@@ -7,7 +7,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "dev:web": "turbo run dev --filter=@motionlab/web",
-    "dev:desktop": "turbo run dev --filter=@motionlab/desktop",
+    "dev:desktop": "ELECTRON_DISABLE_SANDBOX=1 turbo run dev --filter=@motionlab/desktop",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write .",

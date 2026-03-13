@@ -3,24 +3,16 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
     }
   },
   "scripts": {
-    "build": "vite build",
-    "dev": "vite build --watch",
-    "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "lint": "NODE_OPTIONS='--experimental-strip-types' eslint --flag unstable_native_nodejs_ts_config src/"
-  },
-  "devDependencies": {
-    "typescript": "~5.7.3",
-    "vite": "^8.0.0",
-    "vite-plugin-dts": "latest"
   }
 }

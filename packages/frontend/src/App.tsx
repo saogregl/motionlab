@@ -1,5 +1,6 @@
 import { Viewport } from '@motionlab/viewport';
 import { PROTOCOL_VERSION } from '@motionlab/protocol';
+import { Button } from '@motionlab/ui';
 
 export function App() {
   return (
@@ -22,7 +23,8 @@ export function App() {
           protocol v{PROTOCOL_VERSION}
         </span>
       </header>
-      <main style={{ flex: 1, background: '#181825' }}>
+      <main style={{ flex: 1, background: '#181825', padding: '16px' }}>
+        <Button>Test Button</Button>
         <Viewport />
       </main>
     </div>

@@ -5,4 +5,6 @@
  * for the MotionLab desktop-like interface.
  */
 
-export {};
+export { cn } from './lib/utils';
+export { Button, buttonVariants } from './components/ui/button';
+export type { VariantProps } from 'class-variance-authority';

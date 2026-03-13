@@ -3,8 +3,10 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+  root: 'src',
   plugins: [react(), tailwindcss()],
-  server: {
-    port: 5173,
+  build: {
+    outDir: '../.vite/renderer/main_window',
+    emptyOutDir: true,
   },
 });

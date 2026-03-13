@@ -32,6 +32,9 @@ Thumbs.db
 
 # Electron
 apps/desktop/release/
+apps/desktop/.vite/
+apps/desktop/dist-electron/
+apps/desktop/dist-react/
 
 # Logs
 *.log
