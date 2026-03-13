@@ -1,5 +1,5 @@
-import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
+import { app, BrowserWindow } from 'electron';
 
 // TypeScript declarations for Forge Vite plugin globals
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string | undefined;

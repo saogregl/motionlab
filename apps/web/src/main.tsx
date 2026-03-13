@@ -1,6 +1,6 @@
+import { App } from '@motionlab/frontend';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { App } from '@motionlab/frontend';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('Root element not found');

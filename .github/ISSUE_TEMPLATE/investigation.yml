@@ -1,0 +1,25 @@
+name: Investigation
+description: Explore a risky or unclear technical area before implementation.
+title: "[Investigation]: "
+labels:
+  - investigation
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question to answer
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and likely affected modules
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Expected output
+      description: Repo map, options, ADR recommendation, risks, or next-step brief.
+    validations:
+      required: true

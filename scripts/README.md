@@ -1,26 +1,41 @@
 # Scripts
 
-## bootstrap.sh
+## Bootstrap
 
-Full environment setup from a fresh clone:
+Run the initial environment setup:
 
 ```bash
 bash scripts/bootstrap.sh
 ```
 
 This will:
-1. Check prerequisites (node, pnpm, cmake, g++, git, ninja)
-2. Install Node.js dependencies via pnpm
-3. Initialize and bootstrap vcpkg submodule
-4. Configure the native engine with CMake
+
+1. Check prerequisites
+2. Install workspace dependencies
+3. Validate `VCPKG_ROOT`
+4. Configure the native engine
 5. Build the native engine
-6. Build all TypeScript packages
+6. Build the JS and TS workspaces
+
+## Docs and Repo Inventory
+
+- `pnpm docs:generate`
+  - refreshes generated docs under `docs/architecture/generated/`
+- `pnpm docs:check`
+  - verifies required docs and agent-readiness files are present
+
+The generator scripts live under:
+
+- `scripts/repo-map/`
+- `scripts/dependency-graph/`
+- `scripts/api-surface/`
+- `scripts/docs-check/`
 
 ## Prerequisites
 
 - Node.js >= 20
 - pnpm >= 10
 - CMake >= 3.25
-- C++ compiler (g++ or clang)
+- C++ compiler
 - Git
-- ninja (optional but recommended: `sudo apt install ninja-build`)
+- ninja is optional but recommended

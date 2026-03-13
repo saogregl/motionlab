@@ -1,0 +1,36 @@
+name: Refactor brief
+description: Scope a refactor with invariants, risks, and validation.
+title: "[Refactor]: "
+labels:
+  - refactor
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+    validations:
+      required: true
+  - type: textarea
+    id: pain
+    attributes:
+      label: Current pain
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: In scope and out of scope
+    validations:
+      required: true
+  - type: textarea
+    id: invariants
+    attributes:
+      label: Required invariants
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Tests, docs, and ADR impact
+    validations:
+      required: true

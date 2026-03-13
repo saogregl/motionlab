@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "lint": "NODE_OPTIONS='--experimental-strip-types' eslint --flag unstable_native_nodejs_ts_config src/"
+    "lint": "biome check src/",
+    "test": "node -e \"console.log('No tests yet for @motionlab/web')\""
   },
   "dependencies": {
     "@motionlab/frontend": "workspace:*",

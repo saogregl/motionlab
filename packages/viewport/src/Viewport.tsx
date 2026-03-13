@@ -1,5 +1,5 @@
+import { ArcRotateCamera, Engine, HemisphericLight, Scene, Vector3 } from '@babylonjs/core';
 import { useEffect, useRef } from 'react';
-import { Engine, Scene, ArcRotateCamera, HemisphericLight, Vector3 } from '@babylonjs/core';
 
 export interface ViewportProps {
   className?: string;
@@ -26,7 +26,14 @@ export function Viewport({ className }: ViewportProps) {
     const scene = new Scene(engine);
 
     // Default engineering camera
-    const camera = new ArcRotateCamera('camera', Math.PI / 4, Math.PI / 3, 10, Vector3.Zero(), scene);
+    const camera = new ArcRotateCamera(
+      'camera',
+      Math.PI / 4,
+      Math.PI / 3,
+      10,
+      Vector3.Zero(),
+      scene,
+    );
     camera.attachControl(canvas, true);
     camera.wheelPrecision = 50;
 

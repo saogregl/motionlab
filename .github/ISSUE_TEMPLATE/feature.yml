@@ -1,0 +1,48 @@
+name: Feature brief
+description: Plan a new feature with explicit architecture, tests, and docs impact.
+title: "[Feature]: "
+labels:
+  - feature
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What user outcome should this change deliver?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What existing behavior, architecture, or product context matters?
+    validations:
+      required: true
+  - type: textarea
+    id: affected
+    attributes:
+      label: Affected modules
+      description: List apps, packages, native areas, schemas, and docs expected to change.
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Architecture constraints
+      description: Which invariants must stay true?
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Tests required
+      description: What seam tests or regression coverage are required?
+    validations:
+      required: true
+  - type: textarea
+    id: docs
+    attributes:
+      label: Docs and ADR impact
+      description: Which docs must be updated, and is an ADR required?
+    validations:
+      required: true

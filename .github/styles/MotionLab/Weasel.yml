@@ -1,0 +1,9 @@
+extends: existence
+message: "Prefer precise engineering language over '%s'."
+level: warning
+ignorecase: true
+tokens:
+  - obviously
+  - simply
+  - just
+  - easy

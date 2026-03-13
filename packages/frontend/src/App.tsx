@@ -1,6 +1,6 @@
-import { Viewport } from '@motionlab/viewport';
 import { PROTOCOL_VERSION } from '@motionlab/protocol';
 import { Button } from '@motionlab/ui';
+import { Viewport } from '@motionlab/viewport';
 
 export function App() {
   return (

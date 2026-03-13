@@ -1,0 +1,31 @@
+name: Architecture decision
+description: Record a durable architectural choice that needs ADR treatment.
+title: "[ADR]: "
+labels:
+  - architecture
+  - adr
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+    validations:
+      required: true
+  - type: textarea
+    id: decision
+    attributes:
+      label: Decision proposal
+    validations:
+      required: true
+  - type: textarea
+    id: consequences
+    attributes:
+      label: Consequences
+    validations:
+      required: true
+  - type: textarea
+    id: docs
+    attributes:
+      label: Docs and tests to update
+    validations:
+      required: true

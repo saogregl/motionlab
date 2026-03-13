@@ -1,0 +1,18 @@
+repos:
+  - repo: local
+    hooks:
+      - id: motionlab-doc-structure
+        name: motionlab-doc-structure
+        entry: node scripts/docs-check/check-docs.mjs
+        language: system
+        pass_filenames: false
+      - id: motionlab-markdownlint
+        name: motionlab-markdownlint
+        entry: node scripts/docs-check/run-markdownlint.mjs
+        language: system
+        pass_filenames: false
+      - id: motionlab-vale
+        name: motionlab-vale
+        entry: vale docs readme.md plan.md
+        language: system
+        pass_filenames: false
