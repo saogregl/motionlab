@@ -32,6 +32,10 @@
     "onlyBuiltDependencies": [
       "electron",
       "esbuild"
-    ]
+    ],
+    "overrides": {
+      "@tailwindcss/vite>vite": "^8.0.0",
+      "@vitejs/plugin-react>vite": "^8.0.0"
+    }
   }
 }
