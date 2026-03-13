@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package motionlab.mechanism;
+
+option java_package = "com.motionlab.mechanism";
+
+/**
+ * Mechanism IR — core domain schema.
+ *
+ * This is the product-level contract between frontend and engine.
+ * It describes authored mechanism structure, NOT solver internals.
+ *
+ * Stub — will be expanded in Epic 2.
+ */
+
+// Unique identifier for any mechanism element
+message ElementId {
+  string id = 1;
+}
+
+// 3D vector
+message Vec3 {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+}
+
+// Quaternion rotation
+message Quat {
+  double w = 1;
+  double x = 2;
+  double y = 3;
+  double z = 4;
+}
+
+// Rigid body pose
+message Pose {
+  Vec3 position = 1;
+  Quat orientation = 2;
+}
+
+// Mass properties derived from geometry
+message MassProperties {
+  double mass = 1;
+  Vec3 center_of_mass = 2;
+  // Inertia tensor (symmetric 3x3, stored as 6 unique values)
+  double ixx = 3;
+  double iyy = 4;
+  double izz = 5;
+  double ixy = 6;
+  double ixz = 7;
+  double iyz = 8;
+}
+
+// Rigid body in the mechanism
+message Body {
+  ElementId id = 1;
+  string name = 2;
+  Pose pose = 3;
+  MassProperties mass_properties = 4;
+  string source_asset_ref = 5;
+}
+
+// Datum frame anchored to a body
+message Datum {
+  ElementId id = 1;
+  string name = 2;
+  ElementId parent_body_id = 3;
+  Pose local_pose = 4;
+}
+
+// Joint types supported in MVP
+enum JointType {
+  JOINT_TYPE_UNSPECIFIED = 0;
+  JOINT_TYPE_REVOLUTE = 1;
+  JOINT_TYPE_PRISMATIC = 2;
+  JOINT_TYPE_FIXED = 3;
+}
+
+// Joint connecting two datums
+message Joint {
+  ElementId id = 1;
+  string name = 2;
+  JointType type = 3;
+  ElementId parent_datum_id = 4;
+  ElementId child_datum_id = 5;
+  // Optional limits — expanded in later epics
+  double lower_limit = 6;
+  double upper_limit = 7;
+}
+
+// Complete mechanism definition
+message Mechanism {
+  ElementId id = 1;
+  string name = 2;
+  repeated Body bodies = 3;
+  repeated Datum datums = 4;
+  repeated Joint joints = 5;
+}

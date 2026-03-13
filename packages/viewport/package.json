@@ -1,0 +1,38 @@
+{
+  "name": "@motionlab/viewport",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "NODE_OPTIONS='--experimental-strip-types' eslint --flag unstable_native_nodejs_ts_config src/"
+  },
+  "dependencies": {
+    "@babylonjs/core": "^7.43.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "~5.7.3",
+    "vite": "^6.2.0",
+    "vite-plugin-dts": "^4.5.0",
+    "@vitejs/plugin-react": "^4.3.0"
+  }
+}

@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package motionlab.protocol;
+
+option java_package = "com.motionlab.protocol";
+
+/**
+ * Transport envelope schema — frontend ↔ engine communication.
+ *
+ * Commands flow from frontend to engine.
+ * Events flow from engine to frontend.
+ * Frames are high-frequency streamed data (simulation playback).
+ *
+ * Stub — will be expanded in Epic 2.
+ */
+
+// Protocol version for compatibility checking
+message ProtocolVersion {
+  string name = 1;
+  uint32 version = 2;
+}
+
+// Command envelope: frontend → engine
+message Command {
+  uint64 sequence_id = 1;
+  oneof payload {
+    Handshake handshake = 10;
+    Ping ping = 11;
+    // Future: ImportAsset, CompileMechanism, SimulationControl, etc.
+  }
+}
+
+// Event envelope: engine → frontend
+message Event {
+  uint64 sequence_id = 1;
+  oneof payload {
+    HandshakeAck handshake_ack = 10;
+    Pong pong = 11;
+    EngineStatus engine_status = 12;
+    // Future: ImportResult, CompilationResult, SimulationState, etc.
+  }
+}
+
+// Initial handshake
+message Handshake {
+  ProtocolVersion protocol = 1;
+  string session_token = 2;
+}
+
+message HandshakeAck {
+  bool compatible = 1;
+  ProtocolVersion engine_protocol = 2;
+  string engine_version = 3;
+}
+
+message Ping {
+  uint64 timestamp = 1;
+}
+
+message Pong {
+  uint64 timestamp = 1;
+}
+
+message EngineStatus {
+  enum State {
+    STATE_UNSPECIFIED = 0;
+    STATE_INITIALIZING = 1;
+    STATE_READY = 2;
+    STATE_BUSY = 3;
+    STATE_ERROR = 4;
+    STATE_SHUTTING_DOWN = 5;
+  }
+  State state = 1;
+  string message = 2;
+}

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "motionlab-engine",
+  "version-string": "0.0.1",
+  "description": "MotionLab native engine — CAD processing, simulation, and transport",
+  "dependencies": [],
+  "overrides": [],
+  "builtin-baseline": "4b3e4c276b5b87a649e66341e11553e8c577459c"
+}

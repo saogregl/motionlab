@@ -1,0 +1,28 @@
+{
+  "name": "@motionlab/desktop",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "clean": "rm -rf dist dist-electron dist-react *.tsbuildinfo",
+    "typecheck": "tsc --noEmit",
+    "lint": "NODE_OPTIONS='--experimental-strip-types' eslint --flag unstable_native_nodejs_ts_config src/"
+  },
+  "dependencies": {
+    "@motionlab/frontend": "workspace:*",
+    "@motionlab/protocol": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.0",
+    "electron": "^35.0.0",
+    "typescript": "~5.7.3",
+    "vite": "^6.2.0",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-electron-renderer": "^0.14.6"
+  }
+}

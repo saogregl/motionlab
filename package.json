@@ -1,0 +1,37 @@
+{
+  "name": "motionlab",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter=@motionlab/web",
+    "dev:desktop": "turbo run dev --filter=@motionlab/desktop",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "bootstrap": "bash scripts/bootstrap.sh"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.13.0",
+    "eslint": "^10.0.3",
+    "prettier": "^3.5.0",
+    "turbo": "^2.8.16",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.24.0"
+  },
+  "packageManager": "pnpm@10.25.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron",
+      "esbuild"
+    ]
+  }
+}
