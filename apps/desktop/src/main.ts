@@ -1,12 +1,9 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 // TypeScript declarations for Forge Vite plugin globals
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string | undefined;
 declare const MAIN_WINDOW_VITE_NAME: string;
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * MotionLab Electron main process.
