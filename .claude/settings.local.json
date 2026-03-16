@@ -26,7 +26,11 @@
       "Bash(npx kill-port:*)",
       "Bash(git check-ignore:*)",
       "Bash(C:/Dev/motionlab/native/engine/build/vcpkg_installed/x64-windows/tools/protobuf/protoc.exe --version 2>&1)",
-      "Bash(npx:*)"
+      "Bash(npx:*)",
+      "Bash(cat:*)",
+      "Bash(sleep:*)",
+      "Skill(agent-browser)",
+      "Bash(git:*)"
     ]
   },
   "enabledPlugins": {

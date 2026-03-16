@@ -27,7 +27,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 function TokensShowcase() {
   return (
-    <div className="space-y-8 p-6 bg-bg-app min-h-screen">
+    <div className="space-y-8 p-4 bg-bg-app min-h-0">
       {/* Surface Colors */}
       <Section title="Surface Colors">
         <div className="grid grid-cols-3 gap-4">

@@ -1,6 +1,6 @@
 # Epic 1 — Parallel Agent Prompts
 
-> **Status:** Prompt 1 (native engine) is complete. Prompts 2 and 3 are not started.
+> **Status:** All three prompts complete.
 >
 > **Library decision:** Prompt 1 chose `ixwebsocket` (server + client, BSD-3-Clause, via vcpkg) over `websocketpp` (removed from vcpkg) and `uWebSockets` (no client API for tests). `nlohmann-json` for JSON.
 

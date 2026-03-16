@@ -111,3 +111,56 @@ export type { TreeRowRenderProps } from './components/primitives/tree-view';
 export { PropertyRow } from './components/primitives/property-row';
 export { InspectorSection } from './components/primitives/inspector-section';
 export { InspectorPanel } from './components/primitives/inspector-panel';
+export { ToolbarButton } from './components/primitives/toolbar-button';
+export type { ToolbarButtonProps } from './components/primitives/toolbar-button';
+export { ToolbarGroup } from './components/primitives/toolbar-group';
+export type { ToolbarGroupProps } from './components/primitives/toolbar-group';
+export { StatusBadge } from './components/primitives/status-badge';
+export type { StatusBadgeProps, StatusType } from './components/primitives/status-badge';
+export { FloatingToolCard } from './components/primitives/floating-tool-card';
+export type { FloatingToolCardProps } from './components/primitives/floating-tool-card';
+export { ThemeToggle } from './components/primitives/theme-toggle';
+export type { ThemeToggleProps } from './components/primitives/theme-toggle';
+export { DensityToggle } from './components/primitives/density-toggle';
+export type { DensityToggleProps } from './components/primitives/density-toggle';
+export { EmptyState } from './components/primitives/empty-state';
+export type { EmptyStateProps } from './components/primitives/empty-state';
+export { BodyContextMenu, JointContextMenu, DatumContextMenu } from './components/primitives/context-menus';
+export type {
+  BodyContextMenuProps,
+  JointContextMenuProps,
+  DatumContextMenuProps,
+} from './components/primitives/context-menus';
+export { TimelineTransport } from './components/primitives/timeline-transport';
+export type { TimelineTransportProps } from './components/primitives/timeline-transport';
+export { TimelineScrubber } from './components/primitives/timeline-scrubber';
+export type { TimelineScrubberProps } from './components/primitives/timeline-scrubber';
+
+// Hooks
+export { useTheme } from './hooks/use-theme';
+export type { Theme } from './hooks/use-theme';
+export { useDensity } from './hooks/use-density';
+export type { Density } from './hooks/use-density';
+export { useHotkey } from './hooks/use-keyboard-shortcuts';
+
+// Engineering
+export { SelectionChip } from './components/engineering/selection-chip';
+export type { SelectionChipProps } from './components/engineering/selection-chip';
+
+// Shell
+export { AppShell } from './components/shell/app-shell';
+export type { AppShellProps } from './components/shell/app-shell';
+export { TopBar } from './components/shell/top-bar';
+export type { TopBarProps } from './components/shell/top-bar';
+export { SecondaryToolbar } from './components/shell/secondary-toolbar';
+export type { SecondaryToolbarProps } from './components/shell/secondary-toolbar';
+export { LeftPanel } from './components/shell/left-panel';
+export type { LeftPanelProps } from './components/shell/left-panel';
+export { RightPanel } from './components/shell/right-panel';
+export type { RightPanelProps } from './components/shell/right-panel';
+export { BottomDock } from './components/shell/bottom-dock';
+export type { BottomDockProps, DockTab } from './components/shell/bottom-dock';
+export { WorkspaceTabBar } from './components/shell/workspace-tab-bar';
+export type { WorkspaceTabBarProps, WorkspaceTab } from './components/shell/workspace-tab-bar';
+export { ViewportHUD } from './components/shell/viewport-hud';
+export type { ViewportHUDProps } from './components/shell/viewport-hud';
