@@ -1,5 +1,6 @@
 import path from 'node:path';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
+import { EngineSupervisor } from './engine-supervisor';
 
 // TypeScript declarations for Forge Vite plugin globals
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string | undefined;
@@ -10,13 +11,16 @@ declare const MAIN_WINDOW_VITE_NAME: string;
  *
  * Responsibilities:
  * - Window lifecycle management
- * - Native engine process supervision (future Epic 1)
+ * - Native engine process supervision
  * - Desktop integrations (file dialogs, menus)
  *
  * NOT responsible for:
  * - Relaying simulation data (renderer connects directly to engine)
  * - Hot-path frame transport
  */
+
+const supervisor = new EngineSupervisor();
+let quitting = false;
 
 function createWindow(): BrowserWindow {
   const win = new BrowserWindow({
@@ -44,6 +48,19 @@ function createWindow(): BrowserWindow {
 }
 
 app.whenReady().then(() => {
+  const engineReady = supervisor.start().catch((err) => {
+    console.error('[MAIN]', err.message ?? err);
+    return null;
+  });
+
+  ipcMain.handle('get-engine-endpoint', () => engineReady);
+
+  supervisor.onCrash((info) => {
+    for (const win of BrowserWindow.getAllWindows()) {
+      win.webContents.send('engine-status-changed', info);
+    }
+  });
+
   createWindow();
 
   app.on('activate', () => {
@@ -53,8 +70,17 @@ app.whenReady().then(() => {
   });
 });
 
-app.on('window-all-closed', () => {
+app.on('before-quit', async (e) => {
+  if (quitting) return;
+  quitting = true;
+  e.preventDefault();
+  await supervisor.shutdown();
+  app.quit();
+});
+
+app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
+    await supervisor.shutdown();
     app.quit();
   }
 });

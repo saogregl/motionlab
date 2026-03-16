@@ -1,5 +1,21 @@
 # MotionLab MVP Plan
 
+## Epic Status
+
+| # | Epic | Status |
+|---|------|--------|
+| 1 | Desktop Runtime and Engine Supervision (Spike) | In Progress — native engine server done, Electron + frontend remaining |
+| 2 | Versioned Protocol and Mechanism IR Foundation | Not Started |
+| 3 | CAD Import, Derived Properties, and Asset Cache | Not Started |
+| 4 | Viewport Core, Scene Graph, and Picking | Not Started |
+| 5 | Datum Authoring and Frame-First Editing | Not Started |
+| 6 | Assembly Structure, Joint Authoring, and Mechanism Editing | Not Started |
+| 7 | Simulation Compilation and Native Dynamics Runtime | Not Started |
+| 8 | Engineering Outputs, Inspection, and Playback UX | Not Started |
+| 9 | MVP Hardening, Packaging, and Product Credibility Pass | Not Started |
+
+---
+
 > This document defines the MVP as a set of product epics. These epics are intentionally written as deep specifications rather than task checklists. They describe the purpose, scope, constraints, acceptance criteria, and architectural boundaries of the first shippable product.
 
 ---
@@ -126,7 +142,37 @@ Bodies, datums, joints, project metadata, and view-relevant identifiers must sur
 
 ---
 
-## 6. Epic 1 — Desktop Runtime and Engine Supervision
+## 6. Epic 1 — Desktop Runtime and Engine Supervision (Spike)
+
+### Spike-First Approach
+
+Epic 1 is a spike, not a specification. The goal is to validate the Electron + native engine + WebSocket topology through working code before investing in polish. Specifically, the spike must answer:
+
+* How does the renderer discover the engine's WebSocket port? (Electron IPC? Env var? File?)
+* How is the startup race handled? (Renderer ready before engine is listening)
+* What happens when the engine crashes mid-session? (Detection, reporting, recovery)
+* How is the native binary packaged alongside the Electron app? (Platform-specific)
+* Does CSP in the Electron renderer allow WebSocket connections to localhost?
+
+Get a binary launching, a WebSocket connecting, and a handshake completing before writing any further architecture docs. These questions have architectural implications that are best resolved through implementation, not documentation.
+
+### Implementation Progress
+
+**Native engine WebSocket server (Prompt 1): Complete.**
+
+The engine now accepts a WebSocket connection, performs a JSON handshake with session token and protocol version validation, and stays alive in a blocking event loop. Implementation details:
+
+* **Library**: `ixwebsocket` (server + client, no Boost dependency, via vcpkg) + `nlohmann-json` for JSON serialization
+* **Architecture**: `motionlab-engine-lib` static library (shared between exe and tests), pimpl-based `TransportServer` class in `native/engine/src/transport.cpp`
+* **CLI**: `--port <port> --session-token <token>`, validated via `parse_args()`
+* **Protocol**: JSON messages matching `schemas/protocol/transport.proto` shapes — `handshake`/`handshakeAck`, `engineStatus`, `ping`/`pong`
+* **Single-client**: second connections are rejected with close code 4001
+* **Lifecycle**: signal handling (SIGINT + `SetConsoleCtrlHandler` on Windows), structured stdout logging (`[ENGINE] status=<state>`)
+* **Tests**: in-process integration tests — valid handshake, wrong token rejection, ping/pong — using ixwebsocket client, passing via `ctest --preset dev -C Debug`
+
+**Electron supervision (Prompt 2): Not started.** Engine spawn, free port allocation, session token generation, IPC for endpoint discovery.
+
+**Frontend WebSocket client (Prompt 3): Not started.** Zustand store, connection lifecycle, engine status UX.
 
 ### Objective
 
@@ -188,6 +234,28 @@ A user launches the desktop app and receives a working engineering shell that:
 ---
 
 ## 7. Epic 2 — Versioned Protocol and Mechanism IR Foundation
+
+### Codegen-First Implementation Order
+
+The protobuf codegen pipeline (TypeScript + C++) is the highest-risk task in this epic and must be tackled first. The pipeline is currently unbuilt — tooling choice is deferred, C++ protobuf integration via vcpkg is untested, and cross-platform codegen is notoriously painful to set up.
+
+**Required first task:** Get end-to-end codegen working for one simple message (e.g., `Handshake`) before expanding the schema. This means:
+
+1. Choose and wire the TypeScript protobuf library (protobuf-es or ts-proto)
+2. Wire C++ protobuf through vcpkg and CMake
+3. Prove round-trip: TS client serializes `Handshake` → C++ engine deserializes it → C++ serializes `HandshakeAck` → TS client deserializes it
+4. Only then expand the schema to the full Mechanism IR
+
+Do not expand the proto schemas until the codegen pipeline is proven end-to-end.
+
+### Early Persistence Thinking
+
+This epic must also establish the ID and serialization foundations that persistence (later) depends on:
+
+* Element IDs must be deterministic and stable across save/load (not random UUIDs generated at runtime)
+* Asset references must use a strategy that survives project relocation (relative paths or content-addressed)
+* The Mechanism IR serialization format must be defined with persistence in mind — even if full save/load ships later, the IR must be round-trippable to disk from day one
+* Add a naive JSON or protobuf-binary dump of mechanism state as a smoke test for serialization correctness
 
 ### Objective
 
@@ -473,18 +541,32 @@ Additional types can be layered later if architecture remains clean.
 * UI should not assume tree-only mechanisms if loops are planned later
 * mechanism editing must preserve stable IDs for persistence and simulation reconciliation
 
+### Basic Save/Load (pulled forward from former Epic 9)
+
+By the end of this epic, the product must support basic project persistence:
+
+* A project file format (even naive JSON serialization of the Mechanism IR) that captures all authored state: bodies, datums, joints, project metadata
+* Save and load through the desktop shell (File > Save / File > Open)
+* Stable element IDs that survive round-trip serialization
+* Asset references that work after project reopen (relative paths or content-addressed)
+* Cache reuse for derived assets (meshes, mass properties) when the source hasn't changed
+
+This does not need to be the final persistence architecture. It needs to be correct enough that Validation Scenario C (save/reopen) works reliably, and that ID and asset reference decisions are validated through real usage before simulation and output epics build on top of them.
+
 ### Done looks like
 
 * the user can author a basic jointed mechanism from imported bodies
 * the project model expresses bodies, datums, and joints coherently
 * edits survive save/load and can be compiled by the engine
 * inspectors are sufficient to understand the current mechanism definition
+* **the user can save a project, close the app, reopen it, and continue authoring**
 
 ### Risks to watch
 
 * joint authoring becoming too coupled to Chrono-specific semantics
 * UI structure assuming only simple serial chains
 * poor identity management causing broken references on edits
+* persistence format locking in assumptions that are expensive to change later
 
 ---
 
@@ -601,71 +683,31 @@ Choose a minimal but credible set, such as:
 
 ---
 
-## 14. Epic 9 — Project Persistence, Reopen Reliability, and Asset Rehydration
+## 14. Epic 9 — MVP Hardening, Packaging, and Product Credibility Pass
+
+> **Note:** Basic save/load was pulled into Epic 6. This epic combines persistence hardening (from the former standalone persistence epic) with packaging and product polish (from the former Epic 10). The MVP ships 9 epics, not 10.
 
 ### Objective
 
-Make projects durable. The user must be able to close the application and return to a consistent working state with authored structure intact.
-
-### Why this epic exists
-
-Without persistence, every user session is a demo. The MVP needs to feel like the beginning of a real engineering tool.
-
-### Product outcome
-
-A user can save a project and later reopen it with:
-
-* imported bodies restored
-* datums restored
-* joints restored
-* body metadata and organization restored
-* cached derived assets reused when valid
-* the scene and inspectors rehydrated coherently
-
-### Required capabilities
-
-* project file/container format
-* relative asset reference strategy where applicable
-* authored mechanism serialization
-* cache manifest or equivalent derived asset linkage
-* open/reopen workflow through desktop shell
-* missing asset or invalid cache recovery UX
-
-### Architecture constraints
-
-* persisted authored data must remain distinct from regenerable derived data
-* save format must not depend on transient renderer state
-* persistent IDs must remain stable and meaningful
-* broken asset references must surface clear recovery paths
-
-### Done looks like
-
-* the same project can be reopened and continue authoring/simulation
-* save/load does not scramble body/joint/datum identity
-* cache rehydration avoids unnecessary heavy recomputation when valid
-* persistence feels trustworthy enough for repeated use
-
-### Risks to watch
-
-* brittle path assumptions in packaged desktop builds
-* accidental persistence of ephemeral renderer-only state
-* weak migration story for evolving schemas
-
----
-
-## 15. Epic 10 — MVP Hardening, Packaging, and Product Credibility Pass
-
-### Objective
-
-Turn the working vertical slice into a credible first release candidate for internal use.
+Turn the working vertical slice into a credible first release candidate for internal use, with hardened persistence and reliable packaging.
 
 ### Why this epic exists
 
 A product that technically works but is fragile, opaque, or operationally painful is not yet an MVP. This epic closes the gap between prototype and believable tool.
 
+### Persistence Hardening
+
+With basic save/load already working from Epic 6, this epic hardens persistence for production use:
+
+* Missing asset or invalid cache recovery UX
+* Cache manifest validation and selective recomputation
+* Project file migration strategy for schema evolution
+* Broken asset reference recovery paths
+* Persisted authored data verified as distinct from regenerable derived data
+
 ### Product outcome
 
-The app can be packaged, launched, and exercised repeatedly with confidence.
+The app can be packaged, launched, and exercised repeatedly with confidence. Projects persist reliably.
 
 ### Required capabilities
 
@@ -682,7 +724,7 @@ The app can be packaged, launched, and exercised repeatedly with confidence.
 * startup and shutdown stability
 * import error clarity
 * protocol mismatch handling
-* save/load edge cases
+* save/load edge cases and asset recovery
 * large scene responsiveness
 * simulation reset and replay reliability
 
@@ -691,6 +733,7 @@ The app can be packaged, launched, and exercised repeatedly with confidence.
 * hardening must reinforce, not bypass, protocol boundaries
 * developer-only shortcuts should not become production dependencies
 * packaging must preserve the same engine/runtime split used in development
+* persisted authored data must remain distinct from regenerable derived data
 
 ### Done looks like
 
@@ -698,12 +741,16 @@ The app can be packaged, launched, and exercised repeatedly with confidence.
 * startup, import, authoring, simulation, and save/reopen form a coherent loop
 * known limitations are visible rather than hidden
 * the product feels like a serious alpha, not a one-off demo
+* cache rehydration avoids unnecessary heavy recomputation
+* persistence feels trustworthy enough for repeated use
 
 ### Risks to watch
 
 * polishing secondary flows before core loops are stable
 * packaging-specific breakages discovered too late
 * observability gaps that make field failures impossible to diagnose
+* brittle path assumptions in packaged desktop builds
+* weak migration story for evolving schemas
 
 ---
 
@@ -711,18 +758,28 @@ The app can be packaged, launched, and exercised repeatedly with confidence.
 
 The intended sequence is vertical, not purely infrastructural.
 
-1. Desktop Runtime and Engine Supervision
-2. Versioned Protocol and Mechanism IR Foundation
+1. Desktop Runtime and Engine Supervision **(spike — validate topology)**
+2. Versioned Protocol and Mechanism IR Foundation **(codegen pipeline first, then schema expansion)**
 3. CAD Import, Derived Properties, and Asset Cache
 4. Viewport Core, Scene Graph, and Picking
 5. Datum Authoring and Frame-First Editing
-6. Assembly Structure, Joint Authoring, and Mechanism Editing
+6. Assembly Structure, Joint Authoring, and Mechanism Editing **(basic save/load by end of this epic)**
 7. Simulation Compilation and Native Dynamics Runtime
 8. Engineering Outputs, Inspection, and Playback UX
-9. Project Persistence, Reopen Reliability, and Asset Rehydration
-10. MVP Hardening, Packaging, and Product Credibility Pass
+9. MVP Hardening, Packaging, and Product Credibility Pass
 
 This order is intended to prove the hardest architectural loop as early as possible while still yielding usable vertical slices.
+
+### Key ordering changes from initial plan
+
+* **Epic 1 is a spike.** Get the Electron+engine+WebSocket loop working before writing more architecture docs.
+* **Persistence is woven in early.** Epic 2 establishes ID stability and serialization foundations. Basic save/load ships by Epic 6 (not deferred to a separate Epic 9). Full rehydration and cache recovery are part of Epic 9 (now hardening).
+* **Former Epic 9 (Persistence) content is distributed.** Core serialization moves to Epic 2, basic save/load to Epic 6, and asset rehydration/recovery to the hardening epic.
+* **Doc creation is frozen until Epics 1-3 validate the architecture.** Update existing docs as implementation reveals constraints, but do not create new architecture documents until the first vertical slice proves the documented design.
+
+### Process during Epics 1-4
+
+Lighter change hygiene applies (see AGENTS.md "Pre-MVP" section). Focus on building, not documenting. Batch doc updates at epic boundaries.
 
 ---
 

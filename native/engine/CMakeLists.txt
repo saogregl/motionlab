@@ -13,8 +13,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Dependencies via vcpkg
 # ──────────────────────────────────────────────
 
-# Protobuf — active now for protocol foundation
-# find_package(Protobuf CONFIG REQUIRED)
+# WebSocket transport (Epic 1)
+find_package(ixwebsocket CONFIG REQUIRED)
+
+# Protobuf — binary protocol (Epic 2)
+find_package(Protobuf CONFIG REQUIRED)
 
 # OCCT — deferred to Epic 3 (CAD Import)
 # find_package(OpenCASCADE CONFIG REQUIRED)
@@ -23,22 +26,47 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # find_package(Chrono CONFIG)
 
 # ──────────────────────────────────────────────
+# Engine core library (shared between exe and tests)
+# ──────────────────────────────────────────────
+add_library(motionlab-engine-lib STATIC
+  src/transport.cpp
+  src/generated/protocol/transport.pb.cc
+  src/generated/mechanism/mechanism.pb.cc
+)
+
+target_include_directories(motionlab-engine-lib PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/generated
+)
+
+target_link_libraries(motionlab-engine-lib PUBLIC
+  ixwebsocket::ixwebsocket
+  protobuf::libprotobuf
+)
+
+# Windows system libraries required by mbedtls (via ixwebsocket SSL)
+if(WIN32)
+  target_link_libraries(motionlab-engine-lib PUBLIC bcrypt)
+endif()
+
+# Suppress warnings in MSVC
+if(MSVC)
+  target_compile_options(motionlab-engine-lib PRIVATE /W4 /wd4267 /wd4244 /wd4996)
+endif()
+
+# ──────────────────────────────────────────────
 # Engine executable
 # ──────────────────────────────────────────────
 add_executable(motionlab-engine
   src/main.cpp
 )
 
-target_include_directories(motionlab-engine PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/include
+target_link_libraries(motionlab-engine PRIVATE
+  motionlab-engine-lib
 )
 
-# target_link_libraries(motionlab-engine PRIVATE
-#   protobuf::libprotobuf
-# )
-
 # ──────────────────────────────────────────────
-# Tests (placeholder)
+# Tests
 # ──────────────────────────────────────────────
 option(BUILD_TESTS "Build engine tests" ON)
 if(BUILD_TESTS)
@@ -46,8 +74,11 @@ if(BUILD_TESTS)
   add_executable(motionlab-engine-tests
     tests/test_main.cpp
   )
-  target_include_directories(motionlab-engine-tests PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+  target_link_libraries(motionlab-engine-tests PRIVATE
+    motionlab-engine-lib
   )
+  if(MSVC)
+    target_compile_options(motionlab-engine-tests PRIVATE /W4 /wd4267 /wd4244 /wd4996)
+  endif()
   add_test(NAME engine-tests COMMAND motionlab-engine-tests)
 endif()

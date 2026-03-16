@@ -13,7 +13,9 @@ MotionLab is split into a frontend/app layer, a protocol/schema layer, and a nat
 - `schemas/` owns source schemas for transport and mechanism modeling.
 - `native/engine` owns the native executable boundary.
 
-## Target Architectural Direction
+## Target Architectural Direction (Planned)
+
+> The following describes the intended architecture. These subsystems are not yet implemented.
 
 - Durable authored data is modeled as product, model, scenario, and run artifacts.
 - The native runtime compiles authored state into backend-specific execution.

@@ -4,11 +4,20 @@
 
 ## Responsibilities
 
-- native runtime bootstrap
+- native runtime bootstrap and WebSocket transport (`src/transport.cpp`)
+- CLI argument parsing (`--port`, `--session-token`)
+- binary protobuf-over-WebSocket protocol (Epic 2)
+- structured stdout logging for Electron supervision (`[ENGINE] status=<state>`)
 - future geometry/CAD processing
 - simulation compilation and execution
 - runtime output production
 - native tests and protocol seam validation
+
+## Dependencies
+
+- `ixwebsocket` — WebSocket server and client (used in tests)
+- `protobuf` — binary serialization (generated from schemas via Buf)
+- managed via vcpkg (`vcpkg.json`, `CMakePresets.json` with `VCPKG_MANIFEST_MODE=ON`)
 
 ## Rules
 
@@ -22,8 +31,8 @@
 
 ## Required Checks
 
-- `cmake --preset dev`
+- `cmake --preset dev` (requires `VCPKG_ROOT` env var pointing to vcpkg installation)
 - `cmake --build build/dev`
-- `ctest --preset dev`
+- `ctest --preset dev -C Debug` (MSVC multi-config generator requires `-C Debug`)
 
 Update `docs/architecture/runtime-topology.md`, `docs/architecture/results-architecture.md`, and ADRs for architecture-sensitive native changes.

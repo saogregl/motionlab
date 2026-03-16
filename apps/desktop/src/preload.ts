@@ -1,4 +1,4 @@
-import { contextBridge } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 
 /**
  * Preload script — minimal surface area.
@@ -13,11 +13,26 @@ import { contextBridge } from 'electron';
  * - File system access
  */
 
-contextBridge.exposeInMainWorld('motionlab', {
+interface MotionLabAPI {
+  platform: string;
+  getEngineEndpoint(): Promise<{
+    host: string;
+    port: number;
+    sessionToken: string;
+  } | null>;
+  onEngineStatusChanged(
+    callback: (status: { status: string; code?: number | null; signal?: string | null }) => void,
+  ): void;
+}
+
+const api: MotionLabAPI = {
   platform: process.platform,
-  /** Engine connection info will be populated by main process in Epic 1 */
-  getEngineEndpoint: async (): Promise<{ host: string; port: number } | null> => {
-    // Stub — will be implemented when engine supervision is added
-    return null;
+  getEngineEndpoint: () => ipcRenderer.invoke('get-engine-endpoint'),
+  onEngineStatusChanged: (callback) => {
+    ipcRenderer.on('engine-status-changed', (_event, status) => {
+      callback(status);
+    });
   },
-});
+};
+
+contextBridge.exposeInMainWorld('motionlab', api);

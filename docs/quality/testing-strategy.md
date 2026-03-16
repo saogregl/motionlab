@@ -1,5 +1,7 @@
 # Testing Strategy
 
+> **Status: Not yet implemented.** No test runner or test files exist yet. All workspace `test` scripts are placeholders that print a message and exit successfully. This document describes the intended strategy.
+
 MotionLab needs seam-focused testing rather than one generic framework.
 
 ## Required Layers

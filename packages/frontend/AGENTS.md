@@ -17,3 +17,7 @@
 - `pnpm --filter @motionlab/frontend test`
 
 Update `docs/architecture/system-overview.md`, `docs/architecture/repo-map.md`, or relevant domain docs if frontend ownership changes.
+
+## Dependency Notes
+
+- **Zustand** (`zustand`) is listed as a dependency for state management, but no stores exist yet. The store pattern will be established in a future epic.

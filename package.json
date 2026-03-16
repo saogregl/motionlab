@@ -21,10 +21,16 @@
     "docs:prose": "vale docs readme.md plan.md",
     "prepare:agents": "pnpm docs:generate && pnpm docs:check",
     "clean": "turbo run clean && rm -rf node_modules",
-    "bootstrap": "bash scripts/bootstrap.sh"
+    "bootstrap": "bash scripts/bootstrap.sh",
+    "generate:proto": "buf generate",
+    "lint:proto": "buf lint",
+    "breaking:proto": "buf breaking --against '.git#branch=main'"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.6",
+    "@bufbuild/buf": "^1.47.0",
+    "@bufbuild/protoc-gen-es": "^2.0.0",
+    "@playwright/test": "^1.58.2",
     "@types/node": "^22.13.0",
     "markdownlint-cli2": "^0.18.1",
     "turbo": "^2.8.16",
@@ -36,6 +42,7 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@bufbuild/buf",
       "electron",
       "esbuild"
     ],

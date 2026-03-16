@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package motionlab.mechanism;
 
-option java_package = "com.motionlab.mechanism";
-
 /**
  * Mechanism IR — core domain schema.
  *
@@ -15,7 +13,22 @@ option java_package = "com.motionlab.mechanism";
 
 // Unique identifier for any mechanism element
 message ElementId {
+  // UUIDv7 for authored entities, UUIDv5 for derived/runtime IDs
   string id = 1;
+}
+
+// Project-level metadata
+message ProjectMetadata {
+  string name = 1;
+  string created_at = 2;   // ISO 8601 timestamp
+  string modified_at = 3;  // ISO 8601 timestamp
+}
+
+// Reference to an imported asset file
+message AssetReference {
+  string content_hash = 1;      // SHA-256 of file content
+  string relative_path = 2;     // Path within project asset store
+  string original_filename = 3; // User-facing filename
 }
 
 // 3D vector

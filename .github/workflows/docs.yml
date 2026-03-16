@@ -33,7 +33,7 @@ jobs:
       - name: Docs check
         run: pnpm docs:check
       - name: Markdown lint
-        run: pnpm dlx markdownlint-cli2 "docs/**/*.md" "*.md" ".github/**/*.md"
+        run: node scripts/docs-check/run-markdownlint.mjs
       - name: Install Vale
         uses: errata-ai/vale-action@v2.1.1
         with:

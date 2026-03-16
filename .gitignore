@@ -7,6 +7,7 @@ dist/
 build/
 out/
 *.tsbuildinfo
+storybook-static/
 
 # Turborepo
 .turbo/
@@ -40,3 +41,10 @@ apps/desktop/dist-react/
 *.log
 npm-debug.log*
 pnpm-debug.log*
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

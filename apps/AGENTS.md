@@ -5,7 +5,7 @@ This subtree contains application entrypoints, not core domain authority.
 ## Responsibilities
 
 - `apps/desktop`: Electron shell, preload surface, process supervision
-- `apps/web`: browser entry for shared frontend
+- `apps/web`: **Dev-mode only** — browser entry for shared frontend development (hot reload without Electron). Not an MVP deployment target. Requires a mock/stub engine connection to be useful; without one it renders the frontend shell with no engine backing. Do not invest in web-specific features or test web parity until after MVP ships.
 
 ## Rules
 
@@ -20,3 +20,9 @@ This subtree contains application entrypoints, not core domain authority.
 - `pnpm --filter @motionlab/web typecheck`
 
 Update `docs/architecture/runtime-topology.md` if app/runtime responsibilities change.
+
+## Known Quirks
+
+- **`apps/desktop/.npmrc`** uses `node-linker=hoisted` because Electron Forge requires hoisted `node_modules` layout.
+- **`apps/desktop`** intentionally omits `"type": "module"` — Electron's main process requires CommonJS-compatible module resolution.
+- **Electron Forge build**: The desktop app uses `@electron-forge/plugin-vite` for renderer bundling. The Forge config lives in the Vite plugin setup, not a separate `forge.config.js`.

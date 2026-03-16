@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(C:/Dev/vcpkg/vcpkg search:*)",
+      "Bash(setx:*)",
+      "Bash(pnpm:*)",
+      "Bash(node:*)",
+      "Bash(pnpm exec:*)",
+      "Bash(echo:*)",
+      "Bash(cd:*)",
+      "Bash(where cmake:*)",
+      "Read(//c/Program Files/CMake/bin/**)",
+      "Read(//c/Program Files/**)",
+      "Bash(ls:*)",
+      "Bash(\"C:/Dev/motionlab/native/engine/build/dev/Debug/motionlab-engine.exe\" 2>&1; echo \"Exit code: $?\")",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs",
+      "Bash(npm info:*)",
+      "Bash(grep:*)",
+      "WebFetch(domain:buf.build)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(npx protoc-gen-es:*)",
+      "Bash(npx kill-port:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(C:/Dev/motionlab/native/engine/build/vcpkg_installed/x64-windows/tools/protobuf/protoc.exe --version 2>&1)",
+      "Bash(npx:*)"
+    ]
+  },
+  "enabledPlugins": {
+    "typescript-lsp@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true
+  }
+}

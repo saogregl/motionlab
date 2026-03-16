@@ -1,5 +1,7 @@
 # Performance Budget
 
+> **Status: No quantitative budgets defined yet.** This document describes guardrails and review triggers. Specific numeric targets (frame times, bundle sizes, memory limits) will be established as the relevant subsystems are implemented.
+
 Performance decisions are product decisions for MotionLab.
 
 ## Guardrails

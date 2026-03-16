@@ -1,0 +1,14 @@
+version: v2
+clean: true
+plugins:
+  # TypeScript — protobuf-es v2 (local binary from node_modules/.bin)
+  - local: protoc-gen-es
+    out: packages/protocol/src/generated
+    opt:
+      - target=ts
+      - import_extension=js
+
+  # C++ — using remote plugin (protoc not available locally)
+  # Alternative: `protoc_builtin: cpp` if protoc is in PATH
+  - remote: buf.build/protocolbuffers/cpp
+    out: native/engine/src/generated

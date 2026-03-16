@@ -25,6 +25,19 @@ Read in this order before changing code:
 
 ## Required Change Hygiene
 
+### Pre-MVP (Epics 1-4): Lighter Process
+
+During early vertical-slice development, apply a lighter process to maintain iteration speed:
+
+- Commit messages reference the epic (e.g., "Epic 1: ...").
+- Tests are required at integration seams only (protocol handshake, engine spawn, scene graph identity).
+- Doc updates are batched — update subsystem docs when an epic completes, not per-commit.
+- ADRs are still required for boundary or contract changes that affect multiple packages.
+
+### Post-Vertical-Slice (Epics 5+): Full Process
+
+Once the first end-to-end slice (Epics 1-4) is validated, tighten to full governance:
+
 - Any architecture-sensitive change must update the relevant subsystem docs.
 - Any boundary or long-lived contract change requires an ADR.
 - Any protocol, schema, sensor, results, or runtime contract change must add or update tests at the seam it affects.
@@ -39,8 +52,13 @@ Read the nearest local `AGENTS.md` as well when working in a specific area:
 - `packages/viewport/AGENTS.md`
 - `packages/protocol/AGENTS.md`
 - `native/engine/AGENTS.md`
+- `packages/ui/AGENTS.md`
 - `docs/AGENTS.md`
 
 ## Skills
 
 Reusable project skills live under `agents/skills/`. Use them when the task touches architecture, protocol/schema boundaries, sensors/results, testing strategy, or documentation curation.
+
+## Generated Docs
+
+Generated docs under `docs/architecture/generated/` may be stale. Run `pnpm prepare:agents` before reading them to ensure they reflect the current repo state.

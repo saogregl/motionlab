@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
         with:
           version: 10.25.0
@@ -20,6 +22,15 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Buf lint
+        run: pnpm lint:proto
+      - name: Buf breaking change detection
+        if: github.event_name == 'pull_request'
+        run: pnpm breaking:proto
+      - name: Verify generated proto files are fresh
+        run: |
+          pnpm generate:proto
+          git diff --exit-code -- packages/protocol/src/generated/ native/engine/src/generated/
       - name: Generate docs inventories
         run: pnpm docs:generate
       - name: Check docs structure

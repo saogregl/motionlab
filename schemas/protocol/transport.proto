@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package motionlab.protocol;
 
-option java_package = "com.motionlab.protocol";
+import "mechanism/mechanism.proto";
 
 /**
  * Transport envelope schema — frontend ↔ engine communication.
@@ -10,8 +10,6 @@ option java_package = "com.motionlab.protocol";
  * Commands flow from frontend to engine.
  * Events flow from engine to frontend.
  * Frames are high-frequency streamed data (simulation playback).
- *
- * Stub — will be expanded in Epic 2.
  */
 
 // Protocol version for compatibility checking
@@ -26,7 +24,8 @@ message Command {
   oneof payload {
     Handshake handshake = 10;
     Ping ping = 11;
-    // Future: ImportAsset, CompileMechanism, SimulationControl, etc.
+    ImportAssetCommand import_asset = 12;
+    // Future: CompileMechanism, SimulationControl, etc.
   }
 }
 
@@ -37,7 +36,9 @@ message Event {
     HandshakeAck handshake_ack = 10;
     Pong pong = 11;
     EngineStatus engine_status = 12;
-    // Future: ImportResult, CompilationResult, SimulationState, etc.
+    ImportAssetResult import_asset_result = 13;
+    MechanismSnapshot mechanism_snapshot = 14;
+    // Future: CompilationResult, SimulationState, etc.
   }
 }
 
@@ -72,4 +73,20 @@ message EngineStatus {
   }
   State state = 1;
   string message = 2;
+}
+
+// Stub — expanded in Epic 3
+message ImportAssetCommand {
+  string file_path = 1;
+}
+
+message ImportAssetResult {
+  bool success = 1;
+  string error_message = 2;
+  motionlab.mechanism.AssetReference asset_ref = 3;
+}
+
+// Serialized mechanism snapshot for persistence and transport
+message MechanismSnapshot {
+  motionlab.mechanism.Mechanism mechanism = 1;
 }

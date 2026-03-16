@@ -3,7 +3,7 @@
   "name": "motionlab-engine",
   "version-string": "0.0.1",
   "description": "MotionLab native engine — CAD processing, simulation, and transport",
-  "dependencies": [],
+  "dependencies": ["ixwebsocket", "protobuf"],
   "overrides": [],
-  "builtin-baseline": "4b3e4c276b5b87a649e66341e11553e8c577459c"
+  "builtin-baseline": "4b77da7fed37817f124936239197833469f1b9a8"
 }

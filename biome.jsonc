@@ -2,10 +2,19 @@
   "$schema": "https://biomejs.dev/schemas/2.4.6/schema.json",
   "vcs": {
     "clientKind": "git",
-    "defaultBranch": "main"
+    "defaultBranch": "main",
+    "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": true
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!packages/protocol/src/generated",
+      "!native/engine/src/generated",
+      "!.turbo",
+      "!native/engine/build",
+      "!**/storybook-static"
+    ]
   },
   "javascript": {
     "formatter": {
@@ -30,7 +39,9 @@
       },
       "a11y": {
         "useAltText": "off",
-        "useButtonType": "off"
+        "useButtonType": "off",
+        "useSemanticElements": "off",
+        "useKeyWithClickEvents": "off"
       }
     }
   },

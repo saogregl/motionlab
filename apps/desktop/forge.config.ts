@@ -5,6 +5,8 @@ const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
     // Native engine binary will live outside ASAR via extraResource
+    // TODO: Add platform-specific engine binary path, e.g.:
+    //   `native/engine/build/release/motionlab-engine${process.platform === 'win32' ? '.exe' : ''}`
     extraResource: [],
   },
   makers: [

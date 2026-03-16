@@ -1,4 +1,5 @@
 import { ArcRotateCamera, Engine, HemisphericLight, Scene, Vector3 } from '@babylonjs/core';
+import { WebGPUEngine } from '@babylonjs/core/Engines/webgpuEngine';
 import { useEffect, useRef } from 'react';
 
 export interface ViewportProps {
@@ -20,38 +21,81 @@ export function Viewport({ className }: ViewportProps) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const engine = new Engine(canvas, true, { preserveDrawingBuffer: true });
-    engineRef.current = engine;
+    let disposed = false;
 
-    const scene = new Scene(engine);
+    (async () => {
+      let engine: Engine;
 
-    // Default engineering camera
-    const camera = new ArcRotateCamera(
-      'camera',
-      Math.PI / 4,
-      Math.PI / 3,
-      10,
-      Vector3.Zero(),
-      scene,
-    );
-    camera.attachControl(canvas, true);
-    camera.wheelPrecision = 50;
+      if (navigator.gpu) {
+        try {
+          const webgpu = new WebGPUEngine(canvas);
+          await webgpu.initAsync();
+          if (disposed) {
+            webgpu.dispose();
+            return;
+          }
+          engine = webgpu as unknown as Engine;
+        } catch {
+          // TODO: WebGPU — fallback if Electron/browser rejects
+          if (disposed) return;
+          engine = new Engine(canvas, true, { preserveDrawingBuffer: true });
+        }
+      } else {
+        engine = new Engine(canvas, true, { preserveDrawingBuffer: true });
+      }
 
-    // Basic lighting
-    const light = new HemisphericLight('light', new Vector3(0, 1, 0), scene);
-    light.intensity = 0.9;
+      if (disposed) {
+        engine.dispose();
+        return;
+      }
 
-    engine.runRenderLoop(() => {
-      scene.render();
-    });
+      engineRef.current = engine;
 
-    const handleResize = () => engine.resize();
-    window.addEventListener('resize', handleResize);
+      const scene = new Scene(engine);
+
+      // Default engineering camera
+      const camera = new ArcRotateCamera(
+        'camera',
+        Math.PI / 4,
+        Math.PI / 3,
+        10,
+        Vector3.Zero(),
+        scene,
+      );
+      camera.attachControl(canvas, true);
+      camera.wheelPrecision = 50;
+
+      // Basic lighting
+      const light = new HemisphericLight('light', new Vector3(0, 1, 0), scene);
+      light.intensity = 0.9;
+
+      engine.runRenderLoop(() => {
+        scene.render();
+      });
+
+      const handleResize = () => engine.resize();
+      window.addEventListener('resize', handleResize);
+
+      // Stash cleanup references on the canvas for the teardown closure
+      (canvas as unknown as Record<string, unknown>).__cleanup = () => {
+        window.removeEventListener('resize', handleResize);
+        engine.dispose();
+        engineRef.current = null;
+      };
+    })();
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-      engine.dispose();
-      engineRef.current = null;
+      disposed = true;
+      const cleanupFn = (canvas as unknown as Record<string, unknown>).__cleanup as
+        | (() => void)
+        | undefined;
+      if (cleanupFn) {
+        cleanupFn();
+        (canvas as unknown as Record<string, unknown>).__cleanup = undefined;
+      } else if (engineRef.current) {
+        engineRef.current.dispose();
+        engineRef.current = null;
+      }
     };
   }, []);
 

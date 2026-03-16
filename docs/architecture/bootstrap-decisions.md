@@ -114,7 +114,7 @@ The repository currently has no git submodules.
 - TypeScript: `protobuf-es` or `ts-proto` → generated into `packages/protocol/src/generated/`
 - C++: `protoc` → generated into `native/engine/src/generated/`
 
-**Current state:** Schema stubs are in place. Codegen pipeline will be wired in Epic 2 (Protocol Foundation).
+**Current state (not yet wired):** Schema stubs are in place. The codegen pipeline (protobuf-es/ts-proto → TypeScript, protoc → C++) is planned but not yet connected. This will be wired in Epic 2 (Protocol Foundation).
 
 **Versioning:** Protocol version is a simple integer in `packages/protocol/src/version.ts` and echoed in the Handshake message. Breaking changes increment the version and must be deliberate.
 

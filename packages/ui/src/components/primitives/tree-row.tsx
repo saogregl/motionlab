@@ -1,0 +1,251 @@
+import {
+  AlertTriangle,
+  ChevronRight,
+  Eye,
+  EyeOff,
+  MoreHorizontal,
+} from 'lucide-react';
+import type { ReactNode } from 'react';
+
+import { cn } from '@/lib/utils';
+
+/* ── TreeRow ── */
+
+interface TreeRowProps {
+  /** Nesting depth (0 = root) */
+  level: number;
+  /** Display name */
+  name: string;
+  /** Type icon slot (16px) */
+  icon?: ReactNode;
+  /** Secondary text (right of name) */
+  secondary?: string;
+  /** Has children → show disclosure chevron */
+  hasChildren?: boolean;
+  /** Expanded state (only meaningful when hasChildren) */
+  expanded?: boolean;
+  /** Callbacks */
+  onToggleExpand?: () => void;
+  onSelect?: () => void;
+  onToggleVisibility?: () => void;
+  onContextMenu?: () => void;
+  /** State flags — applied as data attributes */
+  selected?: boolean;
+  focused?: boolean;
+  disabled?: boolean;
+  dragTarget?: boolean;
+  /** Hidden (visibility off) */
+  hidden?: boolean;
+  /** Status dot color */
+  status?: 'warning' | 'danger';
+  /** ARIA */
+  role?: string;
+  'aria-level'?: number;
+  'aria-setsize'?: number;
+  'aria-posinset'?: number;
+  className?: string;
+}
+
+function TreeRow({
+  level,
+  name,
+  icon,
+  secondary,
+  hasChildren,
+  expanded,
+  onToggleExpand,
+  onSelect,
+  onToggleVisibility,
+  onContextMenu,
+  selected,
+  focused,
+  disabled,
+  dragTarget,
+  hidden: isHidden,
+  status,
+  className,
+  ...ariaProps
+}: TreeRowProps) {
+  return (
+    <div
+      data-slot="tree-row"
+      data-selected={selected || undefined}
+      data-focused={focused || undefined}
+      data-disabled={disabled || undefined}
+      data-drag-target={dragTarget || undefined}
+      className={cn(
+        'group/tree-row flex h-[var(--tree-row-h)] items-center pr-1',
+        'hover:bg-[var(--hover-overlay)]',
+        'data-[selected]:bg-[var(--selection-row)]',
+        'data-[selected]:data-[focused]:border-l-2 data-[selected]:data-[focused]:border-l-[var(--accent-primary)]',
+        'data-[selected]:not([data-focused]):bg-[var(--selection-row-inactive)]',
+        'data-[disabled]:opacity-50 data-[disabled]:text-[var(--text-disabled)]',
+        'data-[drag-target]:bg-[var(--accent-soft)] data-[drag-target]:border-y-2 data-[drag-target]:border-y-[var(--accent-primary)]',
+        className,
+      )}
+      style={{ paddingLeft: `calc(${level} * var(--tree-indent))` }}
+      onClick={onSelect}
+      {...ariaProps}
+    >
+      {/* Disclosure chevron */}
+      {hasChildren ? (
+        <button
+          data-slot="tree-row-chevron"
+          type="button"
+          className="flex size-5 shrink-0 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleExpand?.();
+          }}
+          tabIndex={-1}
+          aria-label={expanded ? 'Collapse' : 'Expand'}
+        >
+          <ChevronRight
+            className={cn(
+              'size-3 transition-transform duration-[var(--duration-fast)]',
+              expanded && 'rotate-90',
+            )}
+          />
+        </button>
+      ) : (
+        <span className="size-5 shrink-0" />
+      )}
+
+      {/* Type icon */}
+      {icon && (
+        <span data-slot="tree-row-icon" className="mr-1.5 flex size-4 shrink-0 items-center justify-center">
+          {icon}
+        </span>
+      )}
+
+      {/* Name */}
+      <span
+        data-slot="tree-row-name"
+        className="min-w-0 flex-1 truncate text-[length:var(--text-sm)] text-[var(--text-primary)]"
+      >
+        {name}
+      </span>
+
+      {/* Secondary text */}
+      {secondary && (
+        <span
+          data-slot="tree-row-secondary"
+          className="ml-1 max-w-[60px] shrink-0 truncate text-[length:var(--text-2xs)] text-[var(--text-tertiary)]"
+        >
+          {secondary}
+        </span>
+      )}
+
+      {/* Status dot */}
+      {status && (
+        <span
+          data-slot="tree-row-status"
+          className={cn(
+            'ml-1 size-2 shrink-0 rounded-full',
+            status === 'warning' && 'bg-[var(--warning)]',
+            status === 'danger' && 'bg-[var(--danger)]',
+          )}
+        />
+      )}
+
+      {/* Visibility toggle */}
+      {onToggleVisibility && (
+        <button
+          data-slot="tree-row-visibility"
+          type="button"
+          className={cn(
+            'ml-0.5 flex size-4 shrink-0 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)]',
+            !isHidden && 'opacity-0 group-hover/tree-row:opacity-100',
+          )}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleVisibility();
+          }}
+          tabIndex={-1}
+          aria-label={isHidden ? 'Show' : 'Hide'}
+        >
+          {isHidden ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+        </button>
+      )}
+
+      {/* Context menu trigger */}
+      {onContextMenu && (
+        <button
+          data-slot="tree-row-context"
+          type="button"
+          className="ml-0.5 flex size-4 shrink-0 items-center justify-center text-[var(--text-tertiary)] opacity-0 hover:text-[var(--text-primary)] group-hover/tree-row:opacity-100"
+          onClick={(e) => {
+            e.stopPropagation();
+            onContextMenu();
+          }}
+          tabIndex={-1}
+          aria-label="More actions"
+        >
+          <MoreHorizontal className="size-4" />
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* ── GroupHeaderRow ── */
+
+interface GroupHeaderRowProps {
+  /** Group label */
+  label: string;
+  /** Child count */
+  count?: number;
+  /** Nesting depth */
+  level?: number;
+  /** Expanded state */
+  expanded?: boolean;
+  onToggleExpand?: () => void;
+  className?: string;
+}
+
+function GroupHeaderRow({
+  label,
+  count,
+  level = 0,
+  expanded,
+  onToggleExpand,
+  className,
+}: GroupHeaderRowProps) {
+  return (
+    <div
+      data-slot="group-header-row"
+      className={cn(
+        'flex h-[var(--tree-row-h)] items-center pr-1',
+        'hover:bg-[var(--hover-overlay)]',
+        className,
+      )}
+      style={{ paddingLeft: `calc(${level} * var(--tree-indent))` }}
+      onClick={onToggleExpand}
+      role="treeitem"
+    >
+      {/* Disclosure chevron */}
+      <span className="flex size-5 shrink-0 items-center justify-center text-[var(--text-tertiary)]">
+        <ChevronRight
+          className={cn(
+            'size-3 transition-transform duration-[var(--duration-fast)]',
+            expanded && 'rotate-90',
+          )}
+        />
+      </span>
+
+      {/* Label */}
+      <span
+        data-slot="group-header-label"
+        className="min-w-0 flex-1 truncate text-[length:var(--text-xs)] font-semibold uppercase text-[var(--text-secondary)]"
+      >
+        {label}
+        {count != null && (
+          <span className="ml-1 font-normal text-[var(--text-tertiary)]">({count})</span>
+        )}
+      </span>
+    </div>
+  );
+}
+
+export { TreeRow, GroupHeaderRow };
+export type { TreeRowProps, GroupHeaderRowProps };

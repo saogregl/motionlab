@@ -17,3 +17,11 @@
 - documentation completeness
 
 Architecture-sensitive changes are incomplete if they land without updated docs or seam tests.
+
+## Required CI Checks
+
+The following CI jobs must pass before merge:
+
+- **`js-and-docs`** — always required (lint, typecheck, tests, docs check)
+- **`native-smoke`** — required if native code (`native/`) changes
+- **`docs-quality`** — required if docs, AGENTS.md files, agent skills, scripts, readme, or plan change
