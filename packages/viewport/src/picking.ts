@@ -1,5 +1,6 @@
 import {
   type AbstractMesh,
+  GPUPicker,
   type Observer,
   PointerEventTypes,
   type PointerInfo,
@@ -30,8 +31,8 @@ export type HoverCallback = (entityId: string | null) => void;
 
 /**
  * Translates Babylon.js pointer events into entity-level pick and hover
- * callbacks. Uses POINTERPICK (not POINTERDOWN) so that camera orbit
- * drags do not trigger selection.
+ * callbacks. Uses GPU picking (Babylon 8 GPUPicker) with CPU fallback.
+ * Hover picks are RAF-gated to avoid flooding GPU readbacks.
  */
 export class PickingManager {
   private readonly scene: Scene;
@@ -40,6 +41,10 @@ export class PickingManager {
   private readonly onHover: HoverCallback;
   private readonly observer: Observer<PointerInfo>;
   private lastHoveredId: string | null = null;
+  private hoverPending = false;
+
+  private gpuPicker: GPUPicker | null = null;
+  private fallbackToCpu = false;
 
   constructor(
     scene: Scene,
@@ -52,35 +57,90 @@ export class PickingManager {
     this.onPick = onPick;
     this.onHover = onHover;
 
+    // Initialize GPU picker
+    try {
+      this.gpuPicker = new GPUPicker();
+    } catch {
+      this.fallbackToCpu = true;
+    }
+
     this.observer = this.scene.onPointerObservable.add((info) => {
       this.handlePointer(info);
     });
   }
 
+  private updatePickingList(): void {
+    if (!this.gpuPicker || this.fallbackToCpu) return;
+    const meshes = this.sceneGraph.getAllPickableMeshes();
+    if (meshes.length > 0) {
+      this.gpuPicker.setPickingList(meshes);
+    }
+  }
+
   private handlePointer(info: PointerInfo): void {
     switch (info.type) {
       case PointerEventTypes.POINTERPICK: {
-        const result = this.pickEntityAt();
         const evt = info.event as PointerEvent;
-        this.onPick(result.entityId, {
-          ctrl: evt.ctrlKey || evt.metaKey,
-          shift: evt.shiftKey,
+        this.pickEntityAtAsync().then((result) => {
+          this.onPick(result.entityId, {
+            ctrl: evt.ctrlKey || evt.metaKey,
+            shift: evt.shiftKey,
+          });
         });
         break;
       }
 
       case PointerEventTypes.POINTERMOVE: {
-        const result = this.pickEntityAt();
-        if (result.entityId !== this.lastHoveredId) {
-          this.lastHoveredId = result.entityId;
-          this.onHover(result.entityId);
+        // RAF-gated hover throttling — one pick per frame max
+        if (!this.hoverPending) {
+          this.hoverPending = true;
+          requestAnimationFrame(() => {
+            this.hoverPending = false;
+            this.pickEntityAtAsync().then((result) => {
+              if (result.entityId !== this.lastHoveredId) {
+                this.lastHoveredId = result.entityId;
+                this.onHover(result.entityId);
+              }
+            });
+          });
         }
         break;
       }
     }
   }
 
-  private pickEntityAt(): PickResult {
+  private async pickEntityAtAsync(): Promise<PickResult> {
+    // GPU picking path
+    if (this.gpuPicker && !this.fallbackToCpu) {
+      try {
+        this.updatePickingList();
+
+        if (this.gpuPicker.pickingInProgress) {
+          return { entityId: null, mesh: null };
+        }
+
+        const pickingInfo = await this.gpuPicker.pickAsync(
+          this.scene.pointerX,
+          this.scene.pointerY,
+        );
+
+        if (pickingInfo?.mesh) {
+          const entityId = this.resolveEntityId(pickingInfo.mesh);
+          return { entityId, mesh: pickingInfo.mesh };
+        }
+
+        return { entityId: null, mesh: null };
+      } catch {
+        // GPU picking failed — fall back to CPU for this session
+        this.fallbackToCpu = true;
+      }
+    }
+
+    // CPU fallback
+    return this.pickEntityAtCpu();
+  }
+
+  private pickEntityAtCpu(): PickResult {
     const pickResult = this.scene.pick(
       this.scene.pointerX,
       this.scene.pointerY,
@@ -114,5 +174,6 @@ export class PickingManager {
 
   dispose(): void {
     this.scene.onPointerObservable.remove(this.observer);
+    this.gpuPicker?.dispose();
   }
 }

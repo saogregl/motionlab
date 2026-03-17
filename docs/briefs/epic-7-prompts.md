@@ -1,8 +1,40 @@
 # Epic 7 — Parallel Agent Prompts
 
-> **Status:** Not Started
+> **Status:** Prompt 7.1 In Progress (code written, build pending)
 
 Three prompts for simulation compilation and native dynamics runtime. Prompt 7.1 (Chrono spike) is a blocker and CAN start during Epic 6 since it is entirely native-side. Prompts 7.2 and 7.3 are sequential after 7.1.
+
+### Implementation Notes — Prompt 7.1 (2026-03-17)
+
+**Decision:** Started 7.1 before Epics 5-6 so that Chrono's actual joint types inform the authored data model in Epic 6, reducing rework risk.
+
+**Files created/modified:**
+- `native/engine/src/simulation.h` — `SimulationRuntime` class with pimpl (no Chrono in public API). Types: `SimState`, `BodyPose`, `JointState`, `CompilationResult`.
+- `native/engine/src/simulation.cpp` — Full Chrono 8.0 implementation: `compile()` walks Mechanism proto (bodies→ChBody, datums→joint frames, joints→ChLinkLock*), `step(dt)`, `reset()`, `getBodyPoses()`, `getJointStates()`. NSC contact system, gravity (0,-9.81,0).
+- `native/engine/tests/test_simulation.cpp` — 6 tests: two-body revolute pendulum (physics plausibility), empty mechanism, missing datum ref, zero mass, negative mass, reset restores initial state.
+- `native/engine/CMakeLists.txt` — Added `simulation.cpp` to engine lib, `test_simulation.cpp` as separate test exe. Chrono via FetchContent (see below).
+- `native/engine/CMakePresets.json` — Added `mingw-base` preset (Ninja generator, MinGW gcc/g++, `x64-mingw-dynamic` vcpkg triplet).
+
+**Build system — Chrono integration path:**
+- **vcpkg `chronoengine` port rejected** — depends on TBB which fails to build under `x64-mingw-dynamic` community triplet (no Visual Studio on this machine).
+- **FetchContent chosen** — pulls Chrono 8.0.0 from GitHub with all optional modules disabled (`ENABLE_MODULE_IRRLICHT OFF`, `ENABLE_TBB OFF`, etc.). Links `ChronoEngine` target directly.
+- vcpkg.json unchanged (Chrono NOT added to vcpkg deps).
+
+**Build status:** CMake configure was started but not yet completed. To resume:
+```bash
+export VCPKG_ROOT=C:/Dev/vcpkg
+export PATH="C:/msys64/mingw64/bin:C:/msys64/usr/bin:$PATH"
+cd native/engine
+cmake --preset dev
+cmake --build build/dev
+ctest --preset dev
+```
+
+**Potential issues to watch for:**
+- Chrono 8.0 API uses `ChVector<>` not `ChVector3d` (9.0+ alias). Code written with `ChVector<>` for compatibility.
+- FetchContent clone of Chrono is ~200MB, first configure will be slow.
+- Eigen3 is bundled with Chrono when fetched via FetchContent (no separate vcpkg dep needed).
+- May need to adjust Chrono CMake variables if the build surface differs from expected defaults.
 
 **Governance:** Epics 5+ are under full governance — every boundary change needs an ADR, every protocol change needs seam tests, every architecture change needs doc updates.
 

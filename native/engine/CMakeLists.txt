@@ -32,8 +32,44 @@ set(OCCT_LIBS
 # picosha2 — header-only SHA-256
 find_path(PICOSHA2_INCLUDE_DIR picosha2.h)
 
-# Chrono — deferred to Epic 7 (Simulation)
-# find_package(Chrono CONFIG)
+# ──────────────────────────────────────────────
+# Chrono — rigid-body dynamics via FetchContent (Epic 7)
+#
+# Why FetchContent instead of vcpkg:
+#   The vcpkg "chronoengine" port depends on TBB, which fails to build
+#   under the x64-mingw-dynamic community triplet. FetchContent lets us
+#   pull only the core ChronoEngine module with TBB disabled.
+#
+# Chrono version: 8.0.0 (tag "8.0.0" on GitHub)
+# Modules: core only (no Irrlicht, vehicle, postprocess, GPU, etc.)
+# ──────────────────────────────────────────────
+include(FetchContent)
+
+# Disable all optional Chrono modules — we only need core dynamics
+set(ENABLE_MODULE_IRRLICHT OFF CACHE BOOL "" FORCE)
+set(ENABLE_MODULE_VEHICLE OFF CACHE BOOL "" FORCE)
+set(ENABLE_MODULE_POSTPROCESS OFF CACHE BOOL "" FORCE)
+set(ENABLE_MODULE_PARDISO_MKL OFF CACHE BOOL "" FORCE)
+set(ENABLE_MODULE_MUMPS OFF CACHE BOOL "" FORCE)
+set(ENABLE_MODULE_MULTICORE OFF CACHE BOOL "" FORCE)
+set(ENABLE_MODULE_GPU OFF CACHE BOOL "" FORCE)
+set(ENABLE_MODULE_FSI OFF CACHE BOOL "" FORCE)
+set(ENABLE_MODULE_MATLAB OFF CACHE BOOL "" FORCE)
+set(ENABLE_MODULE_CASCADE OFF CACHE BOOL "" FORCE)
+set(USE_EIGEN3_INC_FROM_VCPKG OFF CACHE BOOL "" FORCE)
+set(ENABLE_TBB OFF CACHE BOOL "" FORCE)
+set(BUILD_DEMOS OFF CACHE BOOL "" FORCE)
+set(BUILD_TESTING_CHRONO OFF CACHE BOOL "" FORCE)
+set(BUILD_BENCHMARKING OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+  chrono
+  GIT_REPOSITORY https://github.com/projectchrono/chrono.git
+  GIT_TAG        8.0.0
+  GIT_SHALLOW    ON
+  GIT_PROGRESS   ON
+)
+FetchContent_MakeAvailable(chrono)
 
 # ──────────────────────────────────────────────
 # Engine core library (shared between exe and tests)
@@ -42,6 +78,7 @@ add_library(motionlab-engine-lib STATIC
   src/transport.cpp
   src/cad_import.cpp
   src/asset_cache.cpp
+  src/simulation.cpp
   src/generated/protocol/transport.pb.cc
   src/generated/mechanism/mechanism.pb.cc
 )
@@ -57,6 +94,7 @@ target_link_libraries(motionlab-engine-lib PUBLIC
   ixwebsocket::ixwebsocket
   protobuf::libprotobuf
   ${OCCT_LIBS}
+  ChronoEngine
 )
 
 # Windows system libraries required by mbedtls (via ixwebsocket SSL)
@@ -104,4 +142,12 @@ if(BUILD_TESTS)
     target_compile_options(motionlab-cad-tests PRIVATE /W4 /wd4267 /wd4244 /wd4996)
   endif()
   add_test(NAME cad-import-tests COMMAND motionlab-cad-tests)
+
+  # Simulation tests (Chrono integration — isolated from transport/CAD)
+  add_executable(motionlab-sim-tests tests/test_simulation.cpp)
+  target_link_libraries(motionlab-sim-tests PRIVATE motionlab-engine-lib)
+  if(MSVC)
+    target_compile_options(motionlab-sim-tests PRIVATE /W4 /wd4267 /wd4244 /wd4996)
+  endif()
+  add_test(NAME simulation-tests COMMAND motionlab-sim-tests)
 endif()

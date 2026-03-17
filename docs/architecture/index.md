@@ -8,10 +8,12 @@ This is the canonical architecture entrypoint for MotionLab.
 2. [`system-overview.md`](./system-overview.md)
 3. [`repo-map.md`](./repo-map.md)
 4. [`runtime-topology.md`](./runtime-topology.md)
-5. [`protocol-overview.md`](./protocol-overview.md)
-6. [`sensor-architecture.md`](./sensor-architecture.md)
-7. [`results-architecture.md`](./results-architecture.md)
-8. Relevant ADRs under `docs/decisions/`
+5. [`viewport-architecture.md`](./viewport-architecture.md)
+6. [`chrono-runtime-architecture.md`](./chrono-runtime-architecture.md)
+7. [`protocol-overview.md`](./protocol-overview.md)
+8. [`sensor-architecture.md`](./sensor-architecture.md)
+9. [`results-architecture.md`](./results-architecture.md)
+10. Relevant ADRs under `docs/decisions/`
 
 ## Durable Truth
 

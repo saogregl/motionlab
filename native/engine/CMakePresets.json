@@ -16,10 +16,23 @@
       }
     },
     {
+      "name": "mingw-base",
+      "hidden": true,
+      "inherits": "vcpkg-base",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "C:/msys64/mingw64/bin/gcc.exe",
+        "CMAKE_CXX_COMPILER": "C:/msys64/mingw64/bin/g++.exe",
+        "CMAKE_MAKE_PROGRAM": "C:/msys64/mingw64/bin/ninja.exe",
+        "VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic",
+        "VCPKG_HOST_TRIPLET": "x64-mingw-dynamic"
+      }
+    },
+    {
       "name": "dev",
       "displayName": "Development",
       "description": "Development build with debug symbols",
-      "inherits": "vcpkg-base",
+      "inherits": "mingw-base",
       "binaryDir": "${sourceDir}/build/dev",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",

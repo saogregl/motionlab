@@ -1,10 +1,24 @@
 # Epic 4 — Parallel Agent Prompts
 
-> **Status:** Not Started
+> **Status:** Complete (all 3 prompts)
 >
 > **Dependency:** Prompt 4.1 must complete before Prompt 4.2. Prompt 4.3 can overlap with Prompt 4.2 once selection store shape is agreed.
 >
 > **Prerequisite:** Epic 3 must be complete (CAD import pipeline, body store, and basic layout).
+
+### Implementation Notes (2026-03-17)
+
+**Prompt 4.1 (SceneGraphManager) + 4.2 (PickingManager + Selection Store):** Previously completed.
+
+**Prompt 4.3 (Viewport-Frontend Integration):** Completed. Key files:
+- `packages/viewport/src/Viewport.tsx` — added `onPick`/`onHover` props, creates `PickingManager`
+- `packages/frontend/src/hooks/useViewportBridge.ts` — store↔scenegraph wiring hook (mechanism sync, selection sync, hover sync, pose conversion `{x,y,z}` → `[x,y,z]`)
+- `packages/frontend/src/components/ViewportOverlay.tsx` — composition root (Viewport + HUD + context menu + bridge)
+- `packages/frontend/src/components/ViewportCameraToolbar.tsx` — camera preset buttons (Fit All, Iso, Front/Back/Left/Right/Top/Bottom, Grid)
+- `packages/frontend/src/components/ViewportContextMenu.tsx` — right-click menu with camera presets + grid toggle
+- `packages/frontend/src/App.tsx` — replaced `<Viewport />` with `<ViewportOverlay />`
+
+**Note:** Viewport.tsx was subsequently modified externally with a full rendering pipeline overhaul (environment, lighting rig, material factory, post-processing, selection visuals). The `SceneGraphManager` constructor now takes additional deps. The `onPick`/`onHover` props and `PickingManager` integration remain intact.
 
 Three prompts. Prompt 4.1 must complete first. Prompt 4.2 depends on the SceneGraphManager from 4.1. Prompt 4.3 can overlap with 4.2 once the selection store interface is agreed.
 

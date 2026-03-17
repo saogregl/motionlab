@@ -1,22 +1,45 @@
-import { ArcRotateCamera, Engine, HemisphericLight, Scene, Vector3 } from '@babylonjs/core';
+import { ArcRotateCamera, Engine, Scene, Vector3 } from '@babylonjs/core';
 import { WebGPUEngine } from '@babylonjs/core/Engines/webgpuEngine';
 import { useEffect, useRef } from 'react';
 
+import { type HoverCallback, type PickCallback, PickingManager } from './picking.js';
+import {
+  setupEnvironment,
+  createLightingRig,
+  createMaterialFactory,
+  createGrid,
+  createPostProcessing,
+  createSelectionVisuals,
+} from './rendering/index.js';
 import { SceneGraphManager } from './scene-graph.js';
 
 export interface ViewportProps {
   className?: string;
   onSceneReady?: (sceneGraph: SceneGraphManager) => void;
+  onPick?: PickCallback;
+  onHover?: HoverCallback;
+  gridVisible?: boolean;
+  shadowsEnabled?: boolean;
+  ssaoEnabled?: boolean;
 }
 
 /**
- * Core engineering viewport — Babylon.js scene bootstrapping.
+ * Core engineering viewport — Babylon.js scene bootstrapping with
+ * CAD-quality rendering pipeline.
  *
  * This component owns the canvas, engine, and scene lifecycle.
  * Simulation transforms will be applied imperatively to scene nodes,
  * bypassing React re-renders on the hot path.
  */
-export function Viewport({ className, onSceneReady }: ViewportProps) {
+export function Viewport({
+  className,
+  onSceneReady,
+  onPick,
+  onHover,
+  gridVisible = false,
+  shadowsEnabled = true,
+  ssaoEnabled = true,
+}: ViewportProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<Engine | null>(null);
 
@@ -31,7 +54,7 @@ export function Viewport({ className, onSceneReady }: ViewportProps) {
 
       if (navigator.gpu) {
         try {
-          const webgpu = new WebGPUEngine(canvas);
+          const webgpu = new WebGPUEngine(canvas, { antialias: true });
           await webgpu.initAsync();
           if (disposed) {
             webgpu.dispose();
@@ -39,12 +62,11 @@ export function Viewport({ className, onSceneReady }: ViewportProps) {
           }
           engine = webgpu as unknown as Engine;
         } catch {
-          // TODO: WebGPU — fallback if Electron/browser rejects
           if (disposed) return;
-          engine = new Engine(canvas, true, { preserveDrawingBuffer: true });
+          engine = new Engine(canvas, true, { preserveDrawingBuffer: true, antialias: true });
         }
       } else {
-        engine = new Engine(canvas, true, { preserveDrawingBuffer: true });
+        engine = new Engine(canvas, true, { preserveDrawingBuffer: true, antialias: true });
       }
 
       if (disposed) {
@@ -68,12 +90,46 @@ export function Viewport({ className, onSceneReady }: ViewportProps) {
       camera.attachControl(canvas, true);
       camera.wheelPrecision = 50;
 
-      // Basic lighting
-      const light = new HemisphericLight('light', new Vector3(0, 1, 0), scene);
-      light.intensity = 0.9;
+      // 1. Environment (clear color + IBL)
+      const env = setupEnvironment(scene);
 
-      // Scene graph manager — imperative body/entity management
-      const sceneGraph = new SceneGraphManager(scene, camera);
+      // 2. Lighting (3-point rig + shadows)
+      const lightingRig = createLightingRig(scene, { shadowsEnabled });
+
+      // 3. Materials (PBR factory)
+      const materialFactory = createMaterialFactory(scene);
+
+      // 4. Grid (off by default)
+      const grid = createGrid(scene, { visible: gridVisible });
+
+      // 5. Selection visuals (edge outlines + material tinting)
+      const selectionVisuals = createSelectionVisuals(scene, materialFactory);
+
+      // 6. Scene graph (inject deps)
+      const sceneGraph = new SceneGraphManager(scene, camera, {
+        materialFactory,
+        lightingRig,
+        selectionVisuals,
+        grid,
+      });
+
+      // Ground plane receives shadows
+      env.groundPlane.receiveShadows = true;
+
+      // 7. Post-processing (after camera is attached)
+      const postProcessing = createPostProcessing(scene, camera, { ssaoEnabled });
+
+      // 8. Picking manager
+      let pickingManager: PickingManager | undefined;
+      if (onPick || onHover) {
+        pickingManager = new PickingManager(
+          scene,
+          sceneGraph,
+          onPick ?? (() => {}),
+          onHover ?? (() => {}),
+        );
+      }
+
       onSceneReady?.(sceneGraph);
 
       engine.runRenderLoop(() => {
@@ -86,7 +142,14 @@ export function Viewport({ className, onSceneReady }: ViewportProps) {
       // Stash cleanup references on the canvas for the teardown closure
       (canvas as unknown as Record<string, unknown>).__cleanup = () => {
         window.removeEventListener('resize', handleResize);
+        pickingManager?.dispose();
         sceneGraph.dispose();
+        postProcessing.dispose();
+        selectionVisuals.dispose();
+        grid.dispose();
+        lightingRig.dispose();
+        materialFactory.dispose();
+        env.dispose();
         engine.dispose();
         engineRef.current = null;
       };

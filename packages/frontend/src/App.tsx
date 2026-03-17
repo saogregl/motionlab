@@ -1,10 +1,10 @@
 import { PROTOCOL_VERSION } from '@motionlab/protocol';
 import { AppShell, Button, LeftPanel, RightPanel, TopBar } from '@motionlab/ui';
-import { Viewport } from '@motionlab/viewport';
 import { Import } from 'lucide-react';
 import { useEffect } from 'react';
 import { BodyInspector } from './components/BodyInspector.js';
 import { BodyTree } from './components/BodyTree.js';
+import { ViewportOverlay } from './components/ViewportOverlay.js';
 import { sendImportAsset } from './engine/connection.js';
 import type { ConnectionStatus } from './stores/engine-connection.js';
 import { useEngineConnection } from './stores/engine-connection.js';
@@ -99,7 +99,7 @@ export function App() {
           <BodyTree />
         </LeftPanel>
       }
-      viewport={<Viewport />}
+      viewport={<ViewportOverlay />}
       rightPanel={
         <RightPanel>
           <BodyInspector />

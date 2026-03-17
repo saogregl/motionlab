@@ -19,7 +19,7 @@
     "storybook:build": "storybook build -o storybook-static"
   },
   "dependencies": {
-    "@babylonjs/core": "^7.43.0"
+    "@babylonjs/core": "^8.55.3"
   },
   "peerDependencies": {
     "react": "^19.0.0",

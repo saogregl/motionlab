@@ -1,18 +1,18 @@
 import {
   type AbstractMesh,
   ArcRotateCamera,
-  Color3,
-  Color4,
-  CreateLineSystem,
-  HighlightLayer,
   Mesh,
-  PBRMaterial,
   Quaternion,
   type Scene,
   TransformNode,
   Vector3,
   VertexData,
 } from '@babylonjs/core';
+
+import type { GridOverlay } from './rendering/grid.js';
+import type { LightingRig } from './rendering/lighting.js';
+import type { MaterialFactory } from './rendering/materials.js';
+import type { SelectionVisuals } from './rendering/selection.js';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -46,6 +46,13 @@ export interface PoseInput {
   readonly rotation: [number, number, number, number]; // quaternion [x, y, z, w]
 }
 
+export interface SceneGraphDeps {
+  materialFactory: MaterialFactory;
+  lightingRig: LightingRig;
+  selectionVisuals: SelectionVisuals;
+  grid: GridOverlay;
+}
+
 // ---------------------------------------------------------------------------
 // Camera preset angles
 // ---------------------------------------------------------------------------
@@ -76,27 +83,14 @@ const PRESET_ANGLES: Record<
 export class SceneGraphManager {
   private readonly _scene: Scene;
   private readonly _camera: ArcRotateCamera;
+  private readonly deps: SceneGraphDeps;
   private readonly entities = new Map<string, SceneEntity>();
-  private readonly defaultMaterial: PBRMaterial;
-  private gridNodes: AbstractMesh[] = [];
-  private _gridVisible = true;
-  private readonly selectionHighlight: HighlightLayer;
-  private readonly hoverHighlight: HighlightLayer;
   private currentSelectedIds: Set<string> = new Set();
 
-  constructor(scene: Scene, camera: ArcRotateCamera) {
+  constructor(scene: Scene, camera: ArcRotateCamera, deps: SceneGraphDeps) {
     this._scene = scene;
     this._camera = camera;
-    this.defaultMaterial = this.createDefaultMaterial();
-    this.createGrid();
-
-    this.selectionHighlight = new HighlightLayer('selection_hl', this._scene);
-    this.selectionHighlight.outerGlow = true;
-    this.selectionHighlight.innerGlow = false;
-
-    this.hoverHighlight = new HighlightLayer('hover_hl', this._scene);
-    this.hoverHighlight.outerGlow = true;
-    this.hoverHighlight.innerGlow = false;
+    this.deps = deps;
   }
 
   get scene(): Scene {
@@ -130,9 +124,13 @@ export class SceneGraphManager {
     vertexData.normals = meshData.normals;
     vertexData.applyToMesh(mesh);
 
-    mesh.material = this.defaultMaterial;
+    mesh.material = this.deps.materialFactory.getDefaultMaterial();
     mesh.parent = root;
     mesh.metadata = { entityId: id, entityType: 'body' };
+    mesh.receiveShadows = true;
+
+    // Register as shadow caster
+    this.deps.lightingRig.addShadowCaster(mesh);
 
     root.position = new Vector3(
       pose.position[0],
@@ -166,8 +164,8 @@ export class SceneGraphManager {
     }
 
     for (const mesh of entity.meshes) {
-      this.selectionHighlight.removeMesh(mesh as Mesh);
-      this.hoverHighlight.removeMesh(mesh as Mesh);
+      this.deps.lightingRig.removeShadowCaster(mesh);
+      this.deps.selectionVisuals.applyHover(null);
       mesh.dispose();
     }
     this.currentSelectedIds.delete(id);
@@ -214,6 +212,10 @@ export class SceneGraphManager {
     return Array.from(this.entities.values());
   }
 
+  getAllPickableMeshes(): AbstractMesh[] {
+    return Array.from(this.entities.values()).flatMap((e) => e.meshes);
+  }
+
   // -----------------------------------------------------------------------
   // Camera
   // -----------------------------------------------------------------------
@@ -258,80 +260,11 @@ export class SceneGraphManager {
   // -----------------------------------------------------------------------
 
   get gridVisible(): boolean {
-    return this._gridVisible;
+    return this.deps.grid.visible;
   }
 
   toggleGrid(): void {
-    this._gridVisible = !this._gridVisible;
-    for (const node of this.gridNodes) {
-      node.setEnabled(this._gridVisible);
-    }
-  }
-
-  private createGrid(): void {
-    const gridSize = 50;
-    const step = 1;
-    const gridColor = new Color4(0.3, 0.3, 0.3, 0.4);
-
-    const lines: Vector3[][] = [];
-    const colors: Color4[][] = [];
-
-    // Lines parallel to X axis (varying Z)
-    for (let z = -gridSize; z <= gridSize; z += step) {
-      if (z === 0) continue; // axis line drawn separately
-      lines.push([
-        new Vector3(-gridSize, 0, z),
-        new Vector3(gridSize, 0, z),
-      ]);
-      colors.push([gridColor, gridColor]);
-    }
-
-    // Lines parallel to Z axis (varying X)
-    for (let x = -gridSize; x <= gridSize; x += step) {
-      if (x === 0) continue;
-      lines.push([
-        new Vector3(x, 0, -gridSize),
-        new Vector3(x, 0, gridSize),
-      ]);
-      colors.push([gridColor, gridColor]);
-    }
-
-    const gridMesh = CreateLineSystem(
-      'grid_lines',
-      { lines, colors, useVertexAlpha: true },
-      this._scene,
-    );
-    gridMesh.isPickable = false;
-
-    // X axis (red)
-    const xAxisColor = new Color4(0.8, 0.2, 0.2, 1.0);
-    const xAxis = CreateLineSystem(
-      'axis_x',
-      {
-        lines: [
-          [new Vector3(-gridSize, 0, 0), new Vector3(gridSize, 0, 0)],
-        ],
-        colors: [[xAxisColor, xAxisColor]],
-      },
-      this._scene,
-    );
-    xAxis.isPickable = false;
-
-    // Z axis (blue)
-    const zAxisColor = new Color4(0.2, 0.2, 0.8, 1.0);
-    const zAxis = CreateLineSystem(
-      'axis_z',
-      {
-        lines: [
-          [new Vector3(0, 0, -gridSize), new Vector3(0, 0, gridSize)],
-        ],
-        colors: [[zAxisColor, zAxisColor]],
-      },
-      this._scene,
-    );
-    zAxis.isPickable = false;
-
-    this.gridNodes = [gridMesh, xAxis, zAxis];
+    this.deps.grid.setVisible(!this.deps.grid.visible);
   }
 
   // -----------------------------------------------------------------------
@@ -339,43 +272,29 @@ export class SceneGraphManager {
   // -----------------------------------------------------------------------
 
   applySelection(selectedIds: Set<string>): void {
-    this.selectionHighlight.removeAllMeshes();
     this.currentSelectedIds = new Set(selectedIds);
 
-    const selectionColor = new Color3(0.2, 0.6, 1.0);
+    const meshes: AbstractMesh[] = [];
     for (const id of selectedIds) {
       const entity = this.entities.get(id);
       if (!entity) continue;
-      for (const mesh of entity.meshes) {
-        this.selectionHighlight.addMesh(mesh as Mesh, selectionColor);
-      }
+      meshes.push(...entity.meshes);
     }
+
+    this.deps.selectionVisuals.applySelection(meshes);
   }
 
   applyHover(hoveredId: string | null): void {
-    this.hoverHighlight.removeAllMeshes();
-    if (hoveredId == null || this.currentSelectedIds.has(hoveredId)) return;
+    if (hoveredId == null || this.currentSelectedIds.has(hoveredId)) {
+      this.deps.selectionVisuals.applyHover(null);
+      return;
+    }
 
     const entity = this.entities.get(hoveredId);
     if (!entity) return;
 
-    const hoverColor = new Color3(0.8, 0.8, 0.3);
-    for (const mesh of entity.meshes) {
-      this.hoverHighlight.addMesh(mesh as Mesh, hoverColor);
-    }
-  }
-
-  // -----------------------------------------------------------------------
-  // Material
-  // -----------------------------------------------------------------------
-
-  private createDefaultMaterial(): PBRMaterial {
-    const mat = new PBRMaterial('default_body', this._scene);
-    mat.albedoColor = new Color3(0.7, 0.72, 0.75);
-    mat.metallic = 0.3;
-    mat.roughness = 0.6;
-    mat.backFaceCulling = true;
-    return mat;
+    // Apply hover to the first mesh of the entity
+    this.deps.selectionVisuals.applyHover(entity.meshes[0] ?? null);
   }
 
   // -----------------------------------------------------------------------
@@ -383,22 +302,15 @@ export class SceneGraphManager {
   // -----------------------------------------------------------------------
 
   dispose(): void {
-    this.selectionHighlight.dispose();
-    this.hoverHighlight.dispose();
+    this.deps.selectionVisuals.clearAll();
 
     for (const entity of this.entities.values()) {
       for (const mesh of entity.meshes) {
+        this.deps.lightingRig.removeShadowCaster(mesh);
         mesh.dispose();
       }
       entity.rootNode.dispose();
     }
     this.entities.clear();
-
-    for (const node of this.gridNodes) {
-      node.dispose();
-    }
-    this.gridNodes = [];
-
-    this.defaultMaterial.dispose();
   }
 }
