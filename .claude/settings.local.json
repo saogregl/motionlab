@@ -30,7 +30,11 @@
       "Bash(cat:*)",
       "Bash(sleep:*)",
       "Skill(agent-browser)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(tasklist:*)",
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)",
+      "WebFetch(domain:localhost)"
     ]
   },
   "enabledPlugins": {

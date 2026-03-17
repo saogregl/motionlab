@@ -42,7 +42,7 @@ function InspectorPanel({
           className,
         )}
       >
-        <MousePointerClick className="size-12 opacity-40" />
+        <MousePointerClick className="size-8 opacity-30" />
         <span className="text-[length:var(--text-sm)]">Select an object to inspect</span>
       </div>
     );
@@ -53,26 +53,26 @@ function InspectorPanel({
       {/* Header */}
       <div
         data-slot="inspector-panel-header"
-        className="flex h-12 shrink-0 items-center gap-2 border-b border-[var(--border-subtle)] px-3"
+        className="flex h-8 shrink-0 items-center gap-2 border-b border-[var(--border-subtle)] bg-[var(--layer-recessed)] px-2 py-1"
       >
         {entityIcon && (
           <span className="flex size-5 shrink-0 items-center justify-center text-[var(--text-secondary)]">
             {entityIcon}
           </span>
         )}
-        <div className="min-w-0 flex-1">
-          {entityType && (
-            <div className="text-[length:var(--text-xs)] uppercase text-[var(--text-tertiary)]">
-              {entityType}
-            </div>
-          )}
-          <div className="truncate text-[length:var(--text-base)] font-semibold text-[var(--text-primary)]">
+        <div className="min-w-0 flex-1 truncate">
+          <span className="text-[length:var(--text-sm)] font-bold text-[var(--text-primary)]">
+            {entityType && (
+              <span className="mr-1 text-[10px] font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
+                {entityType}
+              </span>
+            )}
             {entityName}
-          </div>
+          </span>
           {statusLine && (
-            <div className="text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
-              {statusLine}
-            </div>
+            <span className="ml-1.5 text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
+              · {statusLine}
+            </span>
           )}
         </div>
         {quickActions && (

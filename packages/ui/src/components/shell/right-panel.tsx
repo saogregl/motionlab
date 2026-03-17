@@ -9,7 +9,7 @@ interface RightPanelProps {
 
 function RightPanel({ children, className }: RightPanelProps) {
   return (
-    <div data-slot="right-panel" className={cn('flex h-full flex-col bg-bg-panel', className)}>
+    <div data-slot="right-panel" className={cn('flex h-full flex-col bg-layer-base', className)}>
       {children}
     </div>
   );

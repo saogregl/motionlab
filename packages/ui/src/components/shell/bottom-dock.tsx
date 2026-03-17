@@ -53,19 +53,19 @@ function BottomDock({
     <div
       data-slot="bottom-dock"
       data-expanded={expanded || undefined}
-      className={cn('flex shrink-0 flex-col border-t border-border-default bg-bg-panel', className)}
+      className={cn('flex shrink-0 flex-col border-t border-border-default bg-layer-base', className)}
     >
       {/* Tab bar — always visible */}
-      <div className="flex h-7 shrink-0 items-center gap-0.5 bg-bg-subtle px-2">
+      <div className="flex h-6 shrink-0 items-center gap-0.5 border-b border-[var(--border-subtle)] bg-[var(--layer-recessed)] px-2">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             type="button"
             data-active={tab.id === activeTab || undefined}
             className={cn(
-              'h-5 rounded-[var(--radius-sm)] px-2 text-[length:var(--text-2xs)] font-medium transition-colors',
+              'h-[18px] px-2 text-[10px] font-medium transition-colors',
               tab.id === activeTab
-                ? 'bg-bg-panel text-text-primary shadow-[var(--shadow-low)]'
+                ? 'rounded-none border-t-2 border-t-[var(--accent-primary)] bg-layer-base text-text-primary'
                 : 'text-text-tertiary hover:text-text-secondary',
             )}
             onClick={() => handleTabClick(tab.id)}

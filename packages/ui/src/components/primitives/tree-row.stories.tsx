@@ -29,7 +29,7 @@ export const Default: Story = {
 
 export const AllStates: Story = {
   render: () => (
-    <div className="w-[260px] bg-[var(--bg-panel)]">
+    <div className="w-[260px] bg-[var(--layer-base)]">
       <TreeRow
         level={0}
         name="Default"
@@ -112,7 +112,7 @@ export const AllStates: Story = {
 
 export const IndentLevels: Story = {
   render: () => (
-    <div className="w-[260px] bg-[var(--bg-panel)]">
+    <div className="w-[260px] bg-[var(--layer-base)]">
       <TreeRow
         level={0}
         name="Root Assembly"
@@ -159,7 +159,7 @@ export const IndentLevels: Story = {
 
 export const GroupHeader: Story = {
   render: () => (
-    <div className="w-[260px] bg-[var(--bg-panel)]">
+    <div className="w-[260px] bg-[var(--layer-base)]">
       <GroupHeaderRow label="Bodies" count={4} expanded onToggleExpand={() => {}} />
       <TreeRow
         level={1}

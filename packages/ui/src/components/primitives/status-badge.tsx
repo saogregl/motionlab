@@ -31,7 +31,7 @@ function StatusBadge({ status, label, className }: StatusBadgeProps) {
       data-slot="status-badge"
       data-status={status}
       className={cn(
-        'inline-flex h-5 items-center gap-1.5 rounded-[var(--radius-sm)] bg-[var(--bg-subtle)] px-2 text-[length:var(--text-2xs)] font-medium text-[var(--text-secondary)]',
+        'inline-flex h-5 items-center gap-1.5 rounded-[var(--radius-sm)] bg-[var(--bg-muted)] px-2 text-[length:var(--text-2xs)] font-medium text-[var(--text-secondary)]',
         className,
       )}
     >

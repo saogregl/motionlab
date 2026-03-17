@@ -11,9 +11,9 @@ const buttonVariants = cva(
         default:
           'bg-accent-primary text-text-inverse hover:bg-accent-hover active:bg-accent-pressed',
         outline:
-          'border-border-default bg-bg-panel hover:bg-bg-subtle hover:text-text-primary aria-expanded:bg-bg-subtle dark:border-border-default dark:bg-bg-panel dark:hover:bg-bg-subtle',
+          'border-border-default bg-layer-base hover:bg-bg-muted hover:text-text-primary aria-expanded:bg-bg-muted dark:border-border-default dark:bg-layer-base dark:hover:bg-bg-muted',
         secondary:
-          'bg-bg-subtle text-text-primary border border-border-default hover:bg-border-default active:bg-border-strong',
+          'bg-bg-muted text-text-primary border border-border-default hover:bg-border-default active:bg-border-strong',
         ghost:
           'text-text-secondary hover:bg-hover-overlay hover:text-text-primary active:bg-pressed-overlay aria-expanded:bg-hover-overlay',
         destructive:
@@ -22,7 +22,7 @@ const buttonVariants = cva(
         toolbar: 'text-text-secondary hover:bg-hover-overlay active:bg-accent-soft',
         'toolbar-active':
           'bg-accent-soft text-accent-text hover:bg-accent-soft-hover active:bg-accent-soft',
-        subtle: 'text-text-secondary hover:bg-bg-subtle active:bg-bg-inset',
+        subtle: 'text-text-secondary hover:bg-bg-muted active:bg-bg-muted-hover',
       },
       size: {
         default:

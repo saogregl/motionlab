@@ -29,7 +29,7 @@ function WorkspaceTabBar({
     <div
       data-slot="workspace-tab-bar"
       className={cn(
-        'flex h-[var(--bottom-tabs-h)] shrink-0 items-center gap-0.5 overflow-x-auto border-t border-border-default bg-bg-subtle px-1',
+        'flex h-[var(--bottom-tabs-h)] shrink-0 items-center gap-0.5 overflow-x-auto border-t border-border-default bg-layer-recessed px-1',
         className,
       )}
     >
@@ -51,10 +51,10 @@ function WorkspaceTabBar({
           type="button"
           data-active={tab.active || undefined}
           className={cn(
-            'group/tab flex h-6 max-w-[180px] items-center gap-1 rounded-[var(--radius-sm)] px-2 text-[length:var(--text-xs)] font-medium transition-colors',
+            'group/tab flex h-6 max-w-[180px] items-center gap-1 px-2 text-[length:var(--text-xs)] font-medium transition-colors',
             tab.active
-              ? 'border-t-2 border-t-accent-primary bg-bg-panel text-text-primary shadow-[var(--shadow-low)]'
-              : 'text-text-secondary hover:bg-[var(--hover-overlay)] hover:text-text-primary',
+              ? 'border-t-2 border-t-accent-primary bg-layer-base text-text-primary'
+              : 'text-text-secondary hover:bg-[var(--layer-recessed-hover)] hover:text-text-primary',
           )}
           onClick={() => onTabSelect?.(tab.id)}
         >
@@ -66,8 +66,8 @@ function WorkspaceTabBar({
             role="button"
             tabIndex={-1}
             className={cn(
-              'ml-auto flex size-3.5 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-text-tertiary hover:bg-[var(--pressed-overlay)] hover:text-text-primary',
-              !tab.active && 'opacity-0 group-hover/tab:opacity-100',
+              'ml-auto flex size-3.5 shrink-0 items-center justify-center rounded-[1px] text-text-tertiary hover:bg-[var(--layer-recessed-active)] hover:text-text-primary',
+              'opacity-0 group-hover/tab:opacity-100',
             )}
             onClick={(e) => {
               e.stopPropagation();

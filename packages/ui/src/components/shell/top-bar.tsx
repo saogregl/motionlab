@@ -18,14 +18,14 @@ function TopBar({ projectName = 'Untitled Project', status, actions, className }
     <div
       data-slot="top-bar"
       className={cn(
-        'flex h-[var(--topbar-h)] shrink-0 items-center border-b border-border-default bg-bg-panel px-3',
+        'flex h-[var(--topbar-h)] shrink-0 items-center border-b border-border-default bg-layer-base px-2',
         className,
       )}
     >
       {/* Left cluster */}
       <div className="flex min-w-0 items-center gap-2">
         {/* Logo placeholder */}
-        <div className="size-5 shrink-0 rounded-[var(--radius-sm)] bg-accent-primary" />
+        <div className="size-3.5 shrink-0 rounded-[1px] bg-[var(--accent-soft)] border border-[var(--accent-primary)]/20" />
         <span className="max-w-[200px] truncate text-[length:var(--text-base)] font-semibold text-text-primary">
           {projectName}
         </span>
@@ -36,18 +36,18 @@ function TopBar({ projectName = 'Untitled Project', status, actions, className }
       <div className="flex flex-1 justify-center px-4">
         <button
           type="button"
-          className="flex h-7 w-60 items-center gap-1.5 rounded-[var(--radius-md)] border border-border-subtle bg-bg-subtle px-3 text-[length:var(--text-sm)] text-text-tertiary transition-colors hover:border-border-default hover:bg-bg-inset"
+          className="flex h-6 w-52 items-center gap-1 rounded-[var(--radius-sm)] border border-border-subtle bg-layer-recessed px-3 text-[length:var(--text-sm)] text-text-tertiary transition-colors hover:border-border-default hover:bg-field-base"
         >
           <Search className="size-3.5 shrink-0" />
           <span className="flex-1 text-left">Search commands...</span>
-          <kbd className="shrink-0 rounded-[var(--radius-sm)] border border-border-default bg-bg-panel px-1 text-[length:var(--text-2xs)] font-medium text-text-tertiary">
+          <kbd className="shrink-0 rounded-[1px] border border-border-default bg-layer-base px-1 text-[length:var(--text-2xs)] font-medium text-text-tertiary">
             Ctrl+K
           </kbd>
         </button>
       </div>
 
       {/* Right cluster */}
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="flex shrink-0 items-center gap-3">
         {status}
         {actions}
       </div>

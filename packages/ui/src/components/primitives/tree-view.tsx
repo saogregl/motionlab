@@ -54,7 +54,7 @@ function TreeView({
   onExpandedChange,
   defaultExpandedIds,
   renderRow,
-  estimateSize = 28,
+  estimateSize = 26,
   overscan = 5,
   className,
 }: TreeViewProps) {

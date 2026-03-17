@@ -84,7 +84,7 @@ function TimelineScrubber({
       <div
         ref={trackRef}
         data-slot="timeline-scrubber-track"
-        className="relative h-6 cursor-pointer bg-[var(--bg-inset)] rounded-[var(--radius-sm)]"
+        className="relative h-3 cursor-pointer border border-[var(--border-subtle)] bg-[var(--field-base)] rounded-[1px]"
         onMouseDown={handleMouseDown}
       >
         {/* Playhead */}
@@ -94,7 +94,7 @@ function TimelineScrubber({
           style={{ left: `${playheadPercent}%` }}
         >
           {/* Circle handle */}
-          <div className="absolute -top-1 left-1/2 -translate-x-1/2 size-2 rounded-full bg-[var(--accent-primary)]" />
+          <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 size-2.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_3px_rgba(0,0,0,0.3)]" />
         </div>
       </div>
 
@@ -104,7 +104,7 @@ function TimelineScrubber({
           {ticks.map((t) => (
             <span
               key={t}
-              className="font-[family-name:var(--font-mono)] text-[length:var(--text-2xs)] text-[var(--text-tertiary)] tabular-nums"
+              className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--text-tertiary)] tabular-nums"
             >
               {t.toFixed(1)}
             </span>

@@ -135,6 +135,14 @@ export { TimelineTransport } from './components/primitives/timeline-transport';
 export type { TimelineTransportProps } from './components/primitives/timeline-transport';
 export { TimelineScrubber } from './components/primitives/timeline-scrubber';
 export type { TimelineScrubberProps } from './components/primitives/timeline-scrubber';
+export { ViewCube } from './components/primitives/view-cube';
+export type { ViewCubeProps } from './components/primitives/view-cube';
+export { NumericInput } from './components/primitives/numeric-input';
+export type { NumericInputProps } from './components/primitives/numeric-input';
+export { AxisColorLabel } from './components/primitives/axis-color-label';
+export type { AxisColorLabelProps, Axis } from './components/primitives/axis-color-label';
+export { ViewportToolbar } from './components/primitives/viewport-toolbar';
+export type { ViewportToolbarProps } from './components/primitives/viewport-toolbar';
 
 // Hooks
 export { useTheme } from './hooks/use-theme';

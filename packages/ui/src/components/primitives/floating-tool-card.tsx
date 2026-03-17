@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -102,9 +102,9 @@ function FloatingToolCard({
       ref={cardRef}
       data-slot="floating-tool-card"
       className={cn(
-        'absolute w-[280px] max-w-[300px]',
-        'bg-[var(--bg-panel)] border border-[var(--border-default)]',
-        'rounded-[var(--radius-lg)] shadow-[var(--shadow-overlay)]',
+        'absolute w-[260px] max-w-[300px]',
+        'bg-[var(--layer-elevated)] border border-[var(--border-default)]',
+        'rounded-[var(--radius-md)] shadow-[var(--shadow-overlay)]',
         'z-[var(--z-floating)]',
         'animate-in fade-in-0 slide-in-from-bottom-1 duration-[var(--duration-normal)]',
         className,
@@ -115,7 +115,7 @@ function FloatingToolCard({
       <div
         data-slot="floating-tool-card-header"
         className={cn(
-          'flex h-9 items-center gap-2 px-3',
+          'flex h-7 items-center gap-1.5 px-2',
           'border-b border-[var(--border-subtle)]',
           isDragging ? 'cursor-grabbing' : 'cursor-grab',
         )}
@@ -143,7 +143,7 @@ function FloatingToolCard({
 
       {/* Body */}
       {children && (
-        <div data-slot="floating-tool-card-body">
+        <div data-slot="floating-tool-card-body" style={{ '--inspector-label-w': '70px' } as CSSProperties}>
           {children}
         </div>
       )}
@@ -152,7 +152,7 @@ function FloatingToolCard({
       {footer && (
         <div
           data-slot="floating-tool-card-footer"
-          className="flex items-center justify-end gap-2 px-3 py-2 border-t border-[var(--border-subtle)]"
+          className="flex items-center justify-end gap-1.5 px-2 py-1.5 border-t border-[var(--border-subtle)]"
         >
           {footer}
         </div>

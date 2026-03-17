@@ -17,7 +17,7 @@ function ToolbarGroup({ separator, children, className }: ToolbarGroupProps) {
         {children}
       </div>
       {separator && (
-        <Separator orientation="vertical" className="mx-1 h-5 bg-border-default" />
+        <Separator orientation="vertical" className="mx-1 h-[18px] bg-border-default" />
       )}
     </>
   );

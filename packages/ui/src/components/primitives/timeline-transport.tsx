@@ -58,23 +58,23 @@ function TimelineTransport({
   return (
     <div
       data-slot="timeline-transport"
-      className={cn('flex items-center gap-2 h-9 px-2', className)}
+      className={cn('flex items-center gap-1.5 h-8 px-1.5', className)}
     >
       {/* Transport buttons */}
-      <div data-slot="timeline-transport-buttons" className="flex items-center gap-0.5">
-        <Button variant="toolbar" size="icon" onClick={onSkipBack} aria-label="Skip to start">
+      <div data-slot="timeline-transport-buttons" className="flex items-center gap-px">
+        <Button variant="toolbar" size="icon-sm" onClick={onSkipBack} aria-label="Skip to start">
           <SkipBack />
         </Button>
-        <Button variant="toolbar" size="icon" onClick={onStepBack} aria-label="Step back">
+        <Button variant="toolbar" size="icon-sm" onClick={onStepBack} aria-label="Step back">
           <ChevronLeft />
         </Button>
-        <Button variant="toolbar" size="icon" onClick={onPlayPause} aria-label={isPlaying ? 'Pause' : 'Play'}>
+        <Button variant="toolbar" size="icon-sm" onClick={onPlayPause} aria-label={isPlaying ? 'Pause' : 'Play'}>
           {isPlaying ? <Pause /> : <Play />}
         </Button>
-        <Button variant="toolbar" size="icon" onClick={onStepForward} aria-label="Step forward">
+        <Button variant="toolbar" size="icon-sm" onClick={onStepForward} aria-label="Step forward">
           <ChevronRight />
         </Button>
-        <Button variant="toolbar" size="icon" onClick={onSkipForward} aria-label="Skip to end">
+        <Button variant="toolbar" size="icon-sm" onClick={onSkipForward} aria-label="Skip to end">
           <SkipForward />
         </Button>
       </div>
@@ -82,7 +82,7 @@ function TimelineTransport({
       {/* Loop toggle */}
       <Button
         variant={isLooping ? 'toolbar-active' : 'toolbar'}
-        size="icon"
+        size="icon-sm"
         onClick={onLoopToggle}
         aria-label={isLooping ? 'Disable loop' : 'Enable loop'}
         aria-pressed={isLooping}
@@ -113,7 +113,7 @@ function TimelineTransport({
       {/* Time readout */}
       <span
         data-slot="timeline-transport-time"
-        className="ml-auto font-[family-name:var(--font-mono)] text-[length:var(--text-sm)] tabular-nums text-[var(--text-primary)]"
+        className="ml-auto bg-[var(--field-base)] px-2 py-0.5 rounded-[var(--radius-sm)] font-[family-name:var(--font-mono)] text-[length:var(--text-sm)] tabular-nums text-[var(--text-primary)]"
       >
         {formatTime(currentTime)} / {formatTime(duration)}
       </span>

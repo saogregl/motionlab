@@ -44,7 +44,7 @@ function AxisIndicatorPlaceholder() {
 
 function ViewCubePlaceholder() {
   return (
-    <div className="flex size-20 items-center justify-center rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--bg-panel)] text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
+    <div className="flex size-16 items-center justify-center rounded-[var(--radius-md)] bg-[var(--layer-base)] text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
       View Cube
     </div>
   );
@@ -75,7 +75,7 @@ function FullIntegrationDemo() {
       }}
     >
       {/* ── Top bar ── */}
-      <div className="flex items-center gap-3 border-b border-[var(--border-default)] bg-[var(--bg-panel)] px-3">
+      <div className="flex items-center gap-3 border-b border-[var(--border-default)] bg-[var(--layer-base)] px-3">
         <span className="text-[length:var(--text-base)] font-semibold">MotionLab</span>
         <span className="h-5 w-px bg-[var(--border-default)]" />
         <span className="text-[length:var(--text-sm)] text-[var(--text-secondary)]">Water Pump Assembly</span>
@@ -93,7 +93,7 @@ function FullIntegrationDemo() {
         }}
       >
         {/* Left panel */}
-        <div className="row-span-2 overflow-y-auto border-r border-[var(--border-default)] bg-[var(--bg-panel)]">
+        <div className="row-span-2 overflow-y-auto border-r border-[var(--border-default)] bg-[var(--layer-base)]">
           {/* Panel header tabs */}
           <div className="flex h-8 items-center gap-4 border-b border-[var(--border-default)] px-3">
             <span className="border-b-2 border-[var(--accent-primary)] pb-1 text-[length:var(--text-xs)] font-medium uppercase text-[var(--text-primary)]">
@@ -215,7 +215,7 @@ function FullIntegrationDemo() {
                   }
                 >
                   <PropertyRow label="Mode">
-                    <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-subtle)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
+                    <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--field-base)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
                       <option>On Face</option>
                       <option>At Point</option>
                     </select>
@@ -224,7 +224,7 @@ function FullIntegrationDemo() {
                     <input
                       type="text"
                       defaultValue="Datum_4"
-                      className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-subtle)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
+                      className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--field-base)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
                     />
                   </PropertyRow>
                 </FloatingToolCard>
@@ -243,7 +243,7 @@ function FullIntegrationDemo() {
         </div>
 
         {/* Right panel */}
-        <div className="row-span-2 border-l border-[var(--border-default)] bg-[var(--bg-panel)]">
+        <div className="row-span-2 border-l border-[var(--border-default)] bg-[var(--layer-base)]">
           <InspectorPanel
             entityName={selectedBody}
             entityType="Body"
@@ -260,7 +260,7 @@ function FullIntegrationDemo() {
                 <input
                   type="text"
                   defaultValue={selectedBody}
-                  className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-panel)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
+                  className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
                 />
               </PropertyRow>
               <PropertyRow label="Source">
@@ -274,21 +274,21 @@ function FullIntegrationDemo() {
                 <input
                   type="number"
                   defaultValue="12.500"
-                  className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-panel)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+                  className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
                 />
               </PropertyRow>
               <PropertyRow label="Position Y" unit="mm" numeric>
                 <input
                   type="number"
                   defaultValue="0.000"
-                  className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-panel)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+                  className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
                 />
               </PropertyRow>
               <PropertyRow label="Position Z" unit="mm" numeric>
                 <input
                   type="number"
                   defaultValue="-3.200"
-                  className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-panel)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+                  className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
                 />
               </PropertyRow>
             </InspectorSection>
@@ -296,10 +296,10 @@ function FullIntegrationDemo() {
         </div>
 
         {/* Bottom dock */}
-        <div className="border-t border-[var(--border-default)] bg-[var(--bg-panel)] flex flex-col">
+        <div className="border-t border-[var(--border-default)] bg-[var(--layer-base)] flex flex-col">
           {/* Dock tab bar */}
-          <div className="flex h-7 shrink-0 items-center gap-0 border-b border-[var(--border-subtle)] bg-[var(--bg-subtle)]">
-            <span className="flex h-7 items-center border-t-2 border-[var(--accent-primary)] bg-[var(--bg-panel)] px-3 text-[length:var(--text-xs)] font-medium text-[var(--text-primary)]">
+          <div className="flex h-7 shrink-0 items-center gap-0 border-b border-[var(--border-subtle)] bg-[var(--layer-recessed)]">
+            <span className="flex h-7 items-center border-t-2 border-[var(--accent-primary)] bg-[var(--layer-base)] px-3 text-[length:var(--text-xs)] font-medium text-[var(--text-primary)]">
               Timeline
             </span>
             <span className="flex h-7 items-center px-3 text-[length:var(--text-xs)] font-medium text-[var(--text-tertiary)]">
@@ -338,8 +338,8 @@ function FullIntegrationDemo() {
       </div>
 
       {/* ── Bottom workspace tab bar ── */}
-      <div className="flex items-center gap-0 border-t border-[var(--border-default)] bg-[var(--bg-subtle)]">
-        <span className="flex h-8 items-center border-t-2 border-[var(--accent-primary)] bg-[var(--bg-panel)] px-3 text-[length:var(--text-xs)] font-medium text-[var(--text-primary)]">
+      <div className="flex items-center gap-0 border-t border-[var(--border-default)] bg-[var(--layer-recessed)]">
+        <span className="flex h-8 items-center border-t-2 border-[var(--accent-primary)] bg-[var(--layer-base)] px-3 text-[length:var(--text-xs)] font-medium text-[var(--text-primary)]">
           Assembly_1
         </span>
         <span className="flex h-8 items-center px-3 text-[length:var(--text-xs)] font-medium text-[var(--text-secondary)]">

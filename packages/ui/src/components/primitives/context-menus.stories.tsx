@@ -11,7 +11,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const regionCls =
-  'flex h-32 w-48 cursor-context-menu items-center justify-center rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--bg-subtle)] text-[length:var(--text-sm)] text-[var(--text-secondary)] select-none';
+  'flex h-32 w-48 cursor-context-menu items-center justify-center rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--bg-muted)] text-[length:var(--text-sm)] text-[var(--text-secondary)] select-none';
 
 export const AllMenus: Story = {
   render: () => (

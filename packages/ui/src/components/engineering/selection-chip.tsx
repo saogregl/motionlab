@@ -21,9 +21,9 @@ function SelectionChip({ icon, name, onClick, className }: SelectionChipProps) {
       data-slot="selection-chip"
       className={cn(
         'inline-flex items-center gap-1.5 h-7 pl-1.5 pr-2',
-        'bg-[var(--bg-panel)] border border-[var(--border-default)]',
-        'shadow-[var(--shadow-medium)] rounded-[var(--radius-md)]',
-        onClick && 'cursor-pointer hover:bg-[var(--hover-overlay)]',
+        'bg-[var(--layer-base)] border border-[var(--border-subtle)]',
+        'shadow-[var(--shadow-low)] rounded-[var(--radius-md)]',
+        onClick && 'cursor-pointer hover:bg-[var(--layer-base-hover)]',
         className,
       )}
       onClick={onClick}
@@ -40,7 +40,7 @@ function SelectionChip({ icon, name, onClick, className }: SelectionChipProps) {
       >
         {name}
       </span>
-      <ChevronRight className="size-3 shrink-0 text-[var(--text-tertiary)]" />
+      <ChevronRight className="size-2.5 shrink-0 text-[var(--text-tertiary)]" />
     </Tag>
   );
 }

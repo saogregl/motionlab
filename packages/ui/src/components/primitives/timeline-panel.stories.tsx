@@ -43,7 +43,7 @@ function TimelinePanelDemo({ initialTime = 0.342, initialDuration = 2.0 }) {
   }, []);
 
   return (
-    <div className="w-[700px] rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--bg-panel)]">
+    <div className="w-[700px] rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--layer-base)]">
       <TimelineTransport
         isPlaying={isPlaying}
         isLooping={isLooping}

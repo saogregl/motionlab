@@ -1,4 +1,6 @@
 import type { Preview } from '@storybook/react-vite';
+import { Agentation } from 'agentation';
+import { Fragment, createElement } from 'react';
 
 import '../src/globals.css';
 
@@ -31,6 +33,7 @@ const preview: Preview = {
     (Story, context) => {
       const theme = context.globals.theme ?? 'light';
       const density = context.globals.density ?? 'comfortable';
+      const agentationEndpoint = import.meta.env.VITE_AGENTATION_ENDPOINT ?? 'http://localhost:4747';
 
       if (theme === 'dark') {
         document.documentElement.classList.add('dark');
@@ -44,7 +47,12 @@ const preview: Preview = {
         document.documentElement.classList.remove('compact');
       }
 
-      return Story();
+      return createElement(
+        Fragment,
+        null,
+        Story(),
+        import.meta.env.DEV ? createElement(Agentation, { endpoint: agentationEndpoint }) : null,
+      );
     },
   ],
   parameters: {

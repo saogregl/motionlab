@@ -209,7 +209,7 @@ function TreeViewDemo() {
   });
 
   return (
-    <div className="h-[400px] w-[260px] bg-[var(--bg-panel)]">
+    <div className="h-[400px] w-[260px] bg-[var(--layer-base)]">
       <TreeView
         nodes={nodes}
         selectedIds={selectedIds}

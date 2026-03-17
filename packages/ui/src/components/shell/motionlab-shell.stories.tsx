@@ -1,29 +1,35 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   Activity,
+  ArrowLeftRight,
   BarChart3,
   Box,
   BoxSelect,
+  CircleDot,
   Crosshair,
   Eye,
   Gauge,
   Grid3X3,
   Link2,
+  Lock,
   Maximize2,
   MoreHorizontal,
   Move,
   Pointer,
   RotateCcw,
+  RotateCw,
   Settings,
   Zap,
 } from 'lucide-react';
 import { useMemo, useState, useCallback } from 'react';
 
+import { AxisColorLabel } from '@/components/primitives/axis-color-label';
 import { DensityToggle } from '@/components/primitives/density-toggle';
 import { EmptyState } from '@/components/primitives/empty-state';
 import { FloatingToolCard } from '@/components/primitives/floating-tool-card';
 import { InspectorPanel } from '@/components/primitives/inspector-panel';
 import { InspectorSection } from '@/components/primitives/inspector-section';
+import { NumericInput } from '@/components/primitives/numeric-input';
 import { PropertyRow } from '@/components/primitives/property-row';
 import { StatusBadge } from '@/components/primitives/status-badge';
 import { ThemeToggle } from '@/components/primitives/theme-toggle';
@@ -33,6 +39,8 @@ import { ToolbarButton } from '@/components/primitives/toolbar-button';
 import { ToolbarGroup } from '@/components/primitives/toolbar-group';
 import { GroupHeaderRow, TreeRow } from '@/components/primitives/tree-row';
 import { TreeView, type TreeNode } from '@/components/primitives/tree-view';
+import { ViewCube as ViewCubeComponent } from '@/components/primitives/view-cube';
+import { ViewportToolbar } from '@/components/primitives/viewport-toolbar';
 import { Button } from '@/components/ui/button';
 import {
   CommandDialog,
@@ -47,7 +55,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { SelectionChip } from '@/components/engineering/selection-chip';
 import { useTheme } from '@/hooks/use-theme';
 import { useDensity } from '@/hooks/use-density';
-import { useHotkey } from '@/hooks/use-keyboard-shortcuts';
+import { useHotkey, HotkeysProvider } from '@/hooks/use-keyboard-shortcuts';
 
 import { AppShell } from './app-shell';
 import { BottomDock } from './bottom-dock';
@@ -122,8 +130,21 @@ function EntityIcon({ type, jointType }: { type: string; jointType?: string }) {
       return <Box className="size-4 text-[var(--text-secondary)]" />;
     case 'datum':
       return <Crosshair className="size-4 text-[var(--axis-z)]" />;
-    case 'joint':
-      return <Link2 className="size-4" style={{ color: JOINT_COLORS[jointType ?? ''] ?? 'var(--text-secondary)' }} />;
+    case 'joint': {
+      const color = JOINT_COLORS[jointType ?? ''] ?? 'var(--text-secondary)';
+      switch (jointType) {
+        case 'revolute':
+          return <RotateCw className="size-4" style={{ color }} />;
+        case 'slider':
+          return <ArrowLeftRight className="size-4" style={{ color }} />;
+        case 'fixed':
+          return <Lock className="size-4" style={{ color }} />;
+        case 'cylindrical':
+          return <CircleDot className="size-4" style={{ color }} />;
+        default:
+          return <Link2 className="size-4" style={{ color }} />;
+      }
+    }
     case 'driver':
       return <Zap className="size-4 text-[var(--status-running)]" />;
     case 'sensor':
@@ -148,10 +169,21 @@ function AxisIndicator() {
   );
 }
 
-function ViewCube() {
+function ViewCubeWithToolbar() {
   return (
-    <div className="flex size-20 items-center justify-center rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--bg-panel)] text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
-      View Cube
+    <div className="flex flex-col items-end gap-1">
+      <ViewCubeComponent />
+      <ViewportToolbar>
+        <ToolbarButton tooltip="Wireframe">
+          <Grid3X3 />
+        </ToolbarButton>
+        <ToolbarButton tooltip="Shaded">
+          <Box />
+        </ToolbarButton>
+        <ToolbarButton tooltip="Visibility">
+          <Eye />
+        </ToolbarButton>
+      </ViewportToolbar>
     </div>
   );
 }
@@ -223,7 +255,7 @@ function MotionLabShellDemo() {
                 <Button variant="ghost" size="icon" aria-label="Settings">
                   <Settings />
                 </Button>
-                <div className="flex size-6 items-center justify-center rounded-full bg-bg-subtle text-[length:var(--text-2xs)] font-semibold text-text-secondary">
+                <div className="flex size-6 items-center justify-center rounded-full bg-bg-muted text-[length:var(--text-2xs)] font-semibold text-text-secondary">
                   ML
                 </div>
               </>
@@ -231,7 +263,15 @@ function MotionLabShellDemo() {
           />
         }
         toolbar={
-          <SecondaryToolbar>
+          <SecondaryToolbar
+            rightActions={
+              <ToolbarGroup>
+                <ToolbarButton tooltip="Simulation Settings">
+                  <Settings />
+                </ToolbarButton>
+              </ToolbarGroup>
+            }
+          >
             <ToolbarGroup separator>
               <ToolbarButton tooltip="Select" active>
                 <Pointer />
@@ -321,7 +361,7 @@ function MotionLabShellDemo() {
                     }
                   >
                     <PropertyRow label="Mode">
-                      <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-subtle)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
+                      <select className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-transparent px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none hover:bg-[var(--field-base-hover)] focus:border-[var(--accent-primary)] focus:bg-[var(--layer-base)]">
                         <option>On Face</option>
                         <option>At Point</option>
                       </select>
@@ -330,13 +370,13 @@ function MotionLabShellDemo() {
                       <input
                         type="text"
                         defaultValue="Datum_7"
-                        className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-subtle)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
+                        className="h-6 w-full rounded-[var(--radius-sm)] ghost-input px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)]"
                       />
                     </PropertyRow>
                   </FloatingToolCard>
                 ) : undefined
               }
-              topRight={<ViewCube />}
+              topRight={<ViewCubeWithToolbar />}
               bottomLeft={<AxisIndicator />}
               bottomCenter={
                 selectedNode && !selectedNode.isGroup ? (
@@ -368,7 +408,7 @@ function MotionLabShellDemo() {
                   <PropertyRow label="Name">
                     <Input
                       defaultValue={selectedNode.name}
-                      className="h-6 rounded-[var(--radius-sm)] border-none bg-bg-subtle text-[length:var(--text-sm)]"
+                      className="h-6 rounded-[var(--radius-sm)] ghost-input text-[length:var(--text-sm)]"
                     />
                   </PropertyRow>
                   <PropertyRow label="ID">
@@ -378,23 +418,14 @@ function MotionLabShellDemo() {
                   </PropertyRow>
                 </InspectorSection>
                 <InspectorSection title="Transform">
-                  <PropertyRow label="Pos X" unit="mm" numeric>
-                    <Input
-                      defaultValue="12.500"
-                      className="h-6 rounded-[var(--radius-sm)] border-none bg-bg-subtle text-right text-[length:var(--text-sm)] tabular-nums"
-                    />
+                  <PropertyRow label={<><AxisColorLabel axis="x" /> Pos X</>} unit="mm" numeric>
+                    <NumericInput value={12.5} step={0.1} precision={3} />
                   </PropertyRow>
-                  <PropertyRow label="Pos Y" unit="mm" numeric>
-                    <Input
-                      defaultValue="0.000"
-                      className="h-6 rounded-[var(--radius-sm)] border-none bg-bg-subtle text-right text-[length:var(--text-sm)] tabular-nums"
-                    />
+                  <PropertyRow label={<><AxisColorLabel axis="y" /> Pos Y</>} unit="mm" numeric>
+                    <NumericInput value={0} step={0.1} precision={3} />
                   </PropertyRow>
-                  <PropertyRow label="Pos Z" unit="mm" numeric>
-                    <Input
-                      defaultValue="-3.200"
-                      className="h-6 rounded-[var(--radius-sm)] border-none bg-bg-subtle text-right text-[length:var(--text-sm)] tabular-nums"
-                    />
+                  <PropertyRow label={<><AxisColorLabel axis="z" /> Pos Z</>} unit="mm" numeric>
+                    <NumericInput value={-3.2} step={0.1} precision={3} />
                   </PropertyRow>
                 </InspectorSection>
                 {selectedNode.entityType === 'joint' && (

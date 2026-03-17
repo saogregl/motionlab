@@ -15,12 +15,12 @@ function LeftPanel({ children, className }: LeftPanelProps) {
   const [viewMode, setViewMode] = useState<'tree' | 'list'>('tree');
 
   return (
-    <div data-slot="left-panel" className={cn('flex h-full flex-col bg-bg-panel', className)}>
+    <div data-slot="left-panel" className={cn('flex h-full flex-col bg-layer-base', className)}>
       {/* Tab row */}
       <Tabs defaultValue="structure" className="gap-0">
         <TabsList
           variant="line"
-          className="h-8 w-full shrink-0 gap-0 border-b border-border-subtle px-2"
+          className="h-7 w-full shrink-0 gap-0 border-b border-border-subtle px-2"
         >
           <TabsTrigger
             value="structure"
@@ -43,12 +43,12 @@ function LeftPanel({ children, className }: LeftPanelProps) {
         </TabsList>
 
         {/* Filter bar */}
-        <div className="flex items-center gap-1 border-b border-border-subtle px-2 py-1">
+        <div className="flex items-center gap-1 border-b border-border-subtle px-2 py-0.5">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-1.5 top-1/2 size-3 -translate-y-1/2 text-text-tertiary" />
             <Input
               placeholder="Filter..."
-              className="h-6 rounded-[var(--radius-sm)] border-none bg-bg-subtle pl-6 text-[length:var(--text-xs)]"
+              className="h-6 rounded-[var(--radius-sm)] border-none bg-field-base pl-6 text-[length:var(--text-xs)]"
             />
           </div>
           <ToolbarButton

@@ -68,7 +68,6 @@ function AppShell({
             'w-1 shrink-0 bg-transparent transition-colors duration-[var(--duration-fast)]',
             'hover:bg-accent-primary/30',
             'data-[resize-handle-state=drag]:bg-accent-primary',
-            'relative after:absolute after:inset-y-0 after:left-1/2 after:w-px after:-translate-x-1/2 after:bg-border-default',
           )}
         />
 
@@ -85,7 +84,6 @@ function AppShell({
             'w-1 shrink-0 bg-transparent transition-colors duration-[var(--duration-fast)]',
             'hover:bg-accent-primary/30',
             'data-[resize-handle-state=drag]:bg-accent-primary',
-            'relative after:absolute after:inset-y-0 after:left-1/2 after:w-px after:-translate-x-1/2 after:bg-border-default',
           )}
         />
 

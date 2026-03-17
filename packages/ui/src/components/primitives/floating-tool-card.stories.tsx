@@ -33,7 +33,7 @@ export const CreateDatum: Story = {
         }
       >
         <PropertyRow label="Mode">
-          <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-subtle)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
+          <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--field-recessed)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
             <option>On Face</option>
             <option>At Point</option>
             <option>Between Bodies</option>
@@ -43,7 +43,7 @@ export const CreateDatum: Story = {
           <input
             type="text"
             defaultValue="Datum_4"
-            className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-subtle)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
+            className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--field-recessed)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
           />
         </PropertyRow>
         <PropertyRow label="Parent">
@@ -87,7 +87,7 @@ export const AnimateMate: Story = {
           }
         >
           <PropertyRow label="DOF">
-            <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-subtle)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
+            <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--field-recessed)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
               <option>Rotation Z</option>
               <option>Translation X</option>
             </select>
@@ -96,25 +96,25 @@ export const AnimateMate: Story = {
             <input
               type="number"
               defaultValue="0"
-              className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-subtle)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+              className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--field-recessed)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
             />
           </PropertyRow>
           <PropertyRow label="End" unit="deg" numeric>
             <input
               type="number"
               defaultValue="360"
-              className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-subtle)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+              className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--field-recessed)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
             />
           </PropertyRow>
           <PropertyRow label="Steps" numeric>
             <input
               type="number"
               defaultValue="36"
-              className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-subtle)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+              className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--field-recessed)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
             />
           </PropertyRow>
           <PropertyRow label="Playback">
-            <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-subtle)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
+            <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--field-recessed)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
               <option>Once</option>
               <option>Loop</option>
               <option>Ping-pong</option>
@@ -142,7 +142,7 @@ export const Dragged: Story = {
         }
       >
         <PropertyRow label="Mode">
-          <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-subtle)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
+          <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--field-recessed)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
             <option>On Face</option>
           </select>
         </PropertyRow>
@@ -150,7 +150,7 @@ export const Dragged: Story = {
           <input
             type="text"
             defaultValue="Datum_4"
-            className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-subtle)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
+            className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--field-recessed)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
           />
         </PropertyRow>
       </FloatingToolCard>

@@ -92,7 +92,7 @@ function ComposedAppShell() {
                 <Button variant="ghost" size="icon" aria-label="Settings">
                   <Settings />
                 </Button>
-                <div className="flex size-6 items-center justify-center rounded-full bg-bg-subtle text-[length:var(--text-2xs)] font-semibold text-text-secondary">
+                <div className="flex size-6 items-center justify-center rounded-full bg-bg-muted text-[length:var(--text-2xs)] font-semibold text-text-secondary">
                   LS
                 </div>
               </>
@@ -214,19 +214,19 @@ function ComposedAppShell() {
                 <PropertyRow label="Lower" unit="deg" numeric>
                   <Input
                     defaultValue="-180"
-                    className="h-6 rounded-[var(--radius-sm)] border-none bg-bg-subtle text-[length:var(--text-sm)] tabular-nums"
+                    className="h-6 rounded-[var(--radius-sm)] border-none bg-field-base text-[length:var(--text-sm)] tabular-nums"
                   />
                 </PropertyRow>
                 <PropertyRow label="Upper" unit="deg" numeric>
                   <Input
                     defaultValue="180"
-                    className="h-6 rounded-[var(--radius-sm)] border-none bg-bg-subtle text-[length:var(--text-sm)] tabular-nums"
+                    className="h-6 rounded-[var(--radius-sm)] border-none bg-field-base text-[length:var(--text-sm)] tabular-nums"
                   />
                 </PropertyRow>
                 <PropertyRow label="Stiffness" unit="N*m/rad" numeric>
                   <Input
                     defaultValue="0.0"
-                    className="h-6 rounded-[var(--radius-sm)] border-none bg-bg-subtle text-[length:var(--text-sm)] tabular-nums"
+                    className="h-6 rounded-[var(--radius-sm)] border-none bg-field-base text-[length:var(--text-sm)] tabular-nums"
                   />
                 </PropertyRow>
               </InspectorSection>
@@ -242,7 +242,7 @@ function ComposedAppShell() {
               { id: 'console', label: 'Console' },
             ]}
           >
-            <div className="flex h-full items-center justify-center bg-bg-inset text-[length:var(--text-sm)] text-text-tertiary">
+            <div className="flex h-full items-center justify-center bg-layer-recessed text-[length:var(--text-sm)] text-text-tertiary">
               Timeline content
             </div>
           </BottomDock>

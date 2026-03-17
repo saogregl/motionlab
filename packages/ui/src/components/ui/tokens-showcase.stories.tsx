@@ -28,15 +28,56 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 function TokensShowcase() {
   return (
     <div className="space-y-8 p-4 bg-bg-app min-h-0">
-      {/* Surface Colors */}
-      <Section title="Surface Colors">
-        <div className="grid grid-cols-3 gap-4">
-          <ColorSwatch name="App" cssVar="--bg-app" />
-          <ColorSwatch name="Panel" cssVar="--bg-panel" />
-          <ColorSwatch name="Subtle" cssVar="--bg-subtle" />
-          <ColorSwatch name="Elevated" cssVar="--bg-elevated" />
-          <ColorSwatch name="Inset" cssVar="--bg-inset" />
-          <ColorSwatch name="Viewport" cssVar="--bg-viewport" />
+      {/* Surface Colors — Layer Architecture */}
+      <Section title="Surface Layers">
+        <div className="space-y-4">
+          {/* Layer nesting visualization */}
+          <div
+            className="rounded-[var(--radius-lg)] border border-border-default p-3"
+            style={{ backgroundColor: 'var(--bg-app)' }}
+          >
+            <div className="text-[length:var(--text-2xs)] text-text-tertiary font-mono mb-2">bg-app</div>
+            <div
+              className="rounded-[var(--radius-md)] border border-border-default p-3"
+              style={{ backgroundColor: 'var(--layer-base)' }}
+            >
+              <div className="text-[length:var(--text-2xs)] text-text-tertiary font-mono mb-2">layer-base</div>
+              <div
+                className="rounded-[var(--radius-sm)] border border-border-subtle p-3"
+                style={{ backgroundColor: 'var(--layer-recessed)' }}
+              >
+                <div className="text-[length:var(--text-2xs)] text-text-tertiary font-mono mb-2">layer-recessed</div>
+                <div
+                  className="rounded-[var(--radius-sm)] border border-border-subtle p-2"
+                  style={{ backgroundColor: 'var(--layer-raised)' }}
+                >
+                  <div className="text-[length:var(--text-2xs)] text-text-tertiary font-mono">layer-raised</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Swatches */}
+          <div className="grid grid-cols-3 gap-4">
+            <ColorSwatch name="App" cssVar="--bg-app" />
+            <ColorSwatch name="Viewport" cssVar="--bg-viewport" />
+            <ColorSwatch name="Layer Base" cssVar="--layer-base" />
+            <ColorSwatch name="Layer Recessed" cssVar="--layer-recessed" />
+            <ColorSwatch name="Layer Raised" cssVar="--layer-raised" />
+            <ColorSwatch name="Layer Elevated" cssVar="--layer-elevated" />
+            <ColorSwatch name="Muted" cssVar="--bg-muted" />
+            <ColorSwatch name="Muted Hover" cssVar="--bg-muted-hover" />
+          </div>
+        </div>
+      </Section>
+
+      {/* Field / Input Tokens */}
+      <Section title="Field / Input Tokens">
+        <div className="grid grid-cols-2 gap-4">
+          <ColorSwatch name="Field Base" cssVar="--field-base" />
+          <ColorSwatch name="Field Base Hover" cssVar="--field-base-hover" />
+          <ColorSwatch name="Field Recessed" cssVar="--field-recessed" />
+          <ColorSwatch name="Field Recessed Hover" cssVar="--field-recessed-hover" />
         </div>
       </Section>
 
@@ -46,6 +87,9 @@ function TokensShowcase() {
           <ColorSwatch name="Default" cssVar="--border-default" />
           <ColorSwatch name="Strong" cssVar="--border-strong" />
           <ColorSwatch name="Subtle" cssVar="--border-subtle" />
+          <ColorSwatch name="Field" cssVar="--border-field" />
+          <ColorSwatch name="Field Hover" cssVar="--border-field-hover" />
+          <ColorSwatch name="Field Focus" cssVar="--border-field-focus" />
         </div>
       </Section>
 
@@ -122,7 +166,7 @@ function TokensShowcase() {
 
       {/* Typography Scale */}
       <Section title="Typography Scale">
-        <div className="space-y-3 bg-bg-panel p-4 rounded-[var(--radius-lg)]">
+        <div className="space-y-3 bg-layer-base p-4 rounded-[var(--radius-lg)]">
           {[
             ['text-2xs', '--text-2xs', '11px'],
             ['text-xs', '--text-xs', '12px'],
@@ -146,7 +190,7 @@ function TokensShowcase() {
 
       {/* Spacing Scale */}
       <Section title="Spacing Scale">
-        <div className="space-y-2 bg-bg-panel p-4 rounded-[var(--radius-lg)]">
+        <div className="space-y-2 bg-layer-base p-4 rounded-[var(--radius-lg)]">
           {[
             ['space-1', '--space-1', '4px'],
             ['space-2', '--space-2', '8px'],
@@ -171,14 +215,36 @@ function TokensShowcase() {
         </div>
       </Section>
 
+      {/* Layer Stack */}
+      <Section title="Layer Stack">
+        <div className="flex gap-2">
+          {[
+            ['Viewport', '--bg-viewport'],
+            ['App Chrome', '--bg-app'],
+            ['Recessed', '--layer-recessed'],
+            ['Base', '--layer-base'],
+            ['Raised', '--layer-raised'],
+            ['Elevated', '--layer-elevated'],
+          ].map(([label, cssVar]) => (
+            <div key={label} className="flex flex-col items-center gap-1">
+              <div
+                className="h-16 w-24 border border-border-default"
+                style={{ backgroundColor: `var(${cssVar})` }}
+              />
+              <span className="text-[length:var(--text-2xs)] text-text-tertiary font-mono">{label}</span>
+            </div>
+          ))}
+        </div>
+      </Section>
+
       {/* Radius Samples */}
       <Section title="Radius">
-        <div className="flex gap-4 bg-bg-panel p-4 rounded-[var(--radius-lg)]">
+        <div className="flex gap-4 bg-layer-base p-4 rounded-[var(--radius-lg)]">
           {[
-            ['sm', '--radius-sm', '3px'],
-            ['md', '--radius-md', '5px'],
-            ['lg', '--radius-lg', '8px'],
-            ['xl', '--radius-xl', '12px'],
+            ['sm', '--radius-sm', '2px'],
+            ['md', '--radius-md', '3px'],
+            ['lg', '--radius-lg', '4px'],
+            ['xl', '--radius-xl', '6px'],
           ].map(([name, cssVar, px]) => (
             <div key={name} className="flex flex-col items-center gap-2">
               <div
@@ -203,7 +269,7 @@ function TokensShowcase() {
           ].map(([name, cssVar]) => (
             <div key={name} className="flex flex-col items-center gap-2">
               <div
-                className="size-20 bg-bg-panel rounded-[var(--radius-md)]"
+                className="size-20 bg-layer-base rounded-[var(--radius-md)]"
                 style={{ boxShadow: `var(${cssVar})` }}
               />
               <span className="text-[length:var(--text-2xs)] text-text-tertiary font-mono">
@@ -214,13 +280,16 @@ function TokensShowcase() {
         </div>
       </Section>
 
-      {/* Selection Colors */}
+      {/* Selection & Interactive Colors */}
       <Section title="Selection & Interactive">
         <div className="grid grid-cols-3 gap-4">
           <ColorSwatch name="Selection Fill" cssVar="--selection-fill" />
           <ColorSwatch name="Selection Fill Strong" cssVar="--selection-fill-strong" />
           <ColorSwatch name="Selection Row" cssVar="--selection-row" />
+          <ColorSwatch name="Selection Row Hover" cssVar="--selection-row-hover" />
           <ColorSwatch name="Selection Row Inactive" cssVar="--selection-row-inactive" />
+          <ColorSwatch name="Selection Drag BG" cssVar="--selection-drag-bg" />
+          <ColorSwatch name="Selection Drag Border" cssVar="--selection-drag-border" />
           <ColorSwatch name="Hover Overlay" cssVar="--hover-overlay" />
           <ColorSwatch name="Pressed Overlay" cssVar="--pressed-overlay" />
         </div>

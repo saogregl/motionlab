@@ -6,7 +6,8 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ============================================================
-   Engineering Design Tokens
+   Engineering Design Tokens — Layer Architecture
+   IBM Carbon g10 (light) / g100 (dark) neutral grays.
    Source of truth: docs/briefs/ui-epic.md Part 2
    ============================================================ */
 
@@ -71,8 +72,8 @@
   --z-toast: 70;
 
   /* ── Layout ── */
-  --topbar-h: 44px;
-  --toolbar-h: 36px;
+  --topbar-h: 40px;
+  --toolbar-h: 32px;
   --panel-left-w: 260px;
   --panel-left-min: 200px;
   --panel-left-max: 380px;
@@ -82,63 +83,86 @@
   --bottom-dock-h: 240px;
   --bottom-dock-min: 160px;
   --bottom-dock-max: 400px;
-  --bottom-tabs-h: 32px;
+  --bottom-tabs-h: 28px;
 
   /* ── Tree ── */
-  --tree-row-h: 28px;
+  --tree-row-h: 26px;
   --tree-icon-size: 16px;
-  --tree-indent: 16px;
+  --tree-indent: 14px;
   --tree-row-gap: 0px;
 
   /* ── Inspector ── */
   --inspector-section-gap: 2px;
-  --inspector-row-h: 32px;
-  --inspector-label-w: 100px;
+  --inspector-row-h: 28px;
+  --inspector-label-w: 84px;
 
-  /* ── Surface colors (light) ── */
-  --bg-app: #f3f5f8;
-  --bg-panel: #ffffff;
-  --bg-subtle: #eef2f6;
-  --bg-elevated: #fafbfc;
-  --bg-inset: #e8ecf1;
-  --bg-viewport: #e2e6ec;
+  /* ── Surface colors (light) — Carbon g10 ── */
+  --bg-app: #f4f4f4;
+  --bg-viewport: #e0e0e0;
+
+  --layer-base: #ffffff;
+  --layer-base-hover: rgba(141, 141, 141, 0.12);
+  --layer-base-active: rgba(141, 141, 141, 0.5);
+  --layer-recessed: #f4f4f4;
+  --layer-recessed-hover: rgba(141, 141, 141, 0.12);
+  --layer-recessed-active: rgba(141, 141, 141, 0.5);
+  --layer-raised: #ffffff;
+  --layer-raised-hover: rgba(141, 141, 141, 0.12);
+  --layer-raised-active: rgba(141, 141, 141, 0.5);
+  --layer-elevated: #ffffff;
+
+  /* Non-structural surfaces */
+  --bg-muted: #e0e0e0;
+  --bg-muted-hover: #d1d1d1;
+
+  /* Field / input tokens */
+  --field-base: #f4f4f4;
+  --field-base-hover: #e8e8e8;
+  --field-recessed: #e0e0e0;
+  --field-recessed-hover: #d1d1d1;
 
   /* ── Border colors ── */
-  --border-default: #d9e0e7;
-  --border-strong: #bdc7d2;
-  --border-subtle: #e8ecf1;
+  --border-default: #e0e0e0;
+  --border-strong: #8d8d8d;
+  --border-subtle: #c6c6c6;
+  --border-field: #e0e0e0;
+  --border-field-hover: #8d8d8d;
+  --border-field-focus: var(--accent-primary);
 
   /* ── Text colors ── */
-  --text-primary: #18212b;
-  --text-secondary: #4c5a6a;
-  --text-tertiary: #728094;
-  --text-disabled: #a0aabb;
+  --text-primary: #161616;
+  --text-secondary: #525252;
+  --text-tertiary: #6f6f6f;
+  --text-disabled: #a8a8a8;
   --text-inverse: #ffffff;
 
-  /* ── Accent (engineering blue) ── */
-  --accent-primary: #2f6fed;
-  --accent-hover: #245ed1;
-  --accent-pressed: #1c4faf;
-  --accent-soft: #dde8ff;
-  --accent-soft-hover: #ccddff;
-  --accent-text: #1d5ad4;
+  /* ── Accent (interactive blue — Carbon blue) ── */
+  --accent-primary: #0f62fe;
+  --accent-hover: #0043ce;
+  --accent-pressed: #002d9c;
+  --accent-soft: #edf5ff;
+  --accent-soft-hover: #d0e2ff;
+  --accent-text: #0f62fe;
 
   /* ── Selection ── */
-  --selection-fill: rgba(47, 111, 237, 0.08);
-  --selection-fill-strong: rgba(47, 111, 237, 0.15);
-  --selection-outline: #2f6fed;
-  --selection-row: #e8f0fe;
-  --selection-row-inactive: #eef2f6;
+  --selection-fill: rgba(141, 141, 141, 0.2);
+  --selection-fill-strong: rgba(141, 141, 141, 0.32);
+  --selection-outline: #0f62fe;
+  --selection-row: rgba(141, 141, 141, 0.2);
+  --selection-row-hover: rgba(141, 141, 141, 0.32);
+  --selection-row-inactive: rgba(141, 141, 141, 0.12);
+  --selection-drag-bg: var(--accent-soft);
+  --selection-drag-border: var(--accent-primary);
 
   /* ── Semantic states ── */
-  --success: #1f8a4c;
-  --success-soft: #e3f5ec;
-  --warning: #b8791b;
-  --warning-soft: #fff3dd;
-  --danger: #c74646;
-  --danger-soft: #fde8e8;
-  --info: #2f6fed;
-  --info-soft: #dde8ff;
+  --success: #24a148;
+  --success-soft: #defbe6;
+  --warning: #f1c21b;
+  --warning-soft: #fcf4d6;
+  --danger: #da1e28;
+  --danger-soft: #fff1f1;
+  --info: #0043ce;
+  --info-soft: #edf5ff;
 
   /* ── Engineering semantic — Axes ── */
   --axis-x: #d94b4b;
@@ -156,87 +180,127 @@
   --joint-planar: #3182ce;
 
   /* ── Engineering semantic — Status ── */
-  --status-compiled: #1f8a4c;
-  --status-stale: #b8791b;
-  --status-running: #2f6fed;
-  --status-failed: #c74646;
-  --status-warning: #d4880f;
+  --status-compiled: #24a148;
+  --status-stale: #f1c21b;
+  --status-running: #0f62fe;
+  --status-failed: #da1e28;
+  --status-warning: #ff832b;
 
   /* ── Interactive ── */
-  --hover-overlay: rgba(0, 0, 0, 0.04);
-  --pressed-overlay: rgba(0, 0, 0, 0.06);
-  --focus-ring: 0 0 0 2px var(--bg-panel), 0 0 0 4px var(--accent-primary);
+  --hover-overlay: rgba(141, 141, 141, 0.12);
+  --pressed-overlay: rgba(141, 141, 141, 0.5);
+  --focus-ring: 0 0 0 2px var(--layer-base), 0 0 0 4px var(--accent-primary);
+  --focus-ring-inset: 0 0 0 2px var(--layer-recessed), 0 0 0 4px var(--accent-primary);
 
   /* ── shadcn compatibility aliases ── */
   --background: var(--bg-app);
   --foreground: var(--text-primary);
-  --card: var(--bg-panel);
+  --card: var(--layer-base);
   --card-foreground: var(--text-primary);
-  --popover: var(--bg-panel);
+  --popover: var(--layer-elevated);
   --popover-foreground: var(--text-primary);
   --primary: var(--accent-primary);
   --primary-foreground: var(--text-inverse);
-  --secondary: var(--bg-subtle);
+  --secondary: var(--bg-muted);
   --secondary-foreground: var(--text-primary);
-  --muted: var(--bg-subtle);
+  --muted: var(--bg-muted);
   --muted-foreground: var(--text-secondary);
-  --accent: var(--bg-subtle);
+  --accent: var(--bg-muted);
   --accent-foreground: var(--text-primary);
   --destructive: var(--danger);
   --border: var(--border-default);
   --input: var(--border-default);
   --ring: var(--accent-primary);
-  --radius: 5px;
+  --radius: 3px;
   --chart-1: var(--accent-primary);
   --chart-2: var(--accent-hover);
   --chart-3: var(--info);
   --chart-4: var(--success);
   --chart-5: var(--warning);
-  --sidebar: var(--bg-panel);
+  --sidebar: var(--layer-base);
   --sidebar-foreground: var(--text-primary);
   --sidebar-primary: var(--accent-primary);
   --sidebar-primary-foreground: var(--text-inverse);
-  --sidebar-accent: var(--bg-subtle);
+  --sidebar-accent: var(--bg-muted);
   --sidebar-accent-foreground: var(--text-primary);
   --sidebar-border: var(--border-default);
   --sidebar-ring: var(--accent-primary);
 }
 
-/* ── Dark theme ── */
+/* ── Dark theme — Carbon g100 ── */
 .dark {
-  --bg-app: #0f1318;
-  --bg-panel: #181d24;
-  --bg-subtle: #1e252e;
-  --bg-elevated: #222933;
-  --bg-inset: #0c0f13;
-  --bg-viewport: #14181e;
+  --bg-app: #161616;
+  --bg-viewport: #161616;
 
-  --border-default: #2a3240;
-  --border-strong: #3a4555;
-  --border-subtle: #222933;
+  --layer-base: #262626;
+  --layer-base-hover: rgba(141, 141, 141, 0.16);
+  --layer-base-active: rgba(141, 141, 141, 0.4);
+  --layer-recessed: #161616;
+  --layer-recessed-hover: rgba(141, 141, 141, 0.16);
+  --layer-recessed-active: rgba(141, 141, 141, 0.4);
+  --layer-raised: #393939;
+  --layer-raised-hover: rgba(141, 141, 141, 0.16);
+  --layer-raised-active: rgba(141, 141, 141, 0.4);
+  --layer-elevated: #525252;
 
-  --text-primary: #e8ecf1;
-  --text-secondary: #94a3b8;
-  --text-tertiary: #64748b;
-  --text-disabled: #475569;
-  --text-inverse: #18212b;
+  --bg-muted: #393939;
+  --bg-muted-hover: #474747;
 
-  --accent-primary: #5b8def;
-  --accent-hover: #7ba4f5;
-  --accent-pressed: #4a7ce0;
-  --accent-soft: rgba(91, 141, 239, 0.15);
-  --accent-soft-hover: rgba(91, 141, 239, 0.22);
-  --accent-text: #7ba4f5;
+  --field-base: #262626;
+  --field-base-hover: #333333;
+  --field-recessed: #393939;
+  --field-recessed-hover: #474747;
 
-  --selection-fill: rgba(91, 141, 239, 0.1);
-  --selection-fill-strong: rgba(91, 141, 239, 0.2);
-  --selection-outline: #5b8def;
-  --selection-row: rgba(91, 141, 239, 0.12);
-  --selection-row-inactive: #1e252e;
+  --border-default: #525252;
+  --border-strong: #6f6f6f;
+  --border-subtle: #393939;
+  --border-field: #525252;
+  --border-field-hover: #6f6f6f;
+  --border-field-focus: var(--accent-primary);
 
-  --hover-overlay: rgba(255, 255, 255, 0.04);
-  --pressed-overlay: rgba(255, 255, 255, 0.06);
-  --focus-ring: 0 0 0 2px var(--bg-panel), 0 0 0 4px var(--accent-primary);
+  --text-primary: #f4f4f4;
+  --text-secondary: #c6c6c6;
+  --text-tertiary: #a8a8a8;
+  --text-disabled: #525252;
+  --text-inverse: #161616;
+
+  --accent-primary: #4589ff;
+  --accent-hover: #78a9ff;
+  --accent-pressed: #0f62fe;
+  --accent-soft: rgba(69, 137, 255, 0.15);
+  --accent-soft-hover: rgba(69, 137, 255, 0.22);
+  --accent-text: #78a9ff;
+
+  --selection-fill: rgba(141, 141, 141, 0.24);
+  --selection-fill-strong: rgba(141, 141, 141, 0.32);
+  --selection-outline: #4589ff;
+  --selection-row: rgba(141, 141, 141, 0.24);
+  --selection-row-hover: rgba(141, 141, 141, 0.32);
+  --selection-row-inactive: #393939;
+  --selection-drag-bg: var(--accent-soft);
+  --selection-drag-border: var(--accent-primary);
+
+  /* ── Semantic states (dark overrides) ── */
+  --success: #42be65;
+  --success-soft: rgba(66, 190, 101, 0.15);
+  --warning: #f1c21b;
+  --warning-soft: rgba(241, 194, 27, 0.15);
+  --danger: #fa4d56;
+  --danger-soft: rgba(250, 77, 86, 0.15);
+  --info: #4589ff;
+  --info-soft: rgba(69, 137, 255, 0.15);
+
+  /* ── Status (dark overrides) ── */
+  --status-compiled: #42be65;
+  --status-stale: #f1c21b;
+  --status-running: #4589ff;
+  --status-failed: #fa4d56;
+  --status-warning: #ff832b;
+
+  --hover-overlay: rgba(141, 141, 141, 0.16);
+  --pressed-overlay: rgba(141, 141, 141, 0.4);
+  --focus-ring: 0 0 0 2px var(--layer-base), 0 0 0 4px var(--accent-primary);
+  --focus-ring-inset: 0 0 0 2px var(--layer-recessed), 0 0 0 4px var(--accent-primary);
 
   --shadow-low: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
   --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15);
@@ -245,12 +309,13 @@
 
 /* ── Compact density ── */
 .compact {
-  --tree-row-h: 24px;
+  --tree-row-h: 22px;
   --tree-icon-size: 14px;
-  --tree-indent: 14px;
-  --inspector-row-h: 28px;
-  --topbar-h: 40px;
-  --toolbar-h: 32px;
+  --tree-indent: 12px;
+  --inspector-row-h: 24px;
+  --inspector-label-w: 88px;
+  --topbar-h: 36px;
+  --toolbar-h: 28px;
   --text-base: 0.8125rem;
   --text-sm: 0.75rem;
 }
@@ -262,11 +327,11 @@
   --font-mono: ui-monospace, "SF Mono", "Fira Code", "Cascadia Code", monospace;
 
   /* Radius — concrete values (not in :root to avoid circular refs) */
-  --radius-sm: 3px;
-  --radius-md: 5px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
-  --radius-2xl: 16px;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+  --radius-2xl: 8px;
 
   /* shadcn compat color mappings */
   --color-background: var(--background);
@@ -301,24 +366,44 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Engineering color mappings */
+  /* Engineering color mappings — Layer stack */
   --color-bg-app: var(--bg-app);
-  --color-bg-panel: var(--bg-panel);
-  --color-bg-subtle: var(--bg-subtle);
-  --color-bg-elevated: var(--bg-elevated);
-  --color-bg-inset: var(--bg-inset);
   --color-bg-viewport: var(--bg-viewport);
+  --color-layer-base: var(--layer-base);
+  --color-layer-base-hover: var(--layer-base-hover);
+  --color-layer-base-active: var(--layer-base-active);
+  --color-layer-recessed: var(--layer-recessed);
+  --color-layer-recessed-hover: var(--layer-recessed-hover);
+  --color-layer-recessed-active: var(--layer-recessed-active);
+  --color-layer-raised: var(--layer-raised);
+  --color-layer-raised-hover: var(--layer-raised-hover);
+  --color-layer-raised-active: var(--layer-raised-active);
+  --color-layer-elevated: var(--layer-elevated);
+  --color-bg-muted: var(--bg-muted);
+  --color-bg-muted-hover: var(--bg-muted-hover);
 
+  /* Field tokens */
+  --color-field-base: var(--field-base);
+  --color-field-base-hover: var(--field-base-hover);
+  --color-field-recessed: var(--field-recessed);
+  --color-field-recessed-hover: var(--field-recessed-hover);
+
+  /* Border tokens */
   --color-border-default: var(--border-default);
   --color-border-strong: var(--border-strong);
   --color-border-subtle: var(--border-subtle);
+  --color-border-field: var(--border-field);
+  --color-border-field-hover: var(--border-field-hover);
+  --color-border-field-focus: var(--border-field-focus);
 
+  /* Text tokens */
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-tertiary);
   --color-text-disabled: var(--text-disabled);
   --color-text-inverse: var(--text-inverse);
 
+  /* Accent tokens */
   --color-accent-primary: var(--accent-primary);
   --color-accent-hover: var(--accent-hover);
   --color-accent-pressed: var(--accent-pressed);
@@ -326,12 +411,17 @@
   --color-accent-soft-hover: var(--accent-soft-hover);
   --color-accent-text: var(--accent-text);
 
+  /* Selection tokens */
   --color-selection-fill: var(--selection-fill);
   --color-selection-fill-strong: var(--selection-fill-strong);
   --color-selection-outline: var(--selection-outline);
   --color-selection-row: var(--selection-row);
+  --color-selection-row-hover: var(--selection-row-hover);
   --color-selection-row-inactive: var(--selection-row-inactive);
+  --color-selection-drag-bg: var(--selection-drag-bg);
+  --color-selection-drag-border: var(--selection-drag-border);
 
+  /* Semantic tokens */
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
@@ -341,6 +431,7 @@
   --color-info: var(--info);
   --color-info-soft: var(--info-soft);
 
+  /* Domain tokens */
   --color-axis-x: var(--axis-x);
   --color-axis-y: var(--axis-y);
   --color-axis-z: var(--axis-z);
@@ -383,5 +474,19 @@
 @layer utilities {
   .tabular-nums {
     font-variant-numeric: tabular-nums;
+  }
+  .ghost-input {
+    background-color: transparent;
+    border-color: transparent;
+    transition: background-color var(--duration-fast), border-color var(--duration-fast);
+  }
+  .ghost-input:hover {
+    background-color: var(--field-base-hover);
+  }
+  .ghost-input:focus,
+  .ghost-input:focus-visible {
+    background-color: var(--layer-base);
+    border-color: var(--accent-primary);
+    outline: none;
   }
 }

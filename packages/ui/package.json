@@ -28,6 +28,7 @@
     "@tailwindcss/vite": "^4.2.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "agentation": "^2.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "storybook": "^10.2.19",

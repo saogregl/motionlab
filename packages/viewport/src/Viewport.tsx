@@ -2,8 +2,11 @@ import { ArcRotateCamera, Engine, HemisphericLight, Scene, Vector3 } from '@baby
 import { WebGPUEngine } from '@babylonjs/core/Engines/webgpuEngine';
 import { useEffect, useRef } from 'react';
 
+import { SceneGraphManager } from './scene-graph.js';
+
 export interface ViewportProps {
   className?: string;
+  onSceneReady?: (sceneGraph: SceneGraphManager) => void;
 }
 
 /**
@@ -13,7 +16,7 @@ export interface ViewportProps {
  * Simulation transforms will be applied imperatively to scene nodes,
  * bypassing React re-renders on the hot path.
  */
-export function Viewport({ className }: ViewportProps) {
+export function Viewport({ className, onSceneReady }: ViewportProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<Engine | null>(null);
 
@@ -69,6 +72,10 @@ export function Viewport({ className }: ViewportProps) {
       const light = new HemisphericLight('light', new Vector3(0, 1, 0), scene);
       light.intensity = 0.9;
 
+      // Scene graph manager — imperative body/entity management
+      const sceneGraph = new SceneGraphManager(scene, camera);
+      onSceneReady?.(sceneGraph);
+
       engine.runRenderLoop(() => {
         scene.render();
       });
@@ -79,6 +86,7 @@ export function Viewport({ className }: ViewportProps) {
       // Stash cleanup references on the canvas for the teardown closure
       (canvas as unknown as Record<string, unknown>).__cleanup = () => {
         window.removeEventListener('resize', handleResize);
+        sceneGraph.dispose();
         engine.dispose();
         engineRef.current = null;
       };
