@@ -35,7 +35,13 @@
       "Bash(netstat:*)",
       "Bash(taskkill:*)",
       "WebFetch(domain:localhost)",
-      "Bash(where protoc:*)"
+      "Bash(where protoc:*)",
+      "Bash(vcpkg search:*)",
+      "Bash(./bootstrap-vcpkg.bat -disableMetrics)",
+      "Bash(export VCPKG_ROOT=C:/Dev/vcpkg)",
+      "Bash(cmake --preset dev)",
+      "Bash(export PATH=\"C:/msys64/mingw64/bin:$PATH\")",
+      "Bash(export PATH=\"C:/msys64/mingw64/bin:C:/msys64/usr/bin:$PATH\")"
     ]
   },
   "enabledPlugins": {
