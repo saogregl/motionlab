@@ -75,9 +75,9 @@ function TreeRow({
       data-drag-target={dragTarget || undefined}
       className={cn(
         'group/tree-row h-[var(--tree-row-h)]',
-        'hover:bg-[var(--layer-raised-hover)]',
+        'hover:bg-[var(--hover-overlay)]',
         'data-[selected]:bg-[var(--selection-row)]',
-        'data-[selected]:data-[focused]:shadow-[inset_3px_0_0_var(--accent-primary)]',
+        'data-[selected]:data-[focused]:shadow-[inset_2px_0_0_var(--accent-primary)]',
         'data-[selected]:not([data-focused]):bg-[var(--selection-row-inactive)]',
         'data-[disabled]:opacity-50 data-[disabled]:text-[var(--text-disabled)]',
         'data-[drag-target]:bg-[var(--selection-drag-bg)] data-[drag-target]:border-y-2 data-[drag-target]:border-y-[var(--selection-drag-border)]',
@@ -88,7 +88,7 @@ function TreeRow({
     >
       <div
         className="flex h-full items-center pr-1.5"
-        style={{ paddingLeft: `calc(${level} * var(--tree-indent))` }}
+        style={{ paddingLeft: `calc(var(--space-1) + ${level} * var(--tree-indent))` }}
       >
         {/* Disclosure chevron */}
         {hasChildren ? (
@@ -116,7 +116,7 @@ function TreeRow({
 
         {/* Type icon */}
         {icon && (
-          <span data-slot="tree-row-icon" className="mr-1 flex size-3.5 shrink-0 items-center justify-center">
+          <span data-slot="tree-row-icon" className="mr-1.5 flex size-3.5 shrink-0 items-center justify-center">
             {icon}
           </span>
         )}
@@ -124,7 +124,7 @@ function TreeRow({
         {/* Name */}
         <span
           data-slot="tree-row-name"
-          className="min-w-0 flex-1 truncate font-medium text-[length:var(--text-xs)] text-[var(--text-primary)]"
+          className="min-w-0 flex-1 truncate font-normal text-[length:var(--text-xs)] text-[var(--text-primary)]"
         >
           {name}
         </span>
@@ -133,7 +133,7 @@ function TreeRow({
         {secondary && (
           <span
             data-slot="tree-row-secondary"
-            className="ml-1 max-w-[48px] shrink-0 truncate text-[10px] text-[var(--text-tertiary)]"
+            className="ml-1.5 max-w-[60px] shrink-0 truncate text-[length:var(--text-2xs)] text-[var(--text-disabled)]"
           >
             {secondary}
           </span>
@@ -219,11 +219,11 @@ function GroupHeaderRow({
     <div
       data-slot="group-header-row"
       className={cn(
-        'flex h-[var(--tree-row-h)] items-center bg-[var(--layer-recessed)] pr-1',
-        'hover:bg-[var(--layer-recessed-hover)]',
+        'flex h-[var(--tree-row-h)] items-center pr-1',
+        'hover:bg-[var(--hover-overlay)]',
         className,
       )}
-      style={{ paddingLeft: `calc(${level} * var(--tree-indent))` }}
+      style={{ paddingLeft: `calc(var(--space-1) + ${level} * var(--tree-indent))` }}
       onClick={onToggleExpand}
       role="treeitem"
     >
@@ -240,11 +240,11 @@ function GroupHeaderRow({
       {/* Label */}
       <span
         data-slot="group-header-label"
-        className="min-w-0 flex-1 truncate text-[10px] font-semibold uppercase text-[var(--text-secondary)]"
+        className="min-w-0 flex-1 truncate text-[length:var(--text-xs)] font-semibold text-[var(--text-tertiary)]"
       >
         {label}
         {count != null && (
-          <span className="ml-1 font-normal text-[var(--text-tertiary)]">({count})</span>
+          <span className="ml-1 font-normal text-[var(--text-disabled)]">({count})</span>
         )}
       </span>
     </div>

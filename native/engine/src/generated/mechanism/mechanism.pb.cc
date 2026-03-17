@@ -142,6 +142,34 @@ struct ElementIdDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ElementIdDefaultTypeInternal _ElementId_default_instance_;
 
+inline constexpr DisplayMesh::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        vertices_{},
+        indices_{},
+        _indices_cached_byte_size_{0},
+        normals_{} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR DisplayMesh::DisplayMesh(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(DisplayMesh_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct DisplayMeshDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR DisplayMeshDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~DisplayMeshDefaultTypeInternal() {}
+  union {
+    DisplayMesh _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DisplayMeshDefaultTypeInternal _DisplayMesh_default_instance_;
+
 inline constexpr AssetReference::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
@@ -438,6 +466,15 @@ const ::uint32_t
         6,
         7,
         0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::DisplayMesh, _impl_._has_bits_),
+        6, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::DisplayMesh, _impl_.vertices_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::DisplayMesh, _impl_.indices_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::DisplayMesh, _impl_.normals_),
+        0,
+        1,
+        2,
+        0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Body, _impl_._has_bits_),
         8, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Body, _impl_.id_),
@@ -502,10 +539,11 @@ static const ::_pbi::MigrationSchema
         {32, sizeof(::motionlab::mechanism::Quat)},
         {43, sizeof(::motionlab::mechanism::Pose)},
         {50, sizeof(::motionlab::mechanism::MassProperties)},
-        {69, sizeof(::motionlab::mechanism::Body)},
-        {82, sizeof(::motionlab::mechanism::Datum)},
-        {93, sizeof(::motionlab::mechanism::Joint)},
-        {110, sizeof(::motionlab::mechanism::Mechanism)},
+        {69, sizeof(::motionlab::mechanism::DisplayMesh)},
+        {78, sizeof(::motionlab::mechanism::Body)},
+        {91, sizeof(::motionlab::mechanism::Datum)},
+        {102, sizeof(::motionlab::mechanism::Joint)},
+        {119, sizeof(::motionlab::mechanism::Mechanism)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::motionlab::mechanism::_ElementId_default_instance_._instance,
@@ -515,6 +553,7 @@ static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::motionlab::mechanism::_Quat_default_instance_._instance,
     &::motionlab::mechanism::_Pose_default_instance_._instance,
     &::motionlab::mechanism::_MassProperties_default_instance_._instance,
+    &::motionlab::mechanism::_DisplayMesh_default_instance_._instance,
     &::motionlab::mechanism::_Body_default_instance_._instance,
     &::motionlab::mechanism::_Datum_default_instance_._instance,
     &::motionlab::mechanism::_Joint_default_instance_._instance,
@@ -523,56 +562,68 @@ static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
 const char descriptor_table_protodef_mechanism_2fmechanism_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
     "\n\031mechanism/mechanism.proto\022\023motionlab.m"
-    "echanism\"\027\n\tElementId\022\n\n\002id\030\001 \001(\t\"H\n\017Pro"
-    "jectMetadata\022\014\n\004name\030\001 \001(\t\022\022\n\ncreated_at"
-    "\030\002 \001(\t\022\023\n\013modified_at\030\003 \001(\t\"X\n\016AssetRefe"
-    "rence\022\024\n\014content_hash\030\001 \001(\t\022\025\n\rrelative_"
-    "path\030\002 \001(\t\022\031\n\021original_filename\030\003 \001(\t\"\'\n"
-    "\004Vec3\022\t\n\001x\030\001 \001(\001\022\t\n\001y\030\002 \001(\001\022\t\n\001z\030\003 \001(\001\"2"
-    "\n\004Quat\022\t\n\001w\030\001 \001(\001\022\t\n\001x\030\002 \001(\001\022\t\n\001y\030\003 \001(\001\022"
-    "\t\n\001z\030\004 \001(\001\"c\n\004Pose\022+\n\010position\030\001 \001(\0132\031.m"
-    "otionlab.mechanism.Vec3\022.\n\013orientation\030\002"
-    " \001(\0132\031.motionlab.mechanism.Quat\"\237\001\n\016Mass"
-    "Properties\022\014\n\004mass\030\001 \001(\001\0221\n\016center_of_ma"
-    "ss\030\002 \001(\0132\031.motionlab.mechanism.Vec3\022\013\n\003i"
-    "xx\030\003 \001(\001\022\013\n\003iyy\030\004 \001(\001\022\013\n\003izz\030\005 \001(\001\022\013\n\003ix"
-    "y\030\006 \001(\001\022\013\n\003ixz\030\007 \001(\001\022\013\n\003iyz\030\010 \001(\001\"\301\001\n\004Bo"
-    "dy\022*\n\002id\030\001 \001(\0132\036.motionlab.mechanism.Ele"
-    "mentId\022\014\n\004name\030\002 \001(\t\022\'\n\004pose\030\003 \001(\0132\031.mot"
-    "ionlab.mechanism.Pose\022<\n\017mass_properties"
-    "\030\004 \001(\0132#.motionlab.mechanism.MassPropert"
-    "ies\022\030\n\020source_asset_ref\030\005 \001(\t\"\250\001\n\005Datum\022"
-    "*\n\002id\030\001 \001(\0132\036.motionlab.mechanism.Elemen"
-    "tId\022\014\n\004name\030\002 \001(\t\0226\n\016parent_body_id\030\003 \001("
-    "\0132\036.motionlab.mechanism.ElementId\022-\n\nloc"
-    "al_pose\030\004 \001(\0132\031.motionlab.mechanism.Pose"
-    "\"\212\002\n\005Joint\022*\n\002id\030\001 \001(\0132\036.motionlab.mecha"
-    "nism.ElementId\022\014\n\004name\030\002 \001(\t\022,\n\004type\030\003 \001"
-    "(\0162\036.motionlab.mechanism.JointType\0227\n\017pa"
-    "rent_datum_id\030\004 \001(\0132\036.motionlab.mechanis"
-    "m.ElementId\0226\n\016child_datum_id\030\005 \001(\0132\036.mo"
-    "tionlab.mechanism.ElementId\022\023\n\013lower_lim"
-    "it\030\006 \001(\001\022\023\n\013upper_limit\030\007 \001(\001\"\310\001\n\tMechan"
-    "ism\022*\n\002id\030\001 \001(\0132\036.motionlab.mechanism.El"
-    "ementId\022\014\n\004name\030\002 \001(\t\022)\n\006bodies\030\003 \003(\0132\031."
-    "motionlab.mechanism.Body\022*\n\006datums\030\004 \003(\013"
-    "2\032.motionlab.mechanism.Datum\022*\n\006joints\030\005"
-    " \003(\0132\032.motionlab.mechanism.Joint*p\n\tJoin"
-    "tType\022\032\n\026JOINT_TYPE_UNSPECIFIED\020\000\022\027\n\023JOI"
-    "NT_TYPE_REVOLUTE\020\001\022\030\n\024JOINT_TYPE_PRISMAT"
-    "IC\020\002\022\024\n\020JOINT_TYPE_FIXED\020\003b\006proto3"
+    "echanism\"\033\n\tElementId\022\016\n\002id\030\001 \001(\tR\002id\"e\n"
+    "\017ProjectMetadata\022\022\n\004name\030\001 \001(\tR\004name\022\035\n\n"
+    "created_at\030\002 \001(\tR\tcreatedAt\022\037\n\013modified_"
+    "at\030\003 \001(\tR\nmodifiedAt\"\205\001\n\016AssetReference\022"
+    "!\n\014content_hash\030\001 \001(\tR\013contentHash\022#\n\rre"
+    "lative_path\030\002 \001(\tR\014relativePath\022+\n\021origi"
+    "nal_filename\030\003 \001(\tR\020originalFilename\"0\n\004"
+    "Vec3\022\014\n\001x\030\001 \001(\001R\001x\022\014\n\001y\030\002 \001(\001R\001y\022\014\n\001z\030\003 "
+    "\001(\001R\001z\">\n\004Quat\022\014\n\001w\030\001 \001(\001R\001w\022\014\n\001x\030\002 \001(\001R"
+    "\001x\022\014\n\001y\030\003 \001(\001R\001y\022\014\n\001z\030\004 \001(\001R\001z\"z\n\004Pose\0225"
+    "\n\010position\030\001 \001(\0132\031.motionlab.mechanism.V"
+    "ec3R\010position\022;\n\013orientation\030\002 \001(\0132\031.mot"
+    "ionlab.mechanism.QuatR\013orientation\"\321\001\n\016M"
+    "assProperties\022\022\n\004mass\030\001 \001(\001R\004mass\022\?\n\016cen"
+    "ter_of_mass\030\002 \001(\0132\031.motionlab.mechanism."
+    "Vec3R\014centerOfMass\022\020\n\003ixx\030\003 \001(\001R\003ixx\022\020\n\003"
+    "iyy\030\004 \001(\001R\003iyy\022\020\n\003izz\030\005 \001(\001R\003izz\022\020\n\003ixy\030"
+    "\006 \001(\001R\003ixy\022\020\n\003ixz\030\007 \001(\001R\003ixz\022\020\n\003iyz\030\010 \001("
+    "\001R\003iyz\"]\n\013DisplayMesh\022\032\n\010vertices\030\001 \003(\002R"
+    "\010vertices\022\030\n\007indices\030\002 \003(\rR\007indices\022\030\n\007n"
+    "ormals\030\003 \003(\002R\007normals\"\361\001\n\004Body\022.\n\002id\030\001 \001"
+    "(\0132\036.motionlab.mechanism.ElementIdR\002id\022\022"
+    "\n\004name\030\002 \001(\tR\004name\022-\n\004pose\030\003 \001(\0132\031.motio"
+    "nlab.mechanism.PoseR\004pose\022L\n\017mass_proper"
+    "ties\030\004 \001(\0132#.motionlab.mechanism.MassPro"
+    "pertiesR\016massProperties\022(\n\020source_asset_"
+    "ref\030\005 \001(\tR\016sourceAssetRef\"\313\001\n\005Datum\022.\n\002i"
+    "d\030\001 \001(\0132\036.motionlab.mechanism.ElementIdR"
+    "\002id\022\022\n\004name\030\002 \001(\tR\004name\022D\n\016parent_body_i"
+    "d\030\003 \001(\0132\036.motionlab.mechanism.ElementIdR"
+    "\014parentBodyId\0228\n\nlocal_pose\030\004 \001(\0132\031.moti"
+    "onlab.mechanism.PoseR\tlocalPose\"\317\002\n\005Join"
+    "t\022.\n\002id\030\001 \001(\0132\036.motionlab.mechanism.Elem"
+    "entIdR\002id\022\022\n\004name\030\002 \001(\tR\004name\0222\n\004type\030\003 "
+    "\001(\0162\036.motionlab.mechanism.JointTypeR\004typ"
+    "e\022F\n\017parent_datum_id\030\004 \001(\0132\036.motionlab.m"
+    "echanism.ElementIdR\rparentDatumId\022D\n\016chi"
+    "ld_datum_id\030\005 \001(\0132\036.motionlab.mechanism."
+    "ElementIdR\014childDatumId\022\037\n\013lower_limit\030\006"
+    " \001(\001R\nlowerLimit\022\037\n\013upper_limit\030\007 \001(\001R\nu"
+    "pperLimit\"\352\001\n\tMechanism\022.\n\002id\030\001 \001(\0132\036.mo"
+    "tionlab.mechanism.ElementIdR\002id\022\022\n\004name\030"
+    "\002 \001(\tR\004name\0221\n\006bodies\030\003 \003(\0132\031.motionlab."
+    "mechanism.BodyR\006bodies\0222\n\006datums\030\004 \003(\0132\032"
+    ".motionlab.mechanism.DatumR\006datums\0222\n\006jo"
+    "ints\030\005 \003(\0132\032.motionlab.mechanism.JointR\006"
+    "joints*p\n\tJointType\022\032\n\026JOINT_TYPE_UNSPEC"
+    "IFIED\020\000\022\027\n\023JOINT_TYPE_REVOLUTE\020\001\022\030\n\024JOIN"
+    "T_TYPE_PRISMATIC\020\002\022\024\n\020JOINT_TYPE_FIXED\020\003"
+    "b\006proto3"
 };
 static ::absl::once_flag descriptor_table_mechanism_2fmechanism_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_mechanism_2fmechanism_2eproto = {
     false,
     false,
-    1554,
+    2008,
     descriptor_table_protodef_mechanism_2fmechanism_2eproto,
     "mechanism/mechanism.proto",
     &descriptor_table_mechanism_2fmechanism_2eproto_once,
     nullptr,
     0,
-    11,
+    12,
     schemas,
     file_default_instances,
     TableStruct_mechanism_2fmechanism_2eproto::offsets,
@@ -716,14 +767,14 @@ ElementId::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string id = 1;
+    // string id = 1 [json_name = "id"];
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(ElementId, _impl_.id_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string id = 1;
+    // string id = 1 [json_name = "id"];
     {PROTOBUF_FIELD_OFFSET(ElementId, _impl_.id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
@@ -767,7 +818,7 @@ PROTOBUF_NOINLINE void ElementId::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string id = 1;
+  // string id = 1 [json_name = "id"];
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_id().empty()) {
       const ::std::string& _s = this_._internal_id();
@@ -801,7 +852,7 @@ PROTOBUF_NOINLINE void ElementId::Clear() {
   (void)cached_has_bits;
 
    {
-    // string id = 1;
+    // string id = 1 [json_name = "id"];
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_id().empty()) {
@@ -998,26 +1049,26 @@ ProjectMetadata::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // string name = 1;
+    // string name = 1 [json_name = "name"];
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(ProjectMetadata, _impl_.name_)}},
-    // string created_at = 2;
+    // string created_at = 2 [json_name = "createdAt"];
     {::_pbi::TcParser::FastUS1,
      {18, 1, 0,
       PROTOBUF_FIELD_OFFSET(ProjectMetadata, _impl_.created_at_)}},
-    // string modified_at = 3;
+    // string modified_at = 3 [json_name = "modifiedAt"];
     {::_pbi::TcParser::FastUS1,
      {26, 2, 0,
       PROTOBUF_FIELD_OFFSET(ProjectMetadata, _impl_.modified_at_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string name = 1;
+    // string name = 1 [json_name = "name"];
     {PROTOBUF_FIELD_OFFSET(ProjectMetadata, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string created_at = 2;
+    // string created_at = 2 [json_name = "createdAt"];
     {PROTOBUF_FIELD_OFFSET(ProjectMetadata, _impl_.created_at_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string modified_at = 3;
+    // string modified_at = 3 [json_name = "modifiedAt"];
     {PROTOBUF_FIELD_OFFSET(ProjectMetadata, _impl_.modified_at_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
@@ -1071,7 +1122,7 @@ PROTOBUF_NOINLINE void ProjectMetadata::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string name = 1;
+  // string name = 1 [json_name = "name"];
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
@@ -1081,7 +1132,7 @@ PROTOBUF_NOINLINE void ProjectMetadata::Clear() {
     }
   }
 
-  // string created_at = 2;
+  // string created_at = 2 [json_name = "createdAt"];
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (!this_._internal_created_at().empty()) {
       const ::std::string& _s = this_._internal_created_at();
@@ -1091,7 +1142,7 @@ PROTOBUF_NOINLINE void ProjectMetadata::Clear() {
     }
   }
 
-  // string modified_at = 3;
+  // string modified_at = 3 [json_name = "modifiedAt"];
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (!this_._internal_modified_at().empty()) {
       const ::std::string& _s = this_._internal_modified_at();
@@ -1127,21 +1178,21 @@ PROTOBUF_NOINLINE void ProjectMetadata::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
-    // string name = 1;
+    // string name = 1 [json_name = "name"];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
-    // string created_at = 2;
+    // string created_at = 2 [json_name = "createdAt"];
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (!this_._internal_created_at().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_created_at());
       }
     }
-    // string modified_at = 3;
+    // string modified_at = 3 [json_name = "modifiedAt"];
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (!this_._internal_modified_at().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -1359,26 +1410,26 @@ AssetReference::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // string content_hash = 1;
+    // string content_hash = 1 [json_name = "contentHash"];
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(AssetReference, _impl_.content_hash_)}},
-    // string relative_path = 2;
+    // string relative_path = 2 [json_name = "relativePath"];
     {::_pbi::TcParser::FastUS1,
      {18, 1, 0,
       PROTOBUF_FIELD_OFFSET(AssetReference, _impl_.relative_path_)}},
-    // string original_filename = 3;
+    // string original_filename = 3 [json_name = "originalFilename"];
     {::_pbi::TcParser::FastUS1,
      {26, 2, 0,
       PROTOBUF_FIELD_OFFSET(AssetReference, _impl_.original_filename_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string content_hash = 1;
+    // string content_hash = 1 [json_name = "contentHash"];
     {PROTOBUF_FIELD_OFFSET(AssetReference, _impl_.content_hash_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string relative_path = 2;
+    // string relative_path = 2 [json_name = "relativePath"];
     {PROTOBUF_FIELD_OFFSET(AssetReference, _impl_.relative_path_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string original_filename = 3;
+    // string original_filename = 3 [json_name = "originalFilename"];
     {PROTOBUF_FIELD_OFFSET(AssetReference, _impl_.original_filename_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
@@ -1432,7 +1483,7 @@ PROTOBUF_NOINLINE void AssetReference::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string content_hash = 1;
+  // string content_hash = 1 [json_name = "contentHash"];
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_content_hash().empty()) {
       const ::std::string& _s = this_._internal_content_hash();
@@ -1442,7 +1493,7 @@ PROTOBUF_NOINLINE void AssetReference::Clear() {
     }
   }
 
-  // string relative_path = 2;
+  // string relative_path = 2 [json_name = "relativePath"];
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (!this_._internal_relative_path().empty()) {
       const ::std::string& _s = this_._internal_relative_path();
@@ -1452,7 +1503,7 @@ PROTOBUF_NOINLINE void AssetReference::Clear() {
     }
   }
 
-  // string original_filename = 3;
+  // string original_filename = 3 [json_name = "originalFilename"];
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (!this_._internal_original_filename().empty()) {
       const ::std::string& _s = this_._internal_original_filename();
@@ -1488,21 +1539,21 @@ PROTOBUF_NOINLINE void AssetReference::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
-    // string content_hash = 1;
+    // string content_hash = 1 [json_name = "contentHash"];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_content_hash().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_content_hash());
       }
     }
-    // string relative_path = 2;
+    // string relative_path = 2 [json_name = "relativePath"];
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (!this_._internal_relative_path().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_relative_path());
       }
     }
-    // string original_filename = 3;
+    // string original_filename = 3 [json_name = "originalFilename"];
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (!this_._internal_original_filename().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -1705,26 +1756,26 @@ Vec3::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // double x = 1;
+    // double x = 1 [json_name = "x"];
     {::_pbi::TcParser::FastF64S1,
      {9, 0, 0,
       PROTOBUF_FIELD_OFFSET(Vec3, _impl_.x_)}},
-    // double y = 2;
+    // double y = 2 [json_name = "y"];
     {::_pbi::TcParser::FastF64S1,
      {17, 1, 0,
       PROTOBUF_FIELD_OFFSET(Vec3, _impl_.y_)}},
-    // double z = 3;
+    // double z = 3 [json_name = "z"];
     {::_pbi::TcParser::FastF64S1,
      {25, 2, 0,
       PROTOBUF_FIELD_OFFSET(Vec3, _impl_.z_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // double x = 1;
+    // double x = 1 [json_name = "x"];
     {PROTOBUF_FIELD_OFFSET(Vec3, _impl_.x_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double y = 2;
+    // double y = 2 [json_name = "y"];
     {PROTOBUF_FIELD_OFFSET(Vec3, _impl_.y_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double z = 3;
+    // double z = 3 [json_name = "z"];
     {PROTOBUF_FIELD_OFFSET(Vec3, _impl_.z_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
   }},
   // no aux_entries
@@ -1767,7 +1818,7 @@ PROTOBUF_NOINLINE void Vec3::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // double x = 1;
+  // double x = 1 [json_name = "x"];
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_x()) != 0) {
       target = stream->EnsureSpace(target);
@@ -1776,7 +1827,7 @@ PROTOBUF_NOINLINE void Vec3::Clear() {
     }
   }
 
-  // double y = 2;
+  // double y = 2 [json_name = "y"];
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_y()) != 0) {
       target = stream->EnsureSpace(target);
@@ -1785,7 +1836,7 @@ PROTOBUF_NOINLINE void Vec3::Clear() {
     }
   }
 
-  // double z = 3;
+  // double z = 3 [json_name = "z"];
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_z()) != 0) {
       target = stream->EnsureSpace(target);
@@ -1820,19 +1871,19 @@ PROTOBUF_NOINLINE void Vec3::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
-    // double x = 1;
+    // double x = 1 [json_name = "x"];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_x()) != 0) {
         total_size += 9;
       }
     }
-    // double y = 2;
+    // double y = 2 [json_name = "y"];
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_y()) != 0) {
         total_size += 9;
       }
     }
-    // double z = 3;
+    // double z = 3 [json_name = "z"];
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_z()) != 0) {
         total_size += 9;
@@ -2022,32 +2073,32 @@ Quat::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::mechanism::Quat>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // double z = 4;
+    // double z = 4 [json_name = "z"];
     {::_pbi::TcParser::FastF64S1,
      {33, 3, 0,
       PROTOBUF_FIELD_OFFSET(Quat, _impl_.z_)}},
-    // double w = 1;
+    // double w = 1 [json_name = "w"];
     {::_pbi::TcParser::FastF64S1,
      {9, 0, 0,
       PROTOBUF_FIELD_OFFSET(Quat, _impl_.w_)}},
-    // double x = 2;
+    // double x = 2 [json_name = "x"];
     {::_pbi::TcParser::FastF64S1,
      {17, 1, 0,
       PROTOBUF_FIELD_OFFSET(Quat, _impl_.x_)}},
-    // double y = 3;
+    // double y = 3 [json_name = "y"];
     {::_pbi::TcParser::FastF64S1,
      {25, 2, 0,
       PROTOBUF_FIELD_OFFSET(Quat, _impl_.y_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // double w = 1;
+    // double w = 1 [json_name = "w"];
     {PROTOBUF_FIELD_OFFSET(Quat, _impl_.w_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double x = 2;
+    // double x = 2 [json_name = "x"];
     {PROTOBUF_FIELD_OFFSET(Quat, _impl_.x_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double y = 3;
+    // double y = 3 [json_name = "y"];
     {PROTOBUF_FIELD_OFFSET(Quat, _impl_.y_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double z = 4;
+    // double z = 4 [json_name = "z"];
     {PROTOBUF_FIELD_OFFSET(Quat, _impl_.z_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
   }},
   // no aux_entries
@@ -2090,7 +2141,7 @@ PROTOBUF_NOINLINE void Quat::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // double w = 1;
+  // double w = 1 [json_name = "w"];
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_w()) != 0) {
       target = stream->EnsureSpace(target);
@@ -2099,7 +2150,7 @@ PROTOBUF_NOINLINE void Quat::Clear() {
     }
   }
 
-  // double x = 2;
+  // double x = 2 [json_name = "x"];
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_x()) != 0) {
       target = stream->EnsureSpace(target);
@@ -2108,7 +2159,7 @@ PROTOBUF_NOINLINE void Quat::Clear() {
     }
   }
 
-  // double y = 3;
+  // double y = 3 [json_name = "y"];
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_y()) != 0) {
       target = stream->EnsureSpace(target);
@@ -2117,7 +2168,7 @@ PROTOBUF_NOINLINE void Quat::Clear() {
     }
   }
 
-  // double z = 4;
+  // double z = 4 [json_name = "z"];
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_z()) != 0) {
       target = stream->EnsureSpace(target);
@@ -2152,25 +2203,25 @@ PROTOBUF_NOINLINE void Quat::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
-    // double w = 1;
+    // double w = 1 [json_name = "w"];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_w()) != 0) {
         total_size += 9;
       }
     }
-    // double x = 2;
+    // double x = 2 [json_name = "x"];
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_x()) != 0) {
         total_size += 9;
       }
     }
-    // double y = 3;
+    // double y = 3 [json_name = "y"];
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_y()) != 0) {
         total_size += 9;
       }
     }
-    // double z = 4;
+    // double z = 4 [json_name = "z"];
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_z()) != 0) {
         total_size += 9;
@@ -2386,20 +2437,20 @@ Pose::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::mechanism::Pose>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.Quat orientation = 2;
+    // .motionlab.mechanism.Quat orientation = 2 [json_name = "orientation"];
     {::_pbi::TcParser::FastMtS1,
      {18, 1, 1,
       PROTOBUF_FIELD_OFFSET(Pose, _impl_.orientation_)}},
-    // .motionlab.mechanism.Vec3 position = 1;
+    // .motionlab.mechanism.Vec3 position = 1 [json_name = "position"];
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(Pose, _impl_.position_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Vec3 position = 1;
+    // .motionlab.mechanism.Vec3 position = 1 [json_name = "position"];
     {PROTOBUF_FIELD_OFFSET(Pose, _impl_.position_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.Quat orientation = 2;
+    // .motionlab.mechanism.Quat orientation = 2 [json_name = "orientation"];
     {PROTOBUF_FIELD_OFFSET(Pose, _impl_.orientation_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -2450,14 +2501,14 @@ PROTOBUF_NOINLINE void Pose::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.Vec3 position = 1;
+  // .motionlab.mechanism.Vec3 position = 1 [json_name = "position"];
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.position_, this_._impl_.position_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.Quat orientation = 2;
+  // .motionlab.mechanism.Quat orientation = 2 [json_name = "orientation"];
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.orientation_, this_._impl_.orientation_->GetCachedSize(), target,
@@ -2490,12 +2541,12 @@ PROTOBUF_NOINLINE void Pose::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // .motionlab.mechanism.Vec3 position = 1;
+    // .motionlab.mechanism.Vec3 position = 1 [json_name = "position"];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.position_);
     }
-    // .motionlab.mechanism.Quat orientation = 2;
+    // .motionlab.mechanism.Quat orientation = 2 [json_name = "orientation"];
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.orientation_);
@@ -2710,56 +2761,56 @@ MassProperties::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::mechanism::MassProperties>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // double iyz = 8;
+    // double iyz = 8 [json_name = "iyz"];
     {::_pbi::TcParser::FastF64S1,
      {65, 7, 0,
       PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.iyz_)}},
-    // double mass = 1;
+    // double mass = 1 [json_name = "mass"];
     {::_pbi::TcParser::FastF64S1,
      {9, 1, 0,
       PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.mass_)}},
-    // .motionlab.mechanism.Vec3 center_of_mass = 2;
+    // .motionlab.mechanism.Vec3 center_of_mass = 2 [json_name = "centerOfMass"];
     {::_pbi::TcParser::FastMtS1,
      {18, 0, 0,
       PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.center_of_mass_)}},
-    // double ixx = 3;
+    // double ixx = 3 [json_name = "ixx"];
     {::_pbi::TcParser::FastF64S1,
      {25, 2, 0,
       PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.ixx_)}},
-    // double iyy = 4;
+    // double iyy = 4 [json_name = "iyy"];
     {::_pbi::TcParser::FastF64S1,
      {33, 3, 0,
       PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.iyy_)}},
-    // double izz = 5;
+    // double izz = 5 [json_name = "izz"];
     {::_pbi::TcParser::FastF64S1,
      {41, 4, 0,
       PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.izz_)}},
-    // double ixy = 6;
+    // double ixy = 6 [json_name = "ixy"];
     {::_pbi::TcParser::FastF64S1,
      {49, 5, 0,
       PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.ixy_)}},
-    // double ixz = 7;
+    // double ixz = 7 [json_name = "ixz"];
     {::_pbi::TcParser::FastF64S1,
      {57, 6, 0,
       PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.ixz_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // double mass = 1;
+    // double mass = 1 [json_name = "mass"];
     {PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.mass_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // .motionlab.mechanism.Vec3 center_of_mass = 2;
+    // .motionlab.mechanism.Vec3 center_of_mass = 2 [json_name = "centerOfMass"];
     {PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.center_of_mass_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // double ixx = 3;
+    // double ixx = 3 [json_name = "ixx"];
     {PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.ixx_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double iyy = 4;
+    // double iyy = 4 [json_name = "iyy"];
     {PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.iyy_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double izz = 5;
+    // double izz = 5 [json_name = "izz"];
     {PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.izz_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double ixy = 6;
+    // double ixy = 6 [json_name = "ixy"];
     {PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.ixy_), _Internal::kHasBitsOffset + 5, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double ixz = 7;
+    // double ixz = 7 [json_name = "ixz"];
     {PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.ixz_), _Internal::kHasBitsOffset + 6, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double iyz = 8;
+    // double iyz = 8 [json_name = "iyz"];
     {PROTOBUF_FIELD_OFFSET(MassProperties, _impl_.iyz_), _Internal::kHasBitsOffset + 7, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
   }},
   {{
@@ -2808,7 +2859,7 @@ PROTOBUF_NOINLINE void MassProperties::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // double mass = 1;
+  // double mass = 1 [json_name = "mass"];
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_mass()) != 0) {
       target = stream->EnsureSpace(target);
@@ -2817,14 +2868,14 @@ PROTOBUF_NOINLINE void MassProperties::Clear() {
     }
   }
 
-  // .motionlab.mechanism.Vec3 center_of_mass = 2;
+  // .motionlab.mechanism.Vec3 center_of_mass = 2 [json_name = "centerOfMass"];
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.center_of_mass_, this_._impl_.center_of_mass_->GetCachedSize(), target,
         stream);
   }
 
-  // double ixx = 3;
+  // double ixx = 3 [json_name = "ixx"];
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_ixx()) != 0) {
       target = stream->EnsureSpace(target);
@@ -2833,7 +2884,7 @@ PROTOBUF_NOINLINE void MassProperties::Clear() {
     }
   }
 
-  // double iyy = 4;
+  // double iyy = 4 [json_name = "iyy"];
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_iyy()) != 0) {
       target = stream->EnsureSpace(target);
@@ -2842,7 +2893,7 @@ PROTOBUF_NOINLINE void MassProperties::Clear() {
     }
   }
 
-  // double izz = 5;
+  // double izz = 5 [json_name = "izz"];
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_izz()) != 0) {
       target = stream->EnsureSpace(target);
@@ -2851,7 +2902,7 @@ PROTOBUF_NOINLINE void MassProperties::Clear() {
     }
   }
 
-  // double ixy = 6;
+  // double ixy = 6 [json_name = "ixy"];
   if (CheckHasBit(cached_has_bits, 0x00000020U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_ixy()) != 0) {
       target = stream->EnsureSpace(target);
@@ -2860,7 +2911,7 @@ PROTOBUF_NOINLINE void MassProperties::Clear() {
     }
   }
 
-  // double ixz = 7;
+  // double ixz = 7 [json_name = "ixz"];
   if (CheckHasBit(cached_has_bits, 0x00000040U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_ixz()) != 0) {
       target = stream->EnsureSpace(target);
@@ -2869,7 +2920,7 @@ PROTOBUF_NOINLINE void MassProperties::Clear() {
     }
   }
 
-  // double iyz = 8;
+  // double iyz = 8 [json_name = "iyz"];
   if (CheckHasBit(cached_has_bits, 0x00000080U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_iyz()) != 0) {
       target = stream->EnsureSpace(target);
@@ -2904,48 +2955,48 @@ PROTOBUF_NOINLINE void MassProperties::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x000000ffU)) {
-    // .motionlab.mechanism.Vec3 center_of_mass = 2;
+    // .motionlab.mechanism.Vec3 center_of_mass = 2 [json_name = "centerOfMass"];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.center_of_mass_);
     }
-    // double mass = 1;
+    // double mass = 1 [json_name = "mass"];
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_mass()) != 0) {
         total_size += 9;
       }
     }
-    // double ixx = 3;
+    // double ixx = 3 [json_name = "ixx"];
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_ixx()) != 0) {
         total_size += 9;
       }
     }
-    // double iyy = 4;
+    // double iyy = 4 [json_name = "iyy"];
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_iyy()) != 0) {
         total_size += 9;
       }
     }
-    // double izz = 5;
+    // double izz = 5 [json_name = "izz"];
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_izz()) != 0) {
         total_size += 9;
       }
     }
-    // double ixy = 6;
+    // double ixy = 6 [json_name = "ixy"];
     if (CheckHasBit(cached_has_bits, 0x00000020U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_ixy()) != 0) {
         total_size += 9;
       }
     }
-    // double ixz = 7;
+    // double ixz = 7 [json_name = "ixz"];
     if (CheckHasBit(cached_has_bits, 0x00000040U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_ixz()) != 0) {
         total_size += 9;
       }
     }
-    // double iyz = 8;
+    // double iyz = 8 [json_name = "iyz"];
     if (CheckHasBit(cached_has_bits, 0x00000080U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_iyz()) != 0) {
         total_size += 9;
@@ -3042,6 +3093,362 @@ void MassProperties::InternalSwap(MassProperties* PROTOBUF_RESTRICT PROTOBUF_NON
 }
 
 ::google::protobuf::Metadata MassProperties::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class DisplayMesh::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<DisplayMesh>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(DisplayMesh, _impl_._has_bits_);
+};
+
+DisplayMesh::DisplayMesh(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, DisplayMesh_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.DisplayMesh)
+}
+PROTOBUF_NDEBUG_INLINE DisplayMesh::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::DisplayMesh& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        vertices_{visibility, arena, from.vertices_},
+        indices_{visibility, arena, from.indices_},
+        _indices_cached_byte_size_{0},
+        normals_{visibility, arena, from.normals_} {}
+
+DisplayMesh::DisplayMesh(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const DisplayMesh& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, DisplayMesh_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  DisplayMesh* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.DisplayMesh)
+}
+PROTOBUF_NDEBUG_INLINE DisplayMesh::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        vertices_{visibility, arena},
+        indices_{visibility, arena},
+        _indices_cached_byte_size_{0},
+        normals_{visibility, arena} {}
+
+inline void DisplayMesh::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+}
+DisplayMesh::~DisplayMesh() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.DisplayMesh)
+  SharedDtor(*this);
+}
+inline void DisplayMesh::SharedDtor(MessageLite& self) {
+  DisplayMesh& this_ = static_cast<DisplayMesh&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL DisplayMesh::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) DisplayMesh(arena);
+}
+constexpr auto DisplayMesh::InternalNewImpl_() {
+  constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
+      PROTOBUF_FIELD_OFFSET(DisplayMesh, _impl_.vertices_) +
+          decltype(DisplayMesh::_impl_.vertices_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+      PROTOBUF_FIELD_OFFSET(DisplayMesh, _impl_.indices_) +
+          decltype(DisplayMesh::_impl_.indices_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+      PROTOBUF_FIELD_OFFSET(DisplayMesh, _impl_.normals_) +
+          decltype(DisplayMesh::_impl_.normals_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+  });
+  if (arena_bits.has_value()) {
+    return ::google::protobuf::internal::MessageCreator::ZeroInit(
+        sizeof(DisplayMesh), alignof(DisplayMesh), *arena_bits);
+  } else {
+    return ::google::protobuf::internal::MessageCreator(&DisplayMesh::PlacementNew_,
+                                 sizeof(DisplayMesh),
+                                 alignof(DisplayMesh));
+  }
+}
+constexpr auto DisplayMesh::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_DisplayMesh_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &DisplayMesh::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<DisplayMesh>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &DisplayMesh::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<DisplayMesh>(), &DisplayMesh::ByteSizeLong,
+              &DisplayMesh::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(DisplayMesh, _impl_._cached_size_),
+          false,
+      },
+      &DisplayMesh::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull DisplayMesh_class_data_ =
+        DisplayMesh::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+DisplayMesh::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&DisplayMesh_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(DisplayMesh_class_data_.tc_table);
+  return DisplayMesh_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 3, 0, 0, 2>
+DisplayMesh::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(DisplayMesh, _impl_._has_bits_),
+    0, // no _extensions_
+    3, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967288,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    3,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    DisplayMesh_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::DisplayMesh>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // repeated float vertices = 1 [json_name = "vertices"];
+    {::_pbi::TcParser::FastF32P1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(DisplayMesh, _impl_.vertices_)}},
+    // repeated uint32 indices = 2 [json_name = "indices"];
+    {::_pbi::TcParser::FastV32P1,
+     {18, 1, 0,
+      PROTOBUF_FIELD_OFFSET(DisplayMesh, _impl_.indices_)}},
+    // repeated float normals = 3 [json_name = "normals"];
+    {::_pbi::TcParser::FastF32P1,
+     {26, 2, 0,
+      PROTOBUF_FIELD_OFFSET(DisplayMesh, _impl_.normals_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // repeated float vertices = 1 [json_name = "vertices"];
+    {PROTOBUF_FIELD_OFFSET(DisplayMesh, _impl_.vertices_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kPackedFloat)},
+    // repeated uint32 indices = 2 [json_name = "indices"];
+    {PROTOBUF_FIELD_OFFSET(DisplayMesh, _impl_.indices_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcRepeated | ::_fl::kPackedUInt32)},
+    // repeated float normals = 3 [json_name = "normals"];
+    {PROTOBUF_FIELD_OFFSET(DisplayMesh, _impl_.normals_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcRepeated | ::_fl::kPackedFloat)},
+  }},
+  // no aux_entries
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void DisplayMesh::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.DisplayMesh)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+      _impl_.vertices_.Clear();
+    }
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
+      _impl_.indices_.Clear();
+    }
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000004U)) {
+      _impl_.normals_.Clear();
+    }
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL DisplayMesh::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const DisplayMesh& this_ = static_cast<const DisplayMesh&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL DisplayMesh::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const DisplayMesh& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.DisplayMesh)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // repeated float vertices = 1 [json_name = "vertices"];
+  if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+    if (this_._internal_vertices_size() > 0) {
+      target = stream->WriteFixedPacked(1, this_._internal_vertices(), target);
+    }
+  }
+
+  // repeated uint32 indices = 2 [json_name = "indices"];
+  if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
+    {
+      int byte_size = this_._impl_._indices_cached_byte_size_.Get();
+      if (byte_size > 0) {
+        target = stream->WriteUInt32Packed(
+            2, this_._internal_indices(), byte_size, target);
+      }
+    }
+  }
+
+  // repeated float normals = 3 [json_name = "normals"];
+  if (CheckHasBitForRepeated(cached_has_bits, 0x00000004U)) {
+    if (this_._internal_normals_size() > 0) {
+      target = stream->WriteFixedPacked(3, this_._internal_normals(), target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.DisplayMesh)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t DisplayMesh::ByteSizeLong(const MessageLite& base) {
+  const DisplayMesh& this_ = static_cast<const DisplayMesh&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t DisplayMesh::ByteSizeLong() const {
+  const DisplayMesh& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.DisplayMesh)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    // repeated float vertices = 1 [json_name = "vertices"];
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+      ::size_t data_size = ::size_t{4} *
+          ::_pbi::FromIntSize(this_._internal_vertices_size());
+      ::size_t tag_size = data_size == 0
+          ? 0
+          : 1 + ::_pbi::WireFormatLite::Int32Size(
+                              static_cast<::int32_t>(data_size));
+      total_size += tag_size + data_size;
+    }
+    // repeated uint32 indices = 2 [json_name = "indices"];
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
+      total_size +=
+          ::_pbi::WireFormatLite::UInt32SizeWithPackedTagSize(
+              this_._internal_indices(), 1,
+              this_._impl_._indices_cached_byte_size_);
+    }
+    // repeated float normals = 3 [json_name = "normals"];
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000004U)) {
+      ::size_t data_size = ::size_t{4} *
+          ::_pbi::FromIntSize(this_._internal_normals_size());
+      ::size_t tag_size = data_size == 0
+          ? 0
+          : 1 + ::_pbi::WireFormatLite::Int32Size(
+                              static_cast<::int32_t>(data_size));
+      total_size += tag_size + data_size;
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void DisplayMesh::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<DisplayMesh*>(&to_msg);
+  auto& from = static_cast<const DisplayMesh&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.DisplayMesh)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+      _this->_internal_mutable_vertices()->MergeFrom(from._internal_vertices());
+    }
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
+      _this->_internal_mutable_indices()->MergeFrom(from._internal_indices());
+    }
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000004U)) {
+      _this->_internal_mutable_normals()->MergeFrom(from._internal_normals());
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void DisplayMesh::CopyFrom(const DisplayMesh& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.DisplayMesh)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void DisplayMesh::InternalSwap(DisplayMesh* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  _impl_.vertices_.InternalSwap(&other->_impl_.vertices_);
+  _impl_.indices_.InternalSwap(&other->_impl_.indices_);
+  _impl_.normals_.InternalSwap(&other->_impl_.normals_);
+}
+
+::google::protobuf::Metadata DisplayMesh::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
@@ -3196,23 +3603,23 @@ Body::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // .motionlab.mechanism.ElementId id = 1;
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
     {::_pbi::TcParser::FastMtS1,
      {10, 2, 0,
       PROTOBUF_FIELD_OFFSET(Body, _impl_.id_)}},
-    // string name = 2;
+    // string name = 2 [json_name = "name"];
     {::_pbi::TcParser::FastUS1,
      {18, 0, 0,
       PROTOBUF_FIELD_OFFSET(Body, _impl_.name_)}},
-    // .motionlab.mechanism.Pose pose = 3;
+    // .motionlab.mechanism.Pose pose = 3 [json_name = "pose"];
     {::_pbi::TcParser::FastMtS1,
      {26, 3, 1,
       PROTOBUF_FIELD_OFFSET(Body, _impl_.pose_)}},
-    // .motionlab.mechanism.MassProperties mass_properties = 4;
+    // .motionlab.mechanism.MassProperties mass_properties = 4 [json_name = "massProperties"];
     {::_pbi::TcParser::FastMtS1,
      {34, 4, 2,
       PROTOBUF_FIELD_OFFSET(Body, _impl_.mass_properties_)}},
-    // string source_asset_ref = 5;
+    // string source_asset_ref = 5 [json_name = "sourceAssetRef"];
     {::_pbi::TcParser::FastUS1,
      {42, 1, 0,
       PROTOBUF_FIELD_OFFSET(Body, _impl_.source_asset_ref_)}},
@@ -3221,15 +3628,15 @@ Body::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId id = 1;
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
     {PROTOBUF_FIELD_OFFSET(Body, _impl_.id_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string name = 2;
+    // string name = 2 [json_name = "name"];
     {PROTOBUF_FIELD_OFFSET(Body, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .motionlab.mechanism.Pose pose = 3;
+    // .motionlab.mechanism.Pose pose = 3 [json_name = "pose"];
     {PROTOBUF_FIELD_OFFSET(Body, _impl_.pose_), _Internal::kHasBitsOffset + 3, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.MassProperties mass_properties = 4;
+    // .motionlab.mechanism.MassProperties mass_properties = 4 [json_name = "massProperties"];
     {PROTOBUF_FIELD_OFFSET(Body, _impl_.mass_properties_), _Internal::kHasBitsOffset + 4, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string source_asset_ref = 5;
+    // string source_asset_ref = 5 [json_name = "sourceAssetRef"];
     {PROTOBUF_FIELD_OFFSET(Body, _impl_.source_asset_ref_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -3295,14 +3702,14 @@ PROTOBUF_NOINLINE void Body::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId id = 1;
+  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.id_, this_._impl_.id_->GetCachedSize(), target,
         stream);
   }
 
-  // string name = 2;
+  // string name = 2 [json_name = "name"];
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
@@ -3312,21 +3719,21 @@ PROTOBUF_NOINLINE void Body::Clear() {
     }
   }
 
-  // .motionlab.mechanism.Pose pose = 3;
+  // .motionlab.mechanism.Pose pose = 3 [json_name = "pose"];
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.pose_, this_._impl_.pose_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.MassProperties mass_properties = 4;
+  // .motionlab.mechanism.MassProperties mass_properties = 4 [json_name = "massProperties"];
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         4, *this_._impl_.mass_properties_, this_._impl_.mass_properties_->GetCachedSize(), target,
         stream);
   }
 
-  // string source_asset_ref = 5;
+  // string source_asset_ref = 5 [json_name = "sourceAssetRef"];
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (!this_._internal_source_asset_ref().empty()) {
       const ::std::string& _s = this_._internal_source_asset_ref();
@@ -3362,31 +3769,31 @@ PROTOBUF_NOINLINE void Body::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
-    // string name = 2;
+    // string name = 2 [json_name = "name"];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
-    // string source_asset_ref = 5;
+    // string source_asset_ref = 5 [json_name = "sourceAssetRef"];
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (!this_._internal_source_asset_ref().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_source_asset_ref());
       }
     }
-    // .motionlab.mechanism.ElementId id = 1;
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.id_);
     }
-    // .motionlab.mechanism.Pose pose = 3;
+    // .motionlab.mechanism.Pose pose = 3 [json_name = "pose"];
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.pose_);
     }
-    // .motionlab.mechanism.MassProperties mass_properties = 4;
+    // .motionlab.mechanism.MassProperties mass_properties = 4 [json_name = "massProperties"];
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.mass_properties_);
@@ -3635,32 +4042,32 @@ Datum::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::mechanism::Datum>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.Pose local_pose = 4;
+    // .motionlab.mechanism.Pose local_pose = 4 [json_name = "localPose"];
     {::_pbi::TcParser::FastMtS1,
      {34, 3, 2,
       PROTOBUF_FIELD_OFFSET(Datum, _impl_.local_pose_)}},
-    // .motionlab.mechanism.ElementId id = 1;
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
     {::_pbi::TcParser::FastMtS1,
      {10, 1, 0,
       PROTOBUF_FIELD_OFFSET(Datum, _impl_.id_)}},
-    // string name = 2;
+    // string name = 2 [json_name = "name"];
     {::_pbi::TcParser::FastUS1,
      {18, 0, 0,
       PROTOBUF_FIELD_OFFSET(Datum, _impl_.name_)}},
-    // .motionlab.mechanism.ElementId parent_body_id = 3;
+    // .motionlab.mechanism.ElementId parent_body_id = 3 [json_name = "parentBodyId"];
     {::_pbi::TcParser::FastMtS1,
      {26, 2, 1,
       PROTOBUF_FIELD_OFFSET(Datum, _impl_.parent_body_id_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId id = 1;
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
     {PROTOBUF_FIELD_OFFSET(Datum, _impl_.id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string name = 2;
+    // string name = 2 [json_name = "name"];
     {PROTOBUF_FIELD_OFFSET(Datum, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .motionlab.mechanism.ElementId parent_body_id = 3;
+    // .motionlab.mechanism.ElementId parent_body_id = 3 [json_name = "parentBodyId"];
     {PROTOBUF_FIELD_OFFSET(Datum, _impl_.parent_body_id_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.Pose local_pose = 4;
+    // .motionlab.mechanism.Pose local_pose = 4 [json_name = "localPose"];
     {PROTOBUF_FIELD_OFFSET(Datum, _impl_.local_pose_), _Internal::kHasBitsOffset + 3, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -3722,14 +4129,14 @@ PROTOBUF_NOINLINE void Datum::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId id = 1;
+  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.id_, this_._impl_.id_->GetCachedSize(), target,
         stream);
   }
 
-  // string name = 2;
+  // string name = 2 [json_name = "name"];
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
@@ -3739,14 +4146,14 @@ PROTOBUF_NOINLINE void Datum::Clear() {
     }
   }
 
-  // .motionlab.mechanism.ElementId parent_body_id = 3;
+  // .motionlab.mechanism.ElementId parent_body_id = 3 [json_name = "parentBodyId"];
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.parent_body_id_, this_._impl_.parent_body_id_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.Pose local_pose = 4;
+  // .motionlab.mechanism.Pose local_pose = 4 [json_name = "localPose"];
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         4, *this_._impl_.local_pose_, this_._impl_.local_pose_->GetCachedSize(), target,
@@ -3779,24 +4186,24 @@ PROTOBUF_NOINLINE void Datum::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
-    // string name = 2;
+    // string name = 2 [json_name = "name"];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
-    // .motionlab.mechanism.ElementId id = 1;
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.id_);
     }
-    // .motionlab.mechanism.ElementId parent_body_id = 3;
+    // .motionlab.mechanism.ElementId parent_body_id = 3 [json_name = "parentBodyId"];
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.parent_body_id_);
     }
-    // .motionlab.mechanism.Pose local_pose = 4;
+    // .motionlab.mechanism.Pose local_pose = 4 [json_name = "localPose"];
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.local_pose_);
@@ -4043,50 +4450,50 @@ Joint::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // .motionlab.mechanism.ElementId id = 1;
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
     {::_pbi::TcParser::FastMtS1,
      {10, 1, 0,
       PROTOBUF_FIELD_OFFSET(Joint, _impl_.id_)}},
-    // string name = 2;
+    // string name = 2 [json_name = "name"];
     {::_pbi::TcParser::FastUS1,
      {18, 0, 0,
       PROTOBUF_FIELD_OFFSET(Joint, _impl_.name_)}},
-    // .motionlab.mechanism.JointType type = 3;
+    // .motionlab.mechanism.JointType type = 3 [json_name = "type"];
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Joint, _impl_.type_), 6>(),
      {24, 6, 0,
       PROTOBUF_FIELD_OFFSET(Joint, _impl_.type_)}},
-    // .motionlab.mechanism.ElementId parent_datum_id = 4;
+    // .motionlab.mechanism.ElementId parent_datum_id = 4 [json_name = "parentDatumId"];
     {::_pbi::TcParser::FastMtS1,
      {34, 2, 1,
       PROTOBUF_FIELD_OFFSET(Joint, _impl_.parent_datum_id_)}},
-    // .motionlab.mechanism.ElementId child_datum_id = 5;
+    // .motionlab.mechanism.ElementId child_datum_id = 5 [json_name = "childDatumId"];
     {::_pbi::TcParser::FastMtS1,
      {42, 3, 2,
       PROTOBUF_FIELD_OFFSET(Joint, _impl_.child_datum_id_)}},
-    // double lower_limit = 6;
+    // double lower_limit = 6 [json_name = "lowerLimit"];
     {::_pbi::TcParser::FastF64S1,
      {49, 4, 0,
       PROTOBUF_FIELD_OFFSET(Joint, _impl_.lower_limit_)}},
-    // double upper_limit = 7;
+    // double upper_limit = 7 [json_name = "upperLimit"];
     {::_pbi::TcParser::FastF64S1,
      {57, 5, 0,
       PROTOBUF_FIELD_OFFSET(Joint, _impl_.upper_limit_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId id = 1;
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
     {PROTOBUF_FIELD_OFFSET(Joint, _impl_.id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string name = 2;
+    // string name = 2 [json_name = "name"];
     {PROTOBUF_FIELD_OFFSET(Joint, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .motionlab.mechanism.JointType type = 3;
+    // .motionlab.mechanism.JointType type = 3 [json_name = "type"];
     {PROTOBUF_FIELD_OFFSET(Joint, _impl_.type_), _Internal::kHasBitsOffset + 6, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
-    // .motionlab.mechanism.ElementId parent_datum_id = 4;
+    // .motionlab.mechanism.ElementId parent_datum_id = 4 [json_name = "parentDatumId"];
     {PROTOBUF_FIELD_OFFSET(Joint, _impl_.parent_datum_id_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.ElementId child_datum_id = 5;
+    // .motionlab.mechanism.ElementId child_datum_id = 5 [json_name = "childDatumId"];
     {PROTOBUF_FIELD_OFFSET(Joint, _impl_.child_datum_id_), _Internal::kHasBitsOffset + 3, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // double lower_limit = 6;
+    // double lower_limit = 6 [json_name = "lowerLimit"];
     {PROTOBUF_FIELD_OFFSET(Joint, _impl_.lower_limit_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double upper_limit = 7;
+    // double upper_limit = 7 [json_name = "upperLimit"];
     {PROTOBUF_FIELD_OFFSET(Joint, _impl_.upper_limit_), _Internal::kHasBitsOffset + 5, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
   }},
   {{
@@ -4153,14 +4560,14 @@ PROTOBUF_NOINLINE void Joint::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId id = 1;
+  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.id_, this_._impl_.id_->GetCachedSize(), target,
         stream);
   }
 
-  // string name = 2;
+  // string name = 2 [json_name = "name"];
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
@@ -4170,7 +4577,7 @@ PROTOBUF_NOINLINE void Joint::Clear() {
     }
   }
 
-  // .motionlab.mechanism.JointType type = 3;
+  // .motionlab.mechanism.JointType type = 3 [json_name = "type"];
   if (CheckHasBit(cached_has_bits, 0x00000040U)) {
     if (this_._internal_type() != 0) {
       target = stream->EnsureSpace(target);
@@ -4179,21 +4586,21 @@ PROTOBUF_NOINLINE void Joint::Clear() {
     }
   }
 
-  // .motionlab.mechanism.ElementId parent_datum_id = 4;
+  // .motionlab.mechanism.ElementId parent_datum_id = 4 [json_name = "parentDatumId"];
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         4, *this_._impl_.parent_datum_id_, this_._impl_.parent_datum_id_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.ElementId child_datum_id = 5;
+  // .motionlab.mechanism.ElementId child_datum_id = 5 [json_name = "childDatumId"];
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         5, *this_._impl_.child_datum_id_, this_._impl_.child_datum_id_->GetCachedSize(), target,
         stream);
   }
 
-  // double lower_limit = 6;
+  // double lower_limit = 6 [json_name = "lowerLimit"];
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_lower_limit()) != 0) {
       target = stream->EnsureSpace(target);
@@ -4202,7 +4609,7 @@ PROTOBUF_NOINLINE void Joint::Clear() {
     }
   }
 
-  // double upper_limit = 7;
+  // double upper_limit = 7 [json_name = "upperLimit"];
   if (CheckHasBit(cached_has_bits, 0x00000020U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_upper_limit()) != 0) {
       target = stream->EnsureSpace(target);
@@ -4237,41 +4644,41 @@ PROTOBUF_NOINLINE void Joint::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000007fU)) {
-    // string name = 2;
+    // string name = 2 [json_name = "name"];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
-    // .motionlab.mechanism.ElementId id = 1;
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.id_);
     }
-    // .motionlab.mechanism.ElementId parent_datum_id = 4;
+    // .motionlab.mechanism.ElementId parent_datum_id = 4 [json_name = "parentDatumId"];
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.parent_datum_id_);
     }
-    // .motionlab.mechanism.ElementId child_datum_id = 5;
+    // .motionlab.mechanism.ElementId child_datum_id = 5 [json_name = "childDatumId"];
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.child_datum_id_);
     }
-    // double lower_limit = 6;
+    // double lower_limit = 6 [json_name = "lowerLimit"];
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_lower_limit()) != 0) {
         total_size += 9;
       }
     }
-    // double upper_limit = 7;
+    // double upper_limit = 7 [json_name = "upperLimit"];
     if (CheckHasBit(cached_has_bits, 0x00000020U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_upper_limit()) != 0) {
         total_size += 9;
       }
     }
-    // .motionlab.mechanism.JointType type = 3;
+    // .motionlab.mechanism.JointType type = 3 [json_name = "type"];
     if (CheckHasBit(cached_has_bits, 0x00000040U)) {
       if (this_._internal_type() != 0) {
         total_size += 1 +
@@ -4541,23 +4948,23 @@ Mechanism::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // .motionlab.mechanism.ElementId id = 1;
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
     {::_pbi::TcParser::FastMtS1,
      {10, 4, 0,
       PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.id_)}},
-    // string name = 2;
+    // string name = 2 [json_name = "name"];
     {::_pbi::TcParser::FastUS1,
      {18, 3, 0,
       PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.name_)}},
-    // repeated .motionlab.mechanism.Body bodies = 3;
+    // repeated .motionlab.mechanism.Body bodies = 3 [json_name = "bodies"];
     {::_pbi::TcParser::FastMtR1,
      {26, 0, 1,
       PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.bodies_)}},
-    // repeated .motionlab.mechanism.Datum datums = 4;
+    // repeated .motionlab.mechanism.Datum datums = 4 [json_name = "datums"];
     {::_pbi::TcParser::FastMtR1,
      {34, 1, 2,
       PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.datums_)}},
-    // repeated .motionlab.mechanism.Joint joints = 5;
+    // repeated .motionlab.mechanism.Joint joints = 5 [json_name = "joints"];
     {::_pbi::TcParser::FastMtR1,
      {42, 2, 3,
       PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.joints_)}},
@@ -4566,15 +4973,15 @@ Mechanism::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId id = 1;
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
     {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.id_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string name = 2;
+    // string name = 2 [json_name = "name"];
     {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.name_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // repeated .motionlab.mechanism.Body bodies = 3;
+    // repeated .motionlab.mechanism.Body bodies = 3 [json_name = "bodies"];
     {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.bodies_), _Internal::kHasBitsOffset + 0, 1, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
-    // repeated .motionlab.mechanism.Datum datums = 4;
+    // repeated .motionlab.mechanism.Datum datums = 4 [json_name = "datums"];
     {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.datums_), _Internal::kHasBitsOffset + 1, 2, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
-    // repeated .motionlab.mechanism.Joint joints = 5;
+    // repeated .motionlab.mechanism.Joint joints = 5 [json_name = "joints"];
     {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.joints_), _Internal::kHasBitsOffset + 2, 3, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -4638,14 +5045,14 @@ PROTOBUF_NOINLINE void Mechanism::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId id = 1;
+  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.id_, this_._impl_.id_->GetCachedSize(), target,
         stream);
   }
 
-  // string name = 2;
+  // string name = 2 [json_name = "name"];
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
@@ -4655,7 +5062,7 @@ PROTOBUF_NOINLINE void Mechanism::Clear() {
     }
   }
 
-  // repeated .motionlab.mechanism.Body bodies = 3;
+  // repeated .motionlab.mechanism.Body bodies = 3 [json_name = "bodies"];
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_bodies_size());
@@ -4668,7 +5075,7 @@ PROTOBUF_NOINLINE void Mechanism::Clear() {
     }
   }
 
-  // repeated .motionlab.mechanism.Datum datums = 4;
+  // repeated .motionlab.mechanism.Datum datums = 4 [json_name = "datums"];
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_datums_size());
@@ -4681,7 +5088,7 @@ PROTOBUF_NOINLINE void Mechanism::Clear() {
     }
   }
 
-  // repeated .motionlab.mechanism.Joint joints = 5;
+  // repeated .motionlab.mechanism.Joint joints = 5 [json_name = "joints"];
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000004U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_joints_size());
@@ -4720,35 +5127,35 @@ PROTOBUF_NOINLINE void Mechanism::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
-    // repeated .motionlab.mechanism.Body bodies = 3;
+    // repeated .motionlab.mechanism.Body bodies = 3 [json_name = "bodies"];
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       total_size += 1UL * this_._internal_bodies_size();
       for (const auto& msg : this_._internal_bodies()) {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
-    // repeated .motionlab.mechanism.Datum datums = 4;
+    // repeated .motionlab.mechanism.Datum datums = 4 [json_name = "datums"];
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
       total_size += 1UL * this_._internal_datums_size();
       for (const auto& msg : this_._internal_datums()) {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
-    // repeated .motionlab.mechanism.Joint joints = 5;
+    // repeated .motionlab.mechanism.Joint joints = 5 [json_name = "joints"];
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000004U)) {
       total_size += 1UL * this_._internal_joints_size();
       for (const auto& msg : this_._internal_joints()) {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
-    // string name = 2;
+    // string name = 2 [json_name = "name"];
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
-    // .motionlab.mechanism.ElementId id = 1;
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.id_);

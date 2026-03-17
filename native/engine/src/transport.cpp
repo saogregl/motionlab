@@ -4,8 +4,15 @@
 #include <ixwebsocket/IXWebSocketServer.h>
 #include <ixwebsocket/IXNetSystem.h>
 #include "protocol/transport.pb.h"
+#include "mechanism/mechanism.pb.h"
 
+#include "cad_import.h"
+#include "asset_cache.h"
+#include "uuid.h"
+
+#include <algorithm>
 #include <atomic>
+#include <filesystem>
 #include <iostream>
 #include <mutex>
 #include <string>
@@ -62,6 +69,20 @@ std::optional<EngineConfig> parse_args(int argc, char* argv[]) {
 }
 
 // ──────────────────────────────────────────────
+// Cache directory
+// ──────────────────────────────────────────────
+
+static std::filesystem::path get_cache_directory() {
+#ifdef _WIN32
+    const char* home = std::getenv("USERPROFILE");
+#else
+    const char* home = std::getenv("HOME");
+#endif
+    if (!home) home = ".";
+    return std::filesystem::path(home) / ".motionlab" / "cache" / "assets";
+}
+
+// ──────────────────────────────────────────────
 // TransportServer implementation
 // ──────────────────────────────────────────────
 
@@ -73,8 +94,11 @@ struct TransportServer::Impl {
     bool has_connection = false;
     bool authenticated = false;
     std::atomic<bool> running{false};
+    engine::AssetCache asset_cache;
 
-    explicit Impl(std::string token) : session_token(std::move(token)) {}
+    explicit Impl(std::string token)
+        : session_token(std::move(token))
+        , asset_cache(get_cache_directory()) {}
 
     void send_event(ix::WebSocket& ws, const protocol::Event& event) {
         std::string serialized;
@@ -124,6 +148,10 @@ struct TransportServer::Impl {
             case protocol::Command::kPing:
                 handle_ping(ws, cmd.sequence_id(), cmd.ping());
                 break;
+            case protocol::Command::kImportAsset:
+                if (!authenticated) break;
+                handle_import_asset(ws, cmd.sequence_id(), cmd.import_asset());
+                break;
             default:
                 break;
         }
@@ -163,6 +191,129 @@ struct TransportServer::Impl {
         event.set_sequence_id(sequence_id);
         auto* pong = event.mutable_pong();
         pong->set_timestamp(ping.timestamp());
+        send_event(ws, event);
+    }
+
+    void handle_import_asset(ix::WebSocket& ws, uint64_t sequence_id,
+                              const protocol::ImportAssetCommand& cmd) {
+        std::string file_path = cmd.file_path();
+
+        // Extract options with defaults
+        double density = 1000.0;
+        double tess_quality = 0.1;
+        if (cmd.has_import_options()) {
+            const auto& opts = cmd.import_options();
+            if (opts.density_override() > 0.0) density = opts.density_override();
+            if (opts.tessellation_quality() > 0.0) tess_quality = opts.tessellation_quality();
+        }
+
+        // Compute cache key and check cache
+        std::string cache_key = asset_cache.compute_cache_key(file_path, density, tess_quality);
+        if (!cache_key.empty()) {
+            auto cached = asset_cache.lookup(cache_key);
+            if (cached.has_value()) {
+                protocol::ImportAssetResult result;
+                if (result.ParseFromString(cached.value())) {
+                    protocol::Event event;
+                    event.set_sequence_id(sequence_id);
+                    *event.mutable_import_asset_result() = std::move(result);
+                    send_event(ws, event);
+                    return;
+                }
+                // Parse failed — treat as cache miss, fall through
+            }
+        }
+
+        // Cache miss — run import
+        engine::CadImporter importer;
+        engine::ImportOptions import_opts{density, tess_quality};
+
+        // Detect file format from extension
+        std::string lower_path = file_path;
+        std::transform(lower_path.begin(), lower_path.end(), lower_path.begin(),
+                        [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+
+        engine::ImportResult import_result;
+        if (lower_path.ends_with(".iges") || lower_path.ends_with(".igs")) {
+            import_result = importer.import_iges(file_path, import_opts);
+        } else {
+            import_result = importer.import_step(file_path, import_opts);
+        }
+
+        // Map to proto result
+        protocol::ImportAssetResult proto_result;
+        proto_result.set_success(import_result.success);
+        proto_result.set_error_message(import_result.error_message);
+
+        for (const auto& diag : import_result.diagnostics) {
+            proto_result.add_diagnostics(diag);
+        }
+
+        // Extract original filename from path
+        std::string original_filename;
+        {
+            auto pos = file_path.find_last_of("/\\");
+            original_filename = (pos != std::string::npos)
+                ? file_path.substr(pos + 1) : file_path;
+        }
+
+        for (const auto& body : import_result.bodies) {
+            auto* pb = proto_result.add_bodies();
+            pb->set_body_id(engine::generate_uuidv7());
+            pb->set_name(body.name);
+
+            // DisplayMesh
+            auto* mesh = pb->mutable_display_mesh();
+            mesh->mutable_vertices()->Assign(body.mesh.vertices.begin(),
+                                              body.mesh.vertices.end());
+            mesh->mutable_indices()->Assign(body.mesh.indices.begin(),
+                                             body.mesh.indices.end());
+            mesh->mutable_normals()->Assign(body.mesh.normals.begin(),
+                                             body.mesh.normals.end());
+
+            // MassProperties
+            auto* mp = pb->mutable_mass_properties();
+            mp->set_mass(body.mass_properties.mass);
+            auto* com = mp->mutable_center_of_mass();
+            com->set_x(body.mass_properties.center_of_mass[0]);
+            com->set_y(body.mass_properties.center_of_mass[1]);
+            com->set_z(body.mass_properties.center_of_mass[2]);
+            mp->set_ixx(body.mass_properties.inertia[0]);
+            mp->set_iyy(body.mass_properties.inertia[1]);
+            mp->set_izz(body.mass_properties.inertia[2]);
+            mp->set_ixy(body.mass_properties.inertia[3]);
+            mp->set_ixz(body.mass_properties.inertia[4]);
+            mp->set_iyz(body.mass_properties.inertia[5]);
+
+            // Pose — quaternion swap: CadImporter [x,y,z,w] → proto Quat [w,x,y,z]
+            auto* pose = pb->mutable_pose();
+            auto* pos = pose->mutable_position();
+            pos->set_x(body.translation[0]);
+            pos->set_y(body.translation[1]);
+            pos->set_z(body.translation[2]);
+            auto* rot = pose->mutable_orientation();
+            rot->set_w(body.rotation[3]);  // CadImporter w is at index 3
+            rot->set_x(body.rotation[0]);  // CadImporter x is at index 0
+            rot->set_y(body.rotation[1]);  // CadImporter y is at index 1
+            rot->set_z(body.rotation[2]);  // CadImporter z is at index 2
+
+            // AssetReference
+            auto* asset_ref = pb->mutable_source_asset_ref();
+            asset_ref->set_content_hash(import_result.content_hash);
+            asset_ref->set_original_filename(original_filename);
+        }
+
+        // Cache on success
+        if (import_result.success && !cache_key.empty()) {
+            std::string serialized;
+            proto_result.SerializeToString(&serialized);
+            asset_cache.store(cache_key, serialized);
+        }
+
+        // Send event
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        *event.mutable_import_asset_result() = std::move(proto_result);
         send_event(ws, event);
     }
 };

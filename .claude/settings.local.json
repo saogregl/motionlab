@@ -34,7 +34,8 @@
       "Bash(tasklist:*)",
       "Bash(netstat:*)",
       "Bash(taskkill:*)",
-      "WebFetch(domain:localhost)"
+      "WebFetch(domain:localhost)",
+      "Bash(where protoc:*)"
     ]
   },
   "enabledPlugins": {

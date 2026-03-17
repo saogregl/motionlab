@@ -7,6 +7,9 @@ export interface MotionLabEndpoint {
 export interface MotionLabAPI {
   platform: string;
   getEngineEndpoint(): Promise<MotionLabEndpoint | null>;
+  openFileDialog(options?: {
+    filters?: Array<{ name: string; extensions: string[] }>;
+  }): Promise<string | null>;
 }
 
 declare global {

@@ -41,6 +41,7 @@ find_path(PICOSHA2_INCLUDE_DIR picosha2.h)
 add_library(motionlab-engine-lib STATIC
   src/transport.cpp
   src/cad_import.cpp
+  src/asset_cache.cpp
   src/generated/protocol/transport.pb.cc
   src/generated/mechanism/mechanism.pb.cc
 )

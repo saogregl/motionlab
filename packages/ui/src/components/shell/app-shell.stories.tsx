@@ -64,12 +64,12 @@ const TREE_NODES: TreeNode[] = [
 
 function EntityIcon({ type }: { type: string }) {
   const colors: Record<string, string> = {
-    body: 'text-text-secondary',
-    datum: 'text-[var(--axis-z)]',
-    joint: 'text-[var(--joint-revolute)]',
-    driver: 'text-[var(--status-running)]',
+    body: 'text-text-tertiary',
+    datum: 'text-text-tertiary',
+    joint: 'text-[var(--joint-revolute)] opacity-70',
+    driver: 'text-text-tertiary',
   };
-  return <Box className={`size-4 ${colors[type] ?? 'text-text-tertiary'}`} />;
+  return <Box className={`size-3.5 ${colors[type] ?? 'text-text-tertiary'}`} />;
 }
 
 /* ── Composed story component ── */

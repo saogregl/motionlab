@@ -118,7 +118,7 @@ function FullIntegrationDemo() {
                   <TreeRow
                     level={1}
                     name="Caliper Arm"
-                    icon={<Box className="size-4 text-[var(--accent-text)]" />}
+                    icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
                     selected={selectedBody === 'Caliper Arm'}
                     focused={selectedBody === 'Caliper Arm'}
                     onSelect={() => setSelectedBody('Caliper Arm')}
@@ -130,7 +130,7 @@ function FullIntegrationDemo() {
                   <TreeRow
                     level={1}
                     name="Piston"
-                    icon={<Box className="size-4 text-[var(--accent-text)]" />}
+                    icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
                     selected={selectedBody === 'Piston'}
                     onSelect={() => setSelectedBody('Piston')}
                     onToggleVisibility={() => {}}
@@ -141,7 +141,7 @@ function FullIntegrationDemo() {
                   <TreeRow
                     level={1}
                     name="Housing"
-                    icon={<Box className="size-4 text-[var(--accent-text)]" />}
+                    icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
                     selected={selectedBody === 'Housing'}
                     onSelect={() => setSelectedBody('Housing')}
                     onToggleVisibility={() => {}}
@@ -152,7 +152,7 @@ function FullIntegrationDemo() {
                   <TreeRow
                     level={1}
                     name="Impeller"
-                    icon={<Box className="size-4 text-[var(--accent-text)]" />}
+                    icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
                     selected={selectedBody === 'Impeller'}
                     onSelect={() => setSelectedBody('Impeller')}
                     onToggleVisibility={() => {}}
@@ -173,21 +173,21 @@ function FullIntegrationDemo() {
                 <TreeRow
                   level={1}
                   name="Rev_1"
-                  icon={<Link2 className="size-4 text-[var(--joint-revolute)]" />}
+                  icon={<Link2 className="size-3.5 text-[var(--joint-revolute)] opacity-70" />}
                   secondary="Revolute"
                   onSelect={() => {}}
                 />
                 <TreeRow
                   level={1}
                   name="Rev_2"
-                  icon={<Link2 className="size-4 text-[var(--joint-revolute)]" />}
+                  icon={<Link2 className="size-3.5 text-[var(--joint-revolute)] opacity-70" />}
                   secondary="Revolute"
                   onSelect={() => {}}
                 />
                 <TreeRow
                   level={1}
                   name="Fixed_1"
-                  icon={<Link2 className="size-4 text-[var(--joint-fixed)]" />}
+                  icon={<Link2 className="size-3.5 text-[var(--joint-fixed)] opacity-70" />}
                   secondary="Fixed"
                   onSelect={() => {}}
                 />

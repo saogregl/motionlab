@@ -5,6 +5,8 @@ import {
   EngineStatus_State,
   EventSchema,
   HandshakeSchema,
+  ImportAssetCommandSchema,
+  ImportOptionsSchema,
   PingSchema,
   ProtocolVersionSchema,
 } from './generated/protocol/transport_pb.js';
@@ -40,6 +42,33 @@ export function createPingCommand(sequenceId: bigint): Uint8Array {
       case: 'ping',
       value: create(PingSchema, {
         timestamp: BigInt(Date.now()),
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing an ImportAsset payload.
+ */
+export function createImportAssetCommand(
+  filePath: string,
+  options?: { densityOverride?: number; tessellationQuality?: number; unitSystem?: string },
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'importAsset',
+      value: create(ImportAssetCommandSchema, {
+        filePath,
+        importOptions: options
+          ? create(ImportOptionsSchema, {
+              densityOverride: options.densityOverride ?? 0,
+              tessellationQuality: options.tessellationQuality ?? 0,
+              unitSystem: options.unitSystem ?? '',
+            })
+          : undefined,
       }),
     },
   });

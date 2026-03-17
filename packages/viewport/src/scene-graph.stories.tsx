@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useCallback, useRef, useState } from 'react';
 
 import type { SceneGraphManager, CameraPreset } from './scene-graph.js';
+import { PickingManager } from './picking.js';
 import { Viewport } from './Viewport.js';
 
 /**
@@ -171,4 +172,104 @@ type Story = StoryObj<typeof meta>;
 
 export const Showcase: Story = {
   render: () => <SceneGraphShowcase />,
+};
+
+// ---------------------------------------------------------------------------
+// Picking story
+// ---------------------------------------------------------------------------
+
+const STATUS_STYLE: React.CSSProperties = {
+  ...BUTTON_STYLE,
+  cursor: 'default',
+  fontSize: 10,
+  opacity: 0.8,
+  maxWidth: 360,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+};
+
+function PickingShowcase() {
+  const sgRef = useRef<SceneGraphManager | null>(null);
+  const pickingRef = useRef<PickingManager | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+  const handleSceneReady = useCallback((sg: SceneGraphManager) => {
+    sgRef.current = sg;
+
+    // Three demo boxes at different positions
+    sg.addBody('box-a', 'Box A', createBoxMeshData(2, 1, 1.5), {
+      position: [-3, 0.5, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.addBody('box-b', 'Box B', createBoxMeshData(1.5, 2, 1), {
+      position: [0, 1, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.addBody('box-c', 'Box C', createBoxMeshData(1, 1, 2), {
+      position: [3, 0.5, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.fitAll();
+
+    // Wire up picking
+    const picking = new PickingManager(
+      sg.scene,
+      sg,
+      (entityId, modifiers) => {
+        setSelectedIds((prev) => {
+          let next: Set<string>;
+          if (entityId == null) {
+            next = new Set();
+          } else if (modifiers.ctrl) {
+            next = new Set(prev);
+            if (next.has(entityId)) {
+              next.delete(entityId);
+            } else {
+              next.add(entityId);
+            }
+          } else {
+            next = new Set([entityId]);
+          }
+          sg.applySelection(next);
+          return next;
+        });
+      },
+      (entityId) => {
+        setHoveredId(entityId);
+        sg.applyHover(entityId);
+      },
+    );
+    pickingRef.current = picking;
+  }, []);
+
+  return (
+    <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
+      <div style={TOOLBAR_STYLE}>
+        <span style={STATUS_STYLE}>
+          Selected: {selectedIds.size > 0 ? Array.from(selectedIds).join(', ') : '(none)'}
+        </span>
+        <span style={STATUS_STYLE}>
+          Hover: {hoveredId ?? '(none)'}
+        </span>
+        <button
+          type="button"
+          style={BUTTON_STYLE}
+          onClick={() => {
+            const empty = new Set<string>();
+            setSelectedIds(empty);
+            sgRef.current?.applySelection(empty);
+          }}
+        >
+          Clear Selection
+        </button>
+      </div>
+      <Viewport onSceneReady={handleSceneReady} />
+    </div>
+  );
+}
+
+export const Picking: Story = {
+  render: () => <PickingShowcase />,
 };

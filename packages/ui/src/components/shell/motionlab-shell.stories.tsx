@@ -127,30 +127,30 @@ const JOINT_COLORS: Record<string, string> = {
 function EntityIcon({ type, jointType }: { type: string; jointType?: string }) {
   switch (type) {
     case 'body':
-      return <Box className="size-4 text-[var(--text-secondary)]" />;
+      return <Box className="size-3.5 text-[var(--text-tertiary)]" />;
     case 'datum':
-      return <Crosshair className="size-4 text-[var(--axis-z)]" />;
+      return <Crosshair className="size-3.5 text-[var(--text-tertiary)]" />;
     case 'joint': {
       const color = JOINT_COLORS[jointType ?? ''] ?? 'var(--text-secondary)';
       switch (jointType) {
         case 'revolute':
-          return <RotateCw className="size-4" style={{ color }} />;
+          return <RotateCw className="size-3.5 opacity-70" style={{ color }} />;
         case 'slider':
-          return <ArrowLeftRight className="size-4" style={{ color }} />;
+          return <ArrowLeftRight className="size-3.5 opacity-70" style={{ color }} />;
         case 'fixed':
-          return <Lock className="size-4" style={{ color }} />;
+          return <Lock className="size-3.5 opacity-70" style={{ color }} />;
         case 'cylindrical':
-          return <CircleDot className="size-4" style={{ color }} />;
+          return <CircleDot className="size-3.5 opacity-70" style={{ color }} />;
         default:
-          return <Link2 className="size-4" style={{ color }} />;
+          return <Link2 className="size-3.5 opacity-70" style={{ color }} />;
       }
     }
     case 'driver':
-      return <Zap className="size-4 text-[var(--status-running)]" />;
+      return <Zap className="size-3.5 text-[var(--text-tertiary)]" />;
     case 'sensor':
-      return <Gauge className="size-4 text-[var(--info)]" />;
+      return <Gauge className="size-3.5 text-[var(--text-tertiary)]" />;
     default:
-      return <Box className="size-4 text-[var(--text-tertiary)]" />;
+      return <Box className="size-3.5 text-[var(--text-tertiary)]" />;
   }
 }
 
@@ -242,6 +242,7 @@ function MotionLabShellDemo() {
   useHotkey('F2', () => console.log('[shortcut] Rename selection'));
 
   return (
+    <HotkeysProvider>
     <TooltipProvider>
       <AppShell
         topBar={
@@ -533,6 +534,7 @@ function MotionLabShellDemo() {
         </CommandList>
       </CommandDialog>
     </TooltipProvider>
+    </HotkeysProvider>
   );
 }
 

@@ -148,9 +148,9 @@
   --selection-fill: rgba(141, 141, 141, 0.2);
   --selection-fill-strong: rgba(141, 141, 141, 0.32);
   --selection-outline: #0f62fe;
-  --selection-row: rgba(141, 141, 141, 0.2);
-  --selection-row-hover: rgba(141, 141, 141, 0.32);
-  --selection-row-inactive: rgba(141, 141, 141, 0.12);
+  --selection-row: #e8f0fe;
+  --selection-row-hover: #dde8ff;
+  --selection-row-inactive: #eef2f6;
   --selection-drag-bg: var(--accent-soft);
   --selection-drag-border: var(--accent-primary);
 
@@ -274,9 +274,9 @@
   --selection-fill: rgba(141, 141, 141, 0.24);
   --selection-fill-strong: rgba(141, 141, 141, 0.32);
   --selection-outline: #4589ff;
-  --selection-row: rgba(141, 141, 141, 0.24);
-  --selection-row-hover: rgba(141, 141, 141, 0.32);
-  --selection-row-inactive: #393939;
+  --selection-row: rgba(91, 141, 239, 0.12);
+  --selection-row-hover: rgba(91, 141, 239, 0.18);
+  --selection-row-inactive: rgba(91, 141, 239, 0.06);
   --selection-drag-bg: var(--accent-soft);
   --selection-drag-border: var(--accent-primary);
 

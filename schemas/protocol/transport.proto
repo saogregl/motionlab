@@ -75,15 +75,31 @@ message EngineStatus {
   string message = 2;
 }
 
-// Stub — expanded in Epic 3
+message ImportOptions {
+  double density_override = 1;       // kg/m³, 0 = use default (1000)
+  double tessellation_quality = 2;   // linear deflection, 0 = use default (0.1)
+  string unit_system = 3;           // "millimeter" (default), "meter", "inch"
+}
+
 message ImportAssetCommand {
   string file_path = 1;
+  ImportOptions import_options = 2;
+}
+
+message BodyImportResult {
+  string body_id = 1;                              // UUIDv7
+  string name = 2;
+  motionlab.mechanism.DisplayMesh display_mesh = 3;
+  motionlab.mechanism.MassProperties mass_properties = 4;
+  motionlab.mechanism.Pose pose = 5;
+  motionlab.mechanism.AssetReference source_asset_ref = 6;
 }
 
 message ImportAssetResult {
   bool success = 1;
   string error_message = 2;
-  motionlab.mechanism.AssetReference asset_ref = 3;
+  repeated BodyImportResult bodies = 3;
+  repeated string diagnostics = 4;
 }
 
 // Serialized mechanism snapshot for persistence and transport

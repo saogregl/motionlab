@@ -6,3 +6,9 @@ export {
   type PoseInput,
   type SceneEntity,
 } from './scene-graph.js';
+export {
+  PickingManager,
+  type PickCallback,
+  type HoverCallback,
+  type PickResult,
+} from './picking.js';

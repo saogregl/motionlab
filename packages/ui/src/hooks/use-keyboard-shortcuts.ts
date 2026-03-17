@@ -1,1 +1,1 @@
-export { useHotkey } from '@tanstack/react-hotkeys';
+export { useHotkey, HotkeysProvider } from '@tanstack/react-hotkeys';

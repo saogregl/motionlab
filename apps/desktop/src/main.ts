@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain } from 'electron';
 import { EngineSupervisor } from './engine-supervisor';
 
 // TypeScript declarations for Forge Vite plugin globals
@@ -54,6 +54,22 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle('get-engine-endpoint', () => engineReady);
+
+  ipcMain.handle(
+    'show-open-dialog',
+    async (_event, options?: { filters?: Array<{ name: string; extensions: string[] }> }) => {
+      const win = BrowserWindow.getFocusedWindow();
+      if (!win) return null;
+      const result = await dialog.showOpenDialog(win, {
+        properties: ['openFile'],
+        filters: options?.filters ?? [
+          { name: 'CAD Files', extensions: ['step', 'stp', 'iges', 'igs'] },
+          { name: 'All Files', extensions: ['*'] },
+        ],
+      });
+      return result.canceled ? null : result.filePaths[0] ?? null;
+    },
+  );
 
   supervisor.onCrash((info) => {
     for (const win of BrowserWindow.getAllWindows()) {

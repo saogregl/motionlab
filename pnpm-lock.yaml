@@ -140,6 +140,9 @@ importers:
       '@motionlab/viewport':
         specifier: workspace:*
         version: link:../viewport
+      lucide-react:
+        specifier: ^0.577.0
+        version: 0.577.0(react@19.2.4)
       zustand:
         specifier: ^5.0.0
         version: 5.0.11(@types/react@19.2.14)(react@19.2.4)(use-sync-external-store@1.6.0(react@19.2.4))

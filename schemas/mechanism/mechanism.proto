@@ -65,6 +65,14 @@ message MassProperties {
   double iyz = 8;
 }
 
+// Tessellated mesh for viewport display — NOT the source B-Rep.
+// Flat arrays for efficient GPU upload (packed encoding in proto3).
+message DisplayMesh {
+  repeated float vertices = 1;   // flat [x,y,z, x,y,z, ...]
+  repeated uint32 indices = 2;   // triangle indices (0-based)
+  repeated float normals = 3;    // flat [nx,ny,nz, nx,ny,nz, ...]
+}
+
 // Rigid body in the mechanism
 message Body {
   ElementId id = 1;

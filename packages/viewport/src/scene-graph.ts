@@ -4,6 +4,7 @@ import {
   Color3,
   Color4,
   CreateLineSystem,
+  HighlightLayer,
   Mesh,
   PBRMaterial,
   Quaternion,
@@ -73,18 +74,33 @@ const PRESET_ANGLES: Record<
  * Entity IDs correspond 1:1 to mechanism ElementIds (UUIDv7 strings).
  */
 export class SceneGraphManager {
-  private readonly scene: Scene;
-  private readonly camera: ArcRotateCamera;
+  private readonly _scene: Scene;
+  private readonly _camera: ArcRotateCamera;
   private readonly entities = new Map<string, SceneEntity>();
   private readonly defaultMaterial: PBRMaterial;
   private gridNodes: AbstractMesh[] = [];
   private _gridVisible = true;
+  private readonly selectionHighlight: HighlightLayer;
+  private readonly hoverHighlight: HighlightLayer;
+  private currentSelectedIds: Set<string> = new Set();
 
   constructor(scene: Scene, camera: ArcRotateCamera) {
-    this.scene = scene;
-    this.camera = camera;
+    this._scene = scene;
+    this._camera = camera;
     this.defaultMaterial = this.createDefaultMaterial();
     this.createGrid();
+
+    this.selectionHighlight = new HighlightLayer('selection_hl', this._scene);
+    this.selectionHighlight.outerGlow = true;
+    this.selectionHighlight.innerGlow = false;
+
+    this.hoverHighlight = new HighlightLayer('hover_hl', this._scene);
+    this.hoverHighlight.outerGlow = true;
+    this.hoverHighlight.innerGlow = false;
+  }
+
+  get scene(): Scene {
+    return this._scene;
   }
 
   // -----------------------------------------------------------------------
@@ -104,10 +120,10 @@ export class SceneGraphManager {
       this.removeBody(id);
     }
 
-    const root = new TransformNode(`body_${id}`, this.scene);
+    const root = new TransformNode(`body_${id}`, this._scene);
     root.metadata = { entityId: id, entityType: 'body' };
 
-    const mesh = new Mesh(`body_mesh_${id}`, this.scene);
+    const mesh = new Mesh(`body_mesh_${id}`, this._scene);
     const vertexData = new VertexData();
     vertexData.positions = meshData.vertices;
     vertexData.indices = meshData.indices;
@@ -150,8 +166,11 @@ export class SceneGraphManager {
     }
 
     for (const mesh of entity.meshes) {
+      this.selectionHighlight.removeMesh(mesh as Mesh);
+      this.hoverHighlight.removeMesh(mesh as Mesh);
       mesh.dispose();
     }
+    this.currentSelectedIds.delete(id);
     entity.rootNode.dispose();
     this.entities.delete(id);
     return true;
@@ -206,8 +225,8 @@ export class SceneGraphManager {
     }
 
     const angles = PRESET_ANGLES[preset];
-    this.camera.alpha = angles.alpha;
-    this.camera.beta = angles.beta;
+    this._camera.alpha = angles.alpha;
+    this._camera.beta = angles.beta;
   }
 
   fitAll(): void {
@@ -230,8 +249,8 @@ export class SceneGraphManager {
     const center = Vector3.Center(min, max);
     const radius = Vector3.Distance(min, max) / 2;
 
-    this.camera.target = center;
-    this.camera.radius = radius > 0 ? radius * 2.5 : 10;
+    this._camera.target = center;
+    this._camera.radius = radius > 0 ? radius * 2.5 : 10;
   }
 
   // -----------------------------------------------------------------------
@@ -280,7 +299,7 @@ export class SceneGraphManager {
     const gridMesh = CreateLineSystem(
       'grid_lines',
       { lines, colors, useVertexAlpha: true },
-      this.scene,
+      this._scene,
     );
     gridMesh.isPickable = false;
 
@@ -294,7 +313,7 @@ export class SceneGraphManager {
         ],
         colors: [[xAxisColor, xAxisColor]],
       },
-      this.scene,
+      this._scene,
     );
     xAxis.isPickable = false;
 
@@ -308,7 +327,7 @@ export class SceneGraphManager {
         ],
         colors: [[zAxisColor, zAxisColor]],
       },
-      this.scene,
+      this._scene,
     );
     zAxis.isPickable = false;
 
@@ -316,11 +335,42 @@ export class SceneGraphManager {
   }
 
   // -----------------------------------------------------------------------
+  // Selection & Hover
+  // -----------------------------------------------------------------------
+
+  applySelection(selectedIds: Set<string>): void {
+    this.selectionHighlight.removeAllMeshes();
+    this.currentSelectedIds = new Set(selectedIds);
+
+    const selectionColor = new Color3(0.2, 0.6, 1.0);
+    for (const id of selectedIds) {
+      const entity = this.entities.get(id);
+      if (!entity) continue;
+      for (const mesh of entity.meshes) {
+        this.selectionHighlight.addMesh(mesh as Mesh, selectionColor);
+      }
+    }
+  }
+
+  applyHover(hoveredId: string | null): void {
+    this.hoverHighlight.removeAllMeshes();
+    if (hoveredId == null || this.currentSelectedIds.has(hoveredId)) return;
+
+    const entity = this.entities.get(hoveredId);
+    if (!entity) return;
+
+    const hoverColor = new Color3(0.8, 0.8, 0.3);
+    for (const mesh of entity.meshes) {
+      this.hoverHighlight.addMesh(mesh as Mesh, hoverColor);
+    }
+  }
+
+  // -----------------------------------------------------------------------
   // Material
   // -----------------------------------------------------------------------
 
   private createDefaultMaterial(): PBRMaterial {
-    const mat = new PBRMaterial('default_body', this.scene);
+    const mat = new PBRMaterial('default_body', this._scene);
     mat.albedoColor = new Color3(0.7, 0.72, 0.75);
     mat.metallic = 0.3;
     mat.roughness = 0.6;
@@ -333,6 +383,9 @@ export class SceneGraphManager {
   // -----------------------------------------------------------------------
 
   dispose(): void {
+    this.selectionHighlight.dispose();
+    this.hoverHighlight.dispose();
+
     for (const entity of this.entities.values()) {
       for (const mesh of entity.meshes) {
         mesh.dispose();

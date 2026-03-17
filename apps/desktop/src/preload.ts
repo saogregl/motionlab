@@ -23,6 +23,9 @@ interface MotionLabAPI {
   onEngineStatusChanged(
     callback: (status: { status: string; code?: number | null; signal?: string | null }) => void,
   ): void;
+  openFileDialog(options?: {
+    filters?: Array<{ name: string; extensions: string[] }>;
+  }): Promise<string | null>;
 }
 
 const api: MotionLabAPI = {
@@ -33,6 +36,7 @@ const api: MotionLabAPI = {
       callback(status);
     });
   },
+  openFileDialog: (options) => ipcRenderer.invoke('show-open-dialog', options),
 };
 
 contextBridge.exposeInMainWorld('motionlab', api);

@@ -4,7 +4,7 @@
 
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
-import type { AssetReference, Mechanism } from "../mechanism/mechanism_pb.js";
+import type { AssetReference, DisplayMesh, MassProperties, Mechanism, Pose } from "../mechanism/mechanism_pb.js";
 import { file_mechanism_mechanism } from "../mechanism/mechanism_pb.js";
 import type { Message } from "@bufbuild/protobuf";
 
@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file protocol/transport.proto.
  */
 export const file_protocol_transport: GenFile = /*@__PURE__*/
-  fileDesc("Chhwcm90b2NvbC90cmFuc3BvcnQucHJvdG8SEm1vdGlvbmxhYi5wcm90b2NvbCIwCg9Qcm90b2NvbFZlcnNpb24SDAoEbmFtZRgBIAEoCRIPCgd2ZXJzaW9uGAIgASgNIscBCgdDb21tYW5kEhMKC3NlcXVlbmNlX2lkGAEgASgEEjIKCWhhbmRzaGFrZRgKIAEoCzIdLm1vdGlvbmxhYi5wcm90b2NvbC5IYW5kc2hha2VIABIoCgRwaW5nGAsgASgLMhgubW90aW9ubGFiLnByb3RvY29sLlBpbmdIABI+CgxpbXBvcnRfYXNzZXQYDCABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0QXNzZXRDb21tYW5kSABCCQoHcGF5bG9hZCLSAgoFRXZlbnQSEwoLc2VxdWVuY2VfaWQYASABKAQSOQoNaGFuZHNoYWtlX2FjaxgKIAEoCzIgLm1vdGlvbmxhYi5wcm90b2NvbC5IYW5kc2hha2VBY2tIABIoCgRwb25nGAsgASgLMhgubW90aW9ubGFiLnByb3RvY29sLlBvbmdIABI5Cg1lbmdpbmVfc3RhdHVzGAwgASgLMiAubW90aW9ubGFiLnByb3RvY29sLkVuZ2luZVN0YXR1c0gAEkQKE2ltcG9ydF9hc3NldF9yZXN1bHQYDSABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0QXNzZXRSZXN1bHRIABJDChJtZWNoYW5pc21fc25hcHNob3QYDiABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuTWVjaGFuaXNtU25hcHNob3RIAEIJCgdwYXlsb2FkIlkKCUhhbmRzaGFrZRI1Cghwcm90b2NvbBgBIAEoCzIjLm1vdGlvbmxhYi5wcm90b2NvbC5Qcm90b2NvbFZlcnNpb24SFQoNc2Vzc2lvbl90b2tlbhgCIAEoCSJ4CgxIYW5kc2hha2VBY2sSEgoKY29tcGF0aWJsZRgBIAEoCBI8Cg9lbmdpbmVfcHJvdG9jb2wYAiABKAsyIy5tb3Rpb25sYWIucHJvdG9jb2wuUHJvdG9jb2xWZXJzaW9uEhYKDmVuZ2luZV92ZXJzaW9uGAMgASgJIhkKBFBpbmcSEQoJdGltZXN0YW1wGAEgASgEIhkKBFBvbmcSEQoJdGltZXN0YW1wGAEgASgEItoBCgxFbmdpbmVTdGF0dXMSNQoFc3RhdGUYASABKA4yJi5tb3Rpb25sYWIucHJvdG9jb2wuRW5naW5lU3RhdHVzLlN0YXRlEg8KB21lc3NhZ2UYAiABKAkigQEKBVN0YXRlEhUKEVNUQVRFX1VOU1BFQ0lGSUVEEAASFgoSU1RBVEVfSU5JVElBTElaSU5HEAESDwoLU1RBVEVfUkVBRFkQAhIOCgpTVEFURV9CVVNZEAMSDwoLU1RBVEVfRVJST1IQBBIXChNTVEFURV9TSFVUVElOR19ET1dOEAUiJwoSSW1wb3J0QXNzZXRDb21tYW5kEhEKCWZpbGVfcGF0aBgBIAEoCSJzChFJbXBvcnRBc3NldFJlc3VsdBIPCgdzdWNjZXNzGAEgASgIEhUKDWVycm9yX21lc3NhZ2UYAiABKAkSNgoJYXNzZXRfcmVmGAMgASgLMiMubW90aW9ubGFiLm1lY2hhbmlzbS5Bc3NldFJlZmVyZW5jZSJGChFNZWNoYW5pc21TbmFwc2hvdBIxCgltZWNoYW5pc20YASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLk1lY2hhbmlzbWIGcHJvdG8z", [file_mechanism_mechanism]);
+  fileDesc("Chhwcm90b2NvbC90cmFuc3BvcnQucHJvdG8SEm1vdGlvbmxhYi5wcm90b2NvbCIwCg9Qcm90b2NvbFZlcnNpb24SDAoEbmFtZRgBIAEoCRIPCgd2ZXJzaW9uGAIgASgNIscBCgdDb21tYW5kEhMKC3NlcXVlbmNlX2lkGAEgASgEEjIKCWhhbmRzaGFrZRgKIAEoCzIdLm1vdGlvbmxhYi5wcm90b2NvbC5IYW5kc2hha2VIABIoCgRwaW5nGAsgASgLMhgubW90aW9ubGFiLnByb3RvY29sLlBpbmdIABI+CgxpbXBvcnRfYXNzZXQYDCABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0QXNzZXRDb21tYW5kSABCCQoHcGF5bG9hZCLSAgoFRXZlbnQSEwoLc2VxdWVuY2VfaWQYASABKAQSOQoNaGFuZHNoYWtlX2FjaxgKIAEoCzIgLm1vdGlvbmxhYi5wcm90b2NvbC5IYW5kc2hha2VBY2tIABIoCgRwb25nGAsgASgLMhgubW90aW9ubGFiLnByb3RvY29sLlBvbmdIABI5Cg1lbmdpbmVfc3RhdHVzGAwgASgLMiAubW90aW9ubGFiLnByb3RvY29sLkVuZ2luZVN0YXR1c0gAEkQKE2ltcG9ydF9hc3NldF9yZXN1bHQYDSABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0QXNzZXRSZXN1bHRIABJDChJtZWNoYW5pc21fc25hcHNob3QYDiABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuTWVjaGFuaXNtU25hcHNob3RIAEIJCgdwYXlsb2FkIlkKCUhhbmRzaGFrZRI1Cghwcm90b2NvbBgBIAEoCzIjLm1vdGlvbmxhYi5wcm90b2NvbC5Qcm90b2NvbFZlcnNpb24SFQoNc2Vzc2lvbl90b2tlbhgCIAEoCSJ4CgxIYW5kc2hha2VBY2sSEgoKY29tcGF0aWJsZRgBIAEoCBI8Cg9lbmdpbmVfcHJvdG9jb2wYAiABKAsyIy5tb3Rpb25sYWIucHJvdG9jb2wuUHJvdG9jb2xWZXJzaW9uEhYKDmVuZ2luZV92ZXJzaW9uGAMgASgJIhkKBFBpbmcSEQoJdGltZXN0YW1wGAEgASgEIhkKBFBvbmcSEQoJdGltZXN0YW1wGAEgASgEItoBCgxFbmdpbmVTdGF0dXMSNQoFc3RhdGUYASABKA4yJi5tb3Rpb25sYWIucHJvdG9jb2wuRW5naW5lU3RhdHVzLlN0YXRlEg8KB21lc3NhZ2UYAiABKAkigQEKBVN0YXRlEhUKEVNUQVRFX1VOU1BFQ0lGSUVEEAASFgoSU1RBVEVfSU5JVElBTElaSU5HEAESDwoLU1RBVEVfUkVBRFkQAhIOCgpTVEFURV9CVVNZEAMSDwoLU1RBVEVfRVJST1IQBBIXChNTVEFURV9TSFVUVElOR19ET1dOEAUiXAoNSW1wb3J0T3B0aW9ucxIYChBkZW5zaXR5X292ZXJyaWRlGAEgASgBEhwKFHRlc3NlbGxhdGlvbl9xdWFsaXR5GAIgASgBEhMKC3VuaXRfc3lzdGVtGAMgASgJImIKEkltcG9ydEFzc2V0Q29tbWFuZBIRCglmaWxlX3BhdGgYASABKAkSOQoOaW1wb3J0X29wdGlvbnMYAiABKAsyIS5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0T3B0aW9ucyKPAgoQQm9keUltcG9ydFJlc3VsdBIPCgdib2R5X2lkGAEgASgJEgwKBG5hbWUYAiABKAkSNgoMZGlzcGxheV9tZXNoGAMgASgLMiAubW90aW9ubGFiLm1lY2hhbmlzbS5EaXNwbGF5TWVzaBI8Cg9tYXNzX3Byb3BlcnRpZXMYBCABKAsyIy5tb3Rpb25sYWIubWVjaGFuaXNtLk1hc3NQcm9wZXJ0aWVzEicKBHBvc2UYBSABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlBvc2USPQoQc291cmNlX2Fzc2V0X3JlZhgGIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uQXNzZXRSZWZlcmVuY2UihgEKEUltcG9ydEFzc2V0UmVzdWx0Eg8KB3N1Y2Nlc3MYASABKAgSFQoNZXJyb3JfbWVzc2FnZRgCIAEoCRI0CgZib2RpZXMYAyADKAsyJC5tb3Rpb25sYWIucHJvdG9jb2wuQm9keUltcG9ydFJlc3VsdBITCgtkaWFnbm9zdGljcxgEIAMoCSJGChFNZWNoYW5pc21TbmFwc2hvdBIxCgltZWNoYW5pc20YASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLk1lY2hhbmlzbWIGcHJvdG8z", [file_mechanism_mechanism]);
 
 /**
  * Protocol version for compatibility checking
@@ -287,8 +287,39 @@ export const EngineStatus_StateSchema: GenEnum<EngineStatus_State> = /*@__PURE__
   enumDesc(file_protocol_transport, 7, 0);
 
 /**
- * Stub — expanded in Epic 3
- *
+ * @generated from message motionlab.protocol.ImportOptions
+ */
+export type ImportOptions = Message<"motionlab.protocol.ImportOptions"> & {
+  /**
+   * kg/m³, 0 = use default (1000)
+   *
+   * @generated from field: double density_override = 1;
+   */
+  densityOverride: number;
+
+  /**
+   * linear deflection, 0 = use default (0.1)
+   *
+   * @generated from field: double tessellation_quality = 2;
+   */
+  tessellationQuality: number;
+
+  /**
+   * "millimeter" (default), "meter", "inch"
+   *
+   * @generated from field: string unit_system = 3;
+   */
+  unitSystem: string;
+};
+
+/**
+ * Describes the message motionlab.protocol.ImportOptions.
+ * Use `create(ImportOptionsSchema)` to create a new message.
+ */
+export const ImportOptionsSchema: GenMessage<ImportOptions> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 8);
+
+/**
  * @generated from message motionlab.protocol.ImportAssetCommand
  */
 export type ImportAssetCommand = Message<"motionlab.protocol.ImportAssetCommand"> & {
@@ -296,6 +327,11 @@ export type ImportAssetCommand = Message<"motionlab.protocol.ImportAssetCommand"
    * @generated from field: string file_path = 1;
    */
   filePath: string;
+
+  /**
+   * @generated from field: motionlab.protocol.ImportOptions import_options = 2;
+   */
+  importOptions?: ImportOptions;
 };
 
 /**
@@ -303,7 +339,51 @@ export type ImportAssetCommand = Message<"motionlab.protocol.ImportAssetCommand"
  * Use `create(ImportAssetCommandSchema)` to create a new message.
  */
 export const ImportAssetCommandSchema: GenMessage<ImportAssetCommand> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 8);
+  messageDesc(file_protocol_transport, 9);
+
+/**
+ * @generated from message motionlab.protocol.BodyImportResult
+ */
+export type BodyImportResult = Message<"motionlab.protocol.BodyImportResult"> & {
+  /**
+   * UUIDv7
+   *
+   * @generated from field: string body_id = 1;
+   */
+  bodyId: string;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * @generated from field: motionlab.mechanism.DisplayMesh display_mesh = 3;
+   */
+  displayMesh?: DisplayMesh;
+
+  /**
+   * @generated from field: motionlab.mechanism.MassProperties mass_properties = 4;
+   */
+  massProperties?: MassProperties;
+
+  /**
+   * @generated from field: motionlab.mechanism.Pose pose = 5;
+   */
+  pose?: Pose;
+
+  /**
+   * @generated from field: motionlab.mechanism.AssetReference source_asset_ref = 6;
+   */
+  sourceAssetRef?: AssetReference;
+};
+
+/**
+ * Describes the message motionlab.protocol.BodyImportResult.
+ * Use `create(BodyImportResultSchema)` to create a new message.
+ */
+export const BodyImportResultSchema: GenMessage<BodyImportResult> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 10);
 
 /**
  * @generated from message motionlab.protocol.ImportAssetResult
@@ -320,9 +400,14 @@ export type ImportAssetResult = Message<"motionlab.protocol.ImportAssetResult"> 
   errorMessage: string;
 
   /**
-   * @generated from field: motionlab.mechanism.AssetReference asset_ref = 3;
+   * @generated from field: repeated motionlab.protocol.BodyImportResult bodies = 3;
    */
-  assetRef?: AssetReference;
+  bodies: BodyImportResult[];
+
+  /**
+   * @generated from field: repeated string diagnostics = 4;
+   */
+  diagnostics: string[];
 };
 
 /**
@@ -330,7 +415,7 @@ export type ImportAssetResult = Message<"motionlab.protocol.ImportAssetResult"> 
  * Use `create(ImportAssetResultSchema)` to create a new message.
  */
 export const ImportAssetResultSchema: GenMessage<ImportAssetResult> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 9);
+  messageDesc(file_protocol_transport, 11);
 
 /**
  * Serialized mechanism snapshot for persistence and transport
@@ -349,5 +434,5 @@ export type MechanismSnapshot = Message<"motionlab.protocol.MechanismSnapshot"> 
  * Use `create(MechanismSnapshotSchema)` to create a new message.
  */
 export const MechanismSnapshotSchema: GenMessage<MechanismSnapshot> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 10);
+  messageDesc(file_protocol_transport, 12);
 

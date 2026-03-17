@@ -160,9 +160,9 @@ function makeNodes(): TreeNode[] {
 }
 
 const ICON_MAP: Record<string, React.ReactNode> = {
-  body: <Box className="size-4 text-[var(--text-tertiary)]" />,
-  datum: <CircleDot className="size-4 text-[var(--text-tertiary)]" />,
-  joint: <Link2 className="size-4 text-[var(--joint-revolute)]" />,
+  body: <Box className="size-3.5 text-[var(--text-tertiary)]" />,
+  datum: <CircleDot className="size-3.5 text-[var(--text-tertiary)]" />,
+  joint: <Link2 className="size-3.5 text-[var(--joint-revolute)] opacity-70" />,
 };
 
 function renderRow(node: TreeNode, props: TreeRowRenderProps) {

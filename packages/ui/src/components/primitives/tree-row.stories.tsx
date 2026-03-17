@@ -19,7 +19,7 @@ export const Default: Story = {
   args: {
     level: 0,
     name: 'Crank Arm',
-    icon: <Box className="size-4 text-[var(--text-tertiary)]" />,
+    icon: <Box className="size-3.5 text-[var(--text-tertiary)]" />,
     hasChildren: false,
     onSelect: () => {},
     onToggleVisibility: () => {},
@@ -33,7 +33,7 @@ export const AllStates: Story = {
       <TreeRow
         level={0}
         name="Default"
-        icon={<Box className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
         hasChildren
         expanded
         onToggleExpand={() => {}}
@@ -44,7 +44,7 @@ export const AllStates: Story = {
       <TreeRow
         level={1}
         name="Selected"
-        icon={<Box className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
         selected
         onSelect={() => {}}
         onToggleVisibility={() => {}}
@@ -53,7 +53,7 @@ export const AllStates: Story = {
       <TreeRow
         level={1}
         name="Selected + Focused"
-        icon={<Box className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
         selected
         focused
         onSelect={() => {}}
@@ -63,21 +63,21 @@ export const AllStates: Story = {
       <TreeRow
         level={1}
         name="Disabled"
-        icon={<Box className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
         disabled
         onSelect={() => {}}
       />
       <TreeRow
         level={1}
         name="Drag Target"
-        icon={<Box className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
         dragTarget
         onSelect={() => {}}
       />
       <TreeRow
         level={1}
         name="With Warning"
-        icon={<Box className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
         status="warning"
         secondary="12.5 kg"
         onSelect={() => {}}
@@ -87,14 +87,14 @@ export const AllStates: Story = {
       <TreeRow
         level={1}
         name="With Danger"
-        icon={<Box className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
         status="danger"
         onSelect={() => {}}
       />
       <TreeRow
         level={1}
         name="Hidden"
-        icon={<Box className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
         hidden
         onSelect={() => {}}
         onToggleVisibility={() => {}}
@@ -102,7 +102,7 @@ export const AllStates: Story = {
       <TreeRow
         level={1}
         name="Selected + Inactive (unfocused)"
-        icon={<Box className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
         selected
         onSelect={() => {}}
       />
@@ -116,7 +116,7 @@ export const IndentLevels: Story = {
       <TreeRow
         level={0}
         name="Root Assembly"
-        icon={<Box className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
         hasChildren
         expanded
         onToggleExpand={() => {}}
@@ -125,7 +125,7 @@ export const IndentLevels: Story = {
       <TreeRow
         level={1}
         name="Crankshaft"
-        icon={<Link2 className="size-4 text-[var(--joint-revolute)]" />}
+        icon={<Link2 className="size-3.5 text-[var(--joint-revolute)] opacity-70" />}
         hasChildren
         expanded
         onToggleExpand={() => {}}
@@ -134,21 +134,21 @@ export const IndentLevels: Story = {
       <TreeRow
         level={2}
         name="Bearing A"
-        icon={<CircleDot className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<CircleDot className="size-3.5 text-[var(--text-tertiary)]" />}
         secondary="Origin"
         onSelect={() => {}}
       />
       <TreeRow
         level={2}
         name="Bearing B"
-        icon={<CircleDot className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<CircleDot className="size-3.5 text-[var(--text-tertiary)]" />}
         secondary="Origin"
         onSelect={() => {}}
       />
       <TreeRow
         level={1}
         name="Connecting Rod"
-        icon={<Box className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
         hasChildren
         onToggleExpand={() => {}}
         onSelect={() => {}}
@@ -164,14 +164,14 @@ export const GroupHeader: Story = {
       <TreeRow
         level={1}
         name="Crank Arm"
-        icon={<Box className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<Box className="size-3.5 text-[var(--text-tertiary)]" />}
         onSelect={() => {}}
       />
       <GroupHeaderRow label="Datums" count={2} expanded onToggleExpand={() => {}} />
       <TreeRow
         level={1}
         name="Origin"
-        icon={<Crosshair className="size-4 text-[var(--text-tertiary)]" />}
+        icon={<Crosshair className="size-3.5 text-[var(--text-tertiary)]" />}
         onSelect={() => {}}
       />
       <GroupHeaderRow label="Joints" count={0} onToggleExpand={() => {}} />
