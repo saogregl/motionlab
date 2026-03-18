@@ -14,8 +14,8 @@
 The native engine uses binary protobuf over WebSocket. Messages are defined in `schemas/protocol/transport.proto` and serialized via protobuf-es generated types. JSON representation is available for debug logging via `eventToDebugJson()`.
 
 Message types (proto envelopes):
-- `Command` (frontend → engine): oneof payload — `Handshake`, `Ping`, `ImportAssetCommand`
-- `Event` (engine → frontend): oneof payload — `HandshakeAck`, `Pong`, `EngineStatus`, `ImportAssetResult`, `MechanismSnapshot`
+- `Command` (frontend → engine): oneof payload — `Handshake`, `Ping`, `ImportAssetCommand`, `CreateDatumCommand`, `DeleteDatumCommand`, `RenameDatumCommand`, `CreateJointCommand`, `UpdateJointCommand`, `DeleteJointCommand`
+- `Event` (engine → frontend): oneof payload — `HandshakeAck`, `Pong`, `EngineStatus`, `ImportAssetResult`, `MechanismSnapshot`, `CreateDatumResult`, `DeleteDatumResult`, `RenameDatumResult`, `CreateJointResult`, `UpdateJointResult`, `DeleteJointResult`
 
 Key messages:
 - `Handshake`: carries `ProtocolVersion` (name + version) and session token

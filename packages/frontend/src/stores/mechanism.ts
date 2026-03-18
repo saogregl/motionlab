@@ -31,12 +31,37 @@ export interface BodyState {
   sourceAssetRef: { contentHash: string; originalFilename: string };
 }
 
+export interface DatumState {
+  id: string;
+  name: string;
+  parentBodyId: string;
+  localPose: BodyPose;
+}
+
+export interface JointState {
+  id: string;
+  name: string;
+  type: 'revolute' | 'prismatic' | 'fixed';
+  parentDatumId: string;
+  childDatumId: string;
+  lowerLimit: number;
+  upperLimit: number;
+}
+
 export interface MechanismState {
   bodies: Map<string, BodyState>;
+  datums: Map<string, DatumState>;
+  joints: Map<string, JointState>;
   importing: boolean;
   importError: string | null;
   addBodies: (bodies: BodyState[]) => void;
   removeBody: (id: string) => void;
+  addDatum: (datum: DatumState) => void;
+  removeDatum: (id: string) => void;
+  renameDatum: (id: string, name: string) => void;
+  addJoint: (joint: JointState) => void;
+  updateJoint: (id: string, updates: Partial<Omit<JointState, 'id'>>) => void;
+  removeJoint: (id: string) => void;
   clear: () => void;
   setImporting: (v: boolean) => void;
   setImportError: (e: string | null) => void;
@@ -44,6 +69,8 @@ export interface MechanismState {
 
 export const useMechanismStore = create<MechanismState>()((set) => ({
   bodies: new Map<string, BodyState>(),
+  datums: new Map<string, DatumState>(),
+  joints: new Map<string, JointState>(),
   importing: false,
   importError: null,
 
@@ -63,7 +90,59 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       return { bodies: next };
     }),
 
-  clear: () => set({ bodies: new Map<string, BodyState>(), importError: null }),
+  addDatum: (datum) =>
+    set((state) => {
+      const next = new Map(state.datums);
+      next.set(datum.id, datum);
+      return { datums: next };
+    }),
+
+  removeDatum: (id) =>
+    set((state) => {
+      const next = new Map(state.datums);
+      next.delete(id);
+      return { datums: next };
+    }),
+
+  renameDatum: (id, name) =>
+    set((state) => {
+      const existing = state.datums.get(id);
+      if (!existing) return {};
+      const next = new Map(state.datums);
+      next.set(id, { ...existing, name });
+      return { datums: next };
+    }),
+
+  addJoint: (joint) =>
+    set((state) => {
+      const next = new Map(state.joints);
+      next.set(joint.id, joint);
+      return { joints: next };
+    }),
+
+  updateJoint: (id, updates) =>
+    set((state) => {
+      const existing = state.joints.get(id);
+      if (!existing) return {};
+      const next = new Map(state.joints);
+      next.set(id, { ...existing, ...updates });
+      return { joints: next };
+    }),
+
+  removeJoint: (id) =>
+    set((state) => {
+      const next = new Map(state.joints);
+      next.delete(id);
+      return { joints: next };
+    }),
+
+  clear: () =>
+    set({
+      bodies: new Map<string, BodyState>(),
+      datums: new Map<string, DatumState>(),
+      joints: new Map<string, JointState>(),
+      importError: null,
+    }),
 
   setImporting: (v) => set({ importing: v }),
 

@@ -1,9 +1,17 @@
 import {
+  createCreateDatumCommand,
+  createCreateJointCommand,
+  createDeleteDatumCommand,
+  createDeleteJointCommand,
   createHandshakeCommand,
   createImportAssetCommand,
+  createRenameDatumCommand,
+  createUpdateJointCommand,
   engineStateToString,
   eventToDebugJson,
+  mapJointType,
   parseEvent,
+  toProtoJointType,
 } from '@motionlab/protocol';
 import type { EngineConnectionState } from '../stores/engine-connection.js';
 import type { BodyState } from '../stores/mechanism.js';
@@ -55,13 +63,15 @@ export function connect(set: SetState, _get: GetState) {
       set({ status: 'connecting', endpoint });
 
       const url = `ws://${endpoint.host}:${endpoint.port}`;
-      ws = new WebSocket(url);
-      ws.binaryType = 'arraybuffer';
+      const socket = new WebSocket(url);
+      socket.binaryType = 'arraybuffer';
+      ws = socket;
 
-      ws.onopen = () => {
+      socket.onopen = () => {
+        if (ws !== socket) return; // stale socket from StrictMode double-invoke
         set({ status: 'handshaking' });
 
-        ws?.send(createHandshakeCommand(endpoint.sessionToken ?? ''));
+        socket.send(createHandshakeCommand(endpoint.sessionToken ?? ''));
 
         handshakeTimer = setTimeout(() => {
           set({ status: 'error', errorMessage: 'Handshake timed out' });
@@ -69,7 +79,7 @@ export function connect(set: SetState, _get: GetState) {
         }, 5000);
       };
 
-      ws.onmessage = (event) => {
+      socket.onmessage = (event) => {
         let evt: ReturnType<typeof parseEvent>;
         try {
           evt = parseEvent(event.data as ArrayBuffer);
@@ -155,12 +165,108 @@ export function connect(set: SetState, _get: GetState) {
             mechStore.setImporting(false);
             break;
           }
+          case 'createDatumResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'datum') {
+              const d = result.result.value;
+              mechStore.addDatum({
+                id: d.id?.id ?? '',
+                name: d.name,
+                parentBodyId: d.parentBodyId?.id ?? '',
+                localPose: {
+                  position: {
+                    x: d.localPose?.position?.x ?? 0,
+                    y: d.localPose?.position?.y ?? 0,
+                    z: d.localPose?.position?.z ?? 0,
+                  },
+                  rotation: {
+                    x: d.localPose?.orientation?.x ?? 0,
+                    y: d.localPose?.orientation?.y ?? 0,
+                    z: d.localPose?.orientation?.z ?? 0,
+                    w: d.localPose?.orientation?.w ?? 1,
+                  },
+                },
+              });
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[datum] create failed:', result.result.value);
+            }
+            break;
+          }
+          case 'deleteDatumResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'deletedId') {
+              mechStore.removeDatum(result.result.value.id);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[datum] delete failed:', result.result.value);
+            }
+            break;
+          }
+          case 'renameDatumResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'datum') {
+              const d = result.result.value;
+              mechStore.renameDatum(d.id?.id ?? '', d.name);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[datum] rename failed:', result.result.value);
+            }
+            break;
+          }
+          case 'createJointResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'joint') {
+              const j = result.result.value;
+              mechStore.addJoint({
+                id: j.id?.id ?? '',
+                name: j.name,
+                type: mapJointType(j.type),
+                parentDatumId: j.parentDatumId?.id ?? '',
+                childDatumId: j.childDatumId?.id ?? '',
+                lowerLimit: j.lowerLimit,
+                upperLimit: j.upperLimit,
+              });
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[joint] create failed:', result.result.value);
+            }
+            break;
+          }
+          case 'updateJointResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'joint') {
+              const j = result.result.value;
+              mechStore.updateJoint(j.id?.id ?? '', {
+                name: j.name,
+                type: mapJointType(j.type),
+                parentDatumId: j.parentDatumId?.id ?? '',
+                childDatumId: j.childDatumId?.id ?? '',
+                lowerLimit: j.lowerLimit,
+                upperLimit: j.upperLimit,
+              });
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[joint] update failed:', result.result.value);
+            }
+            break;
+          }
+          case 'deleteJointResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'deletedId') {
+              mechStore.removeJoint(result.result.value.id);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[joint] delete failed:', result.result.value);
+            }
+            break;
+          }
           case 'pong':
             break;
         }
       };
 
-      ws.onclose = () => {
+      socket.onclose = () => {
         if (handshakeTimer) {
           clearTimeout(handshakeTimer);
           handshakeTimer = null;
@@ -169,7 +275,7 @@ export function connect(set: SetState, _get: GetState) {
         ws = null;
       };
 
-      ws.onerror = () => {
+      socket.onerror = () => {
         set({ status: 'error', errorMessage: 'WebSocket error' });
       };
     })
@@ -190,4 +296,56 @@ export function sendImportAsset(
 ): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(createImportAssetCommand(filePath, options));
+}
+
+export function sendCreateDatum(
+  parentBodyId: string,
+  name: string,
+  localPose: {
+    position: { x: number; y: number; z: number };
+    orientation: { x: number; y: number; z: number; w: number };
+  },
+): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createCreateDatumCommand(parentBodyId, localPose, name));
+}
+
+export function sendDeleteDatum(datumId: string): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createDeleteDatumCommand(datumId));
+}
+
+export function sendRenameDatum(datumId: string, newName: string): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createRenameDatumCommand(datumId, newName));
+}
+
+export function sendCreateJoint(
+  parentDatumId: string,
+  childDatumId: string,
+  type: 'revolute' | 'prismatic' | 'fixed',
+  name: string,
+  lowerLimit: number,
+  upperLimit: number,
+): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createCreateJointCommand(parentDatumId, childDatumId, toProtoJointType(type), name, lowerLimit, upperLimit));
+}
+
+export function sendUpdateJoint(
+  jointId: string,
+  updates: { name?: string; type?: 'revolute' | 'prismatic' | 'fixed'; lowerLimit?: number; upperLimit?: number },
+): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createUpdateJointCommand(jointId, {
+    name: updates.name,
+    type: updates.type !== undefined ? toProtoJointType(updates.type) : undefined,
+    lowerLimit: updates.lowerLimit,
+    upperLimit: updates.upperLimit,
+  }));
+}
+
+export function sendDeleteJoint(jointId: string): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createDeleteJointCommand(jointId));
 }

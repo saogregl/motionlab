@@ -2,6 +2,7 @@ import {
   type AbstractMesh,
   ArcRotateCamera,
   Mesh,
+  type Observer,
   Quaternion,
   type Scene,
   TransformNode,
@@ -9,6 +10,12 @@ import {
   VertexData,
 } from '@babylonjs/core';
 
+import { createDatumTriad } from './rendering/datum-triad.js';
+import {
+  createFixedJointVisual,
+  createPrismaticJointVisual,
+  createRevoluteJointVisual,
+} from './rendering/joint-visuals.js';
 import type { GridOverlay } from './rendering/grid.js';
 import type { LightingRig } from './rendering/lighting.js';
 import type { MaterialFactory } from './rendering/materials.js';
@@ -71,6 +78,13 @@ const PRESET_ANGLES: Record<
 };
 
 // ---------------------------------------------------------------------------
+// Datum triad view-distance scaling
+// ---------------------------------------------------------------------------
+
+/** Triads render at this fraction of camera distance, keeping screen size constant. */
+const DATUM_SCALE_FACTOR = 0.05;
+
+// ---------------------------------------------------------------------------
 // SceneGraphManager
 // ---------------------------------------------------------------------------
 
@@ -86,11 +100,24 @@ export class SceneGraphManager {
   private readonly deps: SceneGraphDeps;
   private readonly entities = new Map<string, SceneEntity>();
   private currentSelectedIds: Set<string> = new Set();
+  private readonly _datumScaleObserver: Observer<Scene>;
 
   constructor(scene: Scene, camera: ArcRotateCamera, deps: SceneGraphDeps) {
     this._scene = scene;
     this._camera = camera;
     this.deps = deps;
+
+    // Per-frame view-distance scaling for datum triads and joint visuals
+    this._datumScaleObserver = scene.onBeforeRenderObservable.add(() => {
+      const camPos = this._camera.position;
+      for (const entity of this.entities.values()) {
+        if (entity.type !== 'datum' && entity.type !== 'joint') continue;
+        const worldPos = entity.rootNode.getAbsolutePosition();
+        const dist = Vector3.Distance(camPos, worldPos);
+        const s = Math.max(dist * DATUM_SCALE_FACTOR, 0.001);
+        entity.rootNode.scaling.set(s, s, s);
+      }
+    })!;
   }
 
   get scene(): Scene {
@@ -201,6 +228,175 @@ export class SceneGraphManager {
   }
 
   // -----------------------------------------------------------------------
+  // Datum management
+  // -----------------------------------------------------------------------
+
+  addDatum(
+    id: string,
+    parentBodyId: string,
+    localPose: PoseInput,
+  ): SceneEntity | undefined {
+    if (this.entities.has(id)) {
+      console.warn(
+        `SceneGraphManager: datum '${id}' already exists, removing first`,
+      );
+      this.removeDatum(id);
+    }
+
+    const parentEntity = this.entities.get(parentBodyId);
+    if (!parentEntity) {
+      console.warn(
+        `SceneGraphManager: parent body '${parentBodyId}' not found for datum '${id}'`,
+      );
+      return undefined;
+    }
+
+    const { rootNode, meshes } = createDatumTriad(this._scene, id);
+
+    // Parent to body so datum inherits body world transform
+    rootNode.parent = parentEntity.rootNode;
+
+    rootNode.position = new Vector3(
+      localPose.position[0],
+      localPose.position[1],
+      localPose.position[2],
+    );
+    rootNode.rotationQuaternion = new Quaternion(
+      localPose.rotation[0],
+      localPose.rotation[1],
+      localPose.rotation[2],
+      localPose.rotation[3],
+    );
+
+    const entity: SceneEntity = {
+      id,
+      type: 'datum',
+      rootNode,
+      meshes,
+    };
+    this.entities.set(id, entity);
+    return entity;
+  }
+
+  removeDatum(id: string): boolean {
+    const entity = this.entities.get(id);
+    if (!entity || entity.type !== 'datum') {
+      console.warn(
+        `SceneGraphManager: cannot remove unknown datum '${id}'`,
+      );
+      return false;
+    }
+
+    for (const mesh of entity.meshes) {
+      mesh.dispose();
+    }
+    this.currentSelectedIds.delete(id);
+    entity.rootNode.dispose();
+    this.entities.delete(id);
+    return true;
+  }
+
+  // -----------------------------------------------------------------------
+  // Joint management
+  // -----------------------------------------------------------------------
+
+  addJoint(
+    id: string,
+    parentDatumId: string,
+    childDatumId: string,
+    jointType: 'revolute' | 'prismatic' | 'fixed',
+  ): SceneEntity | undefined {
+    if (this.entities.has(id)) {
+      console.warn(`SceneGraphManager: joint '${id}' already exists, removing first`);
+      this.removeJoint(id);
+    }
+
+    const parentEntity = this.entities.get(parentDatumId);
+    const childEntity = this.entities.get(childDatumId);
+    if (!parentEntity || !childEntity) {
+      console.warn(
+        `SceneGraphManager: datum(s) not found for joint '${id}' (parent='${parentDatumId}', child='${childDatumId}')`,
+      );
+      return undefined;
+    }
+
+    const parentPos = parentEntity.rootNode.getAbsolutePosition();
+    const childPos = childEntity.rootNode.getAbsolutePosition();
+    const midpoint = Vector3.Center(parentPos, childPos);
+    const axis = childPos.subtract(parentPos);
+
+    let result: { rootNode: TransformNode; meshes: AbstractMesh[] };
+    switch (jointType) {
+      case 'revolute':
+        result = createRevoluteJointVisual(this._scene, id, midpoint, axis);
+        break;
+      case 'prismatic':
+        result = createPrismaticJointVisual(this._scene, id, parentPos, childPos);
+        break;
+      case 'fixed':
+        result = createFixedJointVisual(this._scene, id, parentPos, childPos);
+        break;
+    }
+
+    // Store datum references on rootNode metadata for future updates
+    result.rootNode.metadata = {
+      ...result.rootNode.metadata,
+      parentDatumId,
+      childDatumId,
+    };
+
+    const entity: SceneEntity = {
+      id,
+      type: 'joint',
+      rootNode: result.rootNode,
+      meshes: result.meshes,
+    };
+    this.entities.set(id, entity);
+    return entity;
+  }
+
+  updateJoint(
+    id: string,
+    jointType: 'revolute' | 'prismatic' | 'fixed',
+  ): void {
+    const entity = this.entities.get(id);
+    if (!entity || entity.type !== 'joint') {
+      console.warn(`SceneGraphManager: cannot update unknown joint '${id}'`);
+      return;
+    }
+
+    const meta = entity.rootNode.metadata as {
+      parentDatumId?: string;
+      childDatumId?: string;
+    };
+    const parentDatumId = meta?.parentDatumId;
+    const childDatumId = meta?.childDatumId;
+    if (!parentDatumId || !childDatumId) return;
+
+    // Dispose old meshes and rootNode
+    for (const mesh of entity.meshes) mesh.dispose();
+    entity.rootNode.dispose();
+    this.entities.delete(id);
+
+    // Recreate
+    this.addJoint(id, parentDatumId, childDatumId, jointType);
+  }
+
+  removeJoint(id: string): boolean {
+    const entity = this.entities.get(id);
+    if (!entity || entity.type !== 'joint') {
+      console.warn(`SceneGraphManager: cannot remove unknown joint '${id}'`);
+      return false;
+    }
+
+    for (const mesh of entity.meshes) mesh.dispose();
+    this.currentSelectedIds.delete(id);
+    entity.rootNode.dispose();
+    this.entities.delete(id);
+    return true;
+  }
+
+  // -----------------------------------------------------------------------
   // Lookups
   // -----------------------------------------------------------------------
 
@@ -302,11 +498,14 @@ export class SceneGraphManager {
   // -----------------------------------------------------------------------
 
   dispose(): void {
+    this._scene.onBeforeRenderObservable.remove(this._datumScaleObserver);
     this.deps.selectionVisuals.clearAll();
 
     for (const entity of this.entities.values()) {
       for (const mesh of entity.meshes) {
-        this.deps.lightingRig.removeShadowCaster(mesh);
+        if (entity.type === 'body') {
+          this.deps.lightingRig.removeShadowCaster(mesh);
+        }
         mesh.dispose();
       }
       entity.rootNode.dispose();

@@ -25,7 +25,12 @@ message Command {
     Handshake handshake = 10;
     Ping ping = 11;
     ImportAssetCommand import_asset = 12;
-    // Future: CompileMechanism, SimulationControl, etc.
+    CreateDatumCommand create_datum = 13;
+    DeleteDatumCommand delete_datum = 14;
+    RenameDatumCommand rename_datum = 15;
+    CreateJointCommand create_joint = 20;
+    UpdateJointCommand update_joint = 21;
+    DeleteJointCommand delete_joint = 22;
   }
 }
 
@@ -38,7 +43,12 @@ message Event {
     EngineStatus engine_status = 12;
     ImportAssetResult import_asset_result = 13;
     MechanismSnapshot mechanism_snapshot = 14;
-    // Future: CompilationResult, SimulationState, etc.
+    CreateDatumResult create_datum_result = 15;
+    DeleteDatumResult delete_datum_result = 16;
+    RenameDatumResult rename_datum_result = 17;
+    CreateJointResult create_joint_result = 20;
+    UpdateJointResult update_joint_result = 21;
+    DeleteJointResult delete_joint_result = 22;
   }
 }
 
@@ -105,4 +115,86 @@ message ImportAssetResult {
 // Serialized mechanism snapshot for persistence and transport
 message MechanismSnapshot {
   motionlab.mechanism.Mechanism mechanism = 1;
+}
+
+// Datum CRUD — Command→Result pattern with oneof success/error
+
+message CreateDatumCommand {
+  motionlab.mechanism.ElementId parent_body_id = 1;
+  motionlab.mechanism.Pose local_pose = 2;
+  string name = 3;
+}
+
+message DeleteDatumCommand {
+  motionlab.mechanism.ElementId datum_id = 1;
+}
+
+message RenameDatumCommand {
+  motionlab.mechanism.ElementId datum_id = 1;
+  string name = 2;
+}
+
+message CreateDatumResult {
+  oneof result {
+    motionlab.mechanism.Datum datum = 1;
+    string error_message = 2;
+  }
+}
+
+message DeleteDatumResult {
+  oneof result {
+    motionlab.mechanism.ElementId deleted_id = 1;
+    string error_message = 2;
+  }
+}
+
+message RenameDatumResult {
+  oneof result {
+    motionlab.mechanism.Datum datum = 1;
+    string error_message = 2;
+  }
+}
+
+// Joint CRUD — Command→Result pattern with oneof success/error
+
+message CreateJointCommand {
+  motionlab.mechanism.ElementId parent_datum_id = 1;
+  motionlab.mechanism.ElementId child_datum_id = 2;
+  motionlab.mechanism.JointType type = 3;
+  string name = 4;
+  double lower_limit = 5;
+  double upper_limit = 6;
+}
+
+message UpdateJointCommand {
+  motionlab.mechanism.ElementId joint_id = 1;
+  optional string name = 2;
+  optional motionlab.mechanism.JointType type = 3;
+  optional double lower_limit = 4;
+  optional double upper_limit = 5;
+}
+
+message DeleteJointCommand {
+  motionlab.mechanism.ElementId joint_id = 1;
+}
+
+message CreateJointResult {
+  oneof result {
+    motionlab.mechanism.Joint joint = 1;
+    string error_message = 2;
+  }
+}
+
+message UpdateJointResult {
+  oneof result {
+    motionlab.mechanism.Joint joint = 1;
+    string error_message = 2;
+  }
+}
+
+message DeleteJointResult {
+  oneof result {
+    motionlab.mechanism.ElementId deleted_id = 1;
+    string error_message = 2;
+  }
 }

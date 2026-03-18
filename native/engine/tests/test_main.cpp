@@ -5,6 +5,7 @@
 #include <ixwebsocket/IXGetFreePort.h>
 #include <ixwebsocket/IXNetSystem.h>
 #include "protocol/transport.pb.h"
+#include "mechanism/mechanism.pb.h"
 
 #include <cassert>
 #include <chrono>
@@ -228,6 +229,126 @@ static void test_protocol_roundtrip(uint16_t port) {
     std::cout << "  PASS: protocol roundtrip" << std::endl;
 }
 
+static void test_create_datum_invalid_parent(uint16_t port) {
+    TestClient client;
+    client.connect(port);
+
+    // Authenticate first
+    client.send_command(make_handshake(1, TEST_TOKEN));
+    client.wait_for_message(1); // ack + status
+
+    // Send CreateDatumCommand with bogus parent body ID
+    Command cmd;
+    cmd.set_sequence_id(200);
+    auto* cd = cmd.mutable_create_datum();
+    cd->mutable_parent_body_id()->set_id("nonexistent-body");
+    cd->set_name("BadDatum");
+    auto* pose = cd->mutable_local_pose();
+    pose->mutable_position()->set_x(0);
+    pose->mutable_position()->set_y(0);
+    pose->mutable_position()->set_z(0);
+    pose->mutable_orientation()->set_w(1);
+    pose->mutable_orientation()->set_x(0);
+    pose->mutable_orientation()->set_y(0);
+    pose->mutable_orientation()->set_z(0);
+    client.send_command(cmd);
+
+    const auto& evt = client.wait_for_message(2);
+    assert(evt.sequence_id() == 200);
+    assert(evt.payload_case() == Event::kCreateDatumResult);
+    assert(evt.create_datum_result().result_case() ==
+           CreateDatumResult::kErrorMessage);
+    assert(!evt.create_datum_result().error_message().empty());
+
+    client.close();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::cout << "  PASS: create datum invalid parent" << std::endl;
+}
+
+static void test_delete_datum_nonexistent(uint16_t port) {
+    TestClient client;
+    client.connect(port);
+
+    // Authenticate first
+    client.send_command(make_handshake(1, TEST_TOKEN));
+    client.wait_for_message(1); // ack + status
+
+    // Send DeleteDatumCommand with nonexistent datum ID
+    Command cmd;
+    cmd.set_sequence_id(201);
+    cmd.mutable_delete_datum()->mutable_datum_id()->set_id("nonexistent-datum");
+    client.send_command(cmd);
+
+    const auto& evt = client.wait_for_message(2);
+    assert(evt.sequence_id() == 201);
+    assert(evt.payload_case() == Event::kDeleteDatumResult);
+    assert(evt.delete_datum_result().result_case() ==
+           DeleteDatumResult::kErrorMessage);
+    assert(!evt.delete_datum_result().error_message().empty());
+
+    client.close();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::cout << "  PASS: delete datum nonexistent" << std::endl;
+}
+
+static void test_create_joint_invalid_datum(uint16_t port) {
+    TestClient client;
+    client.connect(port);
+
+    // Authenticate
+    client.send_command(make_handshake(1, TEST_TOKEN));
+    client.wait_for_message(1); // ack + status
+
+    // Send CreateJointCommand with bad datum IDs
+    Command cmd;
+    cmd.set_sequence_id(300);
+    auto* cj = cmd.mutable_create_joint();
+    cj->mutable_parent_datum_id()->set_id("bad-datum-1");
+    cj->mutable_child_datum_id()->set_id("bad-datum-2");
+    cj->set_type(motionlab::mechanism::JOINT_TYPE_REVOLUTE);
+    cj->set_name("BadJoint");
+    cj->set_lower_limit(-1.0);
+    cj->set_upper_limit(1.0);
+    client.send_command(cmd);
+
+    const auto& evt = client.wait_for_message(2);
+    assert(evt.sequence_id() == 300);
+    assert(evt.payload_case() == Event::kCreateJointResult);
+    assert(evt.create_joint_result().result_case() ==
+           CreateJointResult::kErrorMessage);
+    assert(!evt.create_joint_result().error_message().empty());
+
+    client.close();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::cout << "  PASS: create joint invalid datum" << std::endl;
+}
+
+static void test_delete_joint_nonexistent(uint16_t port) {
+    TestClient client;
+    client.connect(port);
+
+    // Authenticate
+    client.send_command(make_handshake(1, TEST_TOKEN));
+    client.wait_for_message(1); // ack + status
+
+    // Send DeleteJointCommand with bad ID
+    Command cmd;
+    cmd.set_sequence_id(301);
+    cmd.mutable_delete_joint()->mutable_joint_id()->set_id("nonexistent-joint");
+    client.send_command(cmd);
+
+    const auto& evt = client.wait_for_message(2);
+    assert(evt.sequence_id() == 301);
+    assert(evt.payload_case() == Event::kDeleteJointResult);
+    assert(evt.delete_joint_result().result_case() ==
+           DeleteJointResult::kErrorMessage);
+    assert(!evt.delete_joint_result().error_message().empty());
+
+    client.close();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::cout << "  PASS: delete joint nonexistent" << std::endl;
+}
+
 int main() {
     ix::initNetSystem();
 
@@ -252,6 +373,10 @@ int main() {
     test_wrong_token(port);
     test_ping_pong(port);
     test_protocol_roundtrip(port);
+    test_create_datum_invalid_parent(port);
+    test_delete_datum_nonexistent(port);
+    test_create_joint_invalid_datum(port);
+    test_delete_joint_nonexistent(port);
 
     // Shutdown
     server.stop();

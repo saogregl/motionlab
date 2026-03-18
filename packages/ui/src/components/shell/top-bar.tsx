@@ -1,5 +1,6 @@
-import { ChevronDown, Search } from 'lucide-react';
+import { ChevronDown, Copy, Minus, Search, Square, X } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -13,12 +14,68 @@ interface TopBarProps {
   className?: string;
 }
 
+/**
+ * Window control buttons for the custom title bar.
+ * Only rendered when running inside the Electron desktop shell.
+ */
+function WindowControls() {
+  const api = (globalThis as { motionlab?: {
+    windowMinimize(): void;
+    windowMaximize(): void;
+    windowClose(): void;
+    windowIsMaximized(): Promise<boolean>;
+    onWindowMaximizedChange(cb: (maximized: boolean) => void): void;
+  } }).motionlab;
+
+  const [maximized, setMaximized] = useState(false);
+
+  useEffect(() => {
+    if (!api) return;
+    api.windowIsMaximized().then(setMaximized);
+    api.onWindowMaximizedChange(setMaximized);
+  }, [api]);
+
+  if (!api) return null;
+
+  const btnBase =
+    'inline-flex items-center justify-center h-full w-[46px] transition-colors duration-[var(--duration-fast)] text-text-secondary hover:bg-layer-hover [-webkit-app-region:no-drag]';
+
+  return (
+    <div className="flex h-full ml-2">
+      <button
+        type="button"
+        className={btnBase}
+        onClick={useCallback(() => api.windowMinimize(), [api])}
+        aria-label="Minimize"
+      >
+        <Minus className="size-4" />
+      </button>
+      <button
+        type="button"
+        className={btnBase}
+        onClick={useCallback(() => api.windowMaximize(), [api])}
+        aria-label={maximized ? 'Restore' : 'Maximize'}
+      >
+        {maximized ? <Copy className="size-3.5" /> : <Square className="size-3.5" />}
+      </button>
+      <button
+        type="button"
+        className={cn(btnBase, 'hover:bg-[#e81123] hover:text-white')}
+        onClick={useCallback(() => api.windowClose(), [api])}
+        aria-label="Close"
+      >
+        <X className="size-4" />
+      </button>
+    </div>
+  );
+}
+
 function TopBar({ projectName = 'Untitled Project', status, actions, className }: TopBarProps) {
   return (
     <div
       data-slot="top-bar"
       className={cn(
-        'flex h-[var(--topbar-h)] shrink-0 items-center border-b border-border-default bg-layer-base px-2',
+        'flex h-[var(--topbar-h)] shrink-0 items-center border-b border-border-default bg-layer-base px-2 [-webkit-app-region:drag]',
         className,
       )}
     >
@@ -36,7 +93,7 @@ function TopBar({ projectName = 'Untitled Project', status, actions, className }
       <div className="flex flex-1 justify-center px-4">
         <button
           type="button"
-          className="flex h-6 w-52 items-center gap-1 rounded-[var(--radius-sm)] border border-border-subtle bg-layer-recessed px-3 text-[length:var(--text-sm)] text-text-tertiary transition-colors hover:border-border-default hover:bg-field-base"
+          className="flex h-6 w-52 items-center gap-1 rounded-[var(--radius-sm)] border border-border-subtle bg-layer-recessed px-3 text-[length:var(--text-sm)] text-text-tertiary transition-colors hover:border-border-default hover:bg-field-base [-webkit-app-region:no-drag]"
         >
           <Search className="size-3.5 shrink-0" />
           <span className="flex-1 text-left">Search commands...</span>
@@ -47,10 +104,13 @@ function TopBar({ projectName = 'Untitled Project', status, actions, className }
       </div>
 
       {/* Right cluster */}
-      <div className="flex shrink-0 items-center gap-3">
+      <div className="flex shrink-0 items-center gap-3 [-webkit-app-region:no-drag]">
         {status}
         {actions}
       </div>
+
+      {/* Window controls (desktop only) */}
+      <WindowControls />
     </div>
   );
 }

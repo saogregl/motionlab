@@ -162,6 +162,65 @@ struct EngineStatusDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 EngineStatusDefaultTypeInternal _EngineStatus_default_instance_;
 
+inline constexpr UpdateJointCommand::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        joint_id_{nullptr},
+        lower_limit_{0},
+        upper_limit_{0},
+        type_{static_cast< ::motionlab::mechanism::JointType >(0)} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR UpdateJointCommand::UpdateJointCommand(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(UpdateJointCommand_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct UpdateJointCommandDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR UpdateJointCommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~UpdateJointCommandDefaultTypeInternal() {}
+  union {
+    UpdateJointCommand _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 UpdateJointCommandDefaultTypeInternal _UpdateJointCommand_default_instance_;
+
+inline constexpr RenameDatumCommand::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        datum_id_{nullptr} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR RenameDatumCommand::RenameDatumCommand(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(RenameDatumCommand_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct RenameDatumCommandDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR RenameDatumCommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~RenameDatumCommandDefaultTypeInternal() {}
+  union {
+    RenameDatumCommand _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RenameDatumCommandDefaultTypeInternal _RenameDatumCommand_default_instance_;
+
 inline constexpr ImportAssetCommand::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
@@ -247,32 +306,220 @@ struct HandshakeDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 HandshakeDefaultTypeInternal _Handshake_default_instance_;
 
-inline constexpr Command::Impl_::Impl_(
+inline constexpr DeleteJointResult::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : _cached_size_{0},
-        sequence_id_{::uint64_t{0u}},
-        payload_{},
+      : result_{},
+        _cached_size_{0},
         _oneof_case_{} {}
 
 template <typename>
-PROTOBUF_CONSTEXPR Command::Command(::_pbi::ConstantInitialized)
+PROTOBUF_CONSTEXPR DeleteJointResult::DeleteJointResult(::_pbi::ConstantInitialized)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(Command_class_data_.base()),
+    : ::google::protobuf::Message(DeleteJointResult_class_data_.base()),
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(),
 #endif  // PROTOBUF_CUSTOM_VTABLE
       _impl_(::_pbi::ConstantInitialized()) {
 }
-struct CommandDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR CommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~CommandDefaultTypeInternal() {}
+struct DeleteJointResultDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR DeleteJointResultDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~DeleteJointResultDefaultTypeInternal() {}
   union {
-    Command _instance;
+    DeleteJointResult _instance;
   };
 };
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CommandDefaultTypeInternal _Command_default_instance_;
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DeleteJointResultDefaultTypeInternal _DeleteJointResult_default_instance_;
+
+inline constexpr DeleteJointCommand::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        joint_id_{nullptr} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR DeleteJointCommand::DeleteJointCommand(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(DeleteJointCommand_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct DeleteJointCommandDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR DeleteJointCommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~DeleteJointCommandDefaultTypeInternal() {}
+  union {
+    DeleteJointCommand _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DeleteJointCommandDefaultTypeInternal _DeleteJointCommand_default_instance_;
+
+inline constexpr DeleteDatumResult::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR DeleteDatumResult::DeleteDatumResult(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(DeleteDatumResult_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct DeleteDatumResultDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR DeleteDatumResultDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~DeleteDatumResultDefaultTypeInternal() {}
+  union {
+    DeleteDatumResult _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DeleteDatumResultDefaultTypeInternal _DeleteDatumResult_default_instance_;
+
+inline constexpr DeleteDatumCommand::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        datum_id_{nullptr} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR DeleteDatumCommand::DeleteDatumCommand(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(DeleteDatumCommand_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct DeleteDatumCommandDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR DeleteDatumCommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~DeleteDatumCommandDefaultTypeInternal() {}
+  union {
+    DeleteDatumCommand _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DeleteDatumCommandDefaultTypeInternal _DeleteDatumCommand_default_instance_;
+
+inline constexpr CreateJointCommand::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        parent_datum_id_{nullptr},
+        child_datum_id_{nullptr},
+        lower_limit_{0},
+        upper_limit_{0},
+        type_{static_cast< ::motionlab::mechanism::JointType >(0)} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR CreateJointCommand::CreateJointCommand(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(CreateJointCommand_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct CreateJointCommandDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR CreateJointCommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CreateJointCommandDefaultTypeInternal() {}
+  union {
+    CreateJointCommand _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CreateJointCommandDefaultTypeInternal _CreateJointCommand_default_instance_;
+
+inline constexpr UpdateJointResult::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR UpdateJointResult::UpdateJointResult(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(UpdateJointResult_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct UpdateJointResultDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR UpdateJointResultDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~UpdateJointResultDefaultTypeInternal() {}
+  union {
+    UpdateJointResult _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 UpdateJointResultDefaultTypeInternal _UpdateJointResult_default_instance_;
+
+inline constexpr CreateJointResult::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR CreateJointResult::CreateJointResult(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(CreateJointResult_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct CreateJointResultDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR CreateJointResultDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CreateJointResultDefaultTypeInternal() {}
+  union {
+    CreateJointResult _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CreateJointResultDefaultTypeInternal _CreateJointResult_default_instance_;
+
+inline constexpr CreateDatumCommand::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        parent_body_id_{nullptr},
+        local_pose_{nullptr} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR CreateDatumCommand::CreateDatumCommand(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(CreateDatumCommand_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct CreateDatumCommandDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR CreateDatumCommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CreateDatumCommandDefaultTypeInternal() {}
+  union {
+    CreateDatumCommand _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CreateDatumCommandDefaultTypeInternal _CreateDatumCommand_default_instance_;
 
 inline constexpr BodyImportResult::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -308,6 +555,32 @@ struct BodyImportResultDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 BodyImportResultDefaultTypeInternal _BodyImportResult_default_instance_;
 
+inline constexpr RenameDatumResult::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR RenameDatumResult::RenameDatumResult(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(RenameDatumResult_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct RenameDatumResultDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR RenameDatumResultDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~RenameDatumResultDefaultTypeInternal() {}
+  union {
+    RenameDatumResult _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RenameDatumResultDefaultTypeInternal _RenameDatumResult_default_instance_;
+
 inline constexpr ImportAssetResult::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
@@ -337,6 +610,59 @@ struct ImportAssetResultDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ImportAssetResultDefaultTypeInternal _ImportAssetResult_default_instance_;
+
+inline constexpr CreateDatumResult::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR CreateDatumResult::CreateDatumResult(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(CreateDatumResult_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct CreateDatumResultDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR CreateDatumResultDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CreateDatumResultDefaultTypeInternal() {}
+  union {
+    CreateDatumResult _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CreateDatumResultDefaultTypeInternal _CreateDatumResult_default_instance_;
+
+inline constexpr Command::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        sequence_id_{::uint64_t{0u}},
+        payload_{},
+        _oneof_case_{} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR Command::Command(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(Command_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct CommandDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR CommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CommandDefaultTypeInternal() {}
+  union {
+    Command _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CommandDefaultTypeInternal _Command_default_instance_;
 
 inline constexpr MechanismSnapshot::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -408,8 +734,14 @@ const ::uint32_t
         0x085, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_._has_bits_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_._oneof_case_[0]),
-        9, // hasbit index offset
+        15, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.sequence_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
@@ -418,10 +750,16 @@ const ::uint32_t
         ~0u,
         ~0u,
         ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
         0x085, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_._has_bits_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_._oneof_case_[0]),
-        11, // hasbit index offset
+        17, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.sequence_id_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
@@ -429,7 +767,19 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
         0,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
         ~0u,
         ~0u,
         ~0u,
@@ -515,23 +865,119 @@ const ::uint32_t
         4, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::MechanismSnapshot, _impl_.mechanism_),
         0,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumCommand, _impl_._has_bits_),
+        6, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumCommand, _impl_.parent_body_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumCommand, _impl_.local_pose_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumCommand, _impl_.name_),
+        1,
+        2,
+        0,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteDatumCommand, _impl_._has_bits_),
+        4, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteDatumCommand, _impl_.datum_id_),
+        0,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::RenameDatumCommand, _impl_._has_bits_),
+        5, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::RenameDatumCommand, _impl_.datum_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::RenameDatumCommand, _impl_.name_),
+        1,
+        0,
+        0x004, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumResult, _impl_._oneof_case_[0]),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumResult, _impl_.result_),
+        0x004, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteDatumResult, _impl_._oneof_case_[0]),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteDatumResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteDatumResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteDatumResult, _impl_.result_),
+        0x004, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::RenameDatumResult, _impl_._oneof_case_[0]),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::RenameDatumResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::RenameDatumResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::RenameDatumResult, _impl_.result_),
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateJointCommand, _impl_._has_bits_),
+        9, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateJointCommand, _impl_.parent_datum_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateJointCommand, _impl_.child_datum_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateJointCommand, _impl_.type_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateJointCommand, _impl_.name_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateJointCommand, _impl_.lower_limit_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateJointCommand, _impl_.upper_limit_),
+        1,
+        2,
+        5,
+        0,
+        3,
+        4,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateJointCommand, _impl_._has_bits_),
+        8, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateJointCommand, _impl_.joint_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateJointCommand, _impl_.name_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateJointCommand, _impl_.type_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateJointCommand, _impl_.lower_limit_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateJointCommand, _impl_.upper_limit_),
+        1,
+        0,
+        4,
+        2,
+        3,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteJointCommand, _impl_._has_bits_),
+        4, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteJointCommand, _impl_.joint_id_),
+        0,
+        0x004, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateJointResult, _impl_._oneof_case_[0]),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateJointResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateJointResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateJointResult, _impl_.result_),
+        0x004, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateJointResult, _impl_._oneof_case_[0]),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateJointResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateJointResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateJointResult, _impl_.result_),
+        0x004, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteJointResult, _impl_._oneof_case_[0]),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteJointResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteJointResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteJointResult, _impl_.result_),
 };
 
 static const ::_pbi::MigrationSchema
     schemas[] ABSL_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
         {0, sizeof(::motionlab::protocol::ProtocolVersion)},
         {7, sizeof(::motionlab::protocol::Command)},
-        {20, sizeof(::motionlab::protocol::Event)},
-        {37, sizeof(::motionlab::protocol::Handshake)},
-        {44, sizeof(::motionlab::protocol::HandshakeAck)},
-        {53, sizeof(::motionlab::protocol::Ping)},
-        {58, sizeof(::motionlab::protocol::Pong)},
-        {63, sizeof(::motionlab::protocol::EngineStatus)},
-        {70, sizeof(::motionlab::protocol::ImportOptions)},
-        {79, sizeof(::motionlab::protocol::ImportAssetCommand)},
-        {86, sizeof(::motionlab::protocol::BodyImportResult)},
-        {101, sizeof(::motionlab::protocol::ImportAssetResult)},
-        {112, sizeof(::motionlab::protocol::MechanismSnapshot)},
+        {32, sizeof(::motionlab::protocol::Event)},
+        {61, sizeof(::motionlab::protocol::Handshake)},
+        {68, sizeof(::motionlab::protocol::HandshakeAck)},
+        {77, sizeof(::motionlab::protocol::Ping)},
+        {82, sizeof(::motionlab::protocol::Pong)},
+        {87, sizeof(::motionlab::protocol::EngineStatus)},
+        {94, sizeof(::motionlab::protocol::ImportOptions)},
+        {103, sizeof(::motionlab::protocol::ImportAssetCommand)},
+        {110, sizeof(::motionlab::protocol::BodyImportResult)},
+        {125, sizeof(::motionlab::protocol::ImportAssetResult)},
+        {136, sizeof(::motionlab::protocol::MechanismSnapshot)},
+        {141, sizeof(::motionlab::protocol::CreateDatumCommand)},
+        {150, sizeof(::motionlab::protocol::DeleteDatumCommand)},
+        {155, sizeof(::motionlab::protocol::RenameDatumCommand)},
+        {162, sizeof(::motionlab::protocol::CreateDatumResult)},
+        {167, sizeof(::motionlab::protocol::DeleteDatumResult)},
+        {172, sizeof(::motionlab::protocol::RenameDatumResult)},
+        {177, sizeof(::motionlab::protocol::CreateJointCommand)},
+        {192, sizeof(::motionlab::protocol::UpdateJointCommand)},
+        {205, sizeof(::motionlab::protocol::DeleteJointCommand)},
+        {210, sizeof(::motionlab::protocol::CreateJointResult)},
+        {215, sizeof(::motionlab::protocol::UpdateJointResult)},
+        {220, sizeof(::motionlab::protocol::DeleteJointResult)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::motionlab::protocol::_ProtocolVersion_default_instance_._instance,
@@ -547,67 +993,148 @@ static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::motionlab::protocol::_BodyImportResult_default_instance_._instance,
     &::motionlab::protocol::_ImportAssetResult_default_instance_._instance,
     &::motionlab::protocol::_MechanismSnapshot_default_instance_._instance,
+    &::motionlab::protocol::_CreateDatumCommand_default_instance_._instance,
+    &::motionlab::protocol::_DeleteDatumCommand_default_instance_._instance,
+    &::motionlab::protocol::_RenameDatumCommand_default_instance_._instance,
+    &::motionlab::protocol::_CreateDatumResult_default_instance_._instance,
+    &::motionlab::protocol::_DeleteDatumResult_default_instance_._instance,
+    &::motionlab::protocol::_RenameDatumResult_default_instance_._instance,
+    &::motionlab::protocol::_CreateJointCommand_default_instance_._instance,
+    &::motionlab::protocol::_UpdateJointCommand_default_instance_._instance,
+    &::motionlab::protocol::_DeleteJointCommand_default_instance_._instance,
+    &::motionlab::protocol::_CreateJointResult_default_instance_._instance,
+    &::motionlab::protocol::_UpdateJointResult_default_instance_._instance,
+    &::motionlab::protocol::_DeleteJointResult_default_instance_._instance,
 };
 const char descriptor_table_protodef_protocol_2ftransport_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
     "\n\030protocol/transport.proto\022\022motionlab.pr"
     "otocol\032\031mechanism/mechanism.proto\"\?\n\017Pro"
     "tocolVersion\022\022\n\004name\030\001 \001(\tR\004name\022\030\n\007vers"
-    "ion\030\002 \001(\rR\007version\"\361\001\n\007Command\022\037\n\013sequen"
+    "ion\030\002 \001(\rR\007version\"\277\005\n\007Command\022\037\n\013sequen"
     "ce_id\030\001 \001(\004R\nsequenceId\022=\n\thandshake\030\n \001"
     "(\0132\035.motionlab.protocol.HandshakeH\000R\than"
     "dshake\022.\n\004ping\030\013 \001(\0132\030.motionlab.protoco"
     "l.PingH\000R\004ping\022K\n\014import_asset\030\014 \001(\0132&.m"
     "otionlab.protocol.ImportAssetCommandH\000R\013"
-    "importAssetB\t\n\007payload\"\246\003\n\005Event\022\037\n\013sequ"
-    "ence_id\030\001 \001(\004R\nsequenceId\022G\n\rhandshake_a"
-    "ck\030\n \001(\0132 .motionlab.protocol.HandshakeA"
-    "ckH\000R\014handshakeAck\022.\n\004pong\030\013 \001(\0132\030.motio"
-    "nlab.protocol.PongH\000R\004pong\022G\n\rengine_sta"
-    "tus\030\014 \001(\0132 .motionlab.protocol.EngineSta"
-    "tusH\000R\014engineStatus\022W\n\023import_asset_resu"
-    "lt\030\r \001(\0132%.motionlab.protocol.ImportAsse"
-    "tResultH\000R\021importAssetResult\022V\n\022mechanis"
-    "m_snapshot\030\016 \001(\0132%.motionlab.protocol.Me"
-    "chanismSnapshotH\000R\021mechanismSnapshotB\t\n\007"
-    "payload\"q\n\tHandshake\022\?\n\010protocol\030\001 \001(\0132#"
-    ".motionlab.protocol.ProtocolVersionR\010pro"
-    "tocol\022#\n\rsession_token\030\002 \001(\tR\014sessionTok"
-    "en\"\243\001\n\014HandshakeAck\022\036\n\ncompatible\030\001 \001(\010R"
-    "\ncompatible\022L\n\017engine_protocol\030\002 \001(\0132#.m"
-    "otionlab.protocol.ProtocolVersionR\016engin"
-    "eProtocol\022%\n\016engine_version\030\003 \001(\tR\rengin"
-    "eVersion\"$\n\004Ping\022\034\n\ttimestamp\030\001 \001(\004R\ttim"
-    "estamp\"$\n\004Pong\022\034\n\ttimestamp\030\001 \001(\004R\ttimes"
-    "tamp\"\352\001\n\014EngineStatus\022<\n\005state\030\001 \001(\0162&.m"
-    "otionlab.protocol.EngineStatus.StateR\005st"
-    "ate\022\030\n\007message\030\002 \001(\tR\007message\"\201\001\n\005State\022"
-    "\025\n\021STATE_UNSPECIFIED\020\000\022\026\n\022STATE_INITIALI"
-    "ZING\020\001\022\017\n\013STATE_READY\020\002\022\016\n\nSTATE_BUSY\020\003\022"
-    "\017\n\013STATE_ERROR\020\004\022\027\n\023STATE_SHUTTING_DOWN\020"
-    "\005\"\216\001\n\rImportOptions\022)\n\020density_override\030"
-    "\001 \001(\001R\017densityOverride\0221\n\024tessellation_q"
-    "uality\030\002 \001(\001R\023tessellationQuality\022\037\n\013uni"
-    "t_system\030\003 \001(\tR\nunitSystem\"{\n\022ImportAsse"
-    "tCommand\022\033\n\tfile_path\030\001 \001(\tR\010filePath\022H\n"
-    "\016import_options\030\002 \001(\0132!.motionlab.protoc"
-    "ol.ImportOptionsR\rimportOptions\"\320\002\n\020Body"
-    "ImportResult\022\027\n\007body_id\030\001 \001(\tR\006bodyId\022\022\n"
-    "\004name\030\002 \001(\tR\004name\022C\n\014display_mesh\030\003 \001(\0132"
-    " .motionlab.mechanism.DisplayMeshR\013displ"
-    "ayMesh\022L\n\017mass_properties\030\004 \001(\0132#.motion"
-    "lab.mechanism.MassPropertiesR\016massProper"
-    "ties\022-\n\004pose\030\005 \001(\0132\031.motionlab.mechanism"
-    ".PoseR\004pose\022M\n\020source_asset_ref\030\006 \001(\0132#."
-    "motionlab.mechanism.AssetReferenceR\016sour"
-    "ceAssetRef\"\262\001\n\021ImportAssetResult\022\030\n\007succ"
-    "ess\030\001 \001(\010R\007success\022#\n\rerror_message\030\002 \001("
-    "\tR\014errorMessage\022<\n\006bodies\030\003 \003(\0132$.motion"
-    "lab.protocol.BodyImportResultR\006bodies\022 \n"
-    "\013diagnostics\030\004 \003(\tR\013diagnostics\"Q\n\021Mecha"
-    "nismSnapshot\022<\n\tmechanism\030\001 \001(\0132\036.motion"
-    "lab.mechanism.MechanismR\tmechanismb\006prot"
-    "o3"
+    "importAsset\022K\n\014create_datum\030\r \001(\0132&.moti"
+    "onlab.protocol.CreateDatumCommandH\000R\013cre"
+    "ateDatum\022K\n\014delete_datum\030\016 \001(\0132&.motionl"
+    "ab.protocol.DeleteDatumCommandH\000R\013delete"
+    "Datum\022K\n\014rename_datum\030\017 \001(\0132&.motionlab."
+    "protocol.RenameDatumCommandH\000R\013renameDat"
+    "um\022K\n\014create_joint\030\024 \001(\0132&.motionlab.pro"
+    "tocol.CreateJointCommandH\000R\013createJoint\022"
+    "K\n\014update_joint\030\025 \001(\0132&.motionlab.protoc"
+    "ol.UpdateJointCommandH\000R\013updateJoint\022K\n\014"
+    "delete_joint\030\026 \001(\0132&.motionlab.protocol."
+    "DeleteJointCommandH\000R\013deleteJointB\t\n\007pay"
+    "load\"\274\007\n\005Event\022\037\n\013sequence_id\030\001 \001(\004R\nseq"
+    "uenceId\022G\n\rhandshake_ack\030\n \001(\0132 .motionl"
+    "ab.protocol.HandshakeAckH\000R\014handshakeAck"
+    "\022.\n\004pong\030\013 \001(\0132\030.motionlab.protocol.Pong"
+    "H\000R\004pong\022G\n\rengine_status\030\014 \001(\0132 .motion"
+    "lab.protocol.EngineStatusH\000R\014engineStatu"
+    "s\022W\n\023import_asset_result\030\r \001(\0132%.motionl"
+    "ab.protocol.ImportAssetResultH\000R\021importA"
+    "ssetResult\022V\n\022mechanism_snapshot\030\016 \001(\0132%"
+    ".motionlab.protocol.MechanismSnapshotH\000R"
+    "\021mechanismSnapshot\022W\n\023create_datum_resul"
+    "t\030\017 \001(\0132%.motionlab.protocol.CreateDatum"
+    "ResultH\000R\021createDatumResult\022W\n\023delete_da"
+    "tum_result\030\020 \001(\0132%.motionlab.protocol.De"
+    "leteDatumResultH\000R\021deleteDatumResult\022W\n\023"
+    "rename_datum_result\030\021 \001(\0132%.motionlab.pr"
+    "otocol.RenameDatumResultH\000R\021renameDatumR"
+    "esult\022W\n\023create_joint_result\030\024 \001(\0132%.mot"
+    "ionlab.protocol.CreateJointResultH\000R\021cre"
+    "ateJointResult\022W\n\023update_joint_result\030\025 "
+    "\001(\0132%.motionlab.protocol.UpdateJointResu"
+    "ltH\000R\021updateJointResult\022W\n\023delete_joint_"
+    "result\030\026 \001(\0132%.motionlab.protocol.Delete"
+    "JointResultH\000R\021deleteJointResultB\t\n\007payl"
+    "oad\"q\n\tHandshake\022\?\n\010protocol\030\001 \001(\0132#.mot"
+    "ionlab.protocol.ProtocolVersionR\010protoco"
+    "l\022#\n\rsession_token\030\002 \001(\tR\014sessionToken\"\243"
+    "\001\n\014HandshakeAck\022\036\n\ncompatible\030\001 \001(\010R\ncom"
+    "patible\022L\n\017engine_protocol\030\002 \001(\0132#.motio"
+    "nlab.protocol.ProtocolVersionR\016enginePro"
+    "tocol\022%\n\016engine_version\030\003 \001(\tR\rengineVer"
+    "sion\"$\n\004Ping\022\034\n\ttimestamp\030\001 \001(\004R\ttimesta"
+    "mp\"$\n\004Pong\022\034\n\ttimestamp\030\001 \001(\004R\ttimestamp"
+    "\"\352\001\n\014EngineStatus\022<\n\005state\030\001 \001(\0162&.motio"
+    "nlab.protocol.EngineStatus.StateR\005state\022"
+    "\030\n\007message\030\002 \001(\tR\007message\"\201\001\n\005State\022\025\n\021S"
+    "TATE_UNSPECIFIED\020\000\022\026\n\022STATE_INITIALIZING"
+    "\020\001\022\017\n\013STATE_READY\020\002\022\016\n\nSTATE_BUSY\020\003\022\017\n\013S"
+    "TATE_ERROR\020\004\022\027\n\023STATE_SHUTTING_DOWN\020\005\"\216\001"
+    "\n\rImportOptions\022)\n\020density_override\030\001 \001("
+    "\001R\017densityOverride\0221\n\024tessellation_quali"
+    "ty\030\002 \001(\001R\023tessellationQuality\022\037\n\013unit_sy"
+    "stem\030\003 \001(\tR\nunitSystem\"{\n\022ImportAssetCom"
+    "mand\022\033\n\tfile_path\030\001 \001(\tR\010filePath\022H\n\016imp"
+    "ort_options\030\002 \001(\0132!.motionlab.protocol.I"
+    "mportOptionsR\rimportOptions\"\320\002\n\020BodyImpo"
+    "rtResult\022\027\n\007body_id\030\001 \001(\tR\006bodyId\022\022\n\004nam"
+    "e\030\002 \001(\tR\004name\022C\n\014display_mesh\030\003 \001(\0132 .mo"
+    "tionlab.mechanism.DisplayMeshR\013displayMe"
+    "sh\022L\n\017mass_properties\030\004 \001(\0132#.motionlab."
+    "mechanism.MassPropertiesR\016massProperties"
+    "\022-\n\004pose\030\005 \001(\0132\031.motionlab.mechanism.Pos"
+    "eR\004pose\022M\n\020source_asset_ref\030\006 \001(\0132#.moti"
+    "onlab.mechanism.AssetReferenceR\016sourceAs"
+    "setRef\"\262\001\n\021ImportAssetResult\022\030\n\007success\030"
+    "\001 \001(\010R\007success\022#\n\rerror_message\030\002 \001(\tR\014e"
+    "rrorMessage\022<\n\006bodies\030\003 \003(\0132$.motionlab."
+    "protocol.BodyImportResultR\006bodies\022 \n\013dia"
+    "gnostics\030\004 \003(\tR\013diagnostics\"Q\n\021Mechanism"
+    "Snapshot\022<\n\tmechanism\030\001 \001(\0132\036.motionlab."
+    "mechanism.MechanismR\tmechanism\"\250\001\n\022Creat"
+    "eDatumCommand\022D\n\016parent_body_id\030\001 \001(\0132\036."
+    "motionlab.mechanism.ElementIdR\014parentBod"
+    "yId\0228\n\nlocal_pose\030\002 \001(\0132\031.motionlab.mech"
+    "anism.PoseR\tlocalPose\022\022\n\004name\030\003 \001(\tR\004nam"
+    "e\"O\n\022DeleteDatumCommand\0229\n\010datum_id\030\001 \001("
+    "\0132\036.motionlab.mechanism.ElementIdR\007datum"
+    "Id\"c\n\022RenameDatumCommand\0229\n\010datum_id\030\001 \001"
+    "(\0132\036.motionlab.mechanism.ElementIdR\007datu"
+    "mId\022\022\n\004name\030\002 \001(\tR\004name\"x\n\021CreateDatumRe"
+    "sult\0222\n\005datum\030\001 \001(\0132\032.motionlab.mechanis"
+    "m.DatumH\000R\005datum\022%\n\rerror_message\030\002 \001(\tH"
+    "\000R\014errorMessageB\010\n\006result\"\205\001\n\021DeleteDatu"
+    "mResult\022\?\n\ndeleted_id\030\001 \001(\0132\036.motionlab."
+    "mechanism.ElementIdH\000R\tdeletedId\022%\n\rerro"
+    "r_message\030\002 \001(\tH\000R\014errorMessageB\010\n\006resul"
+    "t\"x\n\021RenameDatumResult\0222\n\005datum\030\001 \001(\0132\032."
+    "motionlab.mechanism.DatumH\000R\005datum\022%\n\rer"
+    "ror_message\030\002 \001(\tH\000R\014errorMessageB\010\n\006res"
+    "ult\"\254\002\n\022CreateJointCommand\022F\n\017parent_dat"
+    "um_id\030\001 \001(\0132\036.motionlab.mechanism.Elemen"
+    "tIdR\rparentDatumId\022D\n\016child_datum_id\030\002 \001"
+    "(\0132\036.motionlab.mechanism.ElementIdR\014chil"
+    "dDatumId\0222\n\004type\030\003 \001(\0162\036.motionlab.mecha"
+    "nism.JointTypeR\004type\022\022\n\004name\030\004 \001(\tR\004name"
+    "\022\037\n\013lower_limit\030\005 \001(\001R\nlowerLimit\022\037\n\013upp"
+    "er_limit\030\006 \001(\001R\nupperLimit\"\237\002\n\022UpdateJoi"
+    "ntCommand\0229\n\010joint_id\030\001 \001(\0132\036.motionlab."
+    "mechanism.ElementIdR\007jointId\022\027\n\004name\030\002 \001"
+    "(\tH\000R\004name\210\001\001\0227\n\004type\030\003 \001(\0162\036.motionlab."
+    "mechanism.JointTypeH\001R\004type\210\001\001\022$\n\013lower_"
+    "limit\030\004 \001(\001H\002R\nlowerLimit\210\001\001\022$\n\013upper_li"
+    "mit\030\005 \001(\001H\003R\nupperLimit\210\001\001B\007\n\005_nameB\007\n\005_"
+    "typeB\016\n\014_lower_limitB\016\n\014_upper_limit\"O\n\022"
+    "DeleteJointCommand\0229\n\010joint_id\030\001 \001(\0132\036.m"
+    "otionlab.mechanism.ElementIdR\007jointId\"x\n"
+    "\021CreateJointResult\0222\n\005joint\030\001 \001(\0132\032.moti"
+    "onlab.mechanism.JointH\000R\005joint\022%\n\rerror_"
+    "message\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\""
+    "x\n\021UpdateJointResult\0222\n\005joint\030\001 \001(\0132\032.mo"
+    "tionlab.mechanism.JointH\000R\005joint\022%\n\rerro"
+    "r_message\030\002 \001(\tH\000R\014errorMessageB\010\n\006resul"
+    "t\"\205\001\n\021DeleteJointResult\022\?\n\ndeleted_id\030\001 "
+    "\001(\0132\036.motionlab.mechanism.ElementIdH\000R\td"
+    "eletedId\022%\n\rerror_message\030\002 \001(\tH\000R\014error"
+    "MessageB\010\n\006resultb\006proto3"
 };
 static const ::_pbi::DescriptorTable* PROTOBUF_NONNULL const
     descriptor_table_protocol_2ftransport_2eproto_deps[1] = {
@@ -617,13 +1144,13 @@ static ::absl::once_flag descriptor_table_protocol_2ftransport_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_protocol_2ftransport_2eproto = {
     false,
     false,
-    2282,
+    5065,
     descriptor_table_protodef_protocol_2ftransport_2eproto,
     "protocol/transport.proto",
     &descriptor_table_protocol_2ftransport_2eproto_once,
     descriptor_table_protocol_2ftransport_2eproto_deps,
     1,
-    13,
+    25,
     schemas,
     file_default_instances,
     TableStruct_protocol_2ftransport_2eproto::offsets,
@@ -998,6 +1525,84 @@ void Command::set_allocated_import_asset(::motionlab::protocol::ImportAssetComma
   }
   // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Command.import_asset)
 }
+void Command::set_allocated_create_datum(::motionlab::protocol::CreateDatumCommand* PROTOBUF_NULLABLE create_datum) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (create_datum) {
+    ::google::protobuf::Arena* submessage_arena = create_datum->GetArena();
+    if (message_arena != submessage_arena) {
+      create_datum = ::google::protobuf::internal::GetOwnedMessage(message_arena, create_datum, submessage_arena);
+    }
+    set_has_create_datum();
+    _impl_.payload_.create_datum_ = create_datum;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Command.create_datum)
+}
+void Command::set_allocated_delete_datum(::motionlab::protocol::DeleteDatumCommand* PROTOBUF_NULLABLE delete_datum) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (delete_datum) {
+    ::google::protobuf::Arena* submessage_arena = delete_datum->GetArena();
+    if (message_arena != submessage_arena) {
+      delete_datum = ::google::protobuf::internal::GetOwnedMessage(message_arena, delete_datum, submessage_arena);
+    }
+    set_has_delete_datum();
+    _impl_.payload_.delete_datum_ = delete_datum;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Command.delete_datum)
+}
+void Command::set_allocated_rename_datum(::motionlab::protocol::RenameDatumCommand* PROTOBUF_NULLABLE rename_datum) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (rename_datum) {
+    ::google::protobuf::Arena* submessage_arena = rename_datum->GetArena();
+    if (message_arena != submessage_arena) {
+      rename_datum = ::google::protobuf::internal::GetOwnedMessage(message_arena, rename_datum, submessage_arena);
+    }
+    set_has_rename_datum();
+    _impl_.payload_.rename_datum_ = rename_datum;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Command.rename_datum)
+}
+void Command::set_allocated_create_joint(::motionlab::protocol::CreateJointCommand* PROTOBUF_NULLABLE create_joint) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (create_joint) {
+    ::google::protobuf::Arena* submessage_arena = create_joint->GetArena();
+    if (message_arena != submessage_arena) {
+      create_joint = ::google::protobuf::internal::GetOwnedMessage(message_arena, create_joint, submessage_arena);
+    }
+    set_has_create_joint();
+    _impl_.payload_.create_joint_ = create_joint;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Command.create_joint)
+}
+void Command::set_allocated_update_joint(::motionlab::protocol::UpdateJointCommand* PROTOBUF_NULLABLE update_joint) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (update_joint) {
+    ::google::protobuf::Arena* submessage_arena = update_joint->GetArena();
+    if (message_arena != submessage_arena) {
+      update_joint = ::google::protobuf::internal::GetOwnedMessage(message_arena, update_joint, submessage_arena);
+    }
+    set_has_update_joint();
+    _impl_.payload_.update_joint_ = update_joint;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Command.update_joint)
+}
+void Command::set_allocated_delete_joint(::motionlab::protocol::DeleteJointCommand* PROTOBUF_NULLABLE delete_joint) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (delete_joint) {
+    ::google::protobuf::Arena* submessage_arena = delete_joint->GetArena();
+    if (message_arena != submessage_arena) {
+      delete_joint = ::google::protobuf::internal::GetOwnedMessage(message_arena, delete_joint, submessage_arena);
+    }
+    set_has_delete_joint();
+    _impl_.payload_.delete_joint_ = delete_joint;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Command.delete_joint)
+}
 Command::Command(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, Command_class_data_.base()) {
@@ -1041,6 +1646,24 @@ Command::Command(
         break;
       case kImportAsset:
         _impl_.payload_.import_asset_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.import_asset_);
+        break;
+      case kCreateDatum:
+        _impl_.payload_.create_datum_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.create_datum_);
+        break;
+      case kDeleteDatum:
+        _impl_.payload_.delete_datum_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.delete_datum_);
+        break;
+      case kRenameDatum:
+        _impl_.payload_.rename_datum_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.rename_datum_);
+        break;
+      case kCreateJoint:
+        _impl_.payload_.create_joint_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.create_joint_);
+        break;
+      case kUpdateJoint:
+        _impl_.payload_.update_joint_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.update_joint_);
+        break;
+      case kDeleteJoint:
+        _impl_.payload_.delete_joint_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.delete_joint_);
         break;
   }
 
@@ -1102,6 +1725,54 @@ void Command::clear_payload() {
       }
       break;
     }
+    case kCreateDatum: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.create_datum_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.create_datum_);
+      }
+      break;
+    }
+    case kDeleteDatum: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.delete_datum_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.delete_datum_);
+      }
+      break;
+    }
+    case kRenameDatum: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.rename_datum_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.rename_datum_);
+      }
+      break;
+    }
+    case kCreateJoint: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.create_joint_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.create_joint_);
+      }
+      break;
+    }
+    case kUpdateJoint: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.update_joint_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.update_joint_);
+      }
+      break;
+    }
+    case kDeleteJoint: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.delete_joint_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.delete_joint_);
+      }
+      break;
+    }
     case PAYLOAD_NOT_SET: {
       break;
     }
@@ -1153,17 +1824,17 @@ Command::GetClassData() const {
   return Command_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 4, 3, 0, 2>
+const ::_pbi::TcParseTable<0, 10, 9, 0, 2>
 Command::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Command, _impl_._has_bits_),
     0, // no _extensions_
-    12, 0,  // max_field_number, fast_idx_mask
+    22, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294963710,  // skipmap
+    4291265022,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    4,  // num_field_entries
-    3,  // num_aux_entries
+    10,  // num_field_entries
+    9,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     Command_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -1187,11 +1858,29 @@ Command::_table_ = {
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.ping_), _Internal::kOneofCaseOffset + 0, 1, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .motionlab.protocol.ImportAssetCommand import_asset = 12 [json_name = "importAsset"];
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.import_asset_), _Internal::kOneofCaseOffset + 0, 2, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.CreateDatumCommand create_datum = 13 [json_name = "createDatum"];
+    {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.create_datum_), _Internal::kOneofCaseOffset + 0, 3, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.DeleteDatumCommand delete_datum = 14 [json_name = "deleteDatum"];
+    {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.delete_datum_), _Internal::kOneofCaseOffset + 0, 4, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.RenameDatumCommand rename_datum = 15 [json_name = "renameDatum"];
+    {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.rename_datum_), _Internal::kOneofCaseOffset + 0, 5, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.CreateJointCommand create_joint = 20 [json_name = "createJoint"];
+    {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.create_joint_), _Internal::kOneofCaseOffset + 0, 6, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.UpdateJointCommand update_joint = 21 [json_name = "updateJoint"];
+    {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.update_joint_), _Internal::kOneofCaseOffset + 0, 7, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.DeleteJointCommand delete_joint = 22 [json_name = "deleteJoint"];
+    {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.delete_joint_), _Internal::kOneofCaseOffset + 0, 8, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::motionlab::protocol::Handshake>()},
       {::_pbi::TcParser::GetTable<::motionlab::protocol::Ping>()},
       {::_pbi::TcParser::GetTable<::motionlab::protocol::ImportAssetCommand>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::CreateDatumCommand>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::DeleteDatumCommand>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::RenameDatumCommand>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::CreateJointCommand>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::UpdateJointCommand>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::DeleteJointCommand>()},
   }},
   {{
   }},
@@ -1256,6 +1945,42 @@ PROTOBUF_NOINLINE void Command::Clear() {
           stream);
       break;
     }
+    case kCreateDatum: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          13, *this_._impl_.payload_.create_datum_, this_._impl_.payload_.create_datum_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kDeleteDatum: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          14, *this_._impl_.payload_.delete_datum_, this_._impl_.payload_.delete_datum_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kRenameDatum: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          15, *this_._impl_.payload_.rename_datum_, this_._impl_.payload_.rename_datum_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kCreateJoint: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          20, *this_._impl_.payload_.create_joint_, this_._impl_.payload_.create_joint_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kUpdateJoint: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          21, *this_._impl_.payload_.update_joint_, this_._impl_.payload_.update_joint_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kDeleteJoint: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          22, *this_._impl_.payload_.delete_joint_, this_._impl_.payload_.delete_joint_->GetCachedSize(), target,
+          stream);
+      break;
+    }
     default:
       break;
   }
@@ -1309,6 +2034,42 @@ PROTOBUF_NOINLINE void Command::Clear() {
     case kImportAsset: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.import_asset_);
+      break;
+    }
+    // .motionlab.protocol.CreateDatumCommand create_datum = 13 [json_name = "createDatum"];
+    case kCreateDatum: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_datum_);
+      break;
+    }
+    // .motionlab.protocol.DeleteDatumCommand delete_datum = 14 [json_name = "deleteDatum"];
+    case kDeleteDatum: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_datum_);
+      break;
+    }
+    // .motionlab.protocol.RenameDatumCommand rename_datum = 15 [json_name = "renameDatum"];
+    case kRenameDatum: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.rename_datum_);
+      break;
+    }
+    // .motionlab.protocol.CreateJointCommand create_joint = 20 [json_name = "createJoint"];
+    case kCreateJoint: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_joint_);
+      break;
+    }
+    // .motionlab.protocol.UpdateJointCommand update_joint = 21 [json_name = "updateJoint"];
+    case kUpdateJoint: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_joint_);
+      break;
+    }
+    // .motionlab.protocol.DeleteJointCommand delete_joint = 22 [json_name = "deleteJoint"];
+    case kDeleteJoint: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_joint_);
       break;
     }
     case PAYLOAD_NOT_SET: {
@@ -1373,6 +2134,54 @@ void Command::MergeImpl(::google::protobuf::MessageLite& to_msg,
           _this->_impl_.payload_.import_asset_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.import_asset_);
         } else {
           _this->_impl_.payload_.import_asset_->MergeFrom(*from._impl_.payload_.import_asset_);
+        }
+        break;
+      }
+      case kCreateDatum: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.create_datum_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.create_datum_);
+        } else {
+          _this->_impl_.payload_.create_datum_->MergeFrom(*from._impl_.payload_.create_datum_);
+        }
+        break;
+      }
+      case kDeleteDatum: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.delete_datum_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.delete_datum_);
+        } else {
+          _this->_impl_.payload_.delete_datum_->MergeFrom(*from._impl_.payload_.delete_datum_);
+        }
+        break;
+      }
+      case kRenameDatum: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.rename_datum_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.rename_datum_);
+        } else {
+          _this->_impl_.payload_.rename_datum_->MergeFrom(*from._impl_.payload_.rename_datum_);
+        }
+        break;
+      }
+      case kCreateJoint: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.create_joint_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.create_joint_);
+        } else {
+          _this->_impl_.payload_.create_joint_->MergeFrom(*from._impl_.payload_.create_joint_);
+        }
+        break;
+      }
+      case kUpdateJoint: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.update_joint_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.update_joint_);
+        } else {
+          _this->_impl_.payload_.update_joint_->MergeFrom(*from._impl_.payload_.update_joint_);
+        }
+        break;
+      }
+      case kDeleteJoint: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.delete_joint_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.delete_joint_);
+        } else {
+          _this->_impl_.payload_.delete_joint_->MergeFrom(*from._impl_.payload_.delete_joint_);
         }
         break;
       }
@@ -1481,6 +2290,84 @@ void Event::set_allocated_mechanism_snapshot(::motionlab::protocol::MechanismSna
   }
   // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Event.mechanism_snapshot)
 }
+void Event::set_allocated_create_datum_result(::motionlab::protocol::CreateDatumResult* PROTOBUF_NULLABLE create_datum_result) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (create_datum_result) {
+    ::google::protobuf::Arena* submessage_arena = create_datum_result->GetArena();
+    if (message_arena != submessage_arena) {
+      create_datum_result = ::google::protobuf::internal::GetOwnedMessage(message_arena, create_datum_result, submessage_arena);
+    }
+    set_has_create_datum_result();
+    _impl_.payload_.create_datum_result_ = create_datum_result;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Event.create_datum_result)
+}
+void Event::set_allocated_delete_datum_result(::motionlab::protocol::DeleteDatumResult* PROTOBUF_NULLABLE delete_datum_result) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (delete_datum_result) {
+    ::google::protobuf::Arena* submessage_arena = delete_datum_result->GetArena();
+    if (message_arena != submessage_arena) {
+      delete_datum_result = ::google::protobuf::internal::GetOwnedMessage(message_arena, delete_datum_result, submessage_arena);
+    }
+    set_has_delete_datum_result();
+    _impl_.payload_.delete_datum_result_ = delete_datum_result;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Event.delete_datum_result)
+}
+void Event::set_allocated_rename_datum_result(::motionlab::protocol::RenameDatumResult* PROTOBUF_NULLABLE rename_datum_result) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (rename_datum_result) {
+    ::google::protobuf::Arena* submessage_arena = rename_datum_result->GetArena();
+    if (message_arena != submessage_arena) {
+      rename_datum_result = ::google::protobuf::internal::GetOwnedMessage(message_arena, rename_datum_result, submessage_arena);
+    }
+    set_has_rename_datum_result();
+    _impl_.payload_.rename_datum_result_ = rename_datum_result;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Event.rename_datum_result)
+}
+void Event::set_allocated_create_joint_result(::motionlab::protocol::CreateJointResult* PROTOBUF_NULLABLE create_joint_result) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (create_joint_result) {
+    ::google::protobuf::Arena* submessage_arena = create_joint_result->GetArena();
+    if (message_arena != submessage_arena) {
+      create_joint_result = ::google::protobuf::internal::GetOwnedMessage(message_arena, create_joint_result, submessage_arena);
+    }
+    set_has_create_joint_result();
+    _impl_.payload_.create_joint_result_ = create_joint_result;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Event.create_joint_result)
+}
+void Event::set_allocated_update_joint_result(::motionlab::protocol::UpdateJointResult* PROTOBUF_NULLABLE update_joint_result) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (update_joint_result) {
+    ::google::protobuf::Arena* submessage_arena = update_joint_result->GetArena();
+    if (message_arena != submessage_arena) {
+      update_joint_result = ::google::protobuf::internal::GetOwnedMessage(message_arena, update_joint_result, submessage_arena);
+    }
+    set_has_update_joint_result();
+    _impl_.payload_.update_joint_result_ = update_joint_result;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Event.update_joint_result)
+}
+void Event::set_allocated_delete_joint_result(::motionlab::protocol::DeleteJointResult* PROTOBUF_NULLABLE delete_joint_result) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (delete_joint_result) {
+    ::google::protobuf::Arena* submessage_arena = delete_joint_result->GetArena();
+    if (message_arena != submessage_arena) {
+      delete_joint_result = ::google::protobuf::internal::GetOwnedMessage(message_arena, delete_joint_result, submessage_arena);
+    }
+    set_has_delete_joint_result();
+    _impl_.payload_.delete_joint_result_ = delete_joint_result;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Event.delete_joint_result)
+}
 Event::Event(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, Event_class_data_.base()) {
@@ -1530,6 +2417,24 @@ Event::Event(
         break;
       case kMechanismSnapshot:
         _impl_.payload_.mechanism_snapshot_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.mechanism_snapshot_);
+        break;
+      case kCreateDatumResult:
+        _impl_.payload_.create_datum_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.create_datum_result_);
+        break;
+      case kDeleteDatumResult:
+        _impl_.payload_.delete_datum_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.delete_datum_result_);
+        break;
+      case kRenameDatumResult:
+        _impl_.payload_.rename_datum_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.rename_datum_result_);
+        break;
+      case kCreateJointResult:
+        _impl_.payload_.create_joint_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.create_joint_result_);
+        break;
+      case kUpdateJointResult:
+        _impl_.payload_.update_joint_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.update_joint_result_);
+        break;
+      case kDeleteJointResult:
+        _impl_.payload_.delete_joint_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.delete_joint_result_);
         break;
   }
 
@@ -1607,6 +2512,54 @@ void Event::clear_payload() {
       }
       break;
     }
+    case kCreateDatumResult: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.create_datum_result_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.create_datum_result_);
+      }
+      break;
+    }
+    case kDeleteDatumResult: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.delete_datum_result_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.delete_datum_result_);
+      }
+      break;
+    }
+    case kRenameDatumResult: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.rename_datum_result_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.rename_datum_result_);
+      }
+      break;
+    }
+    case kCreateJointResult: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.create_joint_result_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.create_joint_result_);
+      }
+      break;
+    }
+    case kUpdateJointResult: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.update_joint_result_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.update_joint_result_);
+      }
+      break;
+    }
+    case kDeleteJointResult: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.delete_joint_result_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.delete_joint_result_);
+      }
+      break;
+    }
     case PAYLOAD_NOT_SET: {
       break;
     }
@@ -1658,17 +2611,17 @@ Event::GetClassData() const {
   return Event_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 6, 5, 0, 2>
+const ::_pbi::TcParseTable<0, 12, 11, 0, 2>
 Event::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Event, _impl_._has_bits_),
     0, // no _extensions_
-    14, 0,  // max_field_number, fast_idx_mask
+    22, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294951422,  // skipmap
+    4291166718,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    6,  // num_field_entries
-    5,  // num_aux_entries
+    12,  // num_field_entries
+    11,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     Event_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -1696,6 +2649,18 @@ Event::_table_ = {
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.import_asset_result_), _Internal::kOneofCaseOffset + 0, 3, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .motionlab.protocol.MechanismSnapshot mechanism_snapshot = 14 [json_name = "mechanismSnapshot"];
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.mechanism_snapshot_), _Internal::kOneofCaseOffset + 0, 4, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.CreateDatumResult create_datum_result = 15 [json_name = "createDatumResult"];
+    {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.create_datum_result_), _Internal::kOneofCaseOffset + 0, 5, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.DeleteDatumResult delete_datum_result = 16 [json_name = "deleteDatumResult"];
+    {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.delete_datum_result_), _Internal::kOneofCaseOffset + 0, 6, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.RenameDatumResult rename_datum_result = 17 [json_name = "renameDatumResult"];
+    {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.rename_datum_result_), _Internal::kOneofCaseOffset + 0, 7, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.CreateJointResult create_joint_result = 20 [json_name = "createJointResult"];
+    {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.create_joint_result_), _Internal::kOneofCaseOffset + 0, 8, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.UpdateJointResult update_joint_result = 21 [json_name = "updateJointResult"];
+    {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.update_joint_result_), _Internal::kOneofCaseOffset + 0, 9, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.DeleteJointResult delete_joint_result = 22 [json_name = "deleteJointResult"];
+    {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.delete_joint_result_), _Internal::kOneofCaseOffset + 0, 10, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::motionlab::protocol::HandshakeAck>()},
@@ -1703,6 +2668,12 @@ Event::_table_ = {
       {::_pbi::TcParser::GetTable<::motionlab::protocol::EngineStatus>()},
       {::_pbi::TcParser::GetTable<::motionlab::protocol::ImportAssetResult>()},
       {::_pbi::TcParser::GetTable<::motionlab::protocol::MechanismSnapshot>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::CreateDatumResult>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::DeleteDatumResult>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::RenameDatumResult>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::CreateJointResult>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::UpdateJointResult>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::DeleteJointResult>()},
   }},
   {{
   }},
@@ -1779,6 +2750,42 @@ PROTOBUF_NOINLINE void Event::Clear() {
           stream);
       break;
     }
+    case kCreateDatumResult: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          15, *this_._impl_.payload_.create_datum_result_, this_._impl_.payload_.create_datum_result_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kDeleteDatumResult: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          16, *this_._impl_.payload_.delete_datum_result_, this_._impl_.payload_.delete_datum_result_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kRenameDatumResult: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          17, *this_._impl_.payload_.rename_datum_result_, this_._impl_.payload_.rename_datum_result_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kCreateJointResult: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          20, *this_._impl_.payload_.create_joint_result_, this_._impl_.payload_.create_joint_result_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kUpdateJointResult: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          21, *this_._impl_.payload_.update_joint_result_, this_._impl_.payload_.update_joint_result_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kDeleteJointResult: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          22, *this_._impl_.payload_.delete_joint_result_, this_._impl_.payload_.delete_joint_result_->GetCachedSize(), target,
+          stream);
+      break;
+    }
     default:
       break;
   }
@@ -1844,6 +2851,42 @@ PROTOBUF_NOINLINE void Event::Clear() {
     case kMechanismSnapshot: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.mechanism_snapshot_);
+      break;
+    }
+    // .motionlab.protocol.CreateDatumResult create_datum_result = 15 [json_name = "createDatumResult"];
+    case kCreateDatumResult: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_datum_result_);
+      break;
+    }
+    // .motionlab.protocol.DeleteDatumResult delete_datum_result = 16 [json_name = "deleteDatumResult"];
+    case kDeleteDatumResult: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_datum_result_);
+      break;
+    }
+    // .motionlab.protocol.RenameDatumResult rename_datum_result = 17 [json_name = "renameDatumResult"];
+    case kRenameDatumResult: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.rename_datum_result_);
+      break;
+    }
+    // .motionlab.protocol.CreateJointResult create_joint_result = 20 [json_name = "createJointResult"];
+    case kCreateJointResult: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_joint_result_);
+      break;
+    }
+    // .motionlab.protocol.UpdateJointResult update_joint_result = 21 [json_name = "updateJointResult"];
+    case kUpdateJointResult: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_joint_result_);
+      break;
+    }
+    // .motionlab.protocol.DeleteJointResult delete_joint_result = 22 [json_name = "deleteJointResult"];
+    case kDeleteJointResult: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_joint_result_);
       break;
     }
     case PAYLOAD_NOT_SET: {
@@ -1924,6 +2967,54 @@ void Event::MergeImpl(::google::protobuf::MessageLite& to_msg,
           _this->_impl_.payload_.mechanism_snapshot_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.mechanism_snapshot_);
         } else {
           _this->_impl_.payload_.mechanism_snapshot_->MergeFrom(*from._impl_.payload_.mechanism_snapshot_);
+        }
+        break;
+      }
+      case kCreateDatumResult: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.create_datum_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.create_datum_result_);
+        } else {
+          _this->_impl_.payload_.create_datum_result_->MergeFrom(*from._impl_.payload_.create_datum_result_);
+        }
+        break;
+      }
+      case kDeleteDatumResult: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.delete_datum_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.delete_datum_result_);
+        } else {
+          _this->_impl_.payload_.delete_datum_result_->MergeFrom(*from._impl_.payload_.delete_datum_result_);
+        }
+        break;
+      }
+      case kRenameDatumResult: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.rename_datum_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.rename_datum_result_);
+        } else {
+          _this->_impl_.payload_.rename_datum_result_->MergeFrom(*from._impl_.payload_.rename_datum_result_);
+        }
+        break;
+      }
+      case kCreateJointResult: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.create_joint_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.create_joint_result_);
+        } else {
+          _this->_impl_.payload_.create_joint_result_->MergeFrom(*from._impl_.payload_.create_joint_result_);
+        }
+        break;
+      }
+      case kUpdateJointResult: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.update_joint_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.update_joint_result_);
+        } else {
+          _this->_impl_.payload_.update_joint_result_->MergeFrom(*from._impl_.payload_.update_joint_result_);
+        }
+        break;
+      }
+      case kDeleteJointResult: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.delete_joint_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.delete_joint_result_);
+        } else {
+          _this->_impl_.payload_.delete_joint_result_->MergeFrom(*from._impl_.payload_.delete_joint_result_);
         }
         break;
       }
@@ -5293,6 +6384,4307 @@ void MechanismSnapshot::InternalSwap(MechanismSnapshot* PROTOBUF_RESTRICT PROTOB
 }
 
 ::google::protobuf::Metadata MechanismSnapshot::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class CreateDatumCommand::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<CreateDatumCommand>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_._has_bits_);
+};
+
+void CreateDatumCommand::clear_parent_body_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.parent_body_id_ != nullptr) _impl_.parent_body_id_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+void CreateDatumCommand::clear_local_pose() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.local_pose_ != nullptr) _impl_.local_pose_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+CreateDatumCommand::CreateDatumCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CreateDatumCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.CreateDatumCommand)
+}
+PROTOBUF_NDEBUG_INLINE CreateDatumCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::CreateDatumCommand& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        name_(arena, from.name_) {}
+
+CreateDatumCommand::CreateDatumCommand(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const CreateDatumCommand& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CreateDatumCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  CreateDatumCommand* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.parent_body_id_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.parent_body_id_)
+                : nullptr;
+  _impl_.local_pose_ = (CheckHasBit(cached_has_bits, 0x00000004U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.local_pose_)
+                : nullptr;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.CreateDatumCommand)
+}
+PROTOBUF_NDEBUG_INLINE CreateDatumCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        name_(arena) {}
+
+inline void CreateDatumCommand::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, parent_body_id_),
+           0,
+           offsetof(Impl_, local_pose_) -
+               offsetof(Impl_, parent_body_id_) +
+               sizeof(Impl_::local_pose_));
+}
+CreateDatumCommand::~CreateDatumCommand() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.CreateDatumCommand)
+  SharedDtor(*this);
+}
+inline void CreateDatumCommand::SharedDtor(MessageLite& self) {
+  CreateDatumCommand& this_ = static_cast<CreateDatumCommand&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.name_.Destroy();
+  delete this_._impl_.parent_body_id_;
+  delete this_._impl_.local_pose_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL CreateDatumCommand::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) CreateDatumCommand(arena);
+}
+constexpr auto CreateDatumCommand::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(CreateDatumCommand),
+                                            alignof(CreateDatumCommand));
+}
+constexpr auto CreateDatumCommand::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_CreateDatumCommand_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &CreateDatumCommand::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<CreateDatumCommand>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &CreateDatumCommand::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<CreateDatumCommand>(), &CreateDatumCommand::ByteSizeLong,
+              &CreateDatumCommand::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_._cached_size_),
+          false,
+      },
+      &CreateDatumCommand::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull CreateDatumCommand_class_data_ =
+        CreateDatumCommand::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+CreateDatumCommand::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&CreateDatumCommand_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(CreateDatumCommand_class_data_.tc_table);
+  return CreateDatumCommand_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 3, 2, 50, 2>
+CreateDatumCommand::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_._has_bits_),
+    0, // no _extensions_
+    3, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967288,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    3,  // num_field_entries
+    2,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    CreateDatumCommand_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::CreateDatumCommand>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 1, 0,
+      PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.parent_body_id_)}},
+    // .motionlab.mechanism.Pose local_pose = 2 [json_name = "localPose"];
+    {::_pbi::TcParser::FastMtS1,
+     {18, 2, 1,
+      PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.local_pose_)}},
+    // string name = 3 [json_name = "name"];
+    {::_pbi::TcParser::FastUS1,
+     {26, 0, 0,
+      PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.name_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
+    {PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.parent_body_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.Pose local_pose = 2 [json_name = "localPose"];
+    {PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.local_pose_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string name = 3 [json_name = "name"];
+    {PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Pose>()},
+  }},
+  {{
+    "\45\0\0\4\0\0\0\0"
+    "motionlab.protocol.CreateDatumCommand"
+    "name"
+  }},
+};
+PROTOBUF_NOINLINE void CreateDatumCommand::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.CreateDatumCommand)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _impl_.name_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.parent_body_id_ != nullptr);
+      _impl_.parent_body_id_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      ABSL_DCHECK(_impl_.local_pose_ != nullptr);
+      _impl_.local_pose_->Clear();
+    }
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL CreateDatumCommand::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const CreateDatumCommand& this_ = static_cast<const CreateDatumCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL CreateDatumCommand::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const CreateDatumCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.CreateDatumCommand)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.parent_body_id_, this_._impl_.parent_body_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.Pose local_pose = 2 [json_name = "localPose"];
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        2, *this_._impl_.local_pose_, this_._impl_.local_pose_->GetCachedSize(), target,
+        stream);
+  }
+
+  // string name = 3 [json_name = "name"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!this_._internal_name().empty()) {
+      const ::std::string& _s = this_._internal_name();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.CreateDatumCommand.name");
+      target = stream->WriteStringMaybeAliased(3, _s, target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.CreateDatumCommand)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t CreateDatumCommand::ByteSizeLong(const MessageLite& base) {
+  const CreateDatumCommand& this_ = static_cast<const CreateDatumCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t CreateDatumCommand::ByteSizeLong() const {
+  const CreateDatumCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.CreateDatumCommand)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    // string name = 3 [json_name = "name"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!this_._internal_name().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_name());
+      }
+    }
+    // .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.parent_body_id_);
+    }
+    // .motionlab.mechanism.Pose local_pose = 2 [json_name = "localPose"];
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.local_pose_);
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void CreateDatumCommand::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<CreateDatumCommand*>(&to_msg);
+  auto& from = static_cast<const CreateDatumCommand&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.CreateDatumCommand)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!from._internal_name().empty()) {
+        _this->_internal_set_name(from._internal_name());
+      } else {
+        if (_this->_impl_.name_.IsDefault()) {
+          _this->_internal_set_name("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.parent_body_id_ != nullptr);
+      if (_this->_impl_.parent_body_id_ == nullptr) {
+        _this->_impl_.parent_body_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.parent_body_id_);
+      } else {
+        _this->_impl_.parent_body_id_->MergeFrom(*from._impl_.parent_body_id_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      ABSL_DCHECK(from._impl_.local_pose_ != nullptr);
+      if (_this->_impl_.local_pose_ == nullptr) {
+        _this->_impl_.local_pose_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.local_pose_);
+      } else {
+        _this->_impl_.local_pose_->MergeFrom(*from._impl_.local_pose_);
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void CreateDatumCommand::CopyFrom(const CreateDatumCommand& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.CreateDatumCommand)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void CreateDatumCommand::InternalSwap(CreateDatumCommand* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.local_pose_)
+      + sizeof(CreateDatumCommand::_impl_.local_pose_)
+      - PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.parent_body_id_)>(
+          reinterpret_cast<char*>(&_impl_.parent_body_id_),
+          reinterpret_cast<char*>(&other->_impl_.parent_body_id_));
+}
+
+::google::protobuf::Metadata CreateDatumCommand::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class DeleteDatumCommand::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<DeleteDatumCommand>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(DeleteDatumCommand, _impl_._has_bits_);
+};
+
+void DeleteDatumCommand::clear_datum_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.datum_id_ != nullptr) _impl_.datum_id_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+DeleteDatumCommand::DeleteDatumCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, DeleteDatumCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.DeleteDatumCommand)
+}
+PROTOBUF_NDEBUG_INLINE DeleteDatumCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::DeleteDatumCommand& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
+DeleteDatumCommand::DeleteDatumCommand(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const DeleteDatumCommand& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, DeleteDatumCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  DeleteDatumCommand* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.datum_id_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.datum_id_)
+                : nullptr;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.DeleteDatumCommand)
+}
+PROTOBUF_NDEBUG_INLINE DeleteDatumCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void DeleteDatumCommand::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.datum_id_ = {};
+}
+DeleteDatumCommand::~DeleteDatumCommand() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.DeleteDatumCommand)
+  SharedDtor(*this);
+}
+inline void DeleteDatumCommand::SharedDtor(MessageLite& self) {
+  DeleteDatumCommand& this_ = static_cast<DeleteDatumCommand&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.datum_id_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL DeleteDatumCommand::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) DeleteDatumCommand(arena);
+}
+constexpr auto DeleteDatumCommand::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(DeleteDatumCommand),
+                                            alignof(DeleteDatumCommand));
+}
+constexpr auto DeleteDatumCommand::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_DeleteDatumCommand_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &DeleteDatumCommand::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<DeleteDatumCommand>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &DeleteDatumCommand::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<DeleteDatumCommand>(), &DeleteDatumCommand::ByteSizeLong,
+              &DeleteDatumCommand::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(DeleteDatumCommand, _impl_._cached_size_),
+          false,
+      },
+      &DeleteDatumCommand::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull DeleteDatumCommand_class_data_ =
+        DeleteDatumCommand::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+DeleteDatumCommand::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&DeleteDatumCommand_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(DeleteDatumCommand_class_data_.tc_table);
+  return DeleteDatumCommand_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 1, 0, 2>
+DeleteDatumCommand::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(DeleteDatumCommand, _impl_._has_bits_),
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    DeleteDatumCommand_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::DeleteDatumCommand>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(DeleteDatumCommand, _impl_.datum_id_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    {PROTOBUF_FIELD_OFFSET(DeleteDatumCommand, _impl_.datum_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+  }},
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void DeleteDatumCommand::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.DeleteDatumCommand)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(_impl_.datum_id_ != nullptr);
+    _impl_.datum_id_->Clear();
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL DeleteDatumCommand::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const DeleteDatumCommand& this_ = static_cast<const DeleteDatumCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL DeleteDatumCommand::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const DeleteDatumCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.DeleteDatumCommand)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.datum_id_, this_._impl_.datum_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.DeleteDatumCommand)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t DeleteDatumCommand::ByteSizeLong(const MessageLite& base) {
+  const DeleteDatumCommand& this_ = static_cast<const DeleteDatumCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t DeleteDatumCommand::ByteSizeLong() const {
+  const DeleteDatumCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.DeleteDatumCommand)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+   {
+    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    cached_has_bits = this_._impl_._has_bits_[0];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.datum_id_);
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void DeleteDatumCommand::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<DeleteDatumCommand*>(&to_msg);
+  auto& from = static_cast<const DeleteDatumCommand&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.DeleteDatumCommand)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(from._impl_.datum_id_ != nullptr);
+    if (_this->_impl_.datum_id_ == nullptr) {
+      _this->_impl_.datum_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.datum_id_);
+    } else {
+      _this->_impl_.datum_id_->MergeFrom(*from._impl_.datum_id_);
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void DeleteDatumCommand::CopyFrom(const DeleteDatumCommand& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.DeleteDatumCommand)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void DeleteDatumCommand::InternalSwap(DeleteDatumCommand* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  swap(_impl_.datum_id_, other->_impl_.datum_id_);
+}
+
+::google::protobuf::Metadata DeleteDatumCommand::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class RenameDatumCommand::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<RenameDatumCommand>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(RenameDatumCommand, _impl_._has_bits_);
+};
+
+void RenameDatumCommand::clear_datum_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.datum_id_ != nullptr) _impl_.datum_id_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+RenameDatumCommand::RenameDatumCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, RenameDatumCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.RenameDatumCommand)
+}
+PROTOBUF_NDEBUG_INLINE RenameDatumCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::RenameDatumCommand& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        name_(arena, from.name_) {}
+
+RenameDatumCommand::RenameDatumCommand(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const RenameDatumCommand& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, RenameDatumCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  RenameDatumCommand* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.datum_id_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.datum_id_)
+                : nullptr;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.RenameDatumCommand)
+}
+PROTOBUF_NDEBUG_INLINE RenameDatumCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        name_(arena) {}
+
+inline void RenameDatumCommand::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.datum_id_ = {};
+}
+RenameDatumCommand::~RenameDatumCommand() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.RenameDatumCommand)
+  SharedDtor(*this);
+}
+inline void RenameDatumCommand::SharedDtor(MessageLite& self) {
+  RenameDatumCommand& this_ = static_cast<RenameDatumCommand&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.name_.Destroy();
+  delete this_._impl_.datum_id_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL RenameDatumCommand::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) RenameDatumCommand(arena);
+}
+constexpr auto RenameDatumCommand::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(RenameDatumCommand),
+                                            alignof(RenameDatumCommand));
+}
+constexpr auto RenameDatumCommand::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_RenameDatumCommand_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &RenameDatumCommand::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<RenameDatumCommand>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &RenameDatumCommand::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<RenameDatumCommand>(), &RenameDatumCommand::ByteSizeLong,
+              &RenameDatumCommand::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(RenameDatumCommand, _impl_._cached_size_),
+          false,
+      },
+      &RenameDatumCommand::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull RenameDatumCommand_class_data_ =
+        RenameDatumCommand::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+RenameDatumCommand::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&RenameDatumCommand_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(RenameDatumCommand_class_data_.tc_table);
+  return RenameDatumCommand_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 1, 50, 2>
+RenameDatumCommand::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(RenameDatumCommand, _impl_._has_bits_),
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    RenameDatumCommand_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::RenameDatumCommand>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // string name = 2 [json_name = "name"];
+    {::_pbi::TcParser::FastUS1,
+     {18, 0, 0,
+      PROTOBUF_FIELD_OFFSET(RenameDatumCommand, _impl_.name_)}},
+    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 1, 0,
+      PROTOBUF_FIELD_OFFSET(RenameDatumCommand, _impl_.datum_id_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    {PROTOBUF_FIELD_OFFSET(RenameDatumCommand, _impl_.datum_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string name = 2 [json_name = "name"];
+    {PROTOBUF_FIELD_OFFSET(RenameDatumCommand, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+  }},
+  {{
+    "\45\0\4\0\0\0\0\0"
+    "motionlab.protocol.RenameDatumCommand"
+    "name"
+  }},
+};
+PROTOBUF_NOINLINE void RenameDatumCommand::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.RenameDatumCommand)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _impl_.name_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.datum_id_ != nullptr);
+      _impl_.datum_id_->Clear();
+    }
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL RenameDatumCommand::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const RenameDatumCommand& this_ = static_cast<const RenameDatumCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL RenameDatumCommand::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const RenameDatumCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.RenameDatumCommand)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.datum_id_, this_._impl_.datum_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // string name = 2 [json_name = "name"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!this_._internal_name().empty()) {
+      const ::std::string& _s = this_._internal_name();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.RenameDatumCommand.name");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.RenameDatumCommand)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t RenameDatumCommand::ByteSizeLong(const MessageLite& base) {
+  const RenameDatumCommand& this_ = static_cast<const RenameDatumCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t RenameDatumCommand::ByteSizeLong() const {
+  const RenameDatumCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.RenameDatumCommand)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    // string name = 2 [json_name = "name"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!this_._internal_name().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_name());
+      }
+    }
+    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.datum_id_);
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void RenameDatumCommand::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<RenameDatumCommand*>(&to_msg);
+  auto& from = static_cast<const RenameDatumCommand&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.RenameDatumCommand)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!from._internal_name().empty()) {
+        _this->_internal_set_name(from._internal_name());
+      } else {
+        if (_this->_impl_.name_.IsDefault()) {
+          _this->_internal_set_name("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.datum_id_ != nullptr);
+      if (_this->_impl_.datum_id_ == nullptr) {
+        _this->_impl_.datum_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.datum_id_);
+      } else {
+        _this->_impl_.datum_id_->MergeFrom(*from._impl_.datum_id_);
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void RenameDatumCommand::CopyFrom(const RenameDatumCommand& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.RenameDatumCommand)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void RenameDatumCommand::InternalSwap(RenameDatumCommand* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
+  swap(_impl_.datum_id_, other->_impl_.datum_id_);
+}
+
+::google::protobuf::Metadata RenameDatumCommand::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class CreateDatumResult::_Internal {
+ public:
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumResult, _impl_._oneof_case_);
+};
+
+void CreateDatumResult::set_allocated_datum(::motionlab::mechanism::Datum* PROTOBUF_NULLABLE datum) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_result();
+  if (datum) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(datum)->GetArena();
+    if (message_arena != submessage_arena) {
+      datum = ::google::protobuf::internal::GetOwnedMessage(message_arena, datum, submessage_arena);
+    }
+    set_has_datum();
+    _impl_.result_.datum_ = datum;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateDatumResult.datum)
+}
+void CreateDatumResult::clear_datum() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kDatum) {
+    if (GetArena() == nullptr) {
+      delete _impl_.result_.datum_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.datum_);
+    }
+    clear_has_result();
+  }
+}
+CreateDatumResult::CreateDatumResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CreateDatumResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.CreateDatumResult)
+}
+PROTOBUF_NDEBUG_INLINE CreateDatumResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::CreateDatumResult& from_msg)
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{from._oneof_case_[0]} {}
+
+CreateDatumResult::CreateDatumResult(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const CreateDatumResult& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CreateDatumResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  CreateDatumResult* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  switch (result_case()) {
+    case RESULT_NOT_SET:
+      break;
+      case kDatum:
+        _impl_.result_.datum_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.datum_);
+        break;
+      case kErrorMessage:
+        new (&_impl_.result_.error_message_) decltype(_impl_.result_.error_message_){arena, from._impl_.result_.error_message_};
+        break;
+  }
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.CreateDatumResult)
+}
+PROTOBUF_NDEBUG_INLINE CreateDatumResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
+
+inline void CreateDatumResult::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+}
+CreateDatumResult::~CreateDatumResult() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.CreateDatumResult)
+  SharedDtor(*this);
+}
+inline void CreateDatumResult::SharedDtor(MessageLite& self) {
+  CreateDatumResult& this_ = static_cast<CreateDatumResult&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  if (this_.has_result()) {
+    this_.clear_result();
+  }
+  this_._impl_.~Impl_();
+}
+
+void CreateDatumResult::clear_result() {
+// @@protoc_insertion_point(one_of_clear_start:motionlab.protocol.CreateDatumResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (result_case()) {
+    case kDatum: {
+      if (GetArena() == nullptr) {
+        delete _impl_.result_.datum_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.datum_);
+      }
+      break;
+    }
+    case kErrorMessage: {
+      _impl_.result_.error_message_.Destroy();
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+
+
+inline void* PROTOBUF_NONNULL CreateDatumResult::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) CreateDatumResult(arena);
+}
+constexpr auto CreateDatumResult::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(CreateDatumResult),
+                                            alignof(CreateDatumResult));
+}
+constexpr auto CreateDatumResult::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_CreateDatumResult_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &CreateDatumResult::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<CreateDatumResult>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &CreateDatumResult::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<CreateDatumResult>(), &CreateDatumResult::ByteSizeLong,
+              &CreateDatumResult::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(CreateDatumResult, _impl_._cached_size_),
+          false,
+      },
+      &CreateDatumResult::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull CreateDatumResult_class_data_ =
+        CreateDatumResult::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+CreateDatumResult::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&CreateDatumResult_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(CreateDatumResult_class_data_.tc_table);
+  return CreateDatumResult_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 2, 1, 58, 2>
+CreateDatumResult::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    2, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    CreateDatumResult_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::CreateDatumResult>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+    {PROTOBUF_FIELD_OFFSET(CreateDatumResult, _impl_.result_.datum_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string error_message = 2 [json_name = "errorMessage"];
+    {PROTOBUF_FIELD_OFFSET(CreateDatumResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Datum>()},
+  }},
+  {{
+    "\44\0\15\0\0\0\0\0"
+    "motionlab.protocol.CreateDatumResult"
+    "error_message"
+  }},
+};
+PROTOBUF_NOINLINE void CreateDatumResult::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.CreateDatumResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  clear_result();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL CreateDatumResult::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const CreateDatumResult& this_ = static_cast<const CreateDatumResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL CreateDatumResult::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const CreateDatumResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.CreateDatumResult)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  switch (this_.result_case()) {
+    case kDatum: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          1, *this_._impl_.result_.datum_, this_._impl_.result_.datum_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kErrorMessage: {
+      const ::std::string& _s = this_._internal_error_message();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.CreateDatumResult.error_message");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+      break;
+    }
+    default:
+      break;
+  }
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.CreateDatumResult)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t CreateDatumResult::ByteSizeLong(const MessageLite& base) {
+  const CreateDatumResult& this_ = static_cast<const CreateDatumResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t CreateDatumResult::ByteSizeLong() const {
+  const CreateDatumResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.CreateDatumResult)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  switch (this_.result_case()) {
+    // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+    case kDatum: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.datum_);
+      break;
+    }
+    // string error_message = 2 [json_name = "errorMessage"];
+    case kErrorMessage: {
+      total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                      this_._internal_error_message());
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void CreateDatumResult::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<CreateDatumResult*>(&to_msg);
+  auto& from = static_cast<const CreateDatumResult&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.CreateDatumResult)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  if (const uint32_t oneof_from_case =
+          from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_result();
+      }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kDatum: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.datum_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.datum_);
+        } else {
+          _this->_impl_.result_.datum_->MergeFrom(*from._impl_.result_.datum_);
+        }
+        break;
+      }
+      case kErrorMessage: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.error_message_.InitDefault();
+        }
+        _this->_impl_.result_.error_message_.Set(from._internal_error_message(), arena);
+        break;
+      }
+      case RESULT_NOT_SET:
+        break;
+    }
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void CreateDatumResult::CopyFrom(const CreateDatumResult& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.CreateDatumResult)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void CreateDatumResult::InternalSwap(CreateDatumResult* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_.result_, other->_impl_.result_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
+}
+
+::google::protobuf::Metadata CreateDatumResult::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class DeleteDatumResult::_Internal {
+ public:
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteDatumResult, _impl_._oneof_case_);
+};
+
+void DeleteDatumResult::set_allocated_deleted_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE deleted_id) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_result();
+  if (deleted_id) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(deleted_id)->GetArena();
+    if (message_arena != submessage_arena) {
+      deleted_id = ::google::protobuf::internal::GetOwnedMessage(message_arena, deleted_id, submessage_arena);
+    }
+    set_has_deleted_id();
+    _impl_.result_.deleted_id_ = deleted_id;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.DeleteDatumResult.deleted_id)
+}
+void DeleteDatumResult::clear_deleted_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kDeletedId) {
+    if (GetArena() == nullptr) {
+      delete _impl_.result_.deleted_id_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.deleted_id_);
+    }
+    clear_has_result();
+  }
+}
+DeleteDatumResult::DeleteDatumResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, DeleteDatumResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.DeleteDatumResult)
+}
+PROTOBUF_NDEBUG_INLINE DeleteDatumResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::DeleteDatumResult& from_msg)
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{from._oneof_case_[0]} {}
+
+DeleteDatumResult::DeleteDatumResult(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const DeleteDatumResult& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, DeleteDatumResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  DeleteDatumResult* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  switch (result_case()) {
+    case RESULT_NOT_SET:
+      break;
+      case kDeletedId:
+        _impl_.result_.deleted_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.deleted_id_);
+        break;
+      case kErrorMessage:
+        new (&_impl_.result_.error_message_) decltype(_impl_.result_.error_message_){arena, from._impl_.result_.error_message_};
+        break;
+  }
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.DeleteDatumResult)
+}
+PROTOBUF_NDEBUG_INLINE DeleteDatumResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
+
+inline void DeleteDatumResult::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+}
+DeleteDatumResult::~DeleteDatumResult() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.DeleteDatumResult)
+  SharedDtor(*this);
+}
+inline void DeleteDatumResult::SharedDtor(MessageLite& self) {
+  DeleteDatumResult& this_ = static_cast<DeleteDatumResult&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  if (this_.has_result()) {
+    this_.clear_result();
+  }
+  this_._impl_.~Impl_();
+}
+
+void DeleteDatumResult::clear_result() {
+// @@protoc_insertion_point(one_of_clear_start:motionlab.protocol.DeleteDatumResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (result_case()) {
+    case kDeletedId: {
+      if (GetArena() == nullptr) {
+        delete _impl_.result_.deleted_id_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.deleted_id_);
+      }
+      break;
+    }
+    case kErrorMessage: {
+      _impl_.result_.error_message_.Destroy();
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+
+
+inline void* PROTOBUF_NONNULL DeleteDatumResult::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) DeleteDatumResult(arena);
+}
+constexpr auto DeleteDatumResult::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(DeleteDatumResult),
+                                            alignof(DeleteDatumResult));
+}
+constexpr auto DeleteDatumResult::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_DeleteDatumResult_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &DeleteDatumResult::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<DeleteDatumResult>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &DeleteDatumResult::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<DeleteDatumResult>(), &DeleteDatumResult::ByteSizeLong,
+              &DeleteDatumResult::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(DeleteDatumResult, _impl_._cached_size_),
+          false,
+      },
+      &DeleteDatumResult::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull DeleteDatumResult_class_data_ =
+        DeleteDatumResult::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+DeleteDatumResult::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&DeleteDatumResult_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(DeleteDatumResult_class_data_.tc_table);
+  return DeleteDatumResult_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 2, 1, 58, 2>
+DeleteDatumResult::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    2, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    DeleteDatumResult_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::DeleteDatumResult>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    {PROTOBUF_FIELD_OFFSET(DeleteDatumResult, _impl_.result_.deleted_id_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string error_message = 2 [json_name = "errorMessage"];
+    {PROTOBUF_FIELD_OFFSET(DeleteDatumResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+  }},
+  {{
+    "\44\0\15\0\0\0\0\0"
+    "motionlab.protocol.DeleteDatumResult"
+    "error_message"
+  }},
+};
+PROTOBUF_NOINLINE void DeleteDatumResult::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.DeleteDatumResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  clear_result();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL DeleteDatumResult::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const DeleteDatumResult& this_ = static_cast<const DeleteDatumResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL DeleteDatumResult::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const DeleteDatumResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.DeleteDatumResult)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  switch (this_.result_case()) {
+    case kDeletedId: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          1, *this_._impl_.result_.deleted_id_, this_._impl_.result_.deleted_id_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kErrorMessage: {
+      const ::std::string& _s = this_._internal_error_message();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.DeleteDatumResult.error_message");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+      break;
+    }
+    default:
+      break;
+  }
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.DeleteDatumResult)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t DeleteDatumResult::ByteSizeLong(const MessageLite& base) {
+  const DeleteDatumResult& this_ = static_cast<const DeleteDatumResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t DeleteDatumResult::ByteSizeLong() const {
+  const DeleteDatumResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.DeleteDatumResult)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  switch (this_.result_case()) {
+    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    case kDeletedId: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.deleted_id_);
+      break;
+    }
+    // string error_message = 2 [json_name = "errorMessage"];
+    case kErrorMessage: {
+      total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                      this_._internal_error_message());
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void DeleteDatumResult::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<DeleteDatumResult*>(&to_msg);
+  auto& from = static_cast<const DeleteDatumResult&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.DeleteDatumResult)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  if (const uint32_t oneof_from_case =
+          from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_result();
+      }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kDeletedId: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.deleted_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.deleted_id_);
+        } else {
+          _this->_impl_.result_.deleted_id_->MergeFrom(*from._impl_.result_.deleted_id_);
+        }
+        break;
+      }
+      case kErrorMessage: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.error_message_.InitDefault();
+        }
+        _this->_impl_.result_.error_message_.Set(from._internal_error_message(), arena);
+        break;
+      }
+      case RESULT_NOT_SET:
+        break;
+    }
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void DeleteDatumResult::CopyFrom(const DeleteDatumResult& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.DeleteDatumResult)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void DeleteDatumResult::InternalSwap(DeleteDatumResult* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_.result_, other->_impl_.result_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
+}
+
+::google::protobuf::Metadata DeleteDatumResult::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class RenameDatumResult::_Internal {
+ public:
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::motionlab::protocol::RenameDatumResult, _impl_._oneof_case_);
+};
+
+void RenameDatumResult::set_allocated_datum(::motionlab::mechanism::Datum* PROTOBUF_NULLABLE datum) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_result();
+  if (datum) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(datum)->GetArena();
+    if (message_arena != submessage_arena) {
+      datum = ::google::protobuf::internal::GetOwnedMessage(message_arena, datum, submessage_arena);
+    }
+    set_has_datum();
+    _impl_.result_.datum_ = datum;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.RenameDatumResult.datum)
+}
+void RenameDatumResult::clear_datum() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kDatum) {
+    if (GetArena() == nullptr) {
+      delete _impl_.result_.datum_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.datum_);
+    }
+    clear_has_result();
+  }
+}
+RenameDatumResult::RenameDatumResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, RenameDatumResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.RenameDatumResult)
+}
+PROTOBUF_NDEBUG_INLINE RenameDatumResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::RenameDatumResult& from_msg)
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{from._oneof_case_[0]} {}
+
+RenameDatumResult::RenameDatumResult(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const RenameDatumResult& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, RenameDatumResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  RenameDatumResult* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  switch (result_case()) {
+    case RESULT_NOT_SET:
+      break;
+      case kDatum:
+        _impl_.result_.datum_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.datum_);
+        break;
+      case kErrorMessage:
+        new (&_impl_.result_.error_message_) decltype(_impl_.result_.error_message_){arena, from._impl_.result_.error_message_};
+        break;
+  }
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.RenameDatumResult)
+}
+PROTOBUF_NDEBUG_INLINE RenameDatumResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
+
+inline void RenameDatumResult::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+}
+RenameDatumResult::~RenameDatumResult() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.RenameDatumResult)
+  SharedDtor(*this);
+}
+inline void RenameDatumResult::SharedDtor(MessageLite& self) {
+  RenameDatumResult& this_ = static_cast<RenameDatumResult&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  if (this_.has_result()) {
+    this_.clear_result();
+  }
+  this_._impl_.~Impl_();
+}
+
+void RenameDatumResult::clear_result() {
+// @@protoc_insertion_point(one_of_clear_start:motionlab.protocol.RenameDatumResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (result_case()) {
+    case kDatum: {
+      if (GetArena() == nullptr) {
+        delete _impl_.result_.datum_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.datum_);
+      }
+      break;
+    }
+    case kErrorMessage: {
+      _impl_.result_.error_message_.Destroy();
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+
+
+inline void* PROTOBUF_NONNULL RenameDatumResult::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) RenameDatumResult(arena);
+}
+constexpr auto RenameDatumResult::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(RenameDatumResult),
+                                            alignof(RenameDatumResult));
+}
+constexpr auto RenameDatumResult::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_RenameDatumResult_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &RenameDatumResult::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<RenameDatumResult>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &RenameDatumResult::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<RenameDatumResult>(), &RenameDatumResult::ByteSizeLong,
+              &RenameDatumResult::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(RenameDatumResult, _impl_._cached_size_),
+          false,
+      },
+      &RenameDatumResult::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull RenameDatumResult_class_data_ =
+        RenameDatumResult::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+RenameDatumResult::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&RenameDatumResult_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(RenameDatumResult_class_data_.tc_table);
+  return RenameDatumResult_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 2, 1, 58, 2>
+RenameDatumResult::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    2, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    RenameDatumResult_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::RenameDatumResult>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+    {PROTOBUF_FIELD_OFFSET(RenameDatumResult, _impl_.result_.datum_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string error_message = 2 [json_name = "errorMessage"];
+    {PROTOBUF_FIELD_OFFSET(RenameDatumResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Datum>()},
+  }},
+  {{
+    "\44\0\15\0\0\0\0\0"
+    "motionlab.protocol.RenameDatumResult"
+    "error_message"
+  }},
+};
+PROTOBUF_NOINLINE void RenameDatumResult::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.RenameDatumResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  clear_result();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL RenameDatumResult::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const RenameDatumResult& this_ = static_cast<const RenameDatumResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL RenameDatumResult::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const RenameDatumResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.RenameDatumResult)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  switch (this_.result_case()) {
+    case kDatum: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          1, *this_._impl_.result_.datum_, this_._impl_.result_.datum_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kErrorMessage: {
+      const ::std::string& _s = this_._internal_error_message();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.RenameDatumResult.error_message");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+      break;
+    }
+    default:
+      break;
+  }
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.RenameDatumResult)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t RenameDatumResult::ByteSizeLong(const MessageLite& base) {
+  const RenameDatumResult& this_ = static_cast<const RenameDatumResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t RenameDatumResult::ByteSizeLong() const {
+  const RenameDatumResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.RenameDatumResult)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  switch (this_.result_case()) {
+    // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+    case kDatum: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.datum_);
+      break;
+    }
+    // string error_message = 2 [json_name = "errorMessage"];
+    case kErrorMessage: {
+      total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                      this_._internal_error_message());
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void RenameDatumResult::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<RenameDatumResult*>(&to_msg);
+  auto& from = static_cast<const RenameDatumResult&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.RenameDatumResult)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  if (const uint32_t oneof_from_case =
+          from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_result();
+      }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kDatum: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.datum_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.datum_);
+        } else {
+          _this->_impl_.result_.datum_->MergeFrom(*from._impl_.result_.datum_);
+        }
+        break;
+      }
+      case kErrorMessage: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.error_message_.InitDefault();
+        }
+        _this->_impl_.result_.error_message_.Set(from._internal_error_message(), arena);
+        break;
+      }
+      case RESULT_NOT_SET:
+        break;
+    }
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void RenameDatumResult::CopyFrom(const RenameDatumResult& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.RenameDatumResult)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void RenameDatumResult::InternalSwap(RenameDatumResult* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_.result_, other->_impl_.result_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
+}
+
+::google::protobuf::Metadata RenameDatumResult::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class CreateJointCommand::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<CreateJointCommand>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_._has_bits_);
+};
+
+void CreateJointCommand::clear_parent_datum_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.parent_datum_id_ != nullptr) _impl_.parent_datum_id_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+void CreateJointCommand::clear_child_datum_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.child_datum_id_ != nullptr) _impl_.child_datum_id_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+CreateJointCommand::CreateJointCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CreateJointCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.CreateJointCommand)
+}
+PROTOBUF_NDEBUG_INLINE CreateJointCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::CreateJointCommand& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        name_(arena, from.name_) {}
+
+CreateJointCommand::CreateJointCommand(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const CreateJointCommand& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CreateJointCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  CreateJointCommand* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.parent_datum_id_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.parent_datum_id_)
+                : nullptr;
+  _impl_.child_datum_id_ = (CheckHasBit(cached_has_bits, 0x00000004U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.child_datum_id_)
+                : nullptr;
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, lower_limit_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, lower_limit_),
+           offsetof(Impl_, type_) -
+               offsetof(Impl_, lower_limit_) +
+               sizeof(Impl_::type_));
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.CreateJointCommand)
+}
+PROTOBUF_NDEBUG_INLINE CreateJointCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        name_(arena) {}
+
+inline void CreateJointCommand::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, parent_datum_id_),
+           0,
+           offsetof(Impl_, type_) -
+               offsetof(Impl_, parent_datum_id_) +
+               sizeof(Impl_::type_));
+}
+CreateJointCommand::~CreateJointCommand() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.CreateJointCommand)
+  SharedDtor(*this);
+}
+inline void CreateJointCommand::SharedDtor(MessageLite& self) {
+  CreateJointCommand& this_ = static_cast<CreateJointCommand&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.name_.Destroy();
+  delete this_._impl_.parent_datum_id_;
+  delete this_._impl_.child_datum_id_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL CreateJointCommand::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) CreateJointCommand(arena);
+}
+constexpr auto CreateJointCommand::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(CreateJointCommand),
+                                            alignof(CreateJointCommand));
+}
+constexpr auto CreateJointCommand::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_CreateJointCommand_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &CreateJointCommand::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<CreateJointCommand>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &CreateJointCommand::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<CreateJointCommand>(), &CreateJointCommand::ByteSizeLong,
+              &CreateJointCommand::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_._cached_size_),
+          false,
+      },
+      &CreateJointCommand::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull CreateJointCommand_class_data_ =
+        CreateJointCommand::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+CreateJointCommand::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&CreateJointCommand_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(CreateJointCommand_class_data_.tc_table);
+  return CreateJointCommand_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<3, 6, 2, 50, 2>
+CreateJointCommand::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_._has_bits_),
+    0, // no _extensions_
+    6, 56,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967232,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    6,  // num_field_entries
+    2,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    CreateJointCommand_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::CreateJointCommand>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 1, 0,
+      PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.parent_datum_id_)}},
+    // .motionlab.mechanism.ElementId child_datum_id = 2 [json_name = "childDatumId"];
+    {::_pbi::TcParser::FastMtS1,
+     {18, 2, 1,
+      PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.child_datum_id_)}},
+    // .motionlab.mechanism.JointType type = 3 [json_name = "type"];
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateJointCommand, _impl_.type_), 5>(),
+     {24, 5, 0,
+      PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.type_)}},
+    // string name = 4 [json_name = "name"];
+    {::_pbi::TcParser::FastUS1,
+     {34, 0, 0,
+      PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.name_)}},
+    // double lower_limit = 5 [json_name = "lowerLimit"];
+    {::_pbi::TcParser::FastF64S1,
+     {41, 3, 0,
+      PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.lower_limit_)}},
+    // double upper_limit = 6 [json_name = "upperLimit"];
+    {::_pbi::TcParser::FastF64S1,
+     {49, 4, 0,
+      PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.upper_limit_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
+    {PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.parent_datum_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.ElementId child_datum_id = 2 [json_name = "childDatumId"];
+    {PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.child_datum_id_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.JointType type = 3 [json_name = "type"];
+    {PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.type_), _Internal::kHasBitsOffset + 5, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+    // string name = 4 [json_name = "name"];
+    {PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // double lower_limit = 5 [json_name = "lowerLimit"];
+    {PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.lower_limit_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // double upper_limit = 6 [json_name = "upperLimit"];
+    {PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.upper_limit_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+  }},
+  {{
+    "\45\0\0\0\4\0\0\0"
+    "motionlab.protocol.CreateJointCommand"
+    "name"
+  }},
+};
+PROTOBUF_NOINLINE void CreateJointCommand::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.CreateJointCommand)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _impl_.name_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.parent_datum_id_ != nullptr);
+      _impl_.parent_datum_id_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      ABSL_DCHECK(_impl_.child_datum_id_ != nullptr);
+      _impl_.child_datum_id_->Clear();
+    }
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x00000038U)) {
+    ::memset(&_impl_.lower_limit_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.type_) -
+        reinterpret_cast<char*>(&_impl_.lower_limit_)) + sizeof(_impl_.type_));
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL CreateJointCommand::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const CreateJointCommand& this_ = static_cast<const CreateJointCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL CreateJointCommand::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const CreateJointCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.CreateJointCommand)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.parent_datum_id_, this_._impl_.parent_datum_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.ElementId child_datum_id = 2 [json_name = "childDatumId"];
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        2, *this_._impl_.child_datum_id_, this_._impl_.child_datum_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.JointType type = 3 [json_name = "type"];
+  if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+    if (this_._internal_type() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteEnumToArray(
+          3, this_._internal_type(), target);
+    }
+  }
+
+  // string name = 4 [json_name = "name"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!this_._internal_name().empty()) {
+      const ::std::string& _s = this_._internal_name();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.CreateJointCommand.name");
+      target = stream->WriteStringMaybeAliased(4, _s, target);
+    }
+  }
+
+  // double lower_limit = 5 [json_name = "lowerLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_lower_limit()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          5, this_._internal_lower_limit(), target);
+    }
+  }
+
+  // double upper_limit = 6 [json_name = "upperLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_upper_limit()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          6, this_._internal_upper_limit(), target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.CreateJointCommand)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t CreateJointCommand::ByteSizeLong(const MessageLite& base) {
+  const CreateJointCommand& this_ = static_cast<const CreateJointCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t CreateJointCommand::ByteSizeLong() const {
+  const CreateJointCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.CreateJointCommand)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000003fU)) {
+    // string name = 4 [json_name = "name"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!this_._internal_name().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_name());
+      }
+    }
+    // .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.parent_datum_id_);
+    }
+    // .motionlab.mechanism.ElementId child_datum_id = 2 [json_name = "childDatumId"];
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.child_datum_id_);
+    }
+    // double lower_limit = 5 [json_name = "lowerLimit"];
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_lower_limit()) != 0) {
+        total_size += 9;
+      }
+    }
+    // double upper_limit = 6 [json_name = "upperLimit"];
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_upper_limit()) != 0) {
+        total_size += 9;
+      }
+    }
+    // .motionlab.mechanism.JointType type = 3 [json_name = "type"];
+    if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+      if (this_._internal_type() != 0) {
+        total_size += 1 +
+                      ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void CreateJointCommand::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<CreateJointCommand*>(&to_msg);
+  auto& from = static_cast<const CreateJointCommand&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.CreateJointCommand)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000003fU)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!from._internal_name().empty()) {
+        _this->_internal_set_name(from._internal_name());
+      } else {
+        if (_this->_impl_.name_.IsDefault()) {
+          _this->_internal_set_name("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.parent_datum_id_ != nullptr);
+      if (_this->_impl_.parent_datum_id_ == nullptr) {
+        _this->_impl_.parent_datum_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.parent_datum_id_);
+      } else {
+        _this->_impl_.parent_datum_id_->MergeFrom(*from._impl_.parent_datum_id_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      ABSL_DCHECK(from._impl_.child_datum_id_ != nullptr);
+      if (_this->_impl_.child_datum_id_ == nullptr) {
+        _this->_impl_.child_datum_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.child_datum_id_);
+      } else {
+        _this->_impl_.child_datum_id_->MergeFrom(*from._impl_.child_datum_id_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_lower_limit()) != 0) {
+        _this->_impl_.lower_limit_ = from._impl_.lower_limit_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_upper_limit()) != 0) {
+        _this->_impl_.upper_limit_ = from._impl_.upper_limit_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+      if (from._internal_type() != 0) {
+        _this->_impl_.type_ = from._impl_.type_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void CreateJointCommand::CopyFrom(const CreateJointCommand& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.CreateJointCommand)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void CreateJointCommand::InternalSwap(CreateJointCommand* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.type_)
+      + sizeof(CreateJointCommand::_impl_.type_)
+      - PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.parent_datum_id_)>(
+          reinterpret_cast<char*>(&_impl_.parent_datum_id_),
+          reinterpret_cast<char*>(&other->_impl_.parent_datum_id_));
+}
+
+::google::protobuf::Metadata CreateJointCommand::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class UpdateJointCommand::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<UpdateJointCommand>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_._has_bits_);
+};
+
+void UpdateJointCommand::clear_joint_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.joint_id_ != nullptr) _impl_.joint_id_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+UpdateJointCommand::UpdateJointCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, UpdateJointCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.UpdateJointCommand)
+}
+PROTOBUF_NDEBUG_INLINE UpdateJointCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::UpdateJointCommand& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        name_(arena, from.name_) {}
+
+UpdateJointCommand::UpdateJointCommand(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const UpdateJointCommand& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, UpdateJointCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  UpdateJointCommand* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.joint_id_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.joint_id_)
+                : nullptr;
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, lower_limit_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, lower_limit_),
+           offsetof(Impl_, type_) -
+               offsetof(Impl_, lower_limit_) +
+               sizeof(Impl_::type_));
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.UpdateJointCommand)
+}
+PROTOBUF_NDEBUG_INLINE UpdateJointCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        name_(arena) {}
+
+inline void UpdateJointCommand::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, joint_id_),
+           0,
+           offsetof(Impl_, type_) -
+               offsetof(Impl_, joint_id_) +
+               sizeof(Impl_::type_));
+}
+UpdateJointCommand::~UpdateJointCommand() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.UpdateJointCommand)
+  SharedDtor(*this);
+}
+inline void UpdateJointCommand::SharedDtor(MessageLite& self) {
+  UpdateJointCommand& this_ = static_cast<UpdateJointCommand&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.name_.Destroy();
+  delete this_._impl_.joint_id_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL UpdateJointCommand::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) UpdateJointCommand(arena);
+}
+constexpr auto UpdateJointCommand::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(UpdateJointCommand),
+                                            alignof(UpdateJointCommand));
+}
+constexpr auto UpdateJointCommand::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_UpdateJointCommand_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &UpdateJointCommand::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<UpdateJointCommand>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &UpdateJointCommand::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<UpdateJointCommand>(), &UpdateJointCommand::ByteSizeLong,
+              &UpdateJointCommand::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_._cached_size_),
+          false,
+      },
+      &UpdateJointCommand::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull UpdateJointCommand_class_data_ =
+        UpdateJointCommand::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+UpdateJointCommand::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&UpdateJointCommand_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(UpdateJointCommand_class_data_.tc_table);
+  return UpdateJointCommand_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<3, 5, 1, 50, 2>
+UpdateJointCommand::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_._has_bits_),
+    0, // no _extensions_
+    5, 56,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967264,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    5,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    UpdateJointCommand_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::UpdateJointCommand>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 1, 0,
+      PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.joint_id_)}},
+    // optional string name = 2 [json_name = "name"];
+    {::_pbi::TcParser::FastUS1,
+     {18, 0, 0,
+      PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.name_)}},
+    // optional .motionlab.mechanism.JointType type = 3 [json_name = "type"];
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(UpdateJointCommand, _impl_.type_), 4>(),
+     {24, 4, 0,
+      PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.type_)}},
+    // optional double lower_limit = 4 [json_name = "lowerLimit"];
+    {::_pbi::TcParser::FastF64S1,
+     {33, 2, 0,
+      PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.lower_limit_)}},
+    // optional double upper_limit = 5 [json_name = "upperLimit"];
+    {::_pbi::TcParser::FastF64S1,
+     {41, 3, 0,
+      PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.upper_limit_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    {PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.joint_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // optional string name = 2 [json_name = "name"];
+    {PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // optional .motionlab.mechanism.JointType type = 3 [json_name = "type"];
+    {PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.type_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+    // optional double lower_limit = 4 [json_name = "lowerLimit"];
+    {PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.lower_limit_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // optional double upper_limit = 5 [json_name = "upperLimit"];
+    {PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.upper_limit_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+  }},
+  {{
+    "\45\0\4\0\0\0\0\0"
+    "motionlab.protocol.UpdateJointCommand"
+    "name"
+  }},
+};
+PROTOBUF_NOINLINE void UpdateJointCommand::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.UpdateJointCommand)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _impl_.name_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.joint_id_ != nullptr);
+      _impl_.joint_id_->Clear();
+    }
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001cU)) {
+    ::memset(&_impl_.lower_limit_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.type_) -
+        reinterpret_cast<char*>(&_impl_.lower_limit_)) + sizeof(_impl_.type_));
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL UpdateJointCommand::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const UpdateJointCommand& this_ = static_cast<const UpdateJointCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL UpdateJointCommand::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const UpdateJointCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.UpdateJointCommand)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.joint_id_, this_._impl_.joint_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // optional string name = 2 [json_name = "name"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    const ::std::string& _s = this_._internal_name();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.UpdateJointCommand.name");
+    target = stream->WriteStringMaybeAliased(2, _s, target);
+  }
+
+  // optional .motionlab.mechanism.JointType type = 3 [json_name = "type"];
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteEnumToArray(
+        3, this_._internal_type(), target);
+  }
+
+  // optional double lower_limit = 4 [json_name = "lowerLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+        4, this_._internal_lower_limit(), target);
+  }
+
+  // optional double upper_limit = 5 [json_name = "upperLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+        5, this_._internal_upper_limit(), target);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.UpdateJointCommand)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t UpdateJointCommand::ByteSizeLong(const MessageLite& base) {
+  const UpdateJointCommand& this_ = static_cast<const UpdateJointCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t UpdateJointCommand::ByteSizeLong() const {
+  const UpdateJointCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.UpdateJointCommand)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  total_size += ::absl::popcount(0x0000000cU & cached_has_bits) * 9;
+  if (BatchCheckHasBit(cached_has_bits, 0x00000013U)) {
+    // optional string name = 2 [json_name = "name"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                      this_._internal_name());
+    }
+    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.joint_id_);
+    }
+    // optional .motionlab.mechanism.JointType type = 3 [json_name = "type"];
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      total_size += 1 +
+                    ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void UpdateJointCommand::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<UpdateJointCommand*>(&to_msg);
+  auto& from = static_cast<const UpdateJointCommand&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.UpdateJointCommand)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _this->_internal_set_name(from._internal_name());
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.joint_id_ != nullptr);
+      if (_this->_impl_.joint_id_ == nullptr) {
+        _this->_impl_.joint_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.joint_id_);
+      } else {
+        _this->_impl_.joint_id_->MergeFrom(*from._impl_.joint_id_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      _this->_impl_.lower_limit_ = from._impl_.lower_limit_;
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      _this->_impl_.upper_limit_ = from._impl_.upper_limit_;
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      _this->_impl_.type_ = from._impl_.type_;
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void UpdateJointCommand::CopyFrom(const UpdateJointCommand& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.UpdateJointCommand)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void UpdateJointCommand::InternalSwap(UpdateJointCommand* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.type_)
+      + sizeof(UpdateJointCommand::_impl_.type_)
+      - PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.joint_id_)>(
+          reinterpret_cast<char*>(&_impl_.joint_id_),
+          reinterpret_cast<char*>(&other->_impl_.joint_id_));
+}
+
+::google::protobuf::Metadata UpdateJointCommand::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class DeleteJointCommand::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<DeleteJointCommand>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(DeleteJointCommand, _impl_._has_bits_);
+};
+
+void DeleteJointCommand::clear_joint_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.joint_id_ != nullptr) _impl_.joint_id_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+DeleteJointCommand::DeleteJointCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, DeleteJointCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.DeleteJointCommand)
+}
+PROTOBUF_NDEBUG_INLINE DeleteJointCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::DeleteJointCommand& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
+DeleteJointCommand::DeleteJointCommand(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const DeleteJointCommand& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, DeleteJointCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  DeleteJointCommand* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.joint_id_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.joint_id_)
+                : nullptr;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.DeleteJointCommand)
+}
+PROTOBUF_NDEBUG_INLINE DeleteJointCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void DeleteJointCommand::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.joint_id_ = {};
+}
+DeleteJointCommand::~DeleteJointCommand() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.DeleteJointCommand)
+  SharedDtor(*this);
+}
+inline void DeleteJointCommand::SharedDtor(MessageLite& self) {
+  DeleteJointCommand& this_ = static_cast<DeleteJointCommand&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.joint_id_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL DeleteJointCommand::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) DeleteJointCommand(arena);
+}
+constexpr auto DeleteJointCommand::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(DeleteJointCommand),
+                                            alignof(DeleteJointCommand));
+}
+constexpr auto DeleteJointCommand::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_DeleteJointCommand_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &DeleteJointCommand::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<DeleteJointCommand>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &DeleteJointCommand::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<DeleteJointCommand>(), &DeleteJointCommand::ByteSizeLong,
+              &DeleteJointCommand::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(DeleteJointCommand, _impl_._cached_size_),
+          false,
+      },
+      &DeleteJointCommand::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull DeleteJointCommand_class_data_ =
+        DeleteJointCommand::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+DeleteJointCommand::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&DeleteJointCommand_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(DeleteJointCommand_class_data_.tc_table);
+  return DeleteJointCommand_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 1, 0, 2>
+DeleteJointCommand::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(DeleteJointCommand, _impl_._has_bits_),
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    DeleteJointCommand_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::DeleteJointCommand>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(DeleteJointCommand, _impl_.joint_id_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    {PROTOBUF_FIELD_OFFSET(DeleteJointCommand, _impl_.joint_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+  }},
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void DeleteJointCommand::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.DeleteJointCommand)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(_impl_.joint_id_ != nullptr);
+    _impl_.joint_id_->Clear();
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL DeleteJointCommand::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const DeleteJointCommand& this_ = static_cast<const DeleteJointCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL DeleteJointCommand::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const DeleteJointCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.DeleteJointCommand)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.joint_id_, this_._impl_.joint_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.DeleteJointCommand)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t DeleteJointCommand::ByteSizeLong(const MessageLite& base) {
+  const DeleteJointCommand& this_ = static_cast<const DeleteJointCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t DeleteJointCommand::ByteSizeLong() const {
+  const DeleteJointCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.DeleteJointCommand)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+   {
+    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    cached_has_bits = this_._impl_._has_bits_[0];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.joint_id_);
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void DeleteJointCommand::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<DeleteJointCommand*>(&to_msg);
+  auto& from = static_cast<const DeleteJointCommand&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.DeleteJointCommand)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(from._impl_.joint_id_ != nullptr);
+    if (_this->_impl_.joint_id_ == nullptr) {
+      _this->_impl_.joint_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.joint_id_);
+    } else {
+      _this->_impl_.joint_id_->MergeFrom(*from._impl_.joint_id_);
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void DeleteJointCommand::CopyFrom(const DeleteJointCommand& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.DeleteJointCommand)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void DeleteJointCommand::InternalSwap(DeleteJointCommand* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  swap(_impl_.joint_id_, other->_impl_.joint_id_);
+}
+
+::google::protobuf::Metadata DeleteJointCommand::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class CreateJointResult::_Internal {
+ public:
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateJointResult, _impl_._oneof_case_);
+};
+
+void CreateJointResult::set_allocated_joint(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE joint) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_result();
+  if (joint) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(joint)->GetArena();
+    if (message_arena != submessage_arena) {
+      joint = ::google::protobuf::internal::GetOwnedMessage(message_arena, joint, submessage_arena);
+    }
+    set_has_joint();
+    _impl_.result_.joint_ = joint;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateJointResult.joint)
+}
+void CreateJointResult::clear_joint() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kJoint) {
+    if (GetArena() == nullptr) {
+      delete _impl_.result_.joint_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.joint_);
+    }
+    clear_has_result();
+  }
+}
+CreateJointResult::CreateJointResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CreateJointResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.CreateJointResult)
+}
+PROTOBUF_NDEBUG_INLINE CreateJointResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::CreateJointResult& from_msg)
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{from._oneof_case_[0]} {}
+
+CreateJointResult::CreateJointResult(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const CreateJointResult& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CreateJointResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  CreateJointResult* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  switch (result_case()) {
+    case RESULT_NOT_SET:
+      break;
+      case kJoint:
+        _impl_.result_.joint_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.joint_);
+        break;
+      case kErrorMessage:
+        new (&_impl_.result_.error_message_) decltype(_impl_.result_.error_message_){arena, from._impl_.result_.error_message_};
+        break;
+  }
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.CreateJointResult)
+}
+PROTOBUF_NDEBUG_INLINE CreateJointResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
+
+inline void CreateJointResult::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+}
+CreateJointResult::~CreateJointResult() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.CreateJointResult)
+  SharedDtor(*this);
+}
+inline void CreateJointResult::SharedDtor(MessageLite& self) {
+  CreateJointResult& this_ = static_cast<CreateJointResult&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  if (this_.has_result()) {
+    this_.clear_result();
+  }
+  this_._impl_.~Impl_();
+}
+
+void CreateJointResult::clear_result() {
+// @@protoc_insertion_point(one_of_clear_start:motionlab.protocol.CreateJointResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (result_case()) {
+    case kJoint: {
+      if (GetArena() == nullptr) {
+        delete _impl_.result_.joint_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.joint_);
+      }
+      break;
+    }
+    case kErrorMessage: {
+      _impl_.result_.error_message_.Destroy();
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+
+
+inline void* PROTOBUF_NONNULL CreateJointResult::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) CreateJointResult(arena);
+}
+constexpr auto CreateJointResult::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(CreateJointResult),
+                                            alignof(CreateJointResult));
+}
+constexpr auto CreateJointResult::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_CreateJointResult_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &CreateJointResult::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<CreateJointResult>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &CreateJointResult::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<CreateJointResult>(), &CreateJointResult::ByteSizeLong,
+              &CreateJointResult::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(CreateJointResult, _impl_._cached_size_),
+          false,
+      },
+      &CreateJointResult::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull CreateJointResult_class_data_ =
+        CreateJointResult::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+CreateJointResult::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&CreateJointResult_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(CreateJointResult_class_data_.tc_table);
+  return CreateJointResult_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 2, 1, 58, 2>
+CreateJointResult::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    2, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    CreateJointResult_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::CreateJointResult>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+    {PROTOBUF_FIELD_OFFSET(CreateJointResult, _impl_.result_.joint_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string error_message = 2 [json_name = "errorMessage"];
+    {PROTOBUF_FIELD_OFFSET(CreateJointResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Joint>()},
+  }},
+  {{
+    "\44\0\15\0\0\0\0\0"
+    "motionlab.protocol.CreateJointResult"
+    "error_message"
+  }},
+};
+PROTOBUF_NOINLINE void CreateJointResult::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.CreateJointResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  clear_result();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL CreateJointResult::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const CreateJointResult& this_ = static_cast<const CreateJointResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL CreateJointResult::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const CreateJointResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.CreateJointResult)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  switch (this_.result_case()) {
+    case kJoint: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          1, *this_._impl_.result_.joint_, this_._impl_.result_.joint_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kErrorMessage: {
+      const ::std::string& _s = this_._internal_error_message();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.CreateJointResult.error_message");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+      break;
+    }
+    default:
+      break;
+  }
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.CreateJointResult)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t CreateJointResult::ByteSizeLong(const MessageLite& base) {
+  const CreateJointResult& this_ = static_cast<const CreateJointResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t CreateJointResult::ByteSizeLong() const {
+  const CreateJointResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.CreateJointResult)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  switch (this_.result_case()) {
+    // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+    case kJoint: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.joint_);
+      break;
+    }
+    // string error_message = 2 [json_name = "errorMessage"];
+    case kErrorMessage: {
+      total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                      this_._internal_error_message());
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void CreateJointResult::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<CreateJointResult*>(&to_msg);
+  auto& from = static_cast<const CreateJointResult&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.CreateJointResult)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  if (const uint32_t oneof_from_case =
+          from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_result();
+      }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kJoint: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.joint_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.joint_);
+        } else {
+          _this->_impl_.result_.joint_->MergeFrom(*from._impl_.result_.joint_);
+        }
+        break;
+      }
+      case kErrorMessage: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.error_message_.InitDefault();
+        }
+        _this->_impl_.result_.error_message_.Set(from._internal_error_message(), arena);
+        break;
+      }
+      case RESULT_NOT_SET:
+        break;
+    }
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void CreateJointResult::CopyFrom(const CreateJointResult& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.CreateJointResult)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void CreateJointResult::InternalSwap(CreateJointResult* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_.result_, other->_impl_.result_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
+}
+
+::google::protobuf::Metadata CreateJointResult::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class UpdateJointResult::_Internal {
+ public:
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateJointResult, _impl_._oneof_case_);
+};
+
+void UpdateJointResult::set_allocated_joint(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE joint) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_result();
+  if (joint) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(joint)->GetArena();
+    if (message_arena != submessage_arena) {
+      joint = ::google::protobuf::internal::GetOwnedMessage(message_arena, joint, submessage_arena);
+    }
+    set_has_joint();
+    _impl_.result_.joint_ = joint;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.UpdateJointResult.joint)
+}
+void UpdateJointResult::clear_joint() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kJoint) {
+    if (GetArena() == nullptr) {
+      delete _impl_.result_.joint_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.joint_);
+    }
+    clear_has_result();
+  }
+}
+UpdateJointResult::UpdateJointResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, UpdateJointResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.UpdateJointResult)
+}
+PROTOBUF_NDEBUG_INLINE UpdateJointResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::UpdateJointResult& from_msg)
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{from._oneof_case_[0]} {}
+
+UpdateJointResult::UpdateJointResult(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const UpdateJointResult& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, UpdateJointResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  UpdateJointResult* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  switch (result_case()) {
+    case RESULT_NOT_SET:
+      break;
+      case kJoint:
+        _impl_.result_.joint_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.joint_);
+        break;
+      case kErrorMessage:
+        new (&_impl_.result_.error_message_) decltype(_impl_.result_.error_message_){arena, from._impl_.result_.error_message_};
+        break;
+  }
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.UpdateJointResult)
+}
+PROTOBUF_NDEBUG_INLINE UpdateJointResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
+
+inline void UpdateJointResult::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+}
+UpdateJointResult::~UpdateJointResult() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.UpdateJointResult)
+  SharedDtor(*this);
+}
+inline void UpdateJointResult::SharedDtor(MessageLite& self) {
+  UpdateJointResult& this_ = static_cast<UpdateJointResult&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  if (this_.has_result()) {
+    this_.clear_result();
+  }
+  this_._impl_.~Impl_();
+}
+
+void UpdateJointResult::clear_result() {
+// @@protoc_insertion_point(one_of_clear_start:motionlab.protocol.UpdateJointResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (result_case()) {
+    case kJoint: {
+      if (GetArena() == nullptr) {
+        delete _impl_.result_.joint_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.joint_);
+      }
+      break;
+    }
+    case kErrorMessage: {
+      _impl_.result_.error_message_.Destroy();
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+
+
+inline void* PROTOBUF_NONNULL UpdateJointResult::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) UpdateJointResult(arena);
+}
+constexpr auto UpdateJointResult::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(UpdateJointResult),
+                                            alignof(UpdateJointResult));
+}
+constexpr auto UpdateJointResult::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_UpdateJointResult_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &UpdateJointResult::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<UpdateJointResult>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &UpdateJointResult::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<UpdateJointResult>(), &UpdateJointResult::ByteSizeLong,
+              &UpdateJointResult::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(UpdateJointResult, _impl_._cached_size_),
+          false,
+      },
+      &UpdateJointResult::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull UpdateJointResult_class_data_ =
+        UpdateJointResult::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+UpdateJointResult::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&UpdateJointResult_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(UpdateJointResult_class_data_.tc_table);
+  return UpdateJointResult_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 2, 1, 58, 2>
+UpdateJointResult::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    2, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    UpdateJointResult_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::UpdateJointResult>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+    {PROTOBUF_FIELD_OFFSET(UpdateJointResult, _impl_.result_.joint_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string error_message = 2 [json_name = "errorMessage"];
+    {PROTOBUF_FIELD_OFFSET(UpdateJointResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Joint>()},
+  }},
+  {{
+    "\44\0\15\0\0\0\0\0"
+    "motionlab.protocol.UpdateJointResult"
+    "error_message"
+  }},
+};
+PROTOBUF_NOINLINE void UpdateJointResult::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.UpdateJointResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  clear_result();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL UpdateJointResult::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const UpdateJointResult& this_ = static_cast<const UpdateJointResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL UpdateJointResult::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const UpdateJointResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.UpdateJointResult)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  switch (this_.result_case()) {
+    case kJoint: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          1, *this_._impl_.result_.joint_, this_._impl_.result_.joint_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kErrorMessage: {
+      const ::std::string& _s = this_._internal_error_message();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.UpdateJointResult.error_message");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+      break;
+    }
+    default:
+      break;
+  }
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.UpdateJointResult)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t UpdateJointResult::ByteSizeLong(const MessageLite& base) {
+  const UpdateJointResult& this_ = static_cast<const UpdateJointResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t UpdateJointResult::ByteSizeLong() const {
+  const UpdateJointResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.UpdateJointResult)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  switch (this_.result_case()) {
+    // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+    case kJoint: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.joint_);
+      break;
+    }
+    // string error_message = 2 [json_name = "errorMessage"];
+    case kErrorMessage: {
+      total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                      this_._internal_error_message());
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void UpdateJointResult::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<UpdateJointResult*>(&to_msg);
+  auto& from = static_cast<const UpdateJointResult&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.UpdateJointResult)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  if (const uint32_t oneof_from_case =
+          from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_result();
+      }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kJoint: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.joint_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.joint_);
+        } else {
+          _this->_impl_.result_.joint_->MergeFrom(*from._impl_.result_.joint_);
+        }
+        break;
+      }
+      case kErrorMessage: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.error_message_.InitDefault();
+        }
+        _this->_impl_.result_.error_message_.Set(from._internal_error_message(), arena);
+        break;
+      }
+      case RESULT_NOT_SET:
+        break;
+    }
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void UpdateJointResult::CopyFrom(const UpdateJointResult& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.UpdateJointResult)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void UpdateJointResult::InternalSwap(UpdateJointResult* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_.result_, other->_impl_.result_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
+}
+
+::google::protobuf::Metadata UpdateJointResult::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class DeleteJointResult::_Internal {
+ public:
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::motionlab::protocol::DeleteJointResult, _impl_._oneof_case_);
+};
+
+void DeleteJointResult::set_allocated_deleted_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE deleted_id) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_result();
+  if (deleted_id) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(deleted_id)->GetArena();
+    if (message_arena != submessage_arena) {
+      deleted_id = ::google::protobuf::internal::GetOwnedMessage(message_arena, deleted_id, submessage_arena);
+    }
+    set_has_deleted_id();
+    _impl_.result_.deleted_id_ = deleted_id;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.DeleteJointResult.deleted_id)
+}
+void DeleteJointResult::clear_deleted_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kDeletedId) {
+    if (GetArena() == nullptr) {
+      delete _impl_.result_.deleted_id_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.deleted_id_);
+    }
+    clear_has_result();
+  }
+}
+DeleteJointResult::DeleteJointResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, DeleteJointResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.DeleteJointResult)
+}
+PROTOBUF_NDEBUG_INLINE DeleteJointResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::DeleteJointResult& from_msg)
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{from._oneof_case_[0]} {}
+
+DeleteJointResult::DeleteJointResult(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const DeleteJointResult& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, DeleteJointResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  DeleteJointResult* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  switch (result_case()) {
+    case RESULT_NOT_SET:
+      break;
+      case kDeletedId:
+        _impl_.result_.deleted_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.deleted_id_);
+        break;
+      case kErrorMessage:
+        new (&_impl_.result_.error_message_) decltype(_impl_.result_.error_message_){arena, from._impl_.result_.error_message_};
+        break;
+  }
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.DeleteJointResult)
+}
+PROTOBUF_NDEBUG_INLINE DeleteJointResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
+
+inline void DeleteJointResult::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+}
+DeleteJointResult::~DeleteJointResult() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.DeleteJointResult)
+  SharedDtor(*this);
+}
+inline void DeleteJointResult::SharedDtor(MessageLite& self) {
+  DeleteJointResult& this_ = static_cast<DeleteJointResult&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  if (this_.has_result()) {
+    this_.clear_result();
+  }
+  this_._impl_.~Impl_();
+}
+
+void DeleteJointResult::clear_result() {
+// @@protoc_insertion_point(one_of_clear_start:motionlab.protocol.DeleteJointResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (result_case()) {
+    case kDeletedId: {
+      if (GetArena() == nullptr) {
+        delete _impl_.result_.deleted_id_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.deleted_id_);
+      }
+      break;
+    }
+    case kErrorMessage: {
+      _impl_.result_.error_message_.Destroy();
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+
+
+inline void* PROTOBUF_NONNULL DeleteJointResult::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) DeleteJointResult(arena);
+}
+constexpr auto DeleteJointResult::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(DeleteJointResult),
+                                            alignof(DeleteJointResult));
+}
+constexpr auto DeleteJointResult::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_DeleteJointResult_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &DeleteJointResult::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<DeleteJointResult>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &DeleteJointResult::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<DeleteJointResult>(), &DeleteJointResult::ByteSizeLong,
+              &DeleteJointResult::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(DeleteJointResult, _impl_._cached_size_),
+          false,
+      },
+      &DeleteJointResult::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull DeleteJointResult_class_data_ =
+        DeleteJointResult::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+DeleteJointResult::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&DeleteJointResult_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(DeleteJointResult_class_data_.tc_table);
+  return DeleteJointResult_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 2, 1, 58, 2>
+DeleteJointResult::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    2, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    DeleteJointResult_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::DeleteJointResult>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    {PROTOBUF_FIELD_OFFSET(DeleteJointResult, _impl_.result_.deleted_id_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string error_message = 2 [json_name = "errorMessage"];
+    {PROTOBUF_FIELD_OFFSET(DeleteJointResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+  }},
+  {{
+    "\44\0\15\0\0\0\0\0"
+    "motionlab.protocol.DeleteJointResult"
+    "error_message"
+  }},
+};
+PROTOBUF_NOINLINE void DeleteJointResult::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.DeleteJointResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  clear_result();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL DeleteJointResult::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const DeleteJointResult& this_ = static_cast<const DeleteJointResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL DeleteJointResult::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const DeleteJointResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.DeleteJointResult)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  switch (this_.result_case()) {
+    case kDeletedId: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          1, *this_._impl_.result_.deleted_id_, this_._impl_.result_.deleted_id_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kErrorMessage: {
+      const ::std::string& _s = this_._internal_error_message();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.DeleteJointResult.error_message");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+      break;
+    }
+    default:
+      break;
+  }
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.DeleteJointResult)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t DeleteJointResult::ByteSizeLong(const MessageLite& base) {
+  const DeleteJointResult& this_ = static_cast<const DeleteJointResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t DeleteJointResult::ByteSizeLong() const {
+  const DeleteJointResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.DeleteJointResult)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  switch (this_.result_case()) {
+    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    case kDeletedId: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.deleted_id_);
+      break;
+    }
+    // string error_message = 2 [json_name = "errorMessage"];
+    case kErrorMessage: {
+      total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                      this_._internal_error_message());
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void DeleteJointResult::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<DeleteJointResult*>(&to_msg);
+  auto& from = static_cast<const DeleteJointResult&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.DeleteJointResult)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  if (const uint32_t oneof_from_case =
+          from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_result();
+      }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kDeletedId: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.deleted_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.deleted_id_);
+        } else {
+          _this->_impl_.result_.deleted_id_->MergeFrom(*from._impl_.result_.deleted_id_);
+        }
+        break;
+      }
+      case kErrorMessage: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.error_message_.InitDefault();
+        }
+        _this->_impl_.result_.error_message_.Set(from._internal_error_message(), arena);
+        break;
+      }
+      case RESULT_NOT_SET:
+        break;
+    }
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void DeleteJointResult::CopyFrom(const DeleteJointResult& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.DeleteJointResult)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void DeleteJointResult::InternalSwap(DeleteJointResult* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_.result_, other->_impl_.result_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
+}
+
+::google::protobuf::Metadata DeleteJointResult::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // @@protoc_insertion_point(namespace_scope)

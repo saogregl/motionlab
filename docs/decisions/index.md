@@ -5,6 +5,8 @@
 | [ADR-0001](ADR-0001-repo-truth-and-github-execution.md) | Repo Truth and GitHub Execution | Accepted | Repository is the single source of truth; GitHub is the execution platform for all project work. |
 | [ADR-0002](ADR-0002-sensors-are-first-class-authored-entities.md) | Sensors Are First-Class Authored Entities | Accepted | Sensors are persisted authored entities mounted to datums, not transient backend runtime objects. |
 | [ADR-0003](ADR-0003-runs-and-channel-contracts.md) | Runs Are Immutable and Channels Unify Live and Replay | Accepted | Simulation runs are immutable artifacts; channel descriptors provide unified live/query/replay semantics. |
+| [ADR-0004](ADR-0004-datum-crud-contract.md) | Datum CRUD Contract | Accepted | Datums use engine-authoritative Command→Result oneof pattern with UUIDv7 IDs; pattern reused for joints and sensors. |
+| [ADR-0005](ADR-0005-joint-crud-contract.md) | Joint CRUD Contract | Accepted | Joints follow Command→Result oneof pattern (ADR-0004); reference datums, engine validates referential integrity, proto3 optional for partial updates. |
 
 ## Adding a New ADR
 

@@ -29,13 +29,18 @@ function createWindow(): BrowserWindow {
     minWidth: 800,
     minHeight: 600,
     title: 'MotionLab',
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: true,
+      sandbox: false,
     },
   });
+
+  // Notify renderer when maximized state changes (snap, double-click, etc.)
+  win.on('maximize', () => win.webContents.send('window-maximized-changed', true));
+  win.on('unmaximize', () => win.webContents.send('window-maximized-changed', false));
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     win.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
@@ -54,6 +59,23 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle('get-engine-endpoint', () => engineReady);
+
+  // Window control IPC
+  ipcMain.on('window-minimize', (event) => {
+    BrowserWindow.fromWebContents(event.sender)?.minimize();
+  });
+  ipcMain.on('window-maximize', (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    if (!win) return;
+    if (win.isMaximized()) win.unmaximize();
+    else win.maximize();
+  });
+  ipcMain.on('window-close', (event) => {
+    BrowserWindow.fromWebContents(event.sender)?.close();
+  });
+  ipcMain.handle('window-is-maximized', (event) => {
+    return BrowserWindow.fromWebContents(event.sender)?.isMaximized() ?? false;
+  });
 
   ipcMain.handle(
     'show-open-dialog',

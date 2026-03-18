@@ -61,7 +61,7 @@ function createBoxMeshData(sx = 1, sy = 1, sz = 1) {
 /**
  * Generate a UV sphere mesh.
  */
-function createSphereMeshData(radius = 1, segments = 24, rings = 16) {
+function createSphereMeshData(radius = 1, segments = 48, rings = 32) {
   const positions: number[] = [];
   const normals: number[] = [];
   const indices: number[] = [];
@@ -86,8 +86,8 @@ function createSphereMeshData(radius = 1, segments = 24, rings = 16) {
     for (let seg = 0; seg < segments; seg++) {
       const a = ring * (segments + 1) + seg;
       const b = a + segments + 1;
-      indices.push(a, b + 1, b);
-      indices.push(a, a + 1, b + 1);
+      indices.push(a, b, b + 1);
+      indices.push(a, b + 1, a + 1);
     }
   }
 
@@ -101,7 +101,7 @@ function createSphereMeshData(radius = 1, segments = 24, rings = 16) {
 /**
  * Generate a cylinder mesh.
  */
-function createCylinderMeshData(radiusTop = 0.5, radiusBottom = 0.5, height = 2, segments = 24) {
+function createCylinderMeshData(radiusTop = 0.5, radiusBottom = 0.5, height = 2, segments = 48) {
   const positions: number[] = [];
   const normals: number[] = [];
   const indices: number[] = [];
@@ -122,7 +122,7 @@ function createCylinderMeshData(radiusTop = 0.5, radiusBottom = 0.5, height = 2,
     }
   }
 
-  // Side indices
+  // Side indices (a = bottom ring, b = top ring — opposite layout from sphere)
   for (let s = 0; s < segments; s++) {
     const a = s;
     const b = s + segments + 1;
@@ -140,7 +140,7 @@ function createCylinderMeshData(radiusTop = 0.5, radiusBottom = 0.5, height = 2,
     normals.push(0, 1, 0);
   }
   for (let s = 0; s < segments; s++) {
-    indices.push(topCenter, topCenter + 1 + s + 1, topCenter + 1 + s);
+    indices.push(topCenter, topCenter + 1 + s, topCenter + 1 + s + 1);
   }
 
   // Bottom cap
@@ -153,7 +153,7 @@ function createCylinderMeshData(radiusTop = 0.5, radiusBottom = 0.5, height = 2,
     normals.push(0, -1, 0);
   }
   for (let s = 0; s < segments; s++) {
-    indices.push(botCenter, botCenter + 1 + s, botCenter + 1 + s + 1);
+    indices.push(botCenter, botCenter + 1 + s + 1, botCenter + 1 + s);
   }
 
   return {
@@ -166,7 +166,7 @@ function createCylinderMeshData(radiusTop = 0.5, radiusBottom = 0.5, height = 2,
 /**
  * Generate a torus mesh.
  */
-function createTorusMeshData(majorRadius = 1, minorRadius = 0.3, majorSegments = 32, minorSegments = 16) {
+function createTorusMeshData(majorRadius = 1, minorRadius = 0.3, majorSegments = 48, minorSegments = 24) {
   const positions: number[] = [];
   const normals: number[] = [];
   const indices: number[] = [];
@@ -198,8 +198,8 @@ function createTorusMeshData(majorRadius = 1, minorRadius = 0.3, majorSegments =
     for (let j = 0; j < minorSegments; j++) {
       const a = i * (minorSegments + 1) + j;
       const b = a + minorSegments + 1;
-      indices.push(a, b + 1, b);
-      indices.push(a, a + 1, b + 1);
+      indices.push(a, b, b + 1);
+      indices.push(a, b + 1, a + 1);
     }
   }
 
@@ -754,7 +754,253 @@ export const CADQuality: Story = {
   render: () => <CADQualityShowcase />,
 };
 
+// ---------------------------------------------------------------------------
+// ShadowGround story — showcases shadow-catching ground plane
+// ---------------------------------------------------------------------------
+
+function ShadowGroundShowcase() {
+  const sgRef = useRef<SceneGraphManager | null>(null);
+
+  const handleSceneReady = useCallback((sg: SceneGraphManager) => {
+    sgRef.current = sg;
+
+    // Assembly positioned above y=0 to show contact shadows
+    sg.addBody('sg-base', 'Base Plate', createBoxMeshData(6, 0.3, 4), {
+      position: [0, 0.15, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.addBody('sg-column', 'Column', createCylinderMeshData(0.4, 0.4, 3), {
+      position: [-2, 1.65, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.addBody('sg-beam', 'Cross Beam', createBoxMeshData(4, 0.4, 0.6), {
+      position: [0, 3.15, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.addBody('sg-column2', 'Column 2', createCylinderMeshData(0.4, 0.4, 3), {
+      position: [2, 1.65, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.addBody('sg-sphere', 'Floating Sphere', createSphereMeshData(0.5), {
+      position: [0, 1.5, 1.5],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.addBody('sg-torus', 'Bushing', createTorusMeshData(0.5, 0.12), {
+      position: [0, 0.42, -1.2],
+      rotation: [0, 0, 0, 1],
+    });
+
+    sg.fitAll();
+  }, []);
+
+  return (
+    <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
+      <div style={TOOLBAR_STYLE}>
+        <span style={STATUS_STYLE}>
+          Shadow Ground — BackgroundMaterial shadowOnly mode
+        </span>
+        <span style={{ ...BUTTON_STYLE, cursor: 'default', opacity: 0.6 }}>|</span>
+        {CAMERA_PRESETS.map((preset) => (
+          <button
+            type="button"
+            key={preset}
+            style={BUTTON_STYLE}
+            onClick={() => sgRef.current?.setCameraPreset(preset)}
+          >
+            {preset}
+          </button>
+        ))}
+      </div>
+      <Viewport
+        onSceneReady={handleSceneReady}
+        gridVisible={false}
+        shadowsEnabled={true}
+        ssaoEnabled={true}
+      />
+    </div>
+  );
+}
+
+export const ShadowGround: Story = {
+  render: () => <ShadowGroundShowcase />,
+};
+
 // Keep old Picking story as alias for backward compat
 export const Picking: Story = {
   render: () => <SelectionShowcase />,
+};
+
+// ---------------------------------------------------------------------------
+// RenderingDebug — runtime toggles for AA, AO, materials, background
+// ---------------------------------------------------------------------------
+
+function RenderingDebugShowcase() {
+  const sgRef = useRef<SceneGraphManager | null>(null);
+  const sceneRef = useRef<{
+    defaultPipeline: import('@babylonjs/core').DefaultRenderingPipeline;
+    ssaoPipeline: import('@babylonjs/core').SSAO2RenderingPipeline;
+    scene: import('@babylonjs/core').Scene;
+    camera: import('@babylonjs/core').ArcRotateCamera;
+  } | null>(null);
+  const [ssao, setSsao] = useState(true);
+  const [aaMode, setAAMode] = useState<'msaa+fxaa' | 'fxaa-only' | 'none'>('msaa+fxaa');
+  const [info, setInfo] = useState('');
+
+  const handleSceneReady = useCallback((sg: SceneGraphManager) => {
+    sgRef.current = sg;
+
+    // Build the same assembly as CADQuality
+    sg.addBody('base', 'Base Plate', createBoxMeshData(6, 0.3, 4), {
+      position: [0, 0.15, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.addBody('column', 'Column', createCylinderMeshData(0.4, 0.4, 3), {
+      position: [-2, 1.65, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.addBody('beam', 'Cross Beam', createBoxMeshData(4, 0.4, 0.6), {
+      position: [0, 3.15, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.addBody('column2', 'Column 2', createCylinderMeshData(0.4, 0.4, 3), {
+      position: [2, 1.65, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.addBody('fastener1', 'Fastener 1', createSphereMeshData(0.2), {
+      position: [-2, 3.15, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.addBody('fastener2', 'Fastener 2', createSphereMeshData(0.2), {
+      position: [2, 3.15, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.addBody('bushing', 'Bushing', createTorusMeshData(0.5, 0.12), {
+      position: [0, 0.42, 1.2],
+      rotation: [0, 0, 0, 1],
+    });
+    sg.fitAll();
+
+    // Grab pipeline references for runtime toggling
+    const scene = sg.scene;
+    const pipelines = scene.postProcessRenderPipelineManager;
+    const defaultPipeline = pipelines.supportedPipelines.find(
+      (p) => p.name === 'default_pipeline',
+    ) as import('@babylonjs/core').DefaultRenderingPipeline | undefined;
+    const ssaoPipeline = pipelines.supportedPipelines.find(
+      (p) => p.name === 'ssao_pipeline',
+    ) as import('@babylonjs/core').SSAO2RenderingPipeline | undefined;
+
+    if (defaultPipeline && ssaoPipeline) {
+      const camera = scene.activeCamera as import('@babylonjs/core').ArcRotateCamera;
+      sceneRef.current = { defaultPipeline, ssaoPipeline, scene, camera };
+
+      const engine = scene.getEngine();
+      const dpr = window.devicePixelRatio ?? 1;
+      const canvas = engine.getRenderingCanvas();
+      setInfo(
+        `Engine: ${engine.name} | DPR: ${dpr.toFixed(1)} | ` +
+        `Canvas: ${canvas?.width ?? '?'}x${canvas?.height ?? '?'} | ` +
+        `MSAA: ${defaultPipeline.samples} | FXAA: ${defaultPipeline.fxaaEnabled}`,
+      );
+    }
+  }, []);
+
+  const toggleAA = () => {
+    const refs = sceneRef.current;
+    if (!refs) return;
+    let next: 'msaa+fxaa' | 'fxaa-only' | 'none';
+    if (aaMode === 'msaa+fxaa') next = 'fxaa-only';
+    else if (aaMode === 'fxaa-only') next = 'none';
+    else next = 'msaa+fxaa';
+    setAAMode(next);
+
+    switch (next) {
+      case 'msaa+fxaa':
+        refs.defaultPipeline.samples = 4;
+        refs.defaultPipeline.fxaaEnabled = true;
+        break;
+      case 'fxaa-only':
+        refs.defaultPipeline.samples = 1;
+        refs.defaultPipeline.fxaaEnabled = true;
+        break;
+      case 'none':
+        refs.defaultPipeline.samples = 1;
+        refs.defaultPipeline.fxaaEnabled = false;
+        break;
+    }
+
+    setInfo((prev) =>
+      prev.replace(/MSAA: \d+/, `MSAA: ${refs.defaultPipeline.samples}`)
+        .replace(/FXAA: \w+/, `FXAA: ${refs.defaultPipeline.fxaaEnabled}`),
+    );
+  };
+
+  const toggleSSAO = () => {
+    const refs = sceneRef.current;
+    if (!refs) return;
+    const next = !ssao;
+    setSsao(next);
+    if (next) {
+      refs.scene.postProcessRenderPipelineManager.attachCamerasToRenderPipeline(
+        'ssao_pipeline',
+        refs.camera,
+      );
+    } else {
+      refs.scene.postProcessRenderPipelineManager.detachCamerasFromRenderPipeline(
+        'ssao_pipeline',
+        refs.camera,
+      );
+    }
+  };
+
+  return (
+    <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
+      <div style={TOOLBAR_STYLE}>
+        <button type="button" style={BUTTON_STYLE} onClick={toggleAA}>
+          AA: {aaMode}
+        </button>
+        <button
+          type="button"
+          style={ssao ? ACTIVE_BUTTON_STYLE : BUTTON_STYLE}
+          onClick={toggleSSAO}
+        >
+          SSAO: {ssao ? 'ON' : 'OFF'}
+        </button>
+        <span style={{ ...BUTTON_STYLE, cursor: 'default', opacity: 0.6 }}>|</span>
+        {CAMERA_PRESETS.map((preset) => (
+          <button
+            type="button"
+            key={preset}
+            style={BUTTON_STYLE}
+            onClick={() => sgRef.current?.setCameraPreset(preset)}
+          >
+            {preset}
+          </button>
+        ))}
+      </div>
+      {info && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 8,
+            left: 8,
+            ...STATUS_STYLE,
+            maxWidth: 600,
+            fontSize: 10,
+          }}
+        >
+          {info}
+        </div>
+      )}
+      <Viewport
+        onSceneReady={handleSceneReady}
+        shadowsEnabled={true}
+        ssaoEnabled={ssao}
+      />
+    </div>
+  );
+}
+
+export const RenderingDebug: Story = {
+  render: () => <RenderingDebugShowcase />,
 };

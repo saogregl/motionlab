@@ -19,36 +19,36 @@ function LeftPanel({ children, className }: LeftPanelProps) {
       {/* Tab row */}
       <Tabs defaultValue="structure" className="gap-0">
         <TabsList
-          variant="line"
-          className="h-7 w-full shrink-0 gap-0 border-b border-border-subtle px-2"
+          variant="contained"
+          className="h-7 w-full shrink-0 px-0"
         >
           <TabsTrigger
             value="structure"
-            className="text-[length:var(--text-xs)] uppercase tracking-wider"
+            className="font-medium tracking-normal px-3 text-[length:var(--text-xs)]"
           >
             Structure
           </TabsTrigger>
           <TabsTrigger
             value="studies"
-            className="text-[length:var(--text-xs)] uppercase tracking-wider"
+            className="font-medium tracking-normal px-3 text-[length:var(--text-xs)]"
           >
             Studies
           </TabsTrigger>
           <TabsTrigger
             value="issues"
-            className="text-[length:var(--text-xs)] uppercase tracking-wider"
+            className="font-medium tracking-normal px-3 text-[length:var(--text-xs)]"
           >
             Issues
           </TabsTrigger>
         </TabsList>
 
         {/* Filter bar */}
-        <div className="flex items-center gap-1 border-b border-border-subtle px-2 py-0.5">
+        <div className="flex items-center gap-1 px-2 py-1">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-1.5 top-1/2 size-3 -translate-y-1/2 text-text-tertiary" />
             <Input
               placeholder="Filter..."
-              className="h-6 rounded-[var(--radius-sm)] border-none bg-field-base pl-6 text-[length:var(--text-xs)]"
+              className="h-6 rounded-[var(--radius-sm)] border border-transparent bg-transparent pl-6 text-[length:var(--text-xs)] focus-visible:border-[var(--border-field)] focus-visible:ring-0 focus-visible:bg-[var(--layer-base)]"
             />
           </div>
           <ToolbarButton

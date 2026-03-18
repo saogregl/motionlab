@@ -18,9 +18,17 @@ export interface PickResult {
   mesh: AbstractMesh | null;
 }
 
+/** Spatial data computed from a supplemental CPU pick on click. */
+export interface SpatialPickData {
+  worldPoint: { x: number; y: number; z: number };
+  worldNormal: { x: number; y: number; z: number };
+  bodyWorldMatrix: Float32Array;
+}
+
 export type PickCallback = (
   entityId: string | null,
   modifiers: { ctrl: boolean; shift: boolean },
+  spatial?: SpatialPickData,
 ) => void;
 
 export type HoverCallback = (entityId: string | null) => void;
@@ -82,10 +90,14 @@ export class PickingManager {
       case PointerEventTypes.POINTERPICK: {
         const evt = info.event as PointerEvent;
         this.pickEntityAtAsync().then((result) => {
-          this.onPick(result.entityId, {
-            ctrl: evt.ctrlKey || evt.metaKey,
-            shift: evt.shiftKey,
-          });
+          const spatial = result.mesh
+            ? this.pickSpatialData(result.mesh)
+            : undefined;
+          this.onPick(
+            result.entityId,
+            { ctrl: evt.ctrlKey || evt.metaKey, shift: evt.shiftKey },
+            spatial,
+          );
         });
         break;
       }
@@ -169,6 +181,57 @@ export class PickingManager {
       current = current.parent;
     }
 
+    return null;
+  }
+
+  /**
+   * Supplemental CPU pick restricted to a single mesh to retrieve world-space
+   * hit point, surface normal, and the owning body's world matrix.
+   * Cheap because the predicate limits the pick to one mesh.
+   */
+  private pickSpatialData(mesh: AbstractMesh): SpatialPickData | undefined {
+    const cpuResult = this.scene.pick(
+      this.scene.pointerX,
+      this.scene.pointerY,
+      (m) => m === mesh,
+    );
+
+    if (!cpuResult?.hit || !cpuResult.pickedPoint) return undefined;
+
+    const normal = cpuResult.getNormal(true); // world-space normal
+    if (!normal) return undefined;
+
+    const bodyRoot = this.resolveBodyRootNode(mesh);
+    if (!bodyRoot) return undefined;
+
+    return {
+      worldPoint: {
+        x: cpuResult.pickedPoint.x,
+        y: cpuResult.pickedPoint.y,
+        z: cpuResult.pickedPoint.z,
+      },
+      worldNormal: { x: normal.x, y: normal.y, z: normal.z },
+      bodyWorldMatrix: bodyRoot.getWorldMatrix().toArray() as unknown as Float32Array,
+    };
+  }
+
+  /**
+   * Walks the parent chain from `mesh` to find the node tagged with
+   * `metadata.entityType === 'body'` and returns it.
+   */
+  private resolveBodyRootNode(mesh: AbstractMesh): AbstractMesh | null {
+    // Check mesh itself
+    if (mesh.metadata?.entityType === 'body' && mesh.metadata?.entityId) {
+      return mesh;
+    }
+    let current = mesh.parent;
+    while (current) {
+      const meta = (current as AbstractMesh).metadata;
+      if (meta?.entityType === 'body' && meta?.entityId) {
+        return current as AbstractMesh;
+      }
+      current = current.parent;
+    }
     return null;
   }
 

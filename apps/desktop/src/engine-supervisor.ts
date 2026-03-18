@@ -28,17 +28,27 @@ export class EngineSupervisor {
       return { command: binPath, args: [] };
     }
 
-    // Dev mode: look for native binary first
-    const repoRoot = path.resolve(app.getAppPath(), '..', '..');
+    // Dev mode: walk up from app path to find repo root (contains pnpm-workspace.yaml)
+    let repoRoot = path.resolve(app.getAppPath());
+    for (let i = 0; i < 6; i++) {
+      if (fs.existsSync(path.join(repoRoot, 'pnpm-workspace.yaml'))) break;
+      repoRoot = path.dirname(repoRoot);
+    }
     const ext = process.platform === 'win32' ? '.exe' : '';
-    const devBin = path.join(
-      repoRoot,
-      'native',
-      'engine',
-      'build',
-      'dev',
-      `motionlab-engine${ext}`,
-    );
+
+    // Try common build directory names
+    const buildDirs = ['dev', 'msvc-dev', 'Release', 'Debug'];
+    let devBin = '';
+    for (const dir of buildDirs) {
+      const candidate = path.join(repoRoot, 'native', 'engine', 'build', dir, `motionlab-engine${ext}`);
+      if (fs.existsSync(candidate)) {
+        devBin = candidate;
+        break;
+      }
+    }
+    if (!devBin) {
+      devBin = path.join(repoRoot, 'native', 'engine', 'build', 'dev', `motionlab-engine${ext}`);
+    }
 
     try {
       fs.accessSync(devBin);

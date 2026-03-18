@@ -26,6 +26,11 @@ interface MotionLabAPI {
   openFileDialog(options?: {
     filters?: Array<{ name: string; extensions: string[] }>;
   }): Promise<string | null>;
+  windowMinimize(): void;
+  windowMaximize(): void;
+  windowClose(): void;
+  windowIsMaximized(): Promise<boolean>;
+  onWindowMaximizedChange(callback: (maximized: boolean) => void): void;
 }
 
 const api: MotionLabAPI = {
@@ -37,6 +42,15 @@ const api: MotionLabAPI = {
     });
   },
   openFileDialog: (options) => ipcRenderer.invoke('show-open-dialog', options),
+  windowMinimize: () => ipcRenderer.send('window-minimize'),
+  windowMaximize: () => ipcRenderer.send('window-maximize'),
+  windowClose: () => ipcRenderer.send('window-close'),
+  windowIsMaximized: () => ipcRenderer.invoke('window-is-maximized'),
+  onWindowMaximizedChange: (callback) => {
+    ipcRenderer.on('window-maximized-changed', (_event, maximized) => {
+      callback(maximized);
+    });
+  },
 };
 
 contextBridge.exposeInMainWorld('motionlab', api);

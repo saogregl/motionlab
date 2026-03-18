@@ -1,4 +1,5 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
+import type React from 'react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
 import { cn } from '@/lib/utils';
@@ -29,6 +30,10 @@ interface TreeViewProps {
   defaultExpandedIds?: Set<string>;
   /** Render function for each row */
   renderRow: (node: TreeNode, props: TreeRowRenderProps) => React.ReactNode;
+  /** Enable Ctrl+click / Shift+click multi-select */
+  multiSelect?: boolean;
+  /** Called when Delete key is pressed with selected IDs */
+  onDelete?: (ids: Set<string>) => void;
   /** Estimated row height (default 28px from --tree-row-h) */
   estimateSize?: number;
   /** Overscan count (default 5) */
@@ -41,7 +46,7 @@ export interface TreeRowRenderProps {
   focused: boolean;
   expanded: boolean;
   onToggleExpand: () => void;
-  onSelect: () => void;
+  onSelect: (event?: React.MouseEvent) => void;
 }
 
 /* ── TreeView ── */
@@ -54,6 +59,8 @@ function TreeView({
   onExpandedChange,
   defaultExpandedIds,
   renderRow,
+  multiSelect = false,
+  onDelete,
   estimateSize = 26,
   overscan = 5,
   className,
@@ -116,11 +123,32 @@ function TreeView({
   );
 
   const handleSelect = useCallback(
-    (id: string, index: number) => {
-      onSelectionChange(new Set([id]));
+    (id: string, index: number, event?: React.MouseEvent) => {
+      if (multiSelect && event?.ctrlKey) {
+        // Ctrl+click: toggle item in selection
+        const next = new Set(selectedIds);
+        if (next.has(id)) {
+          next.delete(id);
+        } else {
+          next.add(id);
+        }
+        onSelectionChange(next);
+      } else if (multiSelect && event?.shiftKey) {
+        // Shift+click: range select from focusedIndex to clicked index
+        const start = Math.min(focusedIndex, index);
+        const end = Math.max(focusedIndex, index);
+        const next = new Set(selectedIds);
+        for (let i = start; i <= end; i++) {
+          next.add(visibleNodes[i].id);
+        }
+        onSelectionChange(next);
+      } else {
+        // Plain click: single select
+        onSelectionChange(new Set([id]));
+      }
       setFocusedIndex(index);
     },
-    [onSelectionChange],
+    [onSelectionChange, multiSelect, selectedIds, focusedIndex, visibleNodes],
   );
 
   const handleKeyDown = useCallback(
@@ -161,9 +189,15 @@ function TreeView({
           e.preventDefault();
           onSelectionChange(new Set([node.id]));
           break;
+        case 'Delete':
+          e.preventDefault();
+          if (selectedIds.size > 0) {
+            onDelete?.(selectedIds);
+          }
+          break;
       }
     },
-    [focusedIndex, visibleNodes, expandedIds, toggleExpand, onSelectionChange, virtualizer],
+    [focusedIndex, visibleNodes, expandedIds, toggleExpand, onSelectionChange, virtualizer, selectedIds, onDelete],
   );
 
   return (
@@ -173,7 +207,7 @@ function TreeView({
         data-slot="tree-view"
         role="tree"
         tabIndex={0}
-        className="h-full overflow-auto outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]/50"
+        className="h-full overflow-auto pt-px outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]/50"
         onKeyDown={handleKeyDown}
       >
         <div
@@ -204,7 +238,8 @@ function TreeView({
                   focused: isFocused,
                   expanded: isExpanded,
                   onToggleExpand: () => toggleExpand(node.id),
-                  onSelect: () => handleSelect(node.id, virtualRow.index),
+                  onSelect: (event?: React.MouseEvent) =>
+                    handleSelect(node.id, virtualRow.index, event),
                 })}
               </div>
             );

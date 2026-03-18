@@ -5,7 +5,7 @@ import {
   type Scene,
 } from '@babylonjs/core';
 
-export type MaterialPreset = 'steel' | 'aluminum' | 'plastic-gray' | 'plastic-white' | 'rubber';
+export type MaterialPreset = 'cad-default' | 'steel' | 'aluminum' | 'plastic-gray' | 'plastic-white' | 'rubber';
 
 interface PresetDefinition {
   baseColor: Color3;
@@ -14,6 +14,11 @@ interface PresetDefinition {
 }
 
 const PRESETS: Record<MaterialPreset, PresetDefinition> = {
+  'cad-default': {
+    baseColor: new Color3(0.75, 0.76, 0.78),
+    metallic: 0.3,
+    roughness: 0.45,
+  },
   steel: {
     baseColor: new Color3(0.70, 0.72, 0.74),
     metallic: 0.9,
@@ -76,12 +81,12 @@ export function createMaterialFactory(scene: Scene): MaterialFactory {
   }
 
   function getDefaultMaterial(): PBRMaterial {
-    return getMaterial('aluminum');
+    return getMaterial('cad-default');
   }
 
   function applySelectionTint(mesh: AbstractMesh): void {
-    const mat = mesh.material as PBRMaterial | null;
-    if (!mat?.albedoColor) return;
+    const mat = mesh.material;
+    if (!mat || !(mat instanceof PBRMaterial) || !mat.albedoColor) return;
 
     if (!originalColors.has(mesh)) {
       originalColors.set(mesh, mat.albedoColor.clone());
@@ -98,8 +103,12 @@ export function createMaterialFactory(scene: Scene): MaterialFactory {
     const original = originalColors.get(mesh);
     if (!original) return;
 
-    // Dispose the cloned tinted material
-    const currentMat = mesh.material as PBRMaterial | null;
+    // Dispose the cloned tinted material (only PBR materials were tinted)
+    const currentMat = mesh.material;
+    if (!currentMat || !(currentMat instanceof PBRMaterial)) {
+      originalColors.delete(mesh);
+      return;
+    }
     if (currentMat && currentMat.name.endsWith('_selected')) {
       // Find the base preset material to restore
       const baseName = currentMat.name.replace('_selected', '');

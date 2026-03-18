@@ -9,17 +9,20 @@ import { ImageProcessingConfiguration } from '@babylonjs/core/Materials/imagePro
 export interface PostProcessingOptions {
   ssaoEnabled?: boolean;
   msaaSamples?: number;
+  exposure?: number;
+  contrast?: number;
 }
 
 export interface PostProcessingPipeline {
   defaultPipeline: DefaultRenderingPipeline;
   ssaoPipeline: SSAO2RenderingPipeline;
   setSsaoEnabled: (enabled: boolean) => void;
+  getAAState: () => { msaaSamples: number; fxaaEnabled: boolean; hdr: boolean };
   dispose: () => void;
 }
 
 /**
- * Anti-aliasing (MSAA + FXAA), neutral tone mapping, and subtle SSAO.
+ * Anti-aliasing (MSAA + FXAA), ACES filmic tone mapping, and subtle SSAO.
  */
 export function createPostProcessing(
   scene: Scene,
@@ -28,8 +31,10 @@ export function createPostProcessing(
 ): PostProcessingPipeline {
   const ssaoEnabled = options?.ssaoEnabled ?? true;
   const msaaSamples = options?.msaaSamples ?? 4;
+  const exposure = options?.exposure ?? 1.1;
+  const contrast = options?.contrast ?? 1.0;
 
-  // DefaultRenderingPipeline — AA + tone mapping
+  // DefaultRenderingPipeline — AA + tone mapping + image processing
   const defaultPipeline = new DefaultRenderingPipeline(
     'default_pipeline',
     true, // HDR
@@ -40,19 +45,27 @@ export function createPostProcessing(
   defaultPipeline.fxaaEnabled = true;
   defaultPipeline.imageProcessing.toneMappingEnabled = true;
   defaultPipeline.imageProcessing.toneMappingType =
-    ImageProcessingConfiguration.TONEMAPPING_KHR_PBR_NEUTRAL;
+    ImageProcessingConfiguration.TONEMAPPING_ACES;
+  defaultPipeline.imageProcessing.exposure = exposure;
+  defaultPipeline.imageProcessing.contrast = contrast;
   defaultPipeline.bloomEnabled = false;
+
+  if (defaultPipeline.samples !== msaaSamples) {
+    console.warn(
+      `[viewport] MSAA requested ${msaaSamples} samples but got ${defaultPipeline.samples}. Falling back to FXAA-only.`,
+    );
+  }
 
   // SSAO2 — subtle ambient occlusion
   const ssaoPipeline = new SSAO2RenderingPipeline(
     'ssao_pipeline',
     scene,
-    { ssaoRatio: 0.5, blurRatio: 0.5 },
+    { ssaoRatio: 0.75, blurRatio: 0.5 },
     [camera],
     false, // forceGeometryBuffer
   );
-  ssaoPipeline.radius = 2.0;
-  ssaoPipeline.totalStrength = 0.5;
+  ssaoPipeline.radius = 1.2;
+  ssaoPipeline.totalStrength = 0.25;
   ssaoPipeline.samples = 16;
   ssaoPipeline.maxZ = 250;
 
@@ -79,6 +92,14 @@ export function createPostProcessing(
           camera,
         );
       }
+    },
+
+    getAAState() {
+      return {
+        msaaSamples: defaultPipeline.samples,
+        fxaaEnabled: defaultPipeline.fxaaEnabled,
+        hdr: true,
+      };
     },
 
     dispose() {

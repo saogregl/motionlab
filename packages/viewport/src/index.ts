@@ -12,7 +12,9 @@ export {
   type PickCallback,
   type HoverCallback,
   type PickResult,
+  type SpatialPickData,
 } from './picking.js';
+export { computeDatumLocalPose } from './datum-pose.js';
 
 // Rendering primitives
 export {
@@ -33,4 +35,6 @@ export {
   type PostProcessingOptions,
   createSelectionVisuals,
   type SelectionVisuals,
+  CAD_NEUTRAL_STUDIO,
+  type ViewportPreset,
 } from './rendering/index.js';

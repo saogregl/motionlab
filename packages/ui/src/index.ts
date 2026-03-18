@@ -125,6 +125,8 @@ export { DensityToggle } from './components/primitives/density-toggle';
 export type { DensityToggleProps } from './components/primitives/density-toggle';
 export { EmptyState } from './components/primitives/empty-state';
 export type { EmptyStateProps } from './components/primitives/empty-state';
+export { InlineEditableName } from './components/primitives/inline-editable-name';
+export type { InlineEditableNameProps } from './components/primitives/inline-editable-name';
 export { BodyContextMenu, JointContextMenu, DatumContextMenu } from './components/primitives/context-menus';
 export type {
   BodyContextMenuProps,

@@ -29,9 +29,20 @@
       }
     },
     {
+      "name": "msvc-base",
+      "hidden": true,
+      "inherits": "vcpkg-base",
+      "generator": "Ninja",
+      "description": "MSVC via Ninja — run from a VS Developer Command Prompt or after vcvarsall.bat",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "VCPKG_HOST_TRIPLET": "x64-windows"
+      }
+    },
+    {
       "name": "dev",
-      "displayName": "Development",
-      "description": "Development build with debug symbols",
+      "displayName": "Development (MinGW)",
+      "description": "MinGW debug build with tests",
       "inherits": "mingw-base",
       "binaryDir": "${sourceDir}/build/dev",
       "cacheVariables": {
@@ -42,10 +53,33 @@
     },
     {
       "name": "release",
-      "displayName": "Release",
-      "description": "Optimized release build",
-      "inherits": "vcpkg-base",
+      "displayName": "Release (MinGW)",
+      "description": "MinGW optimized release build",
+      "inherits": "mingw-base",
       "binaryDir": "${sourceDir}/build/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_TESTS": "OFF"
+      }
+    },
+    {
+      "name": "msvc-dev",
+      "displayName": "Development (MSVC)",
+      "description": "MSVC debug build with tests",
+      "inherits": "msvc-base",
+      "binaryDir": "${sourceDir}/build/msvc-dev",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "msvc-release",
+      "displayName": "Release (MSVC)",
+      "description": "MSVC optimized release build",
+      "inherits": "msvc-base",
+      "binaryDir": "${sourceDir}/build/msvc-release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "BUILD_TESTS": "OFF"
@@ -60,12 +94,27 @@
     {
       "name": "release",
       "configurePreset": "release"
+    },
+    {
+      "name": "msvc-dev",
+      "configurePreset": "msvc-dev"
+    },
+    {
+      "name": "msvc-release",
+      "configurePreset": "msvc-release"
     }
   ],
   "testPresets": [
     {
       "name": "dev",
       "configurePreset": "dev",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "msvc-dev",
+      "configurePreset": "msvc-dev",
       "output": {
         "outputOnFailure": true
       }

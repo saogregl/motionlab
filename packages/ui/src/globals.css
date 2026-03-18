@@ -3,6 +3,11 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
+/* Monorepo source scanning — tell Tailwind where to find utility classes */
+@source "../../ui/src/**/*.{ts,tsx}";
+@source "../../frontend/src/**/*.{ts,tsx}";
+@source "../../viewport/src/**/*.{ts,tsx}";
+
 @custom-variant dark (&:is(.dark *));
 
 /* ============================================================
@@ -90,6 +95,12 @@
   --tree-icon-size: 16px;
   --tree-indent: 14px;
   --tree-row-gap: 0px;
+  --tree-guide-color: rgba(0, 0, 0, 0.08);
+  --tree-header-gap: 6px;
+
+  /* ── Contained tabs ── */
+  --tab-contained-bg: var(--layer-recessed);
+  --tab-contained-active: var(--layer-base);
 
   /* ── Inspector ── */
   --inspector-section-gap: 2px;
@@ -187,7 +198,7 @@
   --status-warning: #ff832b;
 
   /* ── Interactive ── */
-  --hover-overlay: rgba(141, 141, 141, 0.12);
+  --hover-overlay: rgba(141, 141, 141, 0.08);
   --pressed-overlay: rgba(141, 141, 141, 0.5);
   --focus-ring: 0 0 0 2px var(--layer-base), 0 0 0 4px var(--accent-primary);
   --focus-ring-inset: 0 0 0 2px var(--layer-recessed), 0 0 0 4px var(--accent-primary);
@@ -297,7 +308,11 @@
   --status-failed: #fa4d56;
   --status-warning: #ff832b;
 
-  --hover-overlay: rgba(141, 141, 141, 0.16);
+  --tree-guide-color: rgba(255, 255, 255, 0.06);
+  --tab-contained-bg: var(--layer-recessed);
+  --tab-contained-active: var(--layer-base);
+
+  --hover-overlay: rgba(141, 141, 141, 0.10);
   --pressed-overlay: rgba(141, 141, 141, 0.4);
   --focus-ring: 0 0 0 2px var(--layer-base), 0 0 0 4px var(--accent-primary);
   --focus-ring-inset: 0 0 0 2px var(--layer-recessed), 0 0 0 4px var(--accent-primary);
@@ -312,6 +327,7 @@
   --tree-row-h: 22px;
   --tree-icon-size: 14px;
   --tree-indent: 12px;
+  --tree-header-gap: 4px;
   --inspector-row-h: 24px;
   --inspector-label-w: 88px;
   --topbar-h: 36px;
@@ -453,6 +469,13 @@
 
   --color-hover-overlay: var(--hover-overlay);
   --color-pressed-overlay: var(--pressed-overlay);
+
+  /* Tree tokens */
+  --color-tree-guide: var(--tree-guide-color);
+
+  /* Contained tab tokens */
+  --color-tab-contained-bg: var(--tab-contained-bg);
+  --color-tab-contained-active: var(--tab-contained-active);
 
   /* Shadows and z-index are NOT mapped here — they have dark mode
      overrides in :root/.dark, so use via var() directly:

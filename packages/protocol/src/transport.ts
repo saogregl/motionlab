@@ -2,6 +2,10 @@ import { create, fromBinary, toBinary, toJsonString } from '@bufbuild/protobuf';
 import type { Event } from './generated/protocol/transport_pb.js';
 import {
   CommandSchema,
+  CreateDatumCommandSchema,
+  CreateJointCommandSchema,
+  DeleteDatumCommandSchema,
+  DeleteJointCommandSchema,
   EngineStatus_State,
   EventSchema,
   HandshakeSchema,
@@ -9,7 +13,16 @@ import {
   ImportOptionsSchema,
   PingSchema,
   ProtocolVersionSchema,
+  RenameDatumCommandSchema,
+  UpdateJointCommandSchema,
 } from './generated/protocol/transport_pb.js';
+import {
+  ElementIdSchema,
+  JointType,
+  PoseSchema,
+  QuatSchema,
+  Vec3Schema,
+} from './generated/mechanism/mechanism_pb.js';
 import { PROTOCOL_NAME, PROTOCOL_VERSION } from './version.js';
 
 /**
@@ -87,6 +100,175 @@ export function parseEvent(data: ArrayBuffer): Event {
  */
 export function eventToDebugJson(evt: Event): string {
   return toJsonString(EventSchema, evt);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a CreateDatum payload.
+ */
+export function createCreateDatumCommand(
+  parentBodyId: string,
+  localPose: { position: { x: number; y: number; z: number }; orientation: { x: number; y: number; z: number; w: number } },
+  name: string,
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'createDatum',
+      value: create(CreateDatumCommandSchema, {
+        parentBodyId: create(ElementIdSchema, { id: parentBodyId }),
+        localPose: create(PoseSchema, {
+          position: create(Vec3Schema, localPose.position),
+          orientation: create(QuatSchema, {
+            w: localPose.orientation.w,
+            x: localPose.orientation.x,
+            y: localPose.orientation.y,
+            z: localPose.orientation.z,
+          }),
+        }),
+        name,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a DeleteDatum payload.
+ */
+export function createDeleteDatumCommand(datumId: string, sequenceId?: bigint): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'deleteDatum',
+      value: create(DeleteDatumCommandSchema, {
+        datumId: create(ElementIdSchema, { id: datumId }),
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a RenameDatum payload.
+ */
+export function createRenameDatumCommand(
+  datumId: string,
+  name: string,
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'renameDatum',
+      value: create(RenameDatumCommandSchema, {
+        datumId: create(ElementIdSchema, { id: datumId }),
+        name,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a CreateJoint payload.
+ */
+export function createCreateJointCommand(
+  parentDatumId: string,
+  childDatumId: string,
+  type: JointType,
+  name: string,
+  lowerLimit: number,
+  upperLimit: number,
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'createJoint',
+      value: create(CreateJointCommandSchema, {
+        parentDatumId: create(ElementIdSchema, { id: parentDatumId }),
+        childDatumId: create(ElementIdSchema, { id: childDatumId }),
+        type,
+        name,
+        lowerLimit,
+        upperLimit,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing an UpdateJoint payload.
+ */
+export function createUpdateJointCommand(
+  jointId: string,
+  updates: { name?: string; type?: JointType; lowerLimit?: number; upperLimit?: number },
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'updateJoint',
+      value: create(UpdateJointCommandSchema, {
+        jointId: create(ElementIdSchema, { id: jointId }),
+        name: updates.name,
+        type: updates.type,
+        lowerLimit: updates.lowerLimit,
+        upperLimit: updates.upperLimit,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a DeleteJoint payload.
+ */
+export function createDeleteJointCommand(jointId: string, sequenceId?: bigint): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'deleteJoint',
+      value: create(DeleteJointCommandSchema, {
+        jointId: create(ElementIdSchema, { id: jointId }),
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Maps a proto JointType enum to a store-friendly string.
+ */
+export function mapJointType(type: JointType): 'revolute' | 'prismatic' | 'fixed' {
+  switch (type) {
+    case JointType.REVOLUTE:
+      return 'revolute';
+    case JointType.PRISMATIC:
+      return 'prismatic';
+    case JointType.FIXED:
+      return 'fixed';
+    default:
+      return 'fixed';
+  }
+}
+
+/**
+ * Maps a store-friendly joint type string to the proto JointType enum.
+ */
+export function toProtoJointType(type: string): JointType {
+  switch (type) {
+    case 'revolute':
+      return JointType.REVOLUTE;
+    case 'prismatic':
+      return JointType.PRISMATIC;
+    case 'fixed':
+      return JointType.FIXED;
+    default:
+      return JointType.UNSPECIFIED;
+  }
 }
 
 /**

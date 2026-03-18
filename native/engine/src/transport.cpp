@@ -8,6 +8,7 @@
 
 #include "cad_import.h"
 #include "asset_cache.h"
+#include "mechanism_state.h"
 #include "uuid.h"
 
 #include <algorithm>
@@ -95,6 +96,7 @@ struct TransportServer::Impl {
     bool authenticated = false;
     std::atomic<bool> running{false};
     engine::AssetCache asset_cache;
+    engine::MechanismState mechanism_state;
 
     explicit Impl(std::string token)
         : session_token(std::move(token))
@@ -151,6 +153,30 @@ struct TransportServer::Impl {
             case protocol::Command::kImportAsset:
                 if (!authenticated) break;
                 handle_import_asset(ws, cmd.sequence_id(), cmd.import_asset());
+                break;
+            case protocol::Command::kCreateDatum:
+                if (!authenticated) break;
+                handle_create_datum(ws, cmd.sequence_id(), cmd.create_datum());
+                break;
+            case protocol::Command::kDeleteDatum:
+                if (!authenticated) break;
+                handle_delete_datum(ws, cmd.sequence_id(), cmd.delete_datum());
+                break;
+            case protocol::Command::kRenameDatum:
+                if (!authenticated) break;
+                handle_rename_datum(ws, cmd.sequence_id(), cmd.rename_datum());
+                break;
+            case protocol::Command::kCreateJoint:
+                if (!authenticated) break;
+                handle_create_joint(ws, cmd.sequence_id(), cmd.create_joint());
+                break;
+            case protocol::Command::kUpdateJoint:
+                if (!authenticated) break;
+                handle_update_joint(ws, cmd.sequence_id(), cmd.update_joint());
+                break;
+            case protocol::Command::kDeleteJoint:
+                if (!authenticated) break;
+                handle_delete_joint(ws, cmd.sequence_id(), cmd.delete_joint());
                 break;
             default:
                 break;
@@ -214,6 +240,10 @@ struct TransportServer::Impl {
             if (cached.has_value()) {
                 protocol::ImportAssetResult result;
                 if (result.ParseFromString(cached.value())) {
+                    // Register bodies in mechanism state from cache
+                    for (const auto& body : result.bodies()) {
+                        mechanism_state.add_body(body.body_id(), body.name());
+                    }
                     protocol::Event event;
                     event.set_sequence_id(sequence_id);
                     *event.mutable_import_asset_result() = std::move(result);
@@ -261,6 +291,7 @@ struct TransportServer::Impl {
             auto* pb = proto_result.add_bodies();
             pb->set_body_id(engine::generate_uuidv7());
             pb->set_name(body.name);
+            mechanism_state.add_body(pb->body_id(), pb->name());
 
             // DisplayMesh
             auto* mesh = pb->mutable_display_mesh();
@@ -316,6 +347,172 @@ struct TransportServer::Impl {
         *event.mutable_import_asset_result() = std::move(proto_result);
         send_event(ws, event);
     }
+
+    void handle_create_datum(ix::WebSocket& ws, uint64_t sequence_id,
+                              const protocol::CreateDatumCommand& cmd) {
+        double pos[3] = {0, 0, 0};
+        double orient[4] = {1, 0, 0, 0}; // w,x,y,z identity
+
+        if (cmd.has_local_pose()) {
+            if (cmd.local_pose().has_position()) {
+                pos[0] = cmd.local_pose().position().x();
+                pos[1] = cmd.local_pose().position().y();
+                pos[2] = cmd.local_pose().position().z();
+            }
+            if (cmd.local_pose().has_orientation()) {
+                orient[0] = cmd.local_pose().orientation().w();
+                orient[1] = cmd.local_pose().orientation().x();
+                orient[2] = cmd.local_pose().orientation().y();
+                orient[3] = cmd.local_pose().orientation().z();
+            }
+        }
+
+        std::string parent_id = cmd.has_parent_body_id() ? cmd.parent_body_id().id() : "";
+        auto result = mechanism_state.create_datum(parent_id, cmd.name(), pos, orient);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* cr = event.mutable_create_datum_result();
+        if (result.has_value()) {
+            auto* datum = cr->mutable_datum();
+            datum->mutable_id()->set_id(result->id);
+            datum->set_name(result->name);
+            datum->mutable_parent_body_id()->set_id(result->parent_body_id);
+            auto* pose = datum->mutable_local_pose();
+            auto* p = pose->mutable_position();
+            p->set_x(result->position[0]);
+            p->set_y(result->position[1]);
+            p->set_z(result->position[2]);
+            auto* q = pose->mutable_orientation();
+            q->set_w(result->orientation[0]);
+            q->set_x(result->orientation[1]);
+            q->set_y(result->orientation[2]);
+            q->set_z(result->orientation[3]);
+        } else {
+            cr->set_error_message("Parent body not found: " + parent_id);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_delete_datum(ix::WebSocket& ws, uint64_t sequence_id,
+                              const protocol::DeleteDatumCommand& cmd) {
+        std::string datum_id = cmd.has_datum_id() ? cmd.datum_id().id() : "";
+        bool ok = mechanism_state.delete_datum(datum_id);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* dr = event.mutable_delete_datum_result();
+        if (ok) {
+            dr->mutable_deleted_id()->set_id(datum_id);
+        } else {
+            dr->set_error_message("Datum not found: " + datum_id);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_rename_datum(ix::WebSocket& ws, uint64_t sequence_id,
+                              const protocol::RenameDatumCommand& cmd) {
+        std::string datum_id = cmd.has_datum_id() ? cmd.datum_id().id() : "";
+        auto result = mechanism_state.rename_datum(datum_id, cmd.name());
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* rr = event.mutable_rename_datum_result();
+        if (result.has_value()) {
+            auto* datum = rr->mutable_datum();
+            datum->mutable_id()->set_id(result->id);
+            datum->set_name(result->name);
+            datum->mutable_parent_body_id()->set_id(result->parent_body_id);
+            auto* pose = datum->mutable_local_pose();
+            auto* p = pose->mutable_position();
+            p->set_x(result->position[0]);
+            p->set_y(result->position[1]);
+            p->set_z(result->position[2]);
+            auto* q = pose->mutable_orientation();
+            q->set_w(result->orientation[0]);
+            q->set_x(result->orientation[1]);
+            q->set_y(result->orientation[2]);
+            q->set_z(result->orientation[3]);
+        } else {
+            rr->set_error_message("Datum not found: " + datum_id);
+        }
+        send_event(ws, event);
+    }
+
+    void populate_proto_joint(mechanism::Joint* proto_joint,
+                               const engine::MechanismState::JointEntry& entry) {
+        proto_joint->mutable_id()->set_id(entry.id);
+        proto_joint->set_name(entry.name);
+        proto_joint->set_type(static_cast<mechanism::JointType>(entry.type));
+        proto_joint->mutable_parent_datum_id()->set_id(entry.parent_datum_id);
+        proto_joint->mutable_child_datum_id()->set_id(entry.child_datum_id);
+        proto_joint->set_lower_limit(entry.lower_limit);
+        proto_joint->set_upper_limit(entry.upper_limit);
+    }
+
+    void handle_create_joint(ix::WebSocket& ws, uint64_t sequence_id,
+                              const protocol::CreateJointCommand& cmd) {
+        std::string parent_datum_id = cmd.has_parent_datum_id() ? cmd.parent_datum_id().id() : "";
+        std::string child_datum_id = cmd.has_child_datum_id() ? cmd.child_datum_id().id() : "";
+        int type = static_cast<int>(cmd.type());
+
+        auto result = mechanism_state.create_joint(
+            parent_datum_id, child_datum_id, type,
+            cmd.name(), cmd.lower_limit(), cmd.upper_limit());
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* cr = event.mutable_create_joint_result();
+        if (result.entry.has_value()) {
+            populate_proto_joint(cr->mutable_joint(), result.entry.value());
+        } else {
+            cr->set_error_message(result.error);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_update_joint(ix::WebSocket& ws, uint64_t sequence_id,
+                              const protocol::UpdateJointCommand& cmd) {
+        std::string joint_id = cmd.has_joint_id() ? cmd.joint_id().id() : "";
+
+        std::optional<std::string> name;
+        std::optional<int> type;
+        std::optional<double> lower_limit;
+        std::optional<double> upper_limit;
+
+        if (cmd.has_name()) name = cmd.name();
+        if (cmd.has_type()) type = static_cast<int>(cmd.type());
+        if (cmd.has_lower_limit()) lower_limit = cmd.lower_limit();
+        if (cmd.has_upper_limit()) upper_limit = cmd.upper_limit();
+
+        auto result = mechanism_state.update_joint(joint_id, name, type, lower_limit, upper_limit);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* ur = event.mutable_update_joint_result();
+        if (result.entry.has_value()) {
+            populate_proto_joint(ur->mutable_joint(), result.entry.value());
+        } else {
+            ur->set_error_message(result.error);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_delete_joint(ix::WebSocket& ws, uint64_t sequence_id,
+                              const protocol::DeleteJointCommand& cmd) {
+        std::string joint_id = cmd.has_joint_id() ? cmd.joint_id().id() : "";
+        bool ok = mechanism_state.delete_joint(joint_id);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* dr = event.mutable_delete_joint_result();
+        if (ok) {
+            dr->mutable_deleted_id()->set_id(joint_id);
+        } else {
+            dr->set_error_message("Joint not found: " + joint_id);
+        }
+        send_event(ws, event);
+    }
 };
 
 TransportServer::TransportServer(std::string session_token)
@@ -350,6 +547,8 @@ void TransportServer::run() {
     }
     impl_->running = true;
     impl_->server->start();
+
+    log_status(EngineState::READY);
 
     // Block until stop() is called
     while (impl_->running) {

@@ -10,6 +10,11 @@ export interface MotionLabAPI {
   openFileDialog(options?: {
     filters?: Array<{ name: string; extensions: string[] }>;
   }): Promise<string | null>;
+  windowMinimize(): void;
+  windowMaximize(): void;
+  windowClose(): void;
+  windowIsMaximized(): Promise<boolean>;
+  onWindowMaximizedChange(callback: (maximized: boolean) => void): void;
 }
 
 declare global {

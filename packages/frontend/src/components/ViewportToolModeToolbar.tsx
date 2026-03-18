@@ -1,0 +1,39 @@
+import { ToolbarButton } from '@motionlab/ui';
+import { Crosshair, Link2, MousePointer2 } from 'lucide-react';
+
+import { useJointCreationStore } from '../stores/joint-creation.js';
+import { useToolModeStore } from '../stores/tool-mode.js';
+
+export function ViewportToolModeToolbar() {
+  const activeMode = useToolModeStore((s) => s.activeMode);
+  const setMode = useToolModeStore((s) => s.setMode);
+
+  return (
+    <div className="flex flex-col gap-0.5 rounded-md bg-background/80 p-0.5 backdrop-blur-sm">
+      <ToolbarButton
+        tooltip="Select (V)"
+        active={activeMode === 'select'}
+        onClick={() => setMode('select')}
+      >
+        <MousePointer2 className="size-4" />
+      </ToolbarButton>
+      <ToolbarButton
+        tooltip="Create Datum (D)"
+        active={activeMode === 'create-datum'}
+        onClick={() => setMode('create-datum')}
+      >
+        <Crosshair className="size-4" />
+      </ToolbarButton>
+      <ToolbarButton
+        tooltip="Create Joint (J)"
+        active={activeMode === 'create-joint'}
+        onClick={() => {
+          setMode('create-joint');
+          useJointCreationStore.getState().startCreation();
+        }}
+      >
+        <Link2 className="size-4" />
+      </ToolbarButton>
+    </div>
+  );
+}

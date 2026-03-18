@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
-// SimulationRuntime — Chrono 8.0 integration
+// SimulationRuntime — Chrono 9.0 integration
 //
-// Chrono version: 8.0.0 (via vcpkg port "chronoengine")
+// Chrono version: 9.0.1 (via FetchContent)
 // Modules used:  ChronoEngine core only (no Irrlicht, vehicle, postprocess)
 // Contact system: NSC (Non-Smooth Contact) — suitable for constrained
 //   multibody dynamics without requiring SMC penalty parameters.
@@ -12,6 +12,14 @@
 //     prismatic translation axis).
 //   - ChLinkLock family requires the joint frame in absolute coordinates.
 //     We compute this from the parent datum's body pose + datum local pose.
+//
+// Chrono 8→9 migration notes:
+//   - ChVector<> renamed to ChVector3d
+//   - ChQuaternion<> aliased as ChQuaterniond
+//   - ChCoordsys<> aliased as ChCoordsysd
+//   - GetRelM() → GetRelCoordsys() on ChLinkMarkers
+//   - GetRelWvel() → GetRelativeAngVel()
+//   - Default OpenMP threads changed to 1 (explicit SetNumThreads needed)
 // ---------------------------------------------------------------------------
 
 #include "simulation.h"
@@ -72,8 +80,8 @@ namespace {
 // Compute world-space frame for a datum given its parent body's pose and
 // the datum's local_pose. Returns position and orientation in absolute coords.
 struct WorldFrame {
-    ChVector<> pos;
-    ChQuaternion<> rot;
+    ChVector3d pos;
+    ChQuaterniond rot;
 };
 
 WorldFrame compute_datum_world_frame(
@@ -83,18 +91,18 @@ WorldFrame compute_datum_world_frame(
     // Body world pose
     const auto& bp = body_pose.position();
     const auto& bo = body_pose.orientation();
-    ChVector<> body_pos(bp.x(), bp.y(), bp.z());
-    ChQuaternion<> body_rot(bo.w(), bo.x(), bo.y(), bo.z());
+    ChVector3d body_pos(bp.x(), bp.y(), bp.z());
+    ChQuaterniond body_rot(bo.w(), bo.x(), bo.y(), bo.z());
 
     // Datum local pose
     const auto& dp = datum_local_pose.position();
     const auto& dr = datum_local_pose.orientation();
-    ChVector<> datum_local_pos(dp.x(), dp.y(), dp.z());
-    ChQuaternion<> datum_local_rot(dr.w(), dr.x(), dr.y(), dr.z());
+    ChVector3d datum_local_pos(dp.x(), dp.y(), dp.z());
+    ChQuaterniond datum_local_rot(dr.w(), dr.x(), dr.y(), dr.z());
 
     // World = body_rot * local_pos + body_pos
-    ChVector<> world_pos = body_rot.Rotate(datum_local_pos) + body_pos;
-    ChQuaternion<> world_rot = body_rot * datum_local_rot;
+    ChVector3d world_pos = body_rot.Rotate(datum_local_pos) + body_pos;
+    ChQuaterniond world_rot = body_rot * datum_local_rot;
 
     return { world_pos, world_rot };
 }
@@ -199,7 +207,7 @@ CompilationResult SimulationRuntime::compile(
     // --- Build Chrono system ---
 
     impl_->system = std::make_unique<ChSystemNSC>();
-    impl_->system->SetGravitationalAcceleration(ChVector<>(0, -9.81, 0));
+    impl_->system->SetGravitationalAcceleration(ChVector3d(0, -9.81, 0));
     impl_->body_map.clear();
     impl_->link_map.clear();
     impl_->initial_poses.clear();
@@ -214,14 +222,14 @@ CompilationResult SimulationRuntime::compile(
 
         // Mass properties
         double mass = 1.0;
-        ChVector<> inertia_xx(0.1, 0.1, 0.1);
-        ChVector<> inertia_xy(0.0, 0.0, 0.0);
+        ChVector3d inertia_xx(0.1, 0.1, 0.1);
+        ChVector3d inertia_xy(0.0, 0.0, 0.0);
 
         if (body.has_mass_properties()) {
             const auto& mp = body.mass_properties();
             mass = mp.mass();
-            inertia_xx = ChVector<>(mp.ixx(), mp.iyy(), mp.izz());
-            inertia_xy = ChVector<>(mp.ixy(), mp.ixz(), mp.iyz());
+            inertia_xx = ChVector3d(mp.ixx(), mp.iyy(), mp.izz());
+            inertia_xy = ChVector3d(mp.ixy(), mp.ixz(), mp.iyz());
         }
 
         ch_body->SetMass(mass);
@@ -229,16 +237,16 @@ CompilationResult SimulationRuntime::compile(
         ch_body->SetInertiaXY(inertia_xy);
 
         // Pose
-        ChVector<> pos(0, 0, 0);
-        ChQuaternion<> rot(1, 0, 0, 0); // identity quaternion (w=1)
+        ChVector3d pos(0, 0, 0);
+        ChQuaterniond rot(1, 0, 0, 0); // identity quaternion (w=1)
 
         if (body.has_pose()) {
             const auto& p = body.pose();
             if (p.has_position()) {
-                pos = ChVector<>(p.position().x(), p.position().y(), p.position().z());
+                pos = ChVector3d(p.position().x(), p.position().y(), p.position().z());
             }
             if (p.has_orientation()) {
-                rot = ChQuaternion<>(
+                rot = ChQuaterniond(
                     p.orientation().w(),
                     p.orientation().x(),
                     p.orientation().y(),
@@ -336,7 +344,7 @@ CompilationResult SimulationRuntime::compile(
         ch_link->Initialize(
             parent_body_it->second,
             child_body_it->second,
-            ChCoordsys<>(wf.pos, wf.rot)
+            ChFramed(wf.pos, wf.rot)
         );
 
         impl_->system->AddLink(ch_link);
@@ -372,13 +380,13 @@ void SimulationRuntime::reset() {
         if (it == impl_->initial_poses.end()) continue;
 
         const auto& pose = it->second;
-        ch_body->SetPos(ChVector<>(pose.position[0], pose.position[1], pose.position[2]));
-        ch_body->SetRot(ChQuaternion<>(
+        ch_body->SetPos(ChVector3d(pose.position[0], pose.position[1], pose.position[2]));
+        ch_body->SetRot(ChQuaterniond(
             pose.orientation[0], pose.orientation[1],
             pose.orientation[2], pose.orientation[3]
         ));
-        ch_body->SetPosDt(ChVector<>(0, 0, 0));
-        ch_body->SetRotDt(ChQuaternion<>(1, 0, 0, 0));
+        ch_body->SetPosDt(ChVector3d(0, 0, 0));
+        ch_body->SetRotDt(ChQuaterniond(1, 0, 0, 0));
     }
 
     impl_->current_time = 0.0;
@@ -438,19 +446,19 @@ std::vector<JointState> SimulationRuntime::getJointStates() const {
         // Generalized coordinate — depends on joint type
         // Revolute: relative rotation angle around Z axis
         // Prismatic: relative displacement along Z axis
-        const auto& rel_pos = entry.link->GetRelM().GetPos();
-        const auto& rel_rot = entry.link->GetRelM().GetRot();
+        const auto& rel_pos = entry.link->GetRelCoordsys().pos;
+        const auto& rel_rot = entry.link->GetRelCoordsys().rot;
 
         if (entry.joint_type == motionlab::mechanism::JOINT_TYPE_REVOLUTE) {
             // Relative angle from quaternion — extract rotation around Z
             // For small angles: angle ≈ 2 * atan2(qz, qw)
             js.position = 2.0 * std::atan2(rel_rot.e3(), rel_rot.e0());
             // Relative angular velocity around Z
-            const auto& rel_wvel = entry.link->GetRelWvel();
+            const auto& rel_wvel = entry.link->GetRelativeAngVel();
             js.velocity = rel_wvel.z();
         } else if (entry.joint_type == motionlab::mechanism::JOINT_TYPE_PRISMATIC) {
             js.position = rel_pos.z();
-            const auto& rel_vel = entry.link->GetRelMDt().GetPos();
+            const auto& rel_vel = entry.link->GetRelCoordsysDt().pos;
             js.velocity = rel_vel.z();
         } else {
             js.position = 0.0;

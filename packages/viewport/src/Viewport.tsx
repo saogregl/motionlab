@@ -21,6 +21,8 @@ export interface ViewportProps {
   gridVisible?: boolean;
   shadowsEnabled?: boolean;
   ssaoEnabled?: boolean;
+  /** Rendering preset. Currently only 'cadNeutralStudio' is available. */
+  preset?: 'cadNeutralStudio';
 }
 
 /**
@@ -39,6 +41,7 @@ export function Viewport({
   gridVisible = false,
   shadowsEnabled = true,
   ssaoEnabled = true,
+  preset: _preset = 'cadNeutralStudio',
 }: ViewportProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<Engine | null>(null);
@@ -54,7 +57,10 @@ export function Viewport({
 
       if (navigator.gpu) {
         try {
-          const webgpu = new WebGPUEngine(canvas, { antialias: true });
+          const webgpu = new WebGPUEngine(canvas, {
+            antialias: true,
+            adaptToDeviceRatio: true,
+          });
           await webgpu.initAsync();
           if (disposed) {
             webgpu.dispose();
@@ -63,11 +69,16 @@ export function Viewport({
           engine = webgpu as unknown as Engine;
         } catch {
           if (disposed) return;
-          engine = new Engine(canvas, true, { preserveDrawingBuffer: true, antialias: true });
+          engine = new Engine(canvas, true, { preserveDrawingBuffer: true, antialias: true }, true);
         }
       } else {
-        engine = new Engine(canvas, true, { preserveDrawingBuffer: true, antialias: true });
+        engine = new Engine(canvas, true, { preserveDrawingBuffer: true, antialias: true }, true);
       }
+
+      // Cap DPR at 2 to avoid excessive pixel count on 3x+ displays
+      const maxDPR = 2;
+      const dpr = Math.min(window.devicePixelRatio ?? 1, maxDPR);
+      engine.setHardwareScalingLevel(1 / dpr);
 
       if (disposed) {
         engine.dispose();

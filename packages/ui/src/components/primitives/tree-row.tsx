@@ -5,6 +5,7 @@ import {
   EyeOff,
   MoreHorizontal,
 } from 'lucide-react';
+import type React from 'react';
 import type { ReactNode } from 'react';
 
 import { cn } from '@/lib/utils';
@@ -26,7 +27,7 @@ interface TreeRowProps {
   expanded?: boolean;
   /** Callbacks */
   onToggleExpand?: () => void;
-  onSelect?: () => void;
+  onSelect?: (event?: React.MouseEvent) => void;
   onToggleVisibility?: () => void;
   onContextMenu?: () => void;
   /** State flags — applied as data attributes */
@@ -77,19 +78,31 @@ function TreeRow({
         'group/tree-row h-[var(--tree-row-h)]',
         'hover:bg-[var(--hover-overlay)]',
         'data-[selected]:bg-[var(--selection-row)]',
-        'data-[selected]:data-[focused]:shadow-[inset_2px_0_0_var(--accent-primary)]',
+        'data-[selected]:data-[focused]:shadow-[inset_1.5px_0_0_var(--accent-primary)]',
         'data-[selected]:not([data-focused]):bg-[var(--selection-row-inactive)]',
         'data-[disabled]:opacity-50 data-[disabled]:text-[var(--text-disabled)]',
         'data-[drag-target]:bg-[var(--selection-drag-bg)] data-[drag-target]:border-y-2 data-[drag-target]:border-y-[var(--selection-drag-border)]',
         className,
       )}
-      onClick={onSelect}
+      onClick={(e) => onSelect?.(e)}
       {...ariaProps}
     >
       <div
-        className="flex h-full items-center pr-1.5"
+        className="relative flex h-full items-center pr-2"
         style={{ paddingLeft: `calc(var(--space-1) + ${level} * var(--tree-indent))` }}
       >
+        {/* Guide lines */}
+        {level > 0 && Array.from({ length: level }, (_, i) => (
+          <span
+            key={i}
+            aria-hidden
+            className="pointer-events-none absolute top-0 bottom-0 w-px bg-tree-guide"
+            style={{
+              left: `calc(var(--space-1) + ${i} * var(--tree-indent) + var(--tree-indent) / 2)`,
+            }}
+          />
+        ))}
+
         {/* Disclosure chevron */}
         {hasChildren ? (
           <button
@@ -219,7 +232,7 @@ function GroupHeaderRow({
     <div
       data-slot="group-header-row"
       className={cn(
-        'flex h-[var(--tree-row-h)] items-center pr-1',
+        'flex h-[var(--tree-row-h)] items-center pr-2',
         'hover:bg-[var(--hover-overlay)]',
         className,
       )}
@@ -240,7 +253,7 @@ function GroupHeaderRow({
       {/* Label */}
       <span
         data-slot="group-header-label"
-        className="min-w-0 flex-1 truncate text-[length:var(--text-xs)] font-semibold text-[var(--text-tertiary)]"
+        className="min-w-0 flex-1 truncate text-[length:var(--text-xs)] font-medium text-[var(--text-tertiary)]"
       >
         {label}
         {count != null && (
