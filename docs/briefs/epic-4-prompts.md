@@ -1,6 +1,8 @@
 # Epic 4 — Parallel Agent Prompts
 
 > **Status:** Complete (all 3 prompts)
+> **Completed:** Commits `8f65600` through `782d9dc`
+> **Deviations:** The "Epic 4+" commit (`782d9dc`) also absorbed most of Epic 5 (datum CRUD) and the protocol/engine/store portions of Epic 6 (joint CRUD). See those briefs for details.
 >
 > **Dependency:** Prompt 4.1 must complete before Prompt 4.2. Prompt 4.3 can overlap with Prompt 4.2 once selection store shape is agreed.
 >

@@ -1,6 +1,16 @@
 # Epic 6 — Parallel Agent Prompts
 
-> **Status:** Not Started
+> **Status:** ~60% Complete (Prompts 1-3 largely done, Prompt 4 not started)
+> **Completed:** Commit `782d9dc` ("Epic 4+: datum/joint CRUD, mechanism state, viewport visuals, protocol expansion")
+> **Deviations:** Joint protocol and engine work was delivered alongside Epic 4/5 rather than as a separate phase.
+>
+> **What's done:**
+> - Prompt 1 (Joint Protocol + Engine CRUD): Complete. `CreateJointCommand`, `UpdateJointCommand`, `DeleteJointCommand` in transport.proto with JointType enum and limits. Engine `MechanismState` with joint CRUD and endpoint validation. ADR-0005 written.
+> - Prompt 2 (Joint Visualization + Creation UX): Mostly complete. Joint connector visuals in `joint-visuals.ts`. `JointConfigDialog` for creation/edit. `create-joint` tool mode and `joint-creation` store exist.
+> - Prompt 3 (Full Project Tree): Mostly complete. `ProjectTree` shows hierarchical Bodies > Datums > Joints. Context menus with rename/delete. Inline rename via `InlineEditableName`.
+>
+> **What's NOT done:**
+> - Prompt 4 (Save/Load): Not started. No `ProjectFile` proto, no `SaveProjectCommand`/`LoadProjectCommand`, no Electron save/open dialogs, no recent files, no project title in window title.
 
 Four prompts. Largest epic. Prompt 3 can run in parallel with Prompts 1 and 2. Prompt 4 depends on all others.
 

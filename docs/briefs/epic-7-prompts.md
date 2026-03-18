@@ -1,6 +1,18 @@
 # Epic 7 — Parallel Agent Prompts
 
-> **Status:** Prompt 7.1 In Progress (code written, build pending)
+> **Status:** ~25% In Progress (Prompt 7.1 partially done)
+> **Started:** Commit `b6982a2` ("Epic 4.3: viewport-frontend integration; Epic 7.1: Chrono simulation runtime (WIP)")
+> **Deviations:**
+> - **Chrono version:** Brief specified Chrono 8.0; codebase uses **Chrono 9.0.1** via FetchContent (core dynamics only, no TBB).
+> - Started earlier than planned (during Epic 4 work rather than during Epic 6).
+>
+> **What's done:**
+> - Prompt 1 (Chrono Spike): Partial. `SimulationRuntime` class with pimpl exists in `simulation.h/.cpp`. Chrono 9.0.1 fetched via FetchContent. `test_simulation.cpp` exists but is WIP. Build may not be fully passing.
+>
+> **What's NOT done:**
+> - Prompt 1 completion: Pendulum validation test, compile/step/reset lifecycle, validation error tests.
+> - Prompt 2 (Simulation Protocol + Streaming): Not started. No `CompileMechanismCommand`, `SimulationControlCommand`, `SimulationFrame`, simulation thread, or backpressure.
+> - Prompt 3 (Frontend Controls + Viewport Playback): Not started. No simulation store, toolbar, hot-path updates, or keyboard shortcuts.
 
 Three prompts for simulation compilation and native dynamics runtime. Prompt 7.1 (Chrono spike) is a blocker and CAN start during Epic 6 since it is entirely native-side. Prompts 7.2 and 7.3 are sequential after 7.1.
 

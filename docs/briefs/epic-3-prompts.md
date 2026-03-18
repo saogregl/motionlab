@@ -1,6 +1,8 @@
 # Epic 3 — Parallel Agent Prompts
 
-> **Status:** Not Started
+> **Status:** Complete
+> **Completed:** Commits `acfa303` through `8f65600`
+> **Deviations:** None. OCCT import, asset cache, protocol expansion, and frontend import flow all delivered as specified.
 >
 > **Dependency:** Prompt 3.1 (OpenCASCADE spike) is a BLOCKER — must succeed before Prompts 3.2 and 3.3 can proceed.
 

@@ -21,11 +21,13 @@
       "inherits": "vcpkg-base",
       "generator": "Ninja",
       "cacheVariables": {
-        "CMAKE_C_COMPILER": "C:/msys64/mingw64/bin/gcc.exe",
-        "CMAKE_CXX_COMPILER": "C:/msys64/mingw64/bin/g++.exe",
-        "CMAKE_MAKE_PROGRAM": "C:/msys64/mingw64/bin/ninja.exe",
         "VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic",
         "VCPKG_HOST_TRIPLET": "x64-mingw-dynamic"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
@@ -37,14 +39,34 @@
       "cacheVariables": {
         "VCPKG_TARGET_TRIPLET": "x64-windows",
         "VCPKG_HOST_TRIPLET": "x64-windows"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
-      "name": "dev",
+      "name": "linux-base",
+      "hidden": true,
+      "inherits": "vcpkg-base",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-linux",
+        "VCPKG_HOST_TRIPLET": "x64-linux"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "dev-mingw",
       "displayName": "Development (MinGW)",
       "description": "MinGW debug build with tests",
       "inherits": "mingw-base",
-      "binaryDir": "${sourceDir}/build/dev",
+      "binaryDir": "${sourceDir}/build/dev-mingw",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
@@ -52,11 +74,11 @@
       }
     },
     {
-      "name": "release",
+      "name": "release-mingw",
       "displayName": "Release (MinGW)",
       "description": "MinGW optimized release build",
       "inherits": "mingw-base",
-      "binaryDir": "${sourceDir}/build/release",
+      "binaryDir": "${sourceDir}/build/release-mingw",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "BUILD_TESTS": "OFF"
@@ -84,16 +106,39 @@
         "CMAKE_BUILD_TYPE": "Release",
         "BUILD_TESTS": "OFF"
       }
+    },
+    {
+      "name": "dev-linux",
+      "displayName": "Development (Linux GCC)",
+      "description": "Linux GCC debug build with tests",
+      "inherits": "linux-base",
+      "binaryDir": "${sourceDir}/build/dev-linux",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "release-linux",
+      "displayName": "Release (Linux GCC)",
+      "description": "Linux GCC optimized release build",
+      "inherits": "linux-base",
+      "binaryDir": "${sourceDir}/build/release-linux",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_TESTS": "OFF"
+      }
     }
   ],
   "buildPresets": [
     {
-      "name": "dev",
-      "configurePreset": "dev"
+      "name": "dev-mingw",
+      "configurePreset": "dev-mingw"
     },
     {
-      "name": "release",
-      "configurePreset": "release"
+      "name": "release-mingw",
+      "configurePreset": "release-mingw"
     },
     {
       "name": "msvc-dev",
@@ -102,12 +147,20 @@
     {
       "name": "msvc-release",
       "configurePreset": "msvc-release"
+    },
+    {
+      "name": "dev-linux",
+      "configurePreset": "dev-linux"
+    },
+    {
+      "name": "release-linux",
+      "configurePreset": "release-linux"
     }
   ],
   "testPresets": [
     {
-      "name": "dev",
-      "configurePreset": "dev",
+      "name": "dev-mingw",
+      "configurePreset": "dev-mingw",
       "output": {
         "outputOnFailure": true
       }
@@ -115,6 +168,13 @@
     {
       "name": "msvc-dev",
       "configurePreset": "msvc-dev",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "dev-linux",
+      "configurePreset": "dev-linux",
       "output": {
         "outputOnFailure": true
       }

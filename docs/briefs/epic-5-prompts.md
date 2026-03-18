@@ -1,6 +1,15 @@
 # Epic 5 — Parallel Agent Prompts
 
-> **Status:** Not Started
+> **Status:** ~90% Complete (absorbed into Epic 4+ batch)
+> **Completed:** Commit `782d9dc` ("Epic 4+: datum/joint CRUD, mechanism state, viewport visuals, protocol expansion")
+> **Deviations:** Work was delivered alongside Epic 4 rather than as a separate phase.
+>
+> **What's done:**
+> - Prompt 1 (Protocol + Engine + Store): Complete. `CreateDatumCommand`, `DeleteDatumCommand`, `RenameDatumCommand` in transport.proto. Engine `MechanismState` with full datum CRUD. Mechanism store with `datums: Map`. ADR-0004 written.
+> - Prompt 3 (Visualization + Inspection + Tree): Complete. Datum triads in viewport (`datum-triad.ts`), datum picking/selection, datums as tree children, `EntityInspector` with inline rename, delete via context menu.
+>
+> **What may be incomplete:**
+> - Prompt 2 (Creation Tool Mode): `useToolModeStore` exists with select/create-datum modes, but geometry-aware surface picking (surface normal → datum Z-axis via `computeDatumPose()`) needs end-to-end verification. Crosshair cursor feedback and Escape-to-exit may be partial.
 
 Three prompts. Mostly sequential but Prompt 3 can overlap with Prompt 2.
 

@@ -1,6 +1,7 @@
 # Epic 9 — Parallel Agent Prompts
 
 > **Status:** Not Started
+> **Deviations:** None.
 
 Three prompts for MVP hardening, packaging, and product credibility pass. Prompts 9.1 and 9.2 can run in parallel. Prompt 9.3 depends on both.
 

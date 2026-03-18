@@ -12,6 +12,20 @@ echo "║     MotionLab Bootstrap              ║"
 echo "╚══════════════════════════════════════╝"
 echo ""
 
+# ─── Detect platform and pick CMake preset ────
+
+case "$(uname -s)" in
+  Linux*)   PRESET="dev-linux";;
+  MINGW*|MSYS*) PRESET="dev-mingw";;
+  *)
+    echo "⚠️  Unknown platform: $(uname -s) — defaulting to dev-mingw"
+    PRESET="dev-mingw"
+    ;;
+esac
+
+echo "Platform: $(uname -s) → preset: $PRESET"
+echo ""
+
 # ─── Check prerequisites ───────────────────────────────
 
 check_command() {
@@ -74,17 +88,17 @@ echo ""
 
 ENGINE_DIR="$ROOT_DIR/native/engine"
 
-echo "🔨 Configuring native engine..."
+echo "🔨 Configuring native engine (preset: $PRESET)..."
 cd "$ENGINE_DIR"
 
-cmake --preset dev
+cmake --preset "$PRESET"
 
 echo ""
 
 # ─── Build native engine ───────────────────────────────
 
 echo "🏗️  Building native engine..."
-cmake --build build/dev --parallel
+cmake --build "build/$PRESET" --parallel
 
 echo ""
 
@@ -109,10 +123,10 @@ echo "  pnpm build            — Build all TypeScript packages"
 echo "  pnpm lint             — Lint all packages"
 echo "  pnpm typecheck        — Type-check all packages"
 echo ""
-echo "Native engine:"
+echo "Native engine (preset: $PRESET):"
 echo "  cd native/engine"
-echo "  cmake --preset dev          — Configure (debug)"
-echo "  cmake --build build/dev     — Build"
-echo "  ctest --preset dev          — Run tests"
-echo "  ./build/dev/motionlab-engine  — Run engine"
+echo "  cmake --preset $PRESET          — Configure (debug)"
+echo "  cmake --build build/$PRESET     — Build"
+echo "  ctest --preset $PRESET          — Run tests"
+echo "  ./build/$PRESET/motionlab-engine  — Run engine"
 echo ""

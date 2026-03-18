@@ -1,5 +1,9 @@
 # Epic 2 — Parallel Agent Prompts
 
+> **Status:** Complete
+> **Completed:** Pre-Epic-4 commit batch
+> **Deviations:** None. Binary protobuf transport operational. CI validates codegen freshness and breaking changes.
+
 Three prompts designed to run as parallel Plan agents. Each covers an independent workstream with fully specified contract interfaces between them.
 
 ## Locked-In Decisions (ADR-0004 pending)

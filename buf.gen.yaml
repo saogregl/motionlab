@@ -11,4 +11,3 @@ plugins:
   # C++ — using vcpkg's protoc to match the installed protobuf runtime
   - protoc_builtin: cpp
     out: native/engine/src/generated
-    protoc_path: native/engine/build/vcpkg_installed/x64-windows/tools/protobuf/protoc.exe

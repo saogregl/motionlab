@@ -42,6 +42,9 @@ apps/desktop/dist-react/
 npm-debug.log*
 pnpm-debug.log*
 
+# CMake user presets (machine-specific compiler overrides)
+CMakeUserPresets.json
+
 # Playwright
 /test-results/
 /playwright-report/

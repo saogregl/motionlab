@@ -69,7 +69,8 @@
       "Bash(timeout 5 C:/Dev/motionlab/native/engine/build/msvc-dev/motionlab-engine.exe --port 9999 --session-token test123)",
       "Bash(cmake --build build/msvc-dev --config Debug)",
       "Bash(cmd //c \"C:\\\\\\\\Dev\\\\\\\\motionlab\\\\\\\\native\\\\\\\\engine\\\\\\\\scripts\\\\\\\\build-msvc.bat\" 2>&1)",
-      "Bash(timeout 3 C:/Dev/motionlab/native/engine/build/msvc-dev/motionlab-engine.exe --port 9999 --session-token test123)"
+      "Bash(timeout 3 C:/Dev/motionlab/native/engine/build/msvc-dev/motionlab-engine.exe --port 9999 --session-token test123)",
+      "Bash(du -sh /c/Dev/motionlab/packages/* /c/Dev/motionlab/native/engine /c/Dev/motionlab/apps/*)"
     ]
   },
   "enabledPlugins": {

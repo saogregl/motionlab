@@ -1,6 +1,7 @@
 # Epic 8 — Parallel Agent Prompts
 
 > **Status:** Not Started
+> **Deviations:** None. UI primitives for timeline (`timeline-transport.tsx`, `timeline-scrubber.tsx`) exist in the `@motionlab/ui` package as empty shells but no backend or data flow work has begun.
 
 Three prompts for engineering outputs, inspection, and playback UX. Prompt 8.2 can partially overlap with 8.1 (chart component with mock data). 8.3 depends on both.
 

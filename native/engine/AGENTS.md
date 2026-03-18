@@ -31,8 +31,10 @@
 
 ## Required Checks
 
-- `cmake --preset dev` (requires `VCPKG_ROOT` env var pointing to vcpkg installation)
-- `cmake --build build/dev`
-- `ctest --preset dev -C Debug` (MSVC multi-config generator requires `-C Debug`)
+- `cmake --preset dev-mingw` (MinGW on Windows, requires `VCPKG_ROOT` env var)
+- `cmake --preset dev-linux` (Linux GCC, requires `VCPKG_ROOT` env var)
+- `cmake --preset msvc-dev` (MSVC, requires VS Developer Prompt + `VCPKG_ROOT`)
+- `cmake --build build/<preset>`
+- `ctest --preset <preset> -C Debug` (MSVC multi-config generator requires `-C Debug`)
 
 Update `docs/architecture/runtime-topology.md`, `docs/architecture/results-architecture.md`, and ADRs for architecture-sensitive native changes.

@@ -1,8 +1,10 @@
 # Epic 1 — Parallel Agent Prompts
 
-> **Status:** All three prompts complete.
+> **Status:** Complete
+> **Completed:** Pre-Epic-4 commit batch
+> **Deviations:** None. All three prompts delivered as specified.
 >
-> **Library decision:** Prompt 1 chose `ixwebsocket` (server + client, BSD-3-Clause, via vcpkg) over `websocketpp` (removed from vcpkg) and `uWebSockets` (no client API for tests). `nlohmann-json` for JSON.
+> **Library decision:** Prompt 1 chose `ixwebsocket` (server + client, BSD-3-Clause, via vcpkg) over `websocketpp` (removed from vcpkg) and `uWebSockets` (no client API for tests). `nlohmann-json` for JSON (later replaced by protobuf in Epic 2).
 
 Three prompts designed to run as parallel Plan agents. Each covers an independent workstream with fully specified contract interfaces between them.
 

@@ -10,6 +10,25 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # ──────────────────────────────────────────────
+# Compiler warning helpers
+# ──────────────────────────────────────────────
+
+function(motionlab_target_warnings target)
+  if(MSVC)
+    target_compile_options(${target} PRIVATE /W4 /wd4267 /wd4244 /wd4996)
+  else()
+    target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Wno-unused-parameter)
+  endif()
+endfunction()
+
+function(motionlab_add_test name source)
+  add_executable(${name} ${source})
+  target_link_libraries(${name} PRIVATE motionlab-engine-lib)
+  motionlab_target_warnings(${name})
+  add_test(NAME ${name} COMMAND ${name})
+endfunction()
+
+# ──────────────────────────────────────────────
 # Dependencies via vcpkg
 # ──────────────────────────────────────────────
 
@@ -89,19 +108,9 @@ FetchContent_GetProperties(chrono)
 if(NOT chrono_POPULATED)
   FetchContent_Populate(chrono)
 
-  # Patch FindEigen3.cmake for Eigen 5.x compatibility.
-  # Eigen 5 moved version macros from Eigen/src/Core/util/Macros.h to
-  # Eigen/Version. Chrono 9.0.1's FindEigen3 only reads Macros.h, so the
-  # version parses as ".." and fails. This patch adds a fallback read of
-  # Eigen/Version when the macros are not found in Macros.h.
-  # See: https://github.com/projectchrono/chrono/issues/619
-  file(READ "${chrono_SOURCE_DIR}/cmake/FindEigen3.cmake" _find_eigen3)
-  string(REPLACE
-    "set(EIGEN3_VERSION \${EIGEN3_WORLD_VERSION}.\${EIGEN3_MAJOR_VERSION}.\${EIGEN3_MINOR_VERSION})"
-    "if(NOT EIGEN3_WORLD_VERSION)\n    # Eigen 5.x moved version macros to Eigen/Version\n    if(EXISTS \"\${EIGEN3_INCLUDE_DIR}/Eigen/Version\")\n      file(READ \"\${EIGEN3_INCLUDE_DIR}/Eigen/Version\" _eigen3_version_header)\n      string(REGEX MATCH \"define[ \\\\t]+EIGEN_WORLD_VERSION[ \\\\t]+([0-9]+)\" _eigen3_world_version_match \"\${_eigen3_version_header}\")\n      set(EIGEN3_WORLD_VERSION \"\${CMAKE_MATCH_1}\")\n      string(REGEX MATCH \"define[ \\\\t]+EIGEN_MAJOR_VERSION[ \\\\t]+([0-9]+)\" _eigen3_major_version_match \"\${_eigen3_version_header}\")\n      set(EIGEN3_MAJOR_VERSION \"\${CMAKE_MATCH_1}\")\n      string(REGEX MATCH \"define[ \\\\t]+EIGEN_MINOR_VERSION[ \\\\t]+([0-9]+)\" _eigen3_minor_version_match \"\${_eigen3_version_header}\")\n      set(EIGEN3_MINOR_VERSION \"\${CMAKE_MATCH_1}\")\n    endif()\n  endif()\n  set(EIGEN3_VERSION \${EIGEN3_WORLD_VERSION}.\${EIGEN3_MAJOR_VERSION}.\${EIGEN3_MINOR_VERSION})"
-    _find_eigen3 "${_find_eigen3}"
-  )
-  file(WRITE "${chrono_SOURCE_DIR}/cmake/FindEigen3.cmake" "${_find_eigen3}")
+  # Patch FindEigen3.cmake for Eigen 5.x compatibility (idempotent copy).
+  file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/patches/FindEigen3.cmake"
+       DESTINATION "${chrono_SOURCE_DIR}/cmake")
 
   # Chrono's CPack config references CMAKE_SOURCE_DIR for LICENSE/README
   # which points to our project root, not Chrono's. Provide stubs.
@@ -153,10 +162,7 @@ if(WIN32)
   target_link_libraries(motionlab-engine-lib PUBLIC bcrypt)
 endif()
 
-# Suppress warnings in MSVC
-if(MSVC)
-  target_compile_options(motionlab-engine-lib PRIVATE /W4 /wd4267 /wd4244 /wd4996)
-endif()
+motionlab_target_warnings(motionlab-engine-lib)
 
 # ──────────────────────────────────────────────
 # Engine executable
@@ -175,38 +181,8 @@ target_link_libraries(motionlab-engine PRIVATE
 option(BUILD_TESTS "Build engine tests" ON)
 if(BUILD_TESTS)
   enable_testing()
-  add_executable(motionlab-engine-tests
-    tests/test_main.cpp
-  )
-  target_link_libraries(motionlab-engine-tests PRIVATE
-    motionlab-engine-lib
-  )
-  if(MSVC)
-    target_compile_options(motionlab-engine-tests PRIVATE /W4 /wd4267 /wd4244 /wd4996)
-  endif()
-  add_test(NAME engine-tests COMMAND motionlab-engine-tests)
-
-  # MechanismState unit tests (no server needed)
-  add_executable(motionlab-mechanism-tests tests/test_mechanism_state.cpp)
-  target_link_libraries(motionlab-mechanism-tests PRIVATE motionlab-engine-lib)
-  if(MSVC)
-    target_compile_options(motionlab-mechanism-tests PRIVATE /W4 /wd4267 /wd4244 /wd4996)
-  endif()
-  add_test(NAME mechanism-state-tests COMMAND motionlab-mechanism-tests)
-
-  # CAD import tests (separate exe — isolates OCCT from transport tests)
-  add_executable(motionlab-cad-tests tests/test_cad_import.cpp)
-  target_link_libraries(motionlab-cad-tests PRIVATE motionlab-engine-lib)
-  if(MSVC)
-    target_compile_options(motionlab-cad-tests PRIVATE /W4 /wd4267 /wd4244 /wd4996)
-  endif()
-  add_test(NAME cad-import-tests COMMAND motionlab-cad-tests)
-
-  # Simulation tests (Chrono integration — isolated from transport/CAD)
-  add_executable(motionlab-sim-tests tests/test_simulation.cpp)
-  target_link_libraries(motionlab-sim-tests PRIVATE motionlab-engine-lib)
-  if(MSVC)
-    target_compile_options(motionlab-sim-tests PRIVATE /W4 /wd4267 /wd4244 /wd4996)
-  endif()
-  add_test(NAME simulation-tests COMMAND motionlab-sim-tests)
+  motionlab_add_test(motionlab-engine-tests    tests/test_main.cpp)
+  motionlab_add_test(motionlab-mechanism-tests  tests/test_mechanism_state.cpp)
+  motionlab_add_test(motionlab-cad-tests        tests/test_cad_import.cpp)
+  motionlab_add_test(motionlab-sim-tests        tests/test_simulation.cpp)
 endif()
