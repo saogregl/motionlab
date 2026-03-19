@@ -16,6 +16,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { sendDeleteDatum, sendRenameDatum } from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
+import { useSimulationStore } from '../stores/simulation.js';
 
 // ── Sentinel IDs for group / structural nodes ──
 
@@ -47,6 +48,8 @@ export function ProjectTree() {
   const joints = useMechanismStore((s) => s.joints);
   const selectedIds = useSelectionStore((s) => s.selectedIds);
   const setSelection = useSelectionStore((s) => s.setSelection);
+  const simState = useSimulationStore((s) => s.state);
+  const isSimulating = simState === 'running' || simState === 'paused';
 
   const [expandedIds, setExpandedIds] = useState<Set<string>>(
     () => new Set([ROOT_ID, BODIES_GROUP_ID, JOINTS_GROUP_ID]),
@@ -145,6 +148,7 @@ export function ProjectTree() {
   // ── Delete handler ──
 
   const handleDelete = useCallback((ids: Set<string>) => {
+    if (isSimulating) return;
     const { datums: dm, joints: jm } = useMechanismStore.getState();
     for (const id of ids) {
       if (dm.has(id)) {
@@ -152,7 +156,7 @@ export function ProjectTree() {
       }
       // Joint deletion will be wired when Epic 6.1 adds sendDeleteJoint
     }
-  }, []);
+  }, [isSimulating]);
 
   // ── Rename commit ──
 
@@ -229,11 +233,11 @@ export function ProjectTree() {
       if (nodeType === 'body') {
         return (
           <BodyContextMenu
-            onRename={() => setEditingId(node.id)}
-            onDelete={() => {
+            onRename={isSimulating ? () => {} : () => setEditingId(node.id)}
+            onDelete={isSimulating ? () => {} : () => {
               // Body deletion not yet supported
             }}
-            onCreateDatum={() => {
+            onCreateDatum={isSimulating ? () => {} : () => {
               // Switch to create-datum mode: could be wired later
             }}
           >
@@ -245,8 +249,8 @@ export function ProjectTree() {
       if (nodeType === 'datum') {
         return (
           <DatumContextMenu
-            onRename={() => setEditingId(node.id)}
-            onDelete={() => sendDeleteDatum(node.id)}
+            onRename={isSimulating ? () => {} : () => setEditingId(node.id)}
+            onDelete={isSimulating ? () => {} : () => sendDeleteDatum(node.id)}
           >
             {row}
           </DatumContextMenu>
@@ -256,8 +260,8 @@ export function ProjectTree() {
       if (nodeType === 'joint') {
         return (
           <JointContextMenu
-            onRename={() => setEditingId(node.id)}
-            onDelete={() => {
+            onRename={isSimulating ? () => {} : () => setEditingId(node.id)}
+            onDelete={isSimulating ? () => {} : () => {
               // Joint deletion wired when Epic 6.1 adds sendDeleteJoint
             }}
           >
@@ -268,7 +272,7 @@ export function ProjectTree() {
 
       return row;
     },
-    [editingId],
+    [editingId, isSimulating],
   );
 
   // ── Empty state ──
@@ -291,7 +295,7 @@ export function ProjectTree() {
       onExpandedChange={setExpandedIds}
       renderRow={renderRow}
       multiSelect
-      onDelete={handleDelete}
+      onDelete={isSimulating ? undefined : handleDelete}
     />
   );
 }

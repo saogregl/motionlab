@@ -37,6 +37,22 @@ The following are part of the long-term design but explicitly deferred past MVP:
 - Explicit frame indexing for large sensor outputs
 - Persistent run storage across sessions (MVP keeps runs in memory; persistence is Epic 9)
 
+## Scrub Flow (Epic 8)
+
+Scrubbing allows the user to navigate to arbitrary simulation times:
+
+1. **TimelineScrubber** fires `onSeek` on mousemove during drag.
+2. **TimelinePanel** throttles these to ≤30/s and auto-pauses a running simulation before sending `sendScrub(time)`.
+3. The engine processes the scrub command and emits a `SimulationState` event with the target time.
+4. The frontend updates `simTime` in the simulation store.
+5. **ChartPanel** draws a dashed vertical scrub marker at `simTime` via a uPlot `draw` hook plugin. The marker redraws on `simTime` changes even when no new trace data arrives.
+
+## Trace Store & Chart Pipeline (Epic 8)
+
+- **TraceStore** (`stores/traces.ts`) — Zustand store holding channel metadata and per-channel `StoreSample[]` arrays. Bounded by `MAX_TRACE_SECONDS` (60s rolling window).
+- **ChartPanel** — Creates a uPlot instance per active-channel set. An imperative data pump subscribes to trace store changes outside React, batched by `requestAnimationFrame`. Selection-linked channel activation maps body/joint selection to their output channels.
+- **Body Pose Cache** (`stores/body-poses.ts`) — Module-level `Map<string, BodyPose>` updated imperatively from the `simulationFrame` handler. Not a Zustand store to avoid triggering React re-renders on the hot path. Used by `BodyInspector` for live pose readout.
+
 ## Storage Direction
 
 - bounded live buffers for current sessions

@@ -1,6 +1,7 @@
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import { app, BrowserWindow, dialog, ipcMain } from 'electron';
-import { EngineSupervisor } from './engine-supervisor';
+import { type EngineEndpoint, EngineSupervisor } from './engine-supervisor';
 
 // TypeScript declarations for Forge Vite plugin globals
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string | undefined;
@@ -21,6 +22,12 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 
 const supervisor = new EngineSupervisor();
 let quitting = false;
+
+function broadcastToRenderers(channel: string, data: unknown): void {
+  for (const win of BrowserWindow.getAllWindows()) {
+    win.webContents.send(channel, data);
+  }
+}
 
 function createWindow(): BrowserWindow {
   const win = new BrowserWindow({
@@ -52,11 +59,38 @@ function createWindow(): BrowserWindow {
   return win;
 }
 
-app.whenReady().then(() => {
-  const engineReady = supervisor.start().catch((err) => {
-    console.error('[MAIN]', err.message ?? err);
-    return null;
+async function showEngineErrorDialog(message: string): Promise<'retry' | 'quit'> {
+  const result = await dialog.showMessageBox({
+    type: 'error',
+    title: 'Engine Error',
+    message: 'MotionLab Engine Failed',
+    detail: message,
+    buttons: ['Retry', 'Quit'],
+    defaultId: 0,
+    cancelId: 1,
   });
+  return result.response === 0 ? 'retry' : 'quit';
+}
+
+async function startEngineWithRetry(): Promise<EngineEndpoint | null> {
+  try {
+    return await supervisor.start();
+  } catch (err) {
+    const errMsg = err instanceof Error ? err.message : String(err);
+    console.error('[MAIN]', errMsg);
+
+    const choice = await showEngineErrorDialog(
+      `The simulation engine failed to start.\n\n${errMsg}`,
+    );
+    if (choice === 'retry') {
+      return startEngineWithRetry();
+    }
+    return null;
+  }
+}
+
+app.whenReady().then(() => {
+  let engineReady: Promise<EngineEndpoint | null> = startEngineWithRetry();
 
   ipcMain.handle('get-engine-endpoint', () => engineReady);
 
@@ -93,10 +127,71 @@ app.whenReady().then(() => {
     },
   );
 
+  // Project file persistence (Epic 6.4)
+  ipcMain.handle(
+    'save-project-file',
+    async (_event, data: Uint8Array, defaultName?: string) => {
+      const win = BrowserWindow.getFocusedWindow();
+      if (!win) return { saved: false };
+      const result = await dialog.showSaveDialog(win, {
+        defaultPath: defaultName ? `${defaultName}.motionlab` : 'Untitled.motionlab',
+        filters: [
+          { name: 'MotionLab Project', extensions: ['motionlab'] },
+        ],
+      });
+      if (result.canceled || !result.filePath) return { saved: false };
+      await fs.writeFile(result.filePath, Buffer.from(data));
+      return { saved: true, filePath: result.filePath };
+    },
+  );
+
+  ipcMain.handle('open-project-file', async () => {
+    const win = BrowserWindow.getFocusedWindow();
+    if (!win) return null;
+    const result = await dialog.showOpenDialog(win, {
+      properties: ['openFile'],
+      filters: [
+        { name: 'MotionLab Project', extensions: ['motionlab'] },
+        { name: 'All Files', extensions: ['*'] },
+      ],
+    });
+    if (result.canceled || !result.filePaths[0]) return null;
+    const filePath = result.filePaths[0];
+    const buffer = await fs.readFile(filePath);
+    return { data: new Uint8Array(buffer), filePath };
+  });
+
+  // Broadcast crash/restart status to all renderer windows
   supervisor.onCrash((info) => {
-    for (const win of BrowserWindow.getAllWindows()) {
-      win.webContents.send('engine-status-changed', info);
+    broadcastToRenderers('engine-status-changed', info);
+
+    // On fatal (max restarts exhausted), show error dialog
+    if (info.status === 'fatal') {
+      dialog
+        .showMessageBox({
+          type: 'error',
+          title: 'Engine Error',
+          message: 'MotionLab Engine Has Stopped',
+          detail:
+            'The simulation engine crashed repeatedly and could not be restarted. The application will now quit.',
+          buttons: ['Quit'],
+          defaultId: 0,
+        })
+        .then(() => {
+          app.quit();
+        });
     }
+  });
+
+  // On successful auto-restart, update cached endpoint and notify renderers
+  supervisor.onRestart((endpoint) => {
+    engineReady = Promise.resolve(endpoint);
+    broadcastToRenderers('engine-status-changed', {
+      status: 'restarted',
+      host: endpoint.host,
+      port: endpoint.port,
+      sessionToken: endpoint.sessionToken,
+    });
   });
 
   createWindow();
@@ -112,6 +207,13 @@ app.on('before-quit', async (e) => {
   if (quitting) return;
   quitting = true;
   e.preventDefault();
+
+  // Notify renderers so they can close WebSocket connections
+  broadcastToRenderers('engine-status-changed', { status: 'shutting_down' });
+
+  // Give renderers time to close connections
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
   await supervisor.shutdown();
   app.quit();
 });

@@ -22,6 +22,9 @@ public:
     // Build a Mechanism proto from current state
     motionlab::mechanism::Mechanism build_mechanism_proto() const;
 
+    // Load state from a Mechanism proto (preserving original IDs)
+    void load_from_proto(const motionlab::mechanism::Mechanism& mech);
+
     // Datum CRUD
     struct DatumEntry {
         std::string id, name, parent_body_id;

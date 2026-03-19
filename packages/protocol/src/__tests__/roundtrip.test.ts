@@ -31,13 +31,20 @@ import {
   DeleteDatumResultSchema,
   DeleteJointCommandSchema,
   DeleteJointResultSchema,
+  EngineStatusSchema,
+  EngineStatus_State,
+  EngineStatus_StateSchema,
   EventSchema,
   FaceSurfaceClass,
+  HandshakeAckSchema,
   HandshakeSchema,
   ImportAssetCommandSchema,
   ImportAssetResultSchema,
   ImportOptionsSchema,
   JointStateDataSchema,
+  MechanismSnapshotSchema,
+  PingSchema,
+  PongSchema,
   ProtocolVersionSchema,
   RenameDatumCommandSchema,
   RenameDatumResultSchema,
@@ -48,12 +55,22 @@ import {
   SimulationControlCommandSchema,
   SimulationFrameSchema,
   SimulationStateEventSchema,
+  SaveProjectCommandSchema,
+  LoadProjectCommandSchema,
+  SaveProjectResultSchema,
+  LoadProjectResultSchema,
+  LoadProjectSuccessSchema,
   SimulationTraceSchema,
   SimStateEnum,
   TimeSampleSchema,
   UpdateJointCommandSchema,
   UpdateJointResultSchema,
 } from '../generated/protocol/transport_pb.js';
+import {
+  BodyDisplayDataSchema,
+  ProjectFileSchema,
+  ProjectMetadataSchema,
+} from '../generated/mechanism/mechanism_pb.js';
 
 describe('Mechanism binary round-trip', () => {
   it('should survive serialize/deserialize for a complete mechanism', () => {
@@ -1093,5 +1110,421 @@ describe('Output channels round-trip', () => {
     expect(restored.name).toBe('Prismatic1 Velocity');
     expect(restored.unit).toBe('m/s');
     expect(restored.dataType).toBe(ChannelDataType.SCALAR);
+  });
+});
+
+describe('Protocol coverage: Ping, Pong, HandshakeAck, EngineStatus, MechanismSnapshot', () => {
+  it('should round-trip Ping command in Command envelope', () => {
+    const cmd = create(CommandSchema, {
+      sequenceId: 300n,
+      payload: {
+        case: 'ping',
+        value: create(PingSchema, { timestamp: 1711000000000n }),
+      },
+    });
+
+    const bytes = toBinary(CommandSchema, cmd);
+    const restored = fromBinary(CommandSchema, bytes);
+
+    expect(restored.sequenceId).toBe(300n);
+    expect(restored.payload.case).toBe('ping');
+    if (restored.payload.case === 'ping') {
+      expect(restored.payload.value.timestamp).toBe(1711000000000n);
+    }
+  });
+
+  it('should round-trip Pong event in Event envelope', () => {
+    const event = create(EventSchema, {
+      sequenceId: 301n,
+      payload: {
+        case: 'pong',
+        value: create(PongSchema, { timestamp: 1711000000001n }),
+      },
+    });
+
+    const bytes = toBinary(EventSchema, event);
+    const restored = fromBinary(EventSchema, bytes);
+
+    expect(restored.sequenceId).toBe(301n);
+    expect(restored.payload.case).toBe('pong');
+    if (restored.payload.case === 'pong') {
+      expect(restored.payload.value.timestamp).toBe(1711000000001n);
+    }
+  });
+
+  it('should round-trip HandshakeAck (compatible=true)', () => {
+    const event = create(EventSchema, {
+      sequenceId: 302n,
+      payload: {
+        case: 'handshakeAck',
+        value: create(HandshakeAckSchema, {
+          compatible: true,
+          engineProtocol: create(ProtocolVersionSchema, {
+            name: 'motionlab',
+            version: 1,
+          }),
+          engineVersion: '0.1.0-alpha',
+        }),
+      },
+    });
+
+    const bytes = toBinary(EventSchema, event);
+    const restored = fromBinary(EventSchema, bytes);
+
+    expect(restored.payload.case).toBe('handshakeAck');
+    if (restored.payload.case === 'handshakeAck') {
+      expect(restored.payload.value.compatible).toBe(true);
+      expect(restored.payload.value.engineProtocol?.name).toBe('motionlab');
+      expect(restored.payload.value.engineProtocol?.version).toBe(1);
+      expect(restored.payload.value.engineVersion).toBe('0.1.0-alpha');
+    }
+  });
+
+  it('should round-trip HandshakeAck (compatible=false)', () => {
+    const event = create(EventSchema, {
+      sequenceId: 303n,
+      payload: {
+        case: 'handshakeAck',
+        value: create(HandshakeAckSchema, {
+          compatible: false,
+          engineVersion: '0.2.0',
+        }),
+      },
+    });
+
+    const bytes = toBinary(EventSchema, event);
+    const restored = fromBinary(EventSchema, bytes);
+
+    expect(restored.payload.case).toBe('handshakeAck');
+    if (restored.payload.case === 'handshakeAck') {
+      expect(restored.payload.value.compatible).toBe(false);
+      expect(restored.payload.value.engineVersion).toBe('0.2.0');
+    }
+  });
+
+  it('should round-trip EngineStatus event (READY)', () => {
+    const event = create(EventSchema, {
+      sequenceId: 304n,
+      payload: {
+        case: 'engineStatus',
+        value: create(EngineStatusSchema, {
+          state: EngineStatus_State.READY,
+          message: 'Engine initialized',
+        }),
+      },
+    });
+
+    const bytes = toBinary(EventSchema, event);
+    const restored = fromBinary(EventSchema, bytes);
+
+    expect(restored.payload.case).toBe('engineStatus');
+    if (restored.payload.case === 'engineStatus') {
+      expect(restored.payload.value.state).toBe(EngineStatus_State.READY);
+      expect(restored.payload.value.message).toBe('Engine initialized');
+    }
+  });
+
+  it('should round-trip EngineStatus all enum values', () => {
+    const allStates = [
+      EngineStatus_State.UNSPECIFIED,
+      EngineStatus_State.INITIALIZING,
+      EngineStatus_State.READY,
+      EngineStatus_State.BUSY,
+      EngineStatus_State.ERROR,
+      EngineStatus_State.SHUTTING_DOWN,
+    ];
+
+    for (const state of allStates) {
+      const msg = create(EngineStatusSchema, { state, message: `state=${state}` });
+      const bytes = toBinary(EngineStatusSchema, msg);
+      const restored = fromBinary(EngineStatusSchema, bytes);
+      expect(restored.state).toBe(state);
+    }
+  });
+
+  it('should round-trip MechanismSnapshot with populated mechanism', () => {
+    const event = create(EventSchema, {
+      sequenceId: 305n,
+      payload: {
+        case: 'mechanismSnapshot',
+        value: create(MechanismSnapshotSchema, {
+          mechanism: create(MechanismSchema, {
+            id: create(ElementIdSchema, { id: 'mech-001' }),
+            name: 'Snapshot Test',
+            bodies: [
+              create(BodySchema, {
+                id: create(ElementIdSchema, { id: 'body-001' }),
+                name: 'Ground',
+              }),
+            ],
+            datums: [
+              create(DatumSchema, {
+                id: create(ElementIdSchema, { id: 'datum-001' }),
+                name: 'Origin',
+                parentBodyId: create(ElementIdSchema, { id: 'body-001' }),
+              }),
+            ],
+            joints: [
+              create(JointSchema, {
+                id: create(ElementIdSchema, { id: 'joint-001' }),
+                name: 'Rev1',
+                type: JointType.REVOLUTE,
+                parentDatumId: create(ElementIdSchema, { id: 'datum-001' }),
+                childDatumId: create(ElementIdSchema, { id: 'datum-002' }),
+              }),
+            ],
+          }),
+        }),
+      },
+    });
+
+    const bytes = toBinary(EventSchema, event);
+    const restored = fromBinary(EventSchema, bytes);
+
+    expect(restored.payload.case).toBe('mechanismSnapshot');
+    if (restored.payload.case === 'mechanismSnapshot') {
+      const mech = restored.payload.value.mechanism!;
+      expect(mech.id?.id).toBe('mech-001');
+      expect(mech.name).toBe('Snapshot Test');
+      expect(mech.bodies).toHaveLength(1);
+      expect(mech.datums).toHaveLength(1);
+      expect(mech.joints).toHaveLength(1);
+      expect(mech.joints[0].type).toBe(JointType.REVOLUTE);
+    }
+  });
+
+  it('should round-trip MechanismSnapshot with empty mechanism', () => {
+    const snapshot = create(MechanismSnapshotSchema, {
+      mechanism: create(MechanismSchema, {}),
+    });
+
+    const bytes = toBinary(MechanismSnapshotSchema, snapshot);
+    const restored = fromBinary(MechanismSnapshotSchema, bytes);
+
+    expect(restored.mechanism).toBeDefined();
+    expect(restored.mechanism!.bodies).toHaveLength(0);
+    expect(restored.mechanism!.datums).toHaveLength(0);
+    expect(restored.mechanism!.joints).toHaveLength(0);
+  });
+});
+
+describe('Project save/load round-trip (Epic 6.4)', () => {
+  it('should round-trip SaveProjectCommand in Command envelope', () => {
+    const cmd = create(CommandSchema, {
+      sequenceId: 400n,
+      payload: {
+        case: 'saveProject',
+        value: create(SaveProjectCommandSchema, {
+          projectName: 'My Project',
+        }),
+      },
+    });
+
+    const bytes = toBinary(CommandSchema, cmd);
+    const restored = fromBinary(CommandSchema, bytes);
+
+    expect(restored.sequenceId).toBe(400n);
+    expect(restored.payload.case).toBe('saveProject');
+    if (restored.payload.case === 'saveProject') {
+      expect(restored.payload.value.projectName).toBe('My Project');
+    }
+  });
+
+  it('should round-trip LoadProjectCommand with binary data', () => {
+    const projectData = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]);
+    const cmd = create(CommandSchema, {
+      sequenceId: 401n,
+      payload: {
+        case: 'loadProject',
+        value: create(LoadProjectCommandSchema, { projectData }),
+      },
+    });
+
+    const bytes = toBinary(CommandSchema, cmd);
+    const restored = fromBinary(CommandSchema, bytes);
+
+    expect(restored.sequenceId).toBe(401n);
+    expect(restored.payload.case).toBe('loadProject');
+    if (restored.payload.case === 'loadProject') {
+      expect(new Uint8Array(restored.payload.value.projectData)).toEqual(projectData);
+    }
+  });
+
+  it('should round-trip SaveProjectResult with project_data (success)', () => {
+    const projectBytes = new Uint8Array([10, 20, 30, 40]);
+    const event = create(EventSchema, {
+      sequenceId: 402n,
+      payload: {
+        case: 'saveProjectResult',
+        value: create(SaveProjectResultSchema, {
+          result: { case: 'projectData', value: projectBytes },
+        }),
+      },
+    });
+
+    const bytes = toBinary(EventSchema, event);
+    const restored = fromBinary(EventSchema, bytes);
+
+    expect(restored.payload.case).toBe('saveProjectResult');
+    if (restored.payload.case === 'saveProjectResult') {
+      expect(restored.payload.value.result.case).toBe('projectData');
+      if (restored.payload.value.result.case === 'projectData') {
+        expect(new Uint8Array(restored.payload.value.result.value)).toEqual(projectBytes);
+      }
+    }
+  });
+
+  it('should round-trip SaveProjectResult with error_message (failure)', () => {
+    const event = create(EventSchema, {
+      sequenceId: 403n,
+      payload: {
+        case: 'saveProjectResult',
+        value: create(SaveProjectResultSchema, {
+          result: { case: 'errorMessage', value: 'Serialization failed' },
+        }),
+      },
+    });
+
+    const bytes = toBinary(EventSchema, event);
+    const restored = fromBinary(EventSchema, bytes);
+
+    expect(restored.payload.case).toBe('saveProjectResult');
+    if (restored.payload.case === 'saveProjectResult') {
+      expect(restored.payload.value.result.case).toBe('errorMessage');
+      if (restored.payload.value.result.case === 'errorMessage') {
+        expect(restored.payload.value.result.value).toBe('Serialization failed');
+      }
+    }
+  });
+
+  it('should round-trip LoadProjectResult with success', () => {
+    const event = create(EventSchema, {
+      sequenceId: 404n,
+      payload: {
+        case: 'loadProjectResult',
+        value: create(LoadProjectResultSchema, {
+          result: {
+            case: 'success',
+            value: create(LoadProjectSuccessSchema, {
+              mechanism: create(MechanismSchema, {
+                id: create(ElementIdSchema, { id: 'mech-loaded' }),
+                name: 'Loaded Mechanism',
+                bodies: [
+                  create(BodySchema, {
+                    id: create(ElementIdSchema, { id: 'body-loaded' }),
+                    name: 'LoadedBody',
+                  }),
+                ],
+              }),
+              bodies: [
+                create(BodyImportResultSchema, {
+                  bodyId: 'body-loaded',
+                  name: 'LoadedBody',
+                  displayMesh: create(DisplayMeshSchema, {
+                    vertices: [1.0, 2.0, 3.0],
+                    indices: [0],
+                    normals: [0.0, 1.0, 0.0],
+                  }),
+                }),
+              ],
+              metadata: create(ProjectMetadataSchema, {
+                name: 'Test Project',
+                createdAt: '2026-03-19T00:00:00Z',
+                modifiedAt: '2026-03-19T00:00:00Z',
+              }),
+            }),
+          },
+        }),
+      },
+    });
+
+    const bytes = toBinary(EventSchema, event);
+    const restored = fromBinary(EventSchema, bytes);
+
+    expect(restored.payload.case).toBe('loadProjectResult');
+    if (restored.payload.case === 'loadProjectResult') {
+      expect(restored.payload.value.result.case).toBe('success');
+      if (restored.payload.value.result.case === 'success') {
+        const success = restored.payload.value.result.value;
+        expect(success.mechanism?.name).toBe('Loaded Mechanism');
+        expect(success.mechanism?.bodies).toHaveLength(1);
+        expect(success.bodies).toHaveLength(1);
+        expect(success.bodies[0].bodyId).toBe('body-loaded');
+        expect(success.bodies[0].displayMesh?.vertices).toEqual([1.0, 2.0, 3.0]);
+        expect(success.metadata?.name).toBe('Test Project');
+      }
+    }
+  });
+
+  it('should round-trip LoadProjectResult with error', () => {
+    const event = create(EventSchema, {
+      sequenceId: 405n,
+      payload: {
+        case: 'loadProjectResult',
+        value: create(LoadProjectResultSchema, {
+          result: { case: 'errorMessage', value: 'Invalid project version' },
+        }),
+      },
+    });
+
+    const bytes = toBinary(EventSchema, event);
+    const restored = fromBinary(EventSchema, bytes);
+
+    expect(restored.payload.case).toBe('loadProjectResult');
+    if (restored.payload.case === 'loadProjectResult') {
+      expect(restored.payload.value.result.case).toBe('errorMessage');
+      if (restored.payload.value.result.case === 'errorMessage') {
+        expect(restored.payload.value.result.value).toBe('Invalid project version');
+      }
+    }
+  });
+
+  it('should round-trip ProjectFile message', () => {
+    const pf = create(ProjectFileSchema, {
+      version: 1,
+      metadata: create(ProjectMetadataSchema, {
+        name: 'Round-trip Test',
+        createdAt: '2026-03-19T12:00:00Z',
+        modifiedAt: '2026-03-19T12:00:00Z',
+      }),
+      mechanism: create(MechanismSchema, {
+        id: create(ElementIdSchema, { id: 'mech-rt' }),
+        name: 'RT Mechanism',
+        bodies: [
+          create(BodySchema, {
+            id: create(ElementIdSchema, { id: 'b1' }),
+            name: 'Body1',
+            pose: create(PoseSchema, {
+              position: create(Vec3Schema, { x: 1, y: 2, z: 3 }),
+              orientation: create(QuatSchema, { w: 1, x: 0, y: 0, z: 0 }),
+            }),
+          }),
+        ],
+      }),
+      bodyDisplayData: [
+        create(BodyDisplayDataSchema, {
+          bodyId: 'b1',
+          displayMesh: create(DisplayMeshSchema, {
+            vertices: [0, 0, 0, 1, 0, 0, 0, 1, 0],
+            indices: [0, 1, 2],
+            normals: [0, 0, 1, 0, 0, 1, 0, 0, 1],
+          }),
+          partIndex: [0, 1],
+        }),
+      ],
+    });
+
+    const bytes = toBinary(ProjectFileSchema, pf);
+    const restored = fromBinary(ProjectFileSchema, bytes);
+
+    expect(restored.version).toBe(1);
+    expect(restored.metadata?.name).toBe('Round-trip Test');
+    expect(restored.mechanism?.bodies).toHaveLength(1);
+    expect(restored.bodyDisplayData).toHaveLength(1);
+    expect(restored.bodyDisplayData[0].bodyId).toBe('b1');
+    expect(Array.from(restored.bodyDisplayData[0].displayMesh?.vertices ?? [])).toEqual(
+      [0, 0, 0, 1, 0, 0, 0, 1, 0],
+    );
+    expect(restored.bodyDisplayData[0].partIndex).toEqual([0, 1]);
   });
 });

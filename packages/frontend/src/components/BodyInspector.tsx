@@ -1,7 +1,9 @@
 import { InspectorPanel, InspectorSection, PropertyRow } from '@motionlab/ui';
 import { Box } from 'lucide-react';
+import { getBodyPose } from '../stores/body-poses.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
+import { useSimulationStore } from '../stores/simulation.js';
 
 function fmt(value: number): string {
   return value.toFixed(6);
@@ -10,9 +12,14 @@ function fmt(value: number): string {
 export function BodyInspector() {
   const selectedIds = useSelectionStore((s) => s.selectedIds);
   const bodies = useMechanismStore((s) => s.bodies);
+  const simState = useSimulationStore((s) => s.state);
+  // Subscribe to simTime as a refresh trigger for live pose readout
+  useSimulationStore((s) => s.simTime);
 
   const firstId = selectedIds.values().next().value as string | undefined;
   const body = firstId ? bodies.get(firstId) : undefined;
+  const isSimulating = simState === 'running' || simState === 'paused';
+  const livePose = firstId && isSimulating ? getBodyPose(firstId) : undefined;
 
   if (!body) {
     return <InspectorPanel />;
@@ -75,6 +82,32 @@ export function BodyInspector() {
           <span>{fmt(mp.iyz)}</span>
         </PropertyRow>
       </InspectorSection>
+
+      {livePose && (
+        <InspectorSection title="Current Pose">
+          <PropertyRow label="Pos X" unit="m" numeric>
+            <span>{fmt(livePose.position.x)}</span>
+          </PropertyRow>
+          <PropertyRow label="Pos Y" unit="m" numeric>
+            <span>{fmt(livePose.position.y)}</span>
+          </PropertyRow>
+          <PropertyRow label="Pos Z" unit="m" numeric>
+            <span>{fmt(livePose.position.z)}</span>
+          </PropertyRow>
+          <PropertyRow label="Rot X" numeric>
+            <span>{fmt(livePose.rotation.x)}</span>
+          </PropertyRow>
+          <PropertyRow label="Rot Y" numeric>
+            <span>{fmt(livePose.rotation.y)}</span>
+          </PropertyRow>
+          <PropertyRow label="Rot Z" numeric>
+            <span>{fmt(livePose.rotation.z)}</span>
+          </PropertyRow>
+          <PropertyRow label="Rot W" numeric>
+            <span>{fmt(livePose.rotation.w)}</span>
+          </PropertyRow>
+        </InspectorSection>
+      )}
     </InspectorPanel>
   );
 }

@@ -71,12 +71,27 @@ function AppShell({
           )}
         />
 
-        {/* Center column: viewport + bottom dock */}
+        {/* Center column: viewport + resizable bottom dock */}
         <Panel id="center" className="overflow-hidden">
-          <div className="flex h-full flex-col">
-            <div className="relative flex-1 overflow-hidden">{viewport}</div>
-            {bottomDock}
-          </div>
+          <PanelGroup orientation="vertical">
+            <Panel id="viewport" defaultSize={70} minSize={30}>
+              <div className="relative h-full overflow-hidden">{viewport}</div>
+            </Panel>
+            {bottomDock && (
+              <>
+                <PanelResizeHandle
+                  className={cn(
+                    'h-1 shrink-0 bg-transparent transition-colors duration-[var(--duration-fast)]',
+                    'hover:bg-accent-primary/30',
+                    'data-[resize-handle-state=drag]:bg-accent-primary',
+                  )}
+                />
+                <Panel id="bottom" defaultSize={30} minSize={10} maxSize={60} collapsible>
+                  {bottomDock}
+                </Panel>
+              </>
+            )}
+          </PanelGroup>
         </Panel>
 
         <PanelResizeHandle

@@ -40,7 +40,13 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
       - name: Workspace tests
+        id: js-tests
         run: pnpm turbo run test
+      - name: Test results summary
+        if: always()
+        run: |
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "- **JS workspace tests:** ${{ steps.js-tests.outcome }}" >> $GITHUB_STEP_SUMMARY
 
   native-smoke:
     runs-on: ubuntu-latest
@@ -67,5 +73,11 @@ jobs:
         working-directory: native/engine
         run: cmake --build build/dev-linux
       - name: Run native tests
+        id: native-tests
         working-directory: native/engine
         run: ctest --preset dev-linux
+      - name: Test results summary
+        if: always()
+        run: |
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "- **Native CTest:** ${{ steps.native-tests.outcome }}" >> $GITHUB_STEP_SUMMARY

@@ -13,9 +13,11 @@ import {
   HandshakeSchema,
   ImportAssetCommandSchema,
   ImportOptionsSchema,
+  LoadProjectCommandSchema,
   PingSchema,
   ProtocolVersionSchema,
   RenameDatumCommandSchema,
+  SaveProjectCommandSchema,
   ScrubCommandSchema,
   SimulationControlCommandSchema,
   UpdateJointCommandSchema,
@@ -358,6 +360,34 @@ export function createScrubCommand(time: number, sequenceId?: bigint): Uint8Arra
     payload: {
       case: 'scrub',
       value: create(ScrubCommandSchema, { time }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a SaveProject payload.
+ */
+export function createSaveProjectCommand(projectName: string, sequenceId?: bigint): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'saveProject',
+      value: create(SaveProjectCommandSchema, { projectName }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a LoadProject payload.
+ */
+export function createLoadProjectCommand(projectData: Uint8Array, sequenceId?: bigint): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'loadProject',
+      value: create(LoadProjectCommandSchema, { projectData }),
     },
   });
   return toBinary(CommandSchema, cmd);

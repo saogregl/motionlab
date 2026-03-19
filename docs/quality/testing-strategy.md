@@ -1,6 +1,6 @@
 # Testing Strategy
 
-> **Status: Not yet implemented.** No test runner or test files exist yet. All workspace `test` scripts are placeholders that print a message and exit successfully. This document describes the intended strategy.
+> **Status: In progress.** Test files exist across protocol, frontend, and viewport packages (9 test files using Vitest). Coverage focuses on integration seams per the pre-MVP process. This document describes the intended full coverage strategy.
 
 MotionLab needs seam-focused testing rather than one generic framework.
 

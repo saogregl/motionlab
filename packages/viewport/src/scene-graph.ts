@@ -582,6 +582,22 @@ export class SceneGraphManager {
   // Cleanup
   // -----------------------------------------------------------------------
 
+  clear(): void {
+    this.deps.selectionVisuals.clearAll();
+    this.clearAllFaceHighlights();
+
+    for (const entity of this.entities.values()) {
+      for (const mesh of entity.meshes) {
+        mesh.dispose();
+      }
+      entity.rootNode.dispose();
+    }
+    this.entities.clear();
+    this.bodyGeometryIndices.clear();
+    this.currentSelectedIds = new Set();
+    this.highlightedFaceBodyId = null;
+  }
+
   dispose(): void {
     this._scene.onBeforeRenderObservable.remove(this._datumScaleObserver);
     this.deps.selectionVisuals.clearAll();

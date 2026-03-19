@@ -87,7 +87,7 @@ function BottomDock({
       {/* Content area with height transition */}
       <div
         className="overflow-hidden transition-[height] duration-[var(--duration-slow)] ease-[var(--easing-default)]"
-        style={{ height: expanded ? 'var(--bottom-dock-h)' : '0px' }}
+        style={{ height: expanded ? '100%' : '0px' }}
       >
         <div className="h-full overflow-auto">{children}</div>
       </div>

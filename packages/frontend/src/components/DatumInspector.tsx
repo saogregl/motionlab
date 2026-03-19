@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 
 import { sendRenameDatum } from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
+import { useSimulationStore } from '../stores/simulation.js';
 
 function fmt(value: number): string {
   return value.toFixed(6);
@@ -15,14 +16,17 @@ export function DatumInspector({ datumId }: { datumId: string }) {
     (s) => (datum ? s.bodies.get(datum.parentBodyId) : undefined),
   );
 
+  const simState = useSimulationStore((s) => s.state);
+  const isSimulating = simState === 'running' || simState === 'paused';
+
   const [editingName, setEditingName] = useState(false);
   const [nameValue, setNameValue] = useState('');
 
   const startEditName = useCallback(() => {
-    if (!datum) return;
+    if (!datum || isSimulating) return;
     setNameValue(datum.name);
     setEditingName(true);
-  }, [datum]);
+  }, [datum, isSimulating]);
 
   const commitName = useCallback(() => {
     const trimmed = nameValue.trim();

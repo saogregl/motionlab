@@ -212,6 +212,66 @@ void MechanismState::clear() {
     joints_.clear();
 }
 
+void MechanismState::load_from_proto(const mechanism::Mechanism& mech) {
+    clear();
+
+    for (const auto& body : mech.bodies()) {
+        double pos[3] = {
+            body.pose().position().x(),
+            body.pose().position().y(),
+            body.pose().position().z()
+        };
+        double orient[4] = {
+            body.pose().orientation().w(),
+            body.pose().orientation().x(),
+            body.pose().orientation().y(),
+            body.pose().orientation().z()
+        };
+        double com[3] = {
+            body.mass_properties().center_of_mass().x(),
+            body.mass_properties().center_of_mass().y(),
+            body.mass_properties().center_of_mass().z()
+        };
+        double inertia[6] = {
+            body.mass_properties().ixx(),
+            body.mass_properties().iyy(),
+            body.mass_properties().izz(),
+            body.mass_properties().ixy(),
+            body.mass_properties().ixz(),
+            body.mass_properties().iyz()
+        };
+        add_body(body.id().id(), body.name(), pos, orient,
+                 body.mass_properties().mass(), com, inertia);
+    }
+
+    for (const auto& datum : mech.datums()) {
+        DatumEntry entry;
+        entry.id = datum.id().id();
+        entry.name = datum.name();
+        entry.parent_body_id = datum.parent_body_id().id();
+        entry.position[0] = datum.local_pose().position().x();
+        entry.position[1] = datum.local_pose().position().y();
+        entry.position[2] = datum.local_pose().position().z();
+        entry.orientation[0] = datum.local_pose().orientation().w();
+        entry.orientation[1] = datum.local_pose().orientation().x();
+        entry.orientation[2] = datum.local_pose().orientation().y();
+        entry.orientation[3] = datum.local_pose().orientation().z();
+        datums_[entry.id] = entry;
+    }
+
+    for (const auto& joint : mech.joints()) {
+        JointEntry entry;
+        entry.id = joint.id().id();
+        entry.name = joint.name();
+        entry.type = static_cast<int>(joint.type());
+        entry.parent_datum_id = joint.parent_datum_id().id();
+        entry.child_datum_id = joint.child_datum_id().id();
+        entry.lower_limit = joint.lower_limit();
+        entry.upper_limit = joint.upper_limit();
+        joints_[entry.id] = entry;
+    }
+}
+
 mechanism::Mechanism MechanismState::build_mechanism_proto() const {
     mechanism::Mechanism mech;
     mech.mutable_id()->set_id("sim-mechanism");

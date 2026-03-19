@@ -55,6 +55,8 @@ export interface MechanismState {
   joints: Map<string, JointState>;
   importing: boolean;
   importError: string | null;
+  projectName: string;
+  projectFilePath: string | null;
   addBodies: (bodies: BodyState[]) => void;
   removeBody: (id: string) => void;
   addDatum: (datum: DatumState) => void;
@@ -66,6 +68,7 @@ export interface MechanismState {
   clear: () => void;
   setImporting: (v: boolean) => void;
   setImportError: (e: string | null) => void;
+  setProjectMeta: (name: string, filePath: string | null) => void;
 }
 
 export const useMechanismStore = create<MechanismState>()((set) => ({
@@ -74,6 +77,8 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
   joints: new Map<string, JointState>(),
   importing: false,
   importError: null,
+  projectName: 'Untitled',
+  projectFilePath: null,
 
   addBodies: (bodies) =>
     set((state) => {
@@ -148,4 +153,6 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
   setImporting: (v) => set({ importing: v }),
 
   setImportError: (e) => set({ importError: e }),
+
+  setProjectMeta: (name, filePath) => set({ projectName: name, projectFilePath: filePath }),
 }));

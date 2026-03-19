@@ -3,8 +3,10 @@ import { InspectorPanel } from '@motionlab/ui';
 import { BodyInspector } from './BodyInspector.js';
 import { DatumInspector } from './DatumInspector.js';
 import { JointInspector } from './JointInspector.js';
+import { SimulationMetadataSection } from './SimulationMetadataSection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
+import { useSimulationStore } from '../stores/simulation.js';
 
 /**
  * Routes the right-panel inspector to the correct component
@@ -15,13 +17,47 @@ export function EntityInspector() {
   const bodies = useMechanismStore((s) => s.bodies);
   const datums = useMechanismStore((s) => s.datums);
   const joints = useMechanismStore((s) => s.joints);
+  const simState = useSimulationStore((s) => s.state);
 
+  const showSimMeta = simState !== 'idle';
   const firstId = selectedIds.values().next().value as string | undefined;
-  if (!firstId) return <InspectorPanel />;
 
-  if (bodies.has(firstId)) return <BodyInspector />;
-  if (datums.has(firstId)) return <DatumInspector datumId={firstId} />;
-  if (joints.has(firstId)) return <JointInspector jointId={firstId} />;
+  if (!firstId) {
+    return (
+      <InspectorPanel>
+        {showSimMeta && <SimulationMetadataSection />}
+      </InspectorPanel>
+    );
+  }
 
-  return <InspectorPanel />;
+  if (bodies.has(firstId)) {
+    return (
+      <>
+        <BodyInspector />
+        {showSimMeta && <SimulationMetadataSection />}
+      </>
+    );
+  }
+  if (datums.has(firstId)) {
+    return (
+      <>
+        <DatumInspector datumId={firstId} />
+        {showSimMeta && <SimulationMetadataSection />}
+      </>
+    );
+  }
+  if (joints.has(firstId)) {
+    return (
+      <>
+        <JointInspector jointId={firstId} />
+        {showSimMeta && <SimulationMetadataSection />}
+      </>
+    );
+  }
+
+  return (
+    <InspectorPanel>
+      {showSimMeta && <SimulationMetadataSection />}
+    </InspectorPanel>
+  );
 }

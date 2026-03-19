@@ -9,6 +9,7 @@
 | [ADR-0005](ADR-0005-joint-crud-contract.md) | Joint CRUD Contract | Accepted | Joints follow Command→Result oneof pattern (ADR-0004); reference datums, engine validates referential integrity, proto3 optional for partial updates. |
 | [ADR-0007](ADR-0007-face-level-datum-creation.md) | Face-Level Datum Creation Contract | Accepted | Face-aware datum creation is engine-authoritative; the wire carries `part_index`, while native B-Rep retention stays behind the boundary and create-datum mode no longer falls back to point+normal picks. |
 | [ADR-0008](ADR-0008-output-channel-naming-and-typing.md) | Output Channel Naming, Typing, and Trace Streaming | Accepted | Channel IDs use `entity/id/measurement` convention; descriptors sent in CompilationResult; traces streamed round-robin; ring buffer enables scrub within 60s window. |
+| [ADR-0009](ADR-0009-project-save-load-contract.md) | Project Save/Load Contract | Accepted | Engine-authoritative serialization via SaveProject/LoadProject Command→Result; ProjectFile is self-contained binary protobuf with version field; display meshes embedded for offline rendering. |
 
 ## Adding a New ADR
 

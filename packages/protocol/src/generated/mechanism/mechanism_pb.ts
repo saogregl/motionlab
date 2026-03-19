@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file mechanism/mechanism.proto.
  */
 export const file_mechanism_mechanism: GenFile = /*@__PURE__*/
-  fileDesc("ChltZWNoYW5pc20vbWVjaGFuaXNtLnByb3RvEhNtb3Rpb25sYWIubWVjaGFuaXNtIhcKCUVsZW1lbnRJZBIKCgJpZBgBIAEoCSJICg9Qcm9qZWN0TWV0YWRhdGESDAoEbmFtZRgBIAEoCRISCgpjcmVhdGVkX2F0GAIgASgJEhMKC21vZGlmaWVkX2F0GAMgASgJIlgKDkFzc2V0UmVmZXJlbmNlEhQKDGNvbnRlbnRfaGFzaBgBIAEoCRIVCg1yZWxhdGl2ZV9wYXRoGAIgASgJEhkKEW9yaWdpbmFsX2ZpbGVuYW1lGAMgASgJIicKBFZlYzMSCQoBeBgBIAEoARIJCgF5GAIgASgBEgkKAXoYAyABKAEiMgoEUXVhdBIJCgF3GAEgASgBEgkKAXgYAiABKAESCQoBeRgDIAEoARIJCgF6GAQgASgBImMKBFBvc2USKwoIcG9zaXRpb24YASABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSLgoLb3JpZW50YXRpb24YAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlF1YXQinwEKDk1hc3NQcm9wZXJ0aWVzEgwKBG1hc3MYASABKAESMQoOY2VudGVyX29mX21hc3MYAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSCwoDaXh4GAMgASgBEgsKA2l5eRgEIAEoARILCgNpenoYBSABKAESCwoDaXh5GAYgASgBEgsKA2l4ehgHIAEoARILCgNpeXoYCCABKAEiQQoLRGlzcGxheU1lc2gSEAoIdmVydGljZXMYASADKAISDwoHaW5kaWNlcxgCIAMoDRIPCgdub3JtYWxzGAMgAygCIsEBCgRCb2R5EioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRInCgRwb3NlGAMgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5Qb3NlEjwKD21hc3NfcHJvcGVydGllcxgEIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uTWFzc1Byb3BlcnRpZXMSGAoQc291cmNlX2Fzc2V0X3JlZhgFIAEoCSKoAQoFRGF0dW0SKgoCaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIMCgRuYW1lGAIgASgJEjYKDnBhcmVudF9ib2R5X2lkGAMgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSLQoKbG9jYWxfcG9zZRgEIAEoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uUG9zZSKKAgoFSm9pbnQSKgoCaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIMCgRuYW1lGAIgASgJEiwKBHR5cGUYAyABKA4yHi5tb3Rpb25sYWIubWVjaGFuaXNtLkpvaW50VHlwZRI3Cg9wYXJlbnRfZGF0dW1faWQYBCABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBI2Cg5jaGlsZF9kYXR1bV9pZBgFIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEhMKC2xvd2VyX2xpbWl0GAYgASgBEhMKC3VwcGVyX2xpbWl0GAcgASgBIsgBCglNZWNoYW5pc20SKgoCaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIMCgRuYW1lGAIgASgJEikKBmJvZGllcxgDIAMoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uQm9keRIqCgZkYXR1bXMYBCADKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLkRhdHVtEioKBmpvaW50cxgFIAMoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uSm9pbnQqcAoJSm9pbnRUeXBlEhoKFkpPSU5UX1RZUEVfVU5TUEVDSUZJRUQQABIXChNKT0lOVF9UWVBFX1JFVk9MVVRFEAESGAoUSk9JTlRfVFlQRV9QUklTTUFUSUMQAhIUChBKT0lOVF9UWVBFX0ZJWEVEEANiBnByb3RvMw");
+  fileDesc("ChltZWNoYW5pc20vbWVjaGFuaXNtLnByb3RvEhNtb3Rpb25sYWIubWVjaGFuaXNtIhcKCUVsZW1lbnRJZBIKCgJpZBgBIAEoCSJICg9Qcm9qZWN0TWV0YWRhdGESDAoEbmFtZRgBIAEoCRISCgpjcmVhdGVkX2F0GAIgASgJEhMKC21vZGlmaWVkX2F0GAMgASgJIlgKDkFzc2V0UmVmZXJlbmNlEhQKDGNvbnRlbnRfaGFzaBgBIAEoCRIVCg1yZWxhdGl2ZV9wYXRoGAIgASgJEhkKEW9yaWdpbmFsX2ZpbGVuYW1lGAMgASgJIicKBFZlYzMSCQoBeBgBIAEoARIJCgF5GAIgASgBEgkKAXoYAyABKAEiMgoEUXVhdBIJCgF3GAEgASgBEgkKAXgYAiABKAESCQoBeRgDIAEoARIJCgF6GAQgASgBImMKBFBvc2USKwoIcG9zaXRpb24YASABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSLgoLb3JpZW50YXRpb24YAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlF1YXQinwEKDk1hc3NQcm9wZXJ0aWVzEgwKBG1hc3MYASABKAESMQoOY2VudGVyX29mX21hc3MYAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSCwoDaXh4GAMgASgBEgsKA2l5eRgEIAEoARILCgNpenoYBSABKAESCwoDaXh5GAYgASgBEgsKA2l4ehgHIAEoARILCgNpeXoYCCABKAEiQQoLRGlzcGxheU1lc2gSEAoIdmVydGljZXMYASADKAISDwoHaW5kaWNlcxgCIAMoDRIPCgdub3JtYWxzGAMgAygCIsEBCgRCb2R5EioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRInCgRwb3NlGAMgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5Qb3NlEjwKD21hc3NfcHJvcGVydGllcxgEIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uTWFzc1Byb3BlcnRpZXMSGAoQc291cmNlX2Fzc2V0X3JlZhgFIAEoCSKoAQoFRGF0dW0SKgoCaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIMCgRuYW1lGAIgASgJEjYKDnBhcmVudF9ib2R5X2lkGAMgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSLQoKbG9jYWxfcG9zZRgEIAEoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uUG9zZSKKAgoFSm9pbnQSKgoCaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIMCgRuYW1lGAIgASgJEiwKBHR5cGUYAyABKA4yHi5tb3Rpb25sYWIubWVjaGFuaXNtLkpvaW50VHlwZRI3Cg9wYXJlbnRfZGF0dW1faWQYBCABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBI2Cg5jaGlsZF9kYXR1bV9pZBgFIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEhMKC2xvd2VyX2xpbWl0GAYgASgBEhMKC3VwcGVyX2xpbWl0GAcgASgBIsgBCglNZWNoYW5pc20SKgoCaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIMCgRuYW1lGAIgASgJEikKBmJvZGllcxgDIAMoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uQm9keRIqCgZkYXR1bXMYBCADKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLkRhdHVtEioKBmpvaW50cxgFIAMoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uSm9pbnQibgoPQm9keURpc3BsYXlEYXRhEg8KB2JvZHlfaWQYASABKAkSNgoMZGlzcGxheV9tZXNoGAIgASgLMiAubW90aW9ubGFiLm1lY2hhbmlzbS5EaXNwbGF5TWVzaBISCgpwYXJ0X2luZGV4GAMgAygNIsoBCgtQcm9qZWN0RmlsZRIPCgd2ZXJzaW9uGAEgASgNEjYKCG1ldGFkYXRhGAIgASgLMiQubW90aW9ubGFiLm1lY2hhbmlzbS5Qcm9qZWN0TWV0YWRhdGESMQoJbWVjaGFuaXNtGAMgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5NZWNoYW5pc20SPwoRYm9keV9kaXNwbGF5X2RhdGEYBCADKAsyJC5tb3Rpb25sYWIubWVjaGFuaXNtLkJvZHlEaXNwbGF5RGF0YSpwCglKb2ludFR5cGUSGgoWSk9JTlRfVFlQRV9VTlNQRUNJRklFRBAAEhcKE0pPSU5UX1RZUEVfUkVWT0xVVEUQARIYChRKT0lOVF9UWVBFX1BSSVNNQVRJQxACEhQKEEpPSU5UX1RZUEVfRklYRUQQA2IGcHJvdG8z");
 
 /**
  * Unique identifier for any mechanism element
@@ -442,6 +442,69 @@ export type Mechanism = Message<"motionlab.mechanism.Mechanism"> & {
  */
 export const MechanismSchema: GenMessage<Mechanism> = /*@__PURE__*/
   messageDesc(file_mechanism_mechanism, 11);
+
+/**
+ * Display data for a body, stored in project files for self-contained persistence
+ *
+ * @generated from message motionlab.mechanism.BodyDisplayData
+ */
+export type BodyDisplayData = Message<"motionlab.mechanism.BodyDisplayData"> & {
+  /**
+   * @generated from field: string body_id = 1;
+   */
+  bodyId: string;
+
+  /**
+   * @generated from field: motionlab.mechanism.DisplayMesh display_mesh = 2;
+   */
+  displayMesh?: DisplayMesh;
+
+  /**
+   * @generated from field: repeated uint32 part_index = 3;
+   */
+  partIndex: number[];
+};
+
+/**
+ * Describes the message motionlab.mechanism.BodyDisplayData.
+ * Use `create(BodyDisplayDataSchema)` to create a new message.
+ */
+export const BodyDisplayDataSchema: GenMessage<BodyDisplayData> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 12);
+
+/**
+ * Self-contained project file (binary protobuf with version field)
+ *
+ * @generated from message motionlab.mechanism.ProjectFile
+ */
+export type ProjectFile = Message<"motionlab.mechanism.ProjectFile"> & {
+  /**
+   * @generated from field: uint32 version = 1;
+   */
+  version: number;
+
+  /**
+   * @generated from field: motionlab.mechanism.ProjectMetadata metadata = 2;
+   */
+  metadata?: ProjectMetadata;
+
+  /**
+   * @generated from field: motionlab.mechanism.Mechanism mechanism = 3;
+   */
+  mechanism?: Mechanism;
+
+  /**
+   * @generated from field: repeated motionlab.mechanism.BodyDisplayData body_display_data = 4;
+   */
+  bodyDisplayData: BodyDisplayData[];
+};
+
+/**
+ * Describes the message motionlab.mechanism.ProjectFile.
+ * Use `create(ProjectFileSchema)` to create a new message.
+ */
+export const ProjectFileSchema: GenMessage<ProjectFile> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 13);
 
 /**
  * Joint types supported in MVP

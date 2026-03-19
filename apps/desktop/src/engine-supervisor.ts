@@ -12,14 +12,20 @@ export interface EngineEndpoint {
 }
 
 type CrashCallback = (info: { status: string; code: number | null; signal: string | null }) => void;
+type RestartCallback = (endpoint: EngineEndpoint) => void;
 
 const READY_TIMEOUT_MS = 10_000;
 const SHUTDOWN_TIMEOUT_MS = 5_000;
+const MAX_RESTARTS = 3;
 
 export class EngineSupervisor {
   private child: ChildProcess | null = null;
   private shuttingDown = false;
   private crashListeners: CrashCallback[] = [];
+  private restartListeners: RestartCallback[] = [];
+  private restartCount = 0;
+  private endpointResolve: ((ep: EngineEndpoint) => void) | null = null;
+  private endpointReject: ((err: Error) => void) | null = null;
 
   resolveEnginePath(): { command: string; args: string[] } {
     if (app.isPackaged) {
@@ -85,6 +91,11 @@ export class EngineSupervisor {
   }
 
   async start(): Promise<EngineEndpoint> {
+    this.restartCount = 0;
+    return this.spawnEngine();
+  }
+
+  private async spawnEngine(): Promise<EngineEndpoint> {
     console.log('[SUPERVISOR] Resolving engine path...');
     const { command, args: baseArgs } = this.resolveEnginePath();
 
@@ -107,8 +118,11 @@ export class EngineSupervisor {
     });
 
     return new Promise<EngineEndpoint>((resolve, reject) => {
+      // Store resolve/reject so auto-restart can update the cached endpoint
+      this.endpointResolve = resolve;
+      this.endpointReject = reject;
+
       let settled = false;
-      let stdoutBuf = '';
 
       const timeout = setTimeout(() => {
         if (!settled) {
@@ -119,9 +133,9 @@ export class EngineSupervisor {
       }, READY_TIMEOUT_MS);
 
       child.stdout?.on('data', (data: Buffer) => {
-        stdoutBuf += data.toString();
-        const lines = stdoutBuf.split('\n');
-        stdoutBuf = lines.pop() ?? '';
+        if (settled) return;
+        const text = data.toString();
+        const lines = text.split('\n');
 
         for (const line of lines) {
           const trimmed = line.trim();
@@ -131,7 +145,8 @@ export class EngineSupervisor {
             clearTimeout(timeout);
             console.log('[SUPERVISOR] Engine ready');
             this.setupCrashHandler(child);
-            resolve({ host: '127.0.0.1', port, sessionToken });
+            const endpoint = { host: '127.0.0.1', port, sessionToken };
+            resolve(endpoint);
           }
         }
       });
@@ -162,12 +177,62 @@ export class EngineSupervisor {
       this.child = null;
 
       if (!this.shuttingDown) {
-        const info = { status: 'crashed', code, signal };
-        for (const cb of this.crashListeners) {
-          try {
-            cb(info);
-          } catch (e) {
-            console.error('[SUPERVISOR] Crash listener error:', e);
+        if (this.restartCount < MAX_RESTARTS) {
+          this.restartCount++;
+          const delay = 1000 * Math.pow(2, this.restartCount - 1);
+          console.log(
+            `[SUPERVISOR] Auto-restarting engine (attempt ${this.restartCount}/${MAX_RESTARTS}) in ${delay}ms...`,
+          );
+
+          // Notify listeners about restart attempt
+          const restartingInfo = {
+            status: 'restarting',
+            code,
+            signal,
+            attempt: this.restartCount,
+            maxAttempts: MAX_RESTARTS,
+          };
+          for (const cb of this.crashListeners) {
+            try {
+              cb(restartingInfo);
+            } catch (e) {
+              console.error('[SUPERVISOR] Crash listener error:', e);
+            }
+          }
+
+          setTimeout(() => {
+            this.spawnEngine()
+              .then((endpoint) => {
+                console.log('[SUPERVISOR] Engine restarted successfully');
+                for (const cb of this.restartListeners) {
+                  try {
+                    cb(endpoint);
+                  } catch (e) {
+                    console.error('[SUPERVISOR] Restart listener error:', e);
+                  }
+                }
+              })
+              .catch((err) => {
+                console.error('[SUPERVISOR] Restart failed:', err.message);
+                // Exhaust remaining attempts or notify fatal
+                const fatalInfo = { status: 'fatal', code, signal };
+                for (const cb of this.crashListeners) {
+                  try {
+                    cb(fatalInfo);
+                  } catch (e) {
+                    console.error('[SUPERVISOR] Crash listener error:', e);
+                  }
+                }
+              });
+          }, delay);
+        } else {
+          const info = { status: 'fatal', code, signal };
+          for (const cb of this.crashListeners) {
+            try {
+              cb(info);
+            } catch (e) {
+              console.error('[SUPERVISOR] Crash listener error:', e);
+            }
           }
         }
       }
@@ -176,6 +241,10 @@ export class EngineSupervisor {
 
   onCrash(callback: CrashCallback): void {
     this.crashListeners.push(callback);
+  }
+
+  onRestart(callback: RestartCallback): void {
+    this.restartListeners.push(callback);
   }
 
   async shutdown(): Promise<void> {

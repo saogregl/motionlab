@@ -118,3 +118,18 @@ message Mechanism {
   repeated Datum datums = 4;
   repeated Joint joints = 5;
 }
+
+// Display data for a body, stored in project files for self-contained persistence
+message BodyDisplayData {
+  string body_id = 1;
+  DisplayMesh display_mesh = 2;
+  repeated uint32 part_index = 3;
+}
+
+// Self-contained project file (binary protobuf with version field)
+message ProjectFile {
+  uint32 version = 1;
+  ProjectMetadata metadata = 2;
+  Mechanism mechanism = 3;
+  repeated BodyDisplayData body_display_data = 4;
+}

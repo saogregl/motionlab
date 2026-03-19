@@ -1,21 +1,21 @@
-# Next Steps — MotionLab Development Roadmap
+d# Next Steps — MotionLab Development Roadmap
 
 > **As of:** 2026-03-18
 > **Last audit commit:** `782d9dc` ("Epic 4+: datum/joint CRUD, mechanism state, viewport visuals, protocol expansion")
 
 ## Progress Summary
 
-| Epic | Title | Status | Remaining |
-|------|-------|--------|-----------|
-| 1 | Engine + Electron + Frontend Client | Complete | — |
-| 2 | Buf Codegen + Binary Protobuf | Complete | — |
-| 3 | OCCT CAD Import + Protocol + Import Flow | Complete | — |
-| 4 | Scene Graph + Picking + Integration | Complete | — |
-| 5 | Datum CRUD + Creation Tool + Visualization | ~90% | Surface picking verification |
-| 6 | Joint Protocol + Visualization + Tree + Save/Load | ~60% | Save/Load (Prompt 4) |
-| 7 | Chrono Simulation Runtime | ~25% | Build validation, protocol, playback |
-| 8 | Output Channels + Charts + Playback UX | Not Started | All prompts |
-| 9 | MVP Hardening + Packaging | Not Started | All prompts |
+| Epic | Title                                             | Status      | Remaining                            |
+| ---- | ------------------------------------------------- | ----------- | ------------------------------------ |
+| 1    | Engine + Electron + Frontend Client               | Complete    | —                                    |
+| 2    | Buf Codegen + Binary Protobuf                     | Complete    | —                                    |
+| 3    | OCCT CAD Import + Protocol + Import Flow          | Complete    | —                                    |
+| 4    | Scene Graph + Picking + Integration               | Complete    | —                                    |
+| 5    | Datum CRUD + Creation Tool + Visualization        | ~90%        | Surface picking verification         |
+| 6    | Joint Protocol + Visualization + Tree + Save/Load | ~60%        | Save/Load (Prompt 4)                 |
+| 7    | Chrono Simulation Runtime                         | ~25%        | Build validation, protocol, playback |
+| 8    | Output Channels + Charts + Playback UX            | Not Started | All prompts                          |
+| 9    | MVP Hardening + Packaging                         | Not Started | All prompts                          |
 
 ## Immediate Priority: Finish the Vertical Slice
 

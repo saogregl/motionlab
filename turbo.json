@@ -11,7 +11,9 @@
     },
     "lint": {},
     "typecheck": {},
-    "test": {},
+    "test": {
+      "inputs": ["src/**", "**/*.test.ts"]
+    },
     "clean": {
       "cache": false
     }

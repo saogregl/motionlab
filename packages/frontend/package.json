@@ -21,6 +21,7 @@
     "@motionlab/ui": "workspace:*",
     "@motionlab/viewport": "workspace:*",
     "lucide-react": "^0.577.0",
+    "uplot": "^1.6.31",
     "zustand": "^5.0.0"
   },
   "peerDependencies": {

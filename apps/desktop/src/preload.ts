@@ -31,6 +31,8 @@ interface MotionLabAPI {
   windowClose(): void;
   windowIsMaximized(): Promise<boolean>;
   onWindowMaximizedChange(callback: (maximized: boolean) => void): void;
+  saveProjectFile(data: Uint8Array, defaultName?: string): Promise<{ saved: boolean; filePath?: string }>;
+  openProjectFile(): Promise<{ data: Uint8Array; filePath: string } | null>;
 }
 
 const api: MotionLabAPI = {
@@ -51,6 +53,9 @@ const api: MotionLabAPI = {
       callback(maximized);
     });
   },
+  saveProjectFile: (data, defaultName) =>
+    ipcRenderer.invoke('save-project-file', data, defaultName),
+  openProjectFile: () => ipcRenderer.invoke('open-project-file'),
 };
 
 contextBridge.exposeInMainWorld('motionlab', api);

@@ -14,8 +14,27 @@ import { useCallback, useState } from 'react';
 
 import { sendUpdateJoint } from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
+import { useSimulationStore } from '../stores/simulation.js';
+import { useTraceStore, type StoreSample } from '../stores/traces.js';
 
 type JointType = 'revolute' | 'prismatic' | 'fixed';
+
+/** Binary search for nearest sample to target time */
+function nearestSample(samples: StoreSample[], time: number): StoreSample | undefined {
+  if (samples.length === 0) return undefined;
+  let lo = 0;
+  let hi = samples.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi) >>> 1;
+    if (samples[mid].time < time) lo = mid + 1;
+    else hi = mid;
+  }
+  // Check adjacent sample for closer match
+  if (lo > 0 && Math.abs(samples[lo - 1].time - time) < Math.abs(samples[lo].time - time)) {
+    return samples[lo - 1];
+  }
+  return samples[lo];
+}
 
 export function JointInspector({ jointId }: { jointId: string }) {
   const joint = useMechanismStore((s) => s.joints.get(jointId));
@@ -26,14 +45,20 @@ export function JointInspector({ jointId }: { jointId: string }) {
     (s) => (joint ? s.datums.get(joint.childDatumId) : undefined),
   );
 
+  const simState = useSimulationStore((s) => s.state);
+  const simTime = useSimulationStore((s) => s.simTime);
+  const traces = useTraceStore((s) => s.traces);
+  const channels = useTraceStore((s) => s.channels);
+  const isSimulating = simState === 'running' || simState === 'paused';
+
   const [editingName, setEditingName] = useState(false);
   const [nameValue, setNameValue] = useState('');
 
   const startEditName = useCallback(() => {
-    if (!joint) return;
+    if (!joint || isSimulating) return;
     setNameValue(joint.name);
     setEditingName(true);
-  }, [joint]);
+  }, [joint, isSimulating]);
 
   const commitName = useCallback(() => {
     const trimmed = nameValue.trim();
@@ -79,7 +104,7 @@ export function JointInspector({ jointId }: { jointId: string }) {
             value={joint.type}
             onValueChange={(v) => sendUpdateJoint(jointId, { type: v as JointType })}
           >
-            <SelectTrigger className="h-5 text-2xs">
+            <SelectTrigger className="h-5 text-2xs" disabled={isSimulating}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -117,6 +142,7 @@ export function JointInspector({ jointId }: { jointId: string }) {
               onChange={(v) => sendUpdateJoint(jointId, { lowerLimit: v })}
               step={joint.type === 'revolute' ? 0.1 : 0.01}
               precision={4}
+              disabled={isSimulating}
             />
           </PropertyRow>
           <PropertyRow label="Upper" numeric>
@@ -125,10 +151,42 @@ export function JointInspector({ jointId }: { jointId: string }) {
               onChange={(v) => sendUpdateJoint(jointId, { upperLimit: v })}
               step={joint.type === 'revolute' ? 0.1 : 0.01}
               precision={4}
+              disabled={isSimulating}
             />
           </PropertyRow>
         </InspectorSection>
       )}
+
+      {isSimulating && (() => {
+        const posId = `joint/${jointId}/position`;
+        const velId = `joint/${jointId}/velocity`;
+        const posSamples = traces.get(posId);
+        const velSamples = traces.get(velId);
+        const posChannel = channels.get(posId);
+        const velChannel = channels.get(velId);
+        const posVal = posSamples ? nearestSample(posSamples, simTime) : undefined;
+        const velVal = velSamples ? nearestSample(velSamples, simTime) : undefined;
+
+        return (
+          <InspectorSection title="Simulation Values">
+            {posVal !== undefined && (
+              <PropertyRow label="Position" unit={posChannel?.unit ?? ''} numeric>
+                <span>{posVal.value.toFixed(4)}</span>
+              </PropertyRow>
+            )}
+            {velVal !== undefined && (
+              <PropertyRow label="Velocity" unit={velChannel?.unit ?? ''} numeric>
+                <span>{velVal.value.toFixed(4)}</span>
+              </PropertyRow>
+            )}
+            {posVal === undefined && velVal === undefined && (
+              <PropertyRow label="Status">
+                <span className="text-2xs text-text-tertiary">Awaiting data...</span>
+              </PropertyRow>
+            )}
+          </InspectorSection>
+        );
+      })()}
     </InspectorPanel>
   );
 }

@@ -117,6 +117,9 @@ struct TransportServer::Impl {
     double scrub_target_time = 0.0;
     ix::WebSocket* active_ws = nullptr;
 
+    // Project persistence (Epic 6.4) — cached import results for save/load
+    std::unordered_map<std::string, protocol::BodyImportResult> body_import_results_;
+
     // Ring buffer + trace streaming (Epic 8.1)
     engine::SimulationRingBuffer ring_buffer;
     uint64_t trace_batch_step = 0;
@@ -232,6 +235,14 @@ struct TransportServer::Impl {
             case protocol::Command::kScrub:
                 if (!authenticated) break;
                 handle_scrub(ws, cmd.sequence_id(), cmd.scrub());
+                break;
+            case protocol::Command::kSaveProject:
+                if (!authenticated) break;
+                handle_save_project(ws, cmd.sequence_id(), cmd.save_project());
+                break;
+            case protocol::Command::kLoadProject:
+                if (!authenticated) break;
+                handle_load_project(ws, cmd.sequence_id(), cmd.load_project());
                 break;
             default:
                 break;
@@ -349,6 +360,7 @@ struct TransportServer::Impl {
                                                          cb_pos, cb_orient,
                                                          cached_body.mass_properties().mass(),
                                                          cb_com, cb_inertia);
+                                body_import_results_[cached_body.body_id()] = cached_body;  // store for save/load
                                 if (topo_body.brep_shape) {
                                     shape_registry.store(cached_body.body_id(), *topo_body.brep_shape);
                                 }
@@ -450,6 +462,8 @@ struct TransportServer::Impl {
                                      body.mass_properties.mass,
                                      body.mass_properties.center_of_mass,
                                      body.mass_properties.inertia);
+
+            body_import_results_[pb->body_id()] = *pb;  // store for save/load
 
             if (body.brep_shape) {
                 shape_registry.store(pb->body_id(), *body.brep_shape);
@@ -682,6 +696,120 @@ struct TransportServer::Impl {
         } else {
             dr->set_error_message("Joint not found: " + joint_id);
         }
+        send_event(ws, event);
+    }
+
+    // ──────────────────────────────────────────────
+    // Project persistence (Epic 6.4)
+    // ──────────────────────────────────────────────
+
+    void handle_save_project(ix::WebSocket& ws, uint64_t sequence_id,
+                              const protocol::SaveProjectCommand& cmd) {
+        stop_sim_thread();
+
+        mechanism::ProjectFile project_file;
+        project_file.set_version(1);
+
+        // Metadata
+        auto* meta = project_file.mutable_metadata();
+        meta->set_name(cmd.project_name());
+        auto now = std::chrono::system_clock::now();
+        auto time_t = std::chrono::system_clock::to_time_t(now);
+        char buf[64];
+        std::strftime(buf, sizeof(buf), "%Y-%m-%dT%H:%M:%SZ", std::gmtime(&time_t));
+        meta->set_created_at(buf);
+        meta->set_modified_at(buf);
+
+        // Mechanism
+        *project_file.mutable_mechanism() = mechanism_state.build_mechanism_proto();
+
+        // Body display data
+        for (const auto& body : project_file.mechanism().bodies()) {
+            auto it = body_import_results_.find(body.id().id());
+            if (it != body_import_results_.end()) {
+                auto* bdd = project_file.add_body_display_data();
+                bdd->set_body_id(body.id().id());
+                *bdd->mutable_display_mesh() = it->second.display_mesh();
+                bdd->mutable_part_index()->CopyFrom(it->second.part_index());
+            }
+        }
+
+        // Serialize
+        std::string serialized;
+        project_file.SerializeToString(&serialized);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_save_project_result();
+        result->set_project_data(serialized);
+        send_event(ws, event);
+    }
+
+    void handle_load_project(ix::WebSocket& ws, uint64_t sequence_id,
+                              const protocol::LoadProjectCommand& cmd) {
+        stop_sim_thread();
+
+        mechanism::ProjectFile project_file;
+        if (!project_file.ParseFromString(cmd.project_data())) {
+            protocol::Event event;
+            event.set_sequence_id(sequence_id);
+            auto* result = event.mutable_load_project_result();
+            result->set_error_message("Failed to parse project file");
+            send_event(ws, event);
+            return;
+        }
+
+        if (project_file.version() == 0 || project_file.version() > 1) {
+            protocol::Event event;
+            event.set_sequence_id(sequence_id);
+            auto* result = event.mutable_load_project_result();
+            result->set_error_message("Unsupported project file version: " +
+                                       std::to_string(project_file.version()));
+            send_event(ws, event);
+            return;
+        }
+
+        // Rebuild mechanism state
+        mechanism_state.clear();
+        mechanism_state.load_from_proto(project_file.mechanism());
+
+        // Build display data lookup
+        std::unordered_map<std::string, const mechanism::BodyDisplayData*> display_lookup;
+        for (const auto& bdd : project_file.body_display_data()) {
+            display_lookup[bdd.body_id()] = &bdd;
+        }
+
+        // Rebuild body_import_results_ and build response bodies
+        body_import_results_.clear();
+        protocol::LoadProjectSuccess success;
+        *success.mutable_mechanism() = project_file.mechanism();
+        *success.mutable_metadata() = project_file.metadata();
+
+        for (const auto& body : project_file.mechanism().bodies()) {
+            auto* bir = success.add_bodies();
+            bir->set_body_id(body.id().id());
+            bir->set_name(body.name());
+            *bir->mutable_mass_properties() = body.mass_properties();
+            *bir->mutable_pose() = body.pose();
+
+            // Source asset ref
+            auto* ref = bir->mutable_source_asset_ref();
+            ref->set_original_filename(body.name());
+
+            auto disp_it = display_lookup.find(body.id().id());
+            if (disp_it != display_lookup.end()) {
+                *bir->mutable_display_mesh() = disp_it->second->display_mesh();
+                bir->mutable_part_index()->CopyFrom(disp_it->second->part_index());
+            }
+
+            // Store for future saves
+            body_import_results_[body.id().id()] = *bir;
+        }
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_load_project_result();
+        *result->mutable_success() = std::move(success);
         send_event(ws, event);
     }
 

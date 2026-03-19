@@ -1,25 +1,42 @@
 import { SimulationAction } from '@motionlab/protocol';
 import { BottomDock, EmptyState, TimelineScrubber, TimelineTransport } from '@motionlab/ui';
 import { Activity, BarChart3 } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
-import { sendSimulationControl } from '../engine/connection.js';
+import { sendScrub, sendSimulationControl, setPlaybackSpeed } from '../engine/connection.js';
 import { useSimulationStore } from '../stores/simulation.js';
+import { useUILayoutStore } from '../stores/ui-layout.js';
+import { ChartPanel } from './ChartPanel.js';
 
 const STEP_SIZE = 1 / 60;
-const DEFAULT_DURATION = 10;
 
 export function TimelinePanel() {
   const simState = useSimulationStore((s) => s.state);
   const simTime = useSimulationStore((s) => s.simTime);
+  const maxSimTime = useSimulationStore((s) => s.maxSimTime);
+  const channelDescriptors = useSimulationStore((s) => s.channelDescriptors);
+  const loopEnabled = useSimulationStore((s) => s.loopEnabled);
 
-  const [activeTab, setActiveTab] = useState('timeline');
-  const [expanded, setExpanded] = useState(true);
-  const [isLooping, setIsLooping] = useState(false);
-  const [speed, setSpeed] = useState(1);
+  const activeTab = useUILayoutStore((s) => s.bottomDockActiveTab);
+  const expanded = useUILayoutStore((s) => s.bottomDockExpanded);
+  const setActiveTab = useUILayoutStore((s) => s.setBottomDockActiveTab);
+  const setExpanded = useUILayoutStore((s) => s.setBottomDockExpanded);
 
   const isPlaying = simState === 'running';
-  const duration = DEFAULT_DURATION;
+  const duration = Math.max(maxSimTime, STEP_SIZE);
+
+  // Throttled scrub: ≤30 commands/s, auto-pause on drag
+  const throttledSeek = useMemo(() => {
+    let lastCall = 0;
+    return (time: number) => {
+      const now = Date.now();
+      if (now - lastCall < 33) return;
+      lastCall = now;
+      const { state } = useSimulationStore.getState();
+      if (state === 'running') sendSimulationControl(SimulationAction.PAUSE);
+      sendScrub(time);
+    };
+  }, []);
 
   const handlePlayPause = useCallback(() => {
     if (simState === 'running') {
@@ -39,8 +56,17 @@ export function TimelinePanel() {
     sendSimulationControl(SimulationAction.RESET);
   }, []);
 
-  const handleSeek = useCallback((_time: number) => {
-    // Seek not yet supported by engine — no-op placeholder
+  // Unthrottled seek for button-triggered navigation
+  const handleSeek = useCallback((time: number) => {
+    sendScrub(time);
+  }, []);
+
+  const handleSpeedChange = useCallback((speed: number) => {
+    setPlaybackSpeed(speed);
+  }, []);
+
+  const handleLoopToggle = useCallback(() => {
+    useSimulationStore.getState().setLoopEnabled(!useSimulationStore.getState().loopEnabled);
   }, []);
 
   const isActive = simState !== 'idle' && simState !== 'compiling';
@@ -61,8 +87,8 @@ export function TimelinePanel() {
         <div className="flex flex-col">
           <TimelineTransport
             isPlaying={isPlaying}
-            isLooping={isLooping}
-            speed={speed}
+            isLooping={loopEnabled}
+            speed={1}
             currentTime={simTime}
             duration={duration}
             onPlayPause={isActive ? handlePlayPause : undefined}
@@ -70,26 +96,28 @@ export function TimelinePanel() {
             onStepBack={isActive ? () => handleSeek(Math.max(0, simTime - STEP_SIZE)) : undefined}
             onSkipForward={isActive ? () => handleSeek(duration) : undefined}
             onSkipBack={isActive ? handleSkipBack : undefined}
-            onLoopToggle={() => setIsLooping((l) => !l)}
-            onSpeedChange={setSpeed}
+            onLoopToggle={handleLoopToggle}
+            onSpeedChange={handleSpeedChange}
           />
           <div className="px-2 pb-2">
             <TimelineScrubber
               currentTime={simTime}
               duration={duration}
-              onSeek={handleSeek}
+              onSeek={throttledSeek}
               tickInterval={1}
             />
           </div>
         </div>
       )}
       {activeTab === 'charts' && (
-        <EmptyState
-          icon={<BarChart3 className="size-10" />}
-          message="No charts configured"
-          hint="Add a sensor output to see charts"
-          className="h-full"
-        />
+        channelDescriptors.length > 0
+          ? <ChartPanel />
+          : <EmptyState
+              icon={<BarChart3 className="size-10" />}
+              message="No charts configured"
+              hint="Compile a mechanism to see output channels"
+              className="h-full"
+            />
       )}
       {activeTab === 'diagnostics' && (
         <EmptyState

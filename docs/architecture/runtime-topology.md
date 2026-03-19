@@ -23,6 +23,17 @@ The viewport uses Babylon.js 7.x, which supports both WebGL2 and WebGPU backends
 
 Validate WebGPU in the Epic 1 spike (Electron 35 + current GPU drivers). Fall back to WebGL2 only if platform-specific issues surface. Either way, avoid WebGL-only API calls in viewport code — use Babylon's backend-agnostic abstractions.
 
+## Frame Streaming Path (Epic 8)
+
+The engine sends `SimulationFrame` events containing body poses at the simulation tick rate. The frontend `connection.ts` handler:
+
+1. Measures FPS (module-level counter, exposed via `getMeasuredFps()`).
+2. Applies frame skipping for sub-1x playback speeds (e.g., 0.5x skips every other frame).
+3. Updates `SceneGraphManager` body transforms (viewport hot path).
+4. Caches body poses in the module-level `body-poses.ts` map for inspector readout.
+
+The body-poses module is intentionally not a Zustand store to avoid React re-renders on every simulation frame. Inspectors read from it imperatively, using `simTime` subscription as a low-frequency refresh trigger.
+
 ## Guardrails
 
 - Do not turn Electron into a simulation data relay.

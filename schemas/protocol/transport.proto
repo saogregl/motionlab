@@ -35,6 +35,8 @@ message Command {
     CompileMechanismCommand compile_mechanism = 30;
     SimulationControlCommand simulation_control = 31;
     ScrubCommand scrub = 32;
+    SaveProjectCommand save_project = 40;
+    LoadProjectCommand load_project = 41;
   }
 }
 
@@ -58,6 +60,8 @@ message Event {
     SimulationStateEvent simulation_state = 31;
     SimulationFrame simulation_frame = 32;
     SimulationTrace simulation_trace = 33;
+    SaveProjectResult save_project_result = 40;
+    LoadProjectResult load_project_result = 41;
   }
 }
 
@@ -330,4 +334,36 @@ message SimulationTrace {
 
 message ScrubCommand {
   double time = 1;
+}
+
+// ──────────────────────────────────────────────
+// Project persistence (Epic 6.4)
+// ──────────────────────────────────────────────
+
+message SaveProjectCommand {
+  string project_name = 1;
+}
+
+message SaveProjectResult {
+  oneof result {
+    bytes project_data = 1;
+    string error_message = 2;
+  }
+}
+
+message LoadProjectCommand {
+  bytes project_data = 1;
+}
+
+message LoadProjectResult {
+  oneof result {
+    LoadProjectSuccess success = 1;
+    string error_message = 2;
+  }
+}
+
+message LoadProjectSuccess {
+  motionlab.mechanism.Mechanism mechanism = 1;
+  repeated BodyImportResult bodies = 2;
+  motionlab.mechanism.ProjectMetadata metadata = 3;
 }
