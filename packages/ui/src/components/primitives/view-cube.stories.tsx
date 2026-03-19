@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { TooltipProvider } from '@/components/ui/tooltip';
+import { TooltipProvider } from '../ui/tooltip';
 
 import { ViewCube } from './view-cube';
 

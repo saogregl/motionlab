@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Box, CircleDot, Crosshair, Link2 } from 'lucide-react';
+import { Box, CircleDot, Link2 } from 'lucide-react';
 import { useState } from 'react';
 import { GroupHeaderRow, TreeRow } from './tree-row';
-import { TreeView, type TreeNode, type TreeRowRenderProps } from './tree-view';
+import { type TreeNode, type TreeRowRenderProps, TreeView } from './tree-view';
 
 const meta = {
   title: 'Primitives/TreeView',

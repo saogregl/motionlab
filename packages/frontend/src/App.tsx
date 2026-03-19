@@ -1,4 +1,5 @@
 import { PROTOCOL_VERSION } from '@motionlab/protocol';
+import type { StatusType } from '@motionlab/ui';
 import {
   AppShell,
   Button,
@@ -12,7 +13,6 @@ import {
   useDensity,
   useTheme,
 } from '@motionlab/ui';
-import type { StatusType } from '@motionlab/ui';
 import { FolderOpen, Import, Save } from 'lucide-react';
 import { useCallback, useEffect } from 'react';
 import { CommandPalette } from './components/CommandPalette.js';

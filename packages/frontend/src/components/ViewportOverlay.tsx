@@ -1,16 +1,11 @@
+import { SimulationAction } from '@motionlab/protocol';
 import { SelectionChip, ViewCube, ViewportHUD } from '@motionlab/ui';
 import type { SceneGraphManager } from '@motionlab/viewport';
 import { Viewport } from '@motionlab/viewport';
 import { Box, Crosshair, Link2 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { SimulationAction } from '@motionlab/protocol';
-
-import {
-  sendDeleteDatum,
-  sendDeleteJoint,
-  sendSimulationControl,
-} from '../engine/connection.js';
+import { sendDeleteDatum, sendDeleteJoint, sendSimulationControl } from '../engine/connection.js';
 import { useViewportBridge } from '../hooks/useViewportBridge.js';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
@@ -25,13 +20,20 @@ import { ViewportToolModeToolbar } from './ViewportToolModeToolbar.js';
 
 function AxisIndicator() {
   return (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <title>Axis indicator</title>
       <line x1="8" y1="36" x2="40" y2="36" stroke="var(--axis-x)" strokeWidth="2" />
-      <text x="42" y="38" fill="var(--axis-x)" fontSize="10" fontWeight="600">X</text>
+      <text x="42" y="38" fill="var(--axis-x)" fontSize="10" fontWeight="600">
+        X
+      </text>
       <line x1="8" y1="36" x2="8" y2="4" stroke="var(--axis-y)" strokeWidth="2" />
-      <text x="4" y="2" fill="var(--axis-y)" fontSize="10" fontWeight="600">Y</text>
+      <text x="4" y="2" fill="var(--axis-y)" fontSize="10" fontWeight="600">
+        Y
+      </text>
       <line x1="8" y1="36" x2="24" y2="20" stroke="var(--axis-z)" strokeWidth="2" />
-      <text x="26" y="18" fill="var(--axis-z)" fontSize="10" fontWeight="600">Z</text>
+      <text x="26" y="18" fill="var(--axis-z)" fontSize="10" fontWeight="600">
+        Z
+      </text>
     </svg>
   );
 }
@@ -262,11 +264,13 @@ export function ViewportOverlay() {
             />
           }
           bottomLeft={
-            activeMode === 'create-joint'
-              ? <JointCreationStatus />
-              : activeMode === 'create-datum'
-                ? <DatumCreationStatus />
-                : <AxisIndicator />
+            activeMode === 'create-joint' ? (
+              <JointCreationStatus />
+            ) : activeMode === 'create-datum' ? (
+              <DatumCreationStatus />
+            ) : (
+              <AxisIndicator />
+            )
           }
           bottomCenter={
             selectedEntity ? (

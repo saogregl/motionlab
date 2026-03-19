@@ -19,9 +19,12 @@ describe('Simulation store', () => {
   it('setCompilationResult(true) transitions to paused', () => {
     useSimulationStore
       .getState()
-      .setCompilationResult(true, undefined, ['2 bodies'], [
-        { channelId: 'ch1', name: 'Ch1', unit: 'rad', dataType: 'scalar' },
-      ]);
+      .setCompilationResult(
+        true,
+        undefined,
+        ['2 bodies'],
+        [{ channelId: 'ch1', name: 'Ch1', unit: 'rad', dataType: 'scalar' }],
+      );
     const s = useSimulationStore.getState();
     expect(s.state).toBe('paused');
     expect(s.errorMessage).toBeNull();
@@ -30,9 +33,7 @@ describe('Simulation store', () => {
   });
 
   it('setCompilationResult(false, msg) transitions to error', () => {
-    useSimulationStore
-      .getState()
-      .setCompilationResult(false, 'No bodies');
+    useSimulationStore.getState().setCompilationResult(false, 'No bodies');
     const s = useSimulationStore.getState();
     expect(s.state).toBe('error');
     expect(s.errorMessage).toBe('No bodies');
@@ -40,9 +41,7 @@ describe('Simulation store', () => {
 
   it('setCompilationResult(false) without message uses default', () => {
     useSimulationStore.getState().setCompilationResult(false);
-    expect(useSimulationStore.getState().errorMessage).toBe(
-      'Compilation failed',
-    );
+    expect(useSimulationStore.getState().errorMessage).toBe('Compilation failed');
   });
 
   it('setSimState updates all three fields', () => {

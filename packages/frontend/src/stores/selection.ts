@@ -47,8 +47,7 @@ export const useSelectionStore = create<SelectionState>()((set) => ({
       return { selectedIds: next, lastSelectedId: id };
     }),
 
-  clearSelection: () =>
-    set({ selectedIds: new Set<string>(), lastSelectedId: null }),
+  clearSelection: () => set({ selectedIds: new Set<string>(), lastSelectedId: null }),
 
   setSelection: (ids) =>
     set({

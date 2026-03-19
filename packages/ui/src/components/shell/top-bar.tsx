@@ -2,7 +2,7 @@ import { ChevronDown, Copy, Minus, Search, Square, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface TopBarProps {
   /** Project name display */
@@ -19,21 +19,29 @@ interface TopBarProps {
  * Only rendered when running inside the Electron desktop shell.
  */
 function WindowControls() {
-  const api = (globalThis as { motionlab?: {
-    windowMinimize(): void;
-    windowMaximize(): void;
-    windowClose(): void;
-    windowIsMaximized(): Promise<boolean>;
-    onWindowMaximizedChange(cb: (maximized: boolean) => void): void;
-  } }).motionlab;
+  const api = (
+    globalThis as {
+      motionlab?: {
+        windowMinimize(): void;
+        windowMaximize(): void;
+        windowClose(): void;
+        windowIsMaximized(): Promise<boolean>;
+        onWindowMaximizedChange(cb: (maximized: boolean) => void): void;
+      };
+    }
+  ).motionlab;
 
   const [maximized, setMaximized] = useState(false);
+
+  const handleMinimize = useCallback(() => api?.windowMinimize(), []);
+  const handleMaximize = useCallback(() => api?.windowMaximize(), []);
+  const handleClose = useCallback(() => api?.windowClose(), []);
 
   useEffect(() => {
     if (!api) return;
     api.windowIsMaximized().then(setMaximized);
     api.onWindowMaximizedChange(setMaximized);
-  }, [api]);
+  }, []);
 
   if (!api) return null;
 
@@ -42,18 +50,13 @@ function WindowControls() {
 
   return (
     <div className="flex h-full ml-2">
-      <button
-        type="button"
-        className={btnBase}
-        onClick={useCallback(() => api.windowMinimize(), [api])}
-        aria-label="Minimize"
-      >
+      <button type="button" className={btnBase} onClick={handleMinimize} aria-label="Minimize">
         <Minus className="size-4" />
       </button>
       <button
         type="button"
         className={btnBase}
-        onClick={useCallback(() => api.windowMaximize(), [api])}
+        onClick={handleMaximize}
         aria-label={maximized ? 'Restore' : 'Maximize'}
       >
         {maximized ? <Copy className="size-3.5" /> : <Square className="size-3.5" />}
@@ -61,7 +64,7 @@ function WindowControls() {
       <button
         type="button"
         className={cn(btnBase, 'hover:bg-[#e81123] hover:text-white')}
-        onClick={useCallback(() => api.windowClose(), [api])}
+        onClick={handleClose}
         aria-label="Close"
       >
         <X className="size-4" />

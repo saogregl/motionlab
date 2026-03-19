@@ -5,10 +5,10 @@ import {
   GroupHeaderRow,
   InlineEditableName,
   JointContextMenu,
-  TreeRow,
-  TreeView,
   type TreeNode,
+  TreeRow,
   type TreeRowRenderProps,
+  TreeView,
 } from '@motionlab/ui';
 import { Box, Crosshair, Link2 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
@@ -85,9 +85,7 @@ export function ProjectTree() {
 
     // Bodies + their datums
     for (const body of bodies.values()) {
-      const bodyDatums = [...datums.values()].filter(
-        (d) => d.parentBodyId === body.id,
-      );
+      const bodyDatums = [...datums.values()].filter((d) => d.parentBodyId === body.id);
       result.push({
         id: body.id,
         parentId: BODIES_GROUP_ID,
@@ -147,30 +145,30 @@ export function ProjectTree() {
 
   // ── Delete handler ──
 
-  const handleDelete = useCallback((ids: Set<string>) => {
-    if (isSimulating) return;
-    const { datums: dm, joints: jm } = useMechanismStore.getState();
-    for (const id of ids) {
-      if (dm.has(id)) {
-        sendDeleteDatum(id);
+  const handleDelete = useCallback(
+    (ids: Set<string>) => {
+      if (isSimulating) return;
+      const { datums: dm } = useMechanismStore.getState();
+      for (const id of ids) {
+        if (dm.has(id)) {
+          sendDeleteDatum(id);
+        }
+        // Joint deletion will be wired when Epic 6.1 adds sendDeleteJoint
       }
-      // Joint deletion will be wired when Epic 6.1 adds sendDeleteJoint
-    }
-  }, [isSimulating]);
+    },
+    [isSimulating],
+  );
 
   // ── Rename commit ──
 
-  const handleRenameCommit = useCallback(
-    (id: string, newName: string) => {
-      const { datums: dm } = useMechanismStore.getState();
-      if (dm.has(id)) {
-        sendRenameDatum(id, newName);
-      }
-      // Joint rename will be wired when Epic 6.1 adds sendUpdateJoint
-      setEditingId(null);
-    },
-    [],
-  );
+  const handleRenameCommit = useCallback((id: string, newName: string) => {
+    const { datums: dm } = useMechanismStore.getState();
+    if (dm.has(id)) {
+      sendRenameDatum(id, newName);
+    }
+    // Joint rename will be wired when Epic 6.1 adds sendUpdateJoint
+    setEditingId(null);
+  }, []);
 
   // ── Render row ──
 
@@ -234,12 +232,20 @@ export function ProjectTree() {
         return (
           <BodyContextMenu
             onRename={isSimulating ? () => {} : () => setEditingId(node.id)}
-            onDelete={isSimulating ? () => {} : () => {
-              // Body deletion not yet supported
-            }}
-            onCreateDatum={isSimulating ? () => {} : () => {
-              // Switch to create-datum mode: could be wired later
-            }}
+            onDelete={
+              isSimulating
+                ? () => {}
+                : () => {
+                    // Body deletion not yet supported
+                  }
+            }
+            onCreateDatum={
+              isSimulating
+                ? () => {}
+                : () => {
+                    // Switch to create-datum mode: could be wired later
+                  }
+            }
           >
             {row}
           </BodyContextMenu>
@@ -261,9 +267,13 @@ export function ProjectTree() {
         return (
           <JointContextMenu
             onRename={isSimulating ? () => {} : () => setEditingId(node.id)}
-            onDelete={isSimulating ? () => {} : () => {
-              // Joint deletion wired when Epic 6.1 adds sendDeleteJoint
-            }}
+            onDelete={
+              isSimulating
+                ? () => {}
+                : () => {
+                    // Joint deletion wired when Epic 6.1 adds sendDeleteJoint
+                  }
+            }
           >
             {row}
           </JointContextMenu>
@@ -272,17 +282,14 @@ export function ProjectTree() {
 
       return row;
     },
-    [editingId, isSimulating],
+    [editingId, isSimulating, handleRenameCommit],
   );
 
   // ── Empty state ──
 
   if (bodies.size === 0) {
     return (
-      <EmptyState
-        message="No bodies imported"
-        hint="Import a STEP or IGES file to get started"
-      />
+      <EmptyState message="No bodies imported" hint="Import a STEP or IGES file to get started" />
     );
   }
 

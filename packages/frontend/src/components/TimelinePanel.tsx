@@ -109,16 +109,17 @@ export function TimelinePanel() {
           </div>
         </div>
       )}
-      {activeTab === 'charts' && (
-        channelDescriptors.length > 0
-          ? <ChartPanel />
-          : <EmptyState
-              icon={<BarChart3 className="size-10" />}
-              message="No charts configured"
-              hint="Compile a mechanism to see output channels"
-              className="h-full"
-            />
-      )}
+      {activeTab === 'charts' &&
+        (channelDescriptors.length > 0 ? (
+          <ChartPanel />
+        ) : (
+          <EmptyState
+            icon={<BarChart3 className="size-10" />}
+            message="No charts configured"
+            hint="Compile a mechanism to see output channels"
+            className="h-full"
+          />
+        ))}
       {activeTab === 'diagnostics' && (
         <EmptyState
           icon={<Activity className="size-10" />}

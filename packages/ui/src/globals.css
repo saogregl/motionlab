@@ -312,7 +312,7 @@
   --tab-contained-bg: var(--layer-recessed);
   --tab-contained-active: var(--layer-base);
 
-  --hover-overlay: rgba(141, 141, 141, 0.10);
+  --hover-overlay: rgba(141, 141, 141, 0.1);
   --pressed-overlay: rgba(141, 141, 141, 0.4);
   --focus-ring: 0 0 0 2px var(--layer-base), 0 0 0 4px var(--accent-primary);
   --focus-ring-inset: 0 0 0 2px var(--layer-recessed), 0 0 0 4px var(--accent-primary);
@@ -501,7 +501,9 @@
   .ghost-input {
     background-color: transparent;
     border-color: transparent;
-    transition: background-color var(--duration-fast), border-color var(--duration-fast);
+    transition:
+      background-color var(--duration-fast),
+      border-color var(--duration-fast);
   }
   .ghost-input:hover {
     background-color: var(--field-base-hover);

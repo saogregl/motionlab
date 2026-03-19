@@ -19,18 +19,13 @@ export const useJointCreationStore = create<JointCreationState>()((set) => ({
   parentDatumId: null,
   childDatumId: null,
 
-  startCreation: () =>
-    set({ step: 'pick-parent', parentDatumId: null, childDatumId: null }),
+  startCreation: () => set({ step: 'pick-parent', parentDatumId: null, childDatumId: null }),
 
-  setParentDatum: (id) =>
-    set({ step: 'pick-child', parentDatumId: id }),
+  setParentDatum: (id) => set({ step: 'pick-child', parentDatumId: id }),
 
-  setChildDatum: (id) =>
-    set({ step: 'configure', childDatumId: id }),
+  setChildDatum: (id) => set({ step: 'configure', childDatumId: id }),
 
-  cancel: () =>
-    set({ step: 'pick-parent', parentDatumId: null, childDatumId: null }),
+  cancel: () => set({ step: 'pick-parent', parentDatumId: null, childDatumId: null }),
 
-  reset: () =>
-    set({ step: 'pick-parent', parentDatumId: null, childDatumId: null }),
+  reset: () => set({ step: 'pick-parent', parentDatumId: null, childDatumId: null }),
 }));

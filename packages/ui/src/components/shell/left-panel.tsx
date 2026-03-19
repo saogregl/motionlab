@@ -1,10 +1,9 @@
-import { Search, TreePine, List } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
-
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { cn } from '@/lib/utils';
-import { ToolbarButton } from '@/components/primitives/toolbar-button';
+import { List, Search, TreePine } from 'lucide-react';
+import { type ReactNode, useState } from 'react';
+import { cn } from '../../lib/utils';
+import { ToolbarButton } from '../primitives/toolbar-button';
+import { Input } from '../ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 
 interface LeftPanelProps {
   children?: ReactNode;
@@ -18,10 +17,7 @@ function LeftPanel({ children, className }: LeftPanelProps) {
     <div data-slot="left-panel" className={cn('flex h-full flex-col bg-layer-base', className)}>
       {/* Tab row */}
       <Tabs defaultValue="structure" className="gap-0">
-        <TabsList
-          variant="contained"
-          className="h-7 w-full shrink-0 px-0"
-        >
+        <TabsList variant="contained" className="h-7 w-full shrink-0 px-0">
           <TabsTrigger
             value="structure"
             className="font-medium tracking-normal px-3 text-[length:var(--text-xs)]"

@@ -15,7 +15,7 @@ import { useCallback, useState } from 'react';
 import { sendUpdateJoint } from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSimulationStore } from '../stores/simulation.js';
-import { useTraceStore, type StoreSample } from '../stores/traces.js';
+import { type StoreSample, useTraceStore } from '../stores/traces.js';
 
 type JointType = 'revolute' | 'prismatic' | 'fixed';
 
@@ -38,11 +38,11 @@ function nearestSample(samples: StoreSample[], time: number): StoreSample | unde
 
 export function JointInspector({ jointId }: { jointId: string }) {
   const joint = useMechanismStore((s) => s.joints.get(jointId));
-  const parentDatum = useMechanismStore(
-    (s) => (joint ? s.datums.get(joint.parentDatumId) : undefined),
+  const parentDatum = useMechanismStore((s) =>
+    joint ? s.datums.get(joint.parentDatumId) : undefined,
   );
-  const childDatum = useMechanismStore(
-    (s) => (joint ? s.datums.get(joint.childDatumId) : undefined),
+  const childDatum = useMechanismStore((s) =>
+    joint ? s.datums.get(joint.childDatumId) : undefined,
   );
 
   const simState = useSimulationStore((s) => s.state);
@@ -80,7 +80,6 @@ export function JointInspector({ jointId }: { jointId: string }) {
         <PropertyRow label="Name">
           {editingName ? (
             <input
-              autoFocus
               className="h-5 w-full rounded-[var(--radius-sm)] border border-[var(--accent-primary)] bg-[var(--layer-base)] px-1 text-2xs text-[var(--text-primary)] outline-none"
               value={nameValue}
               onChange={(e) => setNameValue(e.target.value)}
@@ -92,8 +91,13 @@ export function JointInspector({ jointId }: { jointId: string }) {
             />
           ) : (
             <span
+              role="button"
+              tabIndex={0}
               className="text-2xs truncate cursor-pointer hover:text-[var(--accent-primary)]"
               onDoubleClick={startEditName}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') startEditName();
+              }}
             >
               {joint.name}
             </span>
@@ -115,22 +119,16 @@ export function JointInspector({ jointId }: { jointId: string }) {
           </Select>
         </PropertyRow>
         <PropertyRow label="Joint ID">
-          <span className="text-2xs truncate font-mono">
-            {jointId.slice(0, 12)}...
-          </span>
+          <span className="text-2xs truncate font-mono">{jointId.slice(0, 12)}...</span>
         </PropertyRow>
       </InspectorSection>
 
       <InspectorSection title="Connection">
         <PropertyRow label="Parent Datum">
-          <span className="text-2xs truncate">
-            {parentDatum?.name ?? '\u2014'}
-          </span>
+          <span className="text-2xs truncate">{parentDatum?.name ?? '\u2014'}</span>
         </PropertyRow>
         <PropertyRow label="Child Datum">
-          <span className="text-2xs truncate">
-            {childDatum?.name ?? '\u2014'}
-          </span>
+          <span className="text-2xs truncate">{childDatum?.name ?? '\u2014'}</span>
         </PropertyRow>
       </InspectorSection>
 
@@ -157,36 +155,37 @@ export function JointInspector({ jointId }: { jointId: string }) {
         </InspectorSection>
       )}
 
-      {isSimulating && (() => {
-        const posId = `joint/${jointId}/position`;
-        const velId = `joint/${jointId}/velocity`;
-        const posSamples = traces.get(posId);
-        const velSamples = traces.get(velId);
-        const posChannel = channels.get(posId);
-        const velChannel = channels.get(velId);
-        const posVal = posSamples ? nearestSample(posSamples, simTime) : undefined;
-        const velVal = velSamples ? nearestSample(velSamples, simTime) : undefined;
+      {isSimulating &&
+        (() => {
+          const posId = `joint/${jointId}/position`;
+          const velId = `joint/${jointId}/velocity`;
+          const posSamples = traces.get(posId);
+          const velSamples = traces.get(velId);
+          const posChannel = channels.get(posId);
+          const velChannel = channels.get(velId);
+          const posVal = posSamples ? nearestSample(posSamples, simTime) : undefined;
+          const velVal = velSamples ? nearestSample(velSamples, simTime) : undefined;
 
-        return (
-          <InspectorSection title="Simulation Values">
-            {posVal !== undefined && (
-              <PropertyRow label="Position" unit={posChannel?.unit ?? ''} numeric>
-                <span>{posVal.value.toFixed(4)}</span>
-              </PropertyRow>
-            )}
-            {velVal !== undefined && (
-              <PropertyRow label="Velocity" unit={velChannel?.unit ?? ''} numeric>
-                <span>{velVal.value.toFixed(4)}</span>
-              </PropertyRow>
-            )}
-            {posVal === undefined && velVal === undefined && (
-              <PropertyRow label="Status">
-                <span className="text-2xs text-text-tertiary">Awaiting data...</span>
-              </PropertyRow>
-            )}
-          </InspectorSection>
-        );
-      })()}
+          return (
+            <InspectorSection title="Simulation Values">
+              {posVal !== undefined && (
+                <PropertyRow label="Position" unit={posChannel?.unit ?? ''} numeric>
+                  <span>{posVal.value.toFixed(4)}</span>
+                </PropertyRow>
+              )}
+              {velVal !== undefined && (
+                <PropertyRow label="Velocity" unit={velChannel?.unit ?? ''} numeric>
+                  <span>{velVal.value.toFixed(4)}</span>
+                </PropertyRow>
+              )}
+              {posVal === undefined && velVal === undefined && (
+                <PropertyRow label="Status">
+                  <span className="text-2xs text-text-tertiary">Awaiting data...</span>
+                </PropertyRow>
+              )}
+            </InspectorSection>
+          );
+        })()}
     </InspectorPanel>
   );
 }

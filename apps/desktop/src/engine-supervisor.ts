@@ -24,9 +24,6 @@ export class EngineSupervisor {
   private crashListeners: CrashCallback[] = [];
   private restartListeners: RestartCallback[] = [];
   private restartCount = 0;
-  private endpointResolve: ((ep: EngineEndpoint) => void) | null = null;
-  private endpointReject: ((err: Error) => void) | null = null;
-
   resolveEnginePath(): { command: string; args: string[] } {
     if (app.isPackaged) {
       const ext = process.platform === 'win32' ? '.exe' : '';
@@ -46,7 +43,14 @@ export class EngineSupervisor {
     const buildDirs = ['dev', 'msvc-dev', 'Release', 'Debug'];
     let devBin = '';
     for (const dir of buildDirs) {
-      const candidate = path.join(repoRoot, 'native', 'engine', 'build', dir, `motionlab-engine${ext}`);
+      const candidate = path.join(
+        repoRoot,
+        'native',
+        'engine',
+        'build',
+        dir,
+        `motionlab-engine${ext}`,
+      );
       if (fs.existsSync(candidate)) {
         devBin = candidate;
         break;
@@ -118,10 +122,6 @@ export class EngineSupervisor {
     });
 
     return new Promise<EngineEndpoint>((resolve, reject) => {
-      // Store resolve/reject so auto-restart can update the cached endpoint
-      this.endpointResolve = resolve;
-      this.endpointReject = reject;
-
       let settled = false;
 
       const timeout = setTimeout(() => {
@@ -179,7 +179,7 @@ export class EngineSupervisor {
       if (!this.shuttingDown) {
         if (this.restartCount < MAX_RESTARTS) {
           this.restartCount++;
-          const delay = 1000 * Math.pow(2, this.restartCount - 1);
+          const delay = 1000 * 2 ** (this.restartCount - 1);
           console.log(
             `[SUPERVISOR] Auto-restarting engine (attempt ${this.restartCount}/${MAX_RESTARTS}) in ${delay}ms...`,
           );

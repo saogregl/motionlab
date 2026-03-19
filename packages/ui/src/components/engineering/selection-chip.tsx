@@ -1,7 +1,7 @@
 import { ChevronRight } from 'lucide-react';
 import type { ReactNode } from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface SelectionChipProps {
   /** Entity type icon (14px) */
@@ -30,7 +30,10 @@ function SelectionChip({ icon, name, onClick, className }: SelectionChipProps) {
       type={onClick ? 'button' : undefined}
     >
       {icon && (
-        <span data-slot="selection-chip-icon" className="flex size-3.5 shrink-0 items-center justify-center">
+        <span
+          data-slot="selection-chip-icon"
+          className="flex size-3.5 shrink-0 items-center justify-center"
+        >
           {icon}
         </span>
       )}

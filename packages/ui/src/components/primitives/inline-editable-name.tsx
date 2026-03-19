@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface InlineEditableNameProps {
   /** Current name value */
@@ -78,6 +78,8 @@ function InlineEditableName({
 
   return (
     <span
+      role="button"
+      tabIndex={0}
       className={cn(
         'min-w-0 flex-1 truncate text-[length:var(--text-xs)] text-[var(--text-primary)]',
         className,
@@ -85,6 +87,12 @@ function InlineEditableName({
       onDoubleClick={(e) => {
         e.stopPropagation();
         onStartEdit();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === 'F2') {
+          e.stopPropagation();
+          onStartEdit();
+        }
       }}
     >
       {value}

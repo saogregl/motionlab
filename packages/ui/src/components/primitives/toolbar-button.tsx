@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react';
-
-import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
+import { Button } from '../ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 interface ToolbarButtonProps {
   /** Tooltip text (required for icon-only buttons) */

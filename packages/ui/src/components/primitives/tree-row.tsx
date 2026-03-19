@@ -1,14 +1,8 @@
-import {
-  AlertTriangle,
-  ChevronRight,
-  Eye,
-  EyeOff,
-  MoreHorizontal,
-} from 'lucide-react';
+import { ChevronRight, Eye, EyeOff, MoreHorizontal } from 'lucide-react';
 import type React from 'react';
 import type { ReactNode } from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 /* ── TreeRow ── */
 
@@ -70,6 +64,8 @@ function TreeRow({
   return (
     <div
       data-slot="tree-row"
+      role="treeitem"
+      tabIndex={-1}
       data-selected={selected || undefined}
       data-focused={focused || undefined}
       data-disabled={disabled || undefined}
@@ -85,6 +81,12 @@ function TreeRow({
         className,
       )}
       onClick={(e) => onSelect?.(e)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect?.();
+        }
+      }}
       {...ariaProps}
     >
       <div
@@ -92,16 +94,18 @@ function TreeRow({
         style={{ paddingLeft: `calc(var(--space-1) + ${level} * var(--tree-indent))` }}
       >
         {/* Guide lines */}
-        {level > 0 && Array.from({ length: level }, (_, i) => (
-          <span
-            key={i}
-            aria-hidden
-            className="pointer-events-none absolute top-0 bottom-0 w-px bg-tree-guide"
-            style={{
-              left: `calc(var(--space-1) + ${i} * var(--tree-indent) + var(--tree-indent) / 2)`,
-            }}
-          />
-        ))}
+        {level > 0 &&
+          Array.from({ length: level }, (_, idx) => (
+            <span
+              // biome-ignore lint/suspicious/noArrayIndexKey: static decorative guide lines keyed by fixed depth level
+              key={`guide-${level}-${idx}`}
+              aria-hidden
+              className="pointer-events-none absolute top-0 bottom-0 w-px bg-tree-guide"
+              style={{
+                left: `calc(var(--space-1) + ${idx} * var(--tree-indent) + var(--tree-indent) / 2)`,
+              }}
+            />
+          ))}
 
         {/* Disclosure chevron */}
         {hasChildren ? (
@@ -129,7 +133,10 @@ function TreeRow({
 
         {/* Type icon */}
         {icon && (
-          <span data-slot="tree-row-icon" className="mr-1.5 flex size-3.5 shrink-0 items-center justify-center">
+          <span
+            data-slot="tree-row-icon"
+            className="mr-1.5 flex size-3.5 shrink-0 items-center justify-center"
+          >
             {icon}
           </span>
         )}
@@ -238,7 +245,14 @@ function GroupHeaderRow({
       )}
       style={{ paddingLeft: `calc(var(--space-1) + ${level} * var(--tree-indent))` }}
       onClick={onToggleExpand}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onToggleExpand?.();
+        }
+      }}
       role="treeitem"
+      tabIndex={-1}
     >
       {/* Disclosure chevron */}
       <span className="flex size-4 shrink-0 items-center justify-center text-[var(--text-tertiary)]">

@@ -1,7 +1,6 @@
 import { Plus, X } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
+import { Button } from '../ui/button';
 
 interface WorkspaceTab {
   id: string;
@@ -58,9 +57,7 @@ function WorkspaceTabBar({
           )}
           onClick={() => onTabSelect?.(tab.id)}
         >
-          {tab.dirty && (
-            <span className="size-1.5 shrink-0 rounded-full bg-text-secondary" />
-          )}
+          {tab.dirty && <span className="size-1.5 shrink-0 rounded-full bg-text-secondary" />}
           <span className="truncate">{tab.label}</span>
           <span
             role="button"

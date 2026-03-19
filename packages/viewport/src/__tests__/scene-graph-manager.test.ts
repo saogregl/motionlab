@@ -1,12 +1,12 @@
-import {
-  ArcRotateCamera,
-  NullEngine,
-  Scene,
-  Vector3,
-} from '@babylonjs/core';
+import { ArcRotateCamera, NullEngine, Scene, Vector3 } from '@babylonjs/core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { SceneGraphManager, type SceneGraphDeps, type MeshDataInput, type PoseInput } from '../scene-graph.js';
+import {
+  type MeshDataInput,
+  type PoseInput,
+  type SceneGraphDeps,
+  SceneGraphManager,
+} from '../scene-graph.js';
 
 // ---------------------------------------------------------------------------
 // Minimal test data
@@ -35,20 +35,20 @@ const offsetPose: PoseInput = {
 function makeMockDeps(): SceneGraphDeps {
   return {
     materialFactory: {
-      getDefaultMaterial: () => null as any,
-      getSelectedMaterial: () => null as any,
-      getHoveredMaterial: () => null as any,
-    } as any,
-    lightingRig: {} as any,
+      getDefaultMaterial: () => null as unknown,
+      getSelectedMaterial: () => null as unknown,
+      getHoveredMaterial: () => null as unknown,
+    } as unknown as SceneGraphDeps['materialFactory'],
+    lightingRig: {} as unknown as SceneGraphDeps['lightingRig'],
     selectionVisuals: {
       applySelection: vi.fn(),
       applyHover: vi.fn(),
       clearAll: vi.fn(),
-    } as any,
+    } as unknown as SceneGraphDeps['selectionVisuals'],
     grid: {
       visible: true,
       setVisible: vi.fn(),
-    } as any,
+    } as unknown as SceneGraphDeps['grid'],
   };
 }
 
@@ -88,10 +88,10 @@ describe('SceneGraphManager', () => {
 
   it('addBody sets pose', () => {
     sgm.addBody('b1', 'Body1', minimalMesh, offsetPose);
-    const entity = sgm.getEntity('b1')!;
-    expect(entity.rootNode.position.x).toBe(5);
-    expect(entity.rootNode.position.y).toBe(10);
-    expect(entity.rootNode.position.z).toBe(15);
+    const entity = sgm.getEntity('b1');
+    expect(entity?.rootNode.position.x).toBe(5);
+    expect(entity?.rootNode.position.y).toBe(10);
+    expect(entity?.rootNode.position.z).toBe(15);
   });
 
   it('removeBody deletes entity', () => {
@@ -108,17 +108,17 @@ describe('SceneGraphManager', () => {
   it('updateBodyTransform updates pose', () => {
     sgm.addBody('b1', 'Body1', minimalMesh, defaultPose);
     sgm.updateBodyTransform('b1', offsetPose);
-    const entity = sgm.getEntity('b1')!;
-    expect(entity.rootNode.position.x).toBe(5);
-    expect(entity.rootNode.position.y).toBe(10);
-    expect(entity.rootNode.position.z).toBe(15);
+    const entity = sgm.getEntity('b1');
+    expect(entity?.rootNode.position.x).toBe(5);
+    expect(entity?.rootNode.position.y).toBe(10);
+    expect(entity?.rootNode.position.z).toBe(15);
   });
 
   it('updateBodyTransform preserves entity identity', () => {
     sgm.addBody('b1', 'Body1', minimalMesh, defaultPose);
-    const before = sgm.getEntity('b1')!;
+    const before = sgm.getEntity('b1');
     sgm.updateBodyTransform('b1', offsetPose);
-    const after = sgm.getEntity('b1')!;
+    const after = sgm.getEntity('b1');
     expect(after).toBe(before);
   });
 
@@ -132,8 +132,8 @@ describe('SceneGraphManager', () => {
     sgm.addBody('b1', 'Body1', minimalMesh, defaultPose);
     const datum = sgm.addDatum('d1', 'b1', defaultPose);
     expect(datum).toBeDefined();
-    const bodyEntity = sgm.getEntity('b1')!;
-    expect(datum!.rootNode.parent).toBe(bodyEntity.rootNode);
+    const bodyEntity = sgm.getEntity('b1');
+    expect(datum?.rootNode.parent).toBe(bodyEntity?.rootNode);
   });
 
   it('addDatum missing parent returns undefined', () => {

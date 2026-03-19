@@ -1,5 +1,5 @@
-import type { SceneGraphManager } from '@motionlab/viewport';
 import { ToolbarButton } from '@motionlab/ui';
+import type { SceneGraphManager } from '@motionlab/viewport';
 import {
   ArrowDown,
   ArrowLeft,
@@ -8,8 +8,8 @@ import {
   Box,
   Grid3x3,
   Maximize2,
-  MonitorUp,
   MonitorDown,
+  MonitorUp,
 } from 'lucide-react';
 
 interface ViewportCameraToolbarProps {

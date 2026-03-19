@@ -1,4 +1,11 @@
 import { create, fromBinary, toBinary, toJsonString } from '@bufbuild/protobuf';
+import {
+  ElementIdSchema,
+  JointType,
+  PoseSchema,
+  QuatSchema,
+  Vec3Schema,
+} from './generated/mechanism/mechanism_pb.js';
 import type { Event, SimulationAction } from './generated/protocol/transport_pb.js';
 import {
   CommandSchema,
@@ -22,13 +29,6 @@ import {
   SimulationControlCommandSchema,
   UpdateJointCommandSchema,
 } from './generated/protocol/transport_pb.js';
-import {
-  ElementIdSchema,
-  JointType,
-  PoseSchema,
-  QuatSchema,
-  Vec3Schema,
-} from './generated/mechanism/mechanism_pb.js';
 import { PROTOCOL_NAME, PROTOCOL_VERSION } from './version.js';
 
 /**
@@ -113,7 +113,10 @@ export function eventToDebugJson(evt: Event): string {
  */
 export function createCreateDatumCommand(
   parentBodyId: string,
-  localPose: { position: { x: number; y: number; z: number }; orientation: { x: number; y: number; z: number; w: number } },
+  localPose: {
+    position: { x: number; y: number; z: number };
+    orientation: { x: number; y: number; z: number; w: number };
+  },
   name: string,
   sequenceId?: bigint,
 ): Uint8Array {

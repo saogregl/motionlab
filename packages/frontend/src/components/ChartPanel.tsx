@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import uPlot from 'uplot';
 import 'uplot/dist/uPlot.min.css';
-import { useTraceStore, type StoreSample } from '../stores/traces.js';
-import { useSelectionStore } from '../stores/selection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
+import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
+import { type StoreSample, useTraceStore } from '../stores/traces.js';
 
 const COLORS = [
   '#3b82f6', // blue
@@ -58,20 +58,22 @@ function buildAlignedData(
 function scrubMarkerPlugin(getTime: () => number): uPlot.Plugin {
   return {
     hooks: {
-      draw: [(u: uPlot) => {
-        const cx = u.valToPos(getTime(), 'x', true);
-        if (cx < u.bbox.left || cx > u.bbox.left + u.bbox.width) return;
-        const ctx = u.ctx;
-        ctx.save();
-        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
-        ctx.lineWidth = 1;
-        ctx.setLineDash([4, 4]);
-        ctx.beginPath();
-        ctx.moveTo(cx, u.bbox.top);
-        ctx.lineTo(cx, u.bbox.top + u.bbox.height);
-        ctx.stroke();
-        ctx.restore();
-      }],
+      draw: [
+        (u: uPlot) => {
+          const cx = u.valToPos(getTime(), 'x', true);
+          if (cx < u.bbox.left || cx > u.bbox.left + u.bbox.width) return;
+          const ctx = u.ctx;
+          ctx.save();
+          ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+          ctx.lineWidth = 1;
+          ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          ctx.moveTo(cx, u.bbox.top);
+          ctx.lineTo(cx, u.bbox.top + u.bbox.height);
+          ctx.stroke();
+          ctx.restore();
+        },
+      ],
     },
   };
 }
@@ -98,10 +100,7 @@ function buildOpts(
     width,
     height,
     scales: { x: { time: false } },
-    axes: [
-      { label: 'Time (s)' },
-      { label: 'Value' },
-    ],
+    axes: [{ label: 'Time (s)' }, { label: 'Value' }],
     series: seriesOpts,
     cursor: { drag: { x: false, y: false } },
     plugins: [scrubMarkerPlugin(() => useSimulationStore.getState().simTime)],
@@ -232,13 +231,13 @@ export function ChartPanel() {
     };
     // Recreate when active channel set changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIds.join(',')]);
+  }, [activeIds, channels]);
 
   // Redraw chart on simTime changes (scrub marker) when no new data arrives
-  const simTime = useSimulationStore((s) => s.simTime);
+  const _simTime = useSimulationStore((s) => s.simTime);
   useEffect(() => {
     uplotRef.current?.redraw();
-  }, [simTime]);
+  }, []);
 
   const handleToggle = useCallback((id: string) => {
     useTraceStore.getState().toggleChannel(id);
@@ -268,9 +267,7 @@ export function ChartPanel() {
                   {ch?.unit ? ` (${ch.unit})` : ''}
                 </span>
                 {latest !== undefined && (
-                  <span className="text-neutral-400">
-                    {latest.toFixed(4)}
-                  </span>
+                  <span className="text-neutral-400">{latest.toFixed(4)}</span>
                 )}
               </button>
             );

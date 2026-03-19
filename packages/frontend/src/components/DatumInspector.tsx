@@ -12,8 +12,8 @@ function fmt(value: number): string {
 
 export function DatumInspector({ datumId }: { datumId: string }) {
   const datum = useMechanismStore((s) => s.datums.get(datumId));
-  const parentBody = useMechanismStore(
-    (s) => (datum ? s.bodies.get(datum.parentBodyId) : undefined),
+  const parentBody = useMechanismStore((s) =>
+    datum ? s.bodies.get(datum.parentBodyId) : undefined,
   );
 
   const simState = useSimulationStore((s) => s.state);
@@ -50,7 +50,6 @@ export function DatumInspector({ datumId }: { datumId: string }) {
         <PropertyRow label="Name">
           {editingName ? (
             <input
-              autoFocus
               className="h-5 w-full rounded-[var(--radius-sm)] border border-[var(--accent-primary)] bg-[var(--layer-base)] px-1 text-2xs text-[var(--text-primary)] outline-none"
               value={nameValue}
               onChange={(e) => setNameValue(e.target.value)}
@@ -62,8 +61,13 @@ export function DatumInspector({ datumId }: { datumId: string }) {
             />
           ) : (
             <span
+              role="button"
+              tabIndex={0}
               className="text-2xs truncate cursor-pointer hover:text-[var(--accent-primary)]"
               onDoubleClick={startEditName}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') startEditName();
+              }}
             >
               {datum.name}
             </span>
@@ -73,9 +77,7 @@ export function DatumInspector({ datumId }: { datumId: string }) {
           <span className="text-2xs truncate">{parentBody?.name ?? '—'}</span>
         </PropertyRow>
         <PropertyRow label="Datum ID">
-          <span className="text-2xs truncate font-mono">
-            {datumId.slice(0, 12)}…
-          </span>
+          <span className="text-2xs truncate font-mono">{datumId.slice(0, 12)}…</span>
         </PropertyRow>
       </InspectorSection>
 

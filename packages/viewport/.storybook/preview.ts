@@ -1,11 +1,12 @@
 import type { Preview } from '@storybook/react-vite';
 import { Agentation } from 'agentation';
-import { Fragment, createElement } from 'react';
+import { createElement, Fragment } from 'react';
 
 const preview: Preview = {
   decorators: [
     (Story) => {
-      const agentationEndpoint = import.meta.env.VITE_AGENTATION_ENDPOINT ?? 'http://localhost:4747';
+      const agentationEndpoint =
+        import.meta.env.VITE_AGENTATION_ENDPOINT ?? 'http://localhost:4747';
 
       return createElement(
         Fragment,

@@ -6,33 +6,32 @@ import {
   createCreateJointCommand,
   createDeleteDatumCommand,
   createDeleteJointCommand,
+  createHandshakeCommand,
+  createImportAssetCommand,
   createLoadProjectCommand,
+  createRenameDatumCommand,
   createSaveProjectCommand,
   createScrubCommand,
   createSimulationControlCommand,
-  FaceSurfaceClass,
-  createHandshakeCommand,
-  createImportAssetCommand,
-  createRenameDatumCommand,
   createUpdateJointCommand,
   engineStateToString,
   eventToDebugJson,
+  FaceSurfaceClass,
   mapJointType,
   parseEvent,
-  SimulationAction,
   SimStateEnum,
+  SimulationAction,
   toProtoJointType,
 } from '@motionlab/protocol';
 import type { SceneGraphManager } from '@motionlab/viewport';
-
-import type { EngineConnectionState } from '../stores/engine-connection.js';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { clearBodyPoses, setBodyPose } from '../stores/body-poses.js';
+import type { EngineConnectionState } from '../stores/engine-connection.js';
 import type { BodyState } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
-import { useSimulationStore, type ChannelDescriptor } from '../stores/simulation.js';
+import { type ChannelDescriptor, useSimulationStore } from '../stores/simulation.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
-import { useTraceStore, type StoreSample } from '../stores/traces.js';
+import { type StoreSample, useTraceStore } from '../stores/traces.js';
 
 type SetState = (
   updater:
@@ -177,8 +176,7 @@ export function connect(set: SetState, _get: GetState) {
                   indices: new Uint32Array(b.displayMesh?.indices ?? []),
                   normals: new Float32Array(b.displayMesh?.normals ?? []),
                 },
-                partIndex:
-                  b.partIndex.length > 0 ? new Uint32Array(b.partIndex) : undefined,
+                partIndex: b.partIndex.length > 0 ? new Uint32Array(b.partIndex) : undefined,
                 massProperties: {
                   mass: b.massProperties?.mass ?? 0,
                   centerOfMass: {
@@ -252,7 +250,8 @@ export function connect(set: SetState, _get: GetState) {
             const statusStore = useAuthoringStatusStore.getState();
             if (result.result.case === 'success') {
               const success = result.result.value;
-              const d = success.datum!;
+              const d = success.datum;
+              if (!d) break;
               mechStore.addDatum({
                 id: d.id?.id ?? '',
                 name: d.name,
@@ -354,7 +353,8 @@ export function connect(set: SetState, _get: GetState) {
               channelId: ch.channelId,
               name: ch.name,
               unit: ch.unit,
-              dataType: ch.dataType === ChannelDataType.VEC3 ? 'vec3' as const : 'scalar' as const,
+              dataType:
+                ch.dataType === ChannelDataType.VEC3 ? ('vec3' as const) : ('scalar' as const),
             }));
             useSimulationStore
               .getState()
@@ -378,23 +378,28 @@ export function connect(set: SetState, _get: GetState) {
             const sev = evt.payload.value;
             const SIM = SimStateEnum;
             const mapped =
-              sev.state === SIM.SIM_STATE_RUNNING ? 'running' as const
-              : sev.state === SIM.SIM_STATE_PAUSED ? 'paused' as const
-              : sev.state === SIM.SIM_STATE_COMPILING ? 'compiling' as const
-              : sev.state === SIM.SIM_STATE_ERROR ? 'error' as const
-              : 'idle' as const;
+              sev.state === SIM.SIM_STATE_RUNNING
+                ? ('running' as const)
+                : sev.state === SIM.SIM_STATE_PAUSED
+                  ? ('paused' as const)
+                  : sev.state === SIM.SIM_STATE_COMPILING
+                    ? ('compiling' as const)
+                    : sev.state === SIM.SIM_STATE_ERROR
+                      ? ('error' as const)
+                      : ('idle' as const);
 
             const prevState = useSimulationStore.getState().state;
-            useSimulationStore
-              .getState()
-              .setSimState(mapped, sev.simTime, Number(sev.stepCount));
+            useSimulationStore.getState().setSimState(mapped, sev.simTime, Number(sev.stepCount));
 
             // TODO: When finite-duration simulations are added, check
             // useSimulationStore.getState().loopEnabled here and auto-restart
             // via sendSimulationControl(SimulationAction.PLAY) on natural end.
 
             // Clear traces, body pose cache, and restore initial poses on reset
-            if (mapped === 'idle' && (prevState === 'running' || prevState === 'paused' || prevState === 'error')) {
+            if (
+              mapped === 'idle' &&
+              (prevState === 'running' || prevState === 'paused' || prevState === 'error')
+            ) {
               useTraceStore.getState().clear();
               clearBodyPoses();
               if (sceneGraphManager) {
@@ -402,7 +407,12 @@ export function connect(set: SetState, _get: GetState) {
                 for (const body of bodies.values()) {
                   sceneGraphManager.updateBodyTransform(body.id, {
                     position: [body.pose.position.x, body.pose.position.y, body.pose.position.z],
-                    rotation: [body.pose.rotation.x, body.pose.rotation.y, body.pose.rotation.z, body.pose.rotation.w],
+                    rotation: [
+                      body.pose.rotation.x,
+                      body.pose.rotation.y,
+                      body.pose.rotation.z,
+                      body.pose.rotation.w,
+                    ],
                   });
                 }
               }
@@ -472,7 +482,8 @@ export function connect(set: SetState, _get: GetState) {
               const bytes = result.result.value;
               const mechStore = useMechanismStore.getState();
               const projectName = mechStore.projectName;
-              window.motionlab?.saveProjectFile(new Uint8Array(bytes), projectName)
+              window.motionlab
+                ?.saveProjectFile(new Uint8Array(bytes), projectName)
                 .then((saveResult) => {
                   if (saveResult.saved && saveResult.filePath) {
                     mechStore.setProjectMeta(projectName, saveResult.filePath);
@@ -506,8 +517,7 @@ export function connect(set: SetState, _get: GetState) {
                   indices: new Uint32Array(b.displayMesh?.indices ?? []),
                   normals: new Float32Array(b.displayMesh?.normals ?? []),
                 },
-                partIndex:
-                  b.partIndex.length > 0 ? new Uint32Array(b.partIndex) : undefined,
+                partIndex: b.partIndex.length > 0 ? new Uint32Array(b.partIndex) : undefined,
                 massProperties: {
                   mass: b.massProperties?.mass ?? 0,
                   centerOfMass: {
@@ -551,7 +561,12 @@ export function connect(set: SetState, _get: GetState) {
                     body.meshData,
                     {
                       position: [body.pose.position.x, body.pose.position.y, body.pose.position.z],
-                      rotation: [body.pose.rotation.x, body.pose.rotation.y, body.pose.rotation.z, body.pose.rotation.w],
+                      rotation: [
+                        body.pose.rotation.x,
+                        body.pose.rotation.y,
+                        body.pose.rotation.z,
+                        body.pose.rotation.w,
+                      ],
                     },
                     body.partIndex,
                   );
@@ -583,8 +598,17 @@ export function connect(set: SetState, _get: GetState) {
                   mechStore.addDatum(datumState);
                   if (sceneGraphManager) {
                     sceneGraphManager.addDatum(datumState.id, datumState.parentBodyId, {
-                      position: [datumState.localPose.position.x, datumState.localPose.position.y, datumState.localPose.position.z],
-                      rotation: [datumState.localPose.rotation.x, datumState.localPose.rotation.y, datumState.localPose.rotation.z, datumState.localPose.rotation.w],
+                      position: [
+                        datumState.localPose.position.x,
+                        datumState.localPose.position.y,
+                        datumState.localPose.position.z,
+                      ],
+                      rotation: [
+                        datumState.localPose.rotation.x,
+                        datumState.localPose.rotation.y,
+                        datumState.localPose.rotation.z,
+                        datumState.localPose.rotation.w,
+                      ],
                     });
                   }
                 }
@@ -602,7 +626,12 @@ export function connect(set: SetState, _get: GetState) {
                   };
                   mechStore.addJoint(jointState);
                   if (sceneGraphManager) {
-                    sceneGraphManager.addJoint(jointState.id, jointState.parentDatumId, jointState.childDatumId, jointState.type);
+                    sceneGraphManager.addJoint(
+                      jointState.id,
+                      jointState.parentDatumId,
+                      jointState.childDatumId,
+                      jointState.type,
+                    );
                   }
                 }
               }
@@ -693,20 +722,36 @@ export function sendCreateJoint(
   upperLimit: number,
 ): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createCreateJointCommand(parentDatumId, childDatumId, toProtoJointType(type), name, lowerLimit, upperLimit));
+  ws.send(
+    createCreateJointCommand(
+      parentDatumId,
+      childDatumId,
+      toProtoJointType(type),
+      name,
+      lowerLimit,
+      upperLimit,
+    ),
+  );
 }
 
 export function sendUpdateJoint(
   jointId: string,
-  updates: { name?: string; type?: 'revolute' | 'prismatic' | 'fixed'; lowerLimit?: number; upperLimit?: number },
+  updates: {
+    name?: string;
+    type?: 'revolute' | 'prismatic' | 'fixed';
+    lowerLimit?: number;
+    upperLimit?: number;
+  },
 ): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createUpdateJointCommand(jointId, {
-    name: updates.name,
-    type: updates.type !== undefined ? toProtoJointType(updates.type) : undefined,
-    lowerLimit: updates.lowerLimit,
-    upperLimit: updates.upperLimit,
-  }));
+  ws.send(
+    createUpdateJointCommand(jointId, {
+      name: updates.name,
+      type: updates.type !== undefined ? toProtoJointType(updates.type) : undefined,
+      lowerLimit: updates.lowerLimit,
+      upperLimit: updates.upperLimit,
+    }),
+  );
 }
 
 export function sendDeleteJoint(jointId: string): void {
@@ -749,7 +794,6 @@ function surfaceClassToLabel(surfaceClass: FaceSurfaceClass): string {
       return 'conical';
     case FaceSurfaceClass.SPHERICAL:
       return 'spherical';
-    case FaceSurfaceClass.OTHER:
     default:
       return 'surface';
   }

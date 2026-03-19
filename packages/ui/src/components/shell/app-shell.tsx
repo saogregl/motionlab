@@ -1,11 +1,7 @@
 import type { ReactNode } from 'react';
-import {
-  Panel,
-  Group as PanelGroup,
-  Separator as PanelResizeHandle,
-} from 'react-resizable-panels';
+import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from 'react-resizable-panels';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface AppShellProps {
   /** Top bar (44px) */

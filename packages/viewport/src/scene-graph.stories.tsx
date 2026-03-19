@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useCallback, useRef, useState } from 'react';
-
-import type { SceneGraphManager, CameraPreset } from './scene-graph.js';
 import { PickingManager } from './picking.js';
+import type { CameraPreset, SceneGraphManager } from './scene-graph.js';
 import { Viewport } from './Viewport.js';
 
 // ---------------------------------------------------------------------------
@@ -13,42 +12,103 @@ import { Viewport } from './Viewport.js';
  * Generate a simple box mesh (8 vertices, 12 triangles) for demo purposes.
  */
 function createBoxMeshData(sx = 1, sy = 1, sz = 1) {
-  const hx = sx / 2, hy = sy / 2, hz = sz / 2;
+  const hx = sx / 2,
+    hy = sy / 2,
+    hz = sz / 2;
 
   // prettier-ignore
   const positions = [
     // Front face
-    -hx, -hy,  hz,   hx, -hy,  hz,   hx,  hy,  hz,  -hx,  hy,  hz,
+    -hx,
+    -hy,
+    hz,
+    hx,
+    -hy,
+    hz,
+    hx,
+    hy,
+    hz,
+    -hx,
+    hy,
+    hz,
     // Back face
-    -hx, -hy, -hz,  -hx,  hy, -hz,   hx,  hy, -hz,   hx, -hy, -hz,
+    -hx,
+    -hy,
+    -hz,
+    -hx,
+    hy,
+    -hz,
+    hx,
+    hy,
+    -hz,
+    hx,
+    -hy,
+    -hz,
     // Top face
-    -hx,  hy, -hz,  -hx,  hy,  hz,   hx,  hy,  hz,   hx,  hy, -hz,
+    -hx,
+    hy,
+    -hz,
+    -hx,
+    hy,
+    hz,
+    hx,
+    hy,
+    hz,
+    hx,
+    hy,
+    -hz,
     // Bottom face
-    -hx, -hy, -hz,   hx, -hy, -hz,   hx, -hy,  hz,  -hx, -hy,  hz,
+    -hx,
+    -hy,
+    -hz,
+    hx,
+    -hy,
+    -hz,
+    hx,
+    -hy,
+    hz,
+    -hx,
+    -hy,
+    hz,
     // Right face
-     hx, -hy, -hz,   hx,  hy, -hz,   hx,  hy,  hz,   hx, -hy,  hz,
+    hx,
+    -hy,
+    -hz,
+    hx,
+    hy,
+    -hz,
+    hx,
+    hy,
+    hz,
+    hx,
+    -hy,
+    hz,
     // Left face
-    -hx, -hy, -hz,  -hx, -hy,  hz,  -hx,  hy,  hz,  -hx,  hy, -hz,
+    -hx,
+    -hy,
+    -hz,
+    -hx,
+    -hy,
+    hz,
+    -hx,
+    hy,
+    hz,
+    -hx,
+    hy,
+    -hz,
   ];
 
   // prettier-ignore
   const normals = [
-    0, 0, 1,  0, 0, 1,  0, 0, 1,  0, 0, 1,
-    0, 0,-1,  0, 0,-1,  0, 0,-1,  0, 0,-1,
-    0, 1, 0,  0, 1, 0,  0, 1, 0,  0, 1, 0,
-    0,-1, 0,  0,-1, 0,  0,-1, 0,  0,-1, 0,
-    1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,
-   -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0,
+    0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 1, 0, 0, 1, 0, 0,
+    1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, -1,
+    0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0,
   ];
 
   // prettier-ignore
   const indices = [
-     0,  2,  1,   0,  3,  2,
-     4,  6,  5,   4,  7,  6,
-     8, 10,  9,   8, 11, 10,
-    12, 14, 13,  12, 15, 14,
-    16, 18, 17,  16, 19, 18,
-    20, 22, 21,  20, 23, 22,
+    0, 2, 1, 0, 3, 2, 4, 6, 5, 4, 7, 6, 8, 10, 9, 8, 11, 10, 12, 14, 13, 12, 15, 14, 16, 18, 17, 16,
+    19, 18, 20, 22, 21, 20, 23, 22,
   ];
 
   return {
@@ -166,7 +226,12 @@ function createCylinderMeshData(radiusTop = 0.5, radiusBottom = 0.5, height = 2,
 /**
  * Generate a torus mesh.
  */
-function createTorusMeshData(majorRadius = 1, minorRadius = 0.3, majorSegments = 48, minorSegments = 24) {
+function createTorusMeshData(
+  majorRadius = 1,
+  minorRadius = 0.3,
+  majorSegments = 48,
+  minorSegments = 24,
+) {
   const positions: number[] = [];
   const normals: number[] = [];
   const indices: number[] = [];
@@ -215,7 +280,14 @@ function createTorusMeshData(majorRadius = 1, minorRadius = 0.3, majorSegments =
 // ---------------------------------------------------------------------------
 
 const CAMERA_PRESETS: CameraPreset[] = [
-  'isometric', 'fit-all', 'front', 'back', 'left', 'right', 'top', 'bottom',
+  'isometric',
+  'fit-all',
+  'front',
+  'back',
+  'left',
+  'right',
+  'top',
+  'bottom',
 ];
 
 const TOOLBAR_STYLE: React.CSSProperties = {
@@ -362,7 +434,12 @@ function LightingShowcase() {
     sgRef.current = sg;
 
     // 4 spheres on ground plane
-    const positions = [[-2, 1, -2], [2, 1, -2], [-2, 1, 2], [2, 1, 2]];
+    const positions = [
+      [-2, 1, -2],
+      [2, 1, -2],
+      [-2, 1, 2],
+      [2, 1, 2],
+    ];
     positions.forEach((pos, i) => {
       sg.addBody(`sphere-${i}`, `Sphere ${i}`, createSphereMeshData(0.8), {
         position: pos as [number, number, number],
@@ -570,9 +647,7 @@ function SelectionShowcase() {
         <span style={STATUS_STYLE}>
           Selected: {selectedIds.size > 0 ? Array.from(selectedIds).join(', ') : '(none)'}
         </span>
-        <span style={STATUS_STYLE}>
-          Hover: {hoveredId ?? '(none)'}
-        </span>
+        <span style={STATUS_STYLE}>Hover: {hoveredId ?? '(none)'}</span>
         <button
           type="button"
           style={BUTTON_STYLE}
@@ -655,7 +730,7 @@ export const Grid: Story = {
 function CADQualityShowcase() {
   const sgRef = useRef<SceneGraphManager | null>(null);
   const pickingRef = useRef<PickingManager | null>(null);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [_selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const handleSceneReady = useCallback((sg: SceneGraphManager) => {
     sgRef.current = sg;
@@ -725,9 +800,7 @@ function CADQualityShowcase() {
   return (
     <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
       <div style={TOOLBAR_STYLE}>
-        <span style={STATUS_STYLE}>
-          CAD Quality Composite — all rendering primitives active
-        </span>
+        <span style={STATUS_STYLE}>CAD Quality Composite — all rendering primitives active</span>
         <span style={{ ...BUTTON_STYLE, cursor: 'default', opacity: 0.6 }}>|</span>
         {CAMERA_PRESETS.map((preset) => (
           <button
@@ -740,11 +813,7 @@ function CADQualityShowcase() {
           </button>
         ))}
       </div>
-      <Viewport
-        onSceneReady={handleSceneReady}
-        gridVisible={false}
-               ssaoEnabled={false}
-      />
+      <Viewport onSceneReady={handleSceneReady} gridVisible={false} ssaoEnabled={false} />
     </div>
   );
 }
@@ -795,9 +864,7 @@ function ShadowGroundShowcase() {
   return (
     <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
       <div style={TOOLBAR_STYLE}>
-        <span style={STATUS_STYLE}>
-          Shadow Ground — BackgroundMaterial shadowOnly mode
-        </span>
+        <span style={STATUS_STYLE}>Shadow Ground — BackgroundMaterial shadowOnly mode</span>
         <span style={{ ...BUTTON_STYLE, cursor: 'default', opacity: 0.6 }}>|</span>
         {CAMERA_PRESETS.map((preset) => (
           <button
@@ -810,11 +877,7 @@ function ShadowGroundShowcase() {
           </button>
         ))}
       </div>
-      <Viewport
-        onSceneReady={handleSceneReady}
-        gridVisible={false}
-               ssaoEnabled={false}
-      />
+      <Viewport onSceneReady={handleSceneReady} gridVisible={false} ssaoEnabled={false} />
     </div>
   );
 }
@@ -884,9 +947,9 @@ function RenderingDebugShowcase() {
     const defaultPipeline = pipelines.supportedPipelines.find(
       (p) => p.name === 'default_pipeline',
     ) as import('@babylonjs/core').DefaultRenderingPipeline | undefined;
-    const ssaoPipeline = pipelines.supportedPipelines.find(
-      (p) => p.name === 'ssao_pipeline',
-    ) as import('@babylonjs/core').SSAO2RenderingPipeline | undefined;
+    const ssaoPipeline = pipelines.supportedPipelines.find((p) => p.name === 'ssao_pipeline') as
+      | import('@babylonjs/core').SSAO2RenderingPipeline
+      | undefined;
 
     if (defaultPipeline && ssaoPipeline) {
       const camera = scene.activeCamera as import('@babylonjs/core').ArcRotateCamera;
@@ -897,8 +960,8 @@ function RenderingDebugShowcase() {
       const canvas = engine.getRenderingCanvas();
       setInfo(
         `Engine: ${engine.name} | DPR: ${dpr.toFixed(1)} | ` +
-        `Canvas: ${canvas?.width ?? '?'}x${canvas?.height ?? '?'} | ` +
-        `MSAA: ${defaultPipeline.samples} | FXAA: ${defaultPipeline.fxaaEnabled}`,
+          `Canvas: ${canvas?.width ?? '?'}x${canvas?.height ?? '?'} | ` +
+          `MSAA: ${defaultPipeline.samples} | FXAA: ${defaultPipeline.fxaaEnabled}`,
       );
     }
   }, []);
@@ -928,7 +991,8 @@ function RenderingDebugShowcase() {
     }
 
     setInfo((prev) =>
-      prev.replace(/MSAA: \d+/, `MSAA: ${refs.defaultPipeline.samples}`)
+      prev
+        .replace(/MSAA: \d+/, `MSAA: ${refs.defaultPipeline.samples}`)
         .replace(/FXAA: \w+/, `FXAA: ${refs.defaultPipeline.fxaaEnabled}`),
     );
   };
@@ -990,10 +1054,7 @@ function RenderingDebugShowcase() {
           {info}
         </div>
       )}
-      <Viewport
-        onSceneReady={handleSceneReady}
-               ssaoEnabled={ssao}
-      />
+      <Viewport onSceneReady={handleSceneReady} ssaoEnabled={ssao} />
     </div>
   );
 }

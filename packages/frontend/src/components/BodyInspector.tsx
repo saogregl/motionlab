@@ -38,9 +38,7 @@ export function BodyInspector() {
           <span className="text-2xs truncate">{body.name}</span>
         </PropertyRow>
         <PropertyRow label="Source">
-          <span className="text-2xs truncate">
-            {body.sourceAssetRef.originalFilename || '—'}
-          </span>
+          <span className="text-2xs truncate">{body.sourceAssetRef.originalFilename || '—'}</span>
         </PropertyRow>
         <PropertyRow label="Body ID">
           <span className="text-2xs truncate font-mono">{body.id.slice(0, 12)}…</span>

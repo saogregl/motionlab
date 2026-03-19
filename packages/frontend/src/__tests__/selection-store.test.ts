@@ -48,9 +48,7 @@ describe('Selection store', () => {
   it('addToSelection adds without clearing', () => {
     useSelectionStore.getState().select('a');
     useSelectionStore.getState().addToSelection('b');
-    expect(useSelectionStore.getState().selectedIds).toEqual(
-      new Set(['a', 'b']),
-    );
+    expect(useSelectionStore.getState().selectedIds).toEqual(new Set(['a', 'b']));
     expect(useSelectionStore.getState().lastSelectedId).toBe('b');
   });
 

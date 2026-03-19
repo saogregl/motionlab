@@ -1,7 +1,7 @@
 import { AlertTriangle, RotateCcw } from 'lucide-react';
 import type { ReactNode } from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface PropertyRowProps {
   /** Label text or element */
@@ -46,7 +46,10 @@ function PropertyRow({
       {/* Label */}
       <span
         data-slot="property-row-label"
-        className={cn('flex items-center gap-1 truncate text-[length:var(--text-xs)] text-[var(--text-secondary)]', labelClassName)}
+        className={cn(
+          'flex items-center gap-1 truncate text-[length:var(--text-xs)] text-[var(--text-secondary)]',
+          labelClassName,
+        )}
       >
         {label}
       </span>

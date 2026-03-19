@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { BodyContextMenu, JointContextMenu, DatumContextMenu } from './context-menus';
+import { BodyContextMenu, DatumContextMenu, JointContextMenu } from './context-menus';
 
 const meta = {
   title: 'Primitives/ContextMenus',

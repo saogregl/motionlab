@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface TimelineScrubberProps {
   currentTime: number;
@@ -84,8 +84,31 @@ function TimelineScrubber({
       <div
         ref={trackRef}
         data-slot="timeline-scrubber-track"
+        role="slider"
+        tabIndex={0}
+        aria-label="Timeline position"
+        aria-valuemin={0}
+        aria-valuemax={duration}
+        aria-valuenow={currentTime}
         className="relative h-3 cursor-pointer border border-[var(--border-subtle)] bg-[var(--field-base)] rounded-[1px]"
         onMouseDown={handleMouseDown}
+        onKeyDown={(e) => {
+          if (!onSeek || duration <= 0) return;
+          const step = duration / 100;
+          if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            onSeek(Math.min(duration, currentTime + step));
+          } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            onSeek(Math.max(0, currentTime - step));
+          } else if (e.key === 'Home') {
+            e.preventDefault();
+            onSeek(0);
+          } else if (e.key === 'End') {
+            e.preventDefault();
+            onSeek(duration);
+          }
+        }}
       >
         {/* Playhead */}
         <div

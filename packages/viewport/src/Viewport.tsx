@@ -9,12 +9,12 @@ import {
   PickingManager,
 } from './picking.js';
 import {
-  setupEnvironment,
+  createGrid,
   createLightingRig,
   createMaterialFactory,
-  createGrid,
   createPostProcessing,
   createSelectionVisuals,
+  setupEnvironment,
 } from './rendering/index.js';
 import { SceneGraphManager } from './scene-graph.js';
 
@@ -220,7 +220,7 @@ export function Viewport({
         engineRef.current = null;
       }
     };
-  }, []);
+  }, [gridVisible, interactionMode, onHover, onPick, onSceneReady, ssaoEnabled]);
 
   return <canvas ref={canvasRef} className={className} style={{ width: '100%', height: '100%' }} />;
 }

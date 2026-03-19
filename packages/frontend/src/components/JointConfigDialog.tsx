@@ -1,11 +1,11 @@
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  Button,
   Input,
   NumericInput,
   Select,
@@ -67,27 +67,37 @@ export function JointConfigDialog() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) handleCancel(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) handleCancel();
+      }}
+    >
       <DialogContent className="sm:max-w-[360px]">
         <DialogHeader>
           <DialogTitle>Create Joint</DialogTitle>
-          <DialogDescription>
-            Configure the joint between the selected datums.
-          </DialogDescription>
+          <DialogDescription>Configure the joint between the selected datums.</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-3 py-2">
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted-foreground">Name</label>
+            <label className="text-xs text-muted-foreground" htmlFor="joint-name-input">
+              Name
+            </label>
             <Input
+              id="joint-name-input"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter') handleConfirm(); }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleConfirm();
+              }}
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted-foreground">Type</label>
+            <label className="text-xs text-muted-foreground" htmlFor="joint-type-select">
+              Type
+            </label>
             <Select value={type} onValueChange={(v) => setType(v as JointType)}>
-              <SelectTrigger>
+              <SelectTrigger id="joint-type-select">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -100,10 +110,11 @@ export function JointConfigDialog() {
           {type !== 'fixed' && (
             <>
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-muted-foreground">
+                <label className="text-xs text-muted-foreground" htmlFor="joint-lower-limit">
                   Lower Limit {type === 'revolute' ? '(rad)' : '(m)'}
                 </label>
                 <NumericInput
+                  id="joint-lower-limit"
                   value={lowerLimit}
                   onChange={setLowerLimit}
                   step={type === 'revolute' ? 0.1 : 0.01}
@@ -111,10 +122,11 @@ export function JointConfigDialog() {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-muted-foreground">
+                <label className="text-xs text-muted-foreground" htmlFor="joint-upper-limit">
                   Upper Limit {type === 'revolute' ? '(rad)' : '(m)'}
                 </label>
                 <NumericInput
+                  id="joint-upper-limit"
                   value={upperLimit}
                   onChange={setUpperLimit}
                   step={type === 'revolute' ? 0.1 : 0.01}
@@ -128,9 +140,7 @@ export function JointConfigDialog() {
           <Button variant="outline" onClick={handleCancel}>
             Cancel
           </Button>
-          <Button onClick={handleConfirm}>
-            Create
-          </Button>
+          <Button onClick={handleConfirm}>Create</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

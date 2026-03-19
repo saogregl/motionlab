@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState, useCallback } from 'react';
-
-import { TimelineTransport } from './timeline-transport';
+import { useCallback, useState } from 'react';
 import { TimelineScrubber } from './timeline-scrubber';
+import { TimelineTransport } from './timeline-transport';
 
 const meta = {
   title: 'Primitives/TimelinePanel',
@@ -24,11 +23,11 @@ function TimelinePanelDemo({ initialTime = 0.342, initialDuration = 2.0 }) {
 
   const handleStepForward = useCallback(() => {
     setCurrentTime((t) => Math.min(duration, t + stepSize));
-  }, [duration, stepSize]);
+  }, [duration]);
 
   const handleStepBack = useCallback(() => {
     setCurrentTime((t) => Math.max(0, t - stepSize));
-  }, [stepSize]);
+  }, []);
 
   const handleSkipForward = useCallback(() => {
     setCurrentTime(duration);

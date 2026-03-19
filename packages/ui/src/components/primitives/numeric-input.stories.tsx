@@ -11,19 +11,35 @@ function NumericInputDemo() {
   return (
     <div className="flex flex-col gap-4 p-4 bg-layer-base w-60">
       <div>
-        <label className="text-[length:var(--text-xs)] text-[var(--text-secondary)] mb-1 block">Position (mm)</label>
+        <span className="text-[length:var(--text-xs)] text-[var(--text-secondary)] mb-1 block">
+          Position (mm)
+        </span>
         <NumericInput value={val1} onChange={setVal1} step={0.1} precision={3} unit="mm" />
       </div>
       <div>
-        <label className="text-[length:var(--text-xs)] text-[var(--text-secondary)] mb-1 block">Rotation (deg)</label>
-        <NumericInput value={val2} onChange={setVal2} step={1} precision={1} unit="°" min={-360} max={360} />
+        <span className="text-[length:var(--text-xs)] text-[var(--text-secondary)] mb-1 block">
+          Rotation (deg)
+        </span>
+        <NumericInput
+          value={val2}
+          onChange={setVal2}
+          step={1}
+          precision={1}
+          unit="°"
+          min={-360}
+          max={360}
+        />
       </div>
       <div>
-        <label className="text-[length:var(--text-xs)] text-[var(--text-secondary)] mb-1 block">Angle</label>
+        <span className="text-[length:var(--text-xs)] text-[var(--text-secondary)] mb-1 block">
+          Angle
+        </span>
         <NumericInput value={val3} onChange={setVal3} step={5} precision={0} />
       </div>
       <div>
-        <label className="text-[length:var(--text-xs)] text-[var(--text-secondary)] mb-1 block">Disabled</label>
+        <span className="text-[length:var(--text-xs)] text-[var(--text-secondary)] mb-1 block">
+          Disabled
+        </span>
         <NumericInput value={0} disabled />
       </div>
     </div>

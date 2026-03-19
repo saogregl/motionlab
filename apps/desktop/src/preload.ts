@@ -31,7 +31,10 @@ interface MotionLabAPI {
   windowClose(): void;
   windowIsMaximized(): Promise<boolean>;
   onWindowMaximizedChange(callback: (maximized: boolean) => void): void;
-  saveProjectFile(data: Uint8Array, defaultName?: string): Promise<{ saved: boolean; filePath?: string }>;
+  saveProjectFile(
+    data: Uint8Array,
+    defaultName?: string,
+  ): Promise<{ saved: boolean; filePath?: string }>;
   openProjectFile(): Promise<{ data: Uint8Array; filePath: string } | null>;
 }
 

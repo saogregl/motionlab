@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 type Axis = 'x' | 'y' | 'z';
 
@@ -18,10 +18,7 @@ function AxisColorLabel({ axis, className }: AxisColorLabelProps) {
   return (
     <span
       data-slot="axis-color-label"
-      className={cn(
-        'inline-flex shrink-0 text-[11px] font-bold',
-        className,
-      )}
+      className={cn('inline-flex shrink-0 text-[11px] font-bold', className)}
       style={{ color: config.token }}
     >
       {config.label}

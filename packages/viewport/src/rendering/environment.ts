@@ -29,10 +29,7 @@ export interface EnvironmentSetup {
 /**
  * Configures the scene background and IBL environment for PBR reflections.
  */
-export function setupEnvironment(
-  scene: Scene,
-  options?: EnvironmentOptions,
-): EnvironmentSetup {
+export function setupEnvironment(scene: Scene, options?: EnvironmentOptions): EnvironmentSetup {
   const clearColor = options?.clearColor ?? new Color4(0.941, 0.945, 0.949, 1.0);
   const envIntensity = options?.environmentIntensity ?? 1.2;
   const useGradient = options?.backgroundGradient ?? true;

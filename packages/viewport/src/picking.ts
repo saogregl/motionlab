@@ -186,10 +186,7 @@ export class PickingManager {
   }
 
   private pickEntityAtCpu(): PickResult {
-    const pickResult = this.scene.pick(
-      this.scene.pointerX,
-      this.scene.pointerY,
-    );
+    const pickResult = this.scene.pick(this.scene.pointerX, this.scene.pointerY);
 
     if (pickResult?.hit && pickResult.pickedMesh) {
       const entityId = this.resolveEntityId(pickResult.pickedMesh);
@@ -198,10 +195,7 @@ export class PickingManager {
 
     // Fallback: multiPick to catch near-edge misses where the primary ray
     // passes through edge-rendered pixels but misses the triangulated surface
-    const multiResults = this.scene.multiPick(
-      this.scene.pointerX,
-      this.scene.pointerY,
-    );
+    const multiResults = this.scene.multiPick(this.scene.pointerX, this.scene.pointerY);
     if (multiResults?.length) {
       for (const r of multiResults) {
         if (r.hit && r.pickedMesh) {
@@ -260,11 +254,7 @@ export class PickingManager {
     mesh: AbstractMesh,
     entityId: string | null,
   ): SpatialPickData | undefined {
-    const cpuResult = this.scene.pick(
-      this.scene.pointerX,
-      this.scene.pointerY,
-      (m) => m === mesh,
-    );
+    const cpuResult = this.scene.pick(this.scene.pointerX, this.scene.pointerY, (m) => m === mesh);
 
     if (!cpuResult?.hit || !cpuResult.pickedPoint) return undefined;
 

@@ -8,15 +8,9 @@ import {
   SkipForward,
 } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { cn } from '../../lib/utils';
+import { Button } from '../ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 interface TimelineTransportProps {
   isPlaying: boolean;
@@ -37,7 +31,7 @@ interface TimelineTransportProps {
 const speedOptions = [0.25, 0.5, 1, 2, 4] as const;
 
 function formatTime(seconds: number): string {
-  return seconds.toFixed(3) + 's';
+  return `${seconds.toFixed(3)}s`;
 }
 
 function TimelineTransport({
@@ -68,7 +62,12 @@ function TimelineTransport({
         <Button variant="toolbar" size="icon-sm" onClick={onStepBack} aria-label="Step back">
           <ChevronLeft />
         </Button>
-        <Button variant="toolbar" size="icon-sm" onClick={onPlayPause} aria-label={isPlaying ? 'Pause' : 'Play'}>
+        <Button
+          variant="toolbar"
+          size="icon-sm"
+          onClick={onPlayPause}
+          aria-label={isPlaying ? 'Pause' : 'Play'}
+        >
           {isPlaying ? <Pause /> : <Play />}
         </Button>
         <Button variant="toolbar" size="icon-sm" onClick={onStepForward} aria-label="Step forward">
@@ -93,10 +92,7 @@ function TimelineTransport({
       {/* Speed selector */}
       <div data-slot="timeline-transport-speed" className="flex items-center gap-1">
         <span className="text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">Speed</span>
-        <Select
-          value={String(speed)}
-          onValueChange={(val) => onSpeedChange?.(Number(val))}
-        >
+        <Select value={String(speed)} onValueChange={(val) => val && onSpeedChange?.(Number(val))}>
           <SelectTrigger size="sm" className="w-[68px]">
             <SelectValue />
           </SelectTrigger>

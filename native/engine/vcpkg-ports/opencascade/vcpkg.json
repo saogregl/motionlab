@@ -39,9 +39,7 @@
     },
     "rapidjson": {
       "description": "RapidJSON for glTF 2.0 import/export",
-      "dependencies": [
-        "rapidjson"
-      ]
+      "dependencies": ["rapidjson"]
     }
   }
 }

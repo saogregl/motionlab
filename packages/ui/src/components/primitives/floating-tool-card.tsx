@@ -1,8 +1,15 @@
 import { X } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import {
+  type CSSProperties,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { cn } from '../../lib/utils';
+import { Button } from '../ui/button';
 
 interface FloatingToolCardProps {
   /** Tool icon (16px slot) */
@@ -31,7 +38,9 @@ function FloatingToolCard({
 }: FloatingToolCardProps) {
   const [position, setPosition] = useState(defaultPosition ?? { x: 12, y: 12 });
   const [isDragging, setIsDragging] = useState(false);
-  const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null);
+  const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(
+    null,
+  );
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseDown = useCallback(
@@ -91,7 +100,7 @@ function FloatingToolCard({
   useEffect(() => {
     if (!onClose) return;
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose!();
+      if (e.key === 'Escape') onClose?.();
     }
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
@@ -114,15 +123,22 @@ function FloatingToolCard({
       {/* Header */}
       <div
         data-slot="floating-tool-card-header"
+        role="toolbar"
         className={cn(
           'flex h-7 items-center gap-1.5 px-2',
           'border-b border-[var(--border-subtle)]',
           isDragging ? 'cursor-grabbing' : 'cursor-grab',
         )}
         onMouseDown={handleMouseDown}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') onClose?.();
+        }}
       >
         {icon && (
-          <span data-slot="floating-tool-card-icon" className="flex size-4 shrink-0 items-center justify-center">
+          <span
+            data-slot="floating-tool-card-icon"
+            className="flex size-4 shrink-0 items-center justify-center"
+          >
             {icon}
           </span>
         )}
@@ -130,12 +146,7 @@ function FloatingToolCard({
           {title}
         </span>
         {onClose && (
-          <Button
-            variant="ghost"
-            size="icon-xs"
-            onClick={onClose}
-            aria-label="Close"
-          >
+          <Button variant="ghost" size="icon-xs" onClick={onClose} aria-label="Close">
             <X />
           </Button>
         )}
@@ -143,7 +154,10 @@ function FloatingToolCard({
 
       {/* Body */}
       {children && (
-        <div data-slot="floating-tool-card-body" style={{ '--inspector-label-w': '70px' } as CSSProperties}>
+        <div
+          data-slot="floating-tool-card-body"
+          style={{ '--inspector-label-w': '70px' } as CSSProperties}
+        >
           {children}
         </div>
       )}

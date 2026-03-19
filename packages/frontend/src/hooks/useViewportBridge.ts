@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { registerSceneGraph, sendCreateDatumFromFace } from '../engine/connection.js';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
-import type { BodyPose, BodyState, MeshData } from '../stores/mechanism.js';
+import type { BodyPose, MeshData } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
@@ -87,7 +87,8 @@ export function useViewportBridge() {
 
       for (const id of currentBodyIds) {
         if (!trackedBodyIds.has(id)) {
-          const body = state.bodies.get(id)!;
+          const body = state.bodies.get(id);
+          if (!body) continue;
           sg.addBody(
             body.id,
             body.name,
@@ -117,7 +118,8 @@ export function useViewportBridge() {
 
       for (const id of currentDatumIds) {
         if (!trackedDatumIds.has(id)) {
-          const datum = state.datums.get(id)!;
+          const datum = state.datums.get(id);
+          if (!datum) continue;
           sg.addDatum(datum.id, datum.parentBodyId, convertPose(datum.localPose));
         }
       }
@@ -136,7 +138,8 @@ export function useViewportBridge() {
 
       for (const id of currentJointIds) {
         if (!trackedJointIds.has(id)) {
-          const joint = state.joints.get(id)!;
+          const joint = state.joints.get(id);
+          if (!joint) continue;
           sg.addJoint(joint.id, joint.parentDatumId, joint.childDatumId, joint.type);
         }
       }
@@ -150,7 +153,8 @@ export function useViewportBridge() {
       // Check for joint type updates on existing joints
       for (const id of currentJointIds) {
         if (trackedJointIds.has(id)) {
-          const joint = state.joints.get(id)!;
+          const joint = state.joints.get(id);
+          if (!joint) continue;
           const entity = sg.getEntity(id);
           if (entity) {
             // We track type changes by comparing with stored metadata
@@ -180,7 +184,7 @@ export function useViewportBridge() {
       unsubHover();
       registerSceneGraph(null);
     };
-  }, [sceneGraphRef.current]);
+  }, []);
 
   const handlePick = useCallback(
     (
@@ -203,9 +207,7 @@ export function useViewportBridge() {
           return;
         }
         if (resolution.kind === 'error') {
-          useAuthoringStatusStore
-            .getState()
-            .setMessage(resolution.message);
+          useAuthoringStatusStore.getState().setMessage(resolution.message);
           return;
         }
         const name = nextDatumName(datums);
@@ -228,7 +230,9 @@ export function useViewportBridge() {
 
         if (creationState.step === 'pick-child') {
           // Validate different body
-          const parentDatum = datums.get(creationState.parentDatumId!);
+          const parentDatum = creationState.parentDatumId
+            ? datums.get(creationState.parentDatumId)
+            : undefined;
           const childDatum = datums.get(entityId);
           if (!parentDatum || !childDatum) return;
 

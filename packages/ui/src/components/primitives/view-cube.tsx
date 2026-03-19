@@ -1,7 +1,7 @@
 import { Home, Maximize2 } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
-import { ToolbarButton } from '@/components/primitives/toolbar-button';
+import { cn } from '../../lib/utils';
+import { ToolbarButton } from './toolbar-button';
 
 interface ViewCubeProps {
   onHome?: () => void;

@@ -50,11 +50,7 @@ function makeDatum(id: string, parentBodyId: string): DatumState {
   };
 }
 
-function makeJoint(
-  id: string,
-  parentDatumId: string,
-  childDatumId: string,
-): JointState {
+function makeJoint(id: string, parentDatumId: string, childDatumId: string): JointState {
   return {
     id,
     name: `Joint ${id}`,
@@ -99,7 +95,7 @@ describe('Mechanism store', () => {
     addBodies([updated]);
     const { bodies } = useMechanismStore.getState();
     expect(bodies.size).toBe(1);
-    expect(bodies.get('b1')!.name).toBe('Updated');
+    expect(bodies.get('b1')?.name).toBe('Updated');
   });
 
   it('removeBody deletes from map', () => {
@@ -133,20 +129,18 @@ describe('Mechanism store', () => {
     const datum = makeDatum('d1', 'b1');
     useMechanismStore.getState().addDatum(datum);
     useMechanismStore.getState().renameDatum('d1', 'NewName');
-    const updated = useMechanismStore.getState().datums.get('d1')!;
-    expect(updated.name).toBe('NewName');
-    expect(updated.parentBodyId).toBe('b1');
-    expect(updated.localPose).toEqual(datum.localPose);
+    const updated = useMechanismStore.getState().datums.get('d1');
+    expect(updated?.name).toBe('NewName');
+    expect(updated?.parentBodyId).toBe('b1');
+    expect(updated?.localPose).toEqual(datum.localPose);
   });
 
   it('renameDatum unknown is no-op', () => {
     useMechanismStore.getState().addDatum(makeDatum('d1', 'b1'));
-    const before = useMechanismStore.getState().datums;
+    const _before = useMechanismStore.getState().datums;
     useMechanismStore.getState().renameDatum('nonexistent', 'X');
     // Map reference may differ but content should be the same
-    expect(useMechanismStore.getState().datums.get('d1')!.name).toBe(
-      'Datum d1',
-    );
+    expect(useMechanismStore.getState().datums.get('d1')?.name).toBe('Datum d1');
   });
 
   // --- Joints ---
@@ -160,27 +154,23 @@ describe('Mechanism store', () => {
     // Store is a dumb projection — engine validates datum references
     const joint = makeJoint('j1', 'nonexistent-parent', 'nonexistent-child');
     useMechanismStore.getState().addJoint(joint);
-    const stored = useMechanismStore.getState().joints.get('j1')!;
-    expect(stored.parentDatumId).toBe('nonexistent-parent');
-    expect(stored.childDatumId).toBe('nonexistent-child');
+    const stored = useMechanismStore.getState().joints.get('j1');
+    expect(stored?.parentDatumId).toBe('nonexistent-parent');
+    expect(stored?.childDatumId).toBe('nonexistent-child');
   });
 
   it('updateJoint partial merge', () => {
     useMechanismStore.getState().addJoint(makeJoint('j1', 'd1', 'd2'));
-    useMechanismStore
-      .getState()
-      .updateJoint('j1', { name: 'Updated', type: 'prismatic' });
-    const updated = useMechanismStore.getState().joints.get('j1')!;
-    expect(updated.name).toBe('Updated');
-    expect(updated.type).toBe('prismatic');
-    expect(updated.parentDatumId).toBe('d1');
-    expect(updated.lowerLimit).toBe(-3.14);
+    useMechanismStore.getState().updateJoint('j1', { name: 'Updated', type: 'prismatic' });
+    const updated = useMechanismStore.getState().joints.get('j1');
+    expect(updated?.name).toBe('Updated');
+    expect(updated?.type).toBe('prismatic');
+    expect(updated?.parentDatumId).toBe('d1');
+    expect(updated?.lowerLimit).toBe(-3.14);
   });
 
   it('updateJoint unknown is no-op', () => {
-    useMechanismStore
-      .getState()
-      .updateJoint('nonexistent', { name: 'X' });
+    useMechanismStore.getState().updateJoint('nonexistent', { name: 'X' });
     expect(useMechanismStore.getState().joints.size).toBe(0);
   });
 

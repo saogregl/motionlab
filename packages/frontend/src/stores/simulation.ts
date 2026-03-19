@@ -18,7 +18,12 @@ interface SimulationState {
   errorMessage: string | null;
   compilationDiagnostics: string[];
   channelDescriptors: ChannelDescriptor[];
-  setCompilationResult(success: boolean, error?: string, diagnostics?: string[], channels?: ChannelDescriptor[]): void;
+  setCompilationResult(
+    success: boolean,
+    error?: string,
+    diagnostics?: string[],
+    channels?: ChannelDescriptor[],
+  ): void;
   setSimState(state: SimState, time: number, stepCount: number): void;
   setLoopEnabled(enabled: boolean): void;
   setError(message: string): void;
@@ -49,8 +54,7 @@ export const useSimulationStore = create<SimulationState>()((set) => ({
       maxSimTime: Math.max(prev.maxSimTime, time),
     })),
   setLoopEnabled: (enabled) => set({ loopEnabled: enabled }),
-  setError: (message) =>
-    set({ state: 'error', errorMessage: message }),
+  setError: (message) => set({ state: 'error', errorMessage: message }),
   reset: () =>
     set({
       state: 'idle',

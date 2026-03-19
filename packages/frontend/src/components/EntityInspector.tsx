@@ -1,12 +1,11 @@
 import { InspectorPanel } from '@motionlab/ui';
-
+import { useMechanismStore } from '../stores/mechanism.js';
+import { useSelectionStore } from '../stores/selection.js';
+import { useSimulationStore } from '../stores/simulation.js';
 import { BodyInspector } from './BodyInspector.js';
 import { DatumInspector } from './DatumInspector.js';
 import { JointInspector } from './JointInspector.js';
 import { SimulationMetadataSection } from './SimulationMetadataSection.js';
-import { useMechanismStore } from '../stores/mechanism.js';
-import { useSelectionStore } from '../stores/selection.js';
-import { useSimulationStore } from '../stores/simulation.js';
 
 /**
  * Routes the right-panel inspector to the correct component
@@ -23,11 +22,7 @@ export function EntityInspector() {
   const firstId = selectedIds.values().next().value as string | undefined;
 
   if (!firstId) {
-    return (
-      <InspectorPanel>
-        {showSimMeta && <SimulationMetadataSection />}
-      </InspectorPanel>
-    );
+    return <InspectorPanel>{showSimMeta && <SimulationMetadataSection />}</InspectorPanel>;
   }
 
   if (bodies.has(firstId)) {
@@ -55,9 +50,5 @@ export function EntityInspector() {
     );
   }
 
-  return (
-    <InspectorPanel>
-      {showSimMeta && <SimulationMetadataSection />}
-    </InspectorPanel>
-  );
+  return <InspectorPanel>{showSimMeta && <SimulationMetadataSection />}</InspectorPanel>;
 }

@@ -2,8 +2,8 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import type React from 'react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-import { cn } from '@/lib/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '../../lib/utils';
+import { ScrollArea } from '../ui/scroll-area';
 
 /* ── Types ── */
 
@@ -197,7 +197,16 @@ function TreeView({
           break;
       }
     },
-    [focusedIndex, visibleNodes, expandedIds, toggleExpand, onSelectionChange, virtualizer, selectedIds, onDelete],
+    [
+      focusedIndex,
+      visibleNodes,
+      expandedIds,
+      toggleExpand,
+      onSelectionChange,
+      virtualizer,
+      selectedIds,
+      onDelete,
+    ],
   );
 
   return (
@@ -210,10 +219,7 @@ function TreeView({
         className="h-full overflow-auto pt-px outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]/50"
         onKeyDown={handleKeyDown}
       >
-        <div
-          className="relative w-full"
-          style={{ height: `${virtualizer.getTotalSize()}px` }}
-        >
+        <div className="relative w-full" style={{ height: `${virtualizer.getTotalSize()}px` }}>
           {virtualizer.getVirtualItems().map((virtualRow) => {
             const node = visibleNodes[virtualRow.index];
             const isSelected = selectedIds.has(node.id);
@@ -224,6 +230,7 @@ function TreeView({
               <div
                 key={node.id}
                 role="treeitem"
+                tabIndex={isFocused ? 0 : -1}
                 aria-level={node.level + 1}
                 aria-selected={isSelected}
                 aria-expanded={node.hasChildren ? isExpanded : undefined}

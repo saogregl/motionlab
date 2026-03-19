@@ -1,4 +1,3 @@
-import type { SceneGraphManager } from '@motionlab/viewport';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -9,6 +8,7 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from '@motionlab/ui';
+import type { SceneGraphManager } from '@motionlab/viewport';
 import type { ReactNode } from 'react';
 
 interface ViewportContextMenuProps {

@@ -123,27 +123,22 @@ app.whenReady().then(() => {
           { name: 'All Files', extensions: ['*'] },
         ],
       });
-      return result.canceled ? null : result.filePaths[0] ?? null;
+      return result.canceled ? null : (result.filePaths[0] ?? null);
     },
   );
 
   // Project file persistence (Epic 6.4)
-  ipcMain.handle(
-    'save-project-file',
-    async (_event, data: Uint8Array, defaultName?: string) => {
-      const win = BrowserWindow.getFocusedWindow();
-      if (!win) return { saved: false };
-      const result = await dialog.showSaveDialog(win, {
-        defaultPath: defaultName ? `${defaultName}.motionlab` : 'Untitled.motionlab',
-        filters: [
-          { name: 'MotionLab Project', extensions: ['motionlab'] },
-        ],
-      });
-      if (result.canceled || !result.filePath) return { saved: false };
-      await fs.writeFile(result.filePath, Buffer.from(data));
-      return { saved: true, filePath: result.filePath };
-    },
-  );
+  ipcMain.handle('save-project-file', async (_event, data: Uint8Array, defaultName?: string) => {
+    const win = BrowserWindow.getFocusedWindow();
+    if (!win) return { saved: false };
+    const result = await dialog.showSaveDialog(win, {
+      defaultPath: defaultName ? `${defaultName}.motionlab` : 'Untitled.motionlab',
+      filters: [{ name: 'MotionLab Project', extensions: ['motionlab'] }],
+    });
+    if (result.canceled || !result.filePath) return { saved: false };
+    await fs.writeFile(result.filePath, Buffer.from(data));
+    return { saved: true, filePath: result.filePath };
+  });
 
   ipcMain.handle('open-project-file', async () => {
     const win = BrowserWindow.getFocusedWindow();

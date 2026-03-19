@@ -2,6 +2,7 @@ import { create, fromBinary, toBinary } from '@bufbuild/protobuf';
 import { describe, expect, it } from 'vitest';
 import {
   AssetReferenceSchema,
+  BodyDisplayDataSchema,
   BodySchema,
   DatumSchema,
   DisplayMeshSchema,
@@ -11,12 +12,15 @@ import {
   MassPropertiesSchema,
   MechanismSchema,
   PoseSchema,
+  ProjectFileSchema,
+  ProjectMetadataSchema,
   QuatSchema,
   Vec3Schema,
 } from '../generated/mechanism/mechanism_pb.js';
 import {
   BodyImportResultSchema,
   BodyPoseDataSchema,
+  ChannelDataType,
   CommandSchema,
   CompilationResultEventSchema,
   CompileMechanismCommandSchema,
@@ -31,9 +35,8 @@ import {
   DeleteDatumResultSchema,
   DeleteJointCommandSchema,
   DeleteJointResultSchema,
-  EngineStatusSchema,
   EngineStatus_State,
-  EngineStatus_StateSchema,
+  EngineStatusSchema,
   EventSchema,
   FaceSurfaceClass,
   HandshakeAckSchema,
@@ -42,35 +45,29 @@ import {
   ImportAssetResultSchema,
   ImportOptionsSchema,
   JointStateDataSchema,
+  LoadProjectCommandSchema,
+  LoadProjectResultSchema,
+  LoadProjectSuccessSchema,
   MechanismSnapshotSchema,
+  OutputChannelDescriptorSchema,
   PingSchema,
   PongSchema,
   ProtocolVersionSchema,
   RenameDatumCommandSchema,
   RenameDatumResultSchema,
-  SimulationAction,
-  ChannelDataType,
-  OutputChannelDescriptorSchema,
+  SaveProjectCommandSchema,
+  SaveProjectResultSchema,
   ScrubCommandSchema,
+  SimStateEnum,
+  SimulationAction,
   SimulationControlCommandSchema,
   SimulationFrameSchema,
   SimulationStateEventSchema,
-  SaveProjectCommandSchema,
-  LoadProjectCommandSchema,
-  SaveProjectResultSchema,
-  LoadProjectResultSchema,
-  LoadProjectSuccessSchema,
   SimulationTraceSchema,
-  SimStateEnum,
   TimeSampleSchema,
   UpdateJointCommandSchema,
   UpdateJointResultSchema,
 } from '../generated/protocol/transport_pb.js';
-import {
-  BodyDisplayDataSchema,
-  ProjectFileSchema,
-  ProjectMetadataSchema,
-} from '../generated/mechanism/mechanism_pb.js';
 
 describe('Mechanism binary round-trip', () => {
   it('should survive serialize/deserialize for a complete mechanism', () => {
@@ -861,10 +858,7 @@ describe('Simulation lifecycle round-trip', () => {
     expect(restored.payload.case).toBe('compilationResult');
     if (restored.payload.case === 'compilationResult') {
       expect(restored.payload.value.success).toBe(true);
-      expect(restored.payload.value.diagnostics).toEqual([
-        '2 bodies compiled',
-        '1 joint created',
-      ]);
+      expect(restored.payload.value.diagnostics).toEqual(['2 bodies compiled', '1 joint created']);
     }
   });
 
@@ -1283,13 +1277,14 @@ describe('Protocol coverage: Ping, Pong, HandshakeAck, EngineStatus, MechanismSn
 
     expect(restored.payload.case).toBe('mechanismSnapshot');
     if (restored.payload.case === 'mechanismSnapshot') {
-      const mech = restored.payload.value.mechanism!;
-      expect(mech.id?.id).toBe('mech-001');
-      expect(mech.name).toBe('Snapshot Test');
-      expect(mech.bodies).toHaveLength(1);
-      expect(mech.datums).toHaveLength(1);
-      expect(mech.joints).toHaveLength(1);
-      expect(mech.joints[0].type).toBe(JointType.REVOLUTE);
+      const mech = restored.payload.value.mechanism;
+      expect(mech).toBeDefined();
+      expect(mech?.id?.id).toBe('mech-001');
+      expect(mech?.name).toBe('Snapshot Test');
+      expect(mech?.bodies).toHaveLength(1);
+      expect(mech?.datums).toHaveLength(1);
+      expect(mech?.joints).toHaveLength(1);
+      expect(mech?.joints[0].type).toBe(JointType.REVOLUTE);
     }
   });
 
@@ -1302,9 +1297,9 @@ describe('Protocol coverage: Ping, Pong, HandshakeAck, EngineStatus, MechanismSn
     const restored = fromBinary(MechanismSnapshotSchema, bytes);
 
     expect(restored.mechanism).toBeDefined();
-    expect(restored.mechanism!.bodies).toHaveLength(0);
-    expect(restored.mechanism!.datums).toHaveLength(0);
-    expect(restored.mechanism!.joints).toHaveLength(0);
+    expect(restored.mechanism?.bodies).toHaveLength(0);
+    expect(restored.mechanism?.datums).toHaveLength(0);
+    expect(restored.mechanism?.joints).toHaveLength(0);
   });
 });
 
@@ -1522,9 +1517,9 @@ describe('Project save/load round-trip (Epic 6.4)', () => {
     expect(restored.mechanism?.bodies).toHaveLength(1);
     expect(restored.bodyDisplayData).toHaveLength(1);
     expect(restored.bodyDisplayData[0].bodyId).toBe('b1');
-    expect(Array.from(restored.bodyDisplayData[0].displayMesh?.vertices ?? [])).toEqual(
-      [0, 0, 0, 1, 0, 0, 0, 1, 0],
-    );
+    expect(Array.from(restored.bodyDisplayData[0].displayMesh?.vertices ?? [])).toEqual([
+      0, 0, 0, 1, 0, 0, 0, 1, 0,
+    ]);
     expect(restored.bodyDisplayData[0].partIndex).toEqual([0, 1]);
   });
 });

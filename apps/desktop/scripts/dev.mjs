@@ -18,7 +18,7 @@ import { build, createServer } from 'vite';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 
-async function buildBundle(entry, outFileName, externals) {
+async function _buildBundle(entry, outFileName, externals) {
   await build({
     root,
     build: {
@@ -85,7 +85,12 @@ async function main() {
       rollupOptions: {
         external: [
           'electron',
-          'node:path', 'node:fs', 'node:os', 'node:child_process', 'node:crypto', 'node:net',
+          'node:path',
+          'node:fs',
+          'node:os',
+          'node:child_process',
+          'node:crypto',
+          'node:net',
         ],
       },
       minify: false,

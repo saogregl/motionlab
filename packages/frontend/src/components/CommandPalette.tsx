@@ -45,7 +45,8 @@ export function CommandPalette() {
   const isReady = engineStatus === 'ready';
   const canCompile = isReady && (simState === 'idle' || simState === 'error');
   const canPlay = isReady && simState === 'paused';
-  const canReset = isReady && (simState === 'running' || simState === 'paused' || simState === 'error');
+  const canReset =
+    isReady && (simState === 'running' || simState === 'paused' || simState === 'error');
   const isSimulating = simState === 'running' || simState === 'paused';
 
   const handleImport = useCallback(async () => {
@@ -83,10 +84,7 @@ export function CommandPalette() {
           >
             Create Joint
           </CommandItem>
-          <CommandItem
-            disabled={!isReady}
-            onSelect={handleImport}
-          >
+          <CommandItem disabled={!isReady} onSelect={handleImport}>
             Import CAD File
           </CommandItem>
         </CommandGroup>

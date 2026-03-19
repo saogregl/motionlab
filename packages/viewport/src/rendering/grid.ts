@@ -1,10 +1,4 @@
-import {
-  type AbstractMesh,
-  Color4,
-  CreateLineSystem,
-  type Scene,
-  Vector3,
-} from '@babylonjs/core';
+import { type AbstractMesh, Color4, CreateLineSystem, type Scene, Vector3 } from '@babylonjs/core';
 
 export interface GridOptions {
   visible?: boolean;
@@ -35,28 +29,18 @@ export function createGrid(scene: Scene, options?: GridOptions): GridOverlay {
   // Lines parallel to X axis (varying Z)
   for (let z = -gridSize; z <= gridSize; z += step) {
     if (z === 0) continue;
-    lines.push([
-      new Vector3(-gridSize, 0, z),
-      new Vector3(gridSize, 0, z),
-    ]);
+    lines.push([new Vector3(-gridSize, 0, z), new Vector3(gridSize, 0, z)]);
     colors.push([gridColor, gridColor]);
   }
 
   // Lines parallel to Z axis (varying X)
   for (let x = -gridSize; x <= gridSize; x += step) {
     if (x === 0) continue;
-    lines.push([
-      new Vector3(x, 0, -gridSize),
-      new Vector3(x, 0, gridSize),
-    ]);
+    lines.push([new Vector3(x, 0, -gridSize), new Vector3(x, 0, gridSize)]);
     colors.push([gridColor, gridColor]);
   }
 
-  const gridMesh = CreateLineSystem(
-    'grid_lines',
-    { lines, colors, useVertexAlpha: true },
-    scene,
-  );
+  const gridMesh = CreateLineSystem('grid_lines', { lines, colors, useVertexAlpha: true }, scene);
   gridMesh.isPickable = false;
 
   // X axis — design token #d94b4b

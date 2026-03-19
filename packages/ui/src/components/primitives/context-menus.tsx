@@ -10,7 +10,7 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from '@/components/ui/context-menu';
+} from '../ui/context-menu';
 
 /* ── Shared item class for consistent 28px height + 12px padding ── */
 
@@ -130,11 +130,7 @@ function JointContextMenu({
           <ContextMenuSubTrigger className={itemCls}>Change Type</ContextMenuSubTrigger>
           <ContextMenuSubContent>
             {jointTypes.map((type) => (
-              <ContextMenuItem
-                key={type}
-                className={itemCls}
-                onSelect={() => onChangeType?.(type)}
-              >
+              <ContextMenuItem key={type} className={itemCls} onSelect={() => onChangeType?.(type)}>
                 {type}
               </ContextMenuItem>
             ))}

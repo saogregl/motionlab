@@ -44,8 +44,7 @@ export function createPostProcessing(
   defaultPipeline.samples = msaaSamples;
   defaultPipeline.fxaaEnabled = true;
   defaultPipeline.imageProcessing.toneMappingEnabled = true;
-  defaultPipeline.imageProcessing.toneMappingType =
-    ImageProcessingConfiguration.TONEMAPPING_ACES;
+  defaultPipeline.imageProcessing.toneMappingType = ImageProcessingConfiguration.TONEMAPPING_ACES;
   defaultPipeline.imageProcessing.exposure = exposure;
   defaultPipeline.imageProcessing.contrast = contrast;
   defaultPipeline.bloomEnabled = false;
@@ -76,10 +75,7 @@ export function createPostProcessing(
   ssaoPipeline.maxZ = 250;
 
   if (!ssaoEnabled) {
-    scene.postProcessRenderPipelineManager.detachCamerasFromRenderPipeline(
-      'ssao_pipeline',
-      camera,
-    );
+    scene.postProcessRenderPipelineManager.detachCamerasFromRenderPipeline('ssao_pipeline', camera);
   }
 
   return {

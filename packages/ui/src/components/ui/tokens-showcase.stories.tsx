@@ -36,22 +36,30 @@ function TokensShowcase() {
             className="rounded-[var(--radius-lg)] border border-border-default p-3"
             style={{ backgroundColor: 'var(--bg-app)' }}
           >
-            <div className="text-[length:var(--text-2xs)] text-text-tertiary font-mono mb-2">bg-app</div>
+            <div className="text-[length:var(--text-2xs)] text-text-tertiary font-mono mb-2">
+              bg-app
+            </div>
             <div
               className="rounded-[var(--radius-md)] border border-border-default p-3"
               style={{ backgroundColor: 'var(--layer-base)' }}
             >
-              <div className="text-[length:var(--text-2xs)] text-text-tertiary font-mono mb-2">layer-base</div>
+              <div className="text-[length:var(--text-2xs)] text-text-tertiary font-mono mb-2">
+                layer-base
+              </div>
               <div
                 className="rounded-[var(--radius-sm)] border border-border-subtle p-3"
                 style={{ backgroundColor: 'var(--layer-recessed)' }}
               >
-                <div className="text-[length:var(--text-2xs)] text-text-tertiary font-mono mb-2">layer-recessed</div>
+                <div className="text-[length:var(--text-2xs)] text-text-tertiary font-mono mb-2">
+                  layer-recessed
+                </div>
                 <div
                   className="rounded-[var(--radius-sm)] border border-border-subtle p-2"
                   style={{ backgroundColor: 'var(--layer-raised)' }}
                 >
-                  <div className="text-[length:var(--text-2xs)] text-text-tertiary font-mono">layer-raised</div>
+                  <div className="text-[length:var(--text-2xs)] text-text-tertiary font-mono">
+                    layer-raised
+                  </div>
                 </div>
               </div>
             </div>
@@ -231,7 +239,9 @@ function TokensShowcase() {
                 className="h-16 w-24 border border-border-default"
                 style={{ backgroundColor: `var(${cssVar})` }}
               />
-              <span className="text-[length:var(--text-2xs)] text-text-tertiary font-mono">{label}</span>
+              <span className="text-[length:var(--text-2xs)] text-text-tertiary font-mono">
+                {label}
+              </span>
             </div>
           ))}
         </div>

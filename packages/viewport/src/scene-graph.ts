@@ -8,18 +8,18 @@ import {
   type Scene,
   TransformNode,
   Vector3,
-  VertexData,
   VertexBuffer,
+  VertexData,
 } from '@babylonjs/core';
 
 import { BodyGeometryIndex } from './body-geometry-index.js';
 import { createDatumTriad } from './rendering/datum-triad.js';
+import type { GridOverlay } from './rendering/grid.js';
 import {
   createFixedJointVisual,
   createPrismaticJointVisual,
   createRevoluteJointVisual,
 } from './rendering/joint-visuals.js';
-import type { GridOverlay } from './rendering/grid.js';
 import type { LightingRig } from './rendering/lighting.js';
 import type { MaterialFactory } from './rendering/materials.js';
 import type { SelectionVisuals } from './rendering/selection.js';
@@ -67,10 +67,7 @@ export interface SceneGraphDeps {
 // Camera preset angles
 // ---------------------------------------------------------------------------
 
-const PRESET_ANGLES: Record<
-  Exclude<CameraPreset, 'fit-all'>,
-  { alpha: number; beta: number }
-> = {
+const PRESET_ANGLES: Record<Exclude<CameraPreset, 'fit-all'>, { alpha: number; beta: number }> = {
   isometric: { alpha: Math.PI / 4, beta: Math.PI / 3 },
   front: { alpha: -Math.PI / 2, beta: Math.PI / 2 },
   back: { alpha: Math.PI / 2, beta: Math.PI / 2 },
@@ -113,7 +110,7 @@ export class SceneGraphManager {
     this.deps = deps;
 
     // Per-frame view-distance scaling for datum triads and joint visuals
-    this._datumScaleObserver = scene.onBeforeRenderObservable.add(() => {
+    const observer = scene.onBeforeRenderObservable.add(() => {
       const camPos = this._camera.position;
       for (const entity of this.entities.values()) {
         if (entity.type !== 'datum' && entity.type !== 'joint') continue;
@@ -122,7 +119,9 @@ export class SceneGraphManager {
         const s = Math.max(dist * DATUM_SCALE_FACTOR, 0.001);
         entity.rootNode.scaling.set(s, s, s);
       }
-    })!;
+    });
+    if (!observer) throw new Error('Failed to register onBeforeRender observer');
+    this._datumScaleObserver = observer;
   }
 
   get scene(): Scene {
@@ -135,15 +134,13 @@ export class SceneGraphManager {
 
   addBody(
     id: string,
-    name: string,
+    _name: string,
     meshData: MeshDataInput,
     pose: PoseInput,
     partIndex?: Uint32Array,
   ): SceneEntity {
     if (this.entities.has(id)) {
-      console.warn(
-        `SceneGraphManager: entity '${id}' already exists, removing first`,
-      );
+      console.warn(`SceneGraphManager: entity '${id}' already exists, removing first`);
       this.removeBody(id);
     }
 
@@ -176,11 +173,7 @@ export class SceneGraphManager {
       this.bodyGeometryIndices.set(id, new BodyGeometryIndex(partIndex));
     }
 
-    root.position = new Vector3(
-      pose.position[0],
-      pose.position[1],
-      pose.position[2],
-    );
+    root.position = new Vector3(pose.position[0], pose.position[1], pose.position[2]);
     root.rotationQuaternion = new Quaternion(
       pose.rotation[0],
       pose.rotation[1],
@@ -201,9 +194,7 @@ export class SceneGraphManager {
   removeBody(id: string): boolean {
     const entity = this.entities.get(id);
     if (!entity) {
-      console.warn(
-        `SceneGraphManager: cannot remove unknown entity '${id}'`,
-      );
+      console.warn(`SceneGraphManager: cannot remove unknown entity '${id}'`);
       return false;
     }
 
@@ -224,17 +215,11 @@ export class SceneGraphManager {
   updateBodyTransform(id: string, pose: PoseInput): void {
     const entity = this.entities.get(id);
     if (!entity) {
-      console.warn(
-        `SceneGraphManager: cannot update transform for unknown entity '${id}'`,
-      );
+      console.warn(`SceneGraphManager: cannot update transform for unknown entity '${id}'`);
       return;
     }
 
-    entity.rootNode.position.set(
-      pose.position[0],
-      pose.position[1],
-      pose.position[2],
-    );
+    entity.rootNode.position.set(pose.position[0], pose.position[1], pose.position[2]);
 
     if (!entity.rootNode.rotationQuaternion) {
       entity.rootNode.rotationQuaternion = new Quaternion();
@@ -251,23 +236,15 @@ export class SceneGraphManager {
   // Datum management
   // -----------------------------------------------------------------------
 
-  addDatum(
-    id: string,
-    parentBodyId: string,
-    localPose: PoseInput,
-  ): SceneEntity | undefined {
+  addDatum(id: string, parentBodyId: string, localPose: PoseInput): SceneEntity | undefined {
     if (this.entities.has(id)) {
-      console.warn(
-        `SceneGraphManager: datum '${id}' already exists, removing first`,
-      );
+      console.warn(`SceneGraphManager: datum '${id}' already exists, removing first`);
       this.removeDatum(id);
     }
 
     const parentEntity = this.entities.get(parentBodyId);
     if (!parentEntity) {
-      console.warn(
-        `SceneGraphManager: parent body '${parentBodyId}' not found for datum '${id}'`,
-      );
+      console.warn(`SceneGraphManager: parent body '${parentBodyId}' not found for datum '${id}'`);
       return undefined;
     }
 
@@ -301,9 +278,7 @@ export class SceneGraphManager {
   removeDatum(id: string): boolean {
     const entity = this.entities.get(id);
     if (!entity || entity.type !== 'datum') {
-      console.warn(
-        `SceneGraphManager: cannot remove unknown datum '${id}'`,
-      );
+      console.warn(`SceneGraphManager: cannot remove unknown datum '${id}'`);
       return false;
     }
 
@@ -375,10 +350,7 @@ export class SceneGraphManager {
     return entity;
   }
 
-  updateJoint(
-    id: string,
-    jointType: 'revolute' | 'prismatic' | 'fixed',
-  ): void {
+  updateJoint(id: string, jointType: 'revolute' | 'prismatic' | 'fixed'): void {
     const entity = this.entities.get(id);
     if (!entity || entity.type !== 'joint') {
       console.warn(`SceneGraphManager: cannot update unknown joint '${id}'`);
@@ -454,9 +426,7 @@ export class SceneGraphManager {
   fitAll(): void {
     if (this.entities.size === 0) return;
 
-    const allMeshes = Array.from(this.entities.values()).flatMap(
-      (e) => e.meshes,
-    );
+    const allMeshes = Array.from(this.entities.values()).flatMap((e) => e.meshes);
 
     let min = new Vector3(Infinity, Infinity, Infinity);
     let max = new Vector3(-Infinity, -Infinity, -Infinity);
@@ -540,14 +510,15 @@ export class SceneGraphManager {
 
     colors.fill(1.0);
     for (let triangle = faceRange.start; triangle < faceRange.start + faceRange.count; triangle++) {
-      const i0 = indices[triangle * 3]!;
-      const i1 = indices[triangle * 3 + 1]!;
-      const i2 = indices[triangle * 3 + 2]!;
+      const i0 = indices[triangle * 3];
+      const i1 = indices[triangle * 3 + 1];
+      const i2 = indices[triangle * 3 + 2];
+      if (i0 == null || i1 == null || i2 == null) continue;
       for (const vertexIndex of [i0, i1, i2]) {
-        colors[vertexIndex * 4] = 0.40;
-        colors[vertexIndex * 4 + 1] = 0.70;
-        colors[vertexIndex * 4 + 2] = 1.00;
-        colors[vertexIndex * 4 + 3] = 1.00;
+        colors[vertexIndex * 4] = 0.4;
+        colors[vertexIndex * 4 + 1] = 0.7;
+        colors[vertexIndex * 4 + 2] = 1.0;
+        colors[vertexIndex * 4 + 3] = 1.0;
       }
     }
 

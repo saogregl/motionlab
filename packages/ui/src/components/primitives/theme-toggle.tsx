@@ -1,6 +1,6 @@
 import { Moon, Sun } from 'lucide-react';
 
-import { ToolbarButton } from '@/components/primitives/toolbar-button';
+import { ToolbarButton } from './toolbar-button';
 
 interface ThemeToggleProps {
   theme: 'light' | 'dark';

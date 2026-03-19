@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Box, MoreHorizontal } from 'lucide-react';
 import { Button } from '../ui/button';
-import { InspectorSection } from './inspector-section';
 import { InspectorPanel } from './inspector-panel';
+import { InspectorSection } from './inspector-section';
 import { PropertyRow } from './property-row';
 
 const meta = {

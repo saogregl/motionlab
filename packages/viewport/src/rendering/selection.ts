@@ -1,9 +1,4 @@
-import {
-  type AbstractMesh,
-  Color4,
-  type Mesh,
-  type Scene,
-} from '@babylonjs/core';
+import { type AbstractMesh, Color4, type Mesh, type Scene } from '@babylonjs/core';
 
 import type { MaterialFactory } from './materials.js';
 

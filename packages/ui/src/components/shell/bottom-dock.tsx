@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface DockTab {
   id: string;
@@ -53,7 +53,10 @@ function BottomDock({
     <div
       data-slot="bottom-dock"
       data-expanded={expanded || undefined}
-      className={cn('flex shrink-0 flex-col border-t border-border-default bg-layer-base', className)}
+      className={cn(
+        'flex shrink-0 flex-col border-t border-border-default bg-layer-base',
+        className,
+      )}
     >
       {/* Tab bar — always visible */}
       <div className="flex h-6 shrink-0 items-center gap-0.5 border-b border-[var(--border-subtle)] bg-[var(--layer-recessed)] px-2">

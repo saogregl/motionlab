@@ -3,8 +3,8 @@ import { Crosshair, Play, Square } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '../ui/button';
-import { PropertyRow } from './property-row';
 import { FloatingToolCard } from './floating-tool-card';
+import { PropertyRow } from './property-row';
 
 const meta = {
   title: 'Primitives/FloatingToolCard',
@@ -27,7 +27,9 @@ export const CreateDatum: Story = {
         onClose={() => {}}
         footer={
           <>
-            <Button variant="ghost" size="sm">Cancel</Button>
+            <Button variant="ghost" size="sm">
+              Cancel
+            </Button>
             <Button size="sm">Confirm</Button>
           </>
         }
@@ -67,23 +69,21 @@ export const AnimateMate: Story = {
           title="Animate Mate"
           onClose={() => {}}
           footer={
-            <>
-              <Button
-                variant={isPlaying ? 'toolbar-active' : 'toolbar'}
-                size="sm"
-                onClick={() => setIsPlaying(!isPlaying)}
-              >
-                {isPlaying ? (
-                  <>
-                    <Square className="size-3" /> Stop
-                  </>
-                ) : (
-                  <>
-                    <Play className="size-3" /> Play
-                  </>
-                )}
-              </Button>
-            </>
+            <Button
+              variant={isPlaying ? 'toolbar-active' : 'toolbar'}
+              size="sm"
+              onClick={() => setIsPlaying(!isPlaying)}
+            >
+              {isPlaying ? (
+                <>
+                  <Square className="size-3" /> Stop
+                </>
+              ) : (
+                <>
+                  <Play className="size-3" /> Play
+                </>
+              )}
+            </Button>
           }
         >
           <PropertyRow label="DOF">
@@ -136,7 +136,9 @@ export const Dragged: Story = {
         defaultPosition={{ x: 200, y: 100 }}
         footer={
           <>
-            <Button variant="ghost" size="sm">Cancel</Button>
+            <Button variant="ghost" size="sm">
+              Cancel
+            </Button>
             <Button size="sm">Confirm</Button>
           </>
         }

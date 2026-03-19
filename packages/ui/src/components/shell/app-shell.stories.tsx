@@ -12,17 +12,17 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
-import { InspectorPanel } from '@/components/primitives/inspector-panel';
-import { InspectorSection } from '@/components/primitives/inspector-section';
-import { PropertyRow } from '@/components/primitives/property-row';
-import { StatusBadge } from '@/components/primitives/status-badge';
-import { ToolbarButton } from '@/components/primitives/toolbar-button';
-import { ToolbarGroup } from '@/components/primitives/toolbar-group';
-import { GroupHeaderRow, TreeRow } from '@/components/primitives/tree-row';
-import { TreeView, type TreeNode } from '@/components/primitives/tree-view';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { TooltipProvider } from '@/components/ui/tooltip';
+import { InspectorPanel } from '../primitives/inspector-panel';
+import { InspectorSection } from '../primitives/inspector-section';
+import { PropertyRow } from '../primitives/property-row';
+import { StatusBadge } from '../primitives/status-badge';
+import { ToolbarButton } from '../primitives/toolbar-button';
+import { ToolbarGroup } from '../primitives/toolbar-group';
+import { GroupHeaderRow, TreeRow } from '../primitives/tree-row';
+import { type TreeNode, TreeView } from '../primitives/tree-view';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { TooltipProvider } from '../ui/tooltip';
 
 import { AppShell } from './app-shell';
 import { BottomDock } from './bottom-dock';
@@ -36,28 +36,170 @@ import { WorkspaceTabBar } from './workspace-tab-bar';
 
 const TREE_NODES: TreeNode[] = [
   // Bodies group
-  { id: 'g-bodies', parentId: null, level: 0, name: 'Bodies', hasChildren: true, isGroup: true, count: 6 },
-  { id: 'b-caliper-housing', parentId: 'g-bodies', level: 1, name: 'Caliper Housing', hasChildren: false, entityType: 'body' },
-  { id: 'b-brake-pad-inner', parentId: 'g-bodies', level: 1, name: 'Brake Pad Inner', hasChildren: false, entityType: 'body' },
-  { id: 'b-brake-pad-outer', parentId: 'g-bodies', level: 1, name: 'Brake Pad Outer', hasChildren: false, entityType: 'body' },
-  { id: 'b-piston', parentId: 'g-bodies', level: 1, name: 'Piston', hasChildren: false, entityType: 'body' },
-  { id: 'b-mounting-bracket', parentId: 'g-bodies', level: 1, name: 'Mounting Bracket', hasChildren: false, entityType: 'body' },
-  { id: 'b-brake-disc', parentId: 'g-bodies', level: 1, name: 'Brake Disc', hasChildren: false, entityType: 'body' },
+  {
+    id: 'g-bodies',
+    parentId: null,
+    level: 0,
+    name: 'Bodies',
+    hasChildren: true,
+    isGroup: true,
+    count: 6,
+  },
+  {
+    id: 'b-caliper-housing',
+    parentId: 'g-bodies',
+    level: 1,
+    name: 'Caliper Housing',
+    hasChildren: false,
+    entityType: 'body',
+  },
+  {
+    id: 'b-brake-pad-inner',
+    parentId: 'g-bodies',
+    level: 1,
+    name: 'Brake Pad Inner',
+    hasChildren: false,
+    entityType: 'body',
+  },
+  {
+    id: 'b-brake-pad-outer',
+    parentId: 'g-bodies',
+    level: 1,
+    name: 'Brake Pad Outer',
+    hasChildren: false,
+    entityType: 'body',
+  },
+  {
+    id: 'b-piston',
+    parentId: 'g-bodies',
+    level: 1,
+    name: 'Piston',
+    hasChildren: false,
+    entityType: 'body',
+  },
+  {
+    id: 'b-mounting-bracket',
+    parentId: 'g-bodies',
+    level: 1,
+    name: 'Mounting Bracket',
+    hasChildren: false,
+    entityType: 'body',
+  },
+  {
+    id: 'b-brake-disc',
+    parentId: 'g-bodies',
+    level: 1,
+    name: 'Brake Disc',
+    hasChildren: false,
+    entityType: 'body',
+  },
   // Datums group
-  { id: 'g-datums', parentId: null, level: 0, name: 'Datums', hasChildren: true, isGroup: true, count: 3 },
-  { id: 'd-piston-axis', parentId: 'g-datums', level: 1, name: 'Piston Axis', hasChildren: false, entityType: 'datum' },
-  { id: 'd-pad-contact', parentId: 'g-datums', level: 1, name: 'Pad Contact Plane', hasChildren: false, entityType: 'datum' },
-  { id: 'd-mount-holes', parentId: 'g-datums', level: 1, name: 'Mounting Holes', hasChildren: false, entityType: 'datum' },
+  {
+    id: 'g-datums',
+    parentId: null,
+    level: 0,
+    name: 'Datums',
+    hasChildren: true,
+    isGroup: true,
+    count: 3,
+  },
+  {
+    id: 'd-piston-axis',
+    parentId: 'g-datums',
+    level: 1,
+    name: 'Piston Axis',
+    hasChildren: false,
+    entityType: 'datum',
+  },
+  {
+    id: 'd-pad-contact',
+    parentId: 'g-datums',
+    level: 1,
+    name: 'Pad Contact Plane',
+    hasChildren: false,
+    entityType: 'datum',
+  },
+  {
+    id: 'd-mount-holes',
+    parentId: 'g-datums',
+    level: 1,
+    name: 'Mounting Holes',
+    hasChildren: false,
+    entityType: 'datum',
+  },
   // Joints group
-  { id: 'g-joints', parentId: null, level: 0, name: 'Joints', hasChildren: true, isGroup: true, count: 5 },
-  { id: 'j-piston-slider', parentId: 'g-joints', level: 1, name: 'Piston Slider', hasChildren: false, entityType: 'joint', jointType: 'slider' },
-  { id: 'j-pad-slider-inner', parentId: 'g-joints', level: 1, name: 'Pad Slider Inner', hasChildren: false, entityType: 'joint', jointType: 'slider' },
-  { id: 'j-pad-slider-outer', parentId: 'g-joints', level: 1, name: 'Pad Slider Outer', hasChildren: false, entityType: 'joint', jointType: 'slider' },
-  { id: 'j-mount-fixed', parentId: 'g-joints', level: 1, name: 'Mount Fixed', hasChildren: false, entityType: 'joint', jointType: 'fixed' },
-  { id: 'j-disc-revolute', parentId: 'g-joints', level: 1, name: 'Disc Revolute', hasChildren: false, entityType: 'joint', jointType: 'revolute' },
+  {
+    id: 'g-joints',
+    parentId: null,
+    level: 0,
+    name: 'Joints',
+    hasChildren: true,
+    isGroup: true,
+    count: 5,
+  },
+  {
+    id: 'j-piston-slider',
+    parentId: 'g-joints',
+    level: 1,
+    name: 'Piston Slider',
+    hasChildren: false,
+    entityType: 'joint',
+    jointType: 'slider',
+  },
+  {
+    id: 'j-pad-slider-inner',
+    parentId: 'g-joints',
+    level: 1,
+    name: 'Pad Slider Inner',
+    hasChildren: false,
+    entityType: 'joint',
+    jointType: 'slider',
+  },
+  {
+    id: 'j-pad-slider-outer',
+    parentId: 'g-joints',
+    level: 1,
+    name: 'Pad Slider Outer',
+    hasChildren: false,
+    entityType: 'joint',
+    jointType: 'slider',
+  },
+  {
+    id: 'j-mount-fixed',
+    parentId: 'g-joints',
+    level: 1,
+    name: 'Mount Fixed',
+    hasChildren: false,
+    entityType: 'joint',
+    jointType: 'fixed',
+  },
+  {
+    id: 'j-disc-revolute',
+    parentId: 'g-joints',
+    level: 1,
+    name: 'Disc Revolute',
+    hasChildren: false,
+    entityType: 'joint',
+    jointType: 'revolute',
+  },
   // Drivers group
-  { id: 'g-drivers', parentId: null, level: 0, name: 'Drivers', hasChildren: true, isGroup: true, count: 1 },
-  { id: 'dr-brake-force', parentId: 'g-drivers', level: 1, name: 'Brake Force', hasChildren: false, entityType: 'driver' },
+  {
+    id: 'g-drivers',
+    parentId: null,
+    level: 0,
+    name: 'Drivers',
+    hasChildren: true,
+    isGroup: true,
+    count: 1,
+  },
+  {
+    id: 'dr-brake-force',
+    parentId: 'g-drivers',
+    level: 1,
+    name: 'Brake Force',
+    hasChildren: false,
+    entityType: 'driver',
+  },
 ];
 
 /* ── Entity icons ── */
@@ -207,7 +349,9 @@ function ComposedAppShell() {
                   <span className="text-[length:var(--text-sm)] text-text-primary">Mount Axis</span>
                 </PropertyRow>
                 <PropertyRow label="Datum B">
-                  <span className="text-[length:var(--text-sm)] text-text-primary">Disc Center</span>
+                  <span className="text-[length:var(--text-sm)] text-text-primary">
+                    Disc Center
+                  </span>
                 </PropertyRow>
               </InspectorSection>
               <InspectorSection title="Limits">

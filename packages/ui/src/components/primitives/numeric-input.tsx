@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { useCallback, useRef, useState, type KeyboardEvent } from 'react';
+import { type KeyboardEvent, useCallback, useRef, useState } from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface NumericInputProps {
   value: number;
@@ -13,6 +13,7 @@ interface NumericInputProps {
   unit?: string;
   disabled?: boolean;
   className?: string;
+  id?: string;
 }
 
 function NumericInput({
@@ -25,6 +26,7 @@ function NumericInput({
   unit,
   disabled,
   className,
+  id,
 }: NumericInputProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
@@ -75,7 +77,7 @@ function NumericInput({
   const handleBlur = useCallback(() => {
     setIsEditing(false);
     const parsed = parseFloat(editValue);
-    if (!isNaN(parsed)) {
+    if (!Number.isNaN(parsed)) {
       const clamped = clamp(parsed);
       onChange?.(Number(clamped.toFixed(precision)));
     }
@@ -96,6 +98,7 @@ function NumericInput({
     >
       <input
         ref={inputRef}
+        id={id}
         type="text"
         inputMode="decimal"
         value={isEditing ? editValue : value.toFixed(precision)}

@@ -1,41 +1,40 @@
-export { Viewport, type ViewportProps } from './Viewport.js';
 export { BodyGeometryIndex } from './body-geometry-index.js';
+export { computeDatumLocalPose } from './datum-pose.js';
 export {
-  SceneGraphManager,
+  type HoverCallback,
+  type InteractionMode,
+  type PickCallback,
+  PickingManager,
+  type PickResult,
+  type SpatialPickData,
+} from './picking.js';
+// Rendering primitives
+export {
+  CAD_NEUTRAL_STUDIO,
+  createGrid,
+  createLightingRig,
+  createMaterialFactory,
+  createPostProcessing,
+  createSelectionVisuals,
+  type EnvironmentOptions,
+  type EnvironmentSetup,
+  type GridOptions,
+  type GridOverlay,
+  type LightingRig,
+  type MaterialFactory,
+  type MaterialPreset,
+  type PostProcessingOptions,
+  type PostProcessingPipeline,
+  type SelectionVisuals,
+  setupEnvironment,
+  type ViewportPreset,
+} from './rendering/index.js';
+export {
   type CameraPreset,
   type MeshDataInput,
   type PoseInput,
   type SceneEntity,
   type SceneGraphDeps,
+  SceneGraphManager,
 } from './scene-graph.js';
-export {
-  PickingManager,
-  type PickCallback,
-  type HoverCallback,
-  type InteractionMode,
-  type PickResult,
-  type SpatialPickData,
-} from './picking.js';
-export { computeDatumLocalPose } from './datum-pose.js';
-
-// Rendering primitives
-export {
-  setupEnvironment,
-  type EnvironmentOptions,
-  type EnvironmentSetup,
-  createLightingRig,
-  type LightingRig,
-  createMaterialFactory,
-  type MaterialFactory,
-  type MaterialPreset,
-  createGrid,
-  type GridOverlay,
-  type GridOptions,
-  createPostProcessing,
-  type PostProcessingPipeline,
-  type PostProcessingOptions,
-  createSelectionVisuals,
-  type SelectionVisuals,
-  CAD_NEUTRAL_STUDIO,
-  type ViewportPreset,
-} from './rendering/index.js';
+export { Viewport, type ViewportProps } from './Viewport.js';

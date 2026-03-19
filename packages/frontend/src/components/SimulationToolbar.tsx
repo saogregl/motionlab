@@ -1,11 +1,8 @@
-import { SecondaryToolbar, ToolbarButton } from '@motionlab/ui';
 import { SimulationAction } from '@motionlab/protocol';
+import { SecondaryToolbar, ToolbarButton } from '@motionlab/ui';
 import { Cpu, Pause, Play, RotateCcw, StepForward } from 'lucide-react';
 
-import {
-  sendCompileMechanism,
-  sendSimulationControl,
-} from '../engine/connection.js';
+import { sendCompileMechanism, sendSimulationControl } from '../engine/connection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 
 export function SimulationToolbar() {
@@ -17,8 +14,7 @@ export function SimulationToolbar() {
   const canPlay = simState === 'paused';
   const canPause = simState === 'running';
   const canStep = simState === 'paused';
-  const canReset =
-    simState === 'running' || simState === 'paused' || simState === 'error';
+  const canReset = simState === 'running' || simState === 'paused' || simState === 'error';
 
   return (
     <SecondaryToolbar
@@ -72,7 +68,10 @@ export function SimulationToolbar() {
         <span className="ml-2 text-2xs text-muted-foreground">Compiling…</span>
       )}
       {simState === 'error' && errorMessage && (
-        <span className="ml-2 text-2xs text-destructive truncate max-w-[300px]" title={errorMessage}>
+        <span
+          className="ml-2 text-2xs text-destructive truncate max-w-[300px]"
+          title={errorMessage}
+        >
           {errorMessage}
         </span>
       )}

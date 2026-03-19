@@ -45,8 +45,8 @@ export {
   ChannelDataType,
   EngineStatus_State,
   FaceSurfaceClass,
-  SimulationAction,
   SimStateEnum,
+  SimulationAction,
 } from './generated/protocol/transport_pb.js';
 // Binary transport helpers
 export {

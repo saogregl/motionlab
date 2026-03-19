@@ -30,10 +30,22 @@ export function computeDatumLocalPose(
 
   // Build datum world matrix (column-major in Babylon)
   const datumWorld = Matrix.FromValues(
-    x.x, x.y, x.z, 0,
-    y.x, y.y, y.z, 0,
-    z.x, z.y, z.z, 0,
-    worldPoint.x, worldPoint.y, worldPoint.z, 1,
+    x.x,
+    x.y,
+    x.z,
+    0,
+    y.x,
+    y.y,
+    y.z,
+    0,
+    z.x,
+    z.y,
+    z.z,
+    0,
+    worldPoint.x,
+    worldPoint.y,
+    worldPoint.z,
+    1,
   );
 
   // bodyInverse * datumWorld → local matrix

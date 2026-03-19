@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
-
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
+import { Separator } from '../ui/separator';
 
 interface ToolbarGroupProps {
   /** Show vertical separator after this group */

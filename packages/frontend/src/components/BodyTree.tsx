@@ -1,10 +1,10 @@
 import {
   EmptyState,
   GroupHeaderRow,
-  TreeRow,
-  TreeView,
   type TreeNode,
+  TreeRow,
   type TreeRowRenderProps,
+  TreeView,
 } from '@motionlab/ui';
 import { Box } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -18,9 +18,7 @@ export function BodyTree() {
   const selectedIds = useSelectionStore((s) => s.selectedIds);
   const setSelection = useSelectionStore((s) => s.setSelection);
 
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(
-    () => new Set([BODIES_GROUP_ID]),
-  );
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set([BODIES_GROUP_ID]));
 
   const nodes = useMemo<TreeNode[]>(() => {
     const result: TreeNode[] = [
@@ -54,10 +52,7 @@ export function BodyTree() {
 
   if (bodies.size === 0) {
     return (
-      <EmptyState
-        message="No bodies imported"
-        hint="Import a STEP or IGES file to get started"
-      />
+      <EmptyState message="No bodies imported" hint="Import a STEP or IGES file to get started" />
     );
   }
 

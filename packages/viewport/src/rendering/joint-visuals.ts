@@ -82,13 +82,27 @@ export function createPrismaticJointVisual(
   const mat = makeEmissiveMaterial(scene, `joint_${id}_mat`, new Color3(0, 0.81, 0.82)); // #00CED1
 
   const shaft = Mesh.CreateCylinder(
-    `joint_${id}_shaft`, shaftLen, 0.008, 0.008, TESSELLATION, 1, scene, false,
+    `joint_${id}_shaft`,
+    shaftLen,
+    0.008,
+    0.008,
+    TESSELLATION,
+    1,
+    scene,
+    false,
   );
   shaft.material = mat;
   shaft.parent = root;
 
   const head = Mesh.CreateCylinder(
-    `joint_${id}_head`, headLen, 0, 0.02, TESSELLATION, 1, scene, false,
+    `joint_${id}_head`,
+    headLen,
+    0,
+    0.02,
+    TESSELLATION,
+    1,
+    scene,
+    false,
   );
   head.material = mat;
   head.parent = root;
@@ -127,7 +141,14 @@ export function createFixedJointVisual(
   const mat = makeEmissiveMaterial(scene, `joint_${id}_mat`, new Color3(0.5, 0.5, 0.5)); // #808080
 
   const bar = Mesh.CreateCylinder(
-    `joint_${id}_bar`, barLen, 0.01, 0.01, TESSELLATION, 1, scene, false,
+    `joint_${id}_bar`,
+    barLen,
+    0.01,
+    0.01,
+    TESSELLATION,
+    1,
+    scene,
+    false,
   );
   bar.material = mat;
   bar.parent = root;

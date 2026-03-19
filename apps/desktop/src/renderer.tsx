@@ -10,9 +10,7 @@ const agentationEndpoint = import.meta.env.VITE_AGENTATION_ENDPOINT ?? 'http://l
 
 createRoot(root).render(
   <StrictMode>
-    <>
-      <App />
-      {import.meta.env.DEV && <Agentation endpoint={agentationEndpoint} />}
-    </>
+    <App />
+    {import.meta.env.DEV && <Agentation endpoint={agentationEndpoint} />}
   </StrictMode>,
 );

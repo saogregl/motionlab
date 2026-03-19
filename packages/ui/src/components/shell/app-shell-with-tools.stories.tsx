@@ -1,17 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Box, Crosshair, Link2, MoreHorizontal } from 'lucide-react';
-import { useState, useCallback } from 'react';
-
-import { Button } from '../ui/button';
+import { useCallback, useState } from 'react';
+import { SelectionChip } from '../engineering/selection-chip';
+import { BodyContextMenu } from '../primitives/context-menus';
 import { FloatingToolCard } from '../primitives/floating-tool-card';
-import { PropertyRow } from '../primitives/property-row';
-import { TreeRow, GroupHeaderRow } from '../primitives/tree-row';
 import { InspectorPanel } from '../primitives/inspector-panel';
 import { InspectorSection } from '../primitives/inspector-section';
-import { TimelineTransport } from '../primitives/timeline-transport';
+import { PropertyRow } from '../primitives/property-row';
 import { TimelineScrubber } from '../primitives/timeline-scrubber';
-import { BodyContextMenu } from '../primitives/context-menus';
-import { SelectionChip } from '../engineering/selection-chip';
+import { TimelineTransport } from '../primitives/timeline-transport';
+import { GroupHeaderRow, TreeRow } from '../primitives/tree-row';
+import { Button } from '../ui/button';
 import { ViewportHUD } from './viewport-hud';
 
 const meta = {
@@ -27,15 +26,22 @@ type Story = StoryObj<typeof meta>;
 function AxisIndicatorPlaceholder() {
   return (
     <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <title>Axis indicator</title>
       {/* X axis */}
       <line x1="8" y1="36" x2="40" y2="36" stroke="var(--axis-x)" strokeWidth="2" />
-      <text x="42" y="38" fill="var(--axis-x)" fontSize="10" fontWeight="600">X</text>
+      <text x="42" y="38" fill="var(--axis-x)" fontSize="10" fontWeight="600">
+        X
+      </text>
       {/* Y axis */}
       <line x1="8" y1="36" x2="8" y2="4" stroke="var(--axis-y)" strokeWidth="2" />
-      <text x="4" y="2" fill="var(--axis-y)" fontSize="10" fontWeight="600">Y</text>
+      <text x="4" y="2" fill="var(--axis-y)" fontSize="10" fontWeight="600">
+        Y
+      </text>
       {/* Z axis */}
       <line x1="8" y1="36" x2="24" y2="20" stroke="var(--axis-z)" strokeWidth="2" />
-      <text x="26" y="18" fill="var(--axis-z)" fontSize="10" fontWeight="600">Z</text>
+      <text x="26" y="18" fill="var(--axis-z)" fontSize="10" fontWeight="600">
+        Z
+      </text>
     </svg>
   );
 }
@@ -78,7 +84,9 @@ function FullIntegrationDemo() {
       <div className="flex items-center gap-3 border-b border-[var(--border-default)] bg-[var(--layer-base)] px-3">
         <span className="text-[length:var(--text-base)] font-semibold">MotionLab</span>
         <span className="h-5 w-px bg-[var(--border-default)]" />
-        <span className="text-[length:var(--text-sm)] text-[var(--text-secondary)]">Water Pump Assembly</span>
+        <span className="text-[length:var(--text-sm)] text-[var(--text-secondary)]">
+          Water Pump Assembly
+        </span>
         <span className="ml-auto text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
           Compiled
         </span>

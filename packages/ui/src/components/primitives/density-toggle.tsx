@@ -1,6 +1,6 @@
 import { Maximize2, Minimize2 } from 'lucide-react';
 
-import { ToolbarButton } from '@/components/primitives/toolbar-button';
+import { ToolbarButton } from './toolbar-button';
 
 interface DensityToggleProps {
   density: 'comfortable' | 'compact';
