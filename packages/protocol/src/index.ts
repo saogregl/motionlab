@@ -5,7 +5,12 @@ export * from './generated/mechanism/mechanism_pb.js';
 // Selected generated types for consumers
 export type {
   BodyImportResult,
+  CompilationResultEvent,
+  CompileMechanismCommand,
   CreateDatumCommand,
+  CreateDatumFromFaceCommand,
+  CreateDatumFromFaceResult,
+  CreateDatumFromFaceSuccess,
   CreateDatumResult,
   CreateJointCommand,
   CreateJointResult,
@@ -19,15 +24,30 @@ export type {
   ImportAssetCommand,
   ImportAssetResult,
   ImportOptions,
+  OutputChannelDescriptor,
   RenameDatumCommand,
   RenameDatumResult,
+  ScrubCommand,
+  SimulationControlCommand,
+  SimulationFrame,
+  SimulationStateEvent,
+  SimulationTrace,
+  TimeSample,
   UpdateJointCommand,
   UpdateJointResult,
 } from './generated/protocol/transport_pb.js';
-export { EngineStatus_State } from './generated/protocol/transport_pb.js';
+export {
+  ChannelDataType,
+  EngineStatus_State,
+  FaceSurfaceClass,
+  SimulationAction,
+  SimStateEnum,
+} from './generated/protocol/transport_pb.js';
 // Binary transport helpers
 export {
+  createCompileMechanismCommand,
   createCreateDatumCommand,
+  createCreateDatumFromFaceCommand,
   createCreateJointCommand,
   createDeleteDatumCommand,
   createDeleteJointCommand,
@@ -35,6 +55,8 @@ export {
   createImportAssetCommand,
   createPingCommand,
   createRenameDatumCommand,
+  createScrubCommand,
+  createSimulationControlCommand,
   createUpdateJointCommand,
   engineStateToString,
   eventToDebugJson,

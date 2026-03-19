@@ -12,6 +12,7 @@
 > The following describes the intended topology. These capabilities are not yet implemented.
 
 - The native engine owns runtime lifecycle, geometry processing, simulation compilation, and results production.
+- Imported B-Rep shapes may be retained natively after import so the engine can answer topology-sensitive authoring commands such as face-aware datum creation.
 - The desktop app supervises and packages the local runtime but does not proxy high-frequency simulation data.
 - The viewport consumes runtime updates through stable contracts and keeps playback imperative.
 - Capability-sensitive features, such as future Chrono sensor rendering paths, must be detected and surfaced gracefully.

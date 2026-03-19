@@ -4,13 +4,23 @@
 #include <string>
 #include <unordered_map>
 
+namespace motionlab::mechanism {
+class Mechanism;
+}
+
 namespace motionlab::engine {
 
 class MechanismState {
 public:
     // Body tracking (populated from import results)
     void add_body(const std::string& id, const std::string& name);
+    void add_body(const std::string& id, const std::string& name,
+                  const double pos[3], const double orient[4],
+                  double mass, const double com[3], const double inertia[6]);
     bool has_body(const std::string& id) const;
+
+    // Build a Mechanism proto from current state
+    motionlab::mechanism::Mechanism build_mechanism_proto() const;
 
     // Datum CRUD
     struct DatumEntry {
@@ -59,7 +69,14 @@ public:
     void clear();
 
 private:
-    struct BodyEntry { std::string id, name; };
+    struct BodyEntry {
+        std::string id, name;
+        double position[3] = {0, 0, 0};
+        double orientation[4] = {1, 0, 0, 0}; // w,x,y,z
+        double mass = 0.0;
+        double center_of_mass[3] = {0, 0, 0};
+        double inertia[6] = {0, 0, 0, 0, 0, 0}; // ixx,iyy,izz,ixy,ixz,iyz
+    };
     std::unordered_map<std::string, BodyEntry> bodies_;
     std::unordered_map<std::string, DatumEntry> datums_;
     std::unordered_map<std::string, JointEntry> joints_;

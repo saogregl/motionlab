@@ -61,12 +61,22 @@ namespace motionlab::engine {
 
 ImportResult CadImporter::import_step(const std::string& file_path,
                                        const ImportOptions& options) {
-    return import_xde(file_path, FileFormat::STEP, options);
+    return import_xde(file_path, FileFormat::STEP, options, true, true);
 }
 
 ImportResult CadImporter::import_iges(const std::string& file_path,
                                        const ImportOptions& options) {
-    return import_xde(file_path, FileFormat::IGES, options);
+    return import_xde(file_path, FileFormat::IGES, options, true, true);
+}
+
+ImportResult CadImporter::import_step_topology(const std::string& file_path,
+                                                const ImportOptions& options) {
+    return import_xde(file_path, FileFormat::STEP, options, false, false);
+}
+
+ImportResult CadImporter::import_iges_topology(const std::string& file_path,
+                                                const ImportOptions& options) {
+    return import_xde(file_path, FileFormat::IGES, options, false, false);
 }
 
 // ──────────────────────────────────────────────
@@ -79,12 +89,16 @@ static void collect_bodies(const Handle(XCAFDoc_ShapeTool)& shape_tool,
                            const TopLoc_Location& parent_loc,
                            CadImporter& importer,
                            const ImportOptions& options,
+                           bool build_mesh,
+                           bool build_mass,
                            ImportResult& result,
                            int& body_counter);
 
 ImportResult CadImporter::import_xde(const std::string& file_path,
                                       FileFormat format,
-                                      const ImportOptions& options) {
+                                      const ImportOptions& options,
+                                      bool build_mesh,
+                                      bool build_mass) {
     ImportResult result;
 
     // Compute content hash first (works even if import fails)
@@ -154,7 +168,7 @@ ImportResult CadImporter::import_xde(const std::string& file_path,
 
     for (int i = 1; i <= free_shapes.Length(); ++i) {
         collect_bodies(shape_tool, free_shapes.Value(i), identity,
-                       *this, options, result, body_counter);
+                       *this, options, build_mesh, build_mass, result, body_counter);
     }
 
     if (result.bodies.empty()) {
@@ -177,7 +191,7 @@ static std::string get_label_name(const TDF_Label& label, int fallback_index) {
         // Convert to ASCII (safe for typical STEP names)
         std::string result;
         for (int i = 1; i <= ext.Length(); ++i) {
-            Standard_ExtCharacter c = ext.Value(i);
+            char16_t c = ext.Value(i);
             if (c < 128) {
                 result += static_cast<char>(c);
             } else {
@@ -211,6 +225,8 @@ static void collect_bodies(const Handle(XCAFDoc_ShapeTool)& shape_tool,
                            const TopLoc_Location& parent_loc,
                            CadImporter& importer,
                            const ImportOptions& options,
+                           bool build_mesh,
+                           bool build_mass,
                            ImportResult& result,
                            int& body_counter) {
     // If this is a reference, resolve it and combine locations
@@ -220,7 +236,7 @@ static void collect_bodies(const Handle(XCAFDoc_ShapeTool)& shape_tool,
             // Component label carries placement; combine with parent
             TopoDS_Shape comp_shape = shape_tool->GetShape(label);
             TopLoc_Location combined = parent_loc * comp_shape.Location();
-            collect_bodies(shape_tool, referred, combined, importer, options, result, body_counter);
+            collect_bodies(shape_tool, referred, combined, importer, options, build_mesh, build_mass, result, body_counter);
         }
         return;
     }
@@ -231,7 +247,7 @@ static void collect_bodies(const Handle(XCAFDoc_ShapeTool)& shape_tool,
         shape_tool->GetComponents(label, components);
         for (int i = 1; i <= components.Length(); ++i) {
             collect_bodies(shape_tool, components.Value(i), parent_loc,
-                           importer, options, result, body_counter);
+                           importer, options, build_mesh, build_mass, result, body_counter);
         }
         return;
     }
@@ -244,12 +260,18 @@ static void collect_bodies(const Handle(XCAFDoc_ShapeTool)& shape_tool,
     if (shape.ShapeType() == TopAbs_COMPOUND) {
         int solids_before = static_cast<int>(result.bodies.size());
         for (TopExp_Explorer exp(shape, TopAbs_SOLID); exp.More(); exp.Next()) {
+            TopoDS_Shape solid = exp.Current();
             body_counter++;
             BodyResult body;
             body.name = get_label_name(label, body_counter);
             extract_location(parent_loc, body.translation, body.rotation);
-            body.mesh = importer.tessellate(exp.Current(), options.tessellation_quality);
-            body.mass_properties = importer.compute_mass_properties(exp.Current(), options.density);
+            body.brep_shape = std::make_shared<TopoDS_Shape>(solid);
+            if (build_mesh) {
+                body.mesh = importer.tessellate(solid, options.tessellation_quality);
+            }
+            if (build_mass) {
+                body.mass_properties = importer.compute_mass_properties(solid, options.density);
+            }
             result.bodies.push_back(std::move(body));
         }
         // If compound had no solids, tessellate the whole compound
@@ -258,8 +280,13 @@ static void collect_bodies(const Handle(XCAFDoc_ShapeTool)& shape_tool,
             BodyResult body;
             body.name = get_label_name(label, body_counter);
             extract_location(parent_loc, body.translation, body.rotation);
-            body.mesh = importer.tessellate(shape, options.tessellation_quality);
-            body.mass_properties = importer.compute_mass_properties(shape, options.density);
+            body.brep_shape = std::make_shared<TopoDS_Shape>(shape);
+            if (build_mesh) {
+                body.mesh = importer.tessellate(shape, options.tessellation_quality);
+            }
+            if (build_mass) {
+                body.mass_properties = importer.compute_mass_properties(shape, options.density);
+            }
             result.bodies.push_back(std::move(body));
         }
         return;
@@ -270,8 +297,13 @@ static void collect_bodies(const Handle(XCAFDoc_ShapeTool)& shape_tool,
     BodyResult body;
     body.name = get_label_name(label, body_counter);
     extract_location(parent_loc, body.translation, body.rotation);
-    body.mesh = importer.tessellate(shape, options.tessellation_quality);
-    body.mass_properties = importer.compute_mass_properties(shape, options.density);
+    body.brep_shape = std::make_shared<TopoDS_Shape>(shape);
+    if (build_mesh) {
+        body.mesh = importer.tessellate(shape, options.tessellation_quality);
+    }
+    if (build_mass) {
+        body.mass_properties = importer.compute_mass_properties(shape, options.density);
+    }
     result.bodies.push_back(std::move(body));
 }
 
@@ -298,6 +330,7 @@ MeshData CadImporter::tessellate(const TopoDS_Shape& shape, double quality) {
 
         int nb_nodes = tri->NbNodes();
         int nb_tris = tri->NbTriangles();
+        mesh.part_index.push_back(static_cast<uint32_t>(nb_tris));
 
         // Extract vertices and normals
         for (int i = 1; i <= nb_nodes; ++i) {

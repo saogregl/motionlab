@@ -28,9 +28,13 @@ message Command {
     CreateDatumCommand create_datum = 13;
     DeleteDatumCommand delete_datum = 14;
     RenameDatumCommand rename_datum = 15;
+    CreateDatumFromFaceCommand create_datum_from_face = 16;
     CreateJointCommand create_joint = 20;
     UpdateJointCommand update_joint = 21;
     DeleteJointCommand delete_joint = 22;
+    CompileMechanismCommand compile_mechanism = 30;
+    SimulationControlCommand simulation_control = 31;
+    ScrubCommand scrub = 32;
   }
 }
 
@@ -46,9 +50,14 @@ message Event {
     CreateDatumResult create_datum_result = 15;
     DeleteDatumResult delete_datum_result = 16;
     RenameDatumResult rename_datum_result = 17;
+    CreateDatumFromFaceResult create_datum_from_face_result = 18;
     CreateJointResult create_joint_result = 20;
     UpdateJointResult update_joint_result = 21;
     DeleteJointResult delete_joint_result = 22;
+    CompilationResultEvent compilation_result = 30;
+    SimulationStateEvent simulation_state = 31;
+    SimulationFrame simulation_frame = 32;
+    SimulationTrace simulation_trace = 33;
   }
 }
 
@@ -103,6 +112,7 @@ message BodyImportResult {
   motionlab.mechanism.MassProperties mass_properties = 4;
   motionlab.mechanism.Pose pose = 5;
   motionlab.mechanism.AssetReference source_asset_ref = 6;
+  repeated uint32 part_index = 7;
 }
 
 message ImportAssetResult {
@@ -134,9 +144,37 @@ message RenameDatumCommand {
   string name = 2;
 }
 
+enum FaceSurfaceClass {
+  FACE_SURFACE_CLASS_UNSPECIFIED = 0;
+  FACE_SURFACE_CLASS_PLANAR = 1;
+  FACE_SURFACE_CLASS_CYLINDRICAL = 2;
+  FACE_SURFACE_CLASS_CONICAL = 3;
+  FACE_SURFACE_CLASS_SPHERICAL = 4;
+  FACE_SURFACE_CLASS_OTHER = 5;
+}
+
+message CreateDatumFromFaceCommand {
+  motionlab.mechanism.ElementId parent_body_id = 1;
+  uint32 face_index = 2;
+  string name = 3;
+}
+
+message CreateDatumFromFaceSuccess {
+  motionlab.mechanism.Datum datum = 1;
+  uint32 face_index = 2;
+  FaceSurfaceClass surface_class = 3;
+}
+
 message CreateDatumResult {
   oneof result {
     motionlab.mechanism.Datum datum = 1;
+    string error_message = 2;
+  }
+}
+
+message CreateDatumFromFaceResult {
+  oneof result {
+    CreateDatumFromFaceSuccess success = 1;
     string error_message = 2;
   }
 }
@@ -197,4 +235,99 @@ message DeleteJointResult {
     motionlab.mechanism.ElementId deleted_id = 1;
     string error_message = 2;
   }
+}
+
+// ──────────────────────────────────────────────
+// Simulation lifecycle (Epic 7.2)
+// ──────────────────────────────────────────────
+
+// Compile the current mechanism state into a simulation system
+message CompileMechanismCommand {}
+
+enum SimulationAction {
+  SIMULATION_ACTION_UNSPECIFIED = 0;
+  SIMULATION_ACTION_PLAY = 1;
+  SIMULATION_ACTION_PAUSE = 2;
+  SIMULATION_ACTION_STEP = 3;
+  SIMULATION_ACTION_RESET = 4;
+}
+
+message SimulationControlCommand {
+  SimulationAction action = 1;
+}
+
+message CompilationResultEvent {
+  bool success = 1;
+  string error_message = 2;
+  repeated string diagnostics = 3;
+  repeated OutputChannelDescriptor channels = 4;
+}
+
+enum SimStateEnum {
+  SIM_STATE_IDLE = 0;
+  SIM_STATE_COMPILING = 1;
+  SIM_STATE_RUNNING = 2;
+  SIM_STATE_PAUSED = 3;
+  SIM_STATE_ERROR = 4;
+}
+
+message SimulationStateEvent {
+  SimStateEnum state = 1;
+  double sim_time = 2;
+  uint64 step_count = 3;
+}
+
+message BodyPoseData {
+  string body_id = 1;
+  motionlab.mechanism.Vec3 position = 2;
+  motionlab.mechanism.Quat orientation = 3;
+}
+
+message JointStateData {
+  string joint_id = 1;
+  double position = 2;
+  double velocity = 3;
+  motionlab.mechanism.Vec3 reaction_force = 4;
+  motionlab.mechanism.Vec3 reaction_torque = 5;
+}
+
+message SimulationFrame {
+  double sim_time = 1;
+  uint64 step_count = 2;
+  repeated BodyPoseData body_poses = 3;
+  repeated JointStateData joint_states = 4;
+}
+
+// ──────────────────────────────────────────────
+// Output channels + trace streaming (Epic 8.1)
+// ──────────────────────────────────────────────
+
+enum ChannelDataType {
+  CHANNEL_DATA_TYPE_UNSPECIFIED = 0;
+  CHANNEL_DATA_TYPE_SCALAR = 1;
+  CHANNEL_DATA_TYPE_VEC3 = 2;
+}
+
+message OutputChannelDescriptor {
+  string channel_id = 1;    // e.g., "joint/abc-123/position"
+  string name = 2;          // human-readable: "Revolute1 Position"
+  string unit = 3;          // e.g., "rad", "m", "N", "Nm"
+  ChannelDataType data_type = 4;
+}
+
+message TimeSample {
+  double time = 1;
+  oneof value {
+    double scalar = 2;
+    motionlab.mechanism.Vec3 vector = 3;
+  }
+}
+
+message SimulationTrace {
+  string channel_id = 1;
+  repeated TimeSample samples = 2;
+}
+
+message ScrubCommand {
+  double time = 1;
 }

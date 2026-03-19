@@ -55,6 +55,7 @@ struct SimulationRuntime::Impl {
     struct LinkEntry {
         std::shared_ptr<ChLinkLock> link;
         int joint_type; // motionlab::mechanism::JointType enum value
+        std::string name;
     };
     std::unordered_map<std::string, LinkEntry> link_map;
 
@@ -348,7 +349,7 @@ CompilationResult SimulationRuntime::compile(
         );
 
         impl_->system->AddLink(ch_link);
-        impl_->link_map[joint_id] = { ch_link, static_cast<int>(joint.type()) };
+        impl_->link_map[joint_id] = { ch_link, static_cast<int>(joint.type()), joint_name };
     }
 
     result.success = true;
@@ -481,6 +482,43 @@ std::vector<JointState> SimulationRuntime::getJointStates() const {
     }
 
     return states;
+}
+
+std::vector<ChannelDescriptor> SimulationRuntime::getChannelDescriptors() const {
+    std::vector<ChannelDescriptor> descriptors;
+
+    for (const auto& [id, entry] : impl_->link_map) {
+        bool is_revolute = (entry.joint_type == motionlab::mechanism::JOINT_TYPE_REVOLUTE);
+        std::string pos_unit = is_revolute ? "rad" : "m";
+        std::string vel_unit = is_revolute ? "rad/s" : "m/s";
+
+        descriptors.push_back({
+            "joint/" + id + "/position",
+            entry.name + " Position",
+            pos_unit,
+            1 // SCALAR
+        });
+        descriptors.push_back({
+            "joint/" + id + "/velocity",
+            entry.name + " Velocity",
+            vel_unit,
+            1 // SCALAR
+        });
+        descriptors.push_back({
+            "joint/" + id + "/reaction_force",
+            entry.name + " Reaction Force",
+            "N",
+            2 // VEC3
+        });
+        descriptors.push_back({
+            "joint/" + id + "/reaction_torque",
+            entry.name + " Reaction Torque",
+            "Nm",
+            2 // VEC3
+        });
+    }
+
+    return descriptors;
 }
 
 } // namespace motionlab::engine

@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -18,6 +19,7 @@ struct MeshData {
     std::vector<float> vertices;   // flat xyz
     std::vector<uint32_t> indices;
     std::vector<float> normals;    // flat xyz, same count as vertices
+    std::vector<uint32_t> part_index; // triangle count per B-Rep face
 };
 
 struct MassPropertiesResult {
@@ -33,6 +35,7 @@ struct BodyResult {
     MassPropertiesResult mass_properties;
     std::array<double, 3> translation = {0, 0, 0};
     std::array<double, 4> rotation = {0, 0, 0, 1}; // quaternion x,y,z,w
+    std::shared_ptr<TopoDS_Shape> brep_shape;
 };
 
 struct ImportOptions {
@@ -60,6 +63,12 @@ public:
     ImportResult import_iges(const std::string& file_path,
                              const ImportOptions& options = {});
 
+    ImportResult import_step_topology(const std::string& file_path,
+                                      const ImportOptions& options = {});
+
+    ImportResult import_iges_topology(const std::string& file_path,
+                                      const ImportOptions& options = {});
+
     // Public for use by assembly tree walker (internal code only)
     MeshData tessellate(const TopoDS_Shape& shape, double quality);
     MassPropertiesResult compute_mass_properties(const TopoDS_Shape& shape,
@@ -70,7 +79,9 @@ private:
 
     ImportResult import_xde(const std::string& file_path,
                             FileFormat format,
-                            const ImportOptions& options);
+                            const ImportOptions& options,
+                            bool build_mesh,
+                            bool build_mass);
 
     std::string compute_file_hash(const std::string& file_path);
 };

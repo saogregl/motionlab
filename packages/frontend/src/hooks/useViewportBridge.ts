@@ -1,13 +1,15 @@
 import type { SceneGraphManager, SpatialPickData } from '@motionlab/viewport';
-import { computeDatumLocalPose } from '@motionlab/viewport';
 import { useCallback, useEffect, useRef } from 'react';
 
-import { sendCreateDatum } from '../engine/connection.js';
+import { registerSceneGraph, sendCreateDatumFromFace } from '../engine/connection.js';
+import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import type { BodyPose, BodyState, MeshData } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
+import { useSimulationStore } from '../stores/simulation.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
+import { resolveDatumFacePick } from '../utils/datum-face-pick.js';
 import { nextDatumName } from '../utils/datum-naming.js';
 
 /** Convert {x,y,z} pose format to [x,y,z] tuple format used by SceneGraphManager. */
@@ -36,11 +38,18 @@ export function useViewportBridge() {
 
   const handleSceneReady = useCallback((sceneGraph: SceneGraphManager) => {
     sceneGraphRef.current = sceneGraph;
+    registerSceneGraph(sceneGraph);
 
     // Initial sync: add any bodies already in the store
     const { bodies, datums, joints } = useMechanismStore.getState();
     for (const body of bodies.values()) {
-      sceneGraph.addBody(body.id, body.name, convertMeshData(body.meshData), convertPose(body.pose));
+      sceneGraph.addBody(
+        body.id,
+        body.name,
+        convertMeshData(body.meshData),
+        convertPose(body.pose),
+        body.partIndex,
+      );
     }
 
     // Initial sync: add any datums already in the store
@@ -79,7 +88,13 @@ export function useViewportBridge() {
       for (const id of currentBodyIds) {
         if (!trackedBodyIds.has(id)) {
           const body = state.bodies.get(id)!;
-          sg.addBody(body.id, body.name, convertMeshData(body.meshData), convertPose(body.pose));
+          sg.addBody(
+            body.id,
+            body.name,
+            convertMeshData(body.meshData),
+            convertPose(body.pose),
+            body.partIndex,
+          );
         }
       }
 
@@ -163,6 +178,7 @@ export function useViewportBridge() {
       unsubMechanism();
       unsubSelection();
       unsubHover();
+      registerSceneGraph(null);
     };
   }, [sceneGraphRef.current]);
 
@@ -173,18 +189,27 @@ export function useViewportBridge() {
       spatial?: SpatialPickData,
     ) => {
       const mode = useToolModeStore.getState().activeMode;
+      const simState = useSimulationStore.getState().state;
+      const isSimulating = simState === 'running' || simState === 'paused';
+
+      if (isSimulating && (mode === 'create-datum' || mode === 'create-joint')) {
+        return;
+      }
 
       if (mode === 'create-datum') {
-        if (!entityId || !spatial) return;
         const { bodies, datums } = useMechanismStore.getState();
-        if (!bodies.has(entityId)) return; // only create datums on bodies
-        const localPose = computeDatumLocalPose(
-          spatial.worldPoint,
-          spatial.worldNormal,
-          spatial.bodyWorldMatrix,
-        );
+        const resolution = resolveDatumFacePick(entityId, bodies, spatial);
+        if (resolution.kind === 'ignore') {
+          return;
+        }
+        if (resolution.kind === 'error') {
+          useAuthoringStatusStore
+            .getState()
+            .setMessage(resolution.message);
+          return;
+        }
         const name = nextDatumName(datums);
-        sendCreateDatum(entityId, name, localPose);
+        sendCreateDatumFromFace(resolution.bodyId, resolution.faceIndex, name);
         return;
       }
 
@@ -232,6 +257,10 @@ export function useViewportBridge() {
   );
 
   const handleHover = useCallback((entityId: string | null) => {
+    if (useToolModeStore.getState().activeMode === 'create-datum') {
+      useSelectionStore.getState().setHovered(null);
+      return;
+    }
     useSelectionStore.getState().setHovered(entityId);
   }, []);
 

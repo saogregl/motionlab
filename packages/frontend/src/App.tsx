@@ -1,40 +1,71 @@
 import { PROTOCOL_VERSION } from '@motionlab/protocol';
-import { AppShell, Button, LeftPanel, RightPanel, TopBar } from '@motionlab/ui';
+import {
+  AppShell,
+  Button,
+  DensityToggle,
+  LeftPanel,
+  RightPanel,
+  StatusBadge,
+  ThemeToggle,
+  TooltipProvider,
+  TopBar,
+  useDensity,
+  useTheme,
+} from '@motionlab/ui';
+import type { StatusType } from '@motionlab/ui';
 import { Import } from 'lucide-react';
 import { useEffect } from 'react';
+import { CommandPalette } from './components/CommandPalette.js';
 import { EntityInspector } from './components/EntityInspector.js';
 import { ProjectTree } from './components/ProjectTree.js';
+import { SimulationToolbar } from './components/SimulationToolbar.js';
+import { TimelinePanel } from './components/TimelinePanel.js';
 import { ViewportOverlay } from './components/ViewportOverlay.js';
 import { sendImportAsset } from './engine/connection.js';
 import type { ConnectionStatus } from './stores/engine-connection.js';
 import { useEngineConnection } from './stores/engine-connection.js';
 import { useMechanismStore } from './stores/mechanism.js';
+import { useSimulationStore } from './stores/simulation.js';
 
-const STATUS_CONFIG: Record<ConnectionStatus, { label: string; color: string }> = {
-  discovering: { label: 'Discovering…', color: 'var(--color-muted-foreground)' },
-  connecting: { label: 'Connecting…', color: 'var(--color-muted-foreground)' },
-  handshaking: { label: 'Handshaking…', color: 'var(--color-muted-foreground)' },
-  ready: { label: 'Engine ready', color: 'var(--color-success)' },
-  error: { label: 'Engine error', color: 'var(--color-destructive)' },
-  disconnected: { label: 'Disconnected', color: 'var(--color-warning)' },
+const CONNECTION_TO_STATUS: Record<ConnectionStatus, StatusType> = {
+  discovering: 'stale',
+  connecting: 'stale',
+  handshaking: 'stale',
+  ready: 'compiled',
+  error: 'failed',
+  disconnected: 'warning',
 };
 
-function StatusIndicator() {
-  const { status, errorMessage } = useEngineConnection();
-  const config = STATUS_CONFIG[status];
-  const label =
-    status === 'error' && errorMessage ? `Error: ${errorMessage}` : config.label;
+const CONNECTION_LABELS: Record<ConnectionStatus, string> = {
+  discovering: 'Discovering…',
+  connecting: 'Connecting…',
+  handshaking: 'Handshaking…',
+  ready: 'Engine ready',
+  error: 'Engine error',
+  disconnected: 'Disconnected',
+};
 
-  return (
-    <span className="flex items-center gap-1.5 text-2xs">
-      <span
-        className="inline-block size-2 rounded-full"
-        style={{ backgroundColor: config.color }}
-      />
-      <span style={{ color: config.color }}>{label}</span>
-      <span className="ml-2 opacity-50">v{PROTOCOL_VERSION}</span>
-    </span>
-  );
+function EngineStatusBadge() {
+  const { status, errorMessage } = useEngineConnection();
+  const simState = useSimulationStore((s) => s.state);
+
+  // When simulation is running, show running status
+  if (status === 'ready' && simState === 'running') {
+    return <StatusBadge status="running" label="Simulating" />;
+  }
+  if (status === 'ready' && simState === 'compiling') {
+    return <StatusBadge status="stale" label="Compiling…" />;
+  }
+  if (status === 'ready' && simState === 'error') {
+    return <StatusBadge status="failed" label="Sim error" />;
+  }
+
+  const label =
+    status === 'error' && errorMessage
+      ? `Error: ${errorMessage}`
+      : `${CONNECTION_LABELS[status]}  v${PROTOCOL_VERSION}`;
+
+  return <StatusBadge status={CONNECTION_TO_STATUS[status]} label={label} />;
 }
 
 function ImportButton() {
@@ -78,6 +109,19 @@ function ImportButton() {
   );
 }
 
+function TopBarActions() {
+  const { theme, toggleTheme } = useTheme();
+  const { density, toggleDensity } = useDensity();
+
+  return (
+    <>
+      <ImportButton />
+      <ThemeToggle theme={theme} onToggle={toggleTheme} />
+      <DensityToggle density={density} onToggle={toggleDensity} />
+    </>
+  );
+}
+
 export function App() {
   const connect = useEngineConnection((s) => s.connect);
 
@@ -86,25 +130,30 @@ export function App() {
   }, [connect]);
 
   return (
-    <AppShell
-      topBar={
-        <TopBar
-          projectName="MotionLab"
-          status={<StatusIndicator />}
-          actions={<ImportButton />}
-        />
-      }
-      leftPanel={
-        <LeftPanel>
-          <ProjectTree />
-        </LeftPanel>
-      }
-      viewport={<ViewportOverlay />}
-      rightPanel={
-        <RightPanel>
-          <EntityInspector />
-        </RightPanel>
-      }
-    />
+    <TooltipProvider>
+      <AppShell
+        topBar={
+          <TopBar
+            projectName="MotionLab"
+            status={<EngineStatusBadge />}
+            actions={<TopBarActions />}
+          />
+        }
+        toolbar={<SimulationToolbar />}
+        leftPanel={
+          <LeftPanel>
+            <ProjectTree />
+          </LeftPanel>
+        }
+        viewport={<ViewportOverlay />}
+        rightPanel={
+          <RightPanel>
+            <EntityInspector />
+          </RightPanel>
+        }
+        bottomDock={<TimelinePanel />}
+      />
+      <CommandPalette />
+    </TooltipProvider>
   );
 }

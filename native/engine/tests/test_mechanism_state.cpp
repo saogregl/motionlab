@@ -1,6 +1,8 @@
 #include "../src/mechanism_state.h"
+#include "mechanism/mechanism.pb.h"
 
 #include <cassert>
+#include <cmath>
 #include <cstring>
 #include <iostream>
 #include <regex>
@@ -358,6 +360,91 @@ static void test_delete_datum_blocked_by_joint() {
     std::cout << "  PASS: delete datum blocked by joint" << std::endl;
 }
 
+// ──────────────────────────────────────────────
+// Extended add_body + build_mechanism_proto tests
+// ──────────────────────────────────────────────
+
+static void test_add_body_with_full_data() {
+    MechanismState state;
+    double pos[3] = {1.0, 2.0, 3.0};
+    double orient[4] = {1.0, 0.0, 0.0, 0.0};
+    double com[3] = {0.5, 0.5, 0.5};
+    double inertia[6] = {1.0, 2.0, 3.0, 0.1, 0.2, 0.3};
+
+    state.add_body("body-001", "Ground", pos, orient, 10.0, com, inertia);
+    assert(state.body_count() == 1);
+    assert(state.has_body("body-001"));
+
+    std::cout << "  PASS: add body with full data" << std::endl;
+}
+
+static void test_build_mechanism_proto() {
+    MechanismState state;
+
+    // Add two bodies with full data
+    double pos1[3] = {0.0, 0.0, 0.0};
+    double orient1[4] = {1.0, 0.0, 0.0, 0.0};
+    double com1[3] = {0.0, 0.0, 0.0};
+    double inertia1[6] = {1.0, 1.0, 1.0, 0.0, 0.0, 0.0};
+    state.add_body("body-001", "Ground", pos1, orient1, 10.0, com1, inertia1);
+
+    double pos2[3] = {1.0, 0.0, 0.0};
+    double orient2[4] = {0.707, 0.0, 0.707, 0.0};
+    double com2[3] = {0.5, 0.0, 0.0};
+    double inertia2[6] = {2.0, 3.0, 4.0, 0.1, 0.2, 0.3};
+    state.add_body("body-002", "Link1", pos2, orient2, 5.0, com2, inertia2);
+
+    // Add datums
+    double dpos[3] = {0.0, 0.0, 0.0};
+    double dorient[4] = {1.0, 0.0, 0.0, 0.0};
+    auto d1 = state.create_datum("body-001", "D1", dpos, dorient);
+    auto d2 = state.create_datum("body-002", "D2", dpos, dorient);
+    assert(d1.has_value());
+    assert(d2.has_value());
+
+    // Add a joint
+    auto joint = state.create_joint(d1->id, d2->id, 1, "Rev1", -3.14, 3.14);
+    assert(joint.entry.has_value());
+
+    // Build the proto
+    auto mech = state.build_mechanism_proto();
+
+    // Verify bodies
+    assert(mech.bodies_size() == 2);
+    bool found_ground = false, found_link = false;
+    for (int i = 0; i < mech.bodies_size(); ++i) {
+        const auto& b = mech.bodies(i);
+        if (b.id().id() == "body-001") {
+            found_ground = true;
+            assert(b.name() == "Ground");
+            assert(b.mass_properties().mass() == 10.0);
+            assert(b.pose().position().x() == 0.0);
+        } else if (b.id().id() == "body-002") {
+            found_link = true;
+            assert(b.name() == "Link1");
+            assert(b.mass_properties().mass() == 5.0);
+            assert(b.pose().position().x() == 1.0);
+            assert(std::abs(b.pose().orientation().w() - 0.707) < 0.001);
+            assert(b.mass_properties().ixx() == 2.0);
+            assert(b.mass_properties().ixy() == 0.1);
+        }
+    }
+    assert(found_ground);
+    assert(found_link);
+
+    // Verify datums
+    assert(mech.datums_size() == 2);
+
+    // Verify joints
+    assert(mech.joints_size() == 1);
+    assert(mech.joints(0).name() == "Rev1");
+    assert(mech.joints(0).type() == motionlab::mechanism::JOINT_TYPE_REVOLUTE);
+    assert(mech.joints(0).lower_limit() == -3.14);
+    assert(mech.joints(0).upper_limit() == 3.14);
+
+    std::cout << "  PASS: build mechanism proto" << std::endl;
+}
+
 int main() {
     std::cout << "MechanismState unit tests" << std::endl;
 
@@ -381,6 +468,10 @@ int main() {
     test_delete_nonexistent_joint();
     test_clear_includes_joints();
     test_delete_datum_blocked_by_joint();
+
+    // Extended body + build_mechanism_proto tests
+    test_add_body_with_full_data();
+    test_build_mechanism_proto();
 
     std::cout << "All mechanism state tests passed." << std::endl;
     return 0;

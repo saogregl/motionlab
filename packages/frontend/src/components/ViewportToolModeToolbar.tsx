@@ -2,11 +2,14 @@ import { ToolbarButton } from '@motionlab/ui';
 import { Crosshair, Link2, MousePointer2 } from 'lucide-react';
 
 import { useJointCreationStore } from '../stores/joint-creation.js';
+import { useSimulationStore } from '../stores/simulation.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
 
 export function ViewportToolModeToolbar() {
   const activeMode = useToolModeStore((s) => s.activeMode);
   const setMode = useToolModeStore((s) => s.setMode);
+  const simState = useSimulationStore((s) => s.state);
+  const isSimulating = simState === 'running' || simState === 'paused';
 
   return (
     <div className="flex flex-col gap-0.5 rounded-md bg-background/80 p-0.5 backdrop-blur-sm">
@@ -20,6 +23,7 @@ export function ViewportToolModeToolbar() {
       <ToolbarButton
         tooltip="Create Datum (D)"
         active={activeMode === 'create-datum'}
+        disabled={isSimulating}
         onClick={() => setMode('create-datum')}
       >
         <Crosshair className="size-4" />
@@ -27,6 +31,7 @@ export function ViewportToolModeToolbar() {
       <ToolbarButton
         tooltip="Create Joint (J)"
         active={activeMode === 'create-joint'}
+        disabled={isSimulating}
         onClick={() => {
           setMode('create-joint');
           useJointCreationStore.getState().startCreation();

@@ -1,4 +1,5 @@
 #include "mechanism_state.h"
+#include "mechanism/mechanism.pb.h"
 #include "uuid.h"
 
 #include <cstring>
@@ -6,7 +7,21 @@
 namespace motionlab::engine {
 
 void MechanismState::add_body(const std::string& id, const std::string& name) {
-    bodies_[id] = BodyEntry{id, name};
+    bodies_[id] = BodyEntry{id, name, {0,0,0}, {1,0,0,0}, 0.0, {0,0,0}, {0,0,0,0,0,0}};
+}
+
+void MechanismState::add_body(const std::string& id, const std::string& name,
+                              const double pos[3], const double orient[4],
+                              double mass, const double com[3], const double inertia[6]) {
+    BodyEntry entry;
+    entry.id = id;
+    entry.name = name;
+    std::memcpy(entry.position, pos, 3 * sizeof(double));
+    std::memcpy(entry.orientation, orient, 4 * sizeof(double));
+    entry.mass = mass;
+    std::memcpy(entry.center_of_mass, com, 3 * sizeof(double));
+    std::memcpy(entry.inertia, inertia, 6 * sizeof(double));
+    bodies_[id] = entry;
 }
 
 bool MechanismState::has_body(const std::string& id) const {
@@ -195,6 +210,73 @@ void MechanismState::clear() {
     bodies_.clear();
     datums_.clear();
     joints_.clear();
+}
+
+mechanism::Mechanism MechanismState::build_mechanism_proto() const {
+    mechanism::Mechanism mech;
+    mech.mutable_id()->set_id("sim-mechanism");
+    mech.set_name("Current Mechanism");
+
+    for (const auto& [id, body] : bodies_) {
+        auto* pb = mech.add_bodies();
+        pb->mutable_id()->set_id(body.id);
+        pb->set_name(body.name);
+
+        auto* pose = pb->mutable_pose();
+        auto* pos = pose->mutable_position();
+        pos->set_x(body.position[0]);
+        pos->set_y(body.position[1]);
+        pos->set_z(body.position[2]);
+        auto* rot = pose->mutable_orientation();
+        rot->set_w(body.orientation[0]);
+        rot->set_x(body.orientation[1]);
+        rot->set_y(body.orientation[2]);
+        rot->set_z(body.orientation[3]);
+
+        auto* mp = pb->mutable_mass_properties();
+        mp->set_mass(body.mass);
+        auto* com = mp->mutable_center_of_mass();
+        com->set_x(body.center_of_mass[0]);
+        com->set_y(body.center_of_mass[1]);
+        com->set_z(body.center_of_mass[2]);
+        mp->set_ixx(body.inertia[0]);
+        mp->set_iyy(body.inertia[1]);
+        mp->set_izz(body.inertia[2]);
+        mp->set_ixy(body.inertia[3]);
+        mp->set_ixz(body.inertia[4]);
+        mp->set_iyz(body.inertia[5]);
+    }
+
+    for (const auto& [id, datum] : datums_) {
+        auto* pd = mech.add_datums();
+        pd->mutable_id()->set_id(datum.id);
+        pd->set_name(datum.name);
+        pd->mutable_parent_body_id()->set_id(datum.parent_body_id);
+
+        auto* pose = pd->mutable_local_pose();
+        auto* pos = pose->mutable_position();
+        pos->set_x(datum.position[0]);
+        pos->set_y(datum.position[1]);
+        pos->set_z(datum.position[2]);
+        auto* rot = pose->mutable_orientation();
+        rot->set_w(datum.orientation[0]);
+        rot->set_x(datum.orientation[1]);
+        rot->set_y(datum.orientation[2]);
+        rot->set_z(datum.orientation[3]);
+    }
+
+    for (const auto& [id, joint] : joints_) {
+        auto* pj = mech.add_joints();
+        pj->mutable_id()->set_id(joint.id);
+        pj->set_name(joint.name);
+        pj->set_type(static_cast<mechanism::JointType>(joint.type));
+        pj->mutable_parent_datum_id()->set_id(joint.parent_datum_id);
+        pj->mutable_child_datum_id()->set_id(joint.child_datum_id);
+        pj->set_lower_limit(joint.lower_limit);
+        pj->set_upper_limit(joint.upper_limit);
+    }
+
+    return mech;
 }
 
 } // namespace motionlab::engine

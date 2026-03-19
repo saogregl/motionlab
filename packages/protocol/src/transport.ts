@@ -1,8 +1,10 @@
 import { create, fromBinary, toBinary, toJsonString } from '@bufbuild/protobuf';
-import type { Event } from './generated/protocol/transport_pb.js';
+import type { Event, SimulationAction } from './generated/protocol/transport_pb.js';
 import {
   CommandSchema,
+  CompileMechanismCommandSchema,
   CreateDatumCommandSchema,
+  CreateDatumFromFaceCommandSchema,
   CreateJointCommandSchema,
   DeleteDatumCommandSchema,
   DeleteJointCommandSchema,
@@ -14,6 +16,8 @@ import {
   PingSchema,
   ProtocolVersionSchema,
   RenameDatumCommandSchema,
+  ScrubCommandSchema,
+  SimulationControlCommandSchema,
   UpdateJointCommandSchema,
 } from './generated/protocol/transport_pb.js';
 import {
@@ -126,6 +130,29 @@ export function createCreateDatumCommand(
             z: localPose.orientation.z,
           }),
         }),
+        name,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a CreateDatumFromFace payload.
+ */
+export function createCreateDatumFromFaceCommand(
+  parentBodyId: string,
+  faceIndex: number,
+  name: string,
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'createDatumFromFace',
+      value: create(CreateDatumFromFaceCommandSchema, {
+        parentBodyId: create(ElementIdSchema, { id: parentBodyId }),
+        faceIndex,
         name,
       }),
     },
@@ -290,3 +317,50 @@ export function engineStateToString(state: EngineStatus_State): string {
       return 'unknown';
   }
 }
+
+/**
+ * Creates a binary-encoded Command envelope containing a CompileMechanism payload.
+ */
+export function createCompileMechanismCommand(sequenceId?: bigint): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'compileMechanism',
+      value: create(CompileMechanismCommandSchema, {}),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a SimulationControl payload.
+ */
+export function createSimulationControlCommand(
+  action: SimulationAction,
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'simulationControl',
+      value: create(SimulationControlCommandSchema, { action }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a Scrub payload.
+ */
+export function createScrubCommand(time: number, sequenceId?: bigint): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'scrub',
+      value: create(ScrubCommandSchema, { time }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+export { SimulationAction } from './generated/protocol/transport_pb.js';

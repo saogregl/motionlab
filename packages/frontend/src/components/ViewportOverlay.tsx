@@ -1,18 +1,51 @@
-import { ViewCube, ViewportHUD } from '@motionlab/ui';
+import { SelectionChip, ViewCube, ViewportHUD } from '@motionlab/ui';
 import type { SceneGraphManager } from '@motionlab/viewport';
 import { Viewport } from '@motionlab/viewport';
-import { useCallback, useEffect, useState } from 'react';
+import { Box, Crosshair, Link2 } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { sendDeleteDatum, sendDeleteJoint } from '../engine/connection.js';
+import { SimulationAction } from '@motionlab/protocol';
+
+import {
+  sendDeleteDatum,
+  sendDeleteJoint,
+  sendSimulationControl,
+} from '../engine/connection.js';
 import { useViewportBridge } from '../hooks/useViewportBridge.js';
+import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
+import { useSimulationStore } from '../stores/simulation.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
 import { JointConfigDialog } from './JointConfigDialog.js';
 import { ViewportCameraToolbar } from './ViewportCameraToolbar.js';
 import { ViewportContextMenu } from './ViewportContextMenu.js';
 import { ViewportToolModeToolbar } from './ViewportToolModeToolbar.js';
+
+function AxisIndicator() {
+  return (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <line x1="8" y1="36" x2="40" y2="36" stroke="var(--axis-x)" strokeWidth="2" />
+      <text x="42" y="38" fill="var(--axis-x)" fontSize="10" fontWeight="600">X</text>
+      <line x1="8" y1="36" x2="8" y2="4" stroke="var(--axis-y)" strokeWidth="2" />
+      <text x="4" y="2" fill="var(--axis-y)" fontSize="10" fontWeight="600">Y</text>
+      <line x1="8" y1="36" x2="24" y2="20" stroke="var(--axis-z)" strokeWidth="2" />
+      <text x="26" y="18" fill="var(--axis-z)" fontSize="10" fontWeight="600">Z</text>
+    </svg>
+  );
+}
+
+function SelectionIcon({ entityType }: { entityType: 'body' | 'datum' | 'joint' }) {
+  switch (entityType) {
+    case 'body':
+      return <Box className="size-3.5" />;
+    case 'datum':
+      return <Crosshair className="size-3.5" />;
+    case 'joint':
+      return <Link2 className="size-3.5" />;
+  }
+}
 
 function JointCreationStatus() {
   const step = useJointCreationStore((s) => s.step);
@@ -38,10 +71,47 @@ function JointCreationStatus() {
   return null;
 }
 
+function DatumCreationStatus() {
+  const message = useAuthoringStatusStore((s) => s.message);
+
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="rounded-md bg-background/80 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur-sm">
+        Click a face to create a datum
+      </div>
+      {message ? (
+        <div className="rounded-md bg-background/80 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur-sm">
+          {message}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function useSelectedEntity() {
+  const selectedIds = useSelectionStore((s) => s.selectedIds);
+  const bodies = useMechanismStore((s) => s.bodies);
+  const datums = useMechanismStore((s) => s.datums);
+  const joints = useMechanismStore((s) => s.joints);
+
+  return useMemo(() => {
+    if (selectedIds.size !== 1) return null;
+    const id = selectedIds.values().next().value as string;
+    const body = bodies.get(id);
+    if (body) return { id, name: body.name, entityType: 'body' as const };
+    const datum = datums.get(id);
+    if (datum) return { id, name: datum.name, entityType: 'datum' as const };
+    const joint = joints.get(id);
+    if (joint) return { id, name: joint.name, entityType: 'joint' as const };
+    return null;
+  }, [selectedIds, bodies, datums, joints]);
+}
+
 export function ViewportOverlay() {
   const { handleSceneReady, handlePick, handleHover, sceneGraphRef } = useViewportBridge();
   const [sceneGraph, setSceneGraph] = useState<SceneGraphManager | null>(null);
   const activeMode = useToolModeStore((s) => s.activeMode);
+  const selectedEntity = useSelectedEntity();
 
   const onReady = useCallback(
     (sg: SceneGraphManager) => {
@@ -74,6 +144,7 @@ export function ViewportOverlay() {
 
   // Keyboard shortcuts for tool modes
   useEffect(() => {
+    const clearMessage = useAuthoringStatusStore.getState().clearMessage;
     const setMode = useToolModeStore.getState().setMode;
     const handleKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
@@ -94,12 +165,14 @@ export function ViewportOverlay() {
           // Fall through: go to select mode
           setMode('select');
           useJointCreationStore.getState().reset();
+          clearMessage();
           break;
         }
         case 'v':
         case 'V':
           setMode('select');
           useJointCreationStore.getState().reset();
+          clearMessage();
           break;
         case 'd':
         case 'D':
@@ -111,6 +184,8 @@ export function ViewportOverlay() {
           useJointCreationStore.getState().startCreation();
           break;
         case 'Delete': {
+          const simDel = useSimulationStore.getState().state;
+          if (simDel === 'running' || simDel === 'paused') break;
           const { selectedIds } = useSelectionStore.getState();
           const { datums, joints } = useMechanismStore.getState();
           for (const id of selectedIds) {
@@ -125,11 +200,39 @@ export function ViewportOverlay() {
           }
           break;
         }
+        case ' ': {
+          e.preventDefault();
+          const sim = useSimulationStore.getState().state;
+          if (sim === 'running') sendSimulationControl(SimulationAction.PAUSE);
+          else if (sim === 'paused') sendSimulationControl(SimulationAction.PLAY);
+          break;
+        }
+        case '.': {
+          const sim = useSimulationStore.getState().state;
+          if (sim === 'paused') sendSimulationControl(SimulationAction.STEP);
+          break;
+        }
+        case 'r':
+        case 'R': {
+          const sim = useSimulationStore.getState().state;
+          if (sim !== 'idle' && sim !== 'compiling') {
+            sendSimulationControl(SimulationAction.RESET);
+          }
+          break;
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  useEffect(() => {
+    if (activeMode !== 'create-datum') {
+      useAuthoringStatusStore.getState().clearMessage();
+      return;
+    }
+    useSelectionStore.getState().setHovered(null);
+  }, [activeMode]);
 
   const cursorMode = activeMode === 'create-datum' || activeMode === 'create-joint';
 
@@ -139,7 +242,12 @@ export function ViewportOverlay() {
         className="relative w-full h-full"
         style={{ cursor: cursorMode ? 'crosshair' : undefined }}
       >
-        <Viewport onSceneReady={onReady} onPick={handlePick} onHover={handleHover} />
+        <Viewport
+          onSceneReady={onReady}
+          onPick={handlePick}
+          onHover={handleHover}
+          interactionMode={activeMode}
+        />
         <ViewportHUD
           topLeft={
             <div className="flex flex-col gap-2">
@@ -153,7 +261,21 @@ export function ViewportOverlay() {
               onZoomFit={() => sceneGraph?.fitAll()}
             />
           }
-          bottomLeft={activeMode === 'create-joint' ? <JointCreationStatus /> : undefined}
+          bottomLeft={
+            activeMode === 'create-joint'
+              ? <JointCreationStatus />
+              : activeMode === 'create-datum'
+                ? <DatumCreationStatus />
+                : <AxisIndicator />
+          }
+          bottomCenter={
+            selectedEntity ? (
+              <SelectionChip
+                icon={<SelectionIcon entityType={selectedEntity.entityType} />}
+                name={selectedEntity.name}
+              />
+            ) : undefined
+          }
         />
         <JointConfigDialog />
       </div>

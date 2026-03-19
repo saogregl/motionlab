@@ -15,17 +15,17 @@ interface PresetDefinition {
 
 const PRESETS: Record<MaterialPreset, PresetDefinition> = {
   'cad-default': {
-    baseColor: new Color3(0.75, 0.76, 0.78),
-    metallic: 0.3,
-    roughness: 0.45,
+    baseColor: new Color3(0.53, 0.60, 0.67),
+    metallic: 0.2,
+    roughness: 0.4,
   },
   steel: {
-    baseColor: new Color3(0.70, 0.72, 0.74),
+    baseColor: new Color3(0.72, 0.74, 0.78),
     metallic: 0.9,
     roughness: 0.30,
   },
   aluminum: {
-    baseColor: new Color3(0.82, 0.84, 0.86),
+    baseColor: new Color3(0.84, 0.86, 0.90),
     metallic: 0.85,
     roughness: 0.35,
   },

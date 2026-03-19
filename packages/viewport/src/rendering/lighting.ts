@@ -1,47 +1,30 @@
 import {
-  type AbstractMesh,
   Color3,
   DirectionalLight,
   HemisphericLight,
   type Scene,
-  ShadowGenerator,
   Vector3,
 } from '@babylonjs/core';
-
-export interface LightingRigOptions {
-  shadowMapSize?: number;
-  shadowsEnabled?: boolean;
-}
 
 export interface LightingRig {
   keyLight: DirectionalLight;
   fillLight: DirectionalLight;
   rimLight: DirectionalLight;
   ambientLight: HemisphericLight;
-  shadowGenerator: ShadowGenerator;
-  addShadowCaster: (mesh: AbstractMesh) => void;
-  removeShadowCaster: (mesh: AbstractMesh) => void;
-  setShadowsEnabled: (enabled: boolean) => void;
   dispose: () => void;
 }
 
 /**
- * Professional 3-point lighting rig with soft PCF shadows on the key light.
+ * Professional 3-point lighting rig for CAD viewport.
  */
-export function createLightingRig(
-  scene: Scene,
-  options?: LightingRigOptions,
-): LightingRig {
-  const shadowMapSize = options?.shadowMapSize ?? 2048;
-  const shadowsEnabled = options?.shadowsEnabled ?? true;
-
-  // Key light — pure white, primary shadow caster
+export function createLightingRig(scene: Scene): LightingRig {
+  // Key light — pure white, primary illumination
   const keyLight = new DirectionalLight(
     'key_light',
     new Vector3(-1, -2, 1).normalize(),
     scene,
   );
-  keyLight.intensity = 1.2;
+  keyLight.intensity = 0.9;
   keyLight.diffuse = Color3.White();
   keyLight.specular = Color3.White();
 
@@ -65,47 +48,25 @@ export function createLightingRig(
   rimLight.diffuse = Color3.White();
   rimLight.specular = Color3.White();
 
-  // Ambient fill — prevents pure-black shadows
+  // Ambient fill — provides even illumination from all directions.
+  // groundColor lights faces pointing away from the hemisphere direction,
+  // so a bright ground color prevents dark undersides on models.
   const ambientLight = new HemisphericLight(
     'ambient_light',
     new Vector3(0, 1, 0),
     scene,
   );
-  ambientLight.intensity = 0.2;
+  ambientLight.intensity = 0.4;
   ambientLight.diffuse = Color3.White();
-  ambientLight.groundColor = new Color3(0.3, 0.3, 0.3);
-
-  // Shadow generator on key light — soft PCF
-  const shadowGenerator = new ShadowGenerator(shadowMapSize, keyLight);
-  shadowGenerator.usePercentageCloserFiltering = true;
-  shadowGenerator.bias = 0.001;
-  shadowGenerator.normalBias = 0.02;
-
-  if (!shadowsEnabled) {
-    keyLight.shadowEnabled = false;
-  }
+  ambientLight.groundColor = new Color3(0.8, 0.8, 0.85);
 
   return {
     keyLight,
     fillLight,
     rimLight,
     ambientLight,
-    shadowGenerator,
-
-    addShadowCaster(mesh: AbstractMesh) {
-      shadowGenerator.addShadowCaster(mesh);
-    },
-
-    removeShadowCaster(mesh: AbstractMesh) {
-      shadowGenerator.removeShadowCaster(mesh);
-    },
-
-    setShadowsEnabled(enabled: boolean) {
-      keyLight.shadowEnabled = enabled;
-    },
 
     dispose() {
-      shadowGenerator.dispose();
       keyLight.dispose();
       fillLight.dispose();
       rimLight.dispose();

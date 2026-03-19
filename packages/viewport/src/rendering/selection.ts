@@ -7,10 +7,14 @@ import {
 
 import type { MaterialFactory } from './materials.js';
 
-const ACCENT_COLOR = new Color4(0.06, 0.38, 0.996, 1.0);
-const HOVER_COLOR = new Color4(0.06, 0.38, 0.996, 0.6);
-const SELECTION_EDGE_WIDTH = 3.0;
-const HOVER_EDGE_WIDTH = 1.5;
+const ACCENT_EDGE_COLOR = new Color4(0.06, 0.38, 0.996, 1.0);
+const HOVER_EDGE_COLOR = new Color4(0.06, 0.38, 0.996, 0.6);
+const SELECTION_EDGE_WIDTH = 8.0;
+const HOVER_EDGE_WIDTH = 5.0;
+
+/** Default always-on subtle edges (must match scene-graph addBody values) */
+const DEFAULT_EDGE_WIDTH = 2.0;
+const DEFAULT_EDGE_COLOR = new Color4(0.15, 0.15, 0.2, 0.3);
 const EDGE_EPSILON = 0.9999;
 
 export interface SelectionVisuals {
@@ -21,65 +25,63 @@ export interface SelectionVisuals {
 }
 
 /**
- * Edge-outline selection with material tinting.
- * Replaces HighlightLayer glow with crisp CAD-style feature edges.
+ * Selection feedback via material tinting + thicker edge overlay.
+ * Restores default subtle edges on deselect/dehover.
  */
 export function createSelectionVisuals(
-  scene: Scene,
+  _scene: Scene,
   materialFactory: MaterialFactory,
 ): SelectionVisuals {
   const selectedMeshes = new Set<AbstractMesh>();
   let hoveredMesh: AbstractMesh | null = null;
 
-  function enableEdges(mesh: AbstractMesh, width: number, color: Color4): void {
+  function setEdges(mesh: AbstractMesh, width: number, color: Color4): void {
     (mesh as Mesh).enableEdgesRendering?.(EDGE_EPSILON);
     mesh.edgesWidth = width;
     mesh.edgesColor = color;
   }
 
-  function disableEdges(mesh: AbstractMesh): void {
-    (mesh as Mesh).disableEdgesRendering?.();
+  function restoreDefaultEdges(mesh: AbstractMesh): void {
+    (mesh as Mesh).enableEdgesRendering?.(EDGE_EPSILON);
+    mesh.edgesWidth = DEFAULT_EDGE_WIDTH;
+    mesh.edgesColor = DEFAULT_EDGE_COLOR;
   }
 
   function applySelection(meshes: AbstractMesh[]): void {
-    // Clear previous selection
     for (const mesh of selectedMeshes) {
-      disableEdges(mesh);
+      restoreDefaultEdges(mesh);
       materialFactory.removeSelectionTint(mesh);
     }
     selectedMeshes.clear();
 
-    // Apply new selection
     for (const mesh of meshes) {
-      enableEdges(mesh, SELECTION_EDGE_WIDTH, ACCENT_COLOR);
+      setEdges(mesh, SELECTION_EDGE_WIDTH, ACCENT_EDGE_COLOR);
       materialFactory.applySelectionTint(mesh);
       selectedMeshes.add(mesh);
     }
   }
 
   function applyHover(mesh: AbstractMesh | null): void {
-    // Clear previous hover
     if (hoveredMesh && !selectedMeshes.has(hoveredMesh)) {
-      disableEdges(hoveredMesh);
+      restoreDefaultEdges(hoveredMesh);
     }
     hoveredMesh = null;
 
-    // Apply new hover (skip if already selected)
     if (mesh && !selectedMeshes.has(mesh)) {
-      enableEdges(mesh, HOVER_EDGE_WIDTH, HOVER_COLOR);
+      setEdges(mesh, HOVER_EDGE_WIDTH, HOVER_EDGE_COLOR);
       hoveredMesh = mesh;
     }
   }
 
   function clearAll(): void {
     for (const mesh of selectedMeshes) {
-      disableEdges(mesh);
+      restoreDefaultEdges(mesh);
       materialFactory.removeSelectionTint(mesh);
     }
     selectedMeshes.clear();
 
     if (hoveredMesh) {
-      disableEdges(hoveredMesh);
+      restoreDefaultEdges(hoveredMesh);
       hoveredMesh = null;
     }
   }

@@ -4,7 +4,7 @@
 
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
-import type { AssetReference, Datum, DisplayMesh, ElementId, Joint, JointType, MassProperties, Mechanism, Pose } from "../mechanism/mechanism_pb.js";
+import type { AssetReference, Datum, DisplayMesh, ElementId, Joint, JointType, MassProperties, Mechanism, Pose, Quat, Vec3 } from "../mechanism/mechanism_pb.js";
 import { file_mechanism_mechanism } from "../mechanism/mechanism_pb.js";
 import type { Message } from "@bufbuild/protobuf";
 
@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file protocol/transport.proto.
  */
 export const file_protocol_transport: GenFile = /*@__PURE__*/
-  fileDesc("Chhwcm90b2NvbC90cmFuc3BvcnQucHJvdG8SEm1vdGlvbmxhYi5wcm90b2NvbCIwCg9Qcm90b2NvbFZlcnNpb24SDAoEbmFtZRgBIAEoCRIPCgd2ZXJzaW9uGAIgASgNIscECgdDb21tYW5kEhMKC3NlcXVlbmNlX2lkGAEgASgEEjIKCWhhbmRzaGFrZRgKIAEoCzIdLm1vdGlvbmxhYi5wcm90b2NvbC5IYW5kc2hha2VIABIoCgRwaW5nGAsgASgLMhgubW90aW9ubGFiLnByb3RvY29sLlBpbmdIABI+CgxpbXBvcnRfYXNzZXQYDCABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0QXNzZXRDb21tYW5kSAASPgoMY3JlYXRlX2RhdHVtGA0gASgLMiYubW90aW9ubGFiLnByb3RvY29sLkNyZWF0ZURhdHVtQ29tbWFuZEgAEj4KDGRlbGV0ZV9kYXR1bRgOIAEoCzImLm1vdGlvbmxhYi5wcm90b2NvbC5EZWxldGVEYXR1bUNvbW1hbmRIABI+CgxyZW5hbWVfZGF0dW0YDyABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuUmVuYW1lRGF0dW1Db21tYW5kSAASPgoMY3JlYXRlX2pvaW50GBQgASgLMiYubW90aW9ubGFiLnByb3RvY29sLkNyZWF0ZUpvaW50Q29tbWFuZEgAEj4KDHVwZGF0ZV9qb2ludBgVIAEoCzImLm1vdGlvbmxhYi5wcm90b2NvbC5VcGRhdGVKb2ludENvbW1hbmRIABI+CgxkZWxldGVfam9pbnQYFiABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuRGVsZXRlSm9pbnRDb21tYW5kSABCCQoHcGF5bG9hZCL2BQoFRXZlbnQSEwoLc2VxdWVuY2VfaWQYASABKAQSOQoNaGFuZHNoYWtlX2FjaxgKIAEoCzIgLm1vdGlvbmxhYi5wcm90b2NvbC5IYW5kc2hha2VBY2tIABIoCgRwb25nGAsgASgLMhgubW90aW9ubGFiLnByb3RvY29sLlBvbmdIABI5Cg1lbmdpbmVfc3RhdHVzGAwgASgLMiAubW90aW9ubGFiLnByb3RvY29sLkVuZ2luZVN0YXR1c0gAEkQKE2ltcG9ydF9hc3NldF9yZXN1bHQYDSABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0QXNzZXRSZXN1bHRIABJDChJtZWNoYW5pc21fc25hcHNob3QYDiABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuTWVjaGFuaXNtU25hcHNob3RIABJEChNjcmVhdGVfZGF0dW1fcmVzdWx0GA8gASgLMiUubW90aW9ubGFiLnByb3RvY29sLkNyZWF0ZURhdHVtUmVzdWx0SAASRAoTZGVsZXRlX2RhdHVtX3Jlc3VsdBgQIAEoCzIlLm1vdGlvbmxhYi5wcm90b2NvbC5EZWxldGVEYXR1bVJlc3VsdEgAEkQKE3JlbmFtZV9kYXR1bV9yZXN1bHQYESABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuUmVuYW1lRGF0dW1SZXN1bHRIABJEChNjcmVhdGVfam9pbnRfcmVzdWx0GBQgASgLMiUubW90aW9ubGFiLnByb3RvY29sLkNyZWF0ZUpvaW50UmVzdWx0SAASRAoTdXBkYXRlX2pvaW50X3Jlc3VsdBgVIAEoCzIlLm1vdGlvbmxhYi5wcm90b2NvbC5VcGRhdGVKb2ludFJlc3VsdEgAEkQKE2RlbGV0ZV9qb2ludF9yZXN1bHQYFiABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuRGVsZXRlSm9pbnRSZXN1bHRIAEIJCgdwYXlsb2FkIlkKCUhhbmRzaGFrZRI1Cghwcm90b2NvbBgBIAEoCzIjLm1vdGlvbmxhYi5wcm90b2NvbC5Qcm90b2NvbFZlcnNpb24SFQoNc2Vzc2lvbl90b2tlbhgCIAEoCSJ4CgxIYW5kc2hha2VBY2sSEgoKY29tcGF0aWJsZRgBIAEoCBI8Cg9lbmdpbmVfcHJvdG9jb2wYAiABKAsyIy5tb3Rpb25sYWIucHJvdG9jb2wuUHJvdG9jb2xWZXJzaW9uEhYKDmVuZ2luZV92ZXJzaW9uGAMgASgJIhkKBFBpbmcSEQoJdGltZXN0YW1wGAEgASgEIhkKBFBvbmcSEQoJdGltZXN0YW1wGAEgASgEItoBCgxFbmdpbmVTdGF0dXMSNQoFc3RhdGUYASABKA4yJi5tb3Rpb25sYWIucHJvdG9jb2wuRW5naW5lU3RhdHVzLlN0YXRlEg8KB21lc3NhZ2UYAiABKAkigQEKBVN0YXRlEhUKEVNUQVRFX1VOU1BFQ0lGSUVEEAASFgoSU1RBVEVfSU5JVElBTElaSU5HEAESDwoLU1RBVEVfUkVBRFkQAhIOCgpTVEFURV9CVVNZEAMSDwoLU1RBVEVfRVJST1IQBBIXChNTVEFURV9TSFVUVElOR19ET1dOEAUiXAoNSW1wb3J0T3B0aW9ucxIYChBkZW5zaXR5X292ZXJyaWRlGAEgASgBEhwKFHRlc3NlbGxhdGlvbl9xdWFsaXR5GAIgASgBEhMKC3VuaXRfc3lzdGVtGAMgASgJImIKEkltcG9ydEFzc2V0Q29tbWFuZBIRCglmaWxlX3BhdGgYASABKAkSOQoOaW1wb3J0X29wdGlvbnMYAiABKAsyIS5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0T3B0aW9ucyKPAgoQQm9keUltcG9ydFJlc3VsdBIPCgdib2R5X2lkGAEgASgJEgwKBG5hbWUYAiABKAkSNgoMZGlzcGxheV9tZXNoGAMgASgLMiAubW90aW9ubGFiLm1lY2hhbmlzbS5EaXNwbGF5TWVzaBI8Cg9tYXNzX3Byb3BlcnRpZXMYBCABKAsyIy5tb3Rpb25sYWIubWVjaGFuaXNtLk1hc3NQcm9wZXJ0aWVzEicKBHBvc2UYBSABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlBvc2USPQoQc291cmNlX2Fzc2V0X3JlZhgGIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uQXNzZXRSZWZlcmVuY2UihgEKEUltcG9ydEFzc2V0UmVzdWx0Eg8KB3N1Y2Nlc3MYASABKAgSFQoNZXJyb3JfbWVzc2FnZRgCIAEoCRI0CgZib2RpZXMYAyADKAsyJC5tb3Rpb25sYWIucHJvdG9jb2wuQm9keUltcG9ydFJlc3VsdBITCgtkaWFnbm9zdGljcxgEIAMoCSJGChFNZWNoYW5pc21TbmFwc2hvdBIxCgltZWNoYW5pc20YASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLk1lY2hhbmlzbSKJAQoSQ3JlYXRlRGF0dW1Db21tYW5kEjYKDnBhcmVudF9ib2R5X2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSLQoKbG9jYWxfcG9zZRgCIAEoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uUG9zZRIMCgRuYW1lGAMgASgJIkYKEkRlbGV0ZURhdHVtQ29tbWFuZBIwCghkYXR1bV9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkIlQKElJlbmFtZURhdHVtQ29tbWFuZBIwCghkYXR1bV9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEgwKBG5hbWUYAiABKAkiYwoRQ3JlYXRlRGF0dW1SZXN1bHQSKwoFZGF0dW0YASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLkRhdHVtSAASFwoNZXJyb3JfbWVzc2FnZRgCIAEoCUgAQggKBnJlc3VsdCJsChFEZWxldGVEYXR1bVJlc3VsdBI0CgpkZWxldGVkX2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWRIABIXCg1lcnJvcl9tZXNzYWdlGAIgASgJSABCCAoGcmVzdWx0ImMKEVJlbmFtZURhdHVtUmVzdWx0EisKBWRhdHVtGAEgASgLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5EYXR1bUgAEhcKDWVycm9yX21lc3NhZ2UYAiABKAlIAEIICgZyZXN1bHQi6wEKEkNyZWF0ZUpvaW50Q29tbWFuZBI3Cg9wYXJlbnRfZGF0dW1faWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBI2Cg5jaGlsZF9kYXR1bV9pZBgCIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEiwKBHR5cGUYAyABKA4yHi5tb3Rpb25sYWIubWVjaGFuaXNtLkpvaW50VHlwZRIMCgRuYW1lGAQgASgJEhMKC2xvd2VyX2xpbWl0GAUgASgBEhMKC3VwcGVyX2xpbWl0GAYgASgBIvIBChJVcGRhdGVKb2ludENvbW1hbmQSMAoIam9pbnRfaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIRCgRuYW1lGAIgASgJSACIAQESMQoEdHlwZRgDIAEoDjIeLm1vdGlvbmxhYi5tZWNoYW5pc20uSm9pbnRUeXBlSAGIAQESGAoLbG93ZXJfbGltaXQYBCABKAFIAogBARIYCgt1cHBlcl9saW1pdBgFIAEoAUgDiAEBQgcKBV9uYW1lQgcKBV90eXBlQg4KDF9sb3dlcl9saW1pdEIOCgxfdXBwZXJfbGltaXQiRgoSRGVsZXRlSm9pbnRDb21tYW5kEjAKCGpvaW50X2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQiYwoRQ3JlYXRlSm9pbnRSZXN1bHQSKwoFam9pbnQYASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLkpvaW50SAASFwoNZXJyb3JfbWVzc2FnZRgCIAEoCUgAQggKBnJlc3VsdCJjChFVcGRhdGVKb2ludFJlc3VsdBIrCgVqb2ludBgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uSm9pbnRIABIXCg1lcnJvcl9tZXNzYWdlGAIgASgJSABCCAoGcmVzdWx0ImwKEURlbGV0ZUpvaW50UmVzdWx0EjQKCmRlbGV0ZWRfaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZEgAEhcKDWVycm9yX21lc3NhZ2UYAiABKAlIAEIICgZyZXN1bHRiBnByb3RvMw", [file_mechanism_mechanism]);
+  fileDesc("Chhwcm90b2NvbC90cmFuc3BvcnQucHJvdG8SEm1vdGlvbmxhYi5wcm90b2NvbCIwCg9Qcm90b2NvbFZlcnNpb24SDAoEbmFtZRgBIAEoCRIPCgd2ZXJzaW9uGAIgASgNIuIGCgdDb21tYW5kEhMKC3NlcXVlbmNlX2lkGAEgASgEEjIKCWhhbmRzaGFrZRgKIAEoCzIdLm1vdGlvbmxhYi5wcm90b2NvbC5IYW5kc2hha2VIABIoCgRwaW5nGAsgASgLMhgubW90aW9ubGFiLnByb3RvY29sLlBpbmdIABI+CgxpbXBvcnRfYXNzZXQYDCABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0QXNzZXRDb21tYW5kSAASPgoMY3JlYXRlX2RhdHVtGA0gASgLMiYubW90aW9ubGFiLnByb3RvY29sLkNyZWF0ZURhdHVtQ29tbWFuZEgAEj4KDGRlbGV0ZV9kYXR1bRgOIAEoCzImLm1vdGlvbmxhYi5wcm90b2NvbC5EZWxldGVEYXR1bUNvbW1hbmRIABI+CgxyZW5hbWVfZGF0dW0YDyABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuUmVuYW1lRGF0dW1Db21tYW5kSAASUAoWY3JlYXRlX2RhdHVtX2Zyb21fZmFjZRgQIAEoCzIuLm1vdGlvbmxhYi5wcm90b2NvbC5DcmVhdGVEYXR1bUZyb21GYWNlQ29tbWFuZEgAEj4KDGNyZWF0ZV9qb2ludBgUIAEoCzImLm1vdGlvbmxhYi5wcm90b2NvbC5DcmVhdGVKb2ludENvbW1hbmRIABI+Cgx1cGRhdGVfam9pbnQYFSABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuVXBkYXRlSm9pbnRDb21tYW5kSAASPgoMZGVsZXRlX2pvaW50GBYgASgLMiYubW90aW9ubGFiLnByb3RvY29sLkRlbGV0ZUpvaW50Q29tbWFuZEgAEkgKEWNvbXBpbGVfbWVjaGFuaXNtGB4gASgLMisubW90aW9ubGFiLnByb3RvY29sLkNvbXBpbGVNZWNoYW5pc21Db21tYW5kSAASSgoSc2ltdWxhdGlvbl9jb250cm9sGB8gASgLMiwubW90aW9ubGFiLnByb3RvY29sLlNpbXVsYXRpb25Db250cm9sQ29tbWFuZEgAEjEKBXNjcnViGCAgASgLMiAubW90aW9ubGFiLnByb3RvY29sLlNjcnViQ29tbWFuZEgAQgkKB3BheWxvYWQi4AgKBUV2ZW50EhMKC3NlcXVlbmNlX2lkGAEgASgEEjkKDWhhbmRzaGFrZV9hY2sYCiABKAsyIC5tb3Rpb25sYWIucHJvdG9jb2wuSGFuZHNoYWtlQWNrSAASKAoEcG9uZxgLIAEoCzIYLm1vdGlvbmxhYi5wcm90b2NvbC5Qb25nSAASOQoNZW5naW5lX3N0YXR1cxgMIAEoCzIgLm1vdGlvbmxhYi5wcm90b2NvbC5FbmdpbmVTdGF0dXNIABJEChNpbXBvcnRfYXNzZXRfcmVzdWx0GA0gASgLMiUubW90aW9ubGFiLnByb3RvY29sLkltcG9ydEFzc2V0UmVzdWx0SAASQwoSbWVjaGFuaXNtX3NuYXBzaG90GA4gASgLMiUubW90aW9ubGFiLnByb3RvY29sLk1lY2hhbmlzbVNuYXBzaG90SAASRAoTY3JlYXRlX2RhdHVtX3Jlc3VsdBgPIAEoCzIlLm1vdGlvbmxhYi5wcm90b2NvbC5DcmVhdGVEYXR1bVJlc3VsdEgAEkQKE2RlbGV0ZV9kYXR1bV9yZXN1bHQYECABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuRGVsZXRlRGF0dW1SZXN1bHRIABJEChNyZW5hbWVfZGF0dW1fcmVzdWx0GBEgASgLMiUubW90aW9ubGFiLnByb3RvY29sLlJlbmFtZURhdHVtUmVzdWx0SAASVgodY3JlYXRlX2RhdHVtX2Zyb21fZmFjZV9yZXN1bHQYEiABKAsyLS5tb3Rpb25sYWIucHJvdG9jb2wuQ3JlYXRlRGF0dW1Gcm9tRmFjZVJlc3VsdEgAEkQKE2NyZWF0ZV9qb2ludF9yZXN1bHQYFCABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuQ3JlYXRlSm9pbnRSZXN1bHRIABJEChN1cGRhdGVfam9pbnRfcmVzdWx0GBUgASgLMiUubW90aW9ubGFiLnByb3RvY29sLlVwZGF0ZUpvaW50UmVzdWx0SAASRAoTZGVsZXRlX2pvaW50X3Jlc3VsdBgWIAEoCzIlLm1vdGlvbmxhYi5wcm90b2NvbC5EZWxldGVKb2ludFJlc3VsdEgAEkgKEmNvbXBpbGF0aW9uX3Jlc3VsdBgeIAEoCzIqLm1vdGlvbmxhYi5wcm90b2NvbC5Db21waWxhdGlvblJlc3VsdEV2ZW50SAASRAoQc2ltdWxhdGlvbl9zdGF0ZRgfIAEoCzIoLm1vdGlvbmxhYi5wcm90b2NvbC5TaW11bGF0aW9uU3RhdGVFdmVudEgAEj8KEHNpbXVsYXRpb25fZnJhbWUYICABKAsyIy5tb3Rpb25sYWIucHJvdG9jb2wuU2ltdWxhdGlvbkZyYW1lSAASPwoQc2ltdWxhdGlvbl90cmFjZRghIAEoCzIjLm1vdGlvbmxhYi5wcm90b2NvbC5TaW11bGF0aW9uVHJhY2VIAEIJCgdwYXlsb2FkIlkKCUhhbmRzaGFrZRI1Cghwcm90b2NvbBgBIAEoCzIjLm1vdGlvbmxhYi5wcm90b2NvbC5Qcm90b2NvbFZlcnNpb24SFQoNc2Vzc2lvbl90b2tlbhgCIAEoCSJ4CgxIYW5kc2hha2VBY2sSEgoKY29tcGF0aWJsZRgBIAEoCBI8Cg9lbmdpbmVfcHJvdG9jb2wYAiABKAsyIy5tb3Rpb25sYWIucHJvdG9jb2wuUHJvdG9jb2xWZXJzaW9uEhYKDmVuZ2luZV92ZXJzaW9uGAMgASgJIhkKBFBpbmcSEQoJdGltZXN0YW1wGAEgASgEIhkKBFBvbmcSEQoJdGltZXN0YW1wGAEgASgEItoBCgxFbmdpbmVTdGF0dXMSNQoFc3RhdGUYASABKA4yJi5tb3Rpb25sYWIucHJvdG9jb2wuRW5naW5lU3RhdHVzLlN0YXRlEg8KB21lc3NhZ2UYAiABKAkigQEKBVN0YXRlEhUKEVNUQVRFX1VOU1BFQ0lGSUVEEAASFgoSU1RBVEVfSU5JVElBTElaSU5HEAESDwoLU1RBVEVfUkVBRFkQAhIOCgpTVEFURV9CVVNZEAMSDwoLU1RBVEVfRVJST1IQBBIXChNTVEFURV9TSFVUVElOR19ET1dOEAUiXAoNSW1wb3J0T3B0aW9ucxIYChBkZW5zaXR5X292ZXJyaWRlGAEgASgBEhwKFHRlc3NlbGxhdGlvbl9xdWFsaXR5GAIgASgBEhMKC3VuaXRfc3lzdGVtGAMgASgJImIKEkltcG9ydEFzc2V0Q29tbWFuZBIRCglmaWxlX3BhdGgYASABKAkSOQoOaW1wb3J0X29wdGlvbnMYAiABKAsyIS5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0T3B0aW9ucyKjAgoQQm9keUltcG9ydFJlc3VsdBIPCgdib2R5X2lkGAEgASgJEgwKBG5hbWUYAiABKAkSNgoMZGlzcGxheV9tZXNoGAMgASgLMiAubW90aW9ubGFiLm1lY2hhbmlzbS5EaXNwbGF5TWVzaBI8Cg9tYXNzX3Byb3BlcnRpZXMYBCABKAsyIy5tb3Rpb25sYWIubWVjaGFuaXNtLk1hc3NQcm9wZXJ0aWVzEicKBHBvc2UYBSABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlBvc2USPQoQc291cmNlX2Fzc2V0X3JlZhgGIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uQXNzZXRSZWZlcmVuY2USEgoKcGFydF9pbmRleBgHIAMoDSKGAQoRSW1wb3J0QXNzZXRSZXN1bHQSDwoHc3VjY2VzcxgBIAEoCBIVCg1lcnJvcl9tZXNzYWdlGAIgASgJEjQKBmJvZGllcxgDIAMoCzIkLm1vdGlvbmxhYi5wcm90b2NvbC5Cb2R5SW1wb3J0UmVzdWx0EhMKC2RpYWdub3N0aWNzGAQgAygJIkYKEU1lY2hhbmlzbVNuYXBzaG90EjEKCW1lY2hhbmlzbRgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uTWVjaGFuaXNtIokBChJDcmVhdGVEYXR1bUNvbW1hbmQSNgoOcGFyZW50X2JvZHlfaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBItCgpsb2NhbF9wb3NlGAIgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5Qb3NlEgwKBG5hbWUYAyABKAkiRgoSRGVsZXRlRGF0dW1Db21tYW5kEjAKCGRhdHVtX2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQiVAoSUmVuYW1lRGF0dW1Db21tYW5kEjAKCGRhdHVtX2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCSJ2ChpDcmVhdGVEYXR1bUZyb21GYWNlQ29tbWFuZBI2Cg5wYXJlbnRfYm9keV9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEhIKCmZhY2VfaW5kZXgYAiABKA0SDAoEbmFtZRgDIAEoCSKYAQoaQ3JlYXRlRGF0dW1Gcm9tRmFjZVN1Y2Nlc3MSKQoFZGF0dW0YASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLkRhdHVtEhIKCmZhY2VfaW5kZXgYAiABKA0SOwoNc3VyZmFjZV9jbGFzcxgDIAEoDjIkLm1vdGlvbmxhYi5wcm90b2NvbC5GYWNlU3VyZmFjZUNsYXNzImMKEUNyZWF0ZURhdHVtUmVzdWx0EisKBWRhdHVtGAEgASgLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5EYXR1bUgAEhcKDWVycm9yX21lc3NhZ2UYAiABKAlIAEIICgZyZXN1bHQigQEKGUNyZWF0ZURhdHVtRnJvbUZhY2VSZXN1bHQSQQoHc3VjY2VzcxgBIAEoCzIuLm1vdGlvbmxhYi5wcm90b2NvbC5DcmVhdGVEYXR1bUZyb21GYWNlU3VjY2Vzc0gAEhcKDWVycm9yX21lc3NhZ2UYAiABKAlIAEIICgZyZXN1bHQibAoRRGVsZXRlRGF0dW1SZXN1bHQSNAoKZGVsZXRlZF9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkSAASFwoNZXJyb3JfbWVzc2FnZRgCIAEoCUgAQggKBnJlc3VsdCJjChFSZW5hbWVEYXR1bVJlc3VsdBIrCgVkYXR1bRgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uRGF0dW1IABIXCg1lcnJvcl9tZXNzYWdlGAIgASgJSABCCAoGcmVzdWx0IusBChJDcmVhdGVKb2ludENvbW1hbmQSNwoPcGFyZW50X2RhdHVtX2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSNgoOY2hpbGRfZGF0dW1faWQYAiABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIsCgR0eXBlGAMgASgOMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5Kb2ludFR5cGUSDAoEbmFtZRgEIAEoCRITCgtsb3dlcl9saW1pdBgFIAEoARITCgt1cHBlcl9saW1pdBgGIAEoASLyAQoSVXBkYXRlSm9pbnRDb21tYW5kEjAKCGpvaW50X2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSEQoEbmFtZRgCIAEoCUgAiAEBEjEKBHR5cGUYAyABKA4yHi5tb3Rpb25sYWIubWVjaGFuaXNtLkpvaW50VHlwZUgBiAEBEhgKC2xvd2VyX2xpbWl0GAQgASgBSAKIAQESGAoLdXBwZXJfbGltaXQYBSABKAFIA4gBAUIHCgVfbmFtZUIHCgVfdHlwZUIOCgxfbG93ZXJfbGltaXRCDgoMX3VwcGVyX2xpbWl0IkYKEkRlbGV0ZUpvaW50Q29tbWFuZBIwCghqb2ludF9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkImMKEUNyZWF0ZUpvaW50UmVzdWx0EisKBWpvaW50GAEgASgLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5Kb2ludEgAEhcKDWVycm9yX21lc3NhZ2UYAiABKAlIAEIICgZyZXN1bHQiYwoRVXBkYXRlSm9pbnRSZXN1bHQSKwoFam9pbnQYASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLkpvaW50SAASFwoNZXJyb3JfbWVzc2FnZRgCIAEoCUgAQggKBnJlc3VsdCJsChFEZWxldGVKb2ludFJlc3VsdBI0CgpkZWxldGVkX2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWRIABIXCg1lcnJvcl9tZXNzYWdlGAIgASgJSABCCAoGcmVzdWx0IhkKF0NvbXBpbGVNZWNoYW5pc21Db21tYW5kIlAKGFNpbXVsYXRpb25Db250cm9sQ29tbWFuZBI0CgZhY3Rpb24YASABKA4yJC5tb3Rpb25sYWIucHJvdG9jb2wuU2ltdWxhdGlvbkFjdGlvbiKUAQoWQ29tcGlsYXRpb25SZXN1bHRFdmVudBIPCgdzdWNjZXNzGAEgASgIEhUKDWVycm9yX21lc3NhZ2UYAiABKAkSEwoLZGlhZ25vc3RpY3MYAyADKAkSPQoIY2hhbm5lbHMYBCADKAsyKy5tb3Rpb25sYWIucHJvdG9jb2wuT3V0cHV0Q2hhbm5lbERlc2NyaXB0b3IibQoUU2ltdWxhdGlvblN0YXRlRXZlbnQSLwoFc3RhdGUYASABKA4yIC5tb3Rpb25sYWIucHJvdG9jb2wuU2ltU3RhdGVFbnVtEhAKCHNpbV90aW1lGAIgASgBEhIKCnN0ZXBfY291bnQYAyABKAQifAoMQm9keVBvc2VEYXRhEg8KB2JvZHlfaWQYASABKAkSKwoIcG9zaXRpb24YAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSLgoLb3JpZW50YXRpb24YAyABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlF1YXQirQEKDkpvaW50U3RhdGVEYXRhEhAKCGpvaW50X2lkGAEgASgJEhAKCHBvc2l0aW9uGAIgASgBEhAKCHZlbG9jaXR5GAMgASgBEjEKDnJlYWN0aW9uX2ZvcmNlGAQgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5WZWMzEjIKD3JlYWN0aW9uX3RvcnF1ZRgFIAEoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uVmVjMyKnAQoPU2ltdWxhdGlvbkZyYW1lEhAKCHNpbV90aW1lGAEgASgBEhIKCnN0ZXBfY291bnQYAiABKAQSNAoKYm9keV9wb3NlcxgDIAMoCzIgLm1vdGlvbmxhYi5wcm90b2NvbC5Cb2R5UG9zZURhdGESOAoMam9pbnRfc3RhdGVzGAQgAygLMiIubW90aW9ubGFiLnByb3RvY29sLkpvaW50U3RhdGVEYXRhIoEBChdPdXRwdXRDaGFubmVsRGVzY3JpcHRvchISCgpjaGFubmVsX2lkGAEgASgJEgwKBG5hbWUYAiABKAkSDAoEdW5pdBgDIAEoCRI2CglkYXRhX3R5cGUYBCABKA4yIy5tb3Rpb25sYWIucHJvdG9jb2wuQ2hhbm5lbERhdGFUeXBlImIKClRpbWVTYW1wbGUSDAoEdGltZRgBIAEoARIQCgZzY2FsYXIYAiABKAFIABIrCgZ2ZWN0b3IYAyABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzNIAEIHCgV2YWx1ZSJWCg9TaW11bGF0aW9uVHJhY2USEgoKY2hhbm5lbF9pZBgBIAEoCRIvCgdzYW1wbGVzGAIgAygLMh4ubW90aW9ubGFiLnByb3RvY29sLlRpbWVTYW1wbGUiHAoMU2NydWJDb21tYW5kEgwKBHRpbWUYASABKAEq2QEKEEZhY2VTdXJmYWNlQ2xhc3MSIgoeRkFDRV9TVVJGQUNFX0NMQVNTX1VOU1BFQ0lGSUVEEAASHQoZRkFDRV9TVVJGQUNFX0NMQVNTX1BMQU5BUhABEiIKHkZBQ0VfU1VSRkFDRV9DTEFTU19DWUxJTkRSSUNBTBACEh4KGkZBQ0VfU1VSRkFDRV9DTEFTU19DT05JQ0FMEAMSIAocRkFDRV9TVVJGQUNFX0NMQVNTX1NQSEVSSUNBTBAEEhwKGEZBQ0VfU1VSRkFDRV9DTEFTU19PVEhFUhAFKqcBChBTaW11bGF0aW9uQWN0aW9uEiEKHVNJTVVMQVRJT05fQUNUSU9OX1VOU1BFQ0lGSUVEEAASGgoWU0lNVUxBVElPTl9BQ1RJT05fUExBWRABEhsKF1NJTVVMQVRJT05fQUNUSU9OX1BBVVNFEAISGgoWU0lNVUxBVElPTl9BQ1RJT05fU1RFUBADEhsKF1NJTVVMQVRJT05fQUNUSU9OX1JFU0VUEAQqfQoMU2ltU3RhdGVFbnVtEhIKDlNJTV9TVEFURV9JRExFEAASFwoTU0lNX1NUQVRFX0NPTVBJTElORxABEhUKEVNJTV9TVEFURV9SVU5OSU5HEAISFAoQU0lNX1NUQVRFX1BBVVNFRBADEhMKD1NJTV9TVEFURV9FUlJPUhAEKm4KD0NoYW5uZWxEYXRhVHlwZRIhCh1DSEFOTkVMX0RBVEFfVFlQRV9VTlNQRUNJRklFRBAAEhwKGENIQU5ORUxfREFUQV9UWVBFX1NDQUxBUhABEhoKFkNIQU5ORUxfREFUQV9UWVBFX1ZFQzMQAmIGcHJvdG8z", [file_mechanism_mechanism]);
 
 /**
  * Protocol version for compatibility checking
@@ -90,6 +90,12 @@ export type Command = Message<"motionlab.protocol.Command"> & {
     case: "renameDatum";
   } | {
     /**
+     * @generated from field: motionlab.protocol.CreateDatumFromFaceCommand create_datum_from_face = 16;
+     */
+    value: CreateDatumFromFaceCommand;
+    case: "createDatumFromFace";
+  } | {
+    /**
      * @generated from field: motionlab.protocol.CreateJointCommand create_joint = 20;
      */
     value: CreateJointCommand;
@@ -106,6 +112,24 @@ export type Command = Message<"motionlab.protocol.Command"> & {
      */
     value: DeleteJointCommand;
     case: "deleteJoint";
+  } | {
+    /**
+     * @generated from field: motionlab.protocol.CompileMechanismCommand compile_mechanism = 30;
+     */
+    value: CompileMechanismCommand;
+    case: "compileMechanism";
+  } | {
+    /**
+     * @generated from field: motionlab.protocol.SimulationControlCommand simulation_control = 31;
+     */
+    value: SimulationControlCommand;
+    case: "simulationControl";
+  } | {
+    /**
+     * @generated from field: motionlab.protocol.ScrubCommand scrub = 32;
+     */
+    value: ScrubCommand;
+    case: "scrub";
   } | { case: undefined; value?: undefined };
 };
 
@@ -180,6 +204,12 @@ export type Event = Message<"motionlab.protocol.Event"> & {
     case: "renameDatumResult";
   } | {
     /**
+     * @generated from field: motionlab.protocol.CreateDatumFromFaceResult create_datum_from_face_result = 18;
+     */
+    value: CreateDatumFromFaceResult;
+    case: "createDatumFromFaceResult";
+  } | {
+    /**
      * @generated from field: motionlab.protocol.CreateJointResult create_joint_result = 20;
      */
     value: CreateJointResult;
@@ -196,6 +226,30 @@ export type Event = Message<"motionlab.protocol.Event"> & {
      */
     value: DeleteJointResult;
     case: "deleteJointResult";
+  } | {
+    /**
+     * @generated from field: motionlab.protocol.CompilationResultEvent compilation_result = 30;
+     */
+    value: CompilationResultEvent;
+    case: "compilationResult";
+  } | {
+    /**
+     * @generated from field: motionlab.protocol.SimulationStateEvent simulation_state = 31;
+     */
+    value: SimulationStateEvent;
+    case: "simulationState";
+  } | {
+    /**
+     * @generated from field: motionlab.protocol.SimulationFrame simulation_frame = 32;
+     */
+    value: SimulationFrame;
+    case: "simulationFrame";
+  } | {
+    /**
+     * @generated from field: motionlab.protocol.SimulationTrace simulation_trace = 33;
+     */
+    value: SimulationTrace;
+    case: "simulationTrace";
   } | { case: undefined; value?: undefined };
 };
 
@@ -444,6 +498,11 @@ export type BodyImportResult = Message<"motionlab.protocol.BodyImportResult"> & 
    * @generated from field: motionlab.mechanism.AssetReference source_asset_ref = 6;
    */
   sourceAssetRef?: AssetReference;
+
+  /**
+   * @generated from field: repeated uint32 part_index = 7;
+   */
+  partIndex: number[];
 };
 
 /**
@@ -571,6 +630,60 @@ export const RenameDatumCommandSchema: GenMessage<RenameDatumCommand> = /*@__PUR
   messageDesc(file_protocol_transport, 15);
 
 /**
+ * @generated from message motionlab.protocol.CreateDatumFromFaceCommand
+ */
+export type CreateDatumFromFaceCommand = Message<"motionlab.protocol.CreateDatumFromFaceCommand"> & {
+  /**
+   * @generated from field: motionlab.mechanism.ElementId parent_body_id = 1;
+   */
+  parentBodyId?: ElementId;
+
+  /**
+   * @generated from field: uint32 face_index = 2;
+   */
+  faceIndex: number;
+
+  /**
+   * @generated from field: string name = 3;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message motionlab.protocol.CreateDatumFromFaceCommand.
+ * Use `create(CreateDatumFromFaceCommandSchema)` to create a new message.
+ */
+export const CreateDatumFromFaceCommandSchema: GenMessage<CreateDatumFromFaceCommand> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 16);
+
+/**
+ * @generated from message motionlab.protocol.CreateDatumFromFaceSuccess
+ */
+export type CreateDatumFromFaceSuccess = Message<"motionlab.protocol.CreateDatumFromFaceSuccess"> & {
+  /**
+   * @generated from field: motionlab.mechanism.Datum datum = 1;
+   */
+  datum?: Datum;
+
+  /**
+   * @generated from field: uint32 face_index = 2;
+   */
+  faceIndex: number;
+
+  /**
+   * @generated from field: motionlab.protocol.FaceSurfaceClass surface_class = 3;
+   */
+  surfaceClass: FaceSurfaceClass;
+};
+
+/**
+ * Describes the message motionlab.protocol.CreateDatumFromFaceSuccess.
+ * Use `create(CreateDatumFromFaceSuccessSchema)` to create a new message.
+ */
+export const CreateDatumFromFaceSuccessSchema: GenMessage<CreateDatumFromFaceSuccess> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 17);
+
+/**
  * @generated from message motionlab.protocol.CreateDatumResult
  */
 export type CreateDatumResult = Message<"motionlab.protocol.CreateDatumResult"> & {
@@ -597,7 +710,36 @@ export type CreateDatumResult = Message<"motionlab.protocol.CreateDatumResult"> 
  * Use `create(CreateDatumResultSchema)` to create a new message.
  */
 export const CreateDatumResultSchema: GenMessage<CreateDatumResult> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 16);
+  messageDesc(file_protocol_transport, 18);
+
+/**
+ * @generated from message motionlab.protocol.CreateDatumFromFaceResult
+ */
+export type CreateDatumFromFaceResult = Message<"motionlab.protocol.CreateDatumFromFaceResult"> & {
+  /**
+   * @generated from oneof motionlab.protocol.CreateDatumFromFaceResult.result
+   */
+  result: {
+    /**
+     * @generated from field: motionlab.protocol.CreateDatumFromFaceSuccess success = 1;
+     */
+    value: CreateDatumFromFaceSuccess;
+    case: "success";
+  } | {
+    /**
+     * @generated from field: string error_message = 2;
+     */
+    value: string;
+    case: "errorMessage";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message motionlab.protocol.CreateDatumFromFaceResult.
+ * Use `create(CreateDatumFromFaceResultSchema)` to create a new message.
+ */
+export const CreateDatumFromFaceResultSchema: GenMessage<CreateDatumFromFaceResult> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 19);
 
 /**
  * @generated from message motionlab.protocol.DeleteDatumResult
@@ -626,7 +768,7 @@ export type DeleteDatumResult = Message<"motionlab.protocol.DeleteDatumResult"> 
  * Use `create(DeleteDatumResultSchema)` to create a new message.
  */
 export const DeleteDatumResultSchema: GenMessage<DeleteDatumResult> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 17);
+  messageDesc(file_protocol_transport, 20);
 
 /**
  * @generated from message motionlab.protocol.RenameDatumResult
@@ -655,7 +797,7 @@ export type RenameDatumResult = Message<"motionlab.protocol.RenameDatumResult"> 
  * Use `create(RenameDatumResultSchema)` to create a new message.
  */
 export const RenameDatumResultSchema: GenMessage<RenameDatumResult> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 18);
+  messageDesc(file_protocol_transport, 21);
 
 /**
  * @generated from message motionlab.protocol.CreateJointCommand
@@ -697,7 +839,7 @@ export type CreateJointCommand = Message<"motionlab.protocol.CreateJointCommand"
  * Use `create(CreateJointCommandSchema)` to create a new message.
  */
 export const CreateJointCommandSchema: GenMessage<CreateJointCommand> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 19);
+  messageDesc(file_protocol_transport, 22);
 
 /**
  * @generated from message motionlab.protocol.UpdateJointCommand
@@ -734,7 +876,7 @@ export type UpdateJointCommand = Message<"motionlab.protocol.UpdateJointCommand"
  * Use `create(UpdateJointCommandSchema)` to create a new message.
  */
 export const UpdateJointCommandSchema: GenMessage<UpdateJointCommand> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 20);
+  messageDesc(file_protocol_transport, 23);
 
 /**
  * @generated from message motionlab.protocol.DeleteJointCommand
@@ -751,7 +893,7 @@ export type DeleteJointCommand = Message<"motionlab.protocol.DeleteJointCommand"
  * Use `create(DeleteJointCommandSchema)` to create a new message.
  */
 export const DeleteJointCommandSchema: GenMessage<DeleteJointCommand> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 21);
+  messageDesc(file_protocol_transport, 24);
 
 /**
  * @generated from message motionlab.protocol.CreateJointResult
@@ -780,7 +922,7 @@ export type CreateJointResult = Message<"motionlab.protocol.CreateJointResult"> 
  * Use `create(CreateJointResultSchema)` to create a new message.
  */
 export const CreateJointResultSchema: GenMessage<CreateJointResult> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 22);
+  messageDesc(file_protocol_transport, 25);
 
 /**
  * @generated from message motionlab.protocol.UpdateJointResult
@@ -809,7 +951,7 @@ export type UpdateJointResult = Message<"motionlab.protocol.UpdateJointResult"> 
  * Use `create(UpdateJointResultSchema)` to create a new message.
  */
 export const UpdateJointResultSchema: GenMessage<UpdateJointResult> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 23);
+  messageDesc(file_protocol_transport, 26);
 
 /**
  * @generated from message motionlab.protocol.DeleteJointResult
@@ -838,5 +980,442 @@ export type DeleteJointResult = Message<"motionlab.protocol.DeleteJointResult"> 
  * Use `create(DeleteJointResultSchema)` to create a new message.
  */
 export const DeleteJointResultSchema: GenMessage<DeleteJointResult> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 24);
+  messageDesc(file_protocol_transport, 27);
+
+/**
+ * Compile the current mechanism state into a simulation system
+ *
+ * @generated from message motionlab.protocol.CompileMechanismCommand
+ */
+export type CompileMechanismCommand = Message<"motionlab.protocol.CompileMechanismCommand"> & {
+};
+
+/**
+ * Describes the message motionlab.protocol.CompileMechanismCommand.
+ * Use `create(CompileMechanismCommandSchema)` to create a new message.
+ */
+export const CompileMechanismCommandSchema: GenMessage<CompileMechanismCommand> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 28);
+
+/**
+ * @generated from message motionlab.protocol.SimulationControlCommand
+ */
+export type SimulationControlCommand = Message<"motionlab.protocol.SimulationControlCommand"> & {
+  /**
+   * @generated from field: motionlab.protocol.SimulationAction action = 1;
+   */
+  action: SimulationAction;
+};
+
+/**
+ * Describes the message motionlab.protocol.SimulationControlCommand.
+ * Use `create(SimulationControlCommandSchema)` to create a new message.
+ */
+export const SimulationControlCommandSchema: GenMessage<SimulationControlCommand> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 29);
+
+/**
+ * @generated from message motionlab.protocol.CompilationResultEvent
+ */
+export type CompilationResultEvent = Message<"motionlab.protocol.CompilationResultEvent"> & {
+  /**
+   * @generated from field: bool success = 1;
+   */
+  success: boolean;
+
+  /**
+   * @generated from field: string error_message = 2;
+   */
+  errorMessage: string;
+
+  /**
+   * @generated from field: repeated string diagnostics = 3;
+   */
+  diagnostics: string[];
+
+  /**
+   * @generated from field: repeated motionlab.protocol.OutputChannelDescriptor channels = 4;
+   */
+  channels: OutputChannelDescriptor[];
+};
+
+/**
+ * Describes the message motionlab.protocol.CompilationResultEvent.
+ * Use `create(CompilationResultEventSchema)` to create a new message.
+ */
+export const CompilationResultEventSchema: GenMessage<CompilationResultEvent> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 30);
+
+/**
+ * @generated from message motionlab.protocol.SimulationStateEvent
+ */
+export type SimulationStateEvent = Message<"motionlab.protocol.SimulationStateEvent"> & {
+  /**
+   * @generated from field: motionlab.protocol.SimStateEnum state = 1;
+   */
+  state: SimStateEnum;
+
+  /**
+   * @generated from field: double sim_time = 2;
+   */
+  simTime: number;
+
+  /**
+   * @generated from field: uint64 step_count = 3;
+   */
+  stepCount: bigint;
+};
+
+/**
+ * Describes the message motionlab.protocol.SimulationStateEvent.
+ * Use `create(SimulationStateEventSchema)` to create a new message.
+ */
+export const SimulationStateEventSchema: GenMessage<SimulationStateEvent> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 31);
+
+/**
+ * @generated from message motionlab.protocol.BodyPoseData
+ */
+export type BodyPoseData = Message<"motionlab.protocol.BodyPoseData"> & {
+  /**
+   * @generated from field: string body_id = 1;
+   */
+  bodyId: string;
+
+  /**
+   * @generated from field: motionlab.mechanism.Vec3 position = 2;
+   */
+  position?: Vec3;
+
+  /**
+   * @generated from field: motionlab.mechanism.Quat orientation = 3;
+   */
+  orientation?: Quat;
+};
+
+/**
+ * Describes the message motionlab.protocol.BodyPoseData.
+ * Use `create(BodyPoseDataSchema)` to create a new message.
+ */
+export const BodyPoseDataSchema: GenMessage<BodyPoseData> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 32);
+
+/**
+ * @generated from message motionlab.protocol.JointStateData
+ */
+export type JointStateData = Message<"motionlab.protocol.JointStateData"> & {
+  /**
+   * @generated from field: string joint_id = 1;
+   */
+  jointId: string;
+
+  /**
+   * @generated from field: double position = 2;
+   */
+  position: number;
+
+  /**
+   * @generated from field: double velocity = 3;
+   */
+  velocity: number;
+
+  /**
+   * @generated from field: motionlab.mechanism.Vec3 reaction_force = 4;
+   */
+  reactionForce?: Vec3;
+
+  /**
+   * @generated from field: motionlab.mechanism.Vec3 reaction_torque = 5;
+   */
+  reactionTorque?: Vec3;
+};
+
+/**
+ * Describes the message motionlab.protocol.JointStateData.
+ * Use `create(JointStateDataSchema)` to create a new message.
+ */
+export const JointStateDataSchema: GenMessage<JointStateData> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 33);
+
+/**
+ * @generated from message motionlab.protocol.SimulationFrame
+ */
+export type SimulationFrame = Message<"motionlab.protocol.SimulationFrame"> & {
+  /**
+   * @generated from field: double sim_time = 1;
+   */
+  simTime: number;
+
+  /**
+   * @generated from field: uint64 step_count = 2;
+   */
+  stepCount: bigint;
+
+  /**
+   * @generated from field: repeated motionlab.protocol.BodyPoseData body_poses = 3;
+   */
+  bodyPoses: BodyPoseData[];
+
+  /**
+   * @generated from field: repeated motionlab.protocol.JointStateData joint_states = 4;
+   */
+  jointStates: JointStateData[];
+};
+
+/**
+ * Describes the message motionlab.protocol.SimulationFrame.
+ * Use `create(SimulationFrameSchema)` to create a new message.
+ */
+export const SimulationFrameSchema: GenMessage<SimulationFrame> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 34);
+
+/**
+ * @generated from message motionlab.protocol.OutputChannelDescriptor
+ */
+export type OutputChannelDescriptor = Message<"motionlab.protocol.OutputChannelDescriptor"> & {
+  /**
+   * e.g., "joint/abc-123/position"
+   *
+   * @generated from field: string channel_id = 1;
+   */
+  channelId: string;
+
+  /**
+   * human-readable: "Revolute1 Position"
+   *
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * e.g., "rad", "m", "N", "Nm"
+   *
+   * @generated from field: string unit = 3;
+   */
+  unit: string;
+
+  /**
+   * @generated from field: motionlab.protocol.ChannelDataType data_type = 4;
+   */
+  dataType: ChannelDataType;
+};
+
+/**
+ * Describes the message motionlab.protocol.OutputChannelDescriptor.
+ * Use `create(OutputChannelDescriptorSchema)` to create a new message.
+ */
+export const OutputChannelDescriptorSchema: GenMessage<OutputChannelDescriptor> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 35);
+
+/**
+ * @generated from message motionlab.protocol.TimeSample
+ */
+export type TimeSample = Message<"motionlab.protocol.TimeSample"> & {
+  /**
+   * @generated from field: double time = 1;
+   */
+  time: number;
+
+  /**
+   * @generated from oneof motionlab.protocol.TimeSample.value
+   */
+  value: {
+    /**
+     * @generated from field: double scalar = 2;
+     */
+    value: number;
+    case: "scalar";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.Vec3 vector = 3;
+     */
+    value: Vec3;
+    case: "vector";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message motionlab.protocol.TimeSample.
+ * Use `create(TimeSampleSchema)` to create a new message.
+ */
+export const TimeSampleSchema: GenMessage<TimeSample> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 36);
+
+/**
+ * @generated from message motionlab.protocol.SimulationTrace
+ */
+export type SimulationTrace = Message<"motionlab.protocol.SimulationTrace"> & {
+  /**
+   * @generated from field: string channel_id = 1;
+   */
+  channelId: string;
+
+  /**
+   * @generated from field: repeated motionlab.protocol.TimeSample samples = 2;
+   */
+  samples: TimeSample[];
+};
+
+/**
+ * Describes the message motionlab.protocol.SimulationTrace.
+ * Use `create(SimulationTraceSchema)` to create a new message.
+ */
+export const SimulationTraceSchema: GenMessage<SimulationTrace> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 37);
+
+/**
+ * @generated from message motionlab.protocol.ScrubCommand
+ */
+export type ScrubCommand = Message<"motionlab.protocol.ScrubCommand"> & {
+  /**
+   * @generated from field: double time = 1;
+   */
+  time: number;
+};
+
+/**
+ * Describes the message motionlab.protocol.ScrubCommand.
+ * Use `create(ScrubCommandSchema)` to create a new message.
+ */
+export const ScrubCommandSchema: GenMessage<ScrubCommand> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 38);
+
+/**
+ * @generated from enum motionlab.protocol.FaceSurfaceClass
+ */
+export enum FaceSurfaceClass {
+  /**
+   * @generated from enum value: FACE_SURFACE_CLASS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: FACE_SURFACE_CLASS_PLANAR = 1;
+   */
+  PLANAR = 1,
+
+  /**
+   * @generated from enum value: FACE_SURFACE_CLASS_CYLINDRICAL = 2;
+   */
+  CYLINDRICAL = 2,
+
+  /**
+   * @generated from enum value: FACE_SURFACE_CLASS_CONICAL = 3;
+   */
+  CONICAL = 3,
+
+  /**
+   * @generated from enum value: FACE_SURFACE_CLASS_SPHERICAL = 4;
+   */
+  SPHERICAL = 4,
+
+  /**
+   * @generated from enum value: FACE_SURFACE_CLASS_OTHER = 5;
+   */
+  OTHER = 5,
+}
+
+/**
+ * Describes the enum motionlab.protocol.FaceSurfaceClass.
+ */
+export const FaceSurfaceClassSchema: GenEnum<FaceSurfaceClass> = /*@__PURE__*/
+  enumDesc(file_protocol_transport, 0);
+
+/**
+ * @generated from enum motionlab.protocol.SimulationAction
+ */
+export enum SimulationAction {
+  /**
+   * @generated from enum value: SIMULATION_ACTION_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: SIMULATION_ACTION_PLAY = 1;
+   */
+  PLAY = 1,
+
+  /**
+   * @generated from enum value: SIMULATION_ACTION_PAUSE = 2;
+   */
+  PAUSE = 2,
+
+  /**
+   * @generated from enum value: SIMULATION_ACTION_STEP = 3;
+   */
+  STEP = 3,
+
+  /**
+   * @generated from enum value: SIMULATION_ACTION_RESET = 4;
+   */
+  RESET = 4,
+}
+
+/**
+ * Describes the enum motionlab.protocol.SimulationAction.
+ */
+export const SimulationActionSchema: GenEnum<SimulationAction> = /*@__PURE__*/
+  enumDesc(file_protocol_transport, 1);
+
+/**
+ * @generated from enum motionlab.protocol.SimStateEnum
+ */
+export enum SimStateEnum {
+  /**
+   * @generated from enum value: SIM_STATE_IDLE = 0;
+   */
+  SIM_STATE_IDLE = 0,
+
+  /**
+   * @generated from enum value: SIM_STATE_COMPILING = 1;
+   */
+  SIM_STATE_COMPILING = 1,
+
+  /**
+   * @generated from enum value: SIM_STATE_RUNNING = 2;
+   */
+  SIM_STATE_RUNNING = 2,
+
+  /**
+   * @generated from enum value: SIM_STATE_PAUSED = 3;
+   */
+  SIM_STATE_PAUSED = 3,
+
+  /**
+   * @generated from enum value: SIM_STATE_ERROR = 4;
+   */
+  SIM_STATE_ERROR = 4,
+}
+
+/**
+ * Describes the enum motionlab.protocol.SimStateEnum.
+ */
+export const SimStateEnumSchema: GenEnum<SimStateEnum> = /*@__PURE__*/
+  enumDesc(file_protocol_transport, 2);
+
+/**
+ * @generated from enum motionlab.protocol.ChannelDataType
+ */
+export enum ChannelDataType {
+  /**
+   * @generated from enum value: CHANNEL_DATA_TYPE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: CHANNEL_DATA_TYPE_SCALAR = 1;
+   */
+  SCALAR = 1,
+
+  /**
+   * @generated from enum value: CHANNEL_DATA_TYPE_VEC3 = 2;
+   */
+  VEC3 = 2,
+}
+
+/**
+ * Describes the enum motionlab.protocol.ChannelDataType.
+ */
+export const ChannelDataTypeSchema: GenEnum<ChannelDataType> = /*@__PURE__*/
+  enumDesc(file_protocol_transport, 3);
 

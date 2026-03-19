@@ -1,8 +1,19 @@
 # Epic 10 — Face-Level Topology Selection & Geometry-Aware Datum Creation
 
-> **Status:** Not Started
+> **Status:** ~95% Complete (all core engine + frontend components implemented)
+> **Completed through:** Commits `782d9dc` and `0aac00f`
+> **Dependency:** Epic 5 (Datum CRUD) — complete. Epic 3 (OCCT import pipeline) — complete.
 >
-> **Dependency:** Epic 5 (Datum CRUD) must be complete. Epic 3 (OCCT import pipeline) is already complete.
+> **What's done:**
+> - Prompt 1 (Engine): Complete. `ShapeRegistry` persists B-Rep shapes after import (`shape_registry.h/.cpp`). `FaceClassifier` classifies faces and computes datum poses for Planar, Cylindrical, Conical, Spherical, and Other types (`face_classifier.h/.cpp`). `MeshData.part_index` emitted during tessellation. `CreateDatumFromFaceCommand`/`Result` with `FaceSurfaceClass` enum in transport.proto. Engine handler in transport.cpp. `test_face_classifier.cpp` with box, cylinder, cone, sphere, torus tests. ADR-0007 written.
+> - Prompt 2 (Frontend Topology Index): Complete. `BodyGeometryIndex` (`body-geometry-index.ts`) with O(1) triangleToFace lookup from partIndex. Face highlighting via vertex colors in `SceneGraphManager.highlightFace()`/`clearFaceHighlight()`. Face-aware hover in `PickingManager.updateHoveredFace()` with `pickSpatialData()` returning faceIndex. `getHoveredFace()` exposed for click consumption.
+> - Prompt 3 (Face-Aware Datum Creation Mode): Complete. `sendCreateDatumFromFace()` wired in connection.ts. Create-datum mode uses hoveredFace to send `CreateDatumFromFaceCommand`. Surface class label mapping in `surfaceClassToLabel()`. Result handler updates mechanism store.
+>
+> **Minor gaps:**
+> - Torus faces classified as `Other` (not a separate `Toroidal` type) — minor, spec called for distinct Torus type
+> - No end-to-end protocol seam test (import STEP → CreateDatumFromFace → verify result)
+> - Face-type tooltip during hover not implemented (status message after creation works)
+> - OCCT 8 migration: Build in progress (OCCT 8.0.0 RC4 via custom vcpkg overlay port). May require API fixes in `face_classifier.cpp` and `cad_import.cpp`.
 
 Three prompts. Prompt 1 is a BLOCKER spike. Prompts 2 and 3 can run in parallel after Prompt 1 succeeds.
 

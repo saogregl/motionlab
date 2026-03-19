@@ -73,6 +73,7 @@ Display assets are cacheable render resources, not engineering truth. The viewpo
 The viewport consumes three data classes:
 
 - authored view state for selection, tool mode, visibility, overlay toggles, and authoring previews
+- imported topology hints such as `part_index` that let the viewport resolve triangle hits back to backend-authored face indices
 - live runtime data for body poses, joint state overlays, latest sensor values, and live clock state
 - replay/query data for scrub ranges, point-in-time sensor frames, event markers, and summaries
 
@@ -84,6 +85,8 @@ Picking is a two-stage process:
 
 1. Babylon determines a render-space hit candidate.
 2. Viewport services resolve that hit into a product/runtime entity.
+
+For face-aware datum authoring, the viewport may perform an additional mesh-local topology resolution step (`triangle -> face`) using engine-provided `part_index`, but the resolved face remains a transient interaction target rather than a selected product entity.
 
 Picking results must resolve to product entities such as bodies, datums, joints, sensors, overlays, or gizmo elements rather than exposing raw Babylon meshes as application identity.
 

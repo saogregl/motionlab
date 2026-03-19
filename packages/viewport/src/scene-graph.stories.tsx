@@ -386,7 +386,7 @@ function LightingShowcase() {
           </button>
         ))}
       </div>
-      <Viewport onSceneReady={handleSceneReady} shadowsEnabled={true} />
+      <Viewport onSceneReady={handleSceneReady} />
     </div>
   );
 }
@@ -455,7 +455,7 @@ export const Materials: Story = {
 
 function PostProcessingShowcase() {
   const sgRef = useRef<SceneGraphManager | null>(null);
-  const [ssao, setSsao] = useState(true);
+  const [ssao, setSsao] = useState(false);
 
   const handleSceneReady = useCallback((sg: SceneGraphManager) => {
     sgRef.current = sg;
@@ -743,8 +743,7 @@ function CADQualityShowcase() {
       <Viewport
         onSceneReady={handleSceneReady}
         gridVisible={false}
-        shadowsEnabled={true}
-        ssaoEnabled={true}
+               ssaoEnabled={false}
       />
     </div>
   );
@@ -814,8 +813,7 @@ function ShadowGroundShowcase() {
       <Viewport
         onSceneReady={handleSceneReady}
         gridVisible={false}
-        shadowsEnabled={true}
-        ssaoEnabled={true}
+               ssaoEnabled={false}
       />
     </div>
   );
@@ -842,7 +840,7 @@ function RenderingDebugShowcase() {
     scene: import('@babylonjs/core').Scene;
     camera: import('@babylonjs/core').ArcRotateCamera;
   } | null>(null);
-  const [ssao, setSsao] = useState(true);
+  const [ssao, setSsao] = useState(false);
   const [aaMode, setAAMode] = useState<'msaa+fxaa' | 'fxaa-only' | 'none'>('msaa+fxaa');
   const [info, setInfo] = useState('');
 
@@ -994,8 +992,7 @@ function RenderingDebugShowcase() {
       )}
       <Viewport
         onSceneReady={handleSceneReady}
-        shadowsEnabled={true}
-        ssaoEnabled={ssao}
+               ssaoEnabled={ssao}
       />
     </div>
   );

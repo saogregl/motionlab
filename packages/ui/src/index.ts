@@ -151,7 +151,7 @@ export { useTheme } from './hooks/use-theme';
 export type { Theme } from './hooks/use-theme';
 export { useDensity } from './hooks/use-density';
 export type { Density } from './hooks/use-density';
-export { useHotkey } from './hooks/use-keyboard-shortcuts';
+export { useHotkey, HotkeysProvider } from './hooks/use-keyboard-shortcuts';
 
 // Engineering
 export { SelectionChip } from './components/engineering/selection-chip';

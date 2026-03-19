@@ -1,4 +1,5 @@
 export { Viewport, type ViewportProps } from './Viewport.js';
+export { BodyGeometryIndex } from './body-geometry-index.js';
 export {
   SceneGraphManager,
   type CameraPreset,
@@ -11,6 +12,7 @@ export {
   PickingManager,
   type PickCallback,
   type HoverCallback,
+  type InteractionMode,
   type PickResult,
   type SpatialPickData,
 } from './picking.js';
@@ -23,7 +25,6 @@ export {
   type EnvironmentSetup,
   createLightingRig,
   type LightingRig,
-  type LightingRigOptions,
   createMaterialFactory,
   type MaterialFactory,
   type MaterialPreset,

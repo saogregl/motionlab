@@ -1,52 +1,44 @@
 # Epic 7 — Parallel Agent Prompts
 
-> **Status:** ~25% In Progress (Prompt 7.1 partially done)
+> **Status:** ~75% Complete
 > **Started:** Commit `b6982a2` ("Epic 4.3: viewport-frontend integration; Epic 7.1: Chrono simulation runtime (WIP)")
+> **Completed through:** Commit `782d9dc` ("Epic 4+: datum/joint CRUD, mechanism state, viewport visuals, protocol expansion")
 > **Deviations:**
 > - **Chrono version:** Brief specified Chrono 8.0; codebase uses **Chrono 9.0.1** via FetchContent (core dynamics only, no TBB).
 > - Started earlier than planned (during Epic 4 work rather than during Epic 6).
 >
 > **What's done:**
-> - Prompt 1 (Chrono Spike): Partial. `SimulationRuntime` class with pimpl exists in `simulation.h/.cpp`. Chrono 9.0.1 fetched via FetchContent. `test_simulation.cpp` exists but is WIP. Build may not be fully passing.
+> - Prompt 1 (Chrono Spike): Complete. `SimulationRuntime` class with pimpl in `simulation.h/.cpp`. Chrono 9.0.1 via FetchContent. `compile()` walks Mechanism proto (bodies→ChBody, datums→joint frames, joints→ChLinkLock*), `step(dt)`, `reset()`, `getBodyPoses()`, `getJointStates()`, `getChannelDescriptors()`. NSC contact system, gravity (0,-9.81,0). `test_simulation.cpp` with 6 tests.
+> - Prompt 2 (Simulation Protocol + Streaming): Complete. `CompileMechanismCommand`, `SimulationControlCommand` (PLAY/PAUSE/STEP/RESET), `SimulationFrame` with body_poses + joint_states + sim_time. Simulation thread with ~60fps frame delivery. `SimulationRingBuffer` for trace buffering. Backpressure via WebSocket send buffering.
+> - Prompt 3 (Frontend Controls + Viewport Playback): ~50%. Simulation store (`simulation.ts`) with state/simTime/stepCount. `SimulationToolbar` with Play/Pause/Step/Reset buttons. Hot-path viewport playback wired (SimulationFrame → SceneGraphManager.updateBodyTransform directly, no React render). `TimelinePanel` exists with timeline/charts/diagnostics tabs.
 >
 > **What's NOT done:**
-> - Prompt 1 completion: Pendulum validation test, compile/step/reset lifecycle, validation error tests.
-> - Prompt 2 (Simulation Protocol + Streaming): Not started. No `CompileMechanismCommand`, `SimulationControlCommand`, `SimulationFrame`, simulation thread, or backpressure.
-> - Prompt 3 (Frontend Controls + Viewport Playback): Not started. No simulation store, toolbar, hot-path updates, or keyboard shortcuts.
+> - Prompt 1: Full test suite validation against OCCT 8 build (pending OCCT 8 migration).
+> - Prompt 3: Timeline scrubber not fully wired to engine ScrubCommand. Keyboard shortcuts for play/pause/step. Chart tab shows "No charts configured" placeholder.
 
 Three prompts for simulation compilation and native dynamics runtime. Prompt 7.1 (Chrono spike) is a blocker and CAN start during Epic 6 since it is entirely native-side. Prompts 7.2 and 7.3 are sequential after 7.1.
 
-### Implementation Notes — Prompt 7.1 (2026-03-17)
+### Implementation Notes (2026-03-17 → 2026-03-19)
 
 **Decision:** Started 7.1 before Epics 5-6 so that Chrono's actual joint types inform the authored data model in Epic 6, reducing rework risk.
 
-**Files created/modified:**
-- `native/engine/src/simulation.h` — `SimulationRuntime` class with pimpl (no Chrono in public API). Types: `SimState`, `BodyPose`, `JointState`, `CompilationResult`.
-- `native/engine/src/simulation.cpp` — Full Chrono 8.0 implementation: `compile()` walks Mechanism proto (bodies→ChBody, datums→joint frames, joints→ChLinkLock*), `step(dt)`, `reset()`, `getBodyPoses()`, `getJointStates()`. NSC contact system, gravity (0,-9.81,0).
-- `native/engine/tests/test_simulation.cpp` — 6 tests: two-body revolute pendulum (physics plausibility), empty mechanism, missing datum ref, zero mass, negative mass, reset restores initial state.
-- `native/engine/CMakeLists.txt` — Added `simulation.cpp` to engine lib, `test_simulation.cpp` as separate test exe. Chrono via FetchContent (see below).
-- `native/engine/CMakePresets.json` — Added `mingw-base` preset (Ninja generator, MinGW gcc/g++, `x64-mingw-dynamic` vcpkg triplet).
+**Key files:**
+- `native/engine/src/simulation.h` — `SimulationRuntime` class with pimpl (no Chrono in public API). Types: `SimState`, `BodyPose`, `JointState`, `ChannelDescriptor`, `CompilationResult`.
+- `native/engine/src/simulation.cpp` — Chrono 9.0.1 implementation: `compile()`, `step(dt)`, `reset()`, `getBodyPoses()`, `getJointStates()`, `getChannelDescriptors()`.
+- `native/engine/src/ring_buffer.h` — `SimulationRingBuffer` with 60-second retention, thread-safe, O(log n) time lookup.
+- `native/engine/src/transport.cpp` — Simulation thread at ~60fps, trace batching (round-robin, ~6 batches/s), scrub handler.
+- `native/engine/tests/test_simulation.cpp` — 6 tests: pendulum, empty mechanism, missing datum, zero/negative mass, reset.
 
-**Build system — Chrono integration path:**
-- **vcpkg `chronoengine` port rejected** — depends on TBB which fails to build under `x64-mingw-dynamic` community triplet (no Visual Studio on this machine).
-- **FetchContent chosen** — pulls Chrono 8.0.0 from GitHub with all optional modules disabled (`ENABLE_MODULE_IRRLICHT OFF`, `ENABLE_TBB OFF`, etc.). Links `ChronoEngine` target directly.
-- vcpkg.json unchanged (Chrono NOT added to vcpkg deps).
+**Build system — Chrono integration:**
+- **vcpkg `chronoengine` port rejected** — depends on TBB which fails under MinGW.
+- **FetchContent chosen** — Chrono 9.0.1 from GitHub, core dynamics only, all optional modules disabled, static build.
+- Eigen3 patched FindEigen3.cmake for Eigen 5.x compatibility.
+- MSVC preset now primary build toolchain.
 
-**Build status:** CMake configure was started but not yet completed. To resume:
-```bash
-export VCPKG_ROOT=C:/Dev/vcpkg
-export PATH="C:/msys64/mingw64/bin:C:/msys64/usr/bin:$PATH"
-cd native/engine
-cmake --preset dev
-cmake --build build/dev
-ctest --preset dev
-```
-
-**Potential issues to watch for:**
-- Chrono 8.0 API uses `ChVector<>` not `ChVector3d` (9.0+ alias). Code written with `ChVector<>` for compatibility.
-- FetchContent clone of Chrono is ~200MB, first configure will be slow.
-- Eigen3 is bundled with Chrono when fetched via FetchContent (no separate vcpkg dep needed).
-- May need to adjust Chrono CMake variables if the build surface differs from expected defaults.
+**OCCT 8 migration (in progress as of 2026-03-19):**
+- OCCT 8.0.0 RC4 building via custom vcpkg overlay port (`native/engine/vcpkg-ports/opencascade`).
+- May require API fixes in `cad_import.cpp`, `face_classifier.cpp` for Handle/bool type changes.
+- Migration script available at `adm/scripts/migration_800/occt_modernize.py` in OCCT source.
 
 **Governance:** Epics 5+ are under full governance — every boundary change needs an ADR, every protocol change needs seam tests, every architecture change needs doc updates.
 

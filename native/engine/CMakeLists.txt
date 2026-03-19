@@ -128,7 +128,10 @@ add_library(motionlab-engine-lib STATIC
   src/transport.cpp
   src/cad_import.cpp
   src/asset_cache.cpp
+  src/face_classifier.cpp
   src/mechanism_state.cpp
+  src/ring_buffer.cpp
+  src/shape_registry.cpp
   src/simulation.cpp
   src/generated/protocol/transport.pb.cc
   src/generated/mechanism/mechanism.pb.cc
@@ -184,5 +187,6 @@ if(BUILD_TESTS)
   motionlab_add_test(motionlab-engine-tests    tests/test_main.cpp)
   motionlab_add_test(motionlab-mechanism-tests  tests/test_mechanism_state.cpp)
   motionlab_add_test(motionlab-cad-tests        tests/test_cad_import.cpp)
+  motionlab_add_test(motionlab-face-tests       tests/test_face_classifier.cpp)
   motionlab_add_test(motionlab-sim-tests        tests/test_simulation.cpp)
 endif()

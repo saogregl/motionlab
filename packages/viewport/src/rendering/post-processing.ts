@@ -50,6 +50,11 @@ export function createPostProcessing(
   defaultPipeline.imageProcessing.contrast = contrast;
   defaultPipeline.bloomEnabled = false;
 
+  // Mild sharpen pass for crisp edges
+  defaultPipeline.sharpenEnabled = true;
+  defaultPipeline.sharpen.edgeAmount = 0.15;
+  defaultPipeline.sharpen.colorAmount = 1.0;
+
   if (defaultPipeline.samples !== msaaSamples) {
     console.warn(
       `[viewport] MSAA requested ${msaaSamples} samples but got ${defaultPipeline.samples}. Falling back to FXAA-only.`,
@@ -64,9 +69,10 @@ export function createPostProcessing(
     [camera],
     false, // forceGeometryBuffer
   );
-  ssaoPipeline.radius = 1.2;
-  ssaoPipeline.totalStrength = 0.25;
-  ssaoPipeline.samples = 16;
+  ssaoPipeline.radius = 2.0;
+  ssaoPipeline.totalStrength = 0.6;
+  ssaoPipeline.samples = 24;
+  ssaoPipeline.expensiveBlur = true;
   ssaoPipeline.maxZ = 250;
 
   if (!ssaoEnabled) {

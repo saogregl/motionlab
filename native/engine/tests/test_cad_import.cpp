@@ -87,6 +87,14 @@ static void test_step_import(const std::string& step_file) {
         assert(body.mesh.normals.size() == body.mesh.vertices.size());
         assert(!body.mesh.indices.empty());
         assert(body.mesh.indices.size() % 3 == 0);
+        assert(!body.mesh.part_index.empty());
+        size_t part_triangles = 0;
+        for (uint32_t count : body.mesh.part_index) {
+            assert(count > 0);
+            part_triangles += count;
+        }
+        assert(part_triangles == body.mesh.indices.size() / 3);
+        assert(body.brep_shape != nullptr);
 
         // Mass sanity
         assert(body.mass_properties.mass > 0.0);
@@ -109,6 +117,7 @@ static void test_step_import(const std::string& step_file) {
         std::cout << "    body: \"" << body.name << "\""
                   << "  verts=" << body.mesh.vertices.size() / 3
                   << "  tris=" << body.mesh.indices.size() / 3
+                  << "  faces=" << body.mesh.part_index.size()
                   << "  mass=" << body.mass_properties.mass << " kg"
                   << std::endl;
     }

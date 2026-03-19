@@ -1,0 +1,33 @@
+diff --git a/adm/cmake/occt_toolkit.cmake b/adm/cmake/occt_toolkit.cmake
+index 1234567..abcdefg 100644
+--- a/adm/cmake/occt_toolkit.cmake
++++ b/adm/cmake/occt_toolkit.cmake
+@@ -134,14 +134,24 @@ else()
+   add_library (${PROJECT_NAME} ${USED_SRCFILES} ${USED_INCFILES} ${USED_RCFILE} ${RESOURCE_FILES} ${${PROJECT_NAME}_MOC_FILES})
+
+   if (MSVC AND BUILD_SHARED_LIBS)
+     if (BUILD_FORCE_RelWithDebInfo)
+       set (aReleasePdbConf "Release")
+     else()
+       set (aReleasePdbConf)
+     endif()
+-    if (BUILD_SHARED_LIBS)
++    if (LAYOUT_IS_VCPKG)
++      if (BUILD_SHARED_LIBS)
++        install (FILES  ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.pdb
++               CONFIGURATIONS Debug ${aReleasePdbConf} RelWithDebInfo
++               DESTINATION "$<IF:$<CONFIG:Debug>,debug/${INSTALL_DIR_BIN},${INSTALL_DIR_BIN}>")
++      else()
++        install (FILES  ${CMAKE_BINARY_DIR}/lib/${PROJECT_NAME}.pdb
++               CONFIGURATIONS Debug ${aReleasePdbConf} RelWithDebInfo
++               DESTINATION "$<IF:$<CONFIG:Debug>,debug/${INSTALL_DIR_LIB},${INSTALL_DIR_LIB}>")
++      endif()
++    elseif (BUILD_SHARED_LIBS)
+       install (FILES  ${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin\${OCCT_INSTALL_BIN_LETTER}/${PROJECT_NAME}.pdb
+              CONFIGURATIONS Debug ${aReleasePdbConf} RelWithDebInfo
+              DESTINATION "${INSTALL_DIR_BIN}\${OCCT_INSTALL_BIN_LETTER}")
+     else()
+       install (FILES  ${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/lib\${OCCT_INSTALL_BIN_LETTER}/${PROJECT_NAME}.pdb
+              CONFIGURATIONS Debug ${aReleasePdbConf} RelWithDebInfo
+              DESTINATION "${INSTALL_DIR_LIB}\${OCCT_INSTALL_BIN_LETTER}")
+     endif()

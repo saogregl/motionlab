@@ -31,6 +31,13 @@ struct JointState {
     double reaction_torque[3];
 };
 
+struct ChannelDescriptor {
+    std::string channel_id;
+    std::string name;
+    std::string unit;
+    int data_type; // 1 = SCALAR, 2 = VEC3
+};
+
 struct CompilationResult {
     bool success = false;
     std::string error_message;
@@ -68,6 +75,7 @@ public:
     SimState getState() const;
     std::vector<BodyPose> getBodyPoses() const;
     std::vector<JointState> getJointStates() const;
+    std::vector<ChannelDescriptor> getChannelDescriptors() const;
     double getCurrentTime() const;
     uint64_t getStepCount() const;
 

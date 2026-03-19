@@ -26,6 +26,7 @@ export interface BodyState {
   id: string;
   name: string;
   meshData: MeshData;
+  partIndex?: Uint32Array;
   massProperties: BodyMassProperties;
   pose: BodyPose;
   sourceAssetRef: { contentHash: string; originalFilename: string };

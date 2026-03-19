@@ -1,8 +1,13 @@
-import { ArcRotateCamera, Engine, Scene, Vector3 } from '@babylonjs/core';
+import { ArcRotateCamera, Camera, Engine, Scene, Vector3 } from '@babylonjs/core';
 import { WebGPUEngine } from '@babylonjs/core/Engines/webgpuEngine';
 import { useEffect, useRef } from 'react';
 
-import { type HoverCallback, type PickCallback, PickingManager } from './picking.js';
+import {
+  type HoverCallback,
+  type InteractionMode,
+  type PickCallback,
+  PickingManager,
+} from './picking.js';
 import {
   setupEnvironment,
   createLightingRig,
@@ -18,8 +23,8 @@ export interface ViewportProps {
   onSceneReady?: (sceneGraph: SceneGraphManager) => void;
   onPick?: PickCallback;
   onHover?: HoverCallback;
+  interactionMode?: InteractionMode;
   gridVisible?: boolean;
-  shadowsEnabled?: boolean;
   ssaoEnabled?: boolean;
   /** Rendering preset. Currently only 'cadNeutralStudio' is available. */
   preset?: 'cadNeutralStudio';
@@ -38,13 +43,18 @@ export function Viewport({
   onSceneReady,
   onPick,
   onHover,
+  interactionMode = 'select',
   gridVisible = false,
-  shadowsEnabled = true,
-  ssaoEnabled = true,
+  ssaoEnabled = false,
   preset: _preset = 'cadNeutralStudio',
 }: ViewportProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<Engine | null>(null);
+  const pickingManagerRef = useRef<PickingManager | null>(null);
+
+  useEffect(() => {
+    pickingManagerRef.current?.setInteractionMode(interactionMode);
+  }, [interactionMode]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -55,7 +65,10 @@ export function Viewport({
     (async () => {
       let engine: Engine;
 
-      if (navigator.gpu) {
+      // Skip WebGPU on Firefox — its implementation has a lower
+      // max_inter_stage_shader_variables limit (15) that breaks SSAO2+sharpen
+      const isFirefox = /Firefox\//i.test(navigator.userAgent);
+      if (navigator.gpu && !isFirefox) {
         try {
           const webgpu = new WebGPUEngine(canvas, {
             antialias: true,
@@ -89,7 +102,7 @@ export function Viewport({
 
       const scene = new Scene(engine);
 
-      // Default engineering camera
+      // Default engineering camera — orthographic for CAD
       const camera = new ArcRotateCamera(
         'camera',
         Math.PI / 4,
@@ -98,14 +111,41 @@ export function Viewport({
         Vector3.Zero(),
         scene,
       );
+      camera.mode = Camera.ORTHOGRAPHIC_CAMERA;
+
+      // Initialize ortho bounds based on canvas aspect ratio
+      const aspect = canvas.width / canvas.height || 1;
+      const orthoHalfSize = 5;
+      camera.orthoLeft = -orthoHalfSize * aspect;
+      camera.orthoRight = orthoHalfSize * aspect;
+      camera.orthoTop = orthoHalfSize;
+      camera.orthoBottom = -orthoHalfSize;
+
       camera.attachControl(canvas, true);
       camera.wheelPrecision = 50;
+
+      // In ortho mode the camera position is arbitrary — objects can be
+      // "behind" the camera plane yet still visible. Use a negative minZ
+      // so nothing gets near-plane clipped.
+      camera.minZ = -1000;
+      camera.maxZ = 1000;
+
+      // Sync orthographic bounds to camera radius on every frame so
+      // mouse-wheel zoom works naturally in ortho mode.
+      const orthoZoomObserver = scene.onBeforeRenderObservable.add(() => {
+        const aspect = engine.getAspectRatio(camera) || 1;
+        const halfSize = camera.radius * 0.5;
+        camera.orthoLeft = -halfSize * aspect;
+        camera.orthoRight = halfSize * aspect;
+        camera.orthoTop = halfSize;
+        camera.orthoBottom = -halfSize;
+      });
 
       // 1. Environment (clear color + IBL)
       const env = setupEnvironment(scene);
 
-      // 2. Lighting (3-point rig + shadows)
-      const lightingRig = createLightingRig(scene, { shadowsEnabled });
+      // 2. Lighting (3-point rig)
+      const lightingRig = createLightingRig(scene);
 
       // 3. Materials (PBR factory)
       const materialFactory = createMaterialFactory(scene);
@@ -124,9 +164,6 @@ export function Viewport({
         grid,
       });
 
-      // Ground plane receives shadows
-      env.groundPlane.receiveShadows = true;
-
       // 7. Post-processing (after camera is attached)
       const postProcessing = createPostProcessing(scene, camera, { ssaoEnabled });
 
@@ -139,6 +176,8 @@ export function Viewport({
           onPick ?? (() => {}),
           onHover ?? (() => {}),
         );
+        pickingManager.setInteractionMode(interactionMode);
+        pickingManagerRef.current = pickingManager;
       }
 
       onSceneReady?.(sceneGraph);
@@ -153,7 +192,9 @@ export function Viewport({
       // Stash cleanup references on the canvas for the teardown closure
       (canvas as unknown as Record<string, unknown>).__cleanup = () => {
         window.removeEventListener('resize', handleResize);
+        scene.onBeforeRenderObservable.remove(orthoZoomObserver);
         pickingManager?.dispose();
+        pickingManagerRef.current = null;
         sceneGraph.dispose();
         postProcessing.dispose();
         selectionVisuals.dispose();

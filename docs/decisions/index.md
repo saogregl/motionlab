@@ -7,6 +7,8 @@
 | [ADR-0003](ADR-0003-runs-and-channel-contracts.md) | Runs Are Immutable and Channels Unify Live and Replay | Accepted | Simulation runs are immutable artifacts; channel descriptors provide unified live/query/replay semantics. |
 | [ADR-0004](ADR-0004-datum-crud-contract.md) | Datum CRUD Contract | Accepted | Datums use engine-authoritative Command→Result oneof pattern with UUIDv7 IDs; pattern reused for joints and sensors. |
 | [ADR-0005](ADR-0005-joint-crud-contract.md) | Joint CRUD Contract | Accepted | Joints follow Command→Result oneof pattern (ADR-0004); reference datums, engine validates referential integrity, proto3 optional for partial updates. |
+| [ADR-0007](ADR-0007-face-level-datum-creation.md) | Face-Level Datum Creation Contract | Accepted | Face-aware datum creation is engine-authoritative; the wire carries `part_index`, while native B-Rep retention stays behind the boundary and create-datum mode no longer falls back to point+normal picks. |
+| [ADR-0008](ADR-0008-output-channel-naming-and-typing.md) | Output Channel Naming, Typing, and Trace Streaming | Accepted | Channel IDs use `entity/id/measurement` convention; descriptors sent in CompilationResult; traces streamed round-robin; ring buffer enables scrub within 60s window. |
 
 ## Adding a New ADR
 

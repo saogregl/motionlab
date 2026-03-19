@@ -4,15 +4,16 @@
 
 | # | Epic | Status |
 |---|------|--------|
-| 1 | Desktop Runtime and Engine Supervision (Spike) | In Progress — native engine server done, Electron + frontend remaining |
-| 2 | Versioned Protocol and Mechanism IR Foundation | Not Started |
-| 3 | CAD Import, Derived Properties, and Asset Cache | Not Started |
-| 4 | Viewport Core, Scene Graph, and Picking | Not Started |
-| 5 | Datum Authoring and Frame-First Editing | Not Started |
-| 6 | Assembly Structure, Joint Authoring, and Mechanism Editing | Not Started |
-| 7 | Simulation Compilation and Native Dynamics Runtime | Not Started |
-| 8 | Engineering Outputs, Inspection, and Playback UX | Not Started |
+| 1 | Desktop Runtime and Engine Supervision (Spike) | Complete |
+| 2 | Versioned Protocol and Mechanism IR Foundation | Complete |
+| 3 | CAD Import, Derived Properties, and Asset Cache | Complete |
+| 4 | Viewport Core, Scene Graph, and Picking | Complete |
+| 5 | Datum Authoring and Frame-First Editing | Complete |
+| 6 | Assembly Structure, Joint Authoring, and Mechanism Editing | ~70% — Joint CRUD + visualization complete, Save/Load not started |
+| 7 | Simulation Compilation and Native Dynamics Runtime | ~75% — Chrono integration + protocol + streaming + frontend controls done, tests/scrubber incomplete |
+| 8 | Engineering Outputs, Inspection, and Playback UX | ~40% — Engine-side output channels + ring buffer + trace batching complete, frontend trace/chart wiring not started |
 | 9 | MVP Hardening, Packaging, and Product Credibility Pass | Not Started |
+| 10 | Face-Level Topology Selection & Geometry-Aware Datum Creation | ~95% — All engine + frontend components implemented, minor gaps (torus type, seam test) |
 
 ---
 

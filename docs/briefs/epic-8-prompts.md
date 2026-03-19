@@ -1,7 +1,16 @@
 # Epic 8 — Parallel Agent Prompts
 
-> **Status:** Not Started
-> **Deviations:** None. UI primitives for timeline (`timeline-transport.tsx`, `timeline-scrubber.tsx`) exist in the `@motionlab/ui` package as empty shells but no backend or data flow work has begun.
+> **Status:** ~40% Complete (Prompt 8.1 engine-side done, frontend wiring not started)
+> **Completed through:** Commit `782d9dc` ("Epic 4+: datum/joint CRUD, mechanism state, viewport visuals, protocol expansion")
+> **Deviations:** Engine-side output channel work was delivered alongside Epic 7 simulation streaming.
+>
+> **What's done:**
+> - Prompt 1 (Output Channels + Trace Streaming — Engine Side): Complete. `OutputChannelDescriptor` + `ChannelDataType` enum + `SimulationTrace` + `TimeSample` + `ScrubCommand` all defined in transport.proto. Engine generates channel descriptors for all joint measurements (position, velocity, reaction force/torque) with correct units. `SimulationRingBuffer` (`ring_buffer.h`) with 60-second retention, thread-safe concurrent read/write, O(log n) time lookup. Trace batching in transport.cpp with round-robin channel transmission (~6 batches/second at 60fps). `handle_scrub()` pauses simulation, queries ring buffer, sends windowed trace data. `CompilationResultEvent` includes `channels` field. `createScrubCommand()` exists in protocol helpers.
+>
+> **What's NOT done:**
+> - Prompt 1 (Frontend Wiring): Connection handler does NOT process `result.channels` from CompilationResultEvent. No `simulationTrace` event handler in connection.ts — trace data from engine is dropped. No trace data store. `handleSeek()` in TimelinePanel is a no-op placeholder.
+> - Prompt 2 (Chart Component + Trace Visualization): Not started. No chart/plotting component. Charts tab shows "No charts configured" placeholder. No uplot or similar visualization library. No channel selection UI.
+> - Prompt 3 (Playback UX + Timeline): Partially started. `TimelinePanel` component exists with tabs. `TimelineScrubber` UI exists but onSeek does nothing. Duration hardcoded to 10 seconds. No dynamic duration from simulation time.
 
 Three prompts for engineering outputs, inspection, and playback UX. Prompt 8.2 can partially overlap with 8.1 (chart component with mock data). 8.3 depends on both.
 

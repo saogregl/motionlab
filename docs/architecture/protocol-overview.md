@@ -14,18 +14,30 @@
 The native engine uses binary protobuf over WebSocket. Messages are defined in `schemas/protocol/transport.proto` and serialized via protobuf-es generated types. JSON representation is available for debug logging via `eventToDebugJson()`.
 
 Message types (proto envelopes):
-- `Command` (frontend → engine): oneof payload — `Handshake`, `Ping`, `ImportAssetCommand`, `CreateDatumCommand`, `DeleteDatumCommand`, `RenameDatumCommand`, `CreateJointCommand`, `UpdateJointCommand`, `DeleteJointCommand`
-- `Event` (engine → frontend): oneof payload — `HandshakeAck`, `Pong`, `EngineStatus`, `ImportAssetResult`, `MechanismSnapshot`, `CreateDatumResult`, `DeleteDatumResult`, `RenameDatumResult`, `CreateJointResult`, `UpdateJointResult`, `DeleteJointResult`
+- `Command` (frontend → engine): oneof payload — `Handshake`, `Ping`, `ImportAssetCommand`, `CreateDatumCommand`, `DeleteDatumCommand`, `RenameDatumCommand`, `CreateDatumFromFaceCommand`, `CreateJointCommand`, `UpdateJointCommand`, `DeleteJointCommand`, `CompileMechanismCommand`, `SimulationControlCommand`
+- `Event` (engine → frontend): oneof payload — `HandshakeAck`, `Pong`, `EngineStatus`, `ImportAssetResult`, `MechanismSnapshot`, `CreateDatumResult`, `DeleteDatumResult`, `RenameDatumResult`, `CreateDatumFromFaceResult`, `CreateJointResult`, `UpdateJointResult`, `DeleteJointResult`, `CompilationResultEvent`, `SimulationStateEvent`, `SimulationFrame`
 
 Key messages:
 - `Handshake`: carries `ProtocolVersion` (name + version) and session token
 - `HandshakeAck`: `compatible` boolean (engine decides), `engineProtocol`, `engineVersion`
 - `EngineStatus`: proto enum `State` (INITIALIZING, READY, BUSY, ERROR, SHUTTING_DOWN)
 - `Ping`/`Pong`: uint64 timestamp for latency measurement
+- `ImportAssetResult.BodyImportResult.part_index`: per-face triangle counts used by the viewport to map Babylon triangle hits back to B-Rep face indices
+- `CreateDatumFromFaceCommand`: requests geometry-aware datum creation from a picked body face
+- `CreateDatumFromFaceResult`: returns the created datum plus `face_index` and backend-agnostic `FaceSurfaceClass`
 
 Protocol constants: `PROTOCOL_NAME = "motionlab"`, `PROTOCOL_VERSION = 1` (defined in `packages/protocol/src/version.ts`).
 
-Binary helpers in `packages/protocol/src/transport.ts`: `createHandshakeCommand`, `createPingCommand`, `parseEvent`, `engineStateToString`.
+Binary helpers in `packages/protocol/src/transport.ts`: `createHandshakeCommand`, `createPingCommand`, `createCompileMechanismCommand`, `createSimulationControlCommand`, `parseEvent`, `engineStateToString`.
+
+### Simulation Lifecycle (Epic 7.2)
+
+- `CompileMechanismCommand` (empty): compiles the current MechanismState into a Chrono simulation system
+- `SimulationControlCommand`: `SimulationAction` enum — PLAY, PAUSE, STEP, RESET
+- `CompilationResultEvent`: success/failure + diagnostics
+- `SimulationStateEvent`: `SimStateEnum` (IDLE, COMPILING, RUNNING, PAUSED, ERROR) + sim_time + step_count
+- `SimulationFrame`: high-frequency streamed data — body poses (`BodyPoseData`) + joint states (`JointStateData`)
+- See [ADR-0006](../decisions/ADR-0006-simulation-streaming-contract.md) for streaming contract details
 
 ## Near-Term Expectations (Planned)
 

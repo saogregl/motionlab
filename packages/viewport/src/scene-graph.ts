@@ -1,6 +1,7 @@
 import {
   type AbstractMesh,
   ArcRotateCamera,
+  Color4,
   Mesh,
   type Observer,
   Quaternion,
@@ -8,8 +9,10 @@ import {
   TransformNode,
   Vector3,
   VertexData,
+  VertexBuffer,
 } from '@babylonjs/core';
 
+import { BodyGeometryIndex } from './body-geometry-index.js';
 import { createDatumTriad } from './rendering/datum-triad.js';
 import {
   createFixedJointVisual,
@@ -99,8 +102,10 @@ export class SceneGraphManager {
   private readonly _camera: ArcRotateCamera;
   private readonly deps: SceneGraphDeps;
   private readonly entities = new Map<string, SceneEntity>();
+  private readonly bodyGeometryIndices = new Map<string, BodyGeometryIndex>();
   private currentSelectedIds: Set<string> = new Set();
   private readonly _datumScaleObserver: Observer<Scene>;
+  private highlightedFaceBodyId: string | null = null;
 
   constructor(scene: Scene, camera: ArcRotateCamera, deps: SceneGraphDeps) {
     this._scene = scene;
@@ -133,6 +138,7 @@ export class SceneGraphManager {
     name: string,
     meshData: MeshDataInput,
     pose: PoseInput,
+    partIndex?: Uint32Array,
   ): SceneEntity {
     if (this.entities.has(id)) {
       console.warn(
@@ -154,10 +160,21 @@ export class SceneGraphManager {
     mesh.material = this.deps.materialFactory.getDefaultMaterial();
     mesh.parent = root;
     mesh.metadata = { entityId: id, entityType: 'body' };
-    mesh.receiveShadows = true;
 
-    // Register as shadow caster
-    this.deps.lightingRig.addShadowCaster(mesh);
+    // Always-on subtle edges for geometric readability
+    mesh.enableEdgesRendering(0.9999);
+    mesh.edgesWidth = 2.0;
+    mesh.edgesColor = new Color4(0.15, 0.15, 0.2, 0.3);
+
+    const vertexCount = meshData.vertices.length / 3;
+    const colors = new Float32Array(vertexCount * 4);
+    colors.fill(1.0);
+    mesh.setVerticesData(VertexBuffer.ColorKind, colors, true);
+    mesh.useVertexColors = true;
+
+    if (partIndex && partIndex.length > 0) {
+      this.bodyGeometryIndices.set(id, new BodyGeometryIndex(partIndex));
+    }
 
     root.position = new Vector3(
       pose.position[0],
@@ -191,9 +208,12 @@ export class SceneGraphManager {
     }
 
     for (const mesh of entity.meshes) {
-      this.deps.lightingRig.removeShadowCaster(mesh);
       this.deps.selectionVisuals.applyHover(null);
       mesh.dispose();
+    }
+    this.bodyGeometryIndices.delete(id);
+    if (this.highlightedFaceBodyId === id) {
+      this.highlightedFaceBodyId = null;
     }
     this.currentSelectedIds.delete(id);
     entity.rootNode.dispose();
@@ -412,6 +432,10 @@ export class SceneGraphManager {
     return Array.from(this.entities.values()).flatMap((e) => e.meshes);
   }
 
+  getBodyGeometryIndex(id: string): BodyGeometryIndex | undefined {
+    return this.bodyGeometryIndices.get(id);
+  }
+
   // -----------------------------------------------------------------------
   // Camera
   // -----------------------------------------------------------------------
@@ -448,6 +472,8 @@ export class SceneGraphManager {
     const radius = Vector3.Distance(min, max) / 2;
 
     this._camera.target = center;
+    // In ortho mode, radius controls the ortho half-size via the per-frame
+    // observer in Viewport.tsx. Setting radius adjusts zoom level.
     this._camera.radius = radius > 0 ? radius * 2.5 : 10;
   }
 
@@ -493,6 +519,65 @@ export class SceneGraphManager {
     this.deps.selectionVisuals.applyHover(entity.meshes[0] ?? null);
   }
 
+  highlightFace(bodyId: string, faceIndex: number): void {
+    const entity = this.entities.get(bodyId);
+    if (!entity || entity.type !== 'body') return;
+
+    const mesh = entity.meshes[0];
+    if (!(mesh instanceof Mesh)) return;
+
+    const geometryIndex = this.bodyGeometryIndices.get(bodyId);
+    const faceRange = geometryIndex?.faceRanges[faceIndex];
+    if (!geometryIndex || !faceRange) return;
+
+    if (this.highlightedFaceBodyId && this.highlightedFaceBodyId !== bodyId) {
+      this.clearFaceHighlight(this.highlightedFaceBodyId);
+    }
+
+    const colors = mesh.getVerticesData(VertexBuffer.ColorKind);
+    const indices = mesh.getIndices();
+    if (!colors || !indices) return;
+
+    colors.fill(1.0);
+    for (let triangle = faceRange.start; triangle < faceRange.start + faceRange.count; triangle++) {
+      const i0 = indices[triangle * 3]!;
+      const i1 = indices[triangle * 3 + 1]!;
+      const i2 = indices[triangle * 3 + 2]!;
+      for (const vertexIndex of [i0, i1, i2]) {
+        colors[vertexIndex * 4] = 0.40;
+        colors[vertexIndex * 4 + 1] = 0.70;
+        colors[vertexIndex * 4 + 2] = 1.00;
+        colors[vertexIndex * 4 + 3] = 1.00;
+      }
+    }
+
+    mesh.updateVerticesData(VertexBuffer.ColorKind, colors);
+    this.highlightedFaceBodyId = bodyId;
+  }
+
+  clearFaceHighlight(bodyId: string): void {
+    const entity = this.entities.get(bodyId);
+    if (!entity || entity.type !== 'body') return;
+
+    const mesh = entity.meshes[0];
+    if (!(mesh instanceof Mesh)) return;
+
+    const colors = mesh.getVerticesData(VertexBuffer.ColorKind);
+    if (!colors) return;
+    colors.fill(1.0);
+    mesh.updateVerticesData(VertexBuffer.ColorKind, colors);
+
+    if (this.highlightedFaceBodyId === bodyId) {
+      this.highlightedFaceBodyId = null;
+    }
+  }
+
+  clearAllFaceHighlights(): void {
+    if (this.highlightedFaceBodyId) {
+      this.clearFaceHighlight(this.highlightedFaceBodyId);
+    }
+  }
+
   // -----------------------------------------------------------------------
   // Cleanup
   // -----------------------------------------------------------------------
@@ -500,12 +585,10 @@ export class SceneGraphManager {
   dispose(): void {
     this._scene.onBeforeRenderObservable.remove(this._datumScaleObserver);
     this.deps.selectionVisuals.clearAll();
+    this.clearAllFaceHighlights();
 
     for (const entity of this.entities.values()) {
       for (const mesh of entity.meshes) {
-        if (entity.type === 'body') {
-          this.deps.lightingRig.removeShadowCaster(mesh);
-        }
         mesh.dispose();
       }
       entity.rootNode.dispose();

@@ -10,15 +10,60 @@
 #include <cassert>
 #include <chrono>
 #include <condition_variable>
+#include <filesystem>
 #include <iostream>
 #include <mutex>
 #include <string>
 #include <thread>
 #include <vector>
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4267 4244 4996 4458 4100)
+#endif
+
+#include <BRepPrimAPI_MakeBox.hxx>
+#include <STEPCAFControl_Writer.hxx>
+#include <TDataStd_Name.hxx>
+#include <TDocStd_Document.hxx>
+#include <XCAFApp_Application.hxx>
+#include <XCAFDoc_DocumentTool.hxx>
+#include <XCAFDoc_ShapeTool.hxx>
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
 using namespace motionlab::protocol;
+namespace fs = std::filesystem;
 
 static const std::string TEST_TOKEN = "test-token-12345";
+
+static std::string write_face_test_step_file() {
+    auto path = fs::temp_directory_path() / "motionlab_face_test_box.step";
+
+    Handle(XCAFApp_Application) app = XCAFApp_Application::GetApplication();
+    Handle(TDocStd_Document) doc;
+    app->NewDocument("MDTV-XCAF", doc);
+
+    Handle(XCAFDoc_ShapeTool) shape_tool =
+        XCAFDoc_DocumentTool::ShapeTool(doc->Main());
+
+    TopoDS_Shape box = BRepPrimAPI_MakeBox(10.0, 20.0, 30.0).Shape();
+    TDF_Label box_label = shape_tool->AddShape(box);
+    TDataStd_Name::Set(box_label, "FaceTestBox");
+
+    STEPCAFControl_Writer writer;
+    writer.SetNameMode(true);
+    writer.SetColorMode(false);
+    writer.SetLayerMode(false);
+    writer.Transfer(doc, STEPControl_AsIs);
+    IFSelect_ReturnStatus status = writer.Write(path.string().c_str());
+    assert(status == IFSelect_RetDone);
+
+    app->Close(doc);
+    return path.string();
+}
 
 // ──────────────────────────────────────────────
 // Helper: synchronous WS test client (binary protobuf)
@@ -349,10 +394,250 @@ static void test_delete_joint_nonexistent(uint16_t port) {
     std::cout << "  PASS: delete joint nonexistent" << std::endl;
 }
 
+static void test_create_datum_from_face_after_import(uint16_t port,
+                                                     const std::string& step_file,
+                                                     const char* label) {
+    TestClient client;
+    client.connect(port);
+
+    client.send_command(make_handshake(1, TEST_TOKEN));
+    client.wait_for_message(1); // ack + status
+
+    Command import_cmd;
+    import_cmd.set_sequence_id(400);
+    import_cmd.mutable_import_asset()->set_file_path(step_file);
+    client.send_command(import_cmd);
+
+    const auto& import_evt = client.wait_for_message(2, 5000);
+    assert(import_evt.sequence_id() == 400);
+    assert(import_evt.payload_case() == Event::kImportAssetResult);
+    assert(import_evt.import_asset_result().success());
+    assert(import_evt.import_asset_result().bodies_size() == 1);
+
+    const auto& body = import_evt.import_asset_result().bodies(0);
+    assert(body.part_index_size() > 0);
+
+    Command face_cmd;
+    face_cmd.set_sequence_id(401);
+    auto* create = face_cmd.mutable_create_datum_from_face();
+    create->mutable_parent_body_id()->set_id(body.body_id());
+    create->set_face_index(0);
+    create->set_name("Face Datum");
+    client.send_command(face_cmd);
+
+    const auto& face_evt = client.wait_for_message(3, 5000);
+    assert(face_evt.sequence_id() == 401);
+    assert(face_evt.payload_case() == Event::kCreateDatumFromFaceResult);
+    assert(face_evt.create_datum_from_face_result().result_case() ==
+           CreateDatumFromFaceResult::kSuccess);
+    const auto& success = face_evt.create_datum_from_face_result().success();
+    assert(success.face_index() == 0);
+    assert(success.surface_class() == FACE_SURFACE_CLASS_PLANAR);
+    assert(success.datum().parent_body_id().id() == body.body_id());
+
+    client.close();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::cout << "  PASS: " << label << std::endl;
+}
+
+// Helper: wait for an event of a specific payload_case, with timeout
+static const Event* wait_for_event_type(TestClient& client, Event::PayloadCase target,
+                                         size_t start_index, int timeout_ms = 5000) {
+    auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeout_ms);
+    size_t idx = start_index;
+    while (std::chrono::steady_clock::now() < deadline) {
+        try {
+            const auto& evt = client.wait_for_message(idx, 100);
+            if (evt.payload_case() == target) return &evt;
+            idx++;
+        } catch (...) {
+            // No message yet, keep waiting
+        }
+    }
+    return nullptr;
+}
+
+static void test_output_channels_and_scrub(uint16_t port, const std::string& step_file) {
+    TestClient client;
+    client.connect(port);
+
+    // Handshake
+    client.send_command(make_handshake(1, TEST_TOKEN));
+    client.wait_for_message(1); // ack + status
+    size_t msg_idx = 2;
+
+    // Import box STEP file
+    Command import_cmd;
+    import_cmd.set_sequence_id(500);
+    import_cmd.mutable_import_asset()->set_file_path(step_file);
+    client.send_command(import_cmd);
+
+    const auto& import_evt = client.wait_for_message(msg_idx, 5000);
+    assert(import_evt.payload_case() == Event::kImportAssetResult);
+    assert(import_evt.import_asset_result().success());
+    assert(import_evt.import_asset_result().bodies_size() >= 1);
+    const std::string body_id = import_evt.import_asset_result().bodies(0).body_id();
+    msg_idx++;
+
+    // Create two datums on the body
+    Command d1_cmd;
+    d1_cmd.set_sequence_id(501);
+    auto* cd1 = d1_cmd.mutable_create_datum();
+    cd1->mutable_parent_body_id()->set_id(body_id);
+    cd1->set_name("Datum1");
+    auto* p1 = cd1->mutable_local_pose();
+    p1->mutable_position()->set_x(0); p1->mutable_position()->set_y(0); p1->mutable_position()->set_z(0);
+    p1->mutable_orientation()->set_w(1); p1->mutable_orientation()->set_x(0);
+    p1->mutable_orientation()->set_y(0); p1->mutable_orientation()->set_z(0);
+    client.send_command(d1_cmd);
+
+    const auto& d1_evt = client.wait_for_message(msg_idx);
+    assert(d1_evt.payload_case() == Event::kCreateDatumResult);
+    assert(d1_evt.create_datum_result().result_case() == CreateDatumResult::kDatum);
+    const std::string datum1_id = d1_evt.create_datum_result().datum().id().id();
+    msg_idx++;
+
+    Command d2_cmd;
+    d2_cmd.set_sequence_id(502);
+    auto* cd2 = d2_cmd.mutable_create_datum();
+    cd2->mutable_parent_body_id()->set_id(body_id);
+    cd2->set_name("Datum2");
+    auto* p2 = cd2->mutable_local_pose();
+    p2->mutable_position()->set_x(1); p2->mutable_position()->set_y(0); p2->mutable_position()->set_z(0);
+    p2->mutable_orientation()->set_w(1); p2->mutable_orientation()->set_x(0);
+    p2->mutable_orientation()->set_y(0); p2->mutable_orientation()->set_z(0);
+    client.send_command(d2_cmd);
+
+    const auto& d2_evt = client.wait_for_message(msg_idx);
+    assert(d2_evt.payload_case() == Event::kCreateDatumResult);
+    assert(d2_evt.create_datum_result().result_case() == CreateDatumResult::kDatum);
+    const std::string datum2_id = d2_evt.create_datum_result().datum().id().id();
+    msg_idx++;
+
+    // Create a revolute joint
+    Command jcmd;
+    jcmd.set_sequence_id(503);
+    auto* cj = jcmd.mutable_create_joint();
+    cj->mutable_parent_datum_id()->set_id(datum1_id);
+    cj->mutable_child_datum_id()->set_id(datum2_id);
+    cj->set_type(motionlab::mechanism::JOINT_TYPE_REVOLUTE);
+    cj->set_name("RevJoint1");
+    cj->set_lower_limit(-3.14);
+    cj->set_upper_limit(3.14);
+    client.send_command(jcmd);
+
+    const auto& j_evt = client.wait_for_message(msg_idx);
+    assert(j_evt.payload_case() == Event::kCreateJointResult);
+    assert(j_evt.create_joint_result().result_case() == CreateJointResult::kJoint);
+    msg_idx++;
+
+    // Compile mechanism
+    Command compile_cmd;
+    compile_cmd.set_sequence_id(504);
+    compile_cmd.mutable_compile_mechanism();
+    client.send_command(compile_cmd);
+
+    // Wait for CompilationResultEvent
+    const auto* compile_evt = wait_for_event_type(client, Event::kCompilationResult, msg_idx);
+    assert(compile_evt != nullptr);
+    assert(compile_evt->compilation_result().success());
+    // Should have at least 4 channels (position, velocity, reaction_force, reaction_torque)
+    assert(compile_evt->compilation_result().channels_size() >= 4);
+
+    // Verify channel IDs match pattern
+    bool found_position = false;
+    for (int i = 0; i < compile_evt->compilation_result().channels_size(); ++i) {
+        const auto& ch = compile_evt->compilation_result().channels(i);
+        assert(!ch.channel_id().empty());
+        assert(!ch.name().empty());
+        assert(!ch.unit().empty());
+        assert(ch.data_type() != protocol::CHANNEL_DATA_TYPE_UNSPECIFIED);
+
+        if (ch.channel_id().find("/position") != std::string::npos) {
+            found_position = true;
+            assert(ch.unit() == "rad"); // revolute joint
+            assert(ch.data_type() == protocol::CHANNEL_DATA_TYPE_SCALAR);
+        }
+    }
+    assert(found_position);
+
+    // Count messages received so far for indexing
+    // We may have received SimulationStateEvent too
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+    // Play simulation for ~1s
+    Command play_cmd;
+    play_cmd.set_sequence_id(505);
+    play_cmd.mutable_simulation_control()->set_action(protocol::SIMULATION_ACTION_PLAY);
+    client.send_command(play_cmd);
+
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    // Pause
+    Command pause_cmd;
+    pause_cmd.set_sequence_id(506);
+    pause_cmd.mutable_simulation_control()->set_action(protocol::SIMULATION_ACTION_PAUSE);
+    client.send_command(pause_cmd);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+    // Check we received at least one SimulationTrace event
+    // Scan all received messages for a SimulationTrace
+    bool found_trace = false;
+    bool found_frame = false;
+    size_t last_msg = 0;
+    // Scan by trying sequential indices
+    for (size_t i = msg_idx; i < msg_idx + 200; ++i) {
+        try {
+            const auto& evt = client.wait_for_message(i, 50);
+            last_msg = i;
+            if (evt.payload_case() == Event::kSimulationTrace) {
+                found_trace = true;
+                assert(!evt.simulation_trace().channel_id().empty());
+                assert(evt.simulation_trace().samples_size() > 0);
+            }
+            if (evt.payload_case() == Event::kSimulationFrame) {
+                found_frame = true;
+            }
+        } catch (...) {
+            break;
+        }
+    }
+    assert(found_frame); // Should have received simulation frames
+    assert(found_trace); // Should have received at least one trace
+
+    // Scrub to a time in the buffered range
+    Command scrub_cmd;
+    scrub_cmd.set_sequence_id(507);
+    scrub_cmd.mutable_scrub()->set_time(0.5);
+    client.send_command(scrub_cmd);
+
+    // Wait for a SimulationFrame in response to scrub
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    bool found_scrub_frame = false;
+    for (size_t i = last_msg + 1; i < last_msg + 50; ++i) {
+        try {
+            const auto& evt = client.wait_for_message(i, 100);
+            if (evt.payload_case() == Event::kSimulationFrame) {
+                found_scrub_frame = true;
+                break;
+            }
+        } catch (...) {
+            break;
+        }
+    }
+    assert(found_scrub_frame);
+
+    client.close();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::cout << "  PASS: output channels and scrub" << std::endl;
+}
+
 int main() {
     ix::initNetSystem();
 
     std::cout << "Engine integration tests" << std::endl;
+    std::string step_file = write_face_test_step_file();
 
     test_version_constants();
 
@@ -377,13 +662,33 @@ int main() {
     test_delete_datum_nonexistent(port);
     test_create_joint_invalid_datum(port);
     test_delete_joint_nonexistent(port);
+    test_create_datum_from_face_after_import(port, step_file, "create datum from face after cold import");
+    test_output_channels_and_scrub(port, step_file);
 
     // Shutdown
     server.stop();
     server_thread.join();
 
+    // Start a fresh server instance so shape state must be rebuilt from import/cache.
+    freePort = ix::getFreePort();
+    assert(freePort > 0);
+    port = static_cast<uint16_t>(freePort);
+
+    motionlab::TransportServer cache_server(TEST_TOKEN);
+    cache_server.init(port);
+    std::thread cache_server_thread([&cache_server]() { cache_server.run(); });
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    test_create_datum_from_face_after_import(port, step_file, "create datum from face after cached import");
+
+    cache_server.stop();
+    cache_server_thread.join();
+
     ix::uninitNetSystem();
     google::protobuf::ShutdownProtobufLibrary();
+
+    std::error_code ec;
+    fs::remove(step_file, ec);
 
     std::cout << "All engine tests passed." << std::endl;
     return 0;

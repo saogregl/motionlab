@@ -1,8 +1,12 @@
 import {
+  createCompileMechanismCommand,
   createCreateDatumCommand,
+  createCreateDatumFromFaceCommand,
   createCreateJointCommand,
   createDeleteDatumCommand,
   createDeleteJointCommand,
+  createSimulationControlCommand,
+  FaceSurfaceClass,
   createHandshakeCommand,
   createImportAssetCommand,
   createRenameDatumCommand,
@@ -11,11 +15,18 @@ import {
   eventToDebugJson,
   mapJointType,
   parseEvent,
+  SimulationAction,
+  SimStateEnum,
   toProtoJointType,
 } from '@motionlab/protocol';
+import type { SceneGraphManager } from '@motionlab/viewport';
+
 import type { EngineConnectionState } from '../stores/engine-connection.js';
+import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import type { BodyState } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
+import { useSimulationStore } from '../stores/simulation.js';
+import { useToolModeStore } from '../stores/tool-mode.js';
 
 type SetState = (
   updater:
@@ -26,6 +37,16 @@ type GetState = () => EngineConnectionState;
 
 let ws: WebSocket | null = null;
 let handshakeTimer: ReturnType<typeof setTimeout> | null = null;
+
+// ---------------------------------------------------------------------------
+// SceneGraphManager registry for hot-path frame updates
+// ---------------------------------------------------------------------------
+
+let sceneGraphManager: SceneGraphManager | null = null;
+
+export function registerSceneGraph(sg: SceneGraphManager | null): void {
+  sceneGraphManager = sg;
+}
 
 function cleanup() {
   if (handshakeTimer) {
@@ -126,6 +147,8 @@ export function connect(set: SetState, _get: GetState) {
                   indices: new Uint32Array(b.displayMesh?.indices ?? []),
                   normals: new Float32Array(b.displayMesh?.normals ?? []),
                 },
+                partIndex:
+                  b.partIndex.length > 0 ? new Uint32Array(b.partIndex) : undefined,
                 massProperties: {
                   mass: b.massProperties?.mass ?? 0,
                   centerOfMass: {
@@ -190,6 +213,40 @@ export function connect(set: SetState, _get: GetState) {
               });
             } else if (result.result.case === 'errorMessage') {
               console.error('[datum] create failed:', result.result.value);
+            }
+            break;
+          }
+          case 'createDatumFromFaceResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            const statusStore = useAuthoringStatusStore.getState();
+            if (result.result.case === 'success') {
+              const success = result.result.value;
+              const d = success.datum!;
+              mechStore.addDatum({
+                id: d.id?.id ?? '',
+                name: d.name,
+                parentBodyId: d.parentBodyId?.id ?? '',
+                localPose: {
+                  position: {
+                    x: d.localPose?.position?.x ?? 0,
+                    y: d.localPose?.position?.y ?? 0,
+                    z: d.localPose?.position?.z ?? 0,
+                  },
+                  rotation: {
+                    x: d.localPose?.orientation?.x ?? 0,
+                    y: d.localPose?.orientation?.y ?? 0,
+                    z: d.localPose?.orientation?.z ?? 0,
+                    w: d.localPose?.orientation?.w ?? 1,
+                  },
+                },
+              });
+              statusStore.setMessage(
+                `Created datum from ${surfaceClassToLabel(success.surfaceClass)} face`,
+              );
+            } else if (result.result.case === 'errorMessage') {
+              statusStore.setMessage(result.result.value);
+              console.error('[datum] create-from-face failed:', result.result.value);
             }
             break;
           }
@@ -261,6 +318,58 @@ export function connect(set: SetState, _get: GetState) {
             }
             break;
           }
+          case 'compilationResult': {
+            const result = evt.payload.value;
+            useSimulationStore
+              .getState()
+              .setCompilationResult(
+                result.success,
+                result.errorMessage,
+                result.diagnostics,
+              );
+            if (result.success) {
+              useToolModeStore.getState().setMode('select');
+            } else {
+              useAuthoringStatusStore
+                .getState()
+                .setMessage(result.errorMessage || 'Compilation failed');
+            }
+            break;
+          }
+          case 'simulationState': {
+            const sev = evt.payload.value;
+            const SIM = SimStateEnum;
+            const mapped =
+              sev.state === SIM.SIM_STATE_RUNNING ? 'running' as const
+              : sev.state === SIM.SIM_STATE_PAUSED ? 'paused' as const
+              : sev.state === SIM.SIM_STATE_COMPILING ? 'compiling' as const
+              : sev.state === SIM.SIM_STATE_ERROR ? 'error' as const
+              : 'idle' as const;
+            useSimulationStore
+              .getState()
+              .setSimState(mapped, sev.simTime, Number(sev.stepCount));
+            break;
+          }
+          case 'simulationFrame': {
+            if (!sceneGraphManager) break;
+            const frame = evt.payload.value;
+            for (const bp of frame.bodyPoses) {
+              sceneGraphManager.updateBodyTransform(bp.bodyId, {
+                position: [
+                  bp.position?.x ?? 0,
+                  bp.position?.y ?? 0,
+                  bp.position?.z ?? 0,
+                ],
+                rotation: [
+                  bp.orientation?.x ?? 0,
+                  bp.orientation?.y ?? 0,
+                  bp.orientation?.z ?? 0,
+                  bp.orientation?.w ?? 1,
+                ],
+              });
+            }
+            break;
+          }
           case 'pong':
             break;
         }
@@ -310,6 +419,15 @@ export function sendCreateDatum(
   ws.send(createCreateDatumCommand(parentBodyId, localPose, name));
 }
 
+export function sendCreateDatumFromFace(
+  parentBodyId: string,
+  faceIndex: number,
+  name: string,
+): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createCreateDatumFromFaceCommand(parentBodyId, faceIndex, name));
+}
+
 export function sendDeleteDatum(datumId: string): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(createDeleteDatumCommand(datumId));
@@ -348,4 +466,30 @@ export function sendUpdateJoint(
 export function sendDeleteJoint(jointId: string): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(createDeleteJointCommand(jointId));
+}
+
+export function sendCompileMechanism(): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createCompileMechanismCommand());
+}
+
+export function sendSimulationControl(action: SimulationAction): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createSimulationControlCommand(action));
+}
+
+function surfaceClassToLabel(surfaceClass: FaceSurfaceClass): string {
+  switch (surfaceClass) {
+    case FaceSurfaceClass.PLANAR:
+      return 'planar';
+    case FaceSurfaceClass.CYLINDRICAL:
+      return 'cylindrical';
+    case FaceSurfaceClass.CONICAL:
+      return 'conical';
+    case FaceSurfaceClass.SPHERICAL:
+      return 'spherical';
+    case FaceSurfaceClass.OTHER:
+    default:
+      return 'surface';
+  }
 }
