@@ -23,7 +23,10 @@
 // ---------------------------------------------------------------------------
 
 #include "simulation.h"
+#include "engine/log.h"
 
+#include <algorithm>
+#include <cmath>
 #include <unordered_map>
 
 #include "chrono/physics/ChBody.h"
@@ -44,6 +47,7 @@ struct SimulationRuntime::Impl {
     SimState state = SimState::IDLE;
     double current_time = 0.0;
     uint64_t step_count = 0;
+    double timestep = 0.001;
 
     // Chrono system — created fresh on each compile()
     std::unique_ptr<ChSystemNSC> system;
@@ -115,7 +119,8 @@ WorldFrame compute_datum_world_frame(
 // ---------------------------------------------------------------------------
 
 CompilationResult SimulationRuntime::compile(
-    const motionlab::mechanism::Mechanism& mechanism
+    const motionlab::mechanism::Mechanism& mechanism,
+    const SimulationConfig& config
 ) {
     CompilationResult result;
     result.success = false;
@@ -208,12 +213,20 @@ CompilationResult SimulationRuntime::compile(
     // --- Build Chrono system ---
 
     impl_->system = std::make_unique<ChSystemNSC>();
-    impl_->system->SetGravitationalAcceleration(ChVector3d(0, -9.81, 0));
+    impl_->system->SetGravitationalAcceleration(
+        ChVector3d(config.gravity[0], config.gravity[1], config.gravity[2]));
+    impl_->timestep = config.timestep;
     impl_->body_map.clear();
     impl_->link_map.clear();
     impl_->initial_poses.clear();
     impl_->current_time = 0.0;
     impl_->step_count = 0;
+
+    // Check if any body has is_fixed set
+    bool any_fixed = false;
+    for (const auto& body : mechanism.bodies()) {
+        if (body.is_fixed()) { any_fixed = true; break; }
+    }
 
     // Create Chrono bodies
     bool first_body = true;
@@ -259,16 +272,19 @@ CompilationResult SimulationRuntime::compile(
         ch_body->SetPos(pos);
         ch_body->SetRot(rot);
 
-        // First body is treated as ground (fixed) by convention
-        if (first_body) {
+        // Fix body if is_fixed is set, or fall back to first body if none are marked
+        bool fix_this = body.is_fixed() || (!any_fixed && first_body);
+        if (fix_this) {
             ch_body->SetFixed(true);
-            first_body = false;
             result.diagnostics.push_back(
                 "Body '" + body.name() + "' treated as ground (fixed).");
         }
+        first_body = false;
 
         impl_->system->AddBody(ch_body);
         impl_->body_map[id] = ch_body;
+        spdlog::debug("Chrono body '{}' mass={:.3f} fixed={} pos=({:.3f},{:.3f},{:.3f})",
+                      body.name(), mass, fix_this, pos.x(), pos.y(), pos.z());
 
         // Save initial pose for reset
         BodyPose initial;
@@ -334,6 +350,15 @@ CompilationResult SimulationRuntime::compile(
             case motionlab::mechanism::JOINT_TYPE_FIXED:
                 ch_link = chrono_types::make_shared<ChLinkLockLock>();
                 break;
+            case motionlab::mechanism::JOINT_TYPE_SPHERICAL:
+                ch_link = chrono_types::make_shared<ChLinkLockSpherical>();
+                break;
+            case motionlab::mechanism::JOINT_TYPE_CYLINDRICAL:
+                ch_link = chrono_types::make_shared<ChLinkLockCylindrical>();
+                break;
+            case motionlab::mechanism::JOINT_TYPE_PLANAR:
+                ch_link = chrono_types::make_shared<ChLinkLockPlanar>();
+                break;
             default:
                 result.diagnostics.push_back(
                     "Warning: Joint '" + joint_name +
@@ -348,8 +373,35 @@ CompilationResult SimulationRuntime::compile(
             ChFramed(wf.pos, wf.rot)
         );
 
+        // Enforce joint limits if specified
+        if (joint.lower_limit() != 0.0 || joint.upper_limit() != 0.0) {
+            switch (joint.type()) {
+                case motionlab::mechanism::JOINT_TYPE_REVOLUTE:
+                    ch_link->LimitRz().SetActive(true);
+                    ch_link->LimitRz().SetMin(joint.lower_limit());
+                    ch_link->LimitRz().SetMax(joint.upper_limit());
+                    break;
+                case motionlab::mechanism::JOINT_TYPE_PRISMATIC:
+                    ch_link->LimitZ().SetActive(true);
+                    ch_link->LimitZ().SetMin(joint.lower_limit());
+                    ch_link->LimitZ().SetMax(joint.upper_limit());
+                    break;
+                case motionlab::mechanism::JOINT_TYPE_CYLINDRICAL:
+                    // Apply limits to translation DOF
+                    ch_link->LimitZ().SetActive(true);
+                    ch_link->LimitZ().SetMin(joint.lower_limit());
+                    ch_link->LimitZ().SetMax(joint.upper_limit());
+                    break;
+                default:
+                    break;
+            }
+        }
+
         impl_->system->AddLink(ch_link);
         impl_->link_map[joint_id] = { ch_link, static_cast<int>(joint.type()), joint_name };
+        spdlog::debug("Chrono joint '{}' type={} at ({:.3f},{:.3f},{:.3f})",
+                      joint_name, static_cast<int>(joint.type()),
+                      wf.pos.x(), wf.pos.y(), wf.pos.z());
     }
 
     result.success = true;
@@ -367,6 +419,11 @@ void SimulationRuntime::step(double dt) {
     impl_->system->DoStepDynamics(dt);
     impl_->current_time += dt;
     impl_->step_count++;
+}
+
+void SimulationRuntime::pause() {
+    if (!impl_->system) return;
+    impl_->state = SimState::PAUSED;
 }
 
 // ---------------------------------------------------------------------------
@@ -461,6 +518,22 @@ std::vector<JointState> SimulationRuntime::getJointStates() const {
             js.position = rel_pos.z();
             const auto& rel_vel = entry.link->GetRelCoordsysDt().pos;
             js.velocity = rel_vel.z();
+        } else if (entry.joint_type == motionlab::mechanism::JOINT_TYPE_SPHERICAL) {
+            // Magnitude of relative rotation (scalar summary of 3-DOF rotation)
+            double angle = 2.0 * std::acos(std::clamp(std::abs(rel_rot.e0()), 0.0, 1.0));
+            js.position = angle;
+            const auto& rel_wvel = entry.link->GetRelativeAngVel();
+            js.velocity = rel_wvel.Length();
+        } else if (entry.joint_type == motionlab::mechanism::JOINT_TYPE_CYLINDRICAL) {
+            // Primary DOF: translation along Z
+            js.position = rel_pos.z();
+            const auto& rel_vel = entry.link->GetRelCoordsysDt().pos;
+            js.velocity = rel_vel.z();
+        } else if (entry.joint_type == motionlab::mechanism::JOINT_TYPE_PLANAR) {
+            // Primary DOF: translation in XY plane
+            js.position = std::sqrt(rel_pos.x() * rel_pos.x() + rel_pos.z() * rel_pos.z());
+            const auto& rel_vel = entry.link->GetRelCoordsysDt().pos;
+            js.velocity = std::sqrt(rel_vel.x() * rel_vel.x() + rel_vel.z() * rel_vel.z());
         } else {
             js.position = 0.0;
             js.velocity = 0.0;
@@ -488,9 +561,18 @@ std::vector<ChannelDescriptor> SimulationRuntime::getChannelDescriptors() const 
     std::vector<ChannelDescriptor> descriptors;
 
     for (const auto& [id, entry] : impl_->link_map) {
-        bool is_revolute = (entry.joint_type == motionlab::mechanism::JOINT_TYPE_REVOLUTE);
-        std::string pos_unit = is_revolute ? "rad" : "m";
-        std::string vel_unit = is_revolute ? "rad/s" : "m/s";
+        std::string pos_unit, vel_unit;
+        switch (entry.joint_type) {
+            case motionlab::mechanism::JOINT_TYPE_REVOLUTE:
+            case motionlab::mechanism::JOINT_TYPE_SPHERICAL:
+                pos_unit = "rad";
+                vel_unit = "rad/s";
+                break;
+            default:
+                pos_unit = "m";
+                vel_unit = "m/s";
+                break;
+        }
 
         descriptors.push_back({
             "joint/" + id + "/position",

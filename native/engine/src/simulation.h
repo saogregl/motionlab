@@ -38,6 +38,11 @@ struct ChannelDescriptor {
     int data_type; // 1 = SCALAR, 2 = VEC3
 };
 
+struct SimulationConfig {
+    double timestep = 0.001;
+    double gravity[3] = {0, -9.81, 0};
+};
+
 struct CompilationResult {
     bool success = false;
     std::string error_message;
@@ -68,8 +73,10 @@ public:
     SimulationRuntime(const SimulationRuntime&) = delete;
     SimulationRuntime& operator=(const SimulationRuntime&) = delete;
 
-    CompilationResult compile(const motionlab::mechanism::Mechanism& mechanism);
+    CompilationResult compile(const motionlab::mechanism::Mechanism& mechanism,
+                              const SimulationConfig& config = SimulationConfig{});
     void step(double dt);
+    void pause();
     void reset();
 
     SimState getState() const;

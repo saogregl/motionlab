@@ -16,8 +16,10 @@ public:
     void add_body(const std::string& id, const std::string& name);
     void add_body(const std::string& id, const std::string& name,
                   const double pos[3], const double orient[4],
-                  double mass, const double com[3], const double inertia[6]);
+                  double mass, const double com[3], const double inertia[6],
+                  bool is_fixed = false);
     bool has_body(const std::string& id) const;
+    bool set_body_fixed(const std::string& id, bool is_fixed);
 
     // Build a Mechanism proto from current state
     motionlab::mechanism::Mechanism build_mechanism_proto() const;
@@ -38,12 +40,15 @@ public:
     bool delete_datum(const std::string& datum_id);
     std::optional<DatumEntry> rename_datum(const std::string& datum_id,
                                             const std::string& new_name);
+    std::optional<DatumEntry> update_datum_pose(const std::string& datum_id,
+                                                const double pos[3],
+                                                const double orient[4]);
     const DatumEntry* get_datum(const std::string& id) const;
 
     // Joint CRUD
     struct JointEntry {
         std::string id, name;
-        int type; // 1=REVOLUTE, 2=PRISMATIC, 3=FIXED
+        int type; // 1=REVOLUTE, 2=PRISMATIC, 3=FIXED, 4=SPHERICAL, 5=CYLINDRICAL, 6=PLANAR
         std::string parent_datum_id, child_datum_id;
         double lower_limit, upper_limit;
     };
@@ -79,6 +84,7 @@ private:
         double mass = 0.0;
         double center_of_mass[3] = {0, 0, 0};
         double inertia[6] = {0, 0, 0, 0, 0, 0}; // ixx,iyy,izz,ixy,ixz,iyz
+        bool is_fixed = false;
     };
     std::unordered_map<std::string, BodyEntry> bodies_;
     std::unordered_map<std::string, DatumEntry> datums_;

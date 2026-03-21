@@ -1,3 +1,4 @@
+#include "engine/log.h"
 #include "engine/transport.h"
 #include "engine/version.h"
 
@@ -25,6 +26,7 @@
 #include <mutex>
 #include <string>
 #include <thread>
+#include <utility>
 
 namespace motionlab {
 
@@ -116,6 +118,7 @@ struct TransportServer::Impl {
     SimCommand sim_command{SimCommand::NONE};
     double scrub_target_time = 0.0;
     ix::WebSocket* active_ws = nullptr;
+    std::atomic<engine::SimState> published_sim_state{engine::SimState::IDLE};
 
     // Project persistence (Epic 6.4) — cached import results for save/load
     std::unordered_map<std::string, protocol::BodyImportResult> body_import_results_;
@@ -133,7 +136,7 @@ struct TransportServer::Impl {
     };
     std::vector<ChannelMapping> channel_mappings;
 
-    static constexpr double SIM_DT = 0.001;
+    double sim_dt = 0.001;  // updated from SimulationSettings at compile time
     static constexpr double FRAME_INTERVAL = 1.0 / 60.0;
     static constexpr int TRACE_BATCH_INTERVAL = 10;
 
@@ -212,6 +215,14 @@ struct TransportServer::Impl {
                 if (!authenticated) break;
                 handle_create_datum_from_face(ws, cmd.sequence_id(), cmd.create_datum_from_face());
                 break;
+            case protocol::Command::kUpdateBody:
+                if (!authenticated) break;
+                handle_update_body(ws, cmd.sequence_id(), cmd.update_body());
+                break;
+            case protocol::Command::kUpdateDatumPose:
+                if (!authenticated) break;
+                handle_update_datum_pose(ws, cmd.sequence_id(), cmd.update_datum_pose());
+                break;
             case protocol::Command::kCreateJoint:
                 if (!authenticated) break;
                 handle_create_joint(ws, cmd.sequence_id(), cmd.create_joint());
@@ -226,7 +237,7 @@ struct TransportServer::Impl {
                 break;
             case protocol::Command::kCompileMechanism:
                 if (!authenticated) break;
-                handle_compile_mechanism(ws, cmd.sequence_id());
+                handle_compile_mechanism(ws, cmd.sequence_id(), cmd.compile_mechanism());
                 break;
             case protocol::Command::kSimulationControl:
                 if (!authenticated) break;
@@ -267,12 +278,16 @@ struct TransportServer::Impl {
 
         if (compatible) {
             authenticated = true;
+            spdlog::info("Client authenticated, protocol v{}", PROTOCOL_VERSION);
 
             protocol::Event status_event;
             auto* status = status_event.mutable_engine_status();
             status->set_state(protocol::EngineStatus::STATE_READY);
             send_event(ws, status_event);
         } else {
+            spdlog::warn("Handshake rejected: token_match={} proto_match={}",
+                         hs.session_token() == session_token,
+                         hs.protocol().name() == PROTOCOL_NAME);
             ws.close(4002, "Incompatible handshake");
         }
     }
@@ -288,6 +303,7 @@ struct TransportServer::Impl {
 
     void handle_import_asset(ix::WebSocket& ws, uint64_t sequence_id,
                               const protocol::ImportAssetCommand& cmd) {
+        spdlog::info("Importing asset: {}", cmd.file_path());
         std::string file_path = cmd.file_path();
         std::string lower_path = file_path;
         std::transform(lower_path.begin(), lower_path.end(), lower_path.begin(),
@@ -366,6 +382,8 @@ struct TransportServer::Impl {
                                 }
                             }
 
+                            spdlog::info("Import cache hit: {} bodies from {}",
+                                         result.bodies_size(), file_path);
                             protocol::Event event;
                             event.set_sequence_id(sequence_id);
                             *event.mutable_import_asset_result() = std::move(result);
@@ -458,10 +476,10 @@ struct TransportServer::Impl {
             double body_orient[4] = {body.rotation[3], body.rotation[0],
                                       body.rotation[1], body.rotation[2]};
             mechanism_state.add_body(pb->body_id(), pb->name(),
-                                     body.translation, body_orient,
+                                     body.translation.data(), body_orient,
                                      body.mass_properties.mass,
-                                     body.mass_properties.center_of_mass,
-                                     body.mass_properties.inertia);
+                                     body.mass_properties.center_of_mass.data(),
+                                     body.mass_properties.inertia.data());
 
             body_import_results_[pb->body_id()] = *pb;  // store for save/load
 
@@ -475,6 +493,14 @@ struct TransportServer::Impl {
             std::string serialized;
             proto_result.SerializeToString(&serialized);
             asset_cache.store(cache_key, serialized);
+        }
+
+        if (import_result.success) {
+            spdlog::info("Imported {} bodies from {}", import_result.bodies.size(), file_path);
+        } else {
+            spdlog::error("Import failed: {}", file_path);
+            for (const auto& d : import_result.diagnostics)
+                spdlog::error("  {}", d);
         }
 
         // Send event
@@ -544,7 +570,9 @@ struct TransportServer::Impl {
         auto* cr = event.mutable_create_datum_result();
         if (result.has_value()) {
             populate_proto_datum(cr->mutable_datum(), result.value());
+            spdlog::debug("Created datum '{}' (id={}) on body {}", cmd.name(), result->id, parent_id);
         } else {
+            spdlog::warn("Failed to create datum '{}': parent body not found: {}", cmd.name(), parent_id);
             cr->set_error_message("Parent body not found: " + parent_id);
         }
         send_event(ws, event);
@@ -624,6 +652,39 @@ struct TransportServer::Impl {
         send_event(ws, event);
     }
 
+    void handle_update_datum_pose(ix::WebSocket& ws, uint64_t sequence_id,
+                                  const protocol::UpdateDatumPoseCommand& cmd) {
+        double pos[3] = {0, 0, 0};
+        double orient[4] = {1, 0, 0, 0};
+
+        if (cmd.has_new_local_pose()) {
+            if (cmd.new_local_pose().has_position()) {
+                pos[0] = cmd.new_local_pose().position().x();
+                pos[1] = cmd.new_local_pose().position().y();
+                pos[2] = cmd.new_local_pose().position().z();
+            }
+            if (cmd.new_local_pose().has_orientation()) {
+                orient[0] = cmd.new_local_pose().orientation().w();
+                orient[1] = cmd.new_local_pose().orientation().x();
+                orient[2] = cmd.new_local_pose().orientation().y();
+                orient[3] = cmd.new_local_pose().orientation().z();
+            }
+        }
+
+        std::string datum_id = cmd.has_datum_id() ? cmd.datum_id().id() : "";
+        auto result = mechanism_state.update_datum_pose(datum_id, pos, orient);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* rr = event.mutable_update_datum_pose_result();
+        if (result.has_value()) {
+            populate_proto_datum(rr->mutable_datum(), result.value());
+        } else {
+            rr->set_error_message("Datum not found: " + datum_id);
+        }
+        send_event(ws, event);
+    }
+
     void populate_proto_joint(mechanism::Joint* proto_joint,
                                const engine::MechanismState::JointEntry& entry) {
         proto_joint->mutable_id()->set_id(entry.id);
@@ -633,6 +694,35 @@ struct TransportServer::Impl {
         proto_joint->mutable_child_datum_id()->set_id(entry.child_datum_id);
         proto_joint->set_lower_limit(entry.lower_limit);
         proto_joint->set_upper_limit(entry.upper_limit);
+    }
+
+    void handle_update_body(ix::WebSocket& ws, uint64_t sequence_id,
+                             const protocol::UpdateBodyCommand& cmd) {
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_update_body_result();
+
+        std::string body_id = cmd.has_body_id() ? cmd.body_id().id() : "";
+        if (body_id.empty() || !mechanism_state.has_body(body_id)) {
+            result->set_error_message("Body not found: " + body_id);
+            send_event(ws, event);
+            return;
+        }
+
+        if (cmd.has_is_fixed()) {
+            mechanism_state.set_body_fixed(body_id, cmd.is_fixed());
+        }
+
+        // Build response Body proto from mechanism_state
+        auto mech = mechanism_state.build_mechanism_proto();
+        for (const auto& body : mech.bodies()) {
+            if (body.id().id() == body_id) {
+                *result->mutable_body() = body;
+                break;
+            }
+        }
+
+        send_event(ws, event);
     }
 
     void handle_create_joint(ix::WebSocket& ws, uint64_t sequence_id,
@@ -650,7 +740,10 @@ struct TransportServer::Impl {
         auto* cr = event.mutable_create_joint_result();
         if (result.entry.has_value()) {
             populate_proto_joint(cr->mutable_joint(), result.entry.value());
+            spdlog::debug("Created joint '{}' (id={}) type={} datums={}->{}",
+                          cmd.name(), result.entry->id, type, parent_datum_id, child_datum_id);
         } else {
+            spdlog::warn("Failed to create joint '{}': {}", cmd.name(), result.error);
             cr->set_error_message(result.error);
         }
         send_event(ws, event);
@@ -826,14 +919,33 @@ struct TransportServer::Impl {
             sim_cv.notify_one();
             sim_thread.join();
         }
+        published_sim_state.store(engine::SimState::IDLE);
     }
 
-    void handle_compile_mechanism(ix::WebSocket& ws, uint64_t sequence_id) {
+    void handle_compile_mechanism(ix::WebSocket& ws, uint64_t sequence_id,
+                                    const protocol::CompileMechanismCommand& compile_cmd) {
         // Stop any existing sim thread before recompiling
         stop_sim_thread();
+        published_sim_state.store(engine::SimState::COMPILING);
 
+        // Extract simulation settings (use defaults if not provided)
+        engine::SimulationConfig config;
+        if (compile_cmd.has_settings()) {
+            const auto& settings = compile_cmd.settings();
+            if (settings.timestep() > 0) {
+                config.timestep = settings.timestep();
+            }
+            if (settings.has_gravity()) {
+                config.gravity[0] = settings.gravity().x();
+                config.gravity[1] = settings.gravity().y();
+                config.gravity[2] = settings.gravity().z();
+            }
+        }
+
+        spdlog::info("Compiling mechanism...");
         auto mech_proto = mechanism_state.build_mechanism_proto();
-        auto result = simulation_runtime.compile(mech_proto);
+        auto result = simulation_runtime.compile(mech_proto, config);
+        sim_dt = config.timestep;
 
         // Reset ring buffer and trace state
         ring_buffer.clear();
@@ -883,15 +995,24 @@ struct TransportServer::Impl {
         send_event(ws, event);
 
         if (result.success) {
+            spdlog::info("Compilation succeeded: {} channels", channel_descriptors.size());
+            published_sim_state.store(engine::SimState::PAUSED);
             // Start simulation thread (idle, waiting for commands)
             sim_command = SimCommand::NONE;
             sim_thread = std::thread([this]() { simulation_loop(); });
             send_sim_state_event();
+        } else {
+            spdlog::error("Compilation failed: {}", result.error_message);
+            published_sim_state.store(engine::SimState::ERROR);
         }
     }
 
     void handle_simulation_control(ix::WebSocket& ws, uint64_t sequence_id,
                                     const protocol::SimulationControlCommand& cmd) {
+        static const char* action_names[] = {"UNSPECIFIED", "PLAY", "PAUSE", "STEP", "RESET"};
+        int action_idx = static_cast<int>(cmd.action());
+        spdlog::info("Simulation control: {}", (action_idx >= 0 && action_idx <= 4) ? action_names[action_idx] : "UNKNOWN");
+
         SimCommand sc = SimCommand::NONE;
         switch (cmd.action()) {
             case protocol::SIMULATION_ACTION_PLAY:  sc = SimCommand::PLAY; break;
@@ -933,17 +1054,22 @@ struct TransportServer::Impl {
 
                 case SimCommand::PLAY:
                     playing = true;
+                    published_sim_state.store(engine::SimState::RUNNING);
                     send_sim_state_event();
                     break;
 
                 case SimCommand::PAUSE:
                     playing = false;
+                    simulation_runtime.pause();
+                    published_sim_state.store(engine::SimState::PAUSED);
                     send_sim_state_event();
                     break;
 
                 case SimCommand::STEP_ONCE:
                     playing = false;
-                    simulation_runtime.step(SIM_DT);
+                    simulation_runtime.step(sim_dt);
+                    simulation_runtime.pause();
+                    published_sim_state.store(engine::SimState::PAUSED);
                     send_sim_frame();
                     send_sim_state_event();
                     break;
@@ -951,8 +1077,13 @@ struct TransportServer::Impl {
                 case SimCommand::RESET:
                     playing = false;
                     simulation_runtime.reset();
+                    published_sim_state.store(engine::SimState::IDLE);
                     send_sim_frame();
                     send_sim_state_event();
+                    break;
+
+                case SimCommand::SCRUB:
+                    // Handled inline by handle_scrub(), not via sim loop
                     break;
 
                 case SimCommand::NONE:
@@ -971,8 +1102,8 @@ struct TransportServer::Impl {
                         std::lock_guard<std::mutex> lk(sim_mutex);
                         if (sim_command != SimCommand::NONE) break;
                     }
-                    simulation_runtime.step(SIM_DT);
-                    accumulated += SIM_DT;
+                    simulation_runtime.step(sim_dt);
+                    accumulated += sim_dt;
                 }
 
                 // Read poses and joint states once
@@ -1135,14 +1266,17 @@ struct TransportServer::Impl {
         {
             std::lock_guard<std::mutex> lock(sim_mutex);
             if (sim_command == SimCommand::PLAY ||
-                simulation_runtime.getState() == engine::SimState::RUNNING) {
+                published_sim_state.load() == engine::SimState::RUNNING) {
                 sim_command = SimCommand::PAUSE;
-                sim_cv.notify_one();
             }
+            sim_cv.notify_one();
         }
 
-        // Small delay to let sim thread process pause
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(250);
+        while (published_sim_state.load() == engine::SimState::RUNNING &&
+               std::chrono::steady_clock::now() < deadline) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
 
         double target = cmd.time();
 
@@ -1205,14 +1339,14 @@ struct TransportServer::Impl {
             }
         }
 
-        // Send paused state
+        published_sim_state.store(engine::SimState::PAUSED);
         send_sim_state_event();
     }
 
     void send_sim_state_event() {
         if (!active_ws) return;
 
-        auto state = simulation_runtime.getState();
+        auto state = published_sim_state.load();
         protocol::SimStateEnum proto_state;
         switch (state) {
             case engine::SimState::IDLE:      proto_state = protocol::SIM_STATE_IDLE; break;

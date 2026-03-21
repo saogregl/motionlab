@@ -1,4 +1,5 @@
 #include "../src/mechanism_state.h"
+#include "engine/log.h"
 #include "mechanism/mechanism.pb.h"
 
 #include <cassert>
@@ -103,6 +104,38 @@ static void test_rename_nonexistent() {
     assert(!result.has_value());
 
     std::cout << "  PASS: rename nonexistent datum returns nullopt" << std::endl;
+}
+
+static void test_update_datum_pose() {
+    MechanismState state;
+    state.add_body("body-001", "Ground");
+
+    double pos[3] = {0, 0, 0};
+    double orient[4] = {1, 0, 0, 0};
+    auto created = state.create_datum("body-001", "PoseDatum", pos, orient);
+    assert(created.has_value());
+
+    double new_pos[3] = {4.0, 5.0, 6.0};
+    double new_orient[4] = {0.5, 0.5, 0.5, 0.5};
+    auto updated = state.update_datum_pose(created->id, new_pos, new_orient);
+    assert(updated.has_value());
+    assert(updated->position[0] == 4.0);
+    assert(updated->position[1] == 5.0);
+    assert(updated->position[2] == 6.0);
+    assert(updated->orientation[0] == 0.5);
+    assert(updated->orientation[1] == 0.5);
+    assert(updated->orientation[2] == 0.5);
+    assert(updated->orientation[3] == 0.5);
+
+    const auto* stored = state.get_datum(created->id);
+    assert(stored != nullptr);
+    assert(stored->position[0] == 4.0);
+    assert(stored->orientation[3] == 0.5);
+
+    auto missing = state.update_datum_pose("nonexistent", new_pos, new_orient);
+    assert(!missing.has_value());
+
+    std::cout << "  PASS: update datum pose" << std::endl;
 }
 
 static void test_clear() {
@@ -446,6 +479,7 @@ static void test_build_mechanism_proto() {
 }
 
 int main() {
+    motionlab::init_logging(spdlog::level::debug);
     std::cout << "MechanismState unit tests" << std::endl;
 
     test_create_datum_on_body();
@@ -453,6 +487,7 @@ int main() {
     test_delete_datum();
     test_rename_datum();
     test_rename_nonexistent();
+    test_update_datum_pose();
     test_clear();
 
     // Joint tests

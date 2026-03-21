@@ -1,4 +1,5 @@
 #include "mechanism_state.h"
+#include "engine/log.h"
 #include "mechanism/mechanism.pb.h"
 #include "uuid.h"
 
@@ -12,7 +13,8 @@ void MechanismState::add_body(const std::string& id, const std::string& name) {
 
 void MechanismState::add_body(const std::string& id, const std::string& name,
                               const double pos[3], const double orient[4],
-                              double mass, const double com[3], const double inertia[6]) {
+                              double mass, const double com[3], const double inertia[6],
+                              bool is_fixed) {
     BodyEntry entry;
     entry.id = id;
     entry.name = name;
@@ -21,7 +23,15 @@ void MechanismState::add_body(const std::string& id, const std::string& name,
     entry.mass = mass;
     std::memcpy(entry.center_of_mass, com, 3 * sizeof(double));
     std::memcpy(entry.inertia, inertia, 6 * sizeof(double));
+    entry.is_fixed = is_fixed;
     bodies_[id] = entry;
+}
+
+bool MechanismState::set_body_fixed(const std::string& id, bool is_fixed) {
+    auto it = bodies_.find(id);
+    if (it == bodies_.end()) return false;
+    it->second.is_fixed = is_fixed;
+    return true;
 }
 
 bool MechanismState::has_body(const std::string& id) const {
@@ -68,6 +78,21 @@ std::optional<MechanismState::DatumEntry> MechanismState::rename_datum(
     return it->second;
 }
 
+std::optional<MechanismState::DatumEntry> MechanismState::update_datum_pose(
+    const std::string& datum_id,
+    const double pos[3],
+    const double orient[4]) {
+
+    auto it = datums_.find(datum_id);
+    if (it == datums_.end()) {
+        return std::nullopt;
+    }
+
+    std::memcpy(it->second.position, pos, 3 * sizeof(double));
+    std::memcpy(it->second.orientation, orient, 4 * sizeof(double));
+    return it->second;
+}
+
 const MechanismState::DatumEntry* MechanismState::get_datum(const std::string& id) const {
     auto it = datums_.find(id);
     if (it == datums_.end()) return nullptr;
@@ -102,23 +127,25 @@ MechanismState::JointResult MechanismState::create_joint(
 
     // Validate different parent bodies
     if (parent_it->second.parent_body_id == child_it->second.parent_body_id) {
+        spdlog::warn("Joint '{}' rejected: datums {} and {} are on the same body ({})",
+                     name, parent_datum_id, child_datum_id, parent_it->second.parent_body_id);
         return JointResult{{}, "Parent and child datums must be on different bodies"};
     }
 
-    // Validate joint type (1=REVOLUTE, 2=PRISMATIC, 3=FIXED)
-    if (type < 1 || type > 3) {
+    // Validate joint type (1=REVOLUTE..6=PLANAR)
+    if (type < 1 || type > 6) {
         return JointResult{{}, "Invalid joint type"};
     }
 
-    // Validate limits for REVOLUTE/PRISMATIC
-    if (type == 1 || type == 2) {
+    // Validate limits for types that support them (REVOLUTE, PRISMATIC, CYLINDRICAL)
+    if (type == 1 || type == 2 || type == 5) {
         if (lower_limit > upper_limit) {
             return JointResult{{}, "Lower limit must be <= upper limit"};
         }
     }
 
-    // FIXED joints: zero the limits
-    if (type == 3) {
+    // Zero limits for types that don't support them (FIXED, SPHERICAL, PLANAR)
+    if (type == 3 || type == 4 || type == 6) {
         lower_limit = 0.0;
         upper_limit = 0.0;
     }
@@ -155,7 +182,7 @@ MechanismState::JointResult MechanismState::update_joint(
     }
     if (type.has_value()) {
         int t = type.value();
-        if (t < 1 || t > 3) {
+        if (t < 1 || t > 6) {
             return JointResult{{}, "Invalid joint type"};
         }
         entry.type = t;
@@ -168,14 +195,14 @@ MechanismState::JointResult MechanismState::update_joint(
     }
 
     // Re-validate limits after update
-    if (entry.type == 1 || entry.type == 2) {
+    if (entry.type == 1 || entry.type == 2 || entry.type == 5) {
         if (entry.lower_limit > entry.upper_limit) {
             return JointResult{{}, "Lower limit must be <= upper limit"};
         }
     }
 
-    // FIXED joints: zero the limits
-    if (entry.type == 3) {
+    // Zero limits for types that don't support them (FIXED, SPHERICAL, PLANAR)
+    if (entry.type == 3 || entry.type == 4 || entry.type == 6) {
         entry.lower_limit = 0.0;
         entry.upper_limit = 0.0;
     }
@@ -241,7 +268,8 @@ void MechanismState::load_from_proto(const mechanism::Mechanism& mech) {
             body.mass_properties().iyz()
         };
         add_body(body.id().id(), body.name(), pos, orient,
-                 body.mass_properties().mass(), com, inertia);
+                 body.mass_properties().mass(), com, inertia,
+                 body.is_fixed());
     }
 
     for (const auto& datum : mech.datums()) {
@@ -305,6 +333,8 @@ mechanism::Mechanism MechanismState::build_mechanism_proto() const {
         mp->set_ixy(body.inertia[3]);
         mp->set_ixz(body.inertia[4]);
         mp->set_iyz(body.inertia[5]);
+
+        pb->set_is_fixed(body.is_fixed);
     }
 
     for (const auto& [id, datum] : datums_) {
