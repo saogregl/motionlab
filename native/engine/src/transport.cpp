@@ -150,6 +150,15 @@ struct TransportServer::Impl {
     // Project persistence (Epic 6.4) — cached import results for save/load
     std::unordered_map<std::string, protocol::BodyImportResult> body_import_results_;
     std::unordered_map<std::string, double> body_length_scales_;
+    struct AssetTopologyContext {
+        std::string file_path;
+        std::string unit_system;
+        double density = 1000.0;
+        double tessellation_quality = 0.1;
+        std::vector<std::string> body_ids;
+    };
+    std::unordered_map<std::string, AssetTopologyContext> asset_topology_contexts_;
+    std::unordered_map<std::string, std::string> body_topology_keys_;
 
     // Ring buffer + trace streaming (Epic 8.1)
     engine::SimulationRingBuffer ring_buffer;
@@ -248,6 +257,68 @@ struct TransportServer::Impl {
             if (!ws) return;
             std::invoke(method, this, *ws, sequence_id, payload);
         });
+    }
+
+    void remember_topology_context(const std::string& cache_key,
+                                   const std::string& file_path,
+                                   const std::string& unit_system,
+                                   double density,
+                                   double tessellation_quality,
+                                   const std::vector<std::string>& body_ids) {
+        asset_topology_contexts_[cache_key] = AssetTopologyContext{
+            file_path, unit_system, density, tessellation_quality, body_ids
+        };
+        for (const auto& body_id : body_ids) {
+            body_topology_keys_[body_id] = cache_key;
+        }
+    }
+
+    bool ensure_body_shape_loaded(const std::string& body_id) {
+        if (shape_registry.get(body_id)) {
+            return true;
+        }
+
+        const auto body_it = body_topology_keys_.find(body_id);
+        if (body_it == body_topology_keys_.end()) {
+            return false;
+        }
+
+        const auto ctx_it = asset_topology_contexts_.find(body_it->second);
+        if (ctx_it == asset_topology_contexts_.end()) {
+            return false;
+        }
+
+        const auto& ctx = ctx_it->second;
+        engine::CadImporter topology_importer;
+        engine::ImportOptions topology_opts{
+            ctx.density,
+            ctx.tessellation_quality,
+            ctx.unit_system,
+        };
+        std::string lower_path = ctx.file_path;
+        std::transform(lower_path.begin(), lower_path.end(), lower_path.begin(),
+                       [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+
+        engine::ImportResult topology_result;
+        if (lower_path.ends_with(".iges") || lower_path.ends_with(".igs")) {
+            topology_result = topology_importer.import_iges_topology(ctx.file_path, topology_opts);
+        } else {
+            topology_result = topology_importer.import_step_topology(ctx.file_path, topology_opts);
+        }
+
+        if (!topology_result.success ||
+            topology_result.bodies.size() != ctx.body_ids.size()) {
+            return false;
+        }
+
+        for (size_t i = 0; i < ctx.body_ids.size(); ++i) {
+            const auto& topo_body = topology_result.bodies[i];
+            if (topo_body.brep_shape) {
+                shape_registry.store(ctx.body_ids[i], *topo_body.brep_shape);
+            }
+        }
+
+        return shape_registry.get(body_id) != nullptr;
     }
 
     const engine::JointState* find_joint_state(const engine::BufferedFrame& frame,
@@ -454,76 +525,65 @@ struct TransportServer::Impl {
             if (cached.has_value()) {
                 protocol::ImportAssetResult result;
                 if (result.ParseFromString(cached.value())) {
-                    bool cache_has_topology = true;
+                    std::vector<std::string> body_ids;
+                    bool cache_has_face_index = true;
                     for (const auto& body : result.bodies()) {
+                        body_ids.push_back(body.body_id());
                         if (body.part_index_size() == 0) {
-                            cache_has_topology = false;
+                            cache_has_face_index = false;
                             break;
                         }
                     }
 
-                    if (cache_has_topology) {
-                        engine::CadImporter topology_importer;
-                        engine::ImportOptions topology_opts{density, tess_quality, unit_system};
-                        engine::ImportResult topology_result;
-                        if (lower_path.ends_with(".iges") || lower_path.ends_with(".igs")) {
-                            topology_result = topology_importer.import_iges_topology(file_path, topology_opts);
-                        } else {
-                            topology_result = topology_importer.import_step_topology(file_path, topology_opts);
-                        }
-
-                        if (topology_result.success && topology_result.bodies.size() == static_cast<size_t>(result.bodies_size())) {
-                            for (int i = 0; i < result.bodies_size(); ++i) {
-                                const auto& cached_body = result.bodies(i);
-                                const auto& topo_body = topology_result.bodies[static_cast<size_t>(i)];
-                                // Store full body data for simulation compilation
-                                double cb_pos[3] = {
-                                    cached_body.pose().position().x(),
-                                    cached_body.pose().position().y(),
-                                    cached_body.pose().position().z()
-                                };
-                                double cb_orient[4] = {
-                                    cached_body.pose().orientation().w(),
-                                    cached_body.pose().orientation().x(),
-                                    cached_body.pose().orientation().y(),
-                                    cached_body.pose().orientation().z()
-                                };
-                                double cb_com[3] = {
-                                    cached_body.mass_properties().center_of_mass().x(),
-                                    cached_body.mass_properties().center_of_mass().y(),
-                                    cached_body.mass_properties().center_of_mass().z()
-                                };
-                                double cb_inertia[6] = {
-                                    cached_body.mass_properties().ixx(),
-                                    cached_body.mass_properties().iyy(),
-                                    cached_body.mass_properties().izz(),
-                                    cached_body.mass_properties().ixy(),
-                                    cached_body.mass_properties().ixz(),
-                                    cached_body.mass_properties().iyz()
-                                };
-                                mechanism_state.add_body(cached_body.body_id(), cached_body.name(),
-                                                         cb_pos, cb_orient,
-                                                         cached_body.mass_properties().mass(),
-                                                         cb_com, cb_inertia,
-                                                         cached_body.has_source_asset_ref()
-                                                            ? &cached_body.source_asset_ref()
-                                                            : nullptr);
-                                body_import_results_[cached_body.body_id()] = cached_body;  // store for save/load
-                                body_length_scales_[cached_body.body_id()] = length_scale;
-                                if (topo_body.brep_shape) {
-                                    shape_registry.store(cached_body.body_id(), *topo_body.brep_shape);
-                                }
-                            }
-
-                            spdlog::info("Import cache hit: {} bodies from {}",
-                                         result.bodies_size(), file_path);
-                            protocol::Event event;
-                            event.set_sequence_id(sequence_id);
-                            *event.mutable_import_asset_result() = std::move(result);
-                            send_event(ws, event);
-                            return;
-                        }
+                    if (cache_has_face_index) {
+                        remember_topology_context(cache_key, file_path, unit_system,
+                                                 density, tess_quality, body_ids);
                     }
+
+                    for (int i = 0; i < result.bodies_size(); ++i) {
+                        const auto& cached_body = result.bodies(i);
+                        double cb_pos[3] = {
+                            cached_body.pose().position().x(),
+                            cached_body.pose().position().y(),
+                            cached_body.pose().position().z()
+                        };
+                        double cb_orient[4] = {
+                            cached_body.pose().orientation().w(),
+                            cached_body.pose().orientation().x(),
+                            cached_body.pose().orientation().y(),
+                            cached_body.pose().orientation().z()
+                        };
+                        double cb_com[3] = {
+                            cached_body.mass_properties().center_of_mass().x(),
+                            cached_body.mass_properties().center_of_mass().y(),
+                            cached_body.mass_properties().center_of_mass().z()
+                        };
+                        double cb_inertia[6] = {
+                            cached_body.mass_properties().ixx(),
+                            cached_body.mass_properties().iyy(),
+                            cached_body.mass_properties().izz(),
+                            cached_body.mass_properties().ixy(),
+                            cached_body.mass_properties().ixz(),
+                            cached_body.mass_properties().iyz()
+                        };
+                        mechanism_state.add_body(cached_body.body_id(), cached_body.name(),
+                                                 cb_pos, cb_orient,
+                                                 cached_body.mass_properties().mass(),
+                                                 cb_com, cb_inertia,
+                                                 cached_body.has_source_asset_ref()
+                                                    ? &cached_body.source_asset_ref()
+                                                    : nullptr);
+                        body_import_results_[cached_body.body_id()] = cached_body;
+                        body_length_scales_[cached_body.body_id()] = length_scale;
+                    }
+
+                    spdlog::info("Import cache hit: {} bodies from {}",
+                                 result.bodies_size(), file_path);
+                    protocol::Event event;
+                    event.set_sequence_id(sequence_id);
+                    *event.mutable_import_asset_result() = std::move(result);
+                    send_event(ws, event);
+                    return;
                 }
                 // Parse failed — treat as cache miss, fall through
             }
@@ -557,9 +617,11 @@ struct TransportServer::Impl {
                 ? file_path.substr(pos + 1) : file_path;
         }
 
+        std::vector<std::string> imported_body_ids;
         for (const auto& body : import_result.bodies) {
             auto* pb = proto_result.add_bodies();
             pb->set_body_id(engine::generate_uuidv7());
+            imported_body_ids.push_back(pb->body_id());
             pb->set_name(body.name);
 
             // DisplayMesh
@@ -622,6 +684,11 @@ struct TransportServer::Impl {
             if (body.brep_shape) {
                 shape_registry.store(pb->body_id(), *body.brep_shape);
             }
+        }
+
+        if (import_result.success && !cache_key.empty()) {
+            remember_topology_context(cache_key, file_path, unit_system,
+                                     density, tess_quality, imported_body_ids);
         }
 
         // Cache on success
@@ -717,6 +784,14 @@ struct TransportServer::Impl {
     void handle_create_datum_from_face(ix::WebSocket& ws, uint64_t sequence_id,
                                        const protocol::CreateDatumFromFaceCommand& cmd) {
         const std::string body_id = cmd.has_parent_body_id() ? cmd.parent_body_id().id() : "";
+        if (!ensure_body_shape_loaded(body_id)) {
+            protocol::Event event;
+            event.set_sequence_id(sequence_id);
+            auto* result = event.mutable_create_datum_from_face_result();
+            result->set_error_message("Face-aware datum creation unavailable for body: " + body_id);
+            send_event(ws, event);
+            return;
+        }
         const TopoDS_Shape* shape = shape_registry.get(body_id);
 
         protocol::Event event;
@@ -1019,6 +1094,8 @@ struct TransportServer::Impl {
 
         // Rebuild body_import_results_ and build response bodies
         body_import_results_.clear();
+        body_topology_keys_.clear();
+        asset_topology_contexts_.clear();
         protocol::LoadProjectSuccess success;
         *success.mutable_mechanism() = project_file.mechanism();
         *success.mutable_metadata() = project_file.metadata();

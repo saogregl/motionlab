@@ -17,6 +17,7 @@ Transport execution is split in two parts:
 
 - the WebSocket callback thread performs frame validation, protobuf parsing, authentication checks, and command routing
 - a dedicated native command worker executes authenticated engine commands in-order, including import, authored-state mutation, compile, save/load, and scrub work
+- cached import results rebuild authored body data immediately, while native topology is loaded lazily when a face-aware authoring command needs it
 
 Message types (proto envelopes):
 - `Command` (frontend → engine): oneof payload — `Handshake`, `Ping`, `ImportAssetCommand`, `CreateDatumCommand`, `DeleteDatumCommand`, `RenameDatumCommand`, `CreateDatumFromFaceCommand`, `UpdateBodyCommand`, `UpdateDatumPoseCommand`, `CreateJointCommand`, `UpdateJointCommand`, `DeleteJointCommand`, `CompileMechanismCommand`, `SimulationControlCommand`, `ScrubCommand`, `SaveProjectCommand`, `LoadProjectCommand`
