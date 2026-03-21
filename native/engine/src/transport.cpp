@@ -105,6 +105,12 @@ static std::string normalize_unit_system(std::string unit_system) {
     return {};
 }
 
+static double unit_scale_to_meters(const std::string& unit_system) {
+    if (unit_system == "meter") return 1.0;
+    if (unit_system == "inch") return 0.0254;
+    return 1e-3;
+}
+
 // ──────────────────────────────────────────────
 // TransportServer implementation
 // ──────────────────────────────────────────────
@@ -143,6 +149,7 @@ struct TransportServer::Impl {
 
     // Project persistence (Epic 6.4) — cached import results for save/load
     std::unordered_map<std::string, protocol::BodyImportResult> body_import_results_;
+    std::unordered_map<std::string, double> body_length_scales_;
 
     // Ring buffer + trace streaming (Epic 8.1)
     engine::SimulationRingBuffer ring_buffer;
@@ -438,6 +445,7 @@ struct TransportServer::Impl {
                 return;
             }
         }
+        const double length_scale = unit_scale_to_meters(unit_system);
 
         // Compute cache key and check cache
         std::string cache_key = asset_cache.compute_cache_key(file_path, density, tess_quality, unit_system);
@@ -501,6 +509,7 @@ struct TransportServer::Impl {
                                                             ? &cached_body.source_asset_ref()
                                                             : nullptr);
                                 body_import_results_[cached_body.body_id()] = cached_body;  // store for save/load
+                                body_length_scales_[cached_body.body_id()] = length_scale;
                                 if (topo_body.brep_shape) {
                                     shape_registry.store(cached_body.body_id(), *topo_body.brep_shape);
                                 }
@@ -608,6 +617,7 @@ struct TransportServer::Impl {
                                      asset_ref);
 
             body_import_results_[pb->body_id()] = *pb;  // store for save/load
+            body_length_scales_[pb->body_id()] = length_scale;
 
             if (body.brep_shape) {
                 shape_registry.store(pb->body_id(), *body.brep_shape);
@@ -730,6 +740,14 @@ struct TransportServer::Impl {
             result->set_error_message("Face index out of range for body: " + body_id);
             send_event(ws, event);
             return;
+        }
+
+        const auto scale_it = body_length_scales_.find(body_id);
+        const double length_scale = (scale_it != body_length_scales_.end())
+            ? scale_it->second
+            : 1.0;
+        for (double& component : face_pose->position) {
+            component *= length_scale;
         }
 
         auto datum = mechanism_state.create_datum(body_id, cmd.name(), face_pose->position, face_pose->orientation);
@@ -990,6 +1008,7 @@ struct TransportServer::Impl {
 
         // Rebuild mechanism state
         mechanism_state.clear();
+        body_length_scales_.clear();
         mechanism_state.load_from_proto(project_file.mechanism());
 
         // Build display data lookup
@@ -1024,6 +1043,7 @@ struct TransportServer::Impl {
 
             // Store for future saves
             body_import_results_[body.id().id()] = *bir;
+            body_length_scales_[body.id().id()] = 1.0;
         }
 
         protocol::Event event;

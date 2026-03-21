@@ -8,6 +8,7 @@
 #include "protocol/transport.pb.h"
 #include "mechanism/mechanism.pb.h"
 
+#include <algorithm>
 #include <cassert>
 #include <chrono>
 #include <condition_variable>
@@ -629,6 +630,27 @@ static void test_import_unit_system_and_project_roundtrip(uint16_t port) {
     assert(body.has_source_asset_ref());
     assert(body.source_asset_ref().content_hash().size() == 64);
     assert(std::abs(body.mass_properties().center_of_mass().x() - 0.127) < 1e-4);
+
+    Command face_cmd;
+    face_cmd.set_sequence_id(4211);
+    auto* face = face_cmd.mutable_create_datum_from_face();
+    face->mutable_parent_body_id()->set_id(body.body_id());
+    face->set_face_index(0);
+    face->set_name("InchFaceDatum");
+    client.send_command(face_cmd);
+
+    const auto* face_evt = client.wait_for_response(4211, scan_from, 10000);
+    assert(face_evt != nullptr);
+    assert(face_evt->payload_case() == Event::kCreateDatumFromFaceResult);
+    assert(face_evt->create_datum_from_face_result().result_case() == CreateDatumFromFaceResult::kSuccess);
+    const auto& face_datum = face_evt->create_datum_from_face_result().success().datum();
+    const double max_abs_face_pos = std::max({
+        std::abs(face_datum.local_pose().position().x()),
+        std::abs(face_datum.local_pose().position().y()),
+        std::abs(face_datum.local_pose().position().z()),
+    });
+    assert(max_abs_face_pos > 0.01);
+    assert(max_abs_face_pos < 1.0);
 
     Command save_cmd;
     save_cmd.set_sequence_id(422);

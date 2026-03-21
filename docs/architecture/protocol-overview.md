@@ -27,7 +27,7 @@ Key messages:
 - `HandshakeAck`: `compatible` boolean (engine decides), `engineProtocol`, `engineVersion`
 - `EngineStatus`: proto enum `State` (INITIALIZING, READY, BUSY, ERROR, SHUTTING_DOWN)
 - `Ping`/`Pong`: uint64 timestamp for latency measurement
-- `ImportOptions.unit_system`: declares source CAD length units. The engine validates `millimeter`, `meter`, or `inch` and normalizes imported geometry and mass-property lengths into meters before publishing the result.
+- `ImportOptions.unit_system`: declares source CAD length units. The engine validates `millimeter`, `meter`, or `inch` and normalizes imported geometry, mass-property lengths, and topology-derived datum poses into meters before publishing the result.
 - `motionlab.mechanism.Body.source_asset_ref`: structured `AssetReference` carried through import, save, and load. Product-facing mechanism bodies no longer use a lossy string surrogate.
 - `ImportAssetResult.BodyImportResult.part_index`: per-face triangle counts used by the viewport to map Babylon triangle hits back to B-Rep face indices
 - `CreateDatumFromFaceCommand`: requests geometry-aware datum creation from a picked body face
