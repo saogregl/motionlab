@@ -3,6 +3,7 @@
 ## Current Runtime Topology
 
 - The native engine (`native/engine`) listens on a loopback WebSocket (`127.0.0.1:<port>`) and performs a binary protobuf handshake with session token and protocol version validation. It uses `ixwebsocket` for transport. Single-client only.
+- The WebSocket callback thread is no longer responsible for executing heavy engine commands. Authenticated commands are routed onto a dedicated native worker queue so import, compile, save/load, and scrub work do not block socket parsing or ping handling.
 - `apps/desktop` will launch the engine process and expose the desktop shell (not yet implemented — Epic 1, Prompt 2).
 - The renderer/frontend will connect through versioned protocol contracts (not yet implemented — Epic 1, Prompt 3).
 - `apps/web` reuses the shared frontend without local native-process supervision.

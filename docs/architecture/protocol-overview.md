@@ -13,6 +13,11 @@
 
 The native engine uses binary protobuf over WebSocket. Messages are defined in `schemas/protocol/transport.proto` and serialized via protobuf-es generated types. JSON representation is available for debug logging via `eventToDebugJson()`.
 
+Transport execution is split in two parts:
+
+- the WebSocket callback thread performs frame validation, protobuf parsing, authentication checks, and command routing
+- a dedicated native command worker executes authenticated engine commands in-order, including import, authored-state mutation, compile, save/load, and scrub work
+
 Message types (proto envelopes):
 - `Command` (frontend → engine): oneof payload — `Handshake`, `Ping`, `ImportAssetCommand`, `CreateDatumCommand`, `DeleteDatumCommand`, `RenameDatumCommand`, `CreateDatumFromFaceCommand`, `UpdateBodyCommand`, `UpdateDatumPoseCommand`, `CreateJointCommand`, `UpdateJointCommand`, `DeleteJointCommand`, `CompileMechanismCommand`, `SimulationControlCommand`, `ScrubCommand`, `SaveProjectCommand`, `LoadProjectCommand`
 - `Event` (engine → frontend): oneof payload — `HandshakeAck`, `Pong`, `EngineStatus`, `ImportAssetResult`, `MechanismSnapshot`, `CreateDatumResult`, `DeleteDatumResult`, `RenameDatumResult`, `CreateDatumFromFaceResult`, `UpdateBodyResult`, `UpdateDatumPoseResult`, `CreateJointResult`, `UpdateJointResult`, `DeleteJointResult`, `CompilationResultEvent`, `SimulationStateEvent`, `SimulationFrame`, `SimulationTrace`, `SaveProjectResult`, `LoadProjectResult`

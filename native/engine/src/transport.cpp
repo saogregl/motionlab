@@ -21,7 +21,9 @@
 #include <cctype>
 #include <chrono>
 #include <condition_variable>
+#include <deque>
 #include <filesystem>
+#include <functional>
 #include <iostream>
 #include <mutex>
 #include <string>
@@ -114,10 +116,19 @@ struct TransportServer::Impl {
     std::weak_ptr<ix::WebSocket> active_conn;
     bool has_connection = false;
     bool authenticated = false;
+    uint64_t connection_epoch = 0;
     std::atomic<bool> running{false};
     engine::AssetCache asset_cache;
     engine::MechanismState mechanism_state;
     engine::ShapeRegistry shape_registry;
+
+    // Serialized command execution — keep heavy work and state mutation off
+    // the WebSocket callback thread while preserving command order.
+    std::thread job_thread;
+    std::mutex job_mutex;
+    std::condition_variable job_cv;
+    std::deque<std::function<void()>> job_queue;
+    bool stop_jobs = false;
 
     // Simulation (Epic 7.2)
     engine::SimulationRuntime simulation_runtime;
@@ -152,7 +163,85 @@ struct TransportServer::Impl {
 
     explicit Impl(std::string token)
         : session_token(std::move(token))
-        , asset_cache(get_cache_directory()) {}
+        , asset_cache(get_cache_directory()) {
+        start_job_thread();
+    }
+
+    ~Impl() {
+        stop_job_thread();
+        stop_sim_thread();
+    }
+
+    void start_job_thread() {
+        job_thread = std::thread([this]() { job_loop(); });
+    }
+
+    void stop_job_thread() {
+        {
+            std::lock_guard<std::mutex> lock(job_mutex);
+            stop_jobs = true;
+            job_queue.clear();
+        }
+        job_cv.notify_all();
+        if (job_thread.joinable()) {
+            job_thread.join();
+        }
+    }
+
+    void clear_pending_jobs() {
+        std::lock_guard<std::mutex> lock(job_mutex);
+        job_queue.clear();
+    }
+
+    void job_loop() {
+        while (true) {
+            std::function<void()> job;
+            {
+                std::unique_lock<std::mutex> lock(job_mutex);
+                job_cv.wait(lock, [this]() { return stop_jobs || !job_queue.empty(); });
+                if (stop_jobs && job_queue.empty()) {
+                    return;
+                }
+                job = std::move(job_queue.front());
+                job_queue.pop_front();
+            }
+            job();
+        }
+    }
+
+    template <typename Fn>
+    void post_job(Fn&& fn) {
+        {
+            std::lock_guard<std::mutex> lock(job_mutex);
+            if (stop_jobs) return;
+            job_queue.emplace_back(std::forward<Fn>(fn));
+        }
+        job_cv.notify_one();
+    }
+
+    uint64_t active_connection_epoch() {
+        std::lock_guard<std::mutex> lock(conn_mutex);
+        return connection_epoch;
+    }
+
+    ix::WebSocket* current_ws(uint64_t expected_epoch) {
+        std::lock_guard<std::mutex> lock(conn_mutex);
+        if (!authenticated || !active_ws || connection_epoch != expected_epoch) {
+            return nullptr;
+        }
+        return active_ws;
+    }
+
+    template <typename CommandT, typename Method>
+    void enqueue_command(uint64_t sequence_id, const CommandT& payload, Method method) {
+        auto payload_copy = payload;
+        const uint64_t epoch = active_connection_epoch();
+        post_job([this, sequence_id, epoch, payload = std::move(payload_copy), method]() mutable {
+            ix::WebSocket* ws = current_ws(epoch);
+            if (!ws) return;
+            std::invoke(method, this, *ws, sequence_id, payload);
+        });
+    }
 
     const engine::JointState* find_joint_state(const engine::BufferedFrame& frame,
                                                const ChannelMapping& mapping) const {
@@ -179,15 +268,18 @@ struct TransportServer::Impl {
             }
             has_connection = true;
             authenticated = false;
+            ++connection_epoch;
             active_ws = &ws;
             return;
         }
 
         if (msg->type == ix::WebSocketMessageType::Close) {
+            clear_pending_jobs();
             stop_sim_thread();
             std::lock_guard<std::mutex> lock(conn_mutex);
             has_connection = false;
             authenticated = false;
+            ++connection_epoch;
             active_ws = nullptr;
             return;
         }
@@ -215,63 +307,63 @@ struct TransportServer::Impl {
                 break;
             case protocol::Command::kImportAsset:
                 if (!authenticated) break;
-                handle_import_asset(ws, cmd.sequence_id(), cmd.import_asset());
+                enqueue_command(cmd.sequence_id(), cmd.import_asset(), &Impl::handle_import_asset);
                 break;
             case protocol::Command::kCreateDatum:
                 if (!authenticated) break;
-                handle_create_datum(ws, cmd.sequence_id(), cmd.create_datum());
+                enqueue_command(cmd.sequence_id(), cmd.create_datum(), &Impl::handle_create_datum);
                 break;
             case protocol::Command::kDeleteDatum:
                 if (!authenticated) break;
-                handle_delete_datum(ws, cmd.sequence_id(), cmd.delete_datum());
+                enqueue_command(cmd.sequence_id(), cmd.delete_datum(), &Impl::handle_delete_datum);
                 break;
             case protocol::Command::kRenameDatum:
                 if (!authenticated) break;
-                handle_rename_datum(ws, cmd.sequence_id(), cmd.rename_datum());
+                enqueue_command(cmd.sequence_id(), cmd.rename_datum(), &Impl::handle_rename_datum);
                 break;
             case protocol::Command::kCreateDatumFromFace:
                 if (!authenticated) break;
-                handle_create_datum_from_face(ws, cmd.sequence_id(), cmd.create_datum_from_face());
+                enqueue_command(cmd.sequence_id(), cmd.create_datum_from_face(), &Impl::handle_create_datum_from_face);
                 break;
             case protocol::Command::kUpdateBody:
                 if (!authenticated) break;
-                handle_update_body(ws, cmd.sequence_id(), cmd.update_body());
+                enqueue_command(cmd.sequence_id(), cmd.update_body(), &Impl::handle_update_body);
                 break;
             case protocol::Command::kUpdateDatumPose:
                 if (!authenticated) break;
-                handle_update_datum_pose(ws, cmd.sequence_id(), cmd.update_datum_pose());
+                enqueue_command(cmd.sequence_id(), cmd.update_datum_pose(), &Impl::handle_update_datum_pose);
                 break;
             case protocol::Command::kCreateJoint:
                 if (!authenticated) break;
-                handle_create_joint(ws, cmd.sequence_id(), cmd.create_joint());
+                enqueue_command(cmd.sequence_id(), cmd.create_joint(), &Impl::handle_create_joint);
                 break;
             case protocol::Command::kUpdateJoint:
                 if (!authenticated) break;
-                handle_update_joint(ws, cmd.sequence_id(), cmd.update_joint());
+                enqueue_command(cmd.sequence_id(), cmd.update_joint(), &Impl::handle_update_joint);
                 break;
             case protocol::Command::kDeleteJoint:
                 if (!authenticated) break;
-                handle_delete_joint(ws, cmd.sequence_id(), cmd.delete_joint());
+                enqueue_command(cmd.sequence_id(), cmd.delete_joint(), &Impl::handle_delete_joint);
                 break;
             case protocol::Command::kCompileMechanism:
                 if (!authenticated) break;
-                handle_compile_mechanism(ws, cmd.sequence_id(), cmd.compile_mechanism());
+                enqueue_command(cmd.sequence_id(), cmd.compile_mechanism(), &Impl::handle_compile_mechanism);
                 break;
             case protocol::Command::kSimulationControl:
                 if (!authenticated) break;
-                handle_simulation_control(ws, cmd.sequence_id(), cmd.simulation_control());
+                enqueue_command(cmd.sequence_id(), cmd.simulation_control(), &Impl::handle_simulation_control);
                 break;
             case protocol::Command::kScrub:
                 if (!authenticated) break;
-                handle_scrub(ws, cmd.sequence_id(), cmd.scrub());
+                enqueue_command(cmd.sequence_id(), cmd.scrub(), &Impl::handle_scrub);
                 break;
             case protocol::Command::kSaveProject:
                 if (!authenticated) break;
-                handle_save_project(ws, cmd.sequence_id(), cmd.save_project());
+                enqueue_command(cmd.sequence_id(), cmd.save_project(), &Impl::handle_save_project);
                 break;
             case protocol::Command::kLoadProject:
                 if (!authenticated) break;
-                handle_load_project(ws, cmd.sequence_id(), cmd.load_project());
+                enqueue_command(cmd.sequence_id(), cmd.load_project(), &Impl::handle_load_project);
                 break;
             default:
                 break;
@@ -1437,6 +1529,7 @@ void TransportServer::run() {
 }
 
 void TransportServer::stop() {
+    impl_->stop_job_thread();
     impl_->stop_sim_thread();
     impl_->running = false;
     if (impl_->server) {
