@@ -43,7 +43,7 @@ Scrubbing allows the user to navigate to arbitrary simulation times:
 
 1. **TimelineScrubber** fires `onSeek` on mousemove during drag.
 2. **TimelinePanel** throttles these to ≤30/s and auto-pauses a running simulation before sending `sendScrub(time)`.
-3. The engine processes the scrub command and emits a `SimulationState` event with the target time.
+3. The engine processes the scrub command from the bounded live ring buffer, emits a historical `SimulationFrame`, emits `SimulationTrace` windows for active channels, and publishes a paused `SimulationState` event.
 4. The frontend updates `simTime` in the simulation store.
 5. **ChartPanel** draws a dashed vertical scrub marker at `simTime` via a uPlot `draw` hook plugin. The marker redraws on `simTime` changes even when no new trace data arrives.
 
@@ -59,3 +59,8 @@ Scrubbing allows the user to navigate to arbitrary simulation times:
 - immutable replay artifacts for persisted runs
 - chunking and summaries for efficient charting and scrubbing
 - explicit frame indexing for large sensor outputs
+
+## Current Native Buffering
+
+- The native ring buffer stores body poses, joint states, and a per-frame joint lookup table keyed by authored joint ID.
+- Trace streaming and scrub reuse that lookup table so channel extraction remains bounded even as the number of channels grows.

@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 namespace motionlab::mechanism {
+class AssetReference;
 class Mechanism;
 }
 
@@ -17,6 +18,7 @@ public:
     void add_body(const std::string& id, const std::string& name,
                   const double pos[3], const double orient[4],
                   double mass, const double com[3], const double inertia[6],
+                  const motionlab::mechanism::AssetReference* source_asset_ref = nullptr,
                   bool is_fixed = false);
     bool has_body(const std::string& id) const;
     bool set_body_fixed(const std::string& id, bool is_fixed);
@@ -78,12 +80,18 @@ public:
 
 private:
     struct BodyEntry {
+        struct AssetRef {
+            std::string content_hash;
+            std::string relative_path;
+            std::string original_filename;
+        };
         std::string id, name;
         double position[3] = {0, 0, 0};
         double orientation[4] = {1, 0, 0, 0}; // w,x,y,z
         double mass = 0.0;
         double center_of_mass[3] = {0, 0, 0};
         double inertia[6] = {0, 0, 0, 0, 0, 0}; // ixx,iyy,izz,ixy,ixz,iyz
+        std::optional<AssetRef> source_asset_ref;
         bool is_fixed = false;
     };
     std::unordered_map<std::string, BodyEntry> bodies_;

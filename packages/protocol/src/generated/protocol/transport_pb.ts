@@ -4,7 +4,7 @@
 
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
-import type { AssetReference, Datum, DisplayMesh, ElementId, Joint, JointType, MassProperties, Mechanism, Pose, ProjectMetadata, Quat, Vec3 } from "../mechanism/mechanism_pb.js";
+import type { AssetReference, Body, Datum, DisplayMesh, ElementId, Joint, JointType, MassProperties, Mechanism, Pose, ProjectMetadata, Quat, Vec3 } from "../mechanism/mechanism_pb.js";
 import { file_mechanism_mechanism } from "../mechanism/mechanism_pb.js";
 import type { Message } from "@bufbuild/protobuf";
 
@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file protocol/transport.proto.
  */
 export const file_protocol_transport: GenFile = /*@__PURE__*/
-  fileDesc("Chhwcm90b2NvbC90cmFuc3BvcnQucHJvdG8SEm1vdGlvbmxhYi5wcm90b2NvbCIwCg9Qcm90b2NvbFZlcnNpb24SDAoEbmFtZRgBIAEoCRIPCgd2ZXJzaW9uGAIgASgNIuIHCgdDb21tYW5kEhMKC3NlcXVlbmNlX2lkGAEgASgEEjIKCWhhbmRzaGFrZRgKIAEoCzIdLm1vdGlvbmxhYi5wcm90b2NvbC5IYW5kc2hha2VIABIoCgRwaW5nGAsgASgLMhgubW90aW9ubGFiLnByb3RvY29sLlBpbmdIABI+CgxpbXBvcnRfYXNzZXQYDCABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0QXNzZXRDb21tYW5kSAASPgoMY3JlYXRlX2RhdHVtGA0gASgLMiYubW90aW9ubGFiLnByb3RvY29sLkNyZWF0ZURhdHVtQ29tbWFuZEgAEj4KDGRlbGV0ZV9kYXR1bRgOIAEoCzImLm1vdGlvbmxhYi5wcm90b2NvbC5EZWxldGVEYXR1bUNvbW1hbmRIABI+CgxyZW5hbWVfZGF0dW0YDyABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuUmVuYW1lRGF0dW1Db21tYW5kSAASUAoWY3JlYXRlX2RhdHVtX2Zyb21fZmFjZRgQIAEoCzIuLm1vdGlvbmxhYi5wcm90b2NvbC5DcmVhdGVEYXR1bUZyb21GYWNlQ29tbWFuZEgAEj4KDGNyZWF0ZV9qb2ludBgUIAEoCzImLm1vdGlvbmxhYi5wcm90b2NvbC5DcmVhdGVKb2ludENvbW1hbmRIABI+Cgx1cGRhdGVfam9pbnQYFSABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuVXBkYXRlSm9pbnRDb21tYW5kSAASPgoMZGVsZXRlX2pvaW50GBYgASgLMiYubW90aW9ubGFiLnByb3RvY29sLkRlbGV0ZUpvaW50Q29tbWFuZEgAEkgKEWNvbXBpbGVfbWVjaGFuaXNtGB4gASgLMisubW90aW9ubGFiLnByb3RvY29sLkNvbXBpbGVNZWNoYW5pc21Db21tYW5kSAASSgoSc2ltdWxhdGlvbl9jb250cm9sGB8gASgLMiwubW90aW9ubGFiLnByb3RvY29sLlNpbXVsYXRpb25Db250cm9sQ29tbWFuZEgAEjEKBXNjcnViGCAgASgLMiAubW90aW9ubGFiLnByb3RvY29sLlNjcnViQ29tbWFuZEgAEj4KDHNhdmVfcHJvamVjdBgoIAEoCzImLm1vdGlvbmxhYi5wcm90b2NvbC5TYXZlUHJvamVjdENvbW1hbmRIABI+Cgxsb2FkX3Byb2plY3QYKSABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuTG9hZFByb2plY3RDb21tYW5kSABCCQoHcGF5bG9hZCLsCQoFRXZlbnQSEwoLc2VxdWVuY2VfaWQYASABKAQSOQoNaGFuZHNoYWtlX2FjaxgKIAEoCzIgLm1vdGlvbmxhYi5wcm90b2NvbC5IYW5kc2hha2VBY2tIABIoCgRwb25nGAsgASgLMhgubW90aW9ubGFiLnByb3RvY29sLlBvbmdIABI5Cg1lbmdpbmVfc3RhdHVzGAwgASgLMiAubW90aW9ubGFiLnByb3RvY29sLkVuZ2luZVN0YXR1c0gAEkQKE2ltcG9ydF9hc3NldF9yZXN1bHQYDSABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0QXNzZXRSZXN1bHRIABJDChJtZWNoYW5pc21fc25hcHNob3QYDiABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuTWVjaGFuaXNtU25hcHNob3RIABJEChNjcmVhdGVfZGF0dW1fcmVzdWx0GA8gASgLMiUubW90aW9ubGFiLnByb3RvY29sLkNyZWF0ZURhdHVtUmVzdWx0SAASRAoTZGVsZXRlX2RhdHVtX3Jlc3VsdBgQIAEoCzIlLm1vdGlvbmxhYi5wcm90b2NvbC5EZWxldGVEYXR1bVJlc3VsdEgAEkQKE3JlbmFtZV9kYXR1bV9yZXN1bHQYESABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuUmVuYW1lRGF0dW1SZXN1bHRIABJWCh1jcmVhdGVfZGF0dW1fZnJvbV9mYWNlX3Jlc3VsdBgSIAEoCzItLm1vdGlvbmxhYi5wcm90b2NvbC5DcmVhdGVEYXR1bUZyb21GYWNlUmVzdWx0SAASRAoTY3JlYXRlX2pvaW50X3Jlc3VsdBgUIAEoCzIlLm1vdGlvbmxhYi5wcm90b2NvbC5DcmVhdGVKb2ludFJlc3VsdEgAEkQKE3VwZGF0ZV9qb2ludF9yZXN1bHQYFSABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuVXBkYXRlSm9pbnRSZXN1bHRIABJEChNkZWxldGVfam9pbnRfcmVzdWx0GBYgASgLMiUubW90aW9ubGFiLnByb3RvY29sLkRlbGV0ZUpvaW50UmVzdWx0SAASSAoSY29tcGlsYXRpb25fcmVzdWx0GB4gASgLMioubW90aW9ubGFiLnByb3RvY29sLkNvbXBpbGF0aW9uUmVzdWx0RXZlbnRIABJEChBzaW11bGF0aW9uX3N0YXRlGB8gASgLMigubW90aW9ubGFiLnByb3RvY29sLlNpbXVsYXRpb25TdGF0ZUV2ZW50SAASPwoQc2ltdWxhdGlvbl9mcmFtZRggIAEoCzIjLm1vdGlvbmxhYi5wcm90b2NvbC5TaW11bGF0aW9uRnJhbWVIABI/ChBzaW11bGF0aW9uX3RyYWNlGCEgASgLMiMubW90aW9ubGFiLnByb3RvY29sLlNpbXVsYXRpb25UcmFjZUgAEkQKE3NhdmVfcHJvamVjdF9yZXN1bHQYKCABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuU2F2ZVByb2plY3RSZXN1bHRIABJEChNsb2FkX3Byb2plY3RfcmVzdWx0GCkgASgLMiUubW90aW9ubGFiLnByb3RvY29sLkxvYWRQcm9qZWN0UmVzdWx0SABCCQoHcGF5bG9hZCJZCglIYW5kc2hha2USNQoIcHJvdG9jb2wYASABKAsyIy5tb3Rpb25sYWIucHJvdG9jb2wuUHJvdG9jb2xWZXJzaW9uEhUKDXNlc3Npb25fdG9rZW4YAiABKAkieAoMSGFuZHNoYWtlQWNrEhIKCmNvbXBhdGlibGUYASABKAgSPAoPZW5naW5lX3Byb3RvY29sGAIgASgLMiMubW90aW9ubGFiLnByb3RvY29sLlByb3RvY29sVmVyc2lvbhIWCg5lbmdpbmVfdmVyc2lvbhgDIAEoCSIZCgRQaW5nEhEKCXRpbWVzdGFtcBgBIAEoBCIZCgRQb25nEhEKCXRpbWVzdGFtcBgBIAEoBCLaAQoMRW5naW5lU3RhdHVzEjUKBXN0YXRlGAEgASgOMiYubW90aW9ubGFiLnByb3RvY29sLkVuZ2luZVN0YXR1cy5TdGF0ZRIPCgdtZXNzYWdlGAIgASgJIoEBCgVTdGF0ZRIVChFTVEFURV9VTlNQRUNJRklFRBAAEhYKElNUQVRFX0lOSVRJQUxJWklORxABEg8KC1NUQVRFX1JFQURZEAISDgoKU1RBVEVfQlVTWRADEg8KC1NUQVRFX0VSUk9SEAQSFwoTU1RBVEVfU0hVVFRJTkdfRE9XThAFIlwKDUltcG9ydE9wdGlvbnMSGAoQZGVuc2l0eV9vdmVycmlkZRgBIAEoARIcChR0ZXNzZWxsYXRpb25fcXVhbGl0eRgCIAEoARITCgt1bml0X3N5c3RlbRgDIAEoCSJiChJJbXBvcnRBc3NldENvbW1hbmQSEQoJZmlsZV9wYXRoGAEgASgJEjkKDmltcG9ydF9vcHRpb25zGAIgASgLMiEubW90aW9ubGFiLnByb3RvY29sLkltcG9ydE9wdGlvbnMiowIKEEJvZHlJbXBvcnRSZXN1bHQSDwoHYm9keV9pZBgBIAEoCRIMCgRuYW1lGAIgASgJEjYKDGRpc3BsYXlfbWVzaBgDIAEoCzIgLm1vdGlvbmxhYi5tZWNoYW5pc20uRGlzcGxheU1lc2gSPAoPbWFzc19wcm9wZXJ0aWVzGAQgASgLMiMubW90aW9ubGFiLm1lY2hhbmlzbS5NYXNzUHJvcGVydGllcxInCgRwb3NlGAUgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5Qb3NlEj0KEHNvdXJjZV9hc3NldF9yZWYYBiABKAsyIy5tb3Rpb25sYWIubWVjaGFuaXNtLkFzc2V0UmVmZXJlbmNlEhIKCnBhcnRfaW5kZXgYByADKA0ihgEKEUltcG9ydEFzc2V0UmVzdWx0Eg8KB3N1Y2Nlc3MYASABKAgSFQoNZXJyb3JfbWVzc2FnZRgCIAEoCRI0CgZib2RpZXMYAyADKAsyJC5tb3Rpb25sYWIucHJvdG9jb2wuQm9keUltcG9ydFJlc3VsdBITCgtkaWFnbm9zdGljcxgEIAMoCSJGChFNZWNoYW5pc21TbmFwc2hvdBIxCgltZWNoYW5pc20YASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLk1lY2hhbmlzbSKJAQoSQ3JlYXRlRGF0dW1Db21tYW5kEjYKDnBhcmVudF9ib2R5X2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSLQoKbG9jYWxfcG9zZRgCIAEoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uUG9zZRIMCgRuYW1lGAMgASgJIkYKEkRlbGV0ZURhdHVtQ29tbWFuZBIwCghkYXR1bV9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkIlQKElJlbmFtZURhdHVtQ29tbWFuZBIwCghkYXR1bV9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEgwKBG5hbWUYAiABKAkidgoaQ3JlYXRlRGF0dW1Gcm9tRmFjZUNvbW1hbmQSNgoOcGFyZW50X2JvZHlfaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBISCgpmYWNlX2luZGV4GAIgASgNEgwKBG5hbWUYAyABKAkimAEKGkNyZWF0ZURhdHVtRnJvbUZhY2VTdWNjZXNzEikKBWRhdHVtGAEgASgLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5EYXR1bRISCgpmYWNlX2luZGV4GAIgASgNEjsKDXN1cmZhY2VfY2xhc3MYAyABKA4yJC5tb3Rpb25sYWIucHJvdG9jb2wuRmFjZVN1cmZhY2VDbGFzcyJjChFDcmVhdGVEYXR1bVJlc3VsdBIrCgVkYXR1bRgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uRGF0dW1IABIXCg1lcnJvcl9tZXNzYWdlGAIgASgJSABCCAoGcmVzdWx0IoEBChlDcmVhdGVEYXR1bUZyb21GYWNlUmVzdWx0EkEKB3N1Y2Nlc3MYASABKAsyLi5tb3Rpb25sYWIucHJvdG9jb2wuQ3JlYXRlRGF0dW1Gcm9tRmFjZVN1Y2Nlc3NIABIXCg1lcnJvcl9tZXNzYWdlGAIgASgJSABCCAoGcmVzdWx0ImwKEURlbGV0ZURhdHVtUmVzdWx0EjQKCmRlbGV0ZWRfaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZEgAEhcKDWVycm9yX21lc3NhZ2UYAiABKAlIAEIICgZyZXN1bHQiYwoRUmVuYW1lRGF0dW1SZXN1bHQSKwoFZGF0dW0YASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLkRhdHVtSAASFwoNZXJyb3JfbWVzc2FnZRgCIAEoCUgAQggKBnJlc3VsdCLrAQoSQ3JlYXRlSm9pbnRDb21tYW5kEjcKD3BhcmVudF9kYXR1bV9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEjYKDmNoaWxkX2RhdHVtX2lkGAIgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSLAoEdHlwZRgDIAEoDjIeLm1vdGlvbmxhYi5tZWNoYW5pc20uSm9pbnRUeXBlEgwKBG5hbWUYBCABKAkSEwoLbG93ZXJfbGltaXQYBSABKAESEwoLdXBwZXJfbGltaXQYBiABKAEi8gEKElVwZGF0ZUpvaW50Q29tbWFuZBIwCghqb2ludF9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEhEKBG5hbWUYAiABKAlIAIgBARIxCgR0eXBlGAMgASgOMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5Kb2ludFR5cGVIAYgBARIYCgtsb3dlcl9saW1pdBgEIAEoAUgCiAEBEhgKC3VwcGVyX2xpbWl0GAUgASgBSAOIAQFCBwoFX25hbWVCBwoFX3R5cGVCDgoMX2xvd2VyX2xpbWl0Qg4KDF91cHBlcl9saW1pdCJGChJEZWxldGVKb2ludENvbW1hbmQSMAoIam9pbnRfaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZCJjChFDcmVhdGVKb2ludFJlc3VsdBIrCgVqb2ludBgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uSm9pbnRIABIXCg1lcnJvcl9tZXNzYWdlGAIgASgJSABCCAoGcmVzdWx0ImMKEVVwZGF0ZUpvaW50UmVzdWx0EisKBWpvaW50GAEgASgLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5Kb2ludEgAEhcKDWVycm9yX21lc3NhZ2UYAiABKAlIAEIICgZyZXN1bHQibAoRRGVsZXRlSm9pbnRSZXN1bHQSNAoKZGVsZXRlZF9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkSAASFwoNZXJyb3JfbWVzc2FnZRgCIAEoCUgAQggKBnJlc3VsdCIZChdDb21waWxlTWVjaGFuaXNtQ29tbWFuZCJQChhTaW11bGF0aW9uQ29udHJvbENvbW1hbmQSNAoGYWN0aW9uGAEgASgOMiQubW90aW9ubGFiLnByb3RvY29sLlNpbXVsYXRpb25BY3Rpb24ilAEKFkNvbXBpbGF0aW9uUmVzdWx0RXZlbnQSDwoHc3VjY2VzcxgBIAEoCBIVCg1lcnJvcl9tZXNzYWdlGAIgASgJEhMKC2RpYWdub3N0aWNzGAMgAygJEj0KCGNoYW5uZWxzGAQgAygLMisubW90aW9ubGFiLnByb3RvY29sLk91dHB1dENoYW5uZWxEZXNjcmlwdG9yIm0KFFNpbXVsYXRpb25TdGF0ZUV2ZW50Ei8KBXN0YXRlGAEgASgOMiAubW90aW9ubGFiLnByb3RvY29sLlNpbVN0YXRlRW51bRIQCghzaW1fdGltZRgCIAEoARISCgpzdGVwX2NvdW50GAMgASgEInwKDEJvZHlQb3NlRGF0YRIPCgdib2R5X2lkGAEgASgJEisKCHBvc2l0aW9uGAIgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5WZWMzEi4KC29yaWVudGF0aW9uGAMgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5RdWF0Iq0BCg5Kb2ludFN0YXRlRGF0YRIQCghqb2ludF9pZBgBIAEoCRIQCghwb3NpdGlvbhgCIAEoARIQCgh2ZWxvY2l0eRgDIAEoARIxCg5yZWFjdGlvbl9mb3JjZRgEIAEoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uVmVjMxIyCg9yZWFjdGlvbl90b3JxdWUYBSABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMipwEKD1NpbXVsYXRpb25GcmFtZRIQCghzaW1fdGltZRgBIAEoARISCgpzdGVwX2NvdW50GAIgASgEEjQKCmJvZHlfcG9zZXMYAyADKAsyIC5tb3Rpb25sYWIucHJvdG9jb2wuQm9keVBvc2VEYXRhEjgKDGpvaW50X3N0YXRlcxgEIAMoCzIiLm1vdGlvbmxhYi5wcm90b2NvbC5Kb2ludFN0YXRlRGF0YSKBAQoXT3V0cHV0Q2hhbm5lbERlc2NyaXB0b3ISEgoKY2hhbm5lbF9pZBgBIAEoCRIMCgRuYW1lGAIgASgJEgwKBHVuaXQYAyABKAkSNgoJZGF0YV90eXBlGAQgASgOMiMubW90aW9ubGFiLnByb3RvY29sLkNoYW5uZWxEYXRhVHlwZSJiCgpUaW1lU2FtcGxlEgwKBHRpbWUYASABKAESEAoGc2NhbGFyGAIgASgBSAASKwoGdmVjdG9yGAMgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5WZWMzSABCBwoFdmFsdWUiVgoPU2ltdWxhdGlvblRyYWNlEhIKCmNoYW5uZWxfaWQYASABKAkSLwoHc2FtcGxlcxgCIAMoCzIeLm1vdGlvbmxhYi5wcm90b2NvbC5UaW1lU2FtcGxlIhwKDFNjcnViQ29tbWFuZBIMCgR0aW1lGAEgASgBIioKElNhdmVQcm9qZWN0Q29tbWFuZBIUCgxwcm9qZWN0X25hbWUYASABKAkiTgoRU2F2ZVByb2plY3RSZXN1bHQSFgoMcHJvamVjdF9kYXRhGAEgASgMSAASFwoNZXJyb3JfbWVzc2FnZRgCIAEoCUgAQggKBnJlc3VsdCIqChJMb2FkUHJvamVjdENvbW1hbmQSFAoMcHJvamVjdF9kYXRhGAEgASgMInEKEUxvYWRQcm9qZWN0UmVzdWx0EjkKB3N1Y2Nlc3MYASABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuTG9hZFByb2plY3RTdWNjZXNzSAASFwoNZXJyb3JfbWVzc2FnZRgCIAEoCUgAQggKBnJlc3VsdCK1AQoSTG9hZFByb2plY3RTdWNjZXNzEjEKCW1lY2hhbmlzbRgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uTWVjaGFuaXNtEjQKBmJvZGllcxgCIAMoCzIkLm1vdGlvbmxhYi5wcm90b2NvbC5Cb2R5SW1wb3J0UmVzdWx0EjYKCG1ldGFkYXRhGAMgASgLMiQubW90aW9ubGFiLm1lY2hhbmlzbS5Qcm9qZWN0TWV0YWRhdGEq2QEKEEZhY2VTdXJmYWNlQ2xhc3MSIgoeRkFDRV9TVVJGQUNFX0NMQVNTX1VOU1BFQ0lGSUVEEAASHQoZRkFDRV9TVVJGQUNFX0NMQVNTX1BMQU5BUhABEiIKHkZBQ0VfU1VSRkFDRV9DTEFTU19DWUxJTkRSSUNBTBACEh4KGkZBQ0VfU1VSRkFDRV9DTEFTU19DT05JQ0FMEAMSIAocRkFDRV9TVVJGQUNFX0NMQVNTX1NQSEVSSUNBTBAEEhwKGEZBQ0VfU1VSRkFDRV9DTEFTU19PVEhFUhAFKqcBChBTaW11bGF0aW9uQWN0aW9uEiEKHVNJTVVMQVRJT05fQUNUSU9OX1VOU1BFQ0lGSUVEEAASGgoWU0lNVUxBVElPTl9BQ1RJT05fUExBWRABEhsKF1NJTVVMQVRJT05fQUNUSU9OX1BBVVNFEAISGgoWU0lNVUxBVElPTl9BQ1RJT05fU1RFUBADEhsKF1NJTVVMQVRJT05fQUNUSU9OX1JFU0VUEAQqfQoMU2ltU3RhdGVFbnVtEhIKDlNJTV9TVEFURV9JRExFEAASFwoTU0lNX1NUQVRFX0NPTVBJTElORxABEhUKEVNJTV9TVEFURV9SVU5OSU5HEAISFAoQU0lNX1NUQVRFX1BBVVNFRBADEhMKD1NJTV9TVEFURV9FUlJPUhAEKm4KD0NoYW5uZWxEYXRhVHlwZRIhCh1DSEFOTkVMX0RBVEFfVFlQRV9VTlNQRUNJRklFRBAAEhwKGENIQU5ORUxfREFUQV9UWVBFX1NDQUxBUhABEhoKFkNIQU5ORUxfREFUQV9UWVBFX1ZFQzMQAmIGcHJvdG8z", [file_mechanism_mechanism]);
+  fileDesc("Chhwcm90b2NvbC90cmFuc3BvcnQucHJvdG8SEm1vdGlvbmxhYi5wcm90b2NvbCIwCg9Qcm90b2NvbFZlcnNpb24SDAoEbmFtZRgBIAEoCRIPCgd2ZXJzaW9uGAIgASgNIukICgdDb21tYW5kEhMKC3NlcXVlbmNlX2lkGAEgASgEEjIKCWhhbmRzaGFrZRgKIAEoCzIdLm1vdGlvbmxhYi5wcm90b2NvbC5IYW5kc2hha2VIABIoCgRwaW5nGAsgASgLMhgubW90aW9ubGFiLnByb3RvY29sLlBpbmdIABI+CgxpbXBvcnRfYXNzZXQYDCABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0QXNzZXRDb21tYW5kSAASPgoMY3JlYXRlX2RhdHVtGA0gASgLMiYubW90aW9ubGFiLnByb3RvY29sLkNyZWF0ZURhdHVtQ29tbWFuZEgAEj4KDGRlbGV0ZV9kYXR1bRgOIAEoCzImLm1vdGlvbmxhYi5wcm90b2NvbC5EZWxldGVEYXR1bUNvbW1hbmRIABI+CgxyZW5hbWVfZGF0dW0YDyABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuUmVuYW1lRGF0dW1Db21tYW5kSAASUAoWY3JlYXRlX2RhdHVtX2Zyb21fZmFjZRgQIAEoCzIuLm1vdGlvbmxhYi5wcm90b2NvbC5DcmVhdGVEYXR1bUZyb21GYWNlQ29tbWFuZEgAEjwKC3VwZGF0ZV9ib2R5GBEgASgLMiUubW90aW9ubGFiLnByb3RvY29sLlVwZGF0ZUJvZHlDb21tYW5kSAASRwoRdXBkYXRlX2RhdHVtX3Bvc2UYEiABKAsyKi5tb3Rpb25sYWIucHJvdG9jb2wuVXBkYXRlRGF0dW1Qb3NlQ29tbWFuZEgAEj4KDGNyZWF0ZV9qb2ludBgUIAEoCzImLm1vdGlvbmxhYi5wcm90b2NvbC5DcmVhdGVKb2ludENvbW1hbmRIABI+Cgx1cGRhdGVfam9pbnQYFSABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuVXBkYXRlSm9pbnRDb21tYW5kSAASPgoMZGVsZXRlX2pvaW50GBYgASgLMiYubW90aW9ubGFiLnByb3RvY29sLkRlbGV0ZUpvaW50Q29tbWFuZEgAEkgKEWNvbXBpbGVfbWVjaGFuaXNtGB4gASgLMisubW90aW9ubGFiLnByb3RvY29sLkNvbXBpbGVNZWNoYW5pc21Db21tYW5kSAASSgoSc2ltdWxhdGlvbl9jb250cm9sGB8gASgLMiwubW90aW9ubGFiLnByb3RvY29sLlNpbXVsYXRpb25Db250cm9sQ29tbWFuZEgAEjEKBXNjcnViGCAgASgLMiAubW90aW9ubGFiLnByb3RvY29sLlNjcnViQ29tbWFuZEgAEj4KDHNhdmVfcHJvamVjdBgoIAEoCzImLm1vdGlvbmxhYi5wcm90b2NvbC5TYXZlUHJvamVjdENvbW1hbmRIABI+Cgxsb2FkX3Byb2plY3QYKSABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuTG9hZFByb2plY3RDb21tYW5kSABCCQoHcGF5bG9hZCL/CgoFRXZlbnQSEwoLc2VxdWVuY2VfaWQYASABKAQSOQoNaGFuZHNoYWtlX2FjaxgKIAEoCzIgLm1vdGlvbmxhYi5wcm90b2NvbC5IYW5kc2hha2VBY2tIABIoCgRwb25nGAsgASgLMhgubW90aW9ubGFiLnByb3RvY29sLlBvbmdIABI5Cg1lbmdpbmVfc3RhdHVzGAwgASgLMiAubW90aW9ubGFiLnByb3RvY29sLkVuZ2luZVN0YXR1c0gAEkQKE2ltcG9ydF9hc3NldF9yZXN1bHQYDSABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuSW1wb3J0QXNzZXRSZXN1bHRIABJDChJtZWNoYW5pc21fc25hcHNob3QYDiABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuTWVjaGFuaXNtU25hcHNob3RIABJEChNjcmVhdGVfZGF0dW1fcmVzdWx0GA8gASgLMiUubW90aW9ubGFiLnByb3RvY29sLkNyZWF0ZURhdHVtUmVzdWx0SAASRAoTZGVsZXRlX2RhdHVtX3Jlc3VsdBgQIAEoCzIlLm1vdGlvbmxhYi5wcm90b2NvbC5EZWxldGVEYXR1bVJlc3VsdEgAEkQKE3JlbmFtZV9kYXR1bV9yZXN1bHQYESABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuUmVuYW1lRGF0dW1SZXN1bHRIABJWCh1jcmVhdGVfZGF0dW1fZnJvbV9mYWNlX3Jlc3VsdBgSIAEoCzItLm1vdGlvbmxhYi5wcm90b2NvbC5DcmVhdGVEYXR1bUZyb21GYWNlUmVzdWx0SAASQgoSdXBkYXRlX2JvZHlfcmVzdWx0GBMgASgLMiQubW90aW9ubGFiLnByb3RvY29sLlVwZGF0ZUJvZHlSZXN1bHRIABJEChNjcmVhdGVfam9pbnRfcmVzdWx0GBQgASgLMiUubW90aW9ubGFiLnByb3RvY29sLkNyZWF0ZUpvaW50UmVzdWx0SAASRAoTdXBkYXRlX2pvaW50X3Jlc3VsdBgVIAEoCzIlLm1vdGlvbmxhYi5wcm90b2NvbC5VcGRhdGVKb2ludFJlc3VsdEgAEkQKE2RlbGV0ZV9qb2ludF9yZXN1bHQYFiABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuRGVsZXRlSm9pbnRSZXN1bHRIABJNChh1cGRhdGVfZGF0dW1fcG9zZV9yZXN1bHQYFyABKAsyKS5tb3Rpb25sYWIucHJvdG9jb2wuVXBkYXRlRGF0dW1Qb3NlUmVzdWx0SAASSAoSY29tcGlsYXRpb25fcmVzdWx0GB4gASgLMioubW90aW9ubGFiLnByb3RvY29sLkNvbXBpbGF0aW9uUmVzdWx0RXZlbnRIABJEChBzaW11bGF0aW9uX3N0YXRlGB8gASgLMigubW90aW9ubGFiLnByb3RvY29sLlNpbXVsYXRpb25TdGF0ZUV2ZW50SAASPwoQc2ltdWxhdGlvbl9mcmFtZRggIAEoCzIjLm1vdGlvbmxhYi5wcm90b2NvbC5TaW11bGF0aW9uRnJhbWVIABI/ChBzaW11bGF0aW9uX3RyYWNlGCEgASgLMiMubW90aW9ubGFiLnByb3RvY29sLlNpbXVsYXRpb25UcmFjZUgAEkQKE3NhdmVfcHJvamVjdF9yZXN1bHQYKCABKAsyJS5tb3Rpb25sYWIucHJvdG9jb2wuU2F2ZVByb2plY3RSZXN1bHRIABJEChNsb2FkX3Byb2plY3RfcmVzdWx0GCkgASgLMiUubW90aW9ubGFiLnByb3RvY29sLkxvYWRQcm9qZWN0UmVzdWx0SABCCQoHcGF5bG9hZCJZCglIYW5kc2hha2USNQoIcHJvdG9jb2wYASABKAsyIy5tb3Rpb25sYWIucHJvdG9jb2wuUHJvdG9jb2xWZXJzaW9uEhUKDXNlc3Npb25fdG9rZW4YAiABKAkieAoMSGFuZHNoYWtlQWNrEhIKCmNvbXBhdGlibGUYASABKAgSPAoPZW5naW5lX3Byb3RvY29sGAIgASgLMiMubW90aW9ubGFiLnByb3RvY29sLlByb3RvY29sVmVyc2lvbhIWCg5lbmdpbmVfdmVyc2lvbhgDIAEoCSIZCgRQaW5nEhEKCXRpbWVzdGFtcBgBIAEoBCIZCgRQb25nEhEKCXRpbWVzdGFtcBgBIAEoBCLaAQoMRW5naW5lU3RhdHVzEjUKBXN0YXRlGAEgASgOMiYubW90aW9ubGFiLnByb3RvY29sLkVuZ2luZVN0YXR1cy5TdGF0ZRIPCgdtZXNzYWdlGAIgASgJIoEBCgVTdGF0ZRIVChFTVEFURV9VTlNQRUNJRklFRBAAEhYKElNUQVRFX0lOSVRJQUxJWklORxABEg8KC1NUQVRFX1JFQURZEAISDgoKU1RBVEVfQlVTWRADEg8KC1NUQVRFX0VSUk9SEAQSFwoTU1RBVEVfU0hVVFRJTkdfRE9XThAFIlwKDUltcG9ydE9wdGlvbnMSGAoQZGVuc2l0eV9vdmVycmlkZRgBIAEoARIcChR0ZXNzZWxsYXRpb25fcXVhbGl0eRgCIAEoARITCgt1bml0X3N5c3RlbRgDIAEoCSJiChJJbXBvcnRBc3NldENvbW1hbmQSEQoJZmlsZV9wYXRoGAEgASgJEjkKDmltcG9ydF9vcHRpb25zGAIgASgLMiEubW90aW9ubGFiLnByb3RvY29sLkltcG9ydE9wdGlvbnMiowIKEEJvZHlJbXBvcnRSZXN1bHQSDwoHYm9keV9pZBgBIAEoCRIMCgRuYW1lGAIgASgJEjYKDGRpc3BsYXlfbWVzaBgDIAEoCzIgLm1vdGlvbmxhYi5tZWNoYW5pc20uRGlzcGxheU1lc2gSPAoPbWFzc19wcm9wZXJ0aWVzGAQgASgLMiMubW90aW9ubGFiLm1lY2hhbmlzbS5NYXNzUHJvcGVydGllcxInCgRwb3NlGAUgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5Qb3NlEj0KEHNvdXJjZV9hc3NldF9yZWYYBiABKAsyIy5tb3Rpb25sYWIubWVjaGFuaXNtLkFzc2V0UmVmZXJlbmNlEhIKCnBhcnRfaW5kZXgYByADKA0ihgEKEUltcG9ydEFzc2V0UmVzdWx0Eg8KB3N1Y2Nlc3MYASABKAgSFQoNZXJyb3JfbWVzc2FnZRgCIAEoCRI0CgZib2RpZXMYAyADKAsyJC5tb3Rpb25sYWIucHJvdG9jb2wuQm9keUltcG9ydFJlc3VsdBITCgtkaWFnbm9zdGljcxgEIAMoCSJGChFNZWNoYW5pc21TbmFwc2hvdBIxCgltZWNoYW5pc20YASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLk1lY2hhbmlzbSKJAQoSQ3JlYXRlRGF0dW1Db21tYW5kEjYKDnBhcmVudF9ib2R5X2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSLQoKbG9jYWxfcG9zZRgCIAEoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uUG9zZRIMCgRuYW1lGAMgASgJIkYKEkRlbGV0ZURhdHVtQ29tbWFuZBIwCghkYXR1bV9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkIlQKElJlbmFtZURhdHVtQ29tbWFuZBIwCghkYXR1bV9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEgwKBG5hbWUYAiABKAkidgoaQ3JlYXRlRGF0dW1Gcm9tRmFjZUNvbW1hbmQSNgoOcGFyZW50X2JvZHlfaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBISCgpmYWNlX2luZGV4GAIgASgNEgwKBG5hbWUYAyABKAkimAEKGkNyZWF0ZURhdHVtRnJvbUZhY2VTdWNjZXNzEikKBWRhdHVtGAEgASgLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5EYXR1bRISCgpmYWNlX2luZGV4GAIgASgNEjsKDXN1cmZhY2VfY2xhc3MYAyABKA4yJC5tb3Rpb25sYWIucHJvdG9jb2wuRmFjZVN1cmZhY2VDbGFzcyJjChFDcmVhdGVEYXR1bVJlc3VsdBIrCgVkYXR1bRgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uRGF0dW1IABIXCg1lcnJvcl9tZXNzYWdlGAIgASgJSABCCAoGcmVzdWx0IoEBChlDcmVhdGVEYXR1bUZyb21GYWNlUmVzdWx0EkEKB3N1Y2Nlc3MYASABKAsyLi5tb3Rpb25sYWIucHJvdG9jb2wuQ3JlYXRlRGF0dW1Gcm9tRmFjZVN1Y2Nlc3NIABIXCg1lcnJvcl9tZXNzYWdlGAIgASgJSABCCAoGcmVzdWx0ImwKEURlbGV0ZURhdHVtUmVzdWx0EjQKCmRlbGV0ZWRfaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZEgAEhcKDWVycm9yX21lc3NhZ2UYAiABKAlIAEIICgZyZXN1bHQiYwoRUmVuYW1lRGF0dW1SZXN1bHQSKwoFZGF0dW0YASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLkRhdHVtSAASFwoNZXJyb3JfbWVzc2FnZRgCIAEoCUgAQggKBnJlc3VsdCJ9ChZVcGRhdGVEYXR1bVBvc2VDb21tYW5kEjAKCGRhdHVtX2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSMQoObmV3X2xvY2FsX3Bvc2UYAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlBvc2UiZwoVVXBkYXRlRGF0dW1Qb3NlUmVzdWx0EisKBWRhdHVtGAEgASgLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5EYXR1bUgAEhcKDWVycm9yX21lc3NhZ2UYAiABKAlIAEIICgZyZXN1bHQiaAoRVXBkYXRlQm9keUNvbW1hbmQSLwoHYm9keV9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEhUKCGlzX2ZpeGVkGAIgASgISACIAQFCCwoJX2lzX2ZpeGVkImAKEFVwZGF0ZUJvZHlSZXN1bHQSKQoEYm9keRgBIAEoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uQm9keUgAEhcKDWVycm9yX21lc3NhZ2UYAiABKAlIAEIICgZyZXN1bHQi6wEKEkNyZWF0ZUpvaW50Q29tbWFuZBI3Cg9wYXJlbnRfZGF0dW1faWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBI2Cg5jaGlsZF9kYXR1bV9pZBgCIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEiwKBHR5cGUYAyABKA4yHi5tb3Rpb25sYWIubWVjaGFuaXNtLkpvaW50VHlwZRIMCgRuYW1lGAQgASgJEhMKC2xvd2VyX2xpbWl0GAUgASgBEhMKC3VwcGVyX2xpbWl0GAYgASgBIvIBChJVcGRhdGVKb2ludENvbW1hbmQSMAoIam9pbnRfaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIRCgRuYW1lGAIgASgJSACIAQESMQoEdHlwZRgDIAEoDjIeLm1vdGlvbmxhYi5tZWNoYW5pc20uSm9pbnRUeXBlSAGIAQESGAoLbG93ZXJfbGltaXQYBCABKAFIAogBARIYCgt1cHBlcl9saW1pdBgFIAEoAUgDiAEBQgcKBV9uYW1lQgcKBV90eXBlQg4KDF9sb3dlcl9saW1pdEIOCgxfdXBwZXJfbGltaXQiRgoSRGVsZXRlSm9pbnRDb21tYW5kEjAKCGpvaW50X2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQiYwoRQ3JlYXRlSm9pbnRSZXN1bHQSKwoFam9pbnQYASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLkpvaW50SAASFwoNZXJyb3JfbWVzc2FnZRgCIAEoCUgAQggKBnJlc3VsdCJjChFVcGRhdGVKb2ludFJlc3VsdBIrCgVqb2ludBgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uSm9pbnRIABIXCg1lcnJvcl9tZXNzYWdlGAIgASgJSABCCAoGcmVzdWx0ImwKEURlbGV0ZUpvaW50UmVzdWx0EjQKCmRlbGV0ZWRfaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZEgAEhcKDWVycm9yX21lc3NhZ2UYAiABKAlIAEIICgZyZXN1bHQiUgoSU2ltdWxhdGlvblNldHRpbmdzEhAKCHRpbWVzdGVwGAEgASgBEioKB2dyYXZpdHkYAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMiUwoXQ29tcGlsZU1lY2hhbmlzbUNvbW1hbmQSOAoIc2V0dGluZ3MYASABKAsyJi5tb3Rpb25sYWIucHJvdG9jb2wuU2ltdWxhdGlvblNldHRpbmdzIlAKGFNpbXVsYXRpb25Db250cm9sQ29tbWFuZBI0CgZhY3Rpb24YASABKA4yJC5tb3Rpb25sYWIucHJvdG9jb2wuU2ltdWxhdGlvbkFjdGlvbiKUAQoWQ29tcGlsYXRpb25SZXN1bHRFdmVudBIPCgdzdWNjZXNzGAEgASgIEhUKDWVycm9yX21lc3NhZ2UYAiABKAkSEwoLZGlhZ25vc3RpY3MYAyADKAkSPQoIY2hhbm5lbHMYBCADKAsyKy5tb3Rpb25sYWIucHJvdG9jb2wuT3V0cHV0Q2hhbm5lbERlc2NyaXB0b3IibQoUU2ltdWxhdGlvblN0YXRlRXZlbnQSLwoFc3RhdGUYASABKA4yIC5tb3Rpb25sYWIucHJvdG9jb2wuU2ltU3RhdGVFbnVtEhAKCHNpbV90aW1lGAIgASgBEhIKCnN0ZXBfY291bnQYAyABKAQifAoMQm9keVBvc2VEYXRhEg8KB2JvZHlfaWQYASABKAkSKwoIcG9zaXRpb24YAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSLgoLb3JpZW50YXRpb24YAyABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlF1YXQirQEKDkpvaW50U3RhdGVEYXRhEhAKCGpvaW50X2lkGAEgASgJEhAKCHBvc2l0aW9uGAIgASgBEhAKCHZlbG9jaXR5GAMgASgBEjEKDnJlYWN0aW9uX2ZvcmNlGAQgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5WZWMzEjIKD3JlYWN0aW9uX3RvcnF1ZRgFIAEoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uVmVjMyKnAQoPU2ltdWxhdGlvbkZyYW1lEhAKCHNpbV90aW1lGAEgASgBEhIKCnN0ZXBfY291bnQYAiABKAQSNAoKYm9keV9wb3NlcxgDIAMoCzIgLm1vdGlvbmxhYi5wcm90b2NvbC5Cb2R5UG9zZURhdGESOAoMam9pbnRfc3RhdGVzGAQgAygLMiIubW90aW9ubGFiLnByb3RvY29sLkpvaW50U3RhdGVEYXRhIoEBChdPdXRwdXRDaGFubmVsRGVzY3JpcHRvchISCgpjaGFubmVsX2lkGAEgASgJEgwKBG5hbWUYAiABKAkSDAoEdW5pdBgDIAEoCRI2CglkYXRhX3R5cGUYBCABKA4yIy5tb3Rpb25sYWIucHJvdG9jb2wuQ2hhbm5lbERhdGFUeXBlImIKClRpbWVTYW1wbGUSDAoEdGltZRgBIAEoARIQCgZzY2FsYXIYAiABKAFIABIrCgZ2ZWN0b3IYAyABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzNIAEIHCgV2YWx1ZSJWCg9TaW11bGF0aW9uVHJhY2USEgoKY2hhbm5lbF9pZBgBIAEoCRIvCgdzYW1wbGVzGAIgAygLMh4ubW90aW9ubGFiLnByb3RvY29sLlRpbWVTYW1wbGUiHAoMU2NydWJDb21tYW5kEgwKBHRpbWUYASABKAEiKgoSU2F2ZVByb2plY3RDb21tYW5kEhQKDHByb2plY3RfbmFtZRgBIAEoCSJOChFTYXZlUHJvamVjdFJlc3VsdBIWCgxwcm9qZWN0X2RhdGEYASABKAxIABIXCg1lcnJvcl9tZXNzYWdlGAIgASgJSABCCAoGcmVzdWx0IioKEkxvYWRQcm9qZWN0Q29tbWFuZBIUCgxwcm9qZWN0X2RhdGEYASABKAwicQoRTG9hZFByb2plY3RSZXN1bHQSOQoHc3VjY2VzcxgBIAEoCzImLm1vdGlvbmxhYi5wcm90b2NvbC5Mb2FkUHJvamVjdFN1Y2Nlc3NIABIXCg1lcnJvcl9tZXNzYWdlGAIgASgJSABCCAoGcmVzdWx0IrUBChJMb2FkUHJvamVjdFN1Y2Nlc3MSMQoJbWVjaGFuaXNtGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5NZWNoYW5pc20SNAoGYm9kaWVzGAIgAygLMiQubW90aW9ubGFiLnByb3RvY29sLkJvZHlJbXBvcnRSZXN1bHQSNgoIbWV0YWRhdGEYAyABKAsyJC5tb3Rpb25sYWIubWVjaGFuaXNtLlByb2plY3RNZXRhZGF0YSrZAQoQRmFjZVN1cmZhY2VDbGFzcxIiCh5GQUNFX1NVUkZBQ0VfQ0xBU1NfVU5TUEVDSUZJRUQQABIdChlGQUNFX1NVUkZBQ0VfQ0xBU1NfUExBTkFSEAESIgoeRkFDRV9TVVJGQUNFX0NMQVNTX0NZTElORFJJQ0FMEAISHgoaRkFDRV9TVVJGQUNFX0NMQVNTX0NPTklDQUwQAxIgChxGQUNFX1NVUkZBQ0VfQ0xBU1NfU1BIRVJJQ0FMEAQSHAoYRkFDRV9TVVJGQUNFX0NMQVNTX09USEVSEAUqpwEKEFNpbXVsYXRpb25BY3Rpb24SIQodU0lNVUxBVElPTl9BQ1RJT05fVU5TUEVDSUZJRUQQABIaChZTSU1VTEFUSU9OX0FDVElPTl9QTEFZEAESGwoXU0lNVUxBVElPTl9BQ1RJT05fUEFVU0UQAhIaChZTSU1VTEFUSU9OX0FDVElPTl9TVEVQEAMSGwoXU0lNVUxBVElPTl9BQ1RJT05fUkVTRVQQBCp9CgxTaW1TdGF0ZUVudW0SEgoOU0lNX1NUQVRFX0lETEUQABIXChNTSU1fU1RBVEVfQ09NUElMSU5HEAESFQoRU0lNX1NUQVRFX1JVTk5JTkcQAhIUChBTSU1fU1RBVEVfUEFVU0VEEAMSEwoPU0lNX1NUQVRFX0VSUk9SEAQqbgoPQ2hhbm5lbERhdGFUeXBlEiEKHUNIQU5ORUxfREFUQV9UWVBFX1VOU1BFQ0lGSUVEEAASHAoYQ0hBTk5FTF9EQVRBX1RZUEVfU0NBTEFSEAESGgoWQ0hBTk5FTF9EQVRBX1RZUEVfVkVDMxACYgZwcm90bzM", [file_mechanism_mechanism]);
 
 /**
  * Protocol version for compatibility checking
@@ -94,6 +94,18 @@ export type Command = Message<"motionlab.protocol.Command"> & {
      */
     value: CreateDatumFromFaceCommand;
     case: "createDatumFromFace";
+  } | {
+    /**
+     * @generated from field: motionlab.protocol.UpdateBodyCommand update_body = 17;
+     */
+    value: UpdateBodyCommand;
+    case: "updateBody";
+  } | {
+    /**
+     * @generated from field: motionlab.protocol.UpdateDatumPoseCommand update_datum_pose = 18;
+     */
+    value: UpdateDatumPoseCommand;
+    case: "updateDatumPose";
   } | {
     /**
      * @generated from field: motionlab.protocol.CreateJointCommand create_joint = 20;
@@ -222,6 +234,12 @@ export type Event = Message<"motionlab.protocol.Event"> & {
     case: "createDatumFromFaceResult";
   } | {
     /**
+     * @generated from field: motionlab.protocol.UpdateBodyResult update_body_result = 19;
+     */
+    value: UpdateBodyResult;
+    case: "updateBodyResult";
+  } | {
+    /**
      * @generated from field: motionlab.protocol.CreateJointResult create_joint_result = 20;
      */
     value: CreateJointResult;
@@ -238,6 +256,12 @@ export type Event = Message<"motionlab.protocol.Event"> & {
      */
     value: DeleteJointResult;
     case: "deleteJointResult";
+  } | {
+    /**
+     * @generated from field: motionlab.protocol.UpdateDatumPoseResult update_datum_pose_result = 23;
+     */
+    value: UpdateDatumPoseResult;
+    case: "updateDatumPoseResult";
   } | {
     /**
      * @generated from field: motionlab.protocol.CompilationResultEvent compilation_result = 30;
@@ -451,7 +475,7 @@ export type ImportOptions = Message<"motionlab.protocol.ImportOptions"> & {
   tessellationQuality: number;
 
   /**
-   * "millimeter" (default), "meter", "inch"
+   * source CAD length units; engine normalizes to meters
    *
    * @generated from field: string unit_system = 3;
    */
@@ -824,6 +848,108 @@ export const RenameDatumResultSchema: GenMessage<RenameDatumResult> = /*@__PURE_
   messageDesc(file_protocol_transport, 21);
 
 /**
+ * @generated from message motionlab.protocol.UpdateDatumPoseCommand
+ */
+export type UpdateDatumPoseCommand = Message<"motionlab.protocol.UpdateDatumPoseCommand"> & {
+  /**
+   * @generated from field: motionlab.mechanism.ElementId datum_id = 1;
+   */
+  datumId?: ElementId;
+
+  /**
+   * @generated from field: motionlab.mechanism.Pose new_local_pose = 2;
+   */
+  newLocalPose?: Pose;
+};
+
+/**
+ * Describes the message motionlab.protocol.UpdateDatumPoseCommand.
+ * Use `create(UpdateDatumPoseCommandSchema)` to create a new message.
+ */
+export const UpdateDatumPoseCommandSchema: GenMessage<UpdateDatumPoseCommand> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 22);
+
+/**
+ * @generated from message motionlab.protocol.UpdateDatumPoseResult
+ */
+export type UpdateDatumPoseResult = Message<"motionlab.protocol.UpdateDatumPoseResult"> & {
+  /**
+   * @generated from oneof motionlab.protocol.UpdateDatumPoseResult.result
+   */
+  result: {
+    /**
+     * @generated from field: motionlab.mechanism.Datum datum = 1;
+     */
+    value: Datum;
+    case: "datum";
+  } | {
+    /**
+     * @generated from field: string error_message = 2;
+     */
+    value: string;
+    case: "errorMessage";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message motionlab.protocol.UpdateDatumPoseResult.
+ * Use `create(UpdateDatumPoseResultSchema)` to create a new message.
+ */
+export const UpdateDatumPoseResultSchema: GenMessage<UpdateDatumPoseResult> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 23);
+
+/**
+ * @generated from message motionlab.protocol.UpdateBodyCommand
+ */
+export type UpdateBodyCommand = Message<"motionlab.protocol.UpdateBodyCommand"> & {
+  /**
+   * @generated from field: motionlab.mechanism.ElementId body_id = 1;
+   */
+  bodyId?: ElementId;
+
+  /**
+   * @generated from field: optional bool is_fixed = 2;
+   */
+  isFixed?: boolean;
+};
+
+/**
+ * Describes the message motionlab.protocol.UpdateBodyCommand.
+ * Use `create(UpdateBodyCommandSchema)` to create a new message.
+ */
+export const UpdateBodyCommandSchema: GenMessage<UpdateBodyCommand> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 24);
+
+/**
+ * @generated from message motionlab.protocol.UpdateBodyResult
+ */
+export type UpdateBodyResult = Message<"motionlab.protocol.UpdateBodyResult"> & {
+  /**
+   * @generated from oneof motionlab.protocol.UpdateBodyResult.result
+   */
+  result: {
+    /**
+     * @generated from field: motionlab.mechanism.Body body = 1;
+     */
+    value: Body;
+    case: "body";
+  } | {
+    /**
+     * @generated from field: string error_message = 2;
+     */
+    value: string;
+    case: "errorMessage";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message motionlab.protocol.UpdateBodyResult.
+ * Use `create(UpdateBodyResultSchema)` to create a new message.
+ */
+export const UpdateBodyResultSchema: GenMessage<UpdateBodyResult> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 25);
+
+/**
  * @generated from message motionlab.protocol.CreateJointCommand
  */
 export type CreateJointCommand = Message<"motionlab.protocol.CreateJointCommand"> & {
@@ -863,7 +989,7 @@ export type CreateJointCommand = Message<"motionlab.protocol.CreateJointCommand"
  * Use `create(CreateJointCommandSchema)` to create a new message.
  */
 export const CreateJointCommandSchema: GenMessage<CreateJointCommand> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 22);
+  messageDesc(file_protocol_transport, 26);
 
 /**
  * @generated from message motionlab.protocol.UpdateJointCommand
@@ -900,7 +1026,7 @@ export type UpdateJointCommand = Message<"motionlab.protocol.UpdateJointCommand"
  * Use `create(UpdateJointCommandSchema)` to create a new message.
  */
 export const UpdateJointCommandSchema: GenMessage<UpdateJointCommand> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 23);
+  messageDesc(file_protocol_transport, 27);
 
 /**
  * @generated from message motionlab.protocol.DeleteJointCommand
@@ -917,7 +1043,7 @@ export type DeleteJointCommand = Message<"motionlab.protocol.DeleteJointCommand"
  * Use `create(DeleteJointCommandSchema)` to create a new message.
  */
 export const DeleteJointCommandSchema: GenMessage<DeleteJointCommand> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 24);
+  messageDesc(file_protocol_transport, 28);
 
 /**
  * @generated from message motionlab.protocol.CreateJointResult
@@ -946,7 +1072,7 @@ export type CreateJointResult = Message<"motionlab.protocol.CreateJointResult"> 
  * Use `create(CreateJointResultSchema)` to create a new message.
  */
 export const CreateJointResultSchema: GenMessage<CreateJointResult> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 25);
+  messageDesc(file_protocol_transport, 29);
 
 /**
  * @generated from message motionlab.protocol.UpdateJointResult
@@ -975,7 +1101,7 @@ export type UpdateJointResult = Message<"motionlab.protocol.UpdateJointResult"> 
  * Use `create(UpdateJointResultSchema)` to create a new message.
  */
 export const UpdateJointResultSchema: GenMessage<UpdateJointResult> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 26);
+  messageDesc(file_protocol_transport, 30);
 
 /**
  * @generated from message motionlab.protocol.DeleteJointResult
@@ -1004,7 +1130,35 @@ export type DeleteJointResult = Message<"motionlab.protocol.DeleteJointResult"> 
  * Use `create(DeleteJointResultSchema)` to create a new message.
  */
 export const DeleteJointResultSchema: GenMessage<DeleteJointResult> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 27);
+  messageDesc(file_protocol_transport, 31);
+
+/**
+ * Simulation configuration passed at compile time
+ *
+ * @generated from message motionlab.protocol.SimulationSettings
+ */
+export type SimulationSettings = Message<"motionlab.protocol.SimulationSettings"> & {
+  /**
+   * seconds, default 0.001
+   *
+   * @generated from field: double timestep = 1;
+   */
+  timestep: number;
+
+  /**
+   * m/s^2, default (0, -9.81, 0)
+   *
+   * @generated from field: motionlab.mechanism.Vec3 gravity = 2;
+   */
+  gravity?: Vec3;
+};
+
+/**
+ * Describes the message motionlab.protocol.SimulationSettings.
+ * Use `create(SimulationSettingsSchema)` to create a new message.
+ */
+export const SimulationSettingsSchema: GenMessage<SimulationSettings> = /*@__PURE__*/
+  messageDesc(file_protocol_transport, 32);
 
 /**
  * Compile the current mechanism state into a simulation system
@@ -1012,6 +1166,12 @@ export const DeleteJointResultSchema: GenMessage<DeleteJointResult> = /*@__PURE_
  * @generated from message motionlab.protocol.CompileMechanismCommand
  */
 export type CompileMechanismCommand = Message<"motionlab.protocol.CompileMechanismCommand"> & {
+  /**
+   * optional, defaults apply if absent
+   *
+   * @generated from field: motionlab.protocol.SimulationSettings settings = 1;
+   */
+  settings?: SimulationSettings;
 };
 
 /**
@@ -1019,7 +1179,7 @@ export type CompileMechanismCommand = Message<"motionlab.protocol.CompileMechani
  * Use `create(CompileMechanismCommandSchema)` to create a new message.
  */
 export const CompileMechanismCommandSchema: GenMessage<CompileMechanismCommand> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 28);
+  messageDesc(file_protocol_transport, 33);
 
 /**
  * @generated from message motionlab.protocol.SimulationControlCommand
@@ -1036,7 +1196,7 @@ export type SimulationControlCommand = Message<"motionlab.protocol.SimulationCon
  * Use `create(SimulationControlCommandSchema)` to create a new message.
  */
 export const SimulationControlCommandSchema: GenMessage<SimulationControlCommand> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 29);
+  messageDesc(file_protocol_transport, 34);
 
 /**
  * @generated from message motionlab.protocol.CompilationResultEvent
@@ -1068,7 +1228,7 @@ export type CompilationResultEvent = Message<"motionlab.protocol.CompilationResu
  * Use `create(CompilationResultEventSchema)` to create a new message.
  */
 export const CompilationResultEventSchema: GenMessage<CompilationResultEvent> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 30);
+  messageDesc(file_protocol_transport, 35);
 
 /**
  * @generated from message motionlab.protocol.SimulationStateEvent
@@ -1095,7 +1255,7 @@ export type SimulationStateEvent = Message<"motionlab.protocol.SimulationStateEv
  * Use `create(SimulationStateEventSchema)` to create a new message.
  */
 export const SimulationStateEventSchema: GenMessage<SimulationStateEvent> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 31);
+  messageDesc(file_protocol_transport, 36);
 
 /**
  * @generated from message motionlab.protocol.BodyPoseData
@@ -1122,7 +1282,7 @@ export type BodyPoseData = Message<"motionlab.protocol.BodyPoseData"> & {
  * Use `create(BodyPoseDataSchema)` to create a new message.
  */
 export const BodyPoseDataSchema: GenMessage<BodyPoseData> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 32);
+  messageDesc(file_protocol_transport, 37);
 
 /**
  * @generated from message motionlab.protocol.JointStateData
@@ -1159,7 +1319,7 @@ export type JointStateData = Message<"motionlab.protocol.JointStateData"> & {
  * Use `create(JointStateDataSchema)` to create a new message.
  */
 export const JointStateDataSchema: GenMessage<JointStateData> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 33);
+  messageDesc(file_protocol_transport, 38);
 
 /**
  * @generated from message motionlab.protocol.SimulationFrame
@@ -1191,7 +1351,7 @@ export type SimulationFrame = Message<"motionlab.protocol.SimulationFrame"> & {
  * Use `create(SimulationFrameSchema)` to create a new message.
  */
 export const SimulationFrameSchema: GenMessage<SimulationFrame> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 34);
+  messageDesc(file_protocol_transport, 39);
 
 /**
  * @generated from message motionlab.protocol.OutputChannelDescriptor
@@ -1229,7 +1389,7 @@ export type OutputChannelDescriptor = Message<"motionlab.protocol.OutputChannelD
  * Use `create(OutputChannelDescriptorSchema)` to create a new message.
  */
 export const OutputChannelDescriptorSchema: GenMessage<OutputChannelDescriptor> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 35);
+  messageDesc(file_protocol_transport, 40);
 
 /**
  * @generated from message motionlab.protocol.TimeSample
@@ -1263,7 +1423,7 @@ export type TimeSample = Message<"motionlab.protocol.TimeSample"> & {
  * Use `create(TimeSampleSchema)` to create a new message.
  */
 export const TimeSampleSchema: GenMessage<TimeSample> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 36);
+  messageDesc(file_protocol_transport, 41);
 
 /**
  * @generated from message motionlab.protocol.SimulationTrace
@@ -1285,7 +1445,7 @@ export type SimulationTrace = Message<"motionlab.protocol.SimulationTrace"> & {
  * Use `create(SimulationTraceSchema)` to create a new message.
  */
 export const SimulationTraceSchema: GenMessage<SimulationTrace> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 37);
+  messageDesc(file_protocol_transport, 42);
 
 /**
  * @generated from message motionlab.protocol.ScrubCommand
@@ -1302,7 +1462,7 @@ export type ScrubCommand = Message<"motionlab.protocol.ScrubCommand"> & {
  * Use `create(ScrubCommandSchema)` to create a new message.
  */
 export const ScrubCommandSchema: GenMessage<ScrubCommand> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 38);
+  messageDesc(file_protocol_transport, 43);
 
 /**
  * @generated from message motionlab.protocol.SaveProjectCommand
@@ -1319,7 +1479,7 @@ export type SaveProjectCommand = Message<"motionlab.protocol.SaveProjectCommand"
  * Use `create(SaveProjectCommandSchema)` to create a new message.
  */
 export const SaveProjectCommandSchema: GenMessage<SaveProjectCommand> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 39);
+  messageDesc(file_protocol_transport, 44);
 
 /**
  * @generated from message motionlab.protocol.SaveProjectResult
@@ -1348,7 +1508,7 @@ export type SaveProjectResult = Message<"motionlab.protocol.SaveProjectResult"> 
  * Use `create(SaveProjectResultSchema)` to create a new message.
  */
 export const SaveProjectResultSchema: GenMessage<SaveProjectResult> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 40);
+  messageDesc(file_protocol_transport, 45);
 
 /**
  * @generated from message motionlab.protocol.LoadProjectCommand
@@ -1365,7 +1525,7 @@ export type LoadProjectCommand = Message<"motionlab.protocol.LoadProjectCommand"
  * Use `create(LoadProjectCommandSchema)` to create a new message.
  */
 export const LoadProjectCommandSchema: GenMessage<LoadProjectCommand> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 41);
+  messageDesc(file_protocol_transport, 46);
 
 /**
  * @generated from message motionlab.protocol.LoadProjectResult
@@ -1394,7 +1554,7 @@ export type LoadProjectResult = Message<"motionlab.protocol.LoadProjectResult"> 
  * Use `create(LoadProjectResultSchema)` to create a new message.
  */
 export const LoadProjectResultSchema: GenMessage<LoadProjectResult> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 42);
+  messageDesc(file_protocol_transport, 47);
 
 /**
  * @generated from message motionlab.protocol.LoadProjectSuccess
@@ -1421,7 +1581,7 @@ export type LoadProjectSuccess = Message<"motionlab.protocol.LoadProjectSuccess"
  * Use `create(LoadProjectSuccessSchema)` to create a new message.
  */
 export const LoadProjectSuccessSchema: GenMessage<LoadProjectSuccess> = /*@__PURE__*/
-  messageDesc(file_protocol_transport, 43);
+  messageDesc(file_protocol_transport, 48);
 
 /**
  * @generated from enum motionlab.protocol.FaceSurfaceClass

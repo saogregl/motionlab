@@ -79,7 +79,8 @@ message Body {
   string name = 2;
   Pose pose = 3;
   MassProperties mass_properties = 4;
-  string source_asset_ref = 5;
+  AssetReference source_asset_ref = 5;
+  bool is_fixed = 6;  // If true, body is treated as ground (fixed in space)
 }
 
 // Datum frame anchored to a body
@@ -90,12 +91,15 @@ message Datum {
   Pose local_pose = 4;
 }
 
-// Joint types supported in MVP
+// Joint types
 enum JointType {
   JOINT_TYPE_UNSPECIFIED = 0;
   JOINT_TYPE_REVOLUTE = 1;
   JOINT_TYPE_PRISMATIC = 2;
   JOINT_TYPE_FIXED = 3;
+  JOINT_TYPE_SPHERICAL = 4;    // 3 DOF rotation (ball joint)
+  JOINT_TYPE_CYLINDRICAL = 5;  // 1 DOF rotation + 1 DOF translation
+  JOINT_TYPE_PLANAR = 6;       // 2 DOF translation + 1 DOF rotation
 }
 
 // Joint connecting two datums

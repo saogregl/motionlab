@@ -41,6 +41,7 @@ struct BodyResult {
 struct ImportOptions {
     double density = 1000.0;             // kg/m^3
     double tessellation_quality = 0.1;   // BRepMesh linear deflection
+    std::string unit_system = "millimeter";
 };
 
 struct ImportResult {

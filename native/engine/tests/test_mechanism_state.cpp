@@ -156,6 +156,39 @@ static void test_clear() {
     std::cout << "  PASS: clear" << std::endl;
 }
 
+static void test_body_asset_reference_roundtrip() {
+    MechanismState state;
+
+    motionlab::mechanism::AssetReference asset_ref;
+    asset_ref.set_content_hash("hash-123");
+    asset_ref.set_relative_path("assets/bracket.step");
+    asset_ref.set_original_filename("bracket.step");
+
+    double pos[3] = {1.0, 2.0, 3.0};
+    double orient[4] = {1.0, 0.0, 0.0, 0.0};
+    double com[3] = {0.1, 0.2, 0.3};
+    double inertia[6] = {1.0, 2.0, 3.0, 0.1, 0.2, 0.3};
+    state.add_body("body-001", "Bracket", pos, orient, 10.0, com, inertia, &asset_ref);
+
+    auto mech = state.build_mechanism_proto();
+    assert(mech.bodies_size() == 1);
+    assert(mech.bodies(0).has_source_asset_ref());
+    assert(mech.bodies(0).source_asset_ref().content_hash() == "hash-123");
+    assert(mech.bodies(0).source_asset_ref().relative_path() == "assets/bracket.step");
+    assert(mech.bodies(0).source_asset_ref().original_filename() == "bracket.step");
+
+    MechanismState reloaded;
+    reloaded.load_from_proto(mech);
+    auto reloaded_mech = reloaded.build_mechanism_proto();
+    assert(reloaded_mech.bodies_size() == 1);
+    assert(reloaded_mech.bodies(0).has_source_asset_ref());
+    assert(reloaded_mech.bodies(0).source_asset_ref().content_hash() == "hash-123");
+    assert(reloaded_mech.bodies(0).source_asset_ref().relative_path() == "assets/bracket.step");
+    assert(reloaded_mech.bodies(0).source_asset_ref().original_filename() == "bracket.step");
+
+    std::cout << "  PASS: body asset reference roundtrip" << std::endl;
+}
+
 // ──────────────────────────────────────────────
 // Joint CRUD tests
 // ──────────────────────────────────────────────
@@ -488,6 +521,7 @@ int main() {
     test_rename_datum();
     test_rename_nonexistent();
     test_update_datum_pose();
+    test_body_asset_reference_roundtrip();
     test_clear();
 
     // Joint tests

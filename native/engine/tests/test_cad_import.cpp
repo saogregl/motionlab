@@ -1,4 +1,5 @@
 #include "../src/cad_import.h"
+#include "engine/log.h"
 
 #include <cassert>
 #include <cmath>
@@ -183,10 +184,10 @@ static void test_mass_accuracy(const std::string& step_file) {
             double error = std::abs(body.mass_properties.mass - expected_mass) / expected_mass;
             assert(error < 0.01); // within 1%
 
-            // CoM should be near (5, 10, 15) mm
-            assert(std::abs(body.mass_properties.center_of_mass[0] - 5.0) < 0.1);
-            assert(std::abs(body.mass_properties.center_of_mass[1] - 10.0) < 0.1);
-            assert(std::abs(body.mass_properties.center_of_mass[2] - 15.0) < 0.1);
+            // Engine normalizes imported geometry to meters.
+            assert(std::abs(body.mass_properties.center_of_mass[0] - 0.005) < 1e-4);
+            assert(std::abs(body.mass_properties.center_of_mass[1] - 0.010) < 1e-4);
+            assert(std::abs(body.mass_properties.center_of_mass[2] - 0.015) < 1e-4);
 
             found_box = true;
             std::cout << "  PASS: mass accuracy (box mass=" << body.mass_properties.mass
@@ -213,11 +214,54 @@ static void test_mass_accuracy(const std::string& step_file) {
     assert(found_box);
 }
 
+static void test_unit_system_normalization(const std::string& step_file) {
+    CadImporter importer;
+
+    ImportOptions millimeter;
+    millimeter.unit_system = "millimeter";
+    ImportResult mm_result = importer.import_step(step_file, millimeter);
+    assert(mm_result.success);
+
+    ImportOptions meter;
+    meter.unit_system = "meter";
+    ImportResult m_result = importer.import_step(step_file, meter);
+    assert(m_result.success);
+
+    ImportOptions inch;
+    inch.unit_system = "inch";
+    ImportResult in_result = importer.import_step(step_file, inch);
+    assert(in_result.success);
+
+    const auto find_box = [](const ImportResult& result) -> const BodyResult* {
+        for (const auto& body : result.bodies) {
+            if (body.name.find("Box") != std::string::npos ||
+                body.name.find("box") != std::string::npos) {
+                return &body;
+            }
+        }
+        return result.bodies.empty() ? nullptr : &result.bodies.front();
+    };
+
+    const BodyResult* mm_box = find_box(mm_result);
+    const BodyResult* m_box = find_box(m_result);
+    const BodyResult* in_box = find_box(in_result);
+    assert(mm_box != nullptr);
+    assert(m_box != nullptr);
+    assert(in_box != nullptr);
+
+    assert(std::abs(mm_box->mass_properties.center_of_mass[0] - 0.005) < 1e-4);
+    assert(std::abs(m_box->mass_properties.center_of_mass[0] - 5.0) < 1e-6);
+    assert(std::abs(in_box->mass_properties.center_of_mass[0] - 0.127) < 1e-4);
+
+    std::cout << "  PASS: unit system normalization" << std::endl;
+}
+
 // ──────────────────────────────────────────────
 // Main
 // ──────────────────────────────────────────────
 
 int main() {
+    motionlab::init_logging(spdlog::level::debug);
     std::cout << "CAD import tests" << std::endl;
 
     // Generate programmatic STEP fixture (no binary files in git)
@@ -228,6 +272,7 @@ int main() {
     test_nonexistent_file();
     test_tessellation_quality(step_file);
     test_mass_accuracy(step_file);
+    test_unit_system_normalization(step_file);
 
     // Clean up
     std::error_code ec;

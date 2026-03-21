@@ -5,6 +5,7 @@
 #include <iostream>
 #include <iterator>
 #include <sstream>
+#include <stdexcept>
 
 // Suppress MSVC warnings from OCCT headers
 #ifdef _MSC_VER
@@ -55,6 +56,41 @@
 
 namespace motionlab::engine {
 
+namespace {
+
+double unit_scale_to_meters(const std::string& unit_system) {
+    if (unit_system.empty() || unit_system == "millimeter") return 1e-3;
+    if (unit_system == "meter") return 1.0;
+    if (unit_system == "inch") return 0.0254;
+    throw std::invalid_argument("Unsupported unit system: " + unit_system);
+}
+
+void scale_mesh(MeshData& mesh, double scale) {
+    for (auto& value : mesh.vertices) {
+        value = static_cast<float>(value * scale);
+    }
+}
+
+void scale_mass_properties(MassPropertiesResult& props, double scale) {
+    for (auto& component : props.center_of_mass) {
+        component *= scale;
+    }
+    const double inertia_scale = scale * scale;
+    for (auto& component : props.inertia) {
+        component *= inertia_scale;
+    }
+}
+
+void scale_body_result(BodyResult& body, double scale) {
+    for (auto& component : body.translation) {
+        component *= scale;
+    }
+    scale_mesh(body.mesh, scale);
+    scale_mass_properties(body.mass_properties, scale);
+}
+
+} // namespace
+
 // ──────────────────────────────────────────────
 // Public API
 // ──────────────────────────────────────────────
@@ -100,6 +136,7 @@ ImportResult CadImporter::import_xde(const std::string& file_path,
                                       bool build_mesh,
                                       bool build_mass) {
     ImportResult result;
+    const double length_scale = unit_scale_to_meters(options.unit_system);
 
     // Compute content hash first (works even if import fails)
     result.content_hash = compute_file_hash(file_path);
@@ -169,6 +206,10 @@ ImportResult CadImporter::import_xde(const std::string& file_path,
     for (int i = 1; i <= free_shapes.Length(); ++i) {
         collect_bodies(shape_tool, free_shapes.Value(i), identity,
                        *this, options, build_mesh, build_mass, result, body_counter);
+    }
+
+    for (auto& body : result.bodies) {
+        scale_body_result(body, length_scale);
     }
 
     if (result.bodies.empty()) {
@@ -441,11 +482,18 @@ std::string CadImporter::compute_file_hash(const std::string& file_path) {
     std::ifstream f(file_path, std::ios::binary);
     if (!f.is_open()) return "";
 
-    std::vector<unsigned char> bytes(
-        (std::istreambuf_iterator<char>(f)),
-        std::istreambuf_iterator<char>());
-
-    return picosha2::hash256_hex_string(bytes);
+    picosha2::hash256_one_by_one hasher;
+    std::vector<char> buffer(64 * 1024);
+    while (f.good()) {
+        f.read(buffer.data(), static_cast<std::streamsize>(buffer.size()));
+        std::streamsize count = f.gcount();
+        if (count > 0) {
+            hasher.process(reinterpret_cast<const unsigned char*>(buffer.data()),
+                           reinterpret_cast<const unsigned char*>(buffer.data() + count));
+        }
+    }
+    hasher.finish();
+    return picosha2::get_hash_hex_string(hasher);
 }
 
 } // namespace motionlab::engine

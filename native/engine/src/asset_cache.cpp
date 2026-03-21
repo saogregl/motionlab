@@ -39,22 +39,32 @@ void AssetCache::store(const std::string& cache_key, const std::string& serializ
 }
 
 std::string AssetCache::compute_cache_key(const std::string& file_path,
-                                            double density,
-                                            double tessellation_quality) {
+                                          double density,
+                                          double tessellation_quality,
+                                          const std::string& unit_system) {
     std::ifstream f(file_path, std::ios::binary);
     if (!f.is_open()) return "";
 
-    std::vector<unsigned char> bytes(
-        (std::istreambuf_iterator<char>(f)),
-        std::istreambuf_iterator<char>());
+    picosha2::hash256_one_by_one hasher;
+    std::vector<char> buffer(64 * 1024);
+    while (f.good()) {
+        f.read(buffer.data(), static_cast<std::streamsize>(buffer.size()));
+        std::streamsize count = f.gcount();
+        if (count > 0) {
+            hasher.process(reinterpret_cast<const unsigned char*>(buffer.data()),
+                           reinterpret_cast<const unsigned char*>(buffer.data() + count));
+        }
+    }
 
-    // Append parameter string to file bytes before hashing
     std::ostringstream params;
-    params << "density=" << density << ";quality=" << tessellation_quality;
+    params << "density=" << density
+           << ";quality=" << tessellation_quality
+           << ";units=" << unit_system;
     std::string param_str = params.str();
-    bytes.insert(bytes.end(), param_str.begin(), param_str.end());
-
-    return picosha2::hash256_hex_string(bytes);
+    hasher.process(reinterpret_cast<const unsigned char*>(param_str.data()),
+                   reinterpret_cast<const unsigned char*>(param_str.data() + param_str.size()));
+    hasher.finish();
+    return picosha2::get_hash_hex_string(hasher);
 }
 
 void AssetCache::clear() {

@@ -4,6 +4,7 @@
 
 #include <deque>
 #include <shared_mutex>
+#include <unordered_map>
 #include <vector>
 
 namespace motionlab::engine {
@@ -13,6 +14,7 @@ struct BufferedFrame {
     uint64_t step_count;
     std::vector<BodyPose> body_poses;
     std::vector<JointState> joint_states;
+    std::unordered_map<std::string, size_t> joint_index_by_id;
 };
 
 class SimulationRingBuffer {

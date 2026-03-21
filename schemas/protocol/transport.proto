@@ -29,6 +29,8 @@ message Command {
     DeleteDatumCommand delete_datum = 14;
     RenameDatumCommand rename_datum = 15;
     CreateDatumFromFaceCommand create_datum_from_face = 16;
+    UpdateBodyCommand update_body = 17;
+    UpdateDatumPoseCommand update_datum_pose = 18;
     CreateJointCommand create_joint = 20;
     UpdateJointCommand update_joint = 21;
     DeleteJointCommand delete_joint = 22;
@@ -53,9 +55,11 @@ message Event {
     DeleteDatumResult delete_datum_result = 16;
     RenameDatumResult rename_datum_result = 17;
     CreateDatumFromFaceResult create_datum_from_face_result = 18;
+    UpdateBodyResult update_body_result = 19;
     CreateJointResult create_joint_result = 20;
     UpdateJointResult update_joint_result = 21;
     DeleteJointResult delete_joint_result = 22;
+    UpdateDatumPoseResult update_datum_pose_result = 23;
     CompilationResultEvent compilation_result = 30;
     SimulationStateEvent simulation_state = 31;
     SimulationFrame simulation_frame = 32;
@@ -101,7 +105,7 @@ message EngineStatus {
 message ImportOptions {
   double density_override = 1;       // kg/m³, 0 = use default (1000)
   double tessellation_quality = 2;   // linear deflection, 0 = use default (0.1)
-  string unit_system = 3;           // "millimeter" (default), "meter", "inch"
+  string unit_system = 3;           // source CAD length units; engine normalizes to meters
 }
 
 message ImportAssetCommand {
@@ -197,6 +201,32 @@ message RenameDatumResult {
   }
 }
 
+message UpdateDatumPoseCommand {
+  motionlab.mechanism.ElementId datum_id = 1;
+  motionlab.mechanism.Pose new_local_pose = 2;
+}
+
+message UpdateDatumPoseResult {
+  oneof result {
+    motionlab.mechanism.Datum datum = 1;
+    string error_message = 2;
+  }
+}
+
+// Body update — toggle fixed/ground status
+
+message UpdateBodyCommand {
+  motionlab.mechanism.ElementId body_id = 1;
+  optional bool is_fixed = 2;
+}
+
+message UpdateBodyResult {
+  oneof result {
+    motionlab.mechanism.Body body = 1;
+    string error_message = 2;
+  }
+}
+
 // Joint CRUD — Command→Result pattern with oneof success/error
 
 message CreateJointCommand {
@@ -245,8 +275,16 @@ message DeleteJointResult {
 // Simulation lifecycle (Epic 7.2)
 // ──────────────────────────────────────────────
 
+// Simulation configuration passed at compile time
+message SimulationSettings {
+  double timestep = 1;                    // seconds, default 0.001
+  motionlab.mechanism.Vec3 gravity = 2;   // m/s^2, default (0, -9.81, 0)
+}
+
 // Compile the current mechanism state into a simulation system
-message CompileMechanismCommand {}
+message CompileMechanismCommand {
+  SimulationSettings settings = 1;  // optional, defaults apply if absent
+}
 
 enum SimulationAction {
   SIMULATION_ACTION_UNSPECIFIED = 0;

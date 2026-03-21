@@ -14,6 +14,7 @@ void MechanismState::add_body(const std::string& id, const std::string& name) {
 void MechanismState::add_body(const std::string& id, const std::string& name,
                               const double pos[3], const double orient[4],
                               double mass, const double com[3], const double inertia[6],
+                              const mechanism::AssetReference* source_asset_ref,
                               bool is_fixed) {
     BodyEntry entry;
     entry.id = id;
@@ -23,6 +24,13 @@ void MechanismState::add_body(const std::string& id, const std::string& name,
     entry.mass = mass;
     std::memcpy(entry.center_of_mass, com, 3 * sizeof(double));
     std::memcpy(entry.inertia, inertia, 6 * sizeof(double));
+    if (source_asset_ref) {
+        entry.source_asset_ref = BodyEntry::AssetRef{
+            source_asset_ref->content_hash(),
+            source_asset_ref->relative_path(),
+            source_asset_ref->original_filename(),
+        };
+    }
     entry.is_fixed = is_fixed;
     bodies_[id] = entry;
 }
@@ -269,6 +277,7 @@ void MechanismState::load_from_proto(const mechanism::Mechanism& mech) {
         };
         add_body(body.id().id(), body.name(), pos, orient,
                  body.mass_properties().mass(), com, inertia,
+                 body.has_source_asset_ref() ? &body.source_asset_ref() : nullptr,
                  body.is_fixed());
     }
 
@@ -333,6 +342,12 @@ mechanism::Mechanism MechanismState::build_mechanism_proto() const {
         mp->set_ixy(body.inertia[3]);
         mp->set_ixz(body.inertia[4]);
         mp->set_iyz(body.inertia[5]);
+        if (body.source_asset_ref.has_value()) {
+            auto* asset_ref = pb->mutable_source_asset_ref();
+            asset_ref->set_content_hash(body.source_asset_ref->content_hash);
+            asset_ref->set_relative_path(body.source_asset_ref->relative_path);
+            asset_ref->set_original_filename(body.source_asset_ref->original_filename);
+        }
 
         pb->set_is_fixed(body.is_fixed);
     }

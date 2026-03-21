@@ -93,6 +93,16 @@ static std::filesystem::path get_cache_directory() {
     return std::filesystem::path(home) / ".motionlab" / "cache" / "assets";
 }
 
+static std::string normalize_unit_system(std::string unit_system) {
+    std::transform(unit_system.begin(), unit_system.end(), unit_system.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    if (unit_system.empty()) return "millimeter";
+    if (unit_system == "millimeter" || unit_system == "meter" || unit_system == "inch") {
+        return unit_system;
+    }
+    return {};
+}
+
 // ──────────────────────────────────────────────
 // TransportServer implementation
 // ──────────────────────────────────────────────
@@ -143,6 +153,14 @@ struct TransportServer::Impl {
     explicit Impl(std::string token)
         : session_token(std::move(token))
         , asset_cache(get_cache_directory()) {}
+
+    const engine::JointState* find_joint_state(const engine::BufferedFrame& frame,
+                                               const ChannelMapping& mapping) const {
+        auto it = frame.joint_index_by_id.find(mapping.joint_id);
+        if (it == frame.joint_index_by_id.end()) return nullptr;
+        if (it->second >= frame.joint_states.size()) return nullptr;
+        return &frame.joint_states[it->second];
+    }
 
     void send_event(ix::WebSocket& ws, const protocol::Event& event) {
         std::string serialized;
@@ -312,14 +330,25 @@ struct TransportServer::Impl {
         // Extract options with defaults
         double density = 1000.0;
         double tess_quality = 0.1;
+        std::string unit_system = "millimeter";
         if (cmd.has_import_options()) {
             const auto& opts = cmd.import_options();
             if (opts.density_override() > 0.0) density = opts.density_override();
             if (opts.tessellation_quality() > 0.0) tess_quality = opts.tessellation_quality();
+            unit_system = normalize_unit_system(opts.unit_system());
+            if (unit_system.empty()) {
+                protocol::Event event;
+                event.set_sequence_id(sequence_id);
+                auto* result = event.mutable_import_asset_result();
+                result->set_success(false);
+                result->set_error_message("Unsupported unit_system. Expected millimeter, meter, or inch.");
+                send_event(ws, event);
+                return;
+            }
         }
 
         // Compute cache key and check cache
-        std::string cache_key = asset_cache.compute_cache_key(file_path, density, tess_quality);
+        std::string cache_key = asset_cache.compute_cache_key(file_path, density, tess_quality, unit_system);
         if (!cache_key.empty()) {
             auto cached = asset_cache.lookup(cache_key);
             if (cached.has_value()) {
@@ -335,7 +364,7 @@ struct TransportServer::Impl {
 
                     if (cache_has_topology) {
                         engine::CadImporter topology_importer;
-                        engine::ImportOptions topology_opts{density, tess_quality};
+                        engine::ImportOptions topology_opts{density, tess_quality, unit_system};
                         engine::ImportResult topology_result;
                         if (lower_path.ends_with(".iges") || lower_path.ends_with(".igs")) {
                             topology_result = topology_importer.import_iges_topology(file_path, topology_opts);
@@ -375,7 +404,10 @@ struct TransportServer::Impl {
                                 mechanism_state.add_body(cached_body.body_id(), cached_body.name(),
                                                          cb_pos, cb_orient,
                                                          cached_body.mass_properties().mass(),
-                                                         cb_com, cb_inertia);
+                                                         cb_com, cb_inertia,
+                                                         cached_body.has_source_asset_ref()
+                                                            ? &cached_body.source_asset_ref()
+                                                            : nullptr);
                                 body_import_results_[cached_body.body_id()] = cached_body;  // store for save/load
                                 if (topo_body.brep_shape) {
                                     shape_registry.store(cached_body.body_id(), *topo_body.brep_shape);
@@ -398,7 +430,7 @@ struct TransportServer::Impl {
 
         // Cache miss — run import
         engine::CadImporter importer;
-        engine::ImportOptions import_opts{density, tess_quality};
+        engine::ImportOptions import_opts{density, tess_quality, unit_system};
 
         engine::ImportResult import_result;
         if (lower_path.ends_with(".iges") || lower_path.ends_with(".igs")) {
@@ -469,6 +501,7 @@ struct TransportServer::Impl {
             // AssetReference
             auto* asset_ref = pb->mutable_source_asset_ref();
             asset_ref->set_content_hash(import_result.content_hash);
+            asset_ref->set_relative_path("");
             asset_ref->set_original_filename(original_filename);
 
             // Store full body data for simulation compilation
@@ -479,7 +512,8 @@ struct TransportServer::Impl {
                                      body.translation.data(), body_orient,
                                      body.mass_properties.mass,
                                      body.mass_properties.center_of_mass.data(),
-                                     body.mass_properties.inertia.data());
+                                     body.mass_properties.inertia.data(),
+                                     asset_ref);
 
             body_import_results_[pb->body_id()] = *pb;  // store for save/load
 
@@ -886,8 +920,9 @@ struct TransportServer::Impl {
             *bir->mutable_pose() = body.pose();
 
             // Source asset ref
-            auto* ref = bir->mutable_source_asset_ref();
-            ref->set_original_filename(body.name());
+            if (body.has_source_asset_ref()) {
+                *bir->mutable_source_asset_ref() = body.source_asset_ref();
+            }
 
             auto disp_it = display_lookup.find(body.id().id());
             if (disp_it != display_lookup.end()) {
@@ -1116,6 +1151,10 @@ struct TransportServer::Impl {
                 bf.step_count = simulation_runtime.getStepCount();
                 bf.body_poses = poses;
                 bf.joint_states = joint_states;
+                bf.joint_index_by_id.reserve(joint_states.size());
+                for (size_t i = 0; i < joint_states.size(); ++i) {
+                    bf.joint_index_by_id.emplace(joint_states[i].joint_id, i);
+                }
                 ring_buffer.push(bf);
 
                 // Send frame using pre-read data
@@ -1214,14 +1253,7 @@ struct TransportServer::Impl {
         trace.set_channel_id(desc.channel_id);
 
         for (const auto* bf : frames) {
-            // Find the joint state for this channel's joint
-            const engine::JointState* js = nullptr;
-            for (const auto& s : bf->joint_states) {
-                if (s.joint_id == mapping.joint_id) {
-                    js = &s;
-                    break;
-                }
-            }
+            const engine::JointState* js = find_joint_state(*bf, mapping);
             if (!js) continue;
 
             auto* sample = trace.add_samples();
@@ -1297,13 +1329,7 @@ struct TransportServer::Impl {
                     trace.set_channel_id(desc.channel_id);
 
                     for (const auto* wf : window_frames) {
-                        const engine::JointState* js = nullptr;
-                        for (const auto& s : wf->joint_states) {
-                            if (s.joint_id == mapping.joint_id) {
-                                js = &s;
-                                break;
-                            }
-                        }
+                        const engine::JointState* js = find_joint_state(*wf, mapping);
                         if (!js) continue;
 
                         auto* sample = trace.add_samples();

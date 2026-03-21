@@ -190,7 +190,7 @@ private:
 // ──────────────────────────────────────────────
 static Command make_handshake(uint64_t sequence_id, const std::string& token,
                               const std::string& proto_name = "motionlab",
-                              uint32_t proto_version = 1) {
+                              uint32_t proto_version = motionlab::PROTOCOL_VERSION) {
     Command cmd;
     cmd.set_sequence_id(sequence_id);
     auto* hs = cmd.mutable_handshake();
@@ -224,7 +224,7 @@ static void test_valid_handshake(uint16_t port) {
     const auto& ack = ack_event.handshake_ack();
     assert(ack.compatible() == true);
     assert(ack.engine_protocol().name() == "motionlab");
-    assert(ack.engine_protocol().version() == 1);
+    assert(ack.engine_protocol().version() == motionlab::PROTOCOL_VERSION);
     assert(ack.engine_version() == "0.0.1");
 
     const auto& status_event = client.wait_for_message(1);
@@ -290,7 +290,7 @@ static void test_protocol_roundtrip(uint16_t port) {
     assert(ack_event.payload_case() == Event::kHandshakeAck);
     assert(ack_event.handshake_ack().compatible() == true);
     assert(ack_event.handshake_ack().engine_protocol().name() == "motionlab");
-    assert(ack_event.handshake_ack().engine_protocol().version() == 1);
+    assert(ack_event.handshake_ack().engine_protocol().version() == motionlab::PROTOCOL_VERSION);
     assert(ack_event.handshake_ack().engine_version() == "0.0.1");
 
     const auto& status_event = client.wait_for_message(1);
@@ -590,6 +590,80 @@ static void test_update_datum_pose(uint16_t port) {
     std::cout << "  PASS: update datum pose" << std::endl;
 }
 
+static void test_import_unit_system_and_project_roundtrip(uint16_t port) {
+    TestClient client;
+    client.connect(port);
+
+    client.send_command(make_handshake(1, TEST_TOKEN));
+    client.wait_for_message(1);
+
+    std::string step_file = write_face_test_step_file();
+    size_t scan_from = 2;
+
+    Command bad_import;
+    bad_import.set_sequence_id(420);
+    auto* bad = bad_import.mutable_import_asset();
+    bad->set_file_path(step_file);
+    bad->mutable_import_options()->set_unit_system("parsec");
+    client.send_command(bad_import);
+
+    const auto* bad_evt = client.wait_for_response(420, scan_from, 10000);
+    assert(bad_evt != nullptr);
+    assert(bad_evt->payload_case() == Event::kImportAssetResult);
+    assert(!bad_evt->import_asset_result().success());
+
+    Command import_cmd;
+    import_cmd.set_sequence_id(421);
+    auto* import = import_cmd.mutable_import_asset();
+    import->set_file_path(step_file);
+    import->mutable_import_options()->set_unit_system("inch");
+    client.send_command(import_cmd);
+
+    const auto* import_evt = client.wait_for_response(421, scan_from, 10000);
+    assert(import_evt != nullptr);
+    assert(import_evt->payload_case() == Event::kImportAssetResult);
+    assert(import_evt->import_asset_result().success());
+    assert(import_evt->import_asset_result().bodies_size() >= 1);
+
+    const auto& body = import_evt->import_asset_result().bodies(0);
+    assert(body.has_source_asset_ref());
+    assert(body.source_asset_ref().content_hash().size() == 64);
+    assert(std::abs(body.mass_properties().center_of_mass().x() - 0.127) < 1e-4);
+
+    Command save_cmd;
+    save_cmd.set_sequence_id(422);
+    save_cmd.mutable_save_project()->set_project_name("unit-test-project");
+    client.send_command(save_cmd);
+
+    const auto* save_evt = client.wait_for_response(422, scan_from, 10000);
+    assert(save_evt != nullptr);
+    assert(save_evt->payload_case() == Event::kSaveProjectResult);
+    assert(save_evt->save_project_result().result_case() == SaveProjectResult::kProjectData);
+
+    Command load_cmd;
+    load_cmd.set_sequence_id(423);
+    load_cmd.mutable_load_project()->set_project_data(save_evt->save_project_result().project_data());
+    client.send_command(load_cmd);
+
+    const auto* load_evt = client.wait_for_response(423, scan_from, 10000);
+    assert(load_evt != nullptr);
+    assert(load_evt->payload_case() == Event::kLoadProjectResult);
+    assert(load_evt->load_project_result().result_case() == LoadProjectResult::kSuccess);
+
+    const auto& success = load_evt->load_project_result().success();
+    assert(success.bodies_size() >= 1);
+    assert(success.mechanism().bodies_size() >= 1);
+    assert(success.bodies(0).has_source_asset_ref());
+    assert(success.mechanism().bodies(0).has_source_asset_ref());
+    assert(success.bodies(0).source_asset_ref().content_hash() == body.source_asset_ref().content_hash());
+    assert(success.mechanism().bodies(0).source_asset_ref().content_hash() == body.source_asset_ref().content_hash());
+    assert(success.bodies(0).source_asset_ref().original_filename() == body.source_asset_ref().original_filename());
+
+    client.close();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::cout << "  PASS: import units and project roundtrip" << std::endl;
+}
+
 static void test_output_channels_and_scrub(uint16_t port, const std::string& step_file) {
     TestClient client;
     client.connect(port);
@@ -717,23 +791,16 @@ static void test_output_channels_and_scrub(uint16_t port, const std::string& ste
     const auto* paused_evt = wait_for_sim_state(client, SIM_STATE_PAUSED, scan_from);
     assert(paused_evt != nullptr);
 
-    // Scan all received messages for SimulationFrame and SimulationTrace events
-    bool found_trace = false;
+    // Scan all received messages for SimulationFrame events
     bool found_frame = false;
     size_t total = client.message_count();
     for (size_t i = scan_from; i < total; ++i) {
         const auto& evt = client.wait_for_message(i, 50);
-        if (evt.payload_case() == Event::kSimulationTrace) {
-            found_trace = true;
-            assert(!evt.simulation_trace().channel_id().empty());
-            assert(evt.simulation_trace().samples_size() > 0);
-        }
         if (evt.payload_case() == Event::kSimulationFrame) {
             found_frame = true;
         }
     }
     assert(found_frame); // Should have received simulation frames
-    assert(found_trace); // Should have received at least one trace
 
     // Scrub to a time in the buffered range
     scan_from = client.message_count();
@@ -745,15 +812,21 @@ static void test_output_channels_and_scrub(uint16_t port, const std::string& ste
     // Wait for a SimulationFrame in response to scrub
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     bool found_scrub_frame = false;
+    bool found_scrub_trace = false;
     total = client.message_count();
     for (size_t i = scan_from; i < total; ++i) {
         const auto& evt = client.wait_for_message(i, 100);
         if (evt.payload_case() == Event::kSimulationFrame) {
             found_scrub_frame = true;
-            break;
+        }
+        if (evt.payload_case() == Event::kSimulationTrace) {
+            found_scrub_trace = true;
+            assert(!evt.simulation_trace().channel_id().empty());
+            assert(evt.simulation_trace().samples_size() > 0);
         }
     }
     assert(found_scrub_frame);
+    assert(found_scrub_trace);
 
     client.close();
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -792,6 +865,7 @@ int main() {
     test_delete_joint_nonexistent(port);
     test_create_datum_from_face_after_import(port, step_file, "create datum from face after cold import");
     test_update_datum_pose(port);
+    test_import_unit_system_and_project_roundtrip(port);
     test_output_channels_and_scrub(port, step_file);
 
     // Shutdown

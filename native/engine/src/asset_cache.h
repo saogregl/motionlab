@@ -18,7 +18,8 @@ public:
 
     // Compute a content-addressed cache key from file bytes + import parameters.
     std::string compute_cache_key(const std::string& file_path,
-                                   double density, double tessellation_quality);
+                                   double density, double tessellation_quality,
+                                   const std::string& unit_system);
 
     // Remove all cached entries.
     void clear();

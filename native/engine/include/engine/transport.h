@@ -9,7 +9,7 @@ namespace motionlab {
 
 // Source of truth: schemas/protocol/transport.proto
 constexpr const char* PROTOCOL_NAME = "motionlab";
-constexpr uint32_t PROTOCOL_VERSION = 1;
+constexpr uint32_t PROTOCOL_VERSION = 2;
 
 enum class EngineState {
     INITIALIZING,
