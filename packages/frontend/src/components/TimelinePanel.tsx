@@ -7,6 +7,7 @@ import { sendScrub, sendSimulationControl, setPlaybackSpeed } from '../engine/co
 import { useSimulationStore } from '../stores/simulation.js';
 import { useUILayoutStore } from '../stores/ui-layout.js';
 import { ChartPanel } from './ChartPanel.js';
+import { DiagnosticsPanel } from './DiagnosticsPanel.js';
 
 const STEP_SIZE = 1 / 60;
 
@@ -120,14 +121,7 @@ export function TimelinePanel() {
             className="h-full"
           />
         ))}
-      {activeTab === 'diagnostics' && (
-        <EmptyState
-          icon={<Activity className="size-10" />}
-          message="No diagnostics available"
-          hint="Run a simulation to see diagnostics"
-          className="h-full"
-        />
-      )}
+      {activeTab === 'diagnostics' && <DiagnosticsPanel />}
     </BottomDock>
   );
 }

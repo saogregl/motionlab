@@ -1,7 +1,11 @@
 import type { SceneGraphManager, SpatialPickData } from '@motionlab/viewport';
 import { useCallback, useEffect, useRef } from 'react';
 
-import { registerSceneGraph, sendCreateDatumFromFace } from '../engine/connection.js';
+import {
+  registerSceneGraph,
+  sendCreateDatumFromFace,
+  sendUpdateDatumPose,
+} from '../engine/connection.js';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import type { BodyPose, MeshData } from '../stores/mechanism.js';
@@ -54,7 +58,7 @@ export function useViewportBridge() {
 
     // Initial sync: add any datums already in the store
     for (const datum of datums.values()) {
-      sceneGraph.addDatum(datum.id, datum.parentBodyId, convertPose(datum.localPose));
+      sceneGraph.addDatum(datum.id, datum.parentBodyId, convertPose(datum.localPose), datum.name);
     }
 
     // Initial sync: add any joints already in the store (after datums)
@@ -70,6 +74,14 @@ export function useViewportBridge() {
     const { selectedIds, hoveredId } = useSelectionStore.getState();
     sceneGraph.applySelection(selectedIds);
     sceneGraph.applyHover(hoveredId);
+
+    // Wire gizmo drag-end to send update command
+    sceneGraph.setGizmoOnDragEnd((event) => {
+      sendUpdateDatumPose(event.entityId, {
+        position: { x: event.position[0], y: event.position[1], z: event.position[2] },
+        orientation: { x: event.rotation[0], y: event.rotation[1], z: event.rotation[2], w: event.rotation[3] },
+      });
+    });
   }, []);
 
   // Store subscriptions — set up after scene is ready, tear down on unmount
@@ -120,7 +132,7 @@ export function useViewportBridge() {
         if (!trackedDatumIds.has(id)) {
           const datum = state.datums.get(id);
           if (!datum) continue;
-          sg.addDatum(datum.id, datum.parentBodyId, convertPose(datum.localPose));
+          sg.addDatum(datum.id, datum.parentBodyId, convertPose(datum.localPose), datum.name);
         }
       }
 
@@ -172,16 +184,48 @@ export function useViewportBridge() {
 
     const unsubSelection = useSelectionStore.subscribe((state) => {
       sg.applySelection(state.selectedIds);
+
+      // Attach gizmo when a single datum is selected
+      const { gizmoMode } = useToolModeStore.getState();
+      if (state.selectedIds.size === 1 && gizmoMode !== 'off') {
+        const id = state.selectedIds.values().next().value as string;
+        const { datums } = useMechanismStore.getState();
+        if (datums.has(id)) {
+          sg.attachGizmo(id);
+        } else {
+          sg.detachGizmo();
+        }
+      } else {
+        sg.detachGizmo();
+      }
     });
 
     const unsubHover = useSelectionStore.subscribe((state) => {
       sg.applyHover(state.hoveredId);
     });
 
+    // Sync gizmo mode changes
+    const unsubGizmoMode = useToolModeStore.subscribe((state) => {
+      sg.setGizmoMode(state.gizmoMode);
+
+      // Re-evaluate gizmo attachment with new mode
+      const { selectedIds } = useSelectionStore.getState();
+      if (selectedIds.size === 1 && state.gizmoMode !== 'off') {
+        const id = selectedIds.values().next().value as string;
+        const { datums } = useMechanismStore.getState();
+        if (datums.has(id)) {
+          sg.attachGizmo(id);
+        }
+      } else {
+        sg.detachGizmo();
+      }
+    });
+
     return () => {
       unsubMechanism();
       unsubSelection();
       unsubHover();
+      unsubGizmoMode();
       registerSceneGraph(null);
     };
   }, []);

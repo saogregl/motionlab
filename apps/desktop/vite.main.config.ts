@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   build: {
     rollupOptions: {
-      external: ['electron', '@motionlab/frontend', '@motionlab/protocol'],
+      external: ['electron', '@motionlab/frontend', '@motionlab/protocol', /^node:.*/],
     },
   },
 });

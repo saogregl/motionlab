@@ -74,8 +74,8 @@ export function createMaterialFactory(scene: Scene): MaterialFactory {
     mat.albedoColor = def.baseColor.clone();
     mat.metallic = def.metallic;
     mat.roughness = def.roughness;
-    mat.backFaceCulling = true;
-    mat.useRadianceOverAlpha = true;
+    mat.backFaceCulling = false;
+    mat.transparencyMode = PBRMaterial.PBRMATERIAL_OPAQUE;
 
     cache.set(preset, mat);
     return mat;

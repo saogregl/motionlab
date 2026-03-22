@@ -53,7 +53,7 @@ function InspectorPanel({
       {/* Header */}
       <div
         data-slot="inspector-panel-header"
-        className="flex h-8 shrink-0 items-center gap-2 border-b border-[var(--border-subtle)] bg-[var(--layer-recessed)] px-2 py-1"
+        className="flex h-8 shrink-0 items-center gap-2 border-b border-[var(--border-subtle)] bg-[var(--layer-recessed)] px-1.5 py-1"
       >
         {entityIcon && (
           <span className="flex size-5 shrink-0 items-center justify-center text-[var(--text-secondary)]">
@@ -61,9 +61,9 @@ function InspectorPanel({
           </span>
         )}
         <div className="min-w-0 flex-1 truncate">
-          <span className="text-[length:var(--text-sm)] font-bold text-[var(--text-primary)]">
+          <span className="inline-flex items-baseline gap-3 text-[length:var(--text-sm)] font-bold text-[var(--text-primary)]">
             {entityType && (
-              <span className="mr-1 text-[10px] font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
+              <span className="text-[10px] font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
                 {entityType}
               </span>
             )}
@@ -82,7 +82,7 @@ function InspectorPanel({
 
       {/* Body */}
       <ScrollArea className="flex-1">
-        <div data-slot="inspector-panel-body">{children}</div>
+        <div data-slot="inspector-panel-body" className="flex flex-col gap-[var(--inspector-section-gap)]">{children}</div>
       </ScrollArea>
     </div>
   );

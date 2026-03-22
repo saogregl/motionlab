@@ -13,6 +13,11 @@ import {
 } from '@babylonjs/core';
 
 import { BodyGeometryIndex } from './body-geometry-index.js';
+import {
+  DatumGizmoManager,
+  type GizmoDragEndCallback,
+  type GizmoMode,
+} from './gizmo-manager.js';
 import { createDatumTriad } from './rendering/datum-triad.js';
 import type { GridOverlay } from './rendering/grid.js';
 import {
@@ -94,6 +99,44 @@ const DATUM_SCALE_FACTOR = 0.05;
  * This is NOT a React hook — Babylon.js updates bypass React entirely.
  * Entity IDs correspond 1:1 to mechanism ElementIds (UUIDv7 strings).
  */
+// ---------------------------------------------------------------------------
+// Camera animation
+// ---------------------------------------------------------------------------
+
+const DEFAULT_CAMERA_ANIM_DURATION_MS = 400;
+
+interface CameraAnimation {
+  startAlpha: number;
+  startBeta: number;
+  startRadius: number;
+  targetAlpha: number;
+  targetBeta: number;
+  targetRadius: number;
+  startTime: number;
+  duration: number;
+}
+
+/** Ease-out cubic: decelerating to zero velocity. */
+function easeOutCubic(t: number): number {
+  const t1 = 1 - t;
+  return 1 - t1 * t1 * t1;
+}
+
+/**
+ * Normalize an angle delta so the interpolation takes the shortest path.
+ * Returns the adjusted target so that |target - start| <= PI.
+ */
+function shortestAngleTo(start: number, target: number): number {
+  let delta = target - start;
+  // Normalize into [-2PI, 2PI] then pick the shortest direction
+  delta = delta - Math.PI * 2 * Math.round(delta / (Math.PI * 2));
+  return start + delta;
+}
+
+// ---------------------------------------------------------------------------
+// SceneGraphManager
+// ---------------------------------------------------------------------------
+
 export class SceneGraphManager {
   private readonly _scene: Scene;
   private readonly _camera: ArcRotateCamera;
@@ -103,6 +146,12 @@ export class SceneGraphManager {
   private currentSelectedIds: Set<string> = new Set();
   private readonly _datumScaleObserver: Observer<Scene>;
   private highlightedFaceBodyId: string | null = null;
+  private _cameraAnimation: CameraAnimation | null = null;
+  private _cameraAnimObserver: Observer<Scene> | null = null;
+  private readonly _gizmoManager: DatumGizmoManager;
+
+  /** Called by PickingManager to invalidate the GPU picker list cache. */
+  onEntityListChanged?: () => void;
 
   constructor(scene: Scene, camera: ArcRotateCamera, deps: SceneGraphDeps) {
     this._scene = scene;
@@ -122,6 +171,8 @@ export class SceneGraphManager {
     });
     if (!observer) throw new Error('Failed to register onBeforeRender observer');
     this._datumScaleObserver = observer;
+
+    this._gizmoManager = new DatumGizmoManager(scene);
   }
 
   get scene(): Scene {
@@ -152,11 +203,22 @@ export class SceneGraphManager {
     vertexData.positions = meshData.vertices;
     vertexData.indices = meshData.indices;
     vertexData.normals = meshData.normals;
+
+    // Safety net: if the native engine sent all-zero normals (e.g. OCCT
+    // triangulation without BRepLib::EnsureNormalConsistency), recompute
+    // them from geometry so PBR lighting works.
+    if (vertexData.normals && vertexData.normals.every((n) => n === 0)) {
+      const computed = new Float32Array(vertexData.positions!.length);
+      VertexData.ComputeNormals(vertexData.positions!, vertexData.indices!, computed);
+      vertexData.normals = computed;
+    }
+
     vertexData.applyToMesh(mesh);
 
     mesh.material = this.deps.materialFactory.getDefaultMaterial();
     mesh.parent = root;
     mesh.metadata = { entityId: id, entityType: 'body' };
+    mesh.isPickable = true;
 
     // Always-on subtle edges for geometric readability
     mesh.enableEdgesRendering(0.9999);
@@ -188,6 +250,7 @@ export class SceneGraphManager {
       meshes: [mesh],
     };
     this.entities.set(id, entity);
+    this.onEntityListChanged?.();
     return entity;
   }
 
@@ -209,6 +272,7 @@ export class SceneGraphManager {
     this.currentSelectedIds.delete(id);
     entity.rootNode.dispose();
     this.entities.delete(id);
+    this.onEntityListChanged?.();
     return true;
   }
 
@@ -236,7 +300,7 @@ export class SceneGraphManager {
   // Datum management
   // -----------------------------------------------------------------------
 
-  addDatum(id: string, parentBodyId: string, localPose: PoseInput): SceneEntity | undefined {
+  addDatum(id: string, parentBodyId: string, localPose: PoseInput, name?: string): SceneEntity | undefined {
     if (this.entities.has(id)) {
       console.warn(`SceneGraphManager: datum '${id}' already exists, removing first`);
       this.removeDatum(id);
@@ -248,7 +312,7 @@ export class SceneGraphManager {
       return undefined;
     }
 
-    const { rootNode, meshes } = createDatumTriad(this._scene, id);
+    const { rootNode, meshes } = createDatumTriad(this._scene, id, name);
 
     // Parent to body so datum inherits body world transform
     rootNode.parent = parentEntity.rootNode;
@@ -272,6 +336,7 @@ export class SceneGraphManager {
       meshes,
     };
     this.entities.set(id, entity);
+    this.onEntityListChanged?.();
     return entity;
   }
 
@@ -288,6 +353,7 @@ export class SceneGraphManager {
     this.currentSelectedIds.delete(id);
     entity.rootNode.dispose();
     this.entities.delete(id);
+    this.onEntityListChanged?.();
     return true;
   }
 
@@ -299,7 +365,7 @@ export class SceneGraphManager {
     id: string,
     parentDatumId: string,
     childDatumId: string,
-    jointType: 'revolute' | 'prismatic' | 'fixed',
+    jointType: string,
   ): SceneEntity | undefined {
     if (this.entities.has(id)) {
       console.warn(`SceneGraphManager: joint '${id}' already exists, removing first`);
@@ -331,6 +397,10 @@ export class SceneGraphManager {
       case 'fixed':
         result = createFixedJointVisual(this._scene, id, parentPos, childPos);
         break;
+      default:
+        // For new joint types (spherical, cylindrical, planar), use revolute visual as fallback
+        result = createRevoluteJointVisual(this._scene, id, midpoint, axis);
+        break;
     }
 
     // Store datum references on rootNode metadata for future updates
@@ -347,10 +417,11 @@ export class SceneGraphManager {
       meshes: result.meshes,
     };
     this.entities.set(id, entity);
+    this.onEntityListChanged?.();
     return entity;
   }
 
-  updateJoint(id: string, jointType: 'revolute' | 'prismatic' | 'fixed'): void {
+  updateJoint(id: string, jointType: string): void {
     const entity = this.entities.get(id);
     if (!entity || entity.type !== 'joint') {
       console.warn(`SceneGraphManager: cannot update unknown joint '${id}'`);
@@ -385,6 +456,7 @@ export class SceneGraphManager {
     this.currentSelectedIds.delete(id);
     entity.rootNode.dispose();
     this.entities.delete(id);
+    this.onEntityListChanged?.();
     return true;
   }
 
@@ -412,15 +484,89 @@ export class SceneGraphManager {
   // Camera
   // -----------------------------------------------------------------------
 
-  setCameraPreset(preset: CameraPreset): void {
+  get camera(): ArcRotateCamera {
+    return this._camera;
+  }
+
+  setCameraPreset(preset: CameraPreset, animated = true): void {
     if (preset === 'fit-all') {
       this.fitAll();
       return;
     }
 
     const angles = PRESET_ANGLES[preset];
-    this._camera.alpha = angles.alpha;
-    this._camera.beta = angles.beta;
+    if (animated) {
+      this.animateCameraTo(angles.alpha, angles.beta);
+    } else {
+      this._camera.alpha = angles.alpha;
+      this._camera.beta = angles.beta;
+    }
+  }
+
+  /**
+   * Smoothly interpolate the camera to target angles using ease-out cubic.
+   * Handles alpha wrap-around to always take the shortest angular path.
+   */
+  animateCameraTo(
+    alpha: number,
+    beta: number,
+    radius?: number,
+    duration = DEFAULT_CAMERA_ANIM_DURATION_MS,
+  ): void {
+    // Cancel any in-progress animation
+    this.cancelCameraAnimation();
+
+    const adjustedAlpha = shortestAngleTo(this._camera.alpha, alpha);
+    const adjustedBeta = shortestAngleTo(this._camera.beta, beta);
+    const targetRadius = radius ?? this._camera.radius;
+
+    this._cameraAnimation = {
+      startAlpha: this._camera.alpha,
+      startBeta: this._camera.beta,
+      startRadius: this._camera.radius,
+      targetAlpha: adjustedAlpha,
+      targetBeta: adjustedBeta,
+      targetRadius,
+      startTime: performance.now(),
+      duration,
+    };
+
+    // Disable camera input during animation to prevent fighting
+    this._camera.detachControl();
+
+    this._cameraAnimObserver = this._scene.onBeforeRenderObservable.add(() => {
+      const anim = this._cameraAnimation;
+      if (!anim) return;
+
+      const elapsed = performance.now() - anim.startTime;
+      const t = Math.min(elapsed / anim.duration, 1);
+      const e = easeOutCubic(t);
+
+      this._camera.alpha = anim.startAlpha + (anim.targetAlpha - anim.startAlpha) * e;
+      this._camera.beta = anim.startBeta + (anim.targetBeta - anim.startBeta) * e;
+      this._camera.radius = anim.startRadius + (anim.targetRadius - anim.startRadius) * e;
+
+      if (t >= 1) {
+        this.cancelCameraAnimation();
+      }
+    });
+  }
+
+  private cancelCameraAnimation(): void {
+    if (this._cameraAnimObserver) {
+      this._scene.onBeforeRenderObservable.remove(this._cameraAnimObserver);
+      this._cameraAnimObserver = null;
+    }
+    if (this._cameraAnimation) {
+      // Snap to final values
+      this._camera.alpha = this._cameraAnimation.targetAlpha;
+      this._camera.beta = this._cameraAnimation.targetBeta;
+      this._camera.radius = this._cameraAnimation.targetRadius;
+      this._cameraAnimation = null;
+      // Re-enable camera input
+      const canvas = this._scene.getEngine().getRenderingCanvas();
+      if (canvas) this._camera.attachControl(canvas, true);
+    }
   }
 
   fitAll(): void {
@@ -457,6 +603,39 @@ export class SceneGraphManager {
 
   toggleGrid(): void {
     this.deps.grid.setVisible(!this.deps.grid.visible);
+  }
+
+  // -----------------------------------------------------------------------
+  // Gizmo
+  // -----------------------------------------------------------------------
+
+  /**
+   * Attach the transform gizmo to a datum entity.
+   * Automatically shows position or rotation gizmo based on current mode.
+   */
+  attachGizmo(entityId: string): void {
+    const entity = this.entities.get(entityId);
+    if (!entity || entity.type !== 'datum') {
+      this._gizmoManager.detach();
+      return;
+    }
+    this._gizmoManager.attachTo(entityId, entity.rootNode);
+  }
+
+  detachGizmo(): void {
+    this._gizmoManager.detach();
+  }
+
+  setGizmoMode(mode: GizmoMode): void {
+    this._gizmoManager.setMode(mode);
+  }
+
+  getGizmoMode(): GizmoMode {
+    return this._gizmoManager.getMode();
+  }
+
+  setGizmoOnDragEnd(callback: GizmoDragEndCallback | undefined): void {
+    this._gizmoManager.setOnDragEnd(callback);
   }
 
   // -----------------------------------------------------------------------
@@ -570,6 +749,8 @@ export class SceneGraphManager {
   }
 
   dispose(): void {
+    this.cancelCameraAnimation();
+    this._gizmoManager.dispose();
     this._scene.onBeforeRenderObservable.remove(this._datumScaleObserver);
     this.deps.selectionVisuals.clearAll();
     this.clearAllFaceHighlights();

@@ -1,4 +1,6 @@
 import {
+  CopyableId,
+  InlineEditableName,
   InspectorPanel,
   InspectorSection,
   NumericInput,
@@ -17,7 +19,9 @@ import { useMechanismStore } from '../stores/mechanism.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { type StoreSample, useTraceStore } from '../stores/traces.js';
 
-type JointType = 'revolute' | 'prismatic' | 'fixed';
+import type { JointTypeId } from '../stores/mechanism.js';
+
+type JointType = JointTypeId;
 
 /** Binary search for nearest sample to target time */
 function nearestSample(samples: StoreSample[], time: number): StoreSample | undefined {
@@ -52,21 +56,21 @@ export function JointInspector({ jointId }: { jointId: string }) {
   const isSimulating = simState === 'running' || simState === 'paused';
 
   const [editingName, setEditingName] = useState(false);
-  const [nameValue, setNameValue] = useState('');
 
   const startEditName = useCallback(() => {
     if (!joint || isSimulating) return;
-    setNameValue(joint.name);
     setEditingName(true);
   }, [joint, isSimulating]);
 
-  const commitName = useCallback(() => {
-    const trimmed = nameValue.trim();
-    if (trimmed && joint && trimmed !== joint.name) {
-      sendUpdateJoint(jointId, { name: trimmed });
-    }
-    setEditingName(false);
-  }, [nameValue, joint, jointId]);
+  const commitName = useCallback(
+    (newName: string) => {
+      if (joint && newName !== joint.name) {
+        sendUpdateJoint(jointId, { name: newName });
+      }
+      setEditingName(false);
+    },
+    [joint, jointId],
+  );
 
   if (!joint) return <InspectorPanel />;
 
@@ -78,48 +82,34 @@ export function JointInspector({ jointId }: { jointId: string }) {
     >
       <InspectorSection title="Identity">
         <PropertyRow label="Name">
-          {editingName ? (
-            <input
-              className="h-5 w-full rounded-[var(--radius-sm)] border border-[var(--accent-primary)] bg-[var(--layer-base)] px-1 text-2xs text-[var(--text-primary)] outline-none"
-              value={nameValue}
-              onChange={(e) => setNameValue(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') commitName();
-                if (e.key === 'Escape') setEditingName(false);
-              }}
-              onBlur={commitName}
-            />
-          ) : (
-            <span
-              role="button"
-              tabIndex={0}
-              className="text-2xs truncate cursor-pointer hover:text-[var(--accent-primary)]"
-              onDoubleClick={startEditName}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') startEditName();
-              }}
-            >
-              {joint.name}
-            </span>
-          )}
+          <InlineEditableName
+            value={joint.name}
+            isEditing={editingName}
+            onStartEdit={startEditName}
+            onCommit={commitName}
+            onCancel={() => setEditingName(false)}
+          />
         </PropertyRow>
         <PropertyRow label="Type">
           <Select
             value={joint.type}
             onValueChange={(v) => sendUpdateJoint(jointId, { type: v as JointType })}
           >
-            <SelectTrigger className="h-5 text-2xs" disabled={isSimulating}>
+            <SelectTrigger size="sm" disabled={isSimulating}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="revolute">Revolute</SelectItem>
               <SelectItem value="prismatic">Prismatic</SelectItem>
               <SelectItem value="fixed">Fixed</SelectItem>
+              <SelectItem value="spherical">Spherical</SelectItem>
+              <SelectItem value="cylindrical">Cylindrical</SelectItem>
+              <SelectItem value="planar">Planar</SelectItem>
             </SelectContent>
           </Select>
         </PropertyRow>
         <PropertyRow label="Joint ID">
-          <span className="text-2xs truncate font-mono">{jointId.slice(0, 12)}...</span>
+          <CopyableId value={jointId} />
         </PropertyRow>
       </InspectorSection>
 
@@ -132,7 +122,7 @@ export function JointInspector({ jointId }: { jointId: string }) {
         </PropertyRow>
       </InspectorSection>
 
-      {joint.type !== 'fixed' && (
+      {(joint.type === 'revolute' || joint.type === 'prismatic' || joint.type === 'cylindrical') && (
         <InspectorSection title="Limits">
           <PropertyRow label="Lower" numeric>
             <NumericInput

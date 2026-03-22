@@ -1,13 +1,19 @@
-import { InspectorPanel, InspectorSection, PropertyRow } from '@motionlab/ui';
+import {
+  CopyableId,
+  InertiaMatrixDisplay,
+  InspectorPanel,
+  InspectorSection,
+  PropertyRow,
+  QuatDisplay,
+  Switch,
+  Vec3Display,
+} from '@motionlab/ui';
 import { Box } from 'lucide-react';
+import { sendUpdateBody } from '../engine/connection.js';
 import { getBodyPose } from '../stores/body-poses.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
-
-function fmt(value: number): string {
-  return value.toFixed(6);
-}
 
 export function BodyInspector() {
   const selectedIds = useSelectionStore((s) => s.selectedIds);
@@ -41,69 +47,61 @@ export function BodyInspector() {
           <span className="text-2xs truncate">{body.sourceAssetRef.originalFilename || '—'}</span>
         </PropertyRow>
         <PropertyRow label="Body ID">
-          <span className="text-2xs truncate font-mono">{body.id.slice(0, 12)}…</span>
+          <CopyableId value={body.id} />
+        </PropertyRow>
+        <PropertyRow label="Fixed (Ground)">
+          <div className="flex items-center gap-1.5">
+            <Switch
+              size="sm"
+              checked={body.isFixed ?? false}
+              onCheckedChange={(checked) => sendUpdateBody(body.id, { isFixed: checked })}
+              disabled={isSimulating}
+            />
+            <span className="text-2xs text-[var(--text-secondary)]">
+              {body.isFixed ? 'Yes' : 'No'}
+            </span>
+          </div>
         </PropertyRow>
       </InspectorSection>
 
       <InspectorSection title="Mass Properties">
         <PropertyRow label="Mass" unit="kg" numeric>
-          <span>{fmt(mp.mass)}</span>
+          <span>{mp.mass.toFixed(6)}</span>
         </PropertyRow>
-        <PropertyRow label="CoM X" unit="m" numeric>
-          <span>{fmt(mp.centerOfMass.x)}</span>
-        </PropertyRow>
-        <PropertyRow label="CoM Y" unit="m" numeric>
-          <span>{fmt(mp.centerOfMass.y)}</span>
-        </PropertyRow>
-        <PropertyRow label="CoM Z" unit="m" numeric>
-          <span>{fmt(mp.centerOfMass.z)}</span>
-        </PropertyRow>
+        <Vec3Display
+          label="Center of Mass"
+          value={mp.centerOfMass}
+          unit="m"
+          precision={6}
+        />
       </InspectorSection>
 
       <InspectorSection title="Inertia Tensor">
-        <PropertyRow label="Ixx" unit="kg·m²" numeric>
-          <span>{fmt(mp.ixx)}</span>
-        </PropertyRow>
-        <PropertyRow label="Iyy" unit="kg·m²" numeric>
-          <span>{fmt(mp.iyy)}</span>
-        </PropertyRow>
-        <PropertyRow label="Izz" unit="kg·m²" numeric>
-          <span>{fmt(mp.izz)}</span>
-        </PropertyRow>
-        <PropertyRow label="Ixy" unit="kg·m²" numeric>
-          <span>{fmt(mp.ixy)}</span>
-        </PropertyRow>
-        <PropertyRow label="Ixz" unit="kg·m²" numeric>
-          <span>{fmt(mp.ixz)}</span>
-        </PropertyRow>
-        <PropertyRow label="Iyz" unit="kg·m²" numeric>
-          <span>{fmt(mp.iyz)}</span>
-        </PropertyRow>
+        <InertiaMatrixDisplay
+          ixx={mp.ixx}
+          iyy={mp.iyy}
+          izz={mp.izz}
+          ixy={mp.ixy}
+          ixz={mp.ixz}
+          iyz={mp.iyz}
+          precision={6}
+          unit="kg m²"
+        />
       </InspectorSection>
 
       {livePose && (
         <InspectorSection title="Current Pose">
-          <PropertyRow label="Pos X" unit="m" numeric>
-            <span>{fmt(livePose.position.x)}</span>
-          </PropertyRow>
-          <PropertyRow label="Pos Y" unit="m" numeric>
-            <span>{fmt(livePose.position.y)}</span>
-          </PropertyRow>
-          <PropertyRow label="Pos Z" unit="m" numeric>
-            <span>{fmt(livePose.position.z)}</span>
-          </PropertyRow>
-          <PropertyRow label="Rot X" numeric>
-            <span>{fmt(livePose.rotation.x)}</span>
-          </PropertyRow>
-          <PropertyRow label="Rot Y" numeric>
-            <span>{fmt(livePose.rotation.y)}</span>
-          </PropertyRow>
-          <PropertyRow label="Rot Z" numeric>
-            <span>{fmt(livePose.rotation.z)}</span>
-          </PropertyRow>
-          <PropertyRow label="Rot W" numeric>
-            <span>{fmt(livePose.rotation.w)}</span>
-          </PropertyRow>
+          <Vec3Display
+            label="Position"
+            value={livePose.position}
+            unit="m"
+            precision={6}
+          />
+          <QuatDisplay
+            value={livePose.rotation}
+            label="Rotation"
+            precision={6}
+          />
         </InspectorSection>
       )}
     </InspectorPanel>

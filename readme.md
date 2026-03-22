@@ -115,20 +115,31 @@ docs/                 # Architecture, domain, decisions, workflows
 
 ---
 
-## Getting Started
+## Prerequisites
+
+- Node.js >= 20
+- pnpm
+- CMake >= 3.25
+- vcpkg (with `VCPKG_ROOT` set)
+- C++20 compiler (GCC 12+, Clang 15+, or MSVC 2022)
+
+## Quick Start
 
 ```bash
-# Install dependencies
-pnpm install
+pnpm install && pnpm dev:desktop
+```
 
+### Other Commands
+
+```bash
 # Run the web frontend in dev mode
 pnpm dev:web
 
-# Run the desktop app in dev mode
-pnpm dev:desktop
-
 # Lint and typecheck
 pnpm check
+
+# Package the desktop app for distribution
+pnpm package:desktop
 
 # Generate docs inventories and validate structure
 pnpm prepare:agents
@@ -137,12 +148,15 @@ pnpm prepare:agents
 ### Native Engine Build
 
 ```bash
-# Requires CMake, Ninja, and vcpkg
 cd native/engine
 cmake --preset dev
 cmake --build build/dev
 ctest --preset dev
 ```
+
+### Sample Projects
+
+Example project files are available in [`apps/desktop/examples/`](apps/desktop/examples/).
 
 ---
 
@@ -150,7 +164,8 @@ ctest --preset dev
 
 Detailed documentation lives in `docs/`:
 
-- **Architecture:** `docs/architecture/index.md` — start here
+- **Architecture:** [`docs/architecture/index.md`](docs/architecture/index.md) — start here
+- **Known Limitations:** [`docs/known-limitations.md`](docs/known-limitations.md)
 - **Principles:** `docs/architecture/principles.md`
 - **Repo Map:** `docs/architecture/repo-map.md`
 - **System Overview:** `docs/architecture/system-overview.md`

@@ -20,6 +20,11 @@ export interface MotionLabAPI {
     defaultName?: string,
   ): Promise<{ saved: boolean; filePath?: string }>;
   openProjectFile(): Promise<{ data: Uint8Array; filePath: string } | null>;
+  onCheckDirty(callback: () => boolean): void;
+  showLogsFolder(): Promise<void>;
+  onEngineStatusChanged(
+    callback: (status: { status: string; code?: number | null; signal?: string | null }) => void,
+  ): void;
 }
 
 declare global {

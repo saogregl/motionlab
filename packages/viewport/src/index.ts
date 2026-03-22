@@ -1,6 +1,13 @@
 export { BodyGeometryIndex } from './body-geometry-index.js';
 export { computeDatumLocalPose } from './datum-pose.js';
 export {
+  DatumGizmoManager,
+  type GizmoDragEndCallback,
+  type GizmoDragEndEvent,
+  type GizmoMode,
+} from './gizmo-manager.js';
+export {
+  type FaceHoverCallback,
   type HoverCallback,
   type InteractionMode,
   type PickCallback,

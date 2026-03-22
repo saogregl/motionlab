@@ -2,7 +2,6 @@ import { List, Search, TreePine } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
 import { cn } from '../../lib/utils';
 import { ToolbarButton } from '../primitives/toolbar-button';
-import { Input } from '../ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 
 interface LeftPanelProps {
@@ -40,11 +39,11 @@ function LeftPanel({ children, className }: LeftPanelProps) {
 
         {/* Filter bar */}
         <div className="flex items-center gap-1 px-2 py-1">
-          <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-1.5 top-1/2 size-3 -translate-y-1/2 text-text-tertiary" />
-            <Input
+          <div className="flex flex-1 items-center gap-1.5 h-6 rounded-[var(--radius-sm)] border border-transparent px-1.5 focus-within:border-[var(--border-field)] focus-within:bg-[var(--layer-base)]">
+            <Search className="size-3 shrink-0 text-text-tertiary" />
+            <input
               placeholder="Filter..."
-              className="h-6 rounded-[var(--radius-sm)] border border-transparent bg-transparent pl-6 text-[length:var(--text-xs)] focus-visible:border-[var(--border-field)] focus-visible:ring-0 focus-visible:bg-[var(--layer-base)]"
+              className="min-w-0 flex-1 bg-transparent text-[length:var(--text-xs)] outline-none placeholder:text-muted-foreground"
             />
           </div>
           <ToolbarButton

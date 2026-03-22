@@ -30,6 +30,7 @@ export interface BodyState {
   massProperties: BodyMassProperties;
   pose: BodyPose;
   sourceAssetRef: { contentHash: string; originalFilename: string };
+  isFixed?: boolean;
 }
 
 export interface DatumState {
@@ -39,10 +40,12 @@ export interface DatumState {
   localPose: BodyPose;
 }
 
+export type JointTypeId = 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar';
+
 export interface JointState {
   id: string;
   name: string;
-  type: 'revolute' | 'prismatic' | 'fixed';
+  type: JointTypeId;
   parentDatumId: string;
   childDatumId: string;
   lowerLimit: number;
@@ -57,11 +60,13 @@ export interface MechanismState {
   importError: string | null;
   projectName: string;
   projectFilePath: string | null;
+  isDirty: boolean;
   addBodies: (bodies: BodyState[]) => void;
   removeBody: (id: string) => void;
   addDatum: (datum: DatumState) => void;
   removeDatum: (id: string) => void;
   renameDatum: (id: string, name: string) => void;
+  updateDatumPose: (id: string, localPose: DatumState['localPose']) => void;
   addJoint: (joint: JointState) => void;
   updateJoint: (id: string, updates: Partial<Omit<JointState, 'id'>>) => void;
   removeJoint: (id: string) => void;
@@ -69,6 +74,8 @@ export interface MechanismState {
   setImporting: (v: boolean) => void;
   setImportError: (e: string | null) => void;
   setProjectMeta: (name: string, filePath: string | null) => void;
+  markDirty: () => void;
+  markClean: () => void;
 }
 
 export const useMechanismStore = create<MechanismState>()((set) => ({
@@ -79,6 +86,7 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
   importError: null,
   projectName: 'Untitled',
   projectFilePath: null,
+  isDirty: false,
 
   addBodies: (bodies) =>
     set((state) => {
@@ -86,28 +94,28 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       for (const body of bodies) {
         next.set(body.id, body);
       }
-      return { bodies: next };
+      return { bodies: next, isDirty: true };
     }),
 
   removeBody: (id) =>
     set((state) => {
       const next = new Map(state.bodies);
       next.delete(id);
-      return { bodies: next };
+      return { bodies: next, isDirty: true };
     }),
 
   addDatum: (datum) =>
     set((state) => {
       const next = new Map(state.datums);
       next.set(datum.id, datum);
-      return { datums: next };
+      return { datums: next, isDirty: true };
     }),
 
   removeDatum: (id) =>
     set((state) => {
       const next = new Map(state.datums);
       next.delete(id);
-      return { datums: next };
+      return { datums: next, isDirty: true };
     }),
 
   renameDatum: (id, name) =>
@@ -116,14 +124,23 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       if (!existing) return {};
       const next = new Map(state.datums);
       next.set(id, { ...existing, name });
-      return { datums: next };
+      return { datums: next, isDirty: true };
+    }),
+
+  updateDatumPose: (id, localPose) =>
+    set((state) => {
+      const existing = state.datums.get(id);
+      if (!existing) return {};
+      const next = new Map(state.datums);
+      next.set(id, { ...existing, localPose });
+      return { datums: next, isDirty: true };
     }),
 
   addJoint: (joint) =>
     set((state) => {
       const next = new Map(state.joints);
       next.set(joint.id, joint);
-      return { joints: next };
+      return { joints: next, isDirty: true };
     }),
 
   updateJoint: (id, updates) =>
@@ -132,14 +149,14 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       if (!existing) return {};
       const next = new Map(state.joints);
       next.set(id, { ...existing, ...updates });
-      return { joints: next };
+      return { joints: next, isDirty: true };
     }),
 
   removeJoint: (id) =>
     set((state) => {
       const next = new Map(state.joints);
       next.delete(id);
-      return { joints: next };
+      return { joints: next, isDirty: true };
     }),
 
   clear: () =>
@@ -155,4 +172,8 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
   setImportError: (e) => set({ importError: e }),
 
   setProjectMeta: (name, filePath) => set({ projectName: name, projectFilePath: filePath }),
+
+  markDirty: () => set({ isDirty: true }),
+
+  markClean: () => set({ isDirty: false }),
 }));

@@ -6,6 +6,7 @@
 
 namespace motionlab::mechanism {
 class AssetReference;
+class Body;
 class Mechanism;
 }
 
@@ -22,9 +23,14 @@ public:
                   bool is_fixed = false);
     bool has_body(const std::string& id) const;
     bool set_body_fixed(const std::string& id, bool is_fixed);
+    bool update_body_asset_ref(const std::string& id,
+                               const motionlab::mechanism::AssetReference* ref);
 
     // Build a Mechanism proto from current state
     motionlab::mechanism::Mechanism build_mechanism_proto() const;
+
+    // Build a single Body proto by ID (returns nullopt if not found)
+    std::optional<motionlab::mechanism::Body> build_body_proto(const std::string& body_id) const;
 
     // Load state from a Mechanism proto (preserving original IDs)
     void load_from_proto(const motionlab::mechanism::Mechanism& mech);
@@ -94,6 +100,9 @@ private:
         std::optional<AssetRef> source_asset_ref;
         bool is_fixed = false;
     };
+
+    static void serialize_body_entry(motionlab::mechanism::Body* pb, const BodyEntry& body);
+
     std::unordered_map<std::string, BodyEntry> bodies_;
     std::unordered_map<std::string, DatumEntry> datums_;
     std::unordered_map<std::string, JointEntry> joints_;

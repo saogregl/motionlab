@@ -42,6 +42,19 @@ bool MechanismState::set_body_fixed(const std::string& id, bool is_fixed) {
     return true;
 }
 
+bool MechanismState::update_body_asset_ref(const std::string& id,
+                                            const mechanism::AssetReference* ref) {
+    auto it = bodies_.find(id);
+    if (it == bodies_.end()) return false;
+    if (ref) {
+        it->second.source_asset_ref = BodyEntry::AssetRef{
+            ref->content_hash(), ref->relative_path(), ref->original_filename()};
+    } else {
+        it->second.source_asset_ref = std::nullopt;
+    }
+    return true;
+}
+
 bool MechanismState::has_body(const std::string& id) const {
     return bodies_.find(id) != bodies_.end();
 }
@@ -309,47 +322,50 @@ void MechanismState::load_from_proto(const mechanism::Mechanism& mech) {
     }
 }
 
+void MechanismState::serialize_body_entry(mechanism::Body* pb, const BodyEntry& body) {
+    pb->mutable_id()->set_id(body.id);
+    pb->set_name(body.name);
+
+    auto* pose = pb->mutable_pose();
+    auto* pos = pose->mutable_position();
+    pos->set_x(body.position[0]);
+    pos->set_y(body.position[1]);
+    pos->set_z(body.position[2]);
+    auto* rot = pose->mutable_orientation();
+    rot->set_w(body.orientation[0]);
+    rot->set_x(body.orientation[1]);
+    rot->set_y(body.orientation[2]);
+    rot->set_z(body.orientation[3]);
+
+    auto* mp = pb->mutable_mass_properties();
+    mp->set_mass(body.mass);
+    auto* com = mp->mutable_center_of_mass();
+    com->set_x(body.center_of_mass[0]);
+    com->set_y(body.center_of_mass[1]);
+    com->set_z(body.center_of_mass[2]);
+    mp->set_ixx(body.inertia[0]);
+    mp->set_iyy(body.inertia[1]);
+    mp->set_izz(body.inertia[2]);
+    mp->set_ixy(body.inertia[3]);
+    mp->set_ixz(body.inertia[4]);
+    mp->set_iyz(body.inertia[5]);
+    if (body.source_asset_ref.has_value()) {
+        auto* asset_ref = pb->mutable_source_asset_ref();
+        asset_ref->set_content_hash(body.source_asset_ref->content_hash);
+        asset_ref->set_relative_path(body.source_asset_ref->relative_path);
+        asset_ref->set_original_filename(body.source_asset_ref->original_filename);
+    }
+
+    pb->set_is_fixed(body.is_fixed);
+}
+
 mechanism::Mechanism MechanismState::build_mechanism_proto() const {
     mechanism::Mechanism mech;
     mech.mutable_id()->set_id("sim-mechanism");
     mech.set_name("Current Mechanism");
 
     for (const auto& [id, body] : bodies_) {
-        auto* pb = mech.add_bodies();
-        pb->mutable_id()->set_id(body.id);
-        pb->set_name(body.name);
-
-        auto* pose = pb->mutable_pose();
-        auto* pos = pose->mutable_position();
-        pos->set_x(body.position[0]);
-        pos->set_y(body.position[1]);
-        pos->set_z(body.position[2]);
-        auto* rot = pose->mutable_orientation();
-        rot->set_w(body.orientation[0]);
-        rot->set_x(body.orientation[1]);
-        rot->set_y(body.orientation[2]);
-        rot->set_z(body.orientation[3]);
-
-        auto* mp = pb->mutable_mass_properties();
-        mp->set_mass(body.mass);
-        auto* com = mp->mutable_center_of_mass();
-        com->set_x(body.center_of_mass[0]);
-        com->set_y(body.center_of_mass[1]);
-        com->set_z(body.center_of_mass[2]);
-        mp->set_ixx(body.inertia[0]);
-        mp->set_iyy(body.inertia[1]);
-        mp->set_izz(body.inertia[2]);
-        mp->set_ixy(body.inertia[3]);
-        mp->set_ixz(body.inertia[4]);
-        mp->set_iyz(body.inertia[5]);
-        if (body.source_asset_ref.has_value()) {
-            auto* asset_ref = pb->mutable_source_asset_ref();
-            asset_ref->set_content_hash(body.source_asset_ref->content_hash);
-            asset_ref->set_relative_path(body.source_asset_ref->relative_path);
-            asset_ref->set_original_filename(body.source_asset_ref->original_filename);
-        }
-
-        pb->set_is_fixed(body.is_fixed);
+        serialize_body_entry(mech.add_bodies(), body);
     }
 
     for (const auto& [id, datum] : datums_) {
@@ -382,6 +398,17 @@ mechanism::Mechanism MechanismState::build_mechanism_proto() const {
     }
 
     return mech;
+}
+
+std::optional<mechanism::Body> MechanismState::build_body_proto(const std::string& body_id) const {
+    auto it = bodies_.find(body_id);
+    if (it == bodies_.end()) {
+        return std::nullopt;
+    }
+
+    mechanism::Body pb;
+    serialize_body_entry(&pb, it->second);
+    return pb;
 }
 
 } // namespace motionlab::engine

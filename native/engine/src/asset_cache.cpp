@@ -67,6 +67,29 @@ std::string AssetCache::compute_cache_key(const std::string& file_path,
     return picosha2::get_hash_hex_string(hasher);
 }
 
+void AssetCache::remove(const std::string& cache_key) {
+    auto path = key_to_path(cache_key);
+    std::filesystem::remove(path);
+}
+
+std::string AssetCache::compute_file_hash(const std::string& file_path) {
+    std::ifstream f(file_path, std::ios::binary);
+    if (!f.is_open()) return "";
+
+    picosha2::hash256_one_by_one hasher;
+    std::vector<char> buffer(64 * 1024);
+    while (f.good()) {
+        f.read(buffer.data(), static_cast<std::streamsize>(buffer.size()));
+        std::streamsize count = f.gcount();
+        if (count > 0) {
+            hasher.process(reinterpret_cast<const unsigned char*>(buffer.data()),
+                           reinterpret_cast<const unsigned char*>(buffer.data() + count));
+        }
+    }
+    hasher.finish();
+    return picosha2::get_hash_hex_string(hasher);
+}
+
 void AssetCache::clear() {
     if (std::filesystem::exists(cache_dir_)) {
         std::filesystem::remove_all(cache_dir_);

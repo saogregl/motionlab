@@ -1,3 +1,4 @@
+#include "engine/log.h"
 // ---------------------------------------------------------------------------
 // Simulation tests — Chrono integration
 //
@@ -136,6 +137,17 @@ static int test_pendulum_simulation() {
     const int steps = 100;
     for (int i = 0; i < steps; i++) {
         runtime.step(dt);
+        if (i < 5 || i % 20 == 19) {
+            auto p = runtime.getBodyPoses();
+            for (const auto& bp : p) {
+                if (bp.body_id == "body-b") {
+                    std::cout << "  step " << (i+1) << ": B=("
+                              << bp.position[0] << ", "
+                              << bp.position[1] << ", "
+                              << bp.position[2] << ")\n";
+                }
+            }
+        }
     }
 
     assert(runtime.getStepCount() == 100);
@@ -338,10 +350,163 @@ static int test_reset() {
 }
 
 // ---------------------------------------------------------------------------
+// Test 7: Exact pendulum example — matches generate-pendulum-example.mts
+//
+// Differences from test 1:
+//   - Ground has is_fixed=true (test 1 relies on first-body convention)
+//   - Arm at (0.7,0,0) with pivot at (0.2,0,0) (test 1: arm at 1.0, pivot at 0.5)
+//   - Realistic box inertia (test 1: isotropic 0.1)
+//   - Joint limits set to ±6.28 (test 1: no limits)
+// ---------------------------------------------------------------------------
+
+static mech::Mechanism build_example_pendulum() {
+    mech::Mechanism m;
+    m.mutable_id()->set_id("mech-pendulum");
+    m.set_name("Pendulum");
+
+    // Ground: 0.4×0.2×0.2 m, 1 kg, is_fixed=true
+    {
+        auto* body = m.add_bodies();
+        body->mutable_id()->set_id("body-ground");
+        body->set_name("Ground");
+        body->set_is_fixed(true);
+
+        auto* pose = body->mutable_pose();
+        auto* pos = pose->mutable_position();
+        pos->set_x(0); pos->set_y(0); pos->set_z(0);
+        auto* ori = pose->mutable_orientation();
+        ori->set_w(1); ori->set_x(0); ori->set_y(0); ori->set_z(0);
+
+        auto* mp = body->mutable_mass_properties();
+        mp->set_mass(1.0);
+        // boxInertia(1.0, 0.4, 0.2, 0.2):
+        // ixx = 1/12*(0.04+0.04) = 0.00667
+        // iyy = 1/12*(0.16+0.04) = 0.01667
+        // izz = 1/12*(0.16+0.04) = 0.01667
+        mp->set_ixx(1.0/12.0*(0.04+0.04));
+        mp->set_iyy(1.0/12.0*(0.16+0.04));
+        mp->set_izz(1.0/12.0*(0.16+0.04));
+        mp->set_ixy(0); mp->set_ixz(0); mp->set_iyz(0);
+    }
+
+    // Pendulum Arm: 1.0×0.1×0.1 m, 1 kg
+    {
+        auto* body = m.add_bodies();
+        body->mutable_id()->set_id("body-arm");
+        body->set_name("Pendulum Arm");
+        // is_fixed NOT set (defaults false)
+
+        auto* pose = body->mutable_pose();
+        auto* pos = pose->mutable_position();
+        pos->set_x(0.7); pos->set_y(0); pos->set_z(0);
+        auto* ori = pose->mutable_orientation();
+        ori->set_w(1); ori->set_x(0); ori->set_y(0); ori->set_z(0);
+
+        auto* mp = body->mutable_mass_properties();
+        mp->set_mass(1.0);
+        // boxInertia(1.0, 1.0, 0.1, 0.1):
+        // ixx = 1/12*(0.01+0.01) = 0.001667
+        // iyy = 1/12*(1.0+0.01)  = 0.084167
+        // izz = 1/12*(1.0+0.01)  = 0.084167
+        mp->set_ixx(1.0/12.0*(0.01+0.01));
+        mp->set_iyy(1.0/12.0*(1.0+0.01));
+        mp->set_izz(1.0/12.0*(1.0+0.01));
+        mp->set_ixy(0); mp->set_ixz(0); mp->set_iyz(0);
+    }
+
+    // Datum on Ground at local (0.2, 0, 0)
+    {
+        auto* datum = m.add_datums();
+        datum->mutable_id()->set_id("datum-pivot-ground");
+        datum->set_name("Pivot on Ground");
+        datum->mutable_parent_body_id()->set_id("body-ground");
+
+        auto* lp = datum->mutable_local_pose();
+        auto* pos = lp->mutable_position();
+        pos->set_x(0.2); pos->set_y(0); pos->set_z(0);
+        auto* ori = lp->mutable_orientation();
+        ori->set_w(1); ori->set_x(0); ori->set_y(0); ori->set_z(0);
+    }
+
+    // Datum on Arm at local (-0.5, 0, 0)
+    {
+        auto* datum = m.add_datums();
+        datum->mutable_id()->set_id("datum-pivot-arm");
+        datum->set_name("Pivot on Pendulum");
+        datum->mutable_parent_body_id()->set_id("body-arm");
+
+        auto* lp = datum->mutable_local_pose();
+        auto* pos = lp->mutable_position();
+        pos->set_x(-0.5); pos->set_y(0); pos->set_z(0);
+        auto* ori = lp->mutable_orientation();
+        ori->set_w(1); ori->set_x(0); ori->set_y(0); ori->set_z(0);
+    }
+
+    // Revolute joint (no limits)
+    {
+        auto* joint = m.add_joints();
+        joint->mutable_id()->set_id("joint-pivot");
+        joint->set_name("Pivot");
+        joint->set_type(mech::JOINT_TYPE_REVOLUTE);
+        joint->mutable_parent_datum_id()->set_id("datum-pivot-ground");
+        joint->mutable_child_datum_id()->set_id("datum-pivot-arm");
+    }
+
+    return m;
+}
+
+static int test_example_pendulum() {
+    std::cout << "  [test_example_pendulum] ";
+
+    eng::SimulationRuntime runtime;
+    auto mechanism = build_example_pendulum();
+
+    auto result = runtime.compile(mechanism);
+    assert(result.success && "Compilation should succeed");
+
+    // Print diagnostics
+    for (const auto& d : result.diagnostics) {
+        std::cout << "\n    diag: " << d;
+    }
+
+    // Step for 0.5 seconds at dt=0.001 (500 steps)
+    const double dt = 0.001;
+    for (int i = 0; i < 500; i++) {
+        runtime.step(dt);
+        if (i == 0 || i == 9 || i == 49 || i == 99 || i == 299 || i == 499) {
+            auto poses = runtime.getBodyPoses();
+            for (const auto& p : poses) {
+                if (p.body_id == "body-arm") {
+                    std::cout << "\n    step " << (i+1)
+                              << " (t=" << runtime.getCurrentTime() << "s)"
+                              << ": arm=(" << p.position[0]
+                              << ", " << p.position[1]
+                              << ", " << p.position[2] << ")";
+                }
+            }
+        }
+    }
+
+    auto poses = runtime.getBodyPoses();
+    const eng::BodyPose* arm = nullptr;
+    for (const auto& p : poses) {
+        if (p.body_id == "body-arm") arm = &p;
+    }
+    assert(arm);
+
+    assert(std::abs(arm->position[1]) > 0.01 &&
+           "Pendulum arm should swing significantly under gravity");
+
+    std::cout << "\n    PASS (arm swung: y=" << arm->position[1] << ")\n";
+    return 0;
+}
+
+// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
 int main() {
+    motionlab::init_logging(spdlog::level::debug);
     std::cout << "=== Simulation Tests (Chrono Integration) ===\n";
 
     int failures = 0;
@@ -351,6 +516,7 @@ int main() {
     failures += test_zero_mass();
     failures += test_negative_mass();
     failures += test_reset();
+    failures += test_example_pendulum();
 
     if (failures == 0) {
         std::cout << "\nAll simulation tests passed.\n";

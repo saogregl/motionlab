@@ -38,6 +38,9 @@ find_package(ixwebsocket CONFIG REQUIRED)
 # Protobuf — binary protocol (Epic 2)
 find_package(Protobuf CONFIG REQUIRED)
 
+# Freetype — required by OCCT's visualization targets
+find_package(Freetype REQUIRED)
+
 # OCCT — CAD import, tessellation, mass properties (Epic 3)
 find_package(OpenCASCADE CONFIG REQUIRED)
 set(OCCT_LIBS
@@ -47,6 +50,9 @@ set(OCCT_LIBS
   TKXCAF TKLCAF TKCAF TKCDF
   TKMesh TKPrim
 )
+
+# spdlog — structured logging (stderr, leaves stdout for Electron supervision)
+find_package(spdlog CONFIG REQUIRED)
 
 # picosha2 — header-only SHA-256
 find_path(PICOSHA2_INCLUDE_DIR picosha2.h)
@@ -126,6 +132,8 @@ endif()
 # ──────────────────────────────────────────────
 add_library(motionlab-engine-lib STATIC
   src/transport.cpp
+  src/transport_import_project_context.cpp
+  src/transport_runtime_session.cpp
   src/cad_import.cpp
   src/asset_cache.cpp
   src/face_classifier.cpp
@@ -153,12 +161,21 @@ target_link_libraries(motionlab-engine-lib PUBLIC
   protobuf::libprotobuf
   ${OCCT_LIBS}
   ChronoEngine
+  spdlog::spdlog
 )
 
 # Chrono is built as a static lib (BUILD_SHARED_LIBS=OFF) but ChApi still
 # expands to __declspec(dllimport) on Windows for consumers. Define
 # CH_API_COMPILE so our code matches the static lib's symbol decoration.
 target_compile_definitions(motionlab-engine-lib PUBLIC CH_API_COMPILE)
+
+# Match Chrono's SIMD compile flags so Eigen uses identical alignment
+# (EIGEN_MAX_ALIGN_BYTES) in every compilation unit.  Without this,
+# Chrono objects compiled with AVX (32-byte alignment) segfault when
+# touched by motionlab code compiled without AVX (16-byte alignment).
+if(NOT MSVC AND USE_SIMD AND SIMD_CXX_FLAGS)
+  target_compile_options(motionlab-engine-lib PUBLIC ${SIMD_CXX_FLAGS})
+endif()
 
 # Windows system libraries required by mbedtls (via ixwebsocket SSL)
 if(WIN32)
@@ -177,6 +194,17 @@ add_executable(motionlab-engine
 target_link_libraries(motionlab-engine PRIVATE
   motionlab-engine-lib
 )
+
+# ──────────────────────────────────────────────
+# Tools
+# ──────────────────────────────────────────────
+add_executable(generate-pendulum-example
+  tools/generate_pendulum.cpp
+)
+target_link_libraries(generate-pendulum-example PRIVATE
+  motionlab-engine-lib
+)
+motionlab_target_warnings(generate-pendulum-example)
 
 # ──────────────────────────────────────────────
 # Tests

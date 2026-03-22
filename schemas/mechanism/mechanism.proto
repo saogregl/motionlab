@@ -128,6 +128,10 @@ message BodyDisplayData {
   string body_id = 1;
   DisplayMesh display_mesh = 2;
   repeated uint32 part_index = 3;
+  // Import parameters — enables cache key reconstruction on load
+  double density = 4;
+  double tessellation_quality = 5;
+  string unit_system = 6;
 }
 
 // Self-contained project file (binary protobuf with version field)

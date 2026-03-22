@@ -3,17 +3,20 @@ import { WebGPUEngine } from '@babylonjs/core/Engines/webgpuEngine';
 import { useEffect, useRef } from 'react';
 
 import {
+  type FaceHoverCallback,
   type HoverCallback,
   type InteractionMode,
   type PickCallback,
   PickingManager,
 } from './picking.js';
 import {
+  createAxisIndicator,
   createGrid,
   createLightingRig,
   createMaterialFactory,
   createPostProcessing,
   createSelectionVisuals,
+  createViewCube,
   setupEnvironment,
 } from './rendering/index.js';
 import { SceneGraphManager } from './scene-graph.js';
@@ -23,6 +26,7 @@ export interface ViewportProps {
   onSceneReady?: (sceneGraph: SceneGraphManager) => void;
   onPick?: PickCallback;
   onHover?: HoverCallback;
+  onFaceHover?: FaceHoverCallback;
   interactionMode?: InteractionMode;
   gridVisible?: boolean;
   ssaoEnabled?: boolean;
@@ -43,6 +47,7 @@ export function Viewport({
   onSceneReady,
   onPick,
   onHover,
+  onFaceHover,
   interactionMode = 'select',
   gridVisible = false,
   ssaoEnabled = false,
@@ -52,10 +57,26 @@ export function Viewport({
   const engineRef = useRef<Engine | null>(null);
   const pickingManagerRef = useRef<PickingManager | null>(null);
 
+  // Store callbacks in refs so the scene-init useEffect doesn't depend on them.
+  // This prevents the entire Babylon engine from being torn down and recreated
+  // when callback identity changes or tool mode switches.
+  const onPickRef = useRef(onPick);
+  const onHoverRef = useRef(onHover);
+  const onFaceHoverRef = useRef(onFaceHover);
+  const onSceneReadyRef = useRef(onSceneReady);
+  onPickRef.current = onPick;
+  onHoverRef.current = onHover;
+  onFaceHoverRef.current = onFaceHover;
+  onSceneReadyRef.current = onSceneReady;
+
+  // Interaction mode changes are forwarded to PickingManager without
+  // tearing down the scene.
   useEffect(() => {
     pickingManagerRef.current?.setInteractionMode(interactionMode);
   }, [interactionMode]);
 
+  // One-time scene initialization. Only structural config (grid, SSAO)
+  // should trigger a full engine rebuild.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -123,6 +144,7 @@ export function Viewport({
 
       camera.attachControl(canvas, true);
       camera.wheelPrecision = 50;
+      camera.lowerRadiusLimit = 0.01;
 
       // In ortho mode the camera position is arbitrary — objects can be
       // "behind" the camera plane yet still visible. Use a negative minZ
@@ -167,20 +189,22 @@ export function Viewport({
       // 7. Post-processing (after camera is attached)
       const postProcessing = createPostProcessing(scene, camera, { ssaoEnabled });
 
-      // 8. Picking manager
-      let pickingManager: PickingManager | undefined;
-      if (onPick || onHover) {
-        pickingManager = new PickingManager(
-          scene,
-          sceneGraph,
-          onPick ?? (() => {}),
-          onHover ?? (() => {}),
-        );
-        pickingManager.setInteractionMode(interactionMode);
-        pickingManagerRef.current = pickingManager;
-      }
+      // 8. Picking manager — always created; callbacks read from refs so
+      //    they stay current without recreating the manager.
+      const pickingManager = new PickingManager(
+        scene,
+        sceneGraph,
+        (entityId, modifiers, spatial) => onPickRef.current?.(entityId, modifiers, spatial),
+        (entityId) => onHoverRef.current?.(entityId),
+      );
+      pickingManager.onFaceHoverChange = (face) => onFaceHoverRef.current?.(face);
+      pickingManagerRef.current = pickingManager;
 
-      onSceneReady?.(sceneGraph);
+      // 9. Viewport overlays (render after main scene)
+      const viewCube = createViewCube(scene, sceneGraph);
+      const axisIndicator = createAxisIndicator(scene, camera, sceneGraph);
+
+      onSceneReadyRef.current?.(sceneGraph);
 
       engine.runRenderLoop(() => {
         scene.render();
@@ -189,11 +213,21 @@ export function Viewport({
       const handleResize = () => engine.resize();
       window.addEventListener('resize', handleResize);
 
+      // ResizeObserver catches panel resizes that don't fire window resize
+      // (e.g. react-resizable-panels drag). Babylon needs engine.resize() to
+      // update its internal render target dimensions; without it the canvas
+      // stretches visually but renders at stale resolution.
+      const resizeObserver = new ResizeObserver(() => engine.resize());
+      resizeObserver.observe(canvas);
+
       // Stash cleanup references on the canvas for the teardown closure
       (canvas as unknown as Record<string, unknown>).__cleanup = () => {
+        resizeObserver.disconnect();
         window.removeEventListener('resize', handleResize);
         scene.onBeforeRenderObservable.remove(orthoZoomObserver);
-        pickingManager?.dispose();
+        viewCube.dispose();
+        axisIndicator.dispose();
+        pickingManager.dispose();
         pickingManagerRef.current = null;
         sceneGraph.dispose();
         postProcessing.dispose();
@@ -220,7 +254,10 @@ export function Viewport({
         engineRef.current = null;
       }
     };
-  }, [gridVisible, interactionMode, onHover, onPick, onSceneReady, ssaoEnabled]);
+    // Only rebuild engine/scene for structural config changes.
+    // Callbacks and interaction mode are handled via refs and separate effects.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gridVisible, ssaoEnabled]);
 
   return <canvas ref={canvasRef} className={className} style={{ width: '100%', height: '100%' }} />;
 }

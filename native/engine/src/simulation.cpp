@@ -414,11 +414,27 @@ CompilationResult SimulationRuntime::compile(
 // ---------------------------------------------------------------------------
 
 void SimulationRuntime::step(double dt) {
-    if (!impl_->system) return;
+    if (!impl_->system) {
+        spdlog::warn("step: system is null!");
+        return;
+    }
     impl_->state = SimState::RUNNING;
     impl_->system->DoStepDynamics(dt);
     impl_->current_time += dt;
     impl_->step_count++;
+    // Log every 1000 steps (~1 second at dt=0.001)
+    if (impl_->step_count % 1000 == 0) {
+        auto grav = impl_->system->GetGravitationalAcceleration();
+        spdlog::info("step {}: gravity=({:.2f},{:.2f},{:.2f}) nbodies={} nlinks={}",
+            impl_->step_count, grav.x(), grav.y(), grav.z(),
+            impl_->system->GetBodies().size(), impl_->system->GetLinks().size());
+        for (const auto& [id, ch_body] : impl_->body_map) {
+            spdlog::info("  body '{}': fixed={} mass={:.3f} pos=({:.4f},{:.4f},{:.4f}) vel=({:.4f},{:.4f},{:.4f})",
+                id, ch_body->IsFixed(), ch_body->GetMass(),
+                ch_body->GetPos().x(), ch_body->GetPos().y(), ch_body->GetPos().z(),
+                ch_body->GetPosDt().x(), ch_body->GetPosDt().y(), ch_body->GetPosDt().z());
+        }
+    }
 }
 
 void SimulationRuntime::pause() {

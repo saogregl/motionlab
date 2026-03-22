@@ -58,62 +58,34 @@ export function setupEnvironment(scene: Scene, options?: EnvironmentOptions): En
     bgLayer.texture = gradientTex;
   }
 
-  // --- IBL environment ---
-  let envHelper: ReturnType<Scene['createDefaultEnvironment']> = null;
+  // --- IBL environment (required for PBR materials) ---
+  // Use a bundled .env texture by default to avoid CSP issues with
+  // Babylon's CDN URL (blocked by Electron's default-src 'self').
+  const hdrUrl = options?.hdrUrl ?? '/textures/environmentSpecular.env';
 
-  if (options?.hdrUrl) {
-    try {
-      const url = options.hdrUrl;
-      const ext = url.split('.').pop()?.toLowerCase();
+  try {
+    const ext = hdrUrl.split('.').pop()?.toLowerCase();
 
-      if (ext === 'exr') {
-        // EXR: prefilter on-the-fly into cube texture (requires WebGL2+)
-        const exrTexture = new EXRCubeTexture(url, scene, 256, false, true, true);
-        scene.environmentTexture = exrTexture;
-      } else if (ext === 'hdr') {
-        // HDR (Radiance RGBE): prefilter on-the-fly
-        const hdrTexture = new HDRCubeTexture(url, scene, 256, false, true, false, true);
-        scene.environmentTexture = hdrTexture;
-      } else {
-        // .env: already prefiltered
-        const envTexture = CubeTexture.CreateFromPrefilteredData(url, scene);
-        scene.environmentTexture = envTexture;
-      }
-
-      scene.environmentIntensity = envIntensity;
-    } catch (e) {
-      console.warn('[viewport] Failed to load HDR environment, falling back to procedural:', e);
-      envHelper = createProceduralEnvironment(scene, envIntensity);
+    if (ext === 'exr') {
+      scene.environmentTexture = new EXRCubeTexture(hdrUrl, scene, 256, false, true, true);
+    } else if (ext === 'hdr') {
+      scene.environmentTexture = new HDRCubeTexture(hdrUrl, scene, 256, false, true, false, true);
+    } else {
+      scene.environmentTexture = CubeTexture.CreateFromPrefilteredData(hdrUrl, scene);
     }
-  } else {
-    envHelper = createProceduralEnvironment(scene, envIntensity);
+  } catch (e) {
+    console.warn('[viewport] Failed to load environment texture:', e);
   }
+
+  scene.environmentIntensity = envIntensity;
 
   return {
     dispose: () => {
       scene.environmentTexture?.dispose();
-      envHelper?.dispose();
       bgLayer?.dispose();
       gradientTex?.dispose();
     },
   };
-}
-
-function createProceduralEnvironment(
-  scene: Scene,
-  envIntensity: number,
-): ReturnType<Scene['createDefaultEnvironment']> {
-  const envHelper = scene.createDefaultEnvironment({
-    createSkybox: false,
-    createGround: false,
-    setupImageProcessing: false,
-  });
-
-  if (scene.environmentTexture) {
-    scene.environmentIntensity = envIntensity;
-  }
-
-  return envHelper;
 }
 
 function rgbToHex(r: number, g: number, b: number): string {

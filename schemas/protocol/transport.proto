@@ -39,6 +39,7 @@ message Command {
     ScrubCommand scrub = 32;
     SaveProjectCommand save_project = 40;
     LoadProjectCommand load_project = 41;
+    RelocateAssetCommand relocate_asset = 42;
   }
 }
 
@@ -66,6 +67,7 @@ message Event {
     SimulationTrace simulation_trace = 33;
     SaveProjectResult save_project_result = 40;
     LoadProjectResult load_project_result = 41;
+    RelocateAssetResult relocate_asset_result = 42;
   }
 }
 
@@ -404,4 +406,30 @@ message LoadProjectSuccess {
   motionlab.mechanism.Mechanism mechanism = 1;
   repeated BodyImportResult bodies = 2;
   motionlab.mechanism.ProjectMetadata metadata = 3;
+  repeated MissingAssetInfo missing_assets = 4;
+}
+
+// Information about an asset that could not be found or validated on project load
+message MissingAssetInfo {
+  string body_id = 1;
+  string body_name = 2;
+  motionlab.mechanism.AssetReference expected_asset = 3;
+  string reason = 4;  // "file_not_found", "hash_mismatch", "cache_corrupted"
+}
+
+// ──────────────────────────────────────────────
+// Asset relocation (Epic 9.1)
+// ──────────────────────────────────────────────
+
+message RelocateAssetCommand {
+  string body_id = 1;
+  string new_file_path = 2;
+  ImportOptions import_options = 3;
+}
+
+message RelocateAssetResult {
+  oneof result {
+    BodyImportResult body = 1;
+    string error_message = 2;
+  }
 }

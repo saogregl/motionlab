@@ -9,6 +9,15 @@ export type { VariantProps } from 'class-variance-authority';
 export type { SelectionChipProps } from './components/engineering/selection-chip';
 // Engineering
 export { SelectionChip } from './components/engineering/selection-chip';
+export type { CopyableIdProps } from './components/engineering/copyable-id';
+export { CopyableId } from './components/engineering/copyable-id';
+export type { InertiaMatrixDisplayProps } from './components/engineering/inertia-matrix-display';
+export { InertiaMatrixDisplay } from './components/engineering/inertia-matrix-display';
+export type { QuatDisplayProps, OrientationMode } from './components/engineering/quat-display';
+export { QuatDisplay } from './components/engineering/quat-display';
+export type { Vec3DisplayProps } from './components/engineering/vec3-display';
+export { Vec3Display } from './components/engineering/vec3-display';
+export { quatToEulerDeg } from './lib/quat-math';
 export type { Axis, AxisColorLabelProps } from './components/primitives/axis-color-label';
 export { AxisColorLabel } from './components/primitives/axis-color-label';
 export type {

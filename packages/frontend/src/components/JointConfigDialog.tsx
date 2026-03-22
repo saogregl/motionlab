@@ -21,7 +21,9 @@ import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { nextJointName } from '../utils/joint-naming.js';
 
-type JointType = 'revolute' | 'prismatic' | 'fixed';
+import type { JointTypeId } from '../stores/mechanism.js';
+
+type JointType = JointTypeId;
 
 export function JointConfigDialog() {
   const step = useJointCreationStore((s) => s.step);
@@ -51,13 +53,14 @@ export function JointConfigDialog() {
   const handleConfirm = () => {
     if (!parentDatumId || !childDatumId) return;
     const trimmedName = name.trim() || 'Joint';
+    const hasLimits = type === 'revolute' || type === 'prismatic' || type === 'cylindrical';
     sendCreateJoint(
       parentDatumId,
       childDatumId,
       type,
       trimmedName,
-      type === 'fixed' ? 0 : lowerLimit,
-      type === 'fixed' ? 0 : upperLimit,
+      hasLimits ? lowerLimit : 0,
+      hasLimits ? upperLimit : 0,
     );
     reset(); // back to pick-parent, stay in create-joint mode
   };
@@ -104,10 +107,13 @@ export function JointConfigDialog() {
                 <SelectItem value="revolute">Revolute</SelectItem>
                 <SelectItem value="prismatic">Prismatic</SelectItem>
                 <SelectItem value="fixed">Fixed</SelectItem>
+                <SelectItem value="spherical">Spherical</SelectItem>
+                <SelectItem value="cylindrical">Cylindrical</SelectItem>
+                <SelectItem value="planar">Planar</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          {type !== 'fixed' && (
+          {(type === 'revolute' || type === 'prismatic' || type === 'cylindrical') && (
             <>
               <div className="flex flex-col gap-1">
                 <label className="text-xs text-muted-foreground" htmlFor="joint-lower-limit">

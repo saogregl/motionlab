@@ -1,14 +1,18 @@
-import { InspectorPanel, InspectorSection, PropertyRow } from '@motionlab/ui';
+import {
+  CopyableId,
+  InlineEditableName,
+  InspectorPanel,
+  InspectorSection,
+  PropertyRow,
+  QuatDisplay,
+  Vec3Display,
+} from '@motionlab/ui';
 import { Crosshair } from 'lucide-react';
 import { useCallback, useState } from 'react';
 
 import { sendRenameDatum } from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSimulationStore } from '../stores/simulation.js';
-
-function fmt(value: number): string {
-  return value.toFixed(6);
-}
 
 export function DatumInspector({ datumId }: { datumId: string }) {
   const datum = useMechanismStore((s) => s.datums.get(datumId));
@@ -20,21 +24,21 @@ export function DatumInspector({ datumId }: { datumId: string }) {
   const isSimulating = simState === 'running' || simState === 'paused';
 
   const [editingName, setEditingName] = useState(false);
-  const [nameValue, setNameValue] = useState('');
 
   const startEditName = useCallback(() => {
     if (!datum || isSimulating) return;
-    setNameValue(datum.name);
     setEditingName(true);
   }, [datum, isSimulating]);
 
-  const commitName = useCallback(() => {
-    const trimmed = nameValue.trim();
-    if (trimmed && datum && trimmed !== datum.name) {
-      sendRenameDatum(datumId, trimmed);
-    }
-    setEditingName(false);
-  }, [nameValue, datum, datumId]);
+  const commitName = useCallback(
+    (newName: string) => {
+      if (datum && newName !== datum.name) {
+        sendRenameDatum(datumId, newName);
+      }
+      setEditingName(false);
+    },
+    [datum, datumId],
+  );
 
   if (!datum) return <InspectorPanel />;
 
@@ -48,64 +52,33 @@ export function DatumInspector({ datumId }: { datumId: string }) {
     >
       <InspectorSection title="Identity">
         <PropertyRow label="Name">
-          {editingName ? (
-            <input
-              className="h-5 w-full rounded-[var(--radius-sm)] border border-[var(--accent-primary)] bg-[var(--layer-base)] px-1 text-2xs text-[var(--text-primary)] outline-none"
-              value={nameValue}
-              onChange={(e) => setNameValue(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') commitName();
-                if (e.key === 'Escape') setEditingName(false);
-              }}
-              onBlur={commitName}
-            />
-          ) : (
-            <span
-              role="button"
-              tabIndex={0}
-              className="text-2xs truncate cursor-pointer hover:text-[var(--accent-primary)]"
-              onDoubleClick={startEditName}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') startEditName();
-              }}
-            >
-              {datum.name}
-            </span>
-          )}
+          <InlineEditableName
+            value={datum.name}
+            isEditing={editingName}
+            onStartEdit={startEditName}
+            onCommit={commitName}
+            onCancel={() => setEditingName(false)}
+          />
         </PropertyRow>
         <PropertyRow label="Parent Body">
           <span className="text-2xs truncate">{parentBody?.name ?? '—'}</span>
         </PropertyRow>
         <PropertyRow label="Datum ID">
-          <span className="text-2xs truncate font-mono">{datumId.slice(0, 12)}…</span>
+          <CopyableId value={datumId} />
         </PropertyRow>
       </InspectorSection>
 
       <InspectorSection title="Local Pose">
-        <PropertyRow label="Pos X" unit="m" numeric>
-          <span>{fmt(localPose.position.x)}</span>
-        </PropertyRow>
-        <PropertyRow label="Pos Y" unit="m" numeric>
-          <span>{fmt(localPose.position.y)}</span>
-        </PropertyRow>
-        <PropertyRow label="Pos Z" unit="m" numeric>
-          <span>{fmt(localPose.position.z)}</span>
-        </PropertyRow>
+        <Vec3Display
+          label="Position"
+          value={localPose.position}
+          unit="m"
+          precision={6}
+        />
       </InspectorSection>
 
-      <InspectorSection title="Orientation (Quaternion)">
-        <PropertyRow label="X" numeric>
-          <span>{fmt(localPose.rotation.x)}</span>
-        </PropertyRow>
-        <PropertyRow label="Y" numeric>
-          <span>{fmt(localPose.rotation.y)}</span>
-        </PropertyRow>
-        <PropertyRow label="Z" numeric>
-          <span>{fmt(localPose.rotation.z)}</span>
-        </PropertyRow>
-        <PropertyRow label="W" numeric>
-          <span>{fmt(localPose.rotation.w)}</span>
-        </PropertyRow>
+      <InspectorSection title="Orientation">
+        <QuatDisplay value={localPose.rotation} precision={6} />
       </InspectorSection>
     </InspectorPanel>
   );

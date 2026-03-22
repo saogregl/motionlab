@@ -3,6 +3,6 @@
   "name": "motionlab-engine",
   "version-string": "0.0.1",
   "description": "MotionLab native engine — CAD processing, simulation, and transport",
-  "dependencies": ["eigen3", "ixwebsocket", "opencascade", "picosha2", "protobuf"],
+  "dependencies": ["eigen3", "ixwebsocket", "opencascade", "picosha2", "protobuf", "spdlog"],
   "overrides": []
 }

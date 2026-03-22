@@ -69,7 +69,7 @@ function InlineEditableName({
         onBlur={commitOrCancel}
         onClick={(e) => e.stopPropagation()}
         className={cn(
-          'h-[var(--tree-row-h)] w-full min-w-0 rounded-[var(--radius-sm)] border border-[var(--accent-primary)] bg-[var(--layer-base)] px-1 text-[length:var(--text-xs)] text-[var(--text-primary)] outline-none',
+          'h-6 w-full min-w-0 rounded-[var(--radius-sm)] border border-[var(--accent-primary)] bg-[var(--layer-base)] px-1.5 text-[length:var(--text-xs)] text-[var(--text-primary)] outline-none',
           className,
         )}
       />

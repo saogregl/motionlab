@@ -18,12 +18,52 @@ const READY_TIMEOUT_MS = 10_000;
 const SHUTDOWN_TIMEOUT_MS = 5_000;
 const MAX_RESTARTS = 3;
 
+const LOG_MAX_AGE_DAYS = 7;
+
 export class EngineSupervisor {
   private child: ChildProcess | null = null;
   private shuttingDown = false;
   private crashListeners: CrashCallback[] = [];
   private restartListeners: RestartCallback[] = [];
   private restartCount = 0;
+  private logStream: fs.WriteStream | null = null;
+  private logDir: string = '';
+
+  /** Get the log directory path (for IPC exposure). */
+  getLogDir(): string {
+    return this.logDir;
+  }
+
+  private initLogFile(): void {
+    this.logDir = path.join(app.getPath('userData'), 'logs');
+    fs.mkdirSync(this.logDir, { recursive: true });
+
+    // Rotate: delete logs older than LOG_MAX_AGE_DAYS
+    try {
+      const cutoff = Date.now() - LOG_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+      for (const entry of fs.readdirSync(this.logDir)) {
+        const filePath = path.join(this.logDir, entry);
+        try {
+          const stat = fs.statSync(filePath);
+          if (stat.isFile() && stat.mtimeMs < cutoff) {
+            fs.unlinkSync(filePath);
+          }
+        } catch { /* ignore individual file errors */ }
+      }
+    } catch { /* ignore rotation errors */ }
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const logPath = path.join(this.logDir, `motionlab-${timestamp}.log`);
+    this.logStream = fs.createWriteStream(logPath, { flags: 'a' });
+    this.supervisorLog('Session started');
+  }
+
+  private supervisorLog(msg: string): void {
+    const ts = new Date().toISOString();
+    const line = `[SUPERVISOR ${ts}] ${msg}\n`;
+    this.logStream?.write(line);
+    console.log(`[SUPERVISOR] ${msg}`);
+  }
   resolveEnginePath(): { command: string; args: string[] } {
     if (app.isPackaged) {
       const ext = process.platform === 'win32' ? '.exe' : '';
@@ -40,7 +80,7 @@ export class EngineSupervisor {
     const ext = process.platform === 'win32' ? '.exe' : '';
 
     // Try common build directory names
-    const buildDirs = ['dev', 'msvc-dev', 'Release', 'Debug'];
+    const buildDirs = ['dev', 'dev-linux', 'msvc-dev', 'Release', 'Debug'];
     let devBin = '';
     for (const dir of buildDirs) {
       const candidate = path.join(
@@ -96,11 +136,12 @@ export class EngineSupervisor {
 
   async start(): Promise<EngineEndpoint> {
     this.restartCount = 0;
+    this.initLogFile();
     return this.spawnEngine();
   }
 
   private async spawnEngine(): Promise<EngineEndpoint> {
-    console.log('[SUPERVISOR] Resolving engine path...');
+    this.supervisorLog('Resolving engine path...');
     const { command, args: baseArgs } = this.resolveEnginePath();
 
     const sessionToken = crypto.randomBytes(16).toString('hex');
@@ -108,17 +149,20 @@ export class EngineSupervisor {
 
     const args = [...baseArgs, '--port', String(port), '--session-token', sessionToken];
 
-    console.log(`[SUPERVISOR] Spawning engine on port ${port}`);
+    this.supervisorLog(`Spawning engine on port ${port}`);
     const child = spawn(command, args, {
       stdio: ['ignore', 'pipe', 'pipe'],
     });
     this.child = child;
 
-    console.log(`[SUPERVISOR] Engine PID: ${child.pid}`);
+    this.supervisorLog(`Engine PID: ${child.pid}`);
 
     child.stderr?.on('data', (data: Buffer) => {
       const text = data.toString().trim();
-      if (text) console.error(`[ENGINE stderr] ${text}`);
+      if (text) {
+        this.logStream?.write(`[ENGINE stderr] ${text}\n`);
+        console.error(`[ENGINE stderr] ${text}`);
+      }
     });
 
     return new Promise<EngineEndpoint>((resolve, reject) => {
@@ -133,17 +177,19 @@ export class EngineSupervisor {
       }, READY_TIMEOUT_MS);
 
       child.stdout?.on('data', (data: Buffer) => {
-        if (settled) return;
         const text = data.toString();
         const lines = text.split('\n');
 
         for (const line of lines) {
           const trimmed = line.trim();
-          if (trimmed) console.log(`[ENGINE] ${trimmed}`);
+          if (trimmed) {
+            this.logStream?.write(`[ENGINE stdout] ${trimmed}\n`);
+            if (!settled) console.log(`[ENGINE] ${trimmed}`);
+          }
           if (trimmed.includes('[ENGINE] status=ready') && !settled) {
             settled = true;
             clearTimeout(timeout);
-            console.log('[SUPERVISOR] Engine ready');
+            this.supervisorLog('Engine ready');
             this.setupCrashHandler(child);
             const endpoint = { host: '127.0.0.1', port, sessionToken };
             resolve(endpoint);
@@ -173,15 +219,15 @@ export class EngineSupervisor {
 
   private setupCrashHandler(child: ChildProcess): void {
     child.on('exit', (code, signal) => {
-      console.log(`[SUPERVISOR] Engine exited (code: ${code}, signal: ${signal})`);
+      this.supervisorLog(`Engine exited (code: ${code}, signal: ${signal})`);
       this.child = null;
 
       if (!this.shuttingDown) {
         if (this.restartCount < MAX_RESTARTS) {
           this.restartCount++;
           const delay = 1000 * 2 ** (this.restartCount - 1);
-          console.log(
-            `[SUPERVISOR] Auto-restarting engine (attempt ${this.restartCount}/${MAX_RESTARTS}) in ${delay}ms...`,
+          this.supervisorLog(
+            `Auto-restarting engine (attempt ${this.restartCount}/${MAX_RESTARTS}) in ${delay}ms...`,
           );
 
           // Notify listeners about restart attempt
@@ -252,7 +298,7 @@ export class EngineSupervisor {
     this.shuttingDown = true;
 
     const child = this.child;
-    console.log('[SUPERVISOR] Shutting down engine...');
+    this.supervisorLog('Shutting down engine...');
 
     return new Promise<void>((resolve) => {
       const forceKillTimeout = setTimeout(() => {
@@ -264,7 +310,8 @@ export class EngineSupervisor {
         clearTimeout(forceKillTimeout);
         this.child = null;
         this.shuttingDown = false;
-        console.log('[SUPERVISOR] Engine shutdown complete');
+        this.supervisorLog('Engine shutdown complete');
+        this.logStream?.end();
         resolve();
       });
 

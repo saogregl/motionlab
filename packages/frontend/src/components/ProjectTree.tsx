@@ -13,10 +13,12 @@ import {
 import { Box, Crosshair, Link2 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
-import { sendDeleteDatum, sendRenameDatum } from '../engine/connection.js';
+import { sendDeleteDatum, sendDeleteJoint, sendRenameDatum, sendUpdateJoint } from '../engine/connection.js';
+import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
+import { useToolModeStore } from '../stores/tool-mode.js';
 
 // ── Sentinel IDs for group / structural nodes ──
 
@@ -148,12 +150,13 @@ export function ProjectTree() {
   const handleDelete = useCallback(
     (ids: Set<string>) => {
       if (isSimulating) return;
-      const { datums: dm } = useMechanismStore.getState();
+      const { datums: dm, joints: jm } = useMechanismStore.getState();
       for (const id of ids) {
         if (dm.has(id)) {
           sendDeleteDatum(id);
+        } else if (jm.has(id)) {
+          sendDeleteJoint(id);
         }
-        // Joint deletion will be wired when Epic 6.1 adds sendDeleteJoint
       }
     },
     [isSimulating],
@@ -162,11 +165,12 @@ export function ProjectTree() {
   // ── Rename commit ──
 
   const handleRenameCommit = useCallback((id: string, newName: string) => {
-    const { datums: dm } = useMechanismStore.getState();
+    const { datums: dm, joints: jm } = useMechanismStore.getState();
     if (dm.has(id)) {
       sendRenameDatum(id, newName);
+    } else if (jm.has(id)) {
+      sendUpdateJoint(id, { name: newName });
     }
-    // Joint rename will be wired when Epic 6.1 adds sendUpdateJoint
     setEditingId(null);
   }, []);
 
@@ -231,21 +235,18 @@ export function ProjectTree() {
       if (nodeType === 'body') {
         return (
           <BodyContextMenu
-            onRename={isSimulating ? () => {} : () => setEditingId(node.id)}
-            onDelete={
-              isSimulating
-                ? () => {}
-                : () => {
-                    // Body deletion not yet supported
-                  }
-            }
+            onRename={isSimulating ? undefined : () => setEditingId(node.id)}
+            onDelete={undefined}
             onCreateDatum={
               isSimulating
-                ? () => {}
+                ? undefined
                 : () => {
-                    // Switch to create-datum mode: could be wired later
+                    useToolModeStore.getState().setMode('create-datum');
                   }
             }
+            onSelectInViewport={() => {
+              setSelection([node.id]);
+            }}
           >
             {row}
           </BodyContextMenu>
@@ -255,8 +256,20 @@ export function ProjectTree() {
       if (nodeType === 'datum') {
         return (
           <DatumContextMenu
-            onRename={isSimulating ? () => {} : () => setEditingId(node.id)}
-            onDelete={isSimulating ? () => {} : () => sendDeleteDatum(node.id)}
+            onRename={isSimulating ? undefined : () => setEditingId(node.id)}
+            onDelete={isSimulating ? undefined : () => sendDeleteDatum(node.id)}
+            onCreateJoint={
+              isSimulating
+                ? undefined
+                : () => {
+                    useToolModeStore.getState().setMode('create-joint');
+                    useJointCreationStore.getState().startCreation();
+                    useJointCreationStore.getState().setParentDatum(node.id);
+                  }
+            }
+            onSelectInViewport={() => {
+              setSelection([node.id]);
+            }}
           >
             {row}
           </DatumContextMenu>
@@ -266,14 +279,31 @@ export function ProjectTree() {
       if (nodeType === 'joint') {
         return (
           <JointContextMenu
-            onRename={isSimulating ? () => {} : () => setEditingId(node.id)}
-            onDelete={
+            onRename={isSimulating ? undefined : () => setEditingId(node.id)}
+            onDelete={isSimulating ? undefined : () => sendDeleteJoint(node.id)}
+            onChangeType={
               isSimulating
-                ? () => {}
-                : () => {
-                    // Joint deletion wired when Epic 6.1 adds sendDeleteJoint
+                ? undefined
+                : (type: string) => {
+                    const typeMap: Record<string, string> = {
+                      Revolute: 'revolute',
+                      Prismatic: 'prismatic',
+                      Fixed: 'fixed',
+                      Spherical: 'spherical',
+                      Cylindrical: 'cylindrical',
+                      Planar: 'planar',
+                    };
+                    const mapped = typeMap[type];
+                    if (mapped) {
+                      sendUpdateJoint(node.id, {
+                        type: mapped as 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar',
+                      });
+                    }
                   }
             }
+            onSelectInViewport={() => {
+              setSelection([node.id]);
+            }}
           >
             {row}
           </JointContextMenu>

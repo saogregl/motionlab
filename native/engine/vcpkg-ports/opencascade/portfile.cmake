@@ -46,13 +46,31 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+# OCCT 8.x with INSTALL_DIR_LAYOUT=Vcpkg double-nests the debug install
+# (debug/debug/lib instead of debug/lib). Relocate if needed.
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/debug/lib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/debug/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/debug/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/debug/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/debug")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/debug")
+endif()
+
 vcpkg_cmake_config_fixup(CONFIG_PATH share/opencascade)
 
 # For static builds, ensure OCCT_STATIC_BUILD is defined so dllexport/dllimport
 # macros resolve correctly
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # OCCT 8.x installs headers flat under include/ (no opencascade/ subdirectory)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/include/opencascade/Standard_Macro.hxx")
+        set(_macro_hxx "${CURRENT_PACKAGES_DIR}/include/opencascade/Standard_Macro.hxx")
+    else()
+        set(_macro_hxx "${CURRENT_PACKAGES_DIR}/include/Standard_Macro.hxx")
+    endif()
     vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/include/opencascade/Standard_Macro.hxx"
+        "${_macro_hxx}"
         "defined(OCCT_STATIC_BUILD)"
         "(1)"
     )

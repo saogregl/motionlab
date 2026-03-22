@@ -28,6 +28,7 @@
 
 // OCCT — Geometry & topology
 #include <BRep_Tool.hxx>
+#include <BRepLib.hxx>
 #include <BRepMesh_IncrementalMesh.hxx>
 #include <BRepGProp.hxx>
 #include <GProp_GProps.hxx>
@@ -72,10 +73,14 @@ void scale_mesh(MeshData& mesh, double scale) {
 }
 
 void scale_mass_properties(MassPropertiesResult& props, double scale) {
+    // Mass = density × volume; volume scales as length³
+    props.mass *= scale * scale * scale;
     for (auto& component : props.center_of_mass) {
         component *= scale;
     }
-    const double inertia_scale = scale * scale;
+    // Inertia = mass × length²; scales as length³ × length² = length⁵
+    const double s2 = scale * scale;
+    const double inertia_scale = s2 * s2 * scale;
     for (auto& component : props.inertia) {
         component *= inertia_scale;
     }
@@ -358,6 +363,12 @@ MeshData CadImporter::tessellate(const TopoDS_Shape& shape, double quality) {
     BRepMesh_IncrementalMesh mesher(shape, quality);
     mesher.Perform();
 
+    // Compute smooth normals from the B-rep surface geometry.
+    // BRepMesh_IncrementalMesh does NOT compute normals — without this,
+    // Poly_Triangulation::HasNormals() returns false and the PBR shader
+    // receives zero normals, producing black/unlit surfaces.
+    BRepLib::EnsureNormalConsistency(shape);
+
     uint32_t vertex_offset = 0;
 
     for (TopExp_Explorer exp(shape, TopAbs_FACE); exp.More(); exp.Next()) {
@@ -443,25 +454,27 @@ MassPropertiesResult CadImporter::compute_mass_properties(const TopoDS_Shape& sh
     GProp_GProps gprops;
     BRepGProp::VolumeProperties(shape, gprops);
 
-    // GProp_GProps::Mass() returns VOLUME, not mass — common OCCT gotcha
-    double volume_mm3 = gprops.Mass();
+    // GProp_GProps::Mass() returns VOLUME, not mass — common OCCT gotcha.
+    // The value is in file-native units cubed (e.g. mm³ for mm files).
+    // Unit conversion to SI is handled by scale_mass_properties() after this
+    // function returns, so we leave everything in raw file units here.
+    double volume_raw = gprops.Mass();
 
-    if (volume_mm3 <= 0.0) {
+    if (volume_raw <= 0.0) {
         // Shape has no volume (e.g., shell or wire)
         return props;
     }
 
-    // STEP files typically use mm; convert mm^3 → m^3, then multiply by density (kg/m^3)
-    double volume_m3 = volume_mm3 * 1e-9;
-    props.mass = volume_m3 * density;
+    // mass = volume_raw × density  (still in mixed units — corrected by caller)
+    props.mass = volume_raw * density;
 
-    // Center of mass
+    // Center of mass (in file-native length units)
     gp_Pnt com = gprops.CentreOfMass();
     props.center_of_mass = {com.X(), com.Y(), com.Z()};
 
-    // Inertia matrix — scale by density (raw values are for unit density in mm)
+    // Inertia matrix — second moments of volume × density (file-native units)
     gp_Mat mat = gprops.MatrixOfInertia();
-    double density_scale = density * 1e-9; // density applied to mm^3 volume
+    double density_scale = density;
     props.inertia = {
         mat(1, 1) * density_scale,  // Ixx
         mat(2, 2) * density_scale,  // Iyy

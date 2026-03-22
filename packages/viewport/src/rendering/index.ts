@@ -15,3 +15,5 @@ export {
 } from './post-processing.js';
 export { CAD_NEUTRAL_STUDIO, type ViewportPreset } from './presets.js';
 export { createSelectionVisuals, type SelectionVisuals } from './selection.js';
+export { createAxisIndicator, type AxisIndicator3D } from './axis-indicator.js';
+export { createViewCube, type ViewCubeOverlay } from './view-cube.js';

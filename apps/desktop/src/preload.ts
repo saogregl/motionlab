@@ -36,6 +36,10 @@ interface MotionLabAPI {
     defaultName?: string,
   ): Promise<{ saved: boolean; filePath?: string }>;
   openProjectFile(): Promise<{ data: Uint8Array; filePath: string } | null>;
+  /** Register a callback invoked by the main process to check dirty state before quit. */
+  onCheckDirty(callback: () => boolean): void;
+  /** Open the application logs folder in the system file manager. */
+  showLogsFolder(): Promise<void>;
 }
 
 const api: MotionLabAPI = {
@@ -59,6 +63,13 @@ const api: MotionLabAPI = {
   saveProjectFile: (data, defaultName) =>
     ipcRenderer.invoke('save-project-file', data, defaultName),
   openProjectFile: () => ipcRenderer.invoke('open-project-file'),
+  onCheckDirty: (callback) => {
+    ipcRenderer.on('check-dirty', () => {
+      const isDirty = callback();
+      ipcRenderer.send('check-dirty-response', isDirty);
+    });
+  },
+  showLogsFolder: () => ipcRenderer.invoke('show-logs-folder'),
 };
 
 contextBridge.exposeInMainWorld('motionlab', api);

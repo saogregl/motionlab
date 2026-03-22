@@ -427,6 +427,194 @@ static void test_delete_datum_blocked_by_joint() {
 }
 
 // ──────────────────────────────────────────────
+// Persistence hardening tests
+// ──────────────────────────────────────────────
+
+static void test_id_stability_across_save_load_cycles() {
+    // Build a mechanism with 2 bodies, 2 datums on body-aaa, 1 joint
+    MechanismState state;
+    double pos[3] = {1.0, 2.0, 3.0};
+    double orient[4] = {1.0, 0.0, 0.0, 0.0};
+    double com[3] = {0.1, 0.2, 0.3};
+    double inertia[6] = {1.0, 2.0, 3.0, 0.1, 0.2, 0.3};
+
+    state.add_body("body-aaa", "BodyA", pos, orient, 5.0, com, inertia);
+    state.add_body("body-bbb", "BodyB", pos, orient, 8.0, com, inertia);
+
+    double dpos1[3] = {0.0, 0.0, 0.0};
+    double dorient1[4] = {1.0, 0.0, 0.0, 0.0};
+    auto d1 = state.create_datum("body-aaa", "DatumA1", dpos1, dorient1);
+    auto d2 = state.create_datum("body-aaa", "DatumA2", dpos1, dorient1);
+    assert(d1.has_value());
+    assert(d2.has_value());
+
+    // Need a datum on body-bbb for the joint (datums must be on different bodies)
+    auto d3 = state.create_datum("body-bbb", "DatumB1", dpos1, dorient1);
+    assert(d3.has_value());
+
+    auto joint_result = state.create_joint(d1->id, d3->id, 1, "RevJoint1", -1.57, 1.57);
+    assert(joint_result.entry.has_value());
+
+    // Capture original IDs
+    std::string orig_d1_id = d1->id;
+    std::string orig_d2_id = d2->id;
+    std::string orig_d3_id = d3->id;
+    std::string orig_joint_id = joint_result.entry->id;
+
+    // --- Cycle 1: serialize -> load -> build ---
+    auto proto1 = state.build_mechanism_proto();
+    std::string serialized1;
+    proto1.SerializeToString(&serialized1);
+
+    MechanismState state2;
+    motionlab::mechanism::Mechanism parsed1;
+    parsed1.ParseFromString(serialized1);
+    state2.load_from_proto(parsed1);
+    auto proto2 = state2.build_mechanism_proto();
+
+    // Verify body IDs
+    assert(proto2.bodies_size() == 2);
+    bool found_aaa = false, found_bbb = false;
+    for (int i = 0; i < proto2.bodies_size(); ++i) {
+        if (proto2.bodies(i).id().id() == "body-aaa") found_aaa = true;
+        if (proto2.bodies(i).id().id() == "body-bbb") found_bbb = true;
+    }
+    assert(found_aaa);
+    assert(found_bbb);
+
+    // Verify datum IDs
+    assert(proto2.datums_size() == 3);
+    bool found_d1 = false, found_d2 = false, found_d3 = false;
+    for (int i = 0; i < proto2.datums_size(); ++i) {
+        if (proto2.datums(i).id().id() == orig_d1_id) found_d1 = true;
+        if (proto2.datums(i).id().id() == orig_d2_id) found_d2 = true;
+        if (proto2.datums(i).id().id() == orig_d3_id) found_d3 = true;
+    }
+    assert(found_d1);
+    assert(found_d2);
+    assert(found_d3);
+
+    // Verify joint ID
+    assert(proto2.joints_size() == 1);
+    assert(proto2.joints(0).id().id() == orig_joint_id);
+
+    // --- Cycle 2: serialize again -> load -> build ---
+    std::string serialized2;
+    proto2.SerializeToString(&serialized2);
+
+    MechanismState state3;
+    motionlab::mechanism::Mechanism parsed2;
+    parsed2.ParseFromString(serialized2);
+    state3.load_from_proto(parsed2);
+    auto proto3 = state3.build_mechanism_proto();
+
+    // Verify all IDs still match after second round-trip
+    assert(proto3.bodies_size() == 2);
+    found_aaa = false; found_bbb = false;
+    for (int i = 0; i < proto3.bodies_size(); ++i) {
+        if (proto3.bodies(i).id().id() == "body-aaa") found_aaa = true;
+        if (proto3.bodies(i).id().id() == "body-bbb") found_bbb = true;
+    }
+    assert(found_aaa);
+    assert(found_bbb);
+
+    assert(proto3.datums_size() == 3);
+    found_d1 = false; found_d2 = false; found_d3 = false;
+    for (int i = 0; i < proto3.datums_size(); ++i) {
+        if (proto3.datums(i).id().id() == orig_d1_id) found_d1 = true;
+        if (proto3.datums(i).id().id() == orig_d2_id) found_d2 = true;
+        if (proto3.datums(i).id().id() == orig_d3_id) found_d3 = true;
+    }
+    assert(found_d1);
+    assert(found_d2);
+    assert(found_d3);
+
+    assert(proto3.joints_size() == 1);
+    assert(proto3.joints(0).id().id() == orig_joint_id);
+
+    std::cout << "  PASS: ID stability across save/load cycles" << std::endl;
+}
+
+static void test_empty_mechanism_round_trip() {
+    // Start with a completely empty mechanism
+    MechanismState state;
+    assert(state.body_count() == 0);
+    assert(state.datum_count() == 0);
+    assert(state.joint_count() == 0);
+
+    // Build proto from empty state
+    auto proto1 = state.build_mechanism_proto();
+    assert(proto1.bodies_size() == 0);
+    assert(proto1.datums_size() == 0);
+    assert(proto1.joints_size() == 0);
+
+    // Load the empty proto into a new state
+    MechanismState state2;
+    state2.load_from_proto(proto1);
+    assert(state2.body_count() == 0);
+    assert(state2.datum_count() == 0);
+    assert(state2.joint_count() == 0);
+
+    // Build proto again and verify still empty
+    auto proto2 = state2.build_mechanism_proto();
+    assert(proto2.bodies_size() == 0);
+    assert(proto2.datums_size() == 0);
+    assert(proto2.joints_size() == 0);
+
+    std::cout << "  PASS: empty mechanism round-trip" << std::endl;
+}
+
+static void test_project_file_version_and_round_trip() {
+    // Create a mechanism with 1 body
+    MechanismState state;
+    double pos[3] = {0.0, 0.0, 0.0};
+    double orient[4] = {1.0, 0.0, 0.0, 0.0};
+    double com[3] = {0.0, 0.0, 0.0};
+    double inertia[6] = {1.0, 1.0, 1.0, 0.0, 0.0, 0.0};
+    state.add_body("body-proj-001", "TestBody", pos, orient, 7.5, com, inertia);
+
+    // Build a ProjectFile with version and metadata
+    motionlab::mechanism::ProjectFile project_file;
+    project_file.set_version(1);
+
+    auto* metadata = project_file.mutable_metadata();
+    metadata->set_name("TestProject");
+    metadata->set_created_at("2026-03-22T00:00:00Z");
+    metadata->set_modified_at("2026-03-22T12:00:00Z");
+
+    auto mech = state.build_mechanism_proto();
+    *project_file.mutable_mechanism() = mech;
+
+    // Serialize to string and parse back
+    std::string serialized;
+    project_file.SerializeToString(&serialized);
+
+    motionlab::mechanism::ProjectFile loaded_file;
+    loaded_file.ParseFromString(serialized);
+
+    // Verify version
+    assert(loaded_file.version() == 1);
+
+    // Verify metadata
+    assert(loaded_file.metadata().name() == "TestProject");
+    assert(loaded_file.metadata().created_at() == "2026-03-22T00:00:00Z");
+    assert(loaded_file.metadata().modified_at() == "2026-03-22T12:00:00Z");
+
+    // Verify mechanism has 1 body with correct ID
+    assert(loaded_file.mechanism().bodies_size() == 1);
+    assert(loaded_file.mechanism().bodies(0).id().id() == "body-proj-001");
+    assert(loaded_file.mechanism().bodies(0).name() == "TestBody");
+
+    // Load into a new MechanismState to confirm full round-trip
+    MechanismState state2;
+    state2.load_from_proto(loaded_file.mechanism());
+    assert(state2.body_count() == 1);
+    assert(state2.has_body("body-proj-001"));
+
+    std::cout << "  PASS: ProjectFile version and round-trip" << std::endl;
+}
+
+// ──────────────────────────────────────────────
 // Extended add_body + build_mechanism_proto tests
 // ──────────────────────────────────────────────
 
@@ -537,6 +725,11 @@ int main() {
     test_delete_nonexistent_joint();
     test_clear_includes_joints();
     test_delete_datum_blocked_by_joint();
+
+    // Persistence hardening tests
+    test_id_stability_across_save_load_cycles();
+    test_empty_mechanism_round_trip();
+    test_project_file_version_and_round_trip();
 
     // Extended body + build_mechanism_proto tests
     test_add_body_with_full_data();

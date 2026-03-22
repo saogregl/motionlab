@@ -103,6 +103,7 @@ struct TransportServer::Impl {
     std::unique_ptr<ix::WebSocketServer> server;
     std::string session_token;
     std::mutex conn_mutex;
+    std::mutex send_mutex_;
     std::weak_ptr<ix::WebSocket> active_conn;
     ix::WebSocket* active_ws = nullptr;
     bool has_connection = false;
@@ -196,10 +197,9 @@ struct TransportServer::Impl {
     }
 
     template <typename CommandT, typename Method>
-    void enqueue_command(uint64_t sequence_id, const CommandT& payload, Method method) {
-        auto payload_copy = payload;
+    void enqueue_command(uint64_t sequence_id, CommandT payload, Method method) {
         const uint64_t epoch = active_connection_epoch();
-        post_job([this, sequence_id, epoch, payload = std::move(payload_copy), method]() mutable {
+        post_job([this, sequence_id, epoch, payload = std::move(payload), method]() mutable {
             ix::WebSocket* ws = current_ws(epoch);
             if (!ws) return;
             std::invoke(method, this, *ws, sequence_id, payload);
@@ -209,6 +209,7 @@ struct TransportServer::Impl {
     void send_event(ix::WebSocket& ws, const protocol::Event& event) {
         std::string serialized;
         event.SerializeToString(&serialized);
+        std::lock_guard<std::mutex> lock(send_mutex_);
         ws.sendBinary(serialized);
     }
 
@@ -308,7 +309,7 @@ struct TransportServer::Impl {
                 break;
             case protocol::Command::kSimulationControl:
                 if (!authenticated) break;
-                enqueue_command(cmd.sequence_id(), cmd.simulation_control(), &Impl::handle_simulation_control);
+                runtime_session.handle_simulation_control(cmd.simulation_control());
                 break;
             case protocol::Command::kScrub:
                 if (!authenticated) break;
@@ -321,6 +322,10 @@ struct TransportServer::Impl {
             case protocol::Command::kLoadProject:
                 if (!authenticated) break;
                 enqueue_command(cmd.sequence_id(), cmd.load_project(), &Impl::handle_load_project);
+                break;
+            case protocol::Command::kRelocateAsset:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.relocate_asset(), &Impl::handle_relocate_asset);
                 break;
             default:
                 break;
@@ -594,12 +599,9 @@ struct TransportServer::Impl {
         }
 
         // Build response Body proto from mechanism_state
-        auto mech = mechanism_state.build_mechanism_proto();
-        for (const auto& body : mech.bodies()) {
-            if (body.id().id() == body_id) {
-                *result->mutable_body() = body;
-                break;
-            }
+        auto body_proto = mechanism_state.build_body_proto(body_id);
+        if (body_proto.has_value()) {
+            *result->mutable_body() = std::move(body_proto.value());
         }
 
         send_event(ws, event);
@@ -683,7 +685,7 @@ struct TransportServer::Impl {
             [this](ix::WebSocket& target_ws, const protocol::Event& event) {
                 send_event(target_ws, event);
             },
-            [this]() { runtime_session.stop(); });
+            [this]() { runtime_session.stop_thread(); });
     }
 
     void handle_load_project(ix::WebSocket& ws, uint64_t sequence_id,
@@ -693,16 +695,21 @@ struct TransportServer::Impl {
             [this](ix::WebSocket& target_ws, const protocol::Event& event) {
                 send_event(target_ws, event);
             },
-            [this]() { runtime_session.stop(); });
+            [this]() { runtime_session.stop_thread(); });
+    }
+
+    void handle_relocate_asset(ix::WebSocket& ws, uint64_t sequence_id,
+                                const protocol::RelocateAssetCommand& cmd) {
+        import_project.handle_relocate_asset(
+            ws, sequence_id, cmd,
+            [this](ix::WebSocket& target_ws, const protocol::Event& event) {
+                send_event(target_ws, event);
+            });
     }
 
     // ──────────────────────────────────────────────
     // Simulation lifecycle (Epic 7.2)
     // ──────────────────────────────────────────────
-
-    void stop_sim_thread() {
-        runtime_session.stop();
-    }
 
     void handle_compile_mechanism(ix::WebSocket& ws, uint64_t sequence_id,
                                     const protocol::CompileMechanismCommand& compile_cmd) {
@@ -710,43 +717,11 @@ struct TransportServer::Impl {
             ws, sequence_id, compile_cmd, mechanism_state.build_mechanism_proto());
     }
 
-    void handle_simulation_control(ix::WebSocket& ws, uint64_t sequence_id,
-                                    const protocol::SimulationControlCommand& cmd) {
-        static_cast<void>(ws);
-        static_cast<void>(sequence_id);
-        runtime_session.handle_simulation_control(cmd);
-    }
-
-    void simulation_loop() {
-        // Simulation loop lives in transport_runtime_session.h.
-    }
-
-    void send_sim_frame() {
-        // Frame publishing lives in transport_runtime_session.h.
-    }
-
-    void send_sim_frame_data(const std::vector<engine::BodyPose>& poses,
-                             const std::vector<engine::JointState>& joint_states,
-                             double sim_time, uint64_t step_count) {
-        static_cast<void>(poses);
-        static_cast<void>(joint_states);
-        static_cast<void>(sim_time);
-        static_cast<void>(step_count);
-    }
-
-    void send_trace_batch() {
-        // Trace batching lives in transport_runtime_session.h.
-    }
-
     void handle_scrub(ix::WebSocket& ws, uint64_t sequence_id,
                       const protocol::ScrubCommand& cmd) {
         static_cast<void>(ws);
         static_cast<void>(sequence_id);
         runtime_session.handle_scrub(cmd);
-    }
-
-    void send_sim_state_event() {
-        // State publication lives in transport_runtime_session.h.
     }
 };
 
@@ -793,7 +768,7 @@ void TransportServer::run() {
 
 void TransportServer::stop() {
     impl_->stop_job_thread();
-    impl_->stop_sim_thread();
+    impl_->runtime_session.stop();
     impl_->running = false;
     if (impl_->server) {
         impl_->server->stop();

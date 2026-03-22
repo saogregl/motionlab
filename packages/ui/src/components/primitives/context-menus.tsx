@@ -85,7 +85,7 @@ function BodyContextMenu({
 
 /* ── JointContextMenu ── */
 
-const jointTypes = ['Revolute', 'Slider', 'Cylindrical', 'Ball', 'Fixed', 'Planar'] as const;
+const jointTypes = ['Revolute', 'Prismatic', 'Cylindrical', 'Spherical', 'Planar', 'Fixed'] as const;
 
 interface JointContextMenuProps {
   children: ReactNode;

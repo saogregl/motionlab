@@ -3,6 +3,7 @@ import { SecondaryToolbar, ToolbarButton } from '@motionlab/ui';
 import { Cpu, Pause, Play, RotateCcw, StepForward } from 'lucide-react';
 
 import { sendCompileMechanism, sendSimulationControl } from '../engine/connection.js';
+import { useSimulationSettingsStore } from '../stores/simulation-settings.js';
 import { useSimulationStore } from '../stores/simulation.js';
 
 export function SimulationToolbar() {
@@ -19,7 +20,7 @@ export function SimulationToolbar() {
   return (
     <SecondaryToolbar
       rightActions={
-        <span className="px-2 font-mono text-2xs text-muted-foreground">
+        <span className="px-2 font-mono text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
           t = {simTime.toFixed(3)}s
         </span>
       }
@@ -27,7 +28,10 @@ export function SimulationToolbar() {
       <ToolbarButton
         tooltip="Compile mechanism"
         disabled={!canCompile}
-        onClick={() => sendCompileMechanism()}
+        onClick={() => {
+          const { timestep, gravity } = useSimulationSettingsStore.getState();
+          sendCompileMechanism({ timestep, gravity });
+        }}
       >
         <Cpu className="size-4" />
       </ToolbarButton>
@@ -65,11 +69,11 @@ export function SimulationToolbar() {
       </ToolbarButton>
 
       {simState === 'compiling' && (
-        <span className="ml-2 text-2xs text-muted-foreground">Compiling…</span>
+        <span className="ml-2 text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">Compiling…</span>
       )}
       {simState === 'error' && errorMessage && (
         <span
-          className="ml-2 text-2xs text-destructive truncate max-w-[300px]"
+          className="ml-2 text-[length:var(--text-2xs)] text-destructive truncate max-w-[300px]"
           title={errorMessage}
         >
           {errorMessage}

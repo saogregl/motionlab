@@ -1504,7 +1504,7 @@ describe('Project save/load round-trip (Epic 6.4)', () => {
             indices: [0, 1, 2],
             normals: [0, 0, 1, 0, 0, 1, 0, 0, 1],
           }),
-          partIndex: [0, 1],
+          partIndex: [1],
         }),
       ],
     });
@@ -1520,6 +1520,6 @@ describe('Project save/load round-trip (Epic 6.4)', () => {
     expect(Array.from(restored.bodyDisplayData[0].displayMesh?.vertices ?? [])).toEqual([
       0, 0, 0, 1, 0, 0, 0, 1, 0,
     ]);
-    expect(restored.bodyDisplayData[0].partIndex).toEqual([0, 1]);
+    expect(restored.bodyDisplayData[0].partIndex).toEqual([1]);
   });
 });

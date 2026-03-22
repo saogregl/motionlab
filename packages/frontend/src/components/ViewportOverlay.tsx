@@ -1,9 +1,9 @@
 import { SimulationAction } from '@motionlab/protocol';
-import { SelectionChip, ViewCube, ViewportHUD } from '@motionlab/ui';
+import { SelectionChip, ViewportHUD } from '@motionlab/ui';
 import type { SceneGraphManager } from '@motionlab/viewport';
 import { Viewport } from '@motionlab/viewport';
 import { Box, Crosshair, Link2 } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { sendDeleteDatum, sendDeleteJoint, sendSimulationControl } from '../engine/connection.js';
 import { useViewportBridge } from '../hooks/useViewportBridge.js';
@@ -16,27 +16,8 @@ import { useToolModeStore } from '../stores/tool-mode.js';
 import { JointConfigDialog } from './JointConfigDialog.js';
 import { ViewportCameraToolbar } from './ViewportCameraToolbar.js';
 import { ViewportContextMenu } from './ViewportContextMenu.js';
+import { FaceTooltip } from './FaceTooltip.js';
 import { ViewportToolModeToolbar } from './ViewportToolModeToolbar.js';
-
-function AxisIndicator() {
-  return (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-      <title>Axis indicator</title>
-      <line x1="8" y1="36" x2="40" y2="36" stroke="var(--axis-x)" strokeWidth="2" />
-      <text x="42" y="38" fill="var(--axis-x)" fontSize="10" fontWeight="600">
-        X
-      </text>
-      <line x1="8" y1="36" x2="8" y2="4" stroke="var(--axis-y)" strokeWidth="2" />
-      <text x="4" y="2" fill="var(--axis-y)" fontSize="10" fontWeight="600">
-        Y
-      </text>
-      <line x1="8" y1="36" x2="24" y2="20" stroke="var(--axis-z)" strokeWidth="2" />
-      <text x="26" y="18" fill="var(--axis-z)" fontSize="10" fontWeight="600">
-        Z
-      </text>
-    </svg>
-  );
-}
 
 function SelectionIcon({ entityType }: { entityType: 'body' | 'datum' | 'joint' }) {
   switch (entityType) {
@@ -114,6 +95,8 @@ export function ViewportOverlay() {
   const [sceneGraph, setSceneGraph] = useState<SceneGraphManager | null>(null);
   const activeMode = useToolModeStore((s) => s.activeMode);
   const selectedEntity = useSelectedEntity();
+  const [hoveredFace, setHoveredFace] = useState<{ bodyId: string; faceIndex: number } | null>(null);
+  const viewportContainerRef = useRef<HTMLDivElement>(null);
 
   const onReady = useCallback(
     (sg: SceneGraphManager) => {
@@ -185,6 +168,18 @@ export function ViewportOverlay() {
           setMode('create-joint');
           useJointCreationStore.getState().startCreation();
           break;
+        case 'w':
+        case 'W':
+          useToolModeStore.getState().setGizmoMode('translate');
+          break;
+        case 'e':
+        case 'E':
+          useToolModeStore.getState().setGizmoMode('rotate');
+          break;
+        case 'q':
+        case 'Q':
+          useToolModeStore.getState().setGizmoMode('off');
+          break;
         case 'Delete': {
           const simDel = useSimulationStore.getState().state;
           if (simDel === 'running' || simDel === 'paused') break;
@@ -241,6 +236,7 @@ export function ViewportOverlay() {
   return (
     <ViewportContextMenu sceneGraph={sceneGraph}>
       <div
+        ref={viewportContainerRef}
         className="relative w-full h-full"
         style={{ cursor: cursorMode ? 'crosshair' : undefined }}
       >
@@ -248,8 +244,12 @@ export function ViewportOverlay() {
           onSceneReady={onReady}
           onPick={handlePick}
           onHover={handleHover}
+          onFaceHover={setHoveredFace}
           interactionMode={activeMode}
         />
+        {activeMode === 'create-datum' && (
+          <FaceTooltip containerRef={viewportContainerRef} hoveredFace={hoveredFace} />
+        )}
         <ViewportHUD
           topLeft={
             <div className="flex flex-col gap-2">
@@ -257,20 +257,12 @@ export function ViewportOverlay() {
               <ViewportCameraToolbar sceneGraph={sceneGraph} />
             </div>
           }
-          topRight={
-            <ViewCube
-              onHome={() => sceneGraph?.setCameraPreset('isometric')}
-              onZoomFit={() => sceneGraph?.fitAll()}
-            />
-          }
           bottomLeft={
             activeMode === 'create-joint' ? (
               <JointCreationStatus />
             ) : activeMode === 'create-datum' ? (
               <DatumCreationStatus />
-            ) : (
-              <AxisIndicator />
-            )
+            ) : undefined
           }
           bottomCenter={
             selectedEntity ? (

@@ -85,12 +85,7 @@ async function main() {
       rollupOptions: {
         external: [
           'electron',
-          'node:path',
-          'node:fs',
-          'node:os',
-          'node:child_process',
-          'node:crypto',
-          'node:net',
+          /^node:.*/,
         ],
       },
       minify: false,

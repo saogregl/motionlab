@@ -2421,7 +2421,10 @@ class BodyDisplayData final : public ::google::protobuf::Message
   enum : int {
     kPartIndexFieldNumber = 3,
     kBodyIdFieldNumber = 1,
+    kUnitSystemFieldNumber = 6,
     kDisplayMeshFieldNumber = 2,
+    kDensityFieldNumber = 4,
+    kTessellationQualityFieldNumber = 5,
   };
   // repeated uint32 part_index = 3 [json_name = "partIndex"];
   int part_index_size() const;
@@ -2456,6 +2459,21 @@ class BodyDisplayData final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_body_id();
 
   public:
+  // string unit_system = 6 [json_name = "unitSystem"];
+  void clear_unit_system() ;
+  const ::std::string& unit_system() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_unit_system(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_unit_system();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_unit_system();
+  void set_allocated_unit_system(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_unit_system() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_unit_system(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_unit_system();
+
+  public:
   // .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
   bool has_display_mesh() const;
   void clear_display_mesh() ;
@@ -2471,12 +2489,32 @@ class BodyDisplayData final : public ::google::protobuf::Message
   ::motionlab::mechanism::DisplayMesh* PROTOBUF_NONNULL _internal_mutable_display_mesh();
 
   public:
+  // double density = 4 [json_name = "density"];
+  void clear_density() ;
+  double density() const;
+  void set_density(double value);
+
+  private:
+  double _internal_density() const;
+  void _internal_set_density(double value);
+
+  public:
+  // double tessellation_quality = 5 [json_name = "tessellationQuality"];
+  void clear_tessellation_quality() ;
+  double tessellation_quality() const;
+  void set_tessellation_quality(double value);
+
+  private:
+  double _internal_tessellation_quality() const;
+  void _internal_set_tessellation_quality(double value);
+
+  public:
   // @@protoc_insertion_point(class_scope:motionlab.mechanism.BodyDisplayData)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<2, 3,
-                                   1, 51,
+  static const ::google::protobuf::internal::TcParseTable<3, 6,
+                                   1, 62,
                                    2>
       _table_;
 
@@ -2500,7 +2538,10 @@ class BodyDisplayData final : public ::google::protobuf::Message
     ::google::protobuf::RepeatedField<::uint32_t> part_index_;
     ::google::protobuf::internal::CachedSize _part_index_cached_byte_size_;
     ::google::protobuf::internal::ArenaStringPtr body_id_;
+    ::google::protobuf::internal::ArenaStringPtr unit_system_;
     ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE display_mesh_;
+    double density_;
+    double tessellation_quality_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -6542,7 +6583,7 @@ inline void BodyDisplayData::set_allocated_body_id(::std::string* PROTOBUF_NULLA
 
 // .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
 inline bool BodyDisplayData::has_display_mesh() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
   PROTOBUF_ASSUME(!value || _impl_.display_mesh_ != nullptr);
   return value;
 }
@@ -6550,7 +6591,7 @@ inline void BodyDisplayData::clear_display_mesh() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.display_mesh_ != nullptr) _impl_.display_mesh_->Clear();
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000004U);
+                  0x00000008U);
 }
 inline const ::motionlab::mechanism::DisplayMesh& BodyDisplayData::_internal_display_mesh() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -6569,16 +6610,16 @@ inline void BodyDisplayData::unsafe_arena_set_allocated_display_mesh(
   }
   _impl_.display_mesh_ = reinterpret_cast<::motionlab::mechanism::DisplayMesh*>(value);
   if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+    SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+    ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   }
   // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.mechanism.BodyDisplayData.display_mesh)
 }
 inline ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE BodyDisplayData::release_display_mesh() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
-  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   ::motionlab::mechanism::DisplayMesh* released = _impl_.display_mesh_;
   _impl_.display_mesh_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
@@ -6598,7 +6639,7 @@ inline ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE BodyDisplayData::u
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:motionlab.mechanism.BodyDisplayData.display_mesh)
 
-  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   ::motionlab::mechanism::DisplayMesh* temp = _impl_.display_mesh_;
   _impl_.display_mesh_ = nullptr;
   return temp;
@@ -6613,7 +6654,7 @@ inline ::motionlab::mechanism::DisplayMesh* PROTOBUF_NONNULL BodyDisplayData::_i
 }
 inline ::motionlab::mechanism::DisplayMesh* PROTOBUF_NONNULL BodyDisplayData::mutable_display_mesh()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   ::motionlab::mechanism::DisplayMesh* _msg = _internal_mutable_display_mesh();
   // @@protoc_insertion_point(field_mutable:motionlab.mechanism.BodyDisplayData.display_mesh)
   return _msg;
@@ -6630,9 +6671,9 @@ inline void BodyDisplayData::set_allocated_display_mesh(::motionlab::mechanism::
     if (message_arena != submessage_arena) {
       value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
     }
-    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+    SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+    ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   }
 
   _impl_.display_mesh_ = reinterpret_cast<::motionlab::mechanism::DisplayMesh*>(value);
@@ -6687,6 +6728,121 @@ inline ::google::protobuf::RepeatedField<::uint32_t>* PROTOBUF_NONNULL
 BodyDisplayData::_internal_mutable_part_index() {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return &_impl_.part_index_;
+}
+
+// double density = 4 [json_name = "density"];
+inline void BodyDisplayData::clear_density() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.density_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000010U);
+}
+inline double BodyDisplayData::density() const {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.BodyDisplayData.density)
+  return _internal_density();
+}
+inline void BodyDisplayData::set_density(double value) {
+  _internal_set_density(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
+  // @@protoc_insertion_point(field_set:motionlab.mechanism.BodyDisplayData.density)
+}
+inline double BodyDisplayData::_internal_density() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.density_;
+}
+inline void BodyDisplayData::_internal_set_density(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.density_ = value;
+}
+
+// double tessellation_quality = 5 [json_name = "tessellationQuality"];
+inline void BodyDisplayData::clear_tessellation_quality() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.tessellation_quality_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000020U);
+}
+inline double BodyDisplayData::tessellation_quality() const {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.BodyDisplayData.tessellation_quality)
+  return _internal_tessellation_quality();
+}
+inline void BodyDisplayData::set_tessellation_quality(double value) {
+  _internal_set_tessellation_quality(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000020U);
+  // @@protoc_insertion_point(field_set:motionlab.mechanism.BodyDisplayData.tessellation_quality)
+}
+inline double BodyDisplayData::_internal_tessellation_quality() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.tessellation_quality_;
+}
+inline void BodyDisplayData::_internal_set_tessellation_quality(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.tessellation_quality_ = value;
+}
+
+// string unit_system = 6 [json_name = "unitSystem"];
+inline void BodyDisplayData::clear_unit_system() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.unit_system_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline const ::std::string& BodyDisplayData::unit_system() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.BodyDisplayData.unit_system)
+  return _internal_unit_system();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void BodyDisplayData::set_unit_system(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  _impl_.unit_system_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.mechanism.BodyDisplayData.unit_system)
+}
+inline ::std::string* PROTOBUF_NONNULL BodyDisplayData::mutable_unit_system()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::std::string* _s = _internal_mutable_unit_system();
+  // @@protoc_insertion_point(field_mutable:motionlab.mechanism.BodyDisplayData.unit_system)
+  return _s;
+}
+inline const ::std::string& BodyDisplayData::_internal_unit_system() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.unit_system_.Get();
+}
+inline void BodyDisplayData::_internal_set_unit_system(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.unit_system_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL BodyDisplayData::_internal_mutable_unit_system() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.unit_system_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE BodyDisplayData::release_unit_system() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.mechanism.BodyDisplayData.unit_system)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000004U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  auto* released = _impl_.unit_system_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.unit_system_.Set("", GetArena());
+  }
+  return released;
+}
+inline void BodyDisplayData::set_allocated_unit_system(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  }
+  _impl_.unit_system_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.unit_system_.IsDefault()) {
+    _impl_.unit_system_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.BodyDisplayData.unit_system)
 }
 
 // -------------------------------------------------------------------

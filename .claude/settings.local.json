@@ -75,7 +75,11 @@
       "Bash(VCPKG_ROOT=/c/Dev/vcpkg PATH=\"/c/msys64/mingw64/bin:$PATH\" cmake --preset dev-mingw)",
       "Bash(PATH=\"/c/msys64/mingw64/bin:$PATH\" g++ -std=c++20 -fsyntax-only -I/c/Dev/motionlab/native/engine/src -I/c/Dev/motionlab/native/engine/src/generated /c/Dev/motionlab/native/engine/src/mechanism_state.cpp)",
       "Bash(PATH=\"/c/msys64/mingw64/bin:$PATH\" VCPKG_ROOT=\"C:\\\\Dev\\\\vcpkg\" cmake --preset dev-mingw)",
-      "Bash(grep -rn \"from ''''@/\" packages/ui/src/)"
+      "Bash(grep -rn \"from ''''@/\" packages/ui/src/)",
+      "Bash(xargs -0 ls -lt)",
+      "Bash(xdpyinfo)",
+      "Bash(hyprctl monitors:*)",
+      "Skill(update-config)"
     ]
   },
   "enabledPlugins": {

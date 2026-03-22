@@ -20,8 +20,8 @@ Transport execution is split in two parts:
 - cached import results rebuild authored body data immediately, while native topology is loaded lazily when a face-aware authoring command needs it
 
 Message types (proto envelopes):
-- `Command` (frontend → engine): oneof payload — `Handshake`, `Ping`, `ImportAssetCommand`, `CreateDatumCommand`, `DeleteDatumCommand`, `RenameDatumCommand`, `CreateDatumFromFaceCommand`, `UpdateBodyCommand`, `UpdateDatumPoseCommand`, `CreateJointCommand`, `UpdateJointCommand`, `DeleteJointCommand`, `CompileMechanismCommand`, `SimulationControlCommand`, `ScrubCommand`, `SaveProjectCommand`, `LoadProjectCommand`
-- `Event` (engine → frontend): oneof payload — `HandshakeAck`, `Pong`, `EngineStatus`, `ImportAssetResult`, `MechanismSnapshot`, `CreateDatumResult`, `DeleteDatumResult`, `RenameDatumResult`, `CreateDatumFromFaceResult`, `UpdateBodyResult`, `UpdateDatumPoseResult`, `CreateJointResult`, `UpdateJointResult`, `DeleteJointResult`, `CompilationResultEvent`, `SimulationStateEvent`, `SimulationFrame`, `SimulationTrace`, `SaveProjectResult`, `LoadProjectResult`
+- `Command` (frontend → engine): oneof payload — `Handshake`, `Ping`, `ImportAssetCommand`, `CreateDatumCommand`, `DeleteDatumCommand`, `RenameDatumCommand`, `CreateDatumFromFaceCommand`, `UpdateBodyCommand`, `UpdateDatumPoseCommand`, `CreateJointCommand`, `UpdateJointCommand`, `DeleteJointCommand`, `CompileMechanismCommand`, `SimulationControlCommand`, `ScrubCommand`, `SaveProjectCommand`, `LoadProjectCommand`, `RelocateAssetCommand`
+- `Event` (engine → frontend): oneof payload — `HandshakeAck`, `Pong`, `EngineStatus`, `ImportAssetResult`, `MechanismSnapshot`, `CreateDatumResult`, `DeleteDatumResult`, `RenameDatumResult`, `CreateDatumFromFaceResult`, `UpdateBodyResult`, `UpdateDatumPoseResult`, `CreateJointResult`, `UpdateJointResult`, `DeleteJointResult`, `CompilationResultEvent`, `SimulationStateEvent`, `SimulationFrame`, `SimulationTrace`, `SaveProjectResult`, `LoadProjectResult`, `RelocateAssetResult`
 
 Key messages:
 - `Handshake`: carries `ProtocolVersion` (name + version) and session token
@@ -56,6 +56,16 @@ Binary helpers in `packages/protocol/src/transport.ts`: `createHandshakeCommand`
 - `ScrubCommand`: seeks to a historical simulation time. Engine pauses, looks up the nearest buffered frame, and sends historical `SimulationFrame` plus per-channel `SimulationTrace` events for a ±1s window.
 - Channel ID convention: `<entity_type>/<entity_id>/<measurement>` (e.g., `joint/<uuid>/position`)
 - See [ADR-0008](../decisions/ADR-0008-output-channel-naming-and-typing.md) for full naming/typing/streaming contract
+
+### Persistence and Asset Recovery (Epic 9)
+
+- `SaveProjectCommand` / `LoadProjectCommand`: engine-authoritative serialization to self-contained `.motionlab` files (see [ADR-0009](../decisions/ADR-0009-project-save-load-contract.md))
+- `LoadProjectSuccess.missing_assets`: repeated `MissingAssetInfo` reported when referenced CAD files are missing or have changed since import. Each entry carries `body_id`, `body_name`, `expected_asset` (AssetReference), and `reason` (`"file_not_found"`, `"hash_mismatch"`, `"cache_corrupted"`)
+- `RelocateAssetCommand` (field 42): frontend sends `body_id`, `new_file_path`, and `ImportOptions` to re-import a body's CAD source from a user-selected path
+- `RelocateAssetResult` (field 42): returns the updated `BodyImportResult` on success or an error message
+- `BodyDisplayData` carries `density`, `tessellation_quality`, and `unit_system` alongside display mesh data, enabling the engine to reconstruct cache keys and re-validate content hashes on load
+- Cache validation on load: for each body, the engine checks whether the source file exists and its content hash matches the stored `AssetReference.content_hash`. On match, topology context (B-Rep shapes) is restored; on mismatch, the body renders from embedded mesh but face-picking is unavailable until relocate
+- See [ADR-0011](../decisions/ADR-0011-missing-asset-recovery-contract.md) for the full recovery contract
 
 ## Near-Term Expectations (Planned)
 

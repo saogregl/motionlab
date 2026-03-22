@@ -12,6 +12,7 @@
 | [ADR-0008](ADR-0008-output-channel-naming-and-typing.md) | Output Channel Naming, Typing, and Trace Streaming | Accepted | Channel IDs use `entity/id/measurement` convention; descriptors sent in CompilationResult; traces streamed round-robin; ring buffer enables scrub within 60s window. |
 | [ADR-0009](ADR-0009-project-save-load-contract.md) | Project Save/Load Contract | Accepted | Engine-authoritative serialization via SaveProject/LoadProject Command→Result; ProjectFile is self-contained binary protobuf with version field; display meshes embedded for offline rendering. |
 | [ADR-0010](ADR-0010-protocol-v2-native-boundary-cleanup.md) | Protocol v2 Native Boundary Cleanup | Accepted | Protocol v2 aligns asset references, import unit handling, datum pose updates, and paused-state semantics across engine and frontend contracts. |
+| [ADR-0011](ADR-0011-missing-asset-recovery-contract.md) | Missing Asset Recovery and Cache Validation Contract | Accepted | LoadProjectSuccess reports missing/changed assets; RelocateAssetCommand enables re-import from a new path; BodyDisplayData carries import parameters for cache key reconstruction. |
 
 ## Adding a New ADR
 

@@ -302,7 +302,12 @@ inline constexpr BodyDisplayData::Impl_::Impl_(
         body_id_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
-        display_mesh_{nullptr} {}
+        unit_system_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        display_mesh_{nullptr},
+        density_{0},
+        tessellation_quality_{0} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR BodyDisplayData::BodyDisplayData(::_pbi::ConstantInitialized)
@@ -589,13 +594,19 @@ const ::uint32_t
         2,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::BodyDisplayData, _impl_._has_bits_),
-        6, // hasbit index offset
+        9, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::BodyDisplayData, _impl_.body_id_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::BodyDisplayData, _impl_.display_mesh_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::BodyDisplayData, _impl_.part_index_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::BodyDisplayData, _impl_.density_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::BodyDisplayData, _impl_.tessellation_quality_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::BodyDisplayData, _impl_.unit_system_),
         1,
-        2,
+        3,
         0,
+        4,
+        5,
+        2,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::ProjectFile, _impl_._has_bits_),
         7, // hasbit index offset
@@ -624,7 +635,7 @@ static const ::_pbi::MigrationSchema
         {104, sizeof(::motionlab::mechanism::Joint)},
         {121, sizeof(::motionlab::mechanism::Mechanism)},
         {134, sizeof(::motionlab::mechanism::BodyDisplayData)},
-        {143, sizeof(::motionlab::mechanism::ProjectFile)},
+        {149, sizeof(::motionlab::mechanism::ProjectFile)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::motionlab::mechanism::_ElementId_default_instance_._instance,
@@ -692,28 +703,31 @@ const char descriptor_table_protodef_mechanism_2fmechanism_2eproto[] ABSL_ATTRIB
     "odies\030\003 \003(\0132\031.motionlab.mechanism.BodyR\006"
     "bodies\0222\n\006datums\030\004 \003(\0132\032.motionlab.mecha"
     "nism.DatumR\006datums\0222\n\006joints\030\005 \003(\0132\032.mot"
-    "ionlab.mechanism.JointR\006joints\"\216\001\n\017BodyD"
+    "ionlab.mechanism.JointR\006joints\"\374\001\n\017BodyD"
     "isplayData\022\027\n\007body_id\030\001 \001(\tR\006bodyId\022C\n\014d"
     "isplay_mesh\030\002 \001(\0132 .motionlab.mechanism."
     "DisplayMeshR\013displayMesh\022\035\n\npart_index\030\003"
-    " \003(\rR\tpartIndex\"\371\001\n\013ProjectFile\022\030\n\007versi"
-    "on\030\001 \001(\rR\007version\022@\n\010metadata\030\002 \001(\0132$.mo"
-    "tionlab.mechanism.ProjectMetadataR\010metad"
-    "ata\022<\n\tmechanism\030\003 \001(\0132\036.motionlab.mecha"
-    "nism.MechanismR\tmechanism\022P\n\021body_displa"
-    "y_data\030\004 \003(\0132$.motionlab.mechanism.BodyD"
-    "isplayDataR\017bodyDisplayData*\275\001\n\tJointTyp"
-    "e\022\032\n\026JOINT_TYPE_UNSPECIFIED\020\000\022\027\n\023JOINT_T"
-    "YPE_REVOLUTE\020\001\022\030\n\024JOINT_TYPE_PRISMATIC\020\002"
-    "\022\024\n\020JOINT_TYPE_FIXED\020\003\022\030\n\024JOINT_TYPE_SPH"
-    "ERICAL\020\004\022\032\n\026JOINT_TYPE_CYLINDRICAL\020\005\022\025\n\021"
-    "JOINT_TYPE_PLANAR\020\006b\006proto3"
+    " \003(\rR\tpartIndex\022\030\n\007density\030\004 \001(\001R\007densit"
+    "y\0221\n\024tessellation_quality\030\005 \001(\001R\023tessell"
+    "ationQuality\022\037\n\013unit_system\030\006 \001(\tR\nunitS"
+    "ystem\"\371\001\n\013ProjectFile\022\030\n\007version\030\001 \001(\rR\007"
+    "version\022@\n\010metadata\030\002 \001(\0132$.motionlab.me"
+    "chanism.ProjectMetadataR\010metadata\022<\n\tmec"
+    "hanism\030\003 \001(\0132\036.motionlab.mechanism.Mecha"
+    "nismR\tmechanism\022P\n\021body_display_data\030\004 \003"
+    "(\0132$.motionlab.mechanism.BodyDisplayData"
+    "R\017bodyDisplayData*\275\001\n\tJointType\022\032\n\026JOINT"
+    "_TYPE_UNSPECIFIED\020\000\022\027\n\023JOINT_TYPE_REVOLU"
+    "TE\020\001\022\030\n\024JOINT_TYPE_PRISMATIC\020\002\022\024\n\020JOINT_"
+    "TYPE_FIXED\020\003\022\030\n\024JOINT_TYPE_SPHERICAL\020\004\022\032"
+    "\n\026JOINT_TYPE_CYLINDRICAL\020\005\022\025\n\021JOINT_TYPE"
+    "_PLANAR\020\006b\006proto3"
 };
 static ::absl::once_flag descriptor_table_mechanism_2fmechanism_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_mechanism_2fmechanism_2eproto = {
     false,
     false,
-    2547,
+    2657,
     descriptor_table_protodef_mechanism_2fmechanism_2eproto,
     "mechanism/mechanism.proto",
     &descriptor_table_mechanism_2fmechanism_2eproto_once,
@@ -5388,7 +5402,8 @@ PROTOBUF_NDEBUG_INLINE BodyDisplayData::Impl_::Impl_(
         _cached_size_{0},
         part_index_{visibility, arena, from.part_index_},
         _part_index_cached_byte_size_{0},
-        body_id_(arena, from.body_id_) {}
+        body_id_(arena, from.body_id_),
+        unit_system_(arena, from.unit_system_) {}
 
 BodyDisplayData::BodyDisplayData(
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
@@ -5404,9 +5419,16 @@ BodyDisplayData::BodyDisplayData(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
   ::uint32_t cached_has_bits = _impl_._has_bits_[0];
-  _impl_.display_mesh_ = (CheckHasBit(cached_has_bits, 0x00000004U))
+  _impl_.display_mesh_ = (CheckHasBit(cached_has_bits, 0x00000008U))
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.display_mesh_)
                 : nullptr;
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, density_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, density_),
+           offsetof(Impl_, tessellation_quality_) -
+               offsetof(Impl_, density_) +
+               sizeof(Impl_::tessellation_quality_));
 
   // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.BodyDisplayData)
 }
@@ -5416,11 +5438,17 @@ PROTOBUF_NDEBUG_INLINE BodyDisplayData::Impl_::Impl_(
       : _cached_size_{0},
         part_index_{visibility, arena},
         _part_index_cached_byte_size_{0},
-        body_id_(arena) {}
+        body_id_(arena),
+        unit_system_(arena) {}
 
 inline void BodyDisplayData::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.display_mesh_ = {};
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, display_mesh_),
+           0,
+           offsetof(Impl_, tessellation_quality_) -
+               offsetof(Impl_, display_mesh_) +
+               sizeof(Impl_::tessellation_quality_));
 }
 BodyDisplayData::~BodyDisplayData() {
   // @@protoc_insertion_point(destructor:motionlab.mechanism.BodyDisplayData)
@@ -5434,6 +5462,7 @@ inline void BodyDisplayData::SharedDtor(MessageLite& self) {
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
   this_._impl_.body_id_.Destroy();
+  this_._impl_.unit_system_.Destroy();
   delete this_._impl_.display_mesh_;
   this_._impl_.~Impl_();
 }
@@ -5493,16 +5522,16 @@ BodyDisplayData::GetClassData() const {
   return BodyDisplayData_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 1, 51, 2>
+const ::_pbi::TcParseTable<3, 6, 1, 62, 2>
 BodyDisplayData::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_._has_bits_),
     0, // no _extensions_
-    3, 24,  // max_field_number, fast_idx_mask
+    6, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967232,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
+    6,  // num_field_entries
     1,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     BodyDisplayData_class_data_.base(),
@@ -5519,29 +5548,49 @@ BodyDisplayData::_table_ = {
       PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.body_id_)}},
     // .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
     {::_pbi::TcParser::FastMtS1,
-     {18, 2, 0,
+     {18, 3, 0,
       PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.display_mesh_)}},
     // repeated uint32 part_index = 3 [json_name = "partIndex"];
     {::_pbi::TcParser::FastV32P1,
      {26, 0, 0,
       PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.part_index_)}},
+    // double density = 4 [json_name = "density"];
+    {::_pbi::TcParser::FastF64S1,
+     {33, 4, 0,
+      PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.density_)}},
+    // double tessellation_quality = 5 [json_name = "tessellationQuality"];
+    {::_pbi::TcParser::FastF64S1,
+     {41, 5, 0,
+      PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.tessellation_quality_)}},
+    // string unit_system = 6 [json_name = "unitSystem"];
+    {::_pbi::TcParser::FastUS1,
+     {50, 2, 0,
+      PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.unit_system_)}},
+    {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
     // string body_id = 1 [json_name = "bodyId"];
     {PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.body_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
-    {PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.display_mesh_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    {PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.display_mesh_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // repeated uint32 part_index = 3 [json_name = "partIndex"];
     {PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.part_index_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kPackedUInt32)},
+    // double density = 4 [json_name = "density"];
+    {PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.density_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // double tessellation_quality = 5 [json_name = "tessellationQuality"];
+    {PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.tessellation_quality_), _Internal::kHasBitsOffset + 5, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // string unit_system = 6 [json_name = "unitSystem"];
+    {PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.unit_system_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::DisplayMesh>()},
   }},
   {{
-    "\43\7\0\0\0\0\0\0"
+    "\43\7\0\0\0\0\13\0"
     "motionlab.mechanism.BodyDisplayData"
     "body_id"
+    "unit_system"
   }},
 };
 PROTOBUF_NOINLINE void BodyDisplayData::Clear() {
@@ -5552,7 +5601,7 @@ PROTOBUF_NOINLINE void BodyDisplayData::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       _impl_.part_index_.Clear();
     }
@@ -5560,9 +5609,17 @@ PROTOBUF_NOINLINE void BodyDisplayData::Clear() {
       _impl_.body_id_.ClearNonDefaultToEmpty();
     }
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      _impl_.unit_system_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       ABSL_DCHECK(_impl_.display_mesh_ != nullptr);
       _impl_.display_mesh_->Clear();
     }
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x00000030U)) {
+    ::memset(&_impl_.density_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.tessellation_quality_) -
+        reinterpret_cast<char*>(&_impl_.density_)) + sizeof(_impl_.tessellation_quality_));
   }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
@@ -5598,7 +5655,7 @@ PROTOBUF_NOINLINE void BodyDisplayData::Clear() {
   }
 
   // .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
-  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.display_mesh_, this_._impl_.display_mesh_->GetCachedSize(), target,
         stream);
@@ -5612,6 +5669,34 @@ PROTOBUF_NOINLINE void BodyDisplayData::Clear() {
         target = stream->WriteUInt32Packed(
             3, this_._internal_part_index(), byte_size, target);
       }
+    }
+  }
+
+  // double density = 4 [json_name = "density"];
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_density()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          4, this_._internal_density(), target);
+    }
+  }
+
+  // double tessellation_quality = 5 [json_name = "tessellationQuality"];
+  if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_tessellation_quality()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          5, this_._internal_tessellation_quality(), target);
+    }
+  }
+
+  // string unit_system = 6 [json_name = "unitSystem"];
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (!this_._internal_unit_system().empty()) {
+      const ::std::string& _s = this_._internal_unit_system();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.mechanism.BodyDisplayData.unit_system");
+      target = stream->WriteStringMaybeAliased(6, _s, target);
     }
   }
 
@@ -5640,7 +5725,7 @@ PROTOBUF_NOINLINE void BodyDisplayData::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000003fU)) {
     // repeated uint32 part_index = 3 [json_name = "partIndex"];
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       total_size +=
@@ -5655,10 +5740,29 @@ PROTOBUF_NOINLINE void BodyDisplayData::Clear() {
                                         this_._internal_body_id());
       }
     }
-    // .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
+    // string unit_system = 6 [json_name = "unitSystem"];
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (!this_._internal_unit_system().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_unit_system());
+      }
+    }
+    // .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.display_mesh_);
+    }
+    // double density = 4 [json_name = "density"];
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_density()) != 0) {
+        total_size += 9;
+      }
+    }
+    // double tessellation_quality = 5 [json_name = "tessellationQuality"];
+    if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_tessellation_quality()) != 0) {
+        total_size += 9;
+      }
     }
   }
   return this_.MaybeComputeUnknownFieldsSize(total_size,
@@ -5680,7 +5784,7 @@ void BodyDisplayData::MergeImpl(::google::protobuf::MessageLite& to_msg,
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000003fU)) {
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       _this->_internal_mutable_part_index()->MergeFrom(from._internal_part_index());
     }
@@ -5694,11 +5798,30 @@ void BodyDisplayData::MergeImpl(::google::protobuf::MessageLite& to_msg,
       }
     }
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (!from._internal_unit_system().empty()) {
+        _this->_internal_set_unit_system(from._internal_unit_system());
+      } else {
+        if (_this->_impl_.unit_system_.IsDefault()) {
+          _this->_internal_set_unit_system("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       ABSL_DCHECK(from._impl_.display_mesh_ != nullptr);
       if (_this->_impl_.display_mesh_ == nullptr) {
         _this->_impl_.display_mesh_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.display_mesh_);
       } else {
         _this->_impl_.display_mesh_->MergeFrom(*from._impl_.display_mesh_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_density()) != 0) {
+        _this->_impl_.density_ = from._impl_.density_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_tessellation_quality()) != 0) {
+        _this->_impl_.tessellation_quality_ = from._impl_.tessellation_quality_;
       }
     }
   }
@@ -5723,7 +5846,13 @@ void BodyDisplayData::InternalSwap(BodyDisplayData* PROTOBUF_RESTRICT PROTOBUF_N
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   _impl_.part_index_.InternalSwap(&other->_impl_.part_index_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.body_id_, &other->_impl_.body_id_, arena);
-  swap(_impl_.display_mesh_, other->_impl_.display_mesh_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.unit_system_, &other->_impl_.unit_system_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.tessellation_quality_)
+      + sizeof(BodyDisplayData::_impl_.tessellation_quality_)
+      - PROTOBUF_FIELD_OFFSET(BodyDisplayData, _impl_.display_mesh_)>(
+          reinterpret_cast<char*>(&_impl_.display_mesh_),
+          reinterpret_cast<char*>(&other->_impl_.display_mesh_));
 }
 
 ::google::protobuf::Metadata BodyDisplayData::GetMetadata() const {

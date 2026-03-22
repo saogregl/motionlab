@@ -22,11 +22,15 @@ import {
   ImportOptionsSchema,
   LoadProjectCommandSchema,
   PingSchema,
+  RelocateAssetCommandSchema,
   ProtocolVersionSchema,
   RenameDatumCommandSchema,
   SaveProjectCommandSchema,
   ScrubCommandSchema,
   SimulationControlCommandSchema,
+  SimulationSettingsSchema,
+  UpdateBodyCommandSchema,
+  UpdateDatumPoseCommandSchema,
   UpdateJointCommandSchema,
 } from './generated/protocol/transport_pb.js';
 import { PROTOCOL_NAME, PROTOCOL_VERSION } from './version.js';
@@ -203,6 +207,38 @@ export function createRenameDatumCommand(
 }
 
 /**
+ * Creates a binary-encoded Command envelope containing an UpdateDatumPose payload.
+ */
+export function createUpdateDatumPoseCommand(
+  datumId: string,
+  newLocalPose: {
+    position: { x: number; y: number; z: number };
+    orientation: { x: number; y: number; z: number; w: number };
+  },
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'updateDatumPose',
+      value: create(UpdateDatumPoseCommandSchema, {
+        datumId: create(ElementIdSchema, { id: datumId }),
+        newLocalPose: create(PoseSchema, {
+          position: create(Vec3Schema, newLocalPose.position),
+          orientation: create(QuatSchema, {
+            w: newLocalPose.orientation.w,
+            x: newLocalPose.orientation.x,
+            y: newLocalPose.orientation.y,
+            z: newLocalPose.orientation.z,
+          }),
+        }),
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
  * Creates a binary-encoded Command envelope containing a CreateJoint payload.
  */
 export function createCreateJointCommand(
@@ -274,7 +310,9 @@ export function createDeleteJointCommand(jointId: string, sequenceId?: bigint): 
 /**
  * Maps a proto JointType enum to a store-friendly string.
  */
-export function mapJointType(type: JointType): 'revolute' | 'prismatic' | 'fixed' {
+export function mapJointType(
+  type: JointType,
+): 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar' {
   switch (type) {
     case JointType.REVOLUTE:
       return 'revolute';
@@ -282,6 +320,12 @@ export function mapJointType(type: JointType): 'revolute' | 'prismatic' | 'fixed
       return 'prismatic';
     case JointType.FIXED:
       return 'fixed';
+    case JointType.SPHERICAL:
+      return 'spherical';
+    case JointType.CYLINDRICAL:
+      return 'cylindrical';
+    case JointType.PLANAR:
+      return 'planar';
     default:
       return 'fixed';
   }
@@ -298,6 +342,12 @@ export function toProtoJointType(type: string): JointType {
       return JointType.PRISMATIC;
     case 'fixed':
       return JointType.FIXED;
+    case 'spherical':
+      return JointType.SPHERICAL;
+    case 'cylindrical':
+      return JointType.CYLINDRICAL;
+    case 'planar':
+      return JointType.PLANAR;
     default:
       return JointType.UNSPECIFIED;
   }
@@ -326,12 +376,22 @@ export function engineStateToString(state: EngineStatus_State): string {
 /**
  * Creates a binary-encoded Command envelope containing a CompileMechanism payload.
  */
-export function createCompileMechanismCommand(sequenceId?: bigint): Uint8Array {
+export function createCompileMechanismCommand(
+  settings?: { timestep?: number; gravity?: { x: number; y: number; z: number } },
+  sequenceId?: bigint,
+): Uint8Array {
   const cmd = create(CommandSchema, {
     sequenceId: sequenceId ?? 0n,
     payload: {
       case: 'compileMechanism',
-      value: create(CompileMechanismCommandSchema, {}),
+      value: create(CompileMechanismCommandSchema, {
+        settings: settings
+          ? create(SimulationSettingsSchema, {
+              timestep: settings.timestep ?? 0,
+              gravity: settings.gravity ? create(Vec3Schema, settings.gravity) : undefined,
+            })
+          : undefined,
+      }),
     },
   });
   return toBinary(CommandSchema, cmd);
@@ -391,6 +451,56 @@ export function createLoadProjectCommand(projectData: Uint8Array, sequenceId?: b
     payload: {
       case: 'loadProject',
       value: create(LoadProjectCommandSchema, { projectData }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing an UpdateBody payload.
+ */
+export function createUpdateBodyCommand(
+  bodyId: string,
+  updates: { isFixed?: boolean },
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'updateBody',
+      value: create(UpdateBodyCommandSchema, {
+        bodyId: create(ElementIdSchema, { id: bodyId }),
+        isFixed: updates.isFixed,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a RelocateAsset payload.
+ */
+export function createRelocateAssetCommand(
+  bodyId: string,
+  newFilePath: string,
+  importOptions?: { densityOverride?: number; tessellationQuality?: number; unitSystem?: string },
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'relocateAsset',
+      value: create(RelocateAssetCommandSchema, {
+        bodyId,
+        newFilePath,
+        importOptions: importOptions
+          ? create(ImportOptionsSchema, {
+              densityOverride: importOptions.densityOverride ?? 0,
+              tessellationQuality: importOptions.tessellationQuality ?? 0,
+              unitSystem: importOptions.unitSystem ?? '',
+            })
+          : undefined,
+      }),
     },
   });
   return toBinary(CommandSchema, cmd);

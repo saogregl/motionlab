@@ -249,9 +249,19 @@ static void test_unit_system_normalization(const std::string& step_file) {
     assert(m_box != nullptr);
     assert(in_box != nullptr);
 
+    // CoM assertions (length scaling)
     assert(std::abs(mm_box->mass_properties.center_of_mass[0] - 0.005) < 1e-4);
     assert(std::abs(m_box->mass_properties.center_of_mass[0] - 5.0) < 1e-6);
     assert(std::abs(in_box->mass_properties.center_of_mass[0] - 0.127) < 1e-4);
+
+    // Mass assertions — box is 10×20×30 in file units, density 1000 kg/m³
+    // mm:   volume = 6e-6 m³  → mass = 0.006 kg
+    // meter: volume = 6000 m³ → mass = 6,000,000 kg
+    // inch:  volume = 6000 × 0.0254³ m³ ≈ 0.09832 m³ → mass ≈ 98.32 kg
+    assert(std::abs(mm_box->mass_properties.mass - 0.006) / 0.006 < 0.01);
+    assert(std::abs(m_box->mass_properties.mass - 6e6) / 6e6 < 0.01);
+    const double inch_expected_mass = 6000.0 * 0.0254 * 0.0254 * 0.0254 * 1000.0;
+    assert(std::abs(in_box->mass_properties.mass - inch_expected_mass) / inch_expected_mass < 0.01);
 
     std::cout << "  PASS: unit system normalization" << std::endl;
 }

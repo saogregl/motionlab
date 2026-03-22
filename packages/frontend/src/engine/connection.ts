@@ -9,10 +9,13 @@ import {
   createHandshakeCommand,
   createImportAssetCommand,
   createLoadProjectCommand,
+  createRelocateAssetCommand,
   createRenameDatumCommand,
+  createUpdateDatumPoseCommand,
   createSaveProjectCommand,
   createScrubCommand,
   createSimulationControlCommand,
+  createUpdateBodyCommand,
   createUpdateJointCommand,
   engineStateToString,
   eventToDebugJson,
@@ -22,7 +25,9 @@ import {
   SimStateEnum,
   SimulationAction,
   toProtoJointType,
+  PROTOCOL_VERSION,
 } from '@motionlab/protocol';
+import type { MissingAssetInfo } from '@motionlab/protocol';
 import type { SceneGraphManager } from '@motionlab/viewport';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { clearBodyPoses, setBodyPose } from '../stores/body-poses.js';
@@ -42,6 +47,7 @@ type GetState = () => EngineConnectionState;
 
 let ws: WebSocket | null = null;
 let handshakeTimer: ReturnType<typeof setTimeout> | null = null;
+let connectEpoch = 0;
 
 // ---------------------------------------------------------------------------
 // SceneGraphManager registry for hot-path frame updates
@@ -51,6 +57,28 @@ let sceneGraphManager: SceneGraphManager | null = null;
 
 export function registerSceneGraph(sg: SceneGraphManager | null): void {
   sceneGraphManager = sg;
+}
+
+// ---------------------------------------------------------------------------
+// Missing assets callback — notifies App when a loaded project has missing assets
+// ---------------------------------------------------------------------------
+
+let missingAssetsCallback: ((assets: MissingAssetInfo[]) => void) | null = null;
+
+export function onMissingAssets(cb: ((assets: MissingAssetInfo[]) => void) | null): void {
+  missingAssetsCallback = cb;
+}
+
+// ---------------------------------------------------------------------------
+// Relocate asset result callback — notifies dialog when relocation succeeds/fails
+// ---------------------------------------------------------------------------
+
+let relocateAssetCallback: ((bodyId: string, success: boolean, errorMessage?: string) => void) | null = null;
+
+export function onRelocateAssetResult(
+  cb: ((bodyId: string, success: boolean, errorMessage?: string) => void) | null,
+): void {
+  relocateAssetCallback = cb;
 }
 
 // ---------------------------------------------------------------------------
@@ -94,6 +122,7 @@ function cleanup() {
 
 export function connect(set: SetState, _get: GetState) {
   cleanup();
+  const myEpoch = ++connectEpoch;
 
   set({ status: 'discovering' });
 
@@ -105,6 +134,10 @@ export function connect(set: SetState, _get: GetState) {
   window.motionlab
     .getEngineEndpoint()
     .then((endpoint) => {
+      // Guard against StrictMode double-invoke: if connect() was called again
+      // while this promise was in flight, this invocation is stale.
+      if (myEpoch !== connectEpoch) return;
+
       if (!endpoint) {
         set({ status: 'error', errorMessage: 'Engine endpoint not available' });
         return;
@@ -118,7 +151,7 @@ export function connect(set: SetState, _get: GetState) {
       ws = socket;
 
       socket.onopen = () => {
-        if (ws !== socket) return; // stale socket from StrictMode double-invoke
+        if (ws !== socket) return;
         set({ status: 'handshaking' });
 
         socket.send(createHandshakeCommand(endpoint.sessionToken ?? ''));
@@ -130,10 +163,12 @@ export function connect(set: SetState, _get: GetState) {
       };
 
       socket.onmessage = (event) => {
+        if (ws !== socket) return;
         let evt: ReturnType<typeof parseEvent>;
         try {
           evt = parseEvent(event.data as ArrayBuffer);
-        } catch {
+        } catch (err) {
+          console.warn('[protocol] failed to parse event:', err);
           return;
         }
 
@@ -149,10 +184,10 @@ export function connect(set: SetState, _get: GetState) {
               handshakeTimer = null;
             }
             if (!ack.compatible) {
-              const remoteVersion = ack.engineProtocol?.version ?? 'unknown';
+              const engineVersion = ack.engineProtocol?.version ?? 'unknown';
               set({
                 status: 'error',
-                errorMessage: `Incompatible protocol: engine v${remoteVersion}`,
+                errorMessage: `Protocol version mismatch: frontend expects v${PROTOCOL_VERSION} but engine reports v${engineVersion}. Please rebuild both components.`,
               });
               cleanup();
               return;
@@ -300,6 +335,44 @@ export function connect(set: SetState, _get: GetState) {
             }
             break;
           }
+          case 'updateDatumPoseResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'datum') {
+              const d = result.result.value;
+              mechStore.updateDatumPose(d.id?.id ?? '', {
+                position: {
+                  x: d.localPose?.position?.x ?? 0,
+                  y: d.localPose?.position?.y ?? 0,
+                  z: d.localPose?.position?.z ?? 0,
+                },
+                rotation: {
+                  x: d.localPose?.orientation?.x ?? 0,
+                  y: d.localPose?.orientation?.y ?? 0,
+                  z: d.localPose?.orientation?.z ?? 0,
+                  w: d.localPose?.orientation?.w ?? 1,
+                },
+              });
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[datum] update pose failed:', result.result.value);
+            }
+            break;
+          }
+          case 'updateBodyResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'body') {
+              const b = result.result.value;
+              // Update the body's isFixed state in the store
+              const existing = mechStore.bodies.get(b.id?.id ?? '');
+              if (existing) {
+                mechStore.addBodies([{ ...existing, isFixed: b.isFixed }]);
+              }
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[body] update failed:', result.result.value);
+            }
+            break;
+          }
           case 'createJointResult': {
             const result = evt.payload.value;
             const mechStore = useMechanismStore.getState();
@@ -436,8 +509,14 @@ export function connect(set: SetState, _get: GetState) {
               if (frameSkipCounter % skip !== 0) break;
             }
 
-            if (!sceneGraphManager) break;
+            if (!sceneGraphManager) {
+              console.warn('[sim] no sceneGraphManager, skipping frame');
+              break;
+            }
             const frame = evt.payload.value;
+            if (frame.bodyPoses.length === 0) {
+              console.warn('[sim] frame has no body poses');
+            }
             for (const bp of frame.bodyPoses) {
               const pos = {
                 x: bp.position?.x ?? 0,
@@ -450,12 +529,19 @@ export function connect(set: SetState, _get: GetState) {
                 z: bp.orientation?.z ?? 0,
                 w: bp.orientation?.w ?? 1,
               };
+              if (frameCount <= 3) {
+                console.log(`[sim] frame ${frameCount}: ${bp.bodyId} pos=(${pos.x.toFixed(4)}, ${pos.y.toFixed(4)}, ${pos.z.toFixed(4)})`);
+              }
               sceneGraphManager.updateBodyTransform(bp.bodyId, {
                 position: [pos.x, pos.y, pos.z],
                 rotation: [rot.x, rot.y, rot.z, rot.w],
               });
               setBodyPose(bp.bodyId, pos, rot);
             }
+            // Update simulation time from frame data so timeline tracks progress
+            useSimulationStore
+              .getState()
+              .setSimState('running', frame.simTime, Number(frame.stepCount));
             break;
           }
           case 'simulationTrace': {
@@ -487,6 +573,7 @@ export function connect(set: SetState, _get: GetState) {
                 .then((saveResult) => {
                   if (saveResult.saved && saveResult.filePath) {
                     mechStore.setProjectMeta(projectName, saveResult.filePath);
+                    mechStore.markClean();
                   }
                 })
                 .catch((err: unknown) => {
@@ -507,6 +594,11 @@ export function connect(set: SetState, _get: GetState) {
               mechStore.clear();
               useSimulationStore.getState().reset();
               if (sceneGraphManager) sceneGraphManager.clear();
+
+              // Build lookup for isFixed from mechanism bodies
+              const mechanismBodies = new Map(
+                (success.mechanism?.bodies ?? []).map((b) => [b.id?.id ?? '', b]),
+              );
 
               // Rebuild bodies
               const mapped: BodyState[] = success.bodies.map((b) => ({
@@ -549,6 +641,7 @@ export function connect(set: SetState, _get: GetState) {
                   contentHash: b.sourceAssetRef?.contentHash ?? '',
                   originalFilename: b.sourceAssetRef?.originalFilename ?? '',
                 },
+                isFixed: mechanismBodies.get(b.bodyId)?.isFixed ?? false,
               }));
               mechStore.addBodies(mapped);
 
@@ -640,8 +733,92 @@ export function connect(set: SetState, _get: GetState) {
               if (success.metadata) {
                 mechStore.setProjectMeta(success.metadata.name, null);
               }
+              mechStore.markClean();
+
+              // Notify about missing assets so the UI can show the relocation dialog
+              if (success.missingAssets.length > 0) {
+                console.warn('[project] missing assets:', success.missingAssets);
+                if (missingAssetsCallback) missingAssetsCallback(success.missingAssets);
+              }
             } else if (result.result.case === 'errorMessage') {
               console.error('[project] load failed:', result.result.value);
+            }
+            break;
+          }
+          case 'relocateAssetResult': {
+            const result = evt.payload.value;
+            if (result.result.case === 'body') {
+              const b = result.result.value;
+              const mechStore = useMechanismStore.getState();
+
+              // Rebuild the body with new mesh/asset data (same as importAssetResult mapping)
+              const updated: BodyState = {
+                id: b.bodyId,
+                name: b.name,
+                meshData: {
+                  vertices: new Float32Array(b.displayMesh?.vertices ?? []),
+                  indices: new Uint32Array(b.displayMesh?.indices ?? []),
+                  normals: new Float32Array(b.displayMesh?.normals ?? []),
+                },
+                partIndex: b.partIndex.length > 0 ? new Uint32Array(b.partIndex) : undefined,
+                massProperties: {
+                  mass: b.massProperties?.mass ?? 0,
+                  centerOfMass: {
+                    x: b.massProperties?.centerOfMass?.x ?? 0,
+                    y: b.massProperties?.centerOfMass?.y ?? 0,
+                    z: b.massProperties?.centerOfMass?.z ?? 0,
+                  },
+                  ixx: b.massProperties?.ixx ?? 0,
+                  iyy: b.massProperties?.iyy ?? 0,
+                  izz: b.massProperties?.izz ?? 0,
+                  ixy: b.massProperties?.ixy ?? 0,
+                  ixz: b.massProperties?.ixz ?? 0,
+                  iyz: b.massProperties?.iyz ?? 0,
+                },
+                pose: {
+                  position: {
+                    x: b.pose?.position?.x ?? 0,
+                    y: b.pose?.position?.y ?? 0,
+                    z: b.pose?.position?.z ?? 0,
+                  },
+                  rotation: {
+                    x: b.pose?.orientation?.x ?? 0,
+                    y: b.pose?.orientation?.y ?? 0,
+                    z: b.pose?.orientation?.z ?? 0,
+                    w: b.pose?.orientation?.w ?? 1,
+                  },
+                },
+                sourceAssetRef: {
+                  contentHash: b.sourceAssetRef?.contentHash ?? '',
+                  originalFilename: b.sourceAssetRef?.originalFilename ?? '',
+                },
+              };
+              mechStore.addBodies([updated]);
+
+              // Update scene graph
+              if (sceneGraphManager) {
+                sceneGraphManager.addBody(
+                  updated.id,
+                  updated.name,
+                  updated.meshData,
+                  {
+                    position: [updated.pose.position.x, updated.pose.position.y, updated.pose.position.z],
+                    rotation: [
+                      updated.pose.rotation.x,
+                      updated.pose.rotation.y,
+                      updated.pose.rotation.z,
+                      updated.pose.rotation.w,
+                    ],
+                  },
+                  updated.partIndex,
+                );
+              }
+
+              console.log('[project] asset relocated successfully:', b.bodyId);
+              if (relocateAssetCallback) relocateAssetCallback(b.bodyId, true);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[project] asset relocation failed:', result.result.value);
+              if (relocateAssetCallback) relocateAssetCallback('', false, result.result.value);
             }
             break;
           }
@@ -651,6 +828,7 @@ export function connect(set: SetState, _get: GetState) {
       };
 
       socket.onclose = () => {
+        if (ws !== socket) return;
         if (handshakeTimer) {
           clearTimeout(handshakeTimer);
           handshakeTimer = null;
@@ -660,6 +838,7 @@ export function connect(set: SetState, _get: GetState) {
       };
 
       socket.onerror = () => {
+        if (ws !== socket) return;
         set({ status: 'error', errorMessage: 'WebSocket error' });
       };
     })
@@ -713,10 +892,21 @@ export function sendRenameDatum(datumId: string, newName: string): void {
   ws.send(createRenameDatumCommand(datumId, newName));
 }
 
+export function sendUpdateDatumPose(
+  datumId: string,
+  newLocalPose: {
+    position: { x: number; y: number; z: number };
+    orientation: { x: number; y: number; z: number; w: number };
+  },
+): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createUpdateDatumPoseCommand(datumId, newLocalPose));
+}
+
 export function sendCreateJoint(
   parentDatumId: string,
   childDatumId: string,
-  type: 'revolute' | 'prismatic' | 'fixed',
+  type: 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar',
   name: string,
   lowerLimit: number,
   upperLimit: number,
@@ -738,7 +928,7 @@ export function sendUpdateJoint(
   jointId: string,
   updates: {
     name?: string;
-    type?: 'revolute' | 'prismatic' | 'fixed';
+    type?: 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar';
     lowerLimit?: number;
     upperLimit?: number;
   },
@@ -754,14 +944,21 @@ export function sendUpdateJoint(
   );
 }
 
+export function sendUpdateBody(bodyId: string, updates: { isFixed?: boolean }): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createUpdateBodyCommand(bodyId, updates));
+}
+
 export function sendDeleteJoint(jointId: string): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(createDeleteJointCommand(jointId));
 }
 
-export function sendCompileMechanism(): void {
+export function sendCompileMechanism(
+  settings?: { timestep?: number; gravity?: { x: number; y: number; z: number } },
+): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createCompileMechanismCommand());
+  ws.send(createCompileMechanismCommand(settings));
 }
 
 export function sendSimulationControl(action: SimulationAction): void {
@@ -782,6 +979,11 @@ export function sendSaveProject(projectName: string): void {
 export function sendLoadProject(data: Uint8Array): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(createLoadProjectCommand(data));
+}
+
+export function sendRelocateAsset(bodyId: string, newFilePath: string): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createRelocateAssetCommand(bodyId, newFilePath));
 }
 
 function surfaceClassToLabel(surfaceClass: FaceSurfaceClass): string {

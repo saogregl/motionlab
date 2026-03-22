@@ -1,4 +1,5 @@
 import { PROTOCOL_VERSION } from '@motionlab/protocol';
+import type { MissingAssetInfo } from '@motionlab/protocol';
 import type { StatusType } from '@motionlab/ui';
 import {
   AppShell,
@@ -14,14 +15,20 @@ import {
   useTheme,
 } from '@motionlab/ui';
 import { FolderOpen, Import, Save } from 'lucide-react';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { AboutDialog } from './components/AboutDialog.js';
 import { CommandPalette } from './components/CommandPalette.js';
+import { MissingAssetsDialog } from './components/MissingAssetsDialog.js';
 import { EntityInspector } from './components/EntityInspector.js';
+import { ImportSettingsDialog } from './components/ImportSettingsDialog.js';
+import { KeyboardShortcutsDialog } from './components/KeyboardShortcutsDialog.js';
 import { ProjectTree } from './components/ProjectTree.js';
+import { SimulationSettingsDialog } from './components/SimulationSettingsDialog.js';
 import { SimulationToolbar } from './components/SimulationToolbar.js';
 import { TimelinePanel } from './components/TimelinePanel.js';
 import { ViewportOverlay } from './components/ViewportOverlay.js';
-import { sendImportAsset, sendLoadProject, sendSaveProject } from './engine/connection.js';
+import { onMissingAssets, sendImportAsset, sendLoadProject, sendSaveProject } from './engine/connection.js';
+import { useDialogStore } from './stores/dialogs.js';
 import type { ConnectionStatus } from './stores/engine-connection.js';
 import { useEngineConnection } from './stores/engine-connection.js';
 import { useMechanismStore } from './stores/mechanism.js';
@@ -74,6 +81,7 @@ function ImportButton() {
   const importing = useMechanismStore((s) => s.importing);
   const setImporting = useMechanismStore((s) => s.setImporting);
   const setImportError = useMechanismStore((s) => s.setImportError);
+  const [pendingFilePath, setPendingFilePath] = useState<string | null>(null);
 
   const isDesktop = !!window.motionlab?.openFileDialog;
   const disabled = !isDesktop || status !== 'ready' || importing;
@@ -88,25 +96,37 @@ function ImportButton() {
         ],
       });
       if (!filePath) return;
-      setImportError(null);
-      setImporting(true);
-      sendImportAsset(filePath);
+      setPendingFilePath(filePath);
     } catch {
       setImportError('Failed to open file dialog');
     }
   };
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      disabled={disabled}
-      onClick={handleClick}
-      title={!isDesktop ? 'Desktop app required' : undefined}
-    >
-      <Import className="size-3.5 mr-1.5" />
-      {importing ? 'Importing…' : 'Import'}
-    </Button>
+    <>
+      <Button
+        variant="outline"
+        size="sm"
+        disabled={disabled}
+        onClick={handleClick}
+        title={!isDesktop ? 'Desktop app required' : undefined}
+      >
+        <Import className="size-3.5 mr-1.5" />
+        {importing ? 'Importing…' : 'Import'}
+      </Button>
+      <ImportSettingsDialog
+        open={!!pendingFilePath}
+        filePath={pendingFilePath ?? ''}
+        onConfirm={(options) => {
+          if (!pendingFilePath) return;
+          setImportError(null);
+          setImporting(true);
+          sendImportAsset(pendingFilePath, options);
+          setPendingFilePath(null);
+        }}
+        onCancel={() => setPendingFilePath(null)}
+      />
+    </>
   );
 }
 
@@ -176,10 +196,29 @@ function TopBarActions() {
 export function App() {
   const connect = useEngineConnection((s) => s.connect);
   const projectName = useMechanismStore((s) => s.projectName);
+  const isDirty = useMechanismStore((s) => s.isDirty);
+  const openDialog = useDialogStore((s) => s.openDialog);
+  const closeDialog = useDialogStore((s) => s.close);
+  const openDialogFn = useDialogStore((s) => s.open);
+
+  const [missingAssets, setMissingAssets] = useState<MissingAssetInfo[]>([]);
 
   useEffect(() => {
     connect();
+    // Register dirty check callback for before-quit dialog (desktop only)
+    if (typeof window.motionlab?.onCheckDirty === 'function') {
+      window.motionlab.onCheckDirty(() => useMechanismStore.getState().isDirty);
+    }
   }, [connect]);
+
+  // Listen for missing assets from project loads
+  useEffect(() => {
+    onMissingAssets((assets) => {
+      setMissingAssets(assets);
+      openDialogFn('missing-assets');
+    });
+    return () => { onMissingAssets(null); };
+  }, [openDialogFn]);
 
   const handleSave = useCallback(() => {
     const status = useEngineConnection.getState().status;
@@ -220,6 +259,7 @@ export function App() {
         topBar={
           <TopBar
             projectName={projectName}
+            isDirty={isDirty}
             status={<EngineStatusBadge />}
             actions={<TopBarActions />}
           />
@@ -239,6 +279,14 @@ export function App() {
         bottomDock={<TimelinePanel />}
       />
       <CommandPalette />
+      <SimulationSettingsDialog open={openDialog === 'sim-settings'} onClose={closeDialog} />
+      <KeyboardShortcutsDialog open={openDialog === 'shortcuts'} onClose={closeDialog} />
+      <AboutDialog open={openDialog === 'about'} onClose={closeDialog} />
+      <MissingAssetsDialog
+        open={openDialog === 'missing-assets'}
+        onClose={closeDialog}
+        missingAssets={missingAssets}
+      />
     </TooltipProvider>
   );
 }

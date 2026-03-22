@@ -7,6 +7,8 @@ import { cn } from '../../lib/utils';
 interface TopBarProps {
   /** Project name display */
   projectName?: string;
+  /** Whether the project has unsaved changes */
+  isDirty?: boolean;
   /** Status indicator slot */
   status?: ReactNode;
   /** Right-side actions slot */
@@ -73,7 +75,7 @@ function WindowControls() {
   );
 }
 
-function TopBar({ projectName = 'Untitled Project', status, actions, className }: TopBarProps) {
+function TopBar({ projectName = 'Untitled Project', isDirty, status, actions, className }: TopBarProps) {
   return (
     <div
       data-slot="top-bar"
@@ -87,7 +89,7 @@ function TopBar({ projectName = 'Untitled Project', status, actions, className }
         {/* Logo placeholder */}
         <div className="size-3.5 shrink-0 rounded-[1px] bg-[var(--accent-soft)] border border-[var(--accent-primary)]/20" />
         <span className="max-w-[200px] truncate text-[length:var(--text-base)] font-semibold text-text-primary">
-          {projectName}
+          {projectName}{isDirty ? ' *' : ''}
         </span>
         <ChevronDown className="size-3 shrink-0 text-text-tertiary" />
       </div>
@@ -96,11 +98,11 @@ function TopBar({ projectName = 'Untitled Project', status, actions, className }
       <div className="flex flex-1 justify-center px-4">
         <button
           type="button"
-          className="flex h-6 w-52 items-center gap-1 rounded-[var(--radius-sm)] border border-border-subtle bg-layer-recessed px-3 text-[length:var(--text-sm)] text-text-tertiary transition-colors hover:border-border-default hover:bg-field-base [-webkit-app-region:no-drag]"
+          className="flex h-7 w-56 items-center gap-1.5 rounded-[var(--radius-sm)] bg-transparent px-3 text-[length:var(--text-sm)] text-text-tertiary transition-colors hover:bg-field-base [-webkit-app-region:no-drag]"
         >
           <Search className="size-3.5 shrink-0" />
           <span className="flex-1 text-left">Search commands...</span>
-          <kbd className="shrink-0 rounded-[1px] border border-border-default bg-layer-base px-1 text-[length:var(--text-2xs)] font-medium text-text-tertiary">
+          <kbd className="shrink-0 rounded-[1px] px-1 text-[length:var(--text-2xs)] font-medium text-text-tertiary">
             Ctrl+K
           </kbd>
         </button>

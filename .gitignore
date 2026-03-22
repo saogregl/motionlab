@@ -15,6 +15,7 @@ storybook-static/
 # Native build
 native/engine/build/
 native/engine/out/
+native/engine/compile_commands.json
 
 # Editor
 .idea/

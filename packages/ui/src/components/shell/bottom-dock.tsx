@@ -54,22 +54,22 @@ function BottomDock({
       data-slot="bottom-dock"
       data-expanded={expanded || undefined}
       className={cn(
-        'flex shrink-0 flex-col border-t border-border-default bg-layer-base',
+        'flex h-full flex-col border-t border-border-default bg-layer-base',
         className,
       )}
     >
       {/* Tab bar — always visible */}
-      <div className="flex h-6 shrink-0 items-center gap-0.5 border-b border-[var(--border-subtle)] bg-[var(--layer-recessed)] px-2">
+      <div className="flex h-8 shrink-0 items-center bg-[var(--tab-contained-bg)]">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             type="button"
             data-active={tab.id === activeTab || undefined}
             className={cn(
-              'h-[18px] px-2 text-[10px] font-medium transition-colors',
+              'h-full px-4 font-medium tracking-normal text-[length:var(--text-xs)] transition-colors',
               tab.id === activeTab
-                ? 'rounded-none border-t-2 border-t-[var(--accent-primary)] bg-layer-base text-text-primary'
-                : 'text-text-tertiary hover:text-text-secondary',
+                ? 'bg-[var(--tab-contained-active)] text-text-primary'
+                : 'bg-transparent text-text-tertiary hover:text-text-secondary',
             )}
             onClick={() => handleTabClick(tab.id)}
           >
@@ -79,7 +79,7 @@ function BottomDock({
         <div className="flex-1" />
         <button
           type="button"
-          className="flex size-5 items-center justify-center text-text-tertiary hover:text-text-secondary"
+          className="mr-1 flex size-6 items-center justify-center text-text-tertiary hover:text-text-secondary"
           onClick={() => setExpanded(!expanded)}
           aria-label={expanded ? 'Collapse dock' : 'Expand dock'}
         >
@@ -87,10 +87,12 @@ function BottomDock({
         </button>
       </div>
 
-      {/* Content area with height transition */}
+      {/* Content area — flex-1 fills whatever the panel gives us */}
       <div
-        className="overflow-hidden transition-[height] duration-[var(--duration-slow)] ease-[var(--easing-default)]"
-        style={{ height: expanded ? '100%' : '0px' }}
+        className={cn(
+          'min-h-0 overflow-hidden transition-[flex] duration-[var(--duration-slow)] ease-[var(--easing-default)]',
+          expanded ? 'flex-1' : 'flex-[0]',
+        )}
       >
         <div className="h-full overflow-auto">{children}</div>
       </div>

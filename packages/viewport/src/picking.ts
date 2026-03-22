@@ -36,6 +36,15 @@ export type PickCallback = (
 
 export type HoverCallback = (entityId: string | null) => void;
 
+export type FaceHoverCallback = (face: { bodyId: string; faceIndex: number } | null) => void;
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+/** Screen-pixel drag threshold to distinguish click from orbit/pan. */
+const DRAG_THRESHOLD_PX = 5;
+
 // ---------------------------------------------------------------------------
 // PickingManager
 // ---------------------------------------------------------------------------
@@ -44,6 +53,10 @@ export type HoverCallback = (entityId: string | null) => void;
  * Translates Babylon.js pointer events into entity-level pick and hover
  * callbacks. Uses GPU picking (Babylon 8 GPUPicker) with CPU fallback.
  * Hover picks are RAF-gated to avoid flooding GPU readbacks.
+ *
+ * Uses POINTERDOWN + POINTERTAP (not POINTERPICK) to reliably detect
+ * clicks regardless of whether a mesh is hit, and to distinguish clicks
+ * from orbit/pan drags.
  */
 export class PickingManager {
   private readonly scene: Scene;
@@ -58,6 +71,14 @@ export class PickingManager {
 
   private gpuPicker: GPUPicker | null = null;
   private fallbackToCpu = false;
+  private pickListDirty = true;
+
+  /** Optional callback when the hovered face changes during create-datum mode. */
+  onFaceHoverChange?: FaceHoverCallback;
+
+  // Drag-distance tracking to distinguish click from orbit
+  private pointerDownX = 0;
+  private pointerDownY = 0;
 
   constructor(
     scene: Scene,
@@ -77,17 +98,23 @@ export class PickingManager {
       this.fallbackToCpu = true;
     }
 
+    // Listen for entity list changes to invalidate GPU picker cache
+    this.sceneGraph.onEntityListChanged = () => {
+      this.pickListDirty = true;
+    };
+
     this.observer = this.scene.onPointerObservable.add((info) => {
       this.handlePointer(info);
     });
   }
 
   private updatePickingList(): void {
-    if (!this.gpuPicker || this.fallbackToCpu) return;
+    if (!this.gpuPicker || this.fallbackToCpu || !this.pickListDirty) return;
     const meshes = this.sceneGraph.getAllPickableMeshes();
     if (meshes.length > 0) {
       this.gpuPicker.setPickingList(meshes);
     }
+    this.pickListDirty = false;
   }
 
   setInteractionMode(mode: InteractionMode): void {
@@ -104,8 +131,29 @@ export class PickingManager {
 
   private handlePointer(info: PointerInfo): void {
     switch (info.type) {
-      case PointerEventTypes.POINTERPICK: {
+      case PointerEventTypes.POINTERDOWN: {
+        // Record start position for drag-distance threshold
         const evt = info.event as PointerEvent;
+        this.pointerDownX = evt.clientX;
+        this.pointerDownY = evt.clientY;
+        break;
+      }
+
+      case PointerEventTypes.POINTERTAP: {
+        // POINTERTAP fires on completed click (pointer down + up without
+        // significant movement), regardless of whether a mesh was hit.
+        const evt = info.event as PointerEvent;
+
+        // Verify this was a true click, not an orbit drag release.
+        // POINTERTAP already has its own threshold, but we enforce a
+        // stricter one to avoid accidental selection during slow orbits.
+        const dx = evt.clientX - this.pointerDownX;
+        const dy = evt.clientY - this.pointerDownY;
+        if (dx * dx + dy * dy > DRAG_THRESHOLD_PX * DRAG_THRESHOLD_PX) {
+          break;
+        }
+
+        // Perform our own pick at the tap coordinates
         this.pickEntityAtAsync().then((result) => {
           const spatial = result.mesh
             ? this.pickSpatialData(result.mesh, result.entityId)
@@ -160,8 +208,11 @@ export class PickingManager {
       try {
         this.updatePickingList();
 
+        // Skip GPU pick if one is already in progress (for hover only;
+        // this path returns null which is acceptable for hover since the
+        // next frame will try again).
         if (this.gpuPicker.pickingInProgress) {
-          return { entityId: null, mesh: null };
+          return this.pickEntityAtCpu();
         }
 
         const pickingInfo = await this.gpuPicker.pickAsync(
@@ -211,19 +262,29 @@ export class PickingManager {
   private updateHoveredFace(result: PickResult): boolean {
     if (!result.mesh || !result.entityId) {
       this.sceneGraph.clearAllFaceHighlights();
-      this.hoveredFace = null;
+      if (this.hoveredFace) {
+        this.hoveredFace = null;
+        this.onFaceHoverChange?.(null);
+      }
       return false;
     }
 
     const spatial = this.pickSpatialData(result.mesh, result.entityId);
     if (spatial?.faceIndex === undefined) {
       this.sceneGraph.clearAllFaceHighlights();
-      this.hoveredFace = null;
+      if (this.hoveredFace) {
+        this.hoveredFace = null;
+        this.onFaceHoverChange?.(null);
+      }
       return false;
     }
 
     this.sceneGraph.highlightFace(result.entityId, spatial.faceIndex);
-    this.hoveredFace = { bodyId: result.entityId, faceIndex: spatial.faceIndex };
+    const newFace = { bodyId: result.entityId, faceIndex: spatial.faceIndex };
+    if (!this.hoveredFace || this.hoveredFace.bodyId !== newFace.bodyId || this.hoveredFace.faceIndex !== newFace.faceIndex) {
+      this.hoveredFace = newFace;
+      this.onFaceHoverChange?.(newFace);
+    }
     return true;
   }
 
@@ -309,6 +370,7 @@ export class PickingManager {
 
   dispose(): void {
     this.sceneGraph.clearAllFaceHighlights();
+    this.sceneGraph.onEntityListChanged = undefined;
     this.scene.onPointerObservable.remove(this.observer);
     this.gpuPicker?.dispose();
   }

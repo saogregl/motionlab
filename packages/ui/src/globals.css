@@ -10,6 +10,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* react-resizable-panels: allow panels to shrink below content intrinsic size */
+[data-panel] {
+  min-height: 0;
+  min-width: 0;
+}
+
 /* ============================================================
    Engineering Design Tokens — Layer Architecture
    IBM Carbon g10 (light) / g100 (dark) neutral grays.

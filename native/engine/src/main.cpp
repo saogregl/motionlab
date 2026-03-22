@@ -1,3 +1,4 @@
+#include "engine/log.h"
 #include "engine/transport.h"
 #include "engine/version.h"
 
@@ -35,6 +36,8 @@ static BOOL WINAPI console_ctrl_handler(DWORD event) {
 #endif
 
 int main(int argc, char* argv[]) {
+    motionlab::init_logging();
+
     auto config = motionlab::parse_args(argc, argv);
     if (!config) {
         std::cerr << "Usage: motionlab-engine --port <port> --session-token <token>"

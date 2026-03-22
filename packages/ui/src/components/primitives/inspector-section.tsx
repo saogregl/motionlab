@@ -30,7 +30,7 @@ function InspectorSection({
       open={open}
       onOpenChange={onOpenChange}
       defaultOpen={defaultOpen}
-      className={cn('border-b border-[var(--border-default)]', className)}
+      className={cn('', className)}
     >
       <Collapsible.Trigger
         data-slot="inspector-section-trigger"
@@ -41,7 +41,7 @@ function InspectorSection({
       </Collapsible.Trigger>
       <Collapsible.Panel
         data-slot="inspector-section-panel"
-        className="overflow-hidden bg-[var(--layer-raised)] transition-[height] duration-[var(--duration-normal)] ease-[var(--easing-default)]"
+        className="overflow-hidden bg-[var(--layer-base)] transition-[height] duration-[var(--duration-normal)] ease-[var(--easing-default)]"
       >
         {children}
       </Collapsible.Panel>

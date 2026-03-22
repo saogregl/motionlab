@@ -5,6 +5,7 @@ import { useSimulationStore } from '../stores/simulation.js';
 import { BodyInspector } from './BodyInspector.js';
 import { DatumInspector } from './DatumInspector.js';
 import { JointInspector } from './JointInspector.js';
+import { MechanismInspector } from './MechanismInspector.js';
 import { SimulationMetadataSection } from './SimulationMetadataSection.js';
 
 /**
@@ -22,7 +23,12 @@ export function EntityInspector() {
   const firstId = selectedIds.values().next().value as string | undefined;
 
   if (!firstId) {
-    return <InspectorPanel>{showSimMeta && <SimulationMetadataSection />}</InspectorPanel>;
+    return (
+      <>
+        <MechanismInspector />
+        {showSimMeta && <SimulationMetadataSection />}
+      </>
+    );
   }
 
   if (bodies.has(firstId)) {

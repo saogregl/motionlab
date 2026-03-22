@@ -21,8 +21,14 @@ public:
                                    double density, double tessellation_quality,
                                    const std::string& unit_system);
 
+    // Remove a single cached entry by key.
+    void remove(const std::string& cache_key);
+
     // Remove all cached entries.
     void clear();
+
+    // Compute SHA-256 hash of a file's content (without import parameters).
+    static std::string compute_file_hash(const std::string& file_path);
 
 private:
     std::filesystem::path cache_dir_;

@@ -1,4 +1,5 @@
 #include "../src/face_classifier.h"
+#include "engine/log.h"
 
 #include <cassert>
 #include <cmath>
@@ -52,6 +53,7 @@ static void assert_unit_quaternion(const double (&orientation)[4]) {
 }
 
 int main() {
+    motionlab::init_logging(spdlog::level::debug);
     {
         TopoDS_Shape box = BRepPrimAPI_MakeBox(10.0, 20.0, 30.0).Shape();
         auto pose = classify_face_for_datum(box, find_face_index(box, GeomAbs_Plane));
