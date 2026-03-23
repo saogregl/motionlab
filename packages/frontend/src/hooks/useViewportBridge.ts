@@ -37,6 +37,18 @@ function convertPose(pose: BodyPose) {
   };
 }
 
+function poseSignature(pose: BodyPose): string {
+  return [
+    pose.position.x,
+    pose.position.y,
+    pose.position.z,
+    pose.rotation.x,
+    pose.rotation.y,
+    pose.rotation.z,
+    pose.rotation.w,
+  ].join('|');
+}
+
 export function useViewportBridge() {
   const sceneGraphRef = useRef<SceneGraphManager | null>(null);
 
@@ -96,6 +108,7 @@ export function useViewportBridge() {
     const trackedBodyIds = new Set<string>(useMechanismStore.getState().bodies.keys());
     const trackedGeometryIds = new Set<string>(useMechanismStore.getState().geometries.keys());
     const trackedDatumIds = new Set<string>(useMechanismStore.getState().datums.keys());
+    const trackedDatumSignatures = new Map<string, string>();
     const trackedJointIds = new Set<string>(useMechanismStore.getState().joints.keys());
     const trackedLoadIds = new Set<string>(useMechanismStore.getState().loads.keys());
 
@@ -180,17 +193,33 @@ export function useViewportBridge() {
           const datum = state.datums.get(id);
           if (!datum) continue;
           sg.addDatum(datum.id, datum.parentBodyId, convertPose(datum.localPose), datum.name);
+          trackedDatumSignatures.set(id, poseSignature(datum.localPose));
+          continue;
+        }
+
+        const datum = state.datums.get(id);
+        if (!datum) continue;
+        const nextSignature = poseSignature(datum.localPose);
+        const prevSignature = trackedDatumSignatures.get(id);
+        if (prevSignature !== nextSignature) {
+          sg.updateDatumPose(id, convertPose(datum.localPose));
+          trackedDatumSignatures.set(id, nextSignature);
         }
       }
 
       for (const id of trackedDatumIds) {
         if (!currentDatumIds.has(id)) {
           sg.removeDatum(id);
+          trackedDatumSignatures.delete(id);
         }
       }
 
       trackedDatumIds.clear();
-      for (const id of currentDatumIds) trackedDatumIds.add(id);
+      for (const id of currentDatumIds) {
+        trackedDatumIds.add(id);
+        const datum = state.datums.get(id);
+        if (datum) trackedDatumSignatures.set(id, poseSignature(datum.localPose));
+      }
 
       // --- Joint diff (runs after datum diff so datum entities exist) ---
       const currentJointIds = new Set<string>(state.joints.keys());
@@ -216,8 +245,8 @@ export function useViewportBridge() {
           if (!joint) continue;
           const entity = sg.getEntity(id);
           if (entity) {
-            // We track type changes by comparing with stored metadata
-            const meta = entity.rootNode.metadata as { jointType?: string } | undefined;
+            // We track type changes by comparing with stored userData
+            const meta = entity.rootNode.userData as { jointType?: string } | undefined;
             if (meta?.jointType !== undefined && meta.jointType !== joint.type) {
               sg.updateJoint(id, joint.type);
             }

@@ -143,11 +143,9 @@ function JointCreationDatumLabel({ sceneGraph }: { sceneGraph: SceneGraphManager
   const showLabel = (step === 'pick-child' || step === 'select-type') && parentDatumId && sceneGraph;
   if (!showLabel) return null;
 
-  // Get the world position of the parent datum from the scene graph entity
-  const entity = sceneGraph.getEntity(parentDatumId);
-  if (!entity) return null;
-  const absPos = entity.rootNode.getAbsolutePosition();
-  const worldPosition = { x: absPos.x, y: absPos.y, z: absPos.z };
+  // Get the world position of the parent datum
+  const worldPosition = sceneGraph.getEntityWorldPosition(parentDatumId);
+  if (!worldPosition) return null;
 
   return (
     <WorldSpaceOverlay

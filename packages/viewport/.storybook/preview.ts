@@ -3,6 +3,23 @@ import { Agentation } from 'agentation';
 import { createElement, Fragment } from 'react';
 
 const preview: Preview = {
+  globalTypes: {
+    theme: {
+      description: 'Viewport theme',
+      toolbar: {
+        title: 'Theme',
+        icon: 'mirror',
+        items: [
+          { value: 'dark', title: 'Dark', icon: 'moon' },
+          { value: 'light', title: 'Light', icon: 'sun' },
+        ],
+        dynamicTitle: true,
+      },
+    },
+  },
+  initialGlobals: {
+    theme: 'dark',
+  },
   decorators: [
     (Story) => {
       const agentationEndpoint =

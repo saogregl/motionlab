@@ -81,7 +81,15 @@
       "Bash(hyprctl monitors:*)",
       "Skill(update-config)",
       "Bash(cmake:*)",
-      "Bash(ctest:*)"
+      "Bash(ctest:*)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_wait_for",
+      "WebFetch(domain:doc.babylonjs.com)",
+      "WebFetch(domain:r3f.docs.pmnd.rs)",
+      "WebFetch(domain:www.utsubo.com)",
+      "WebFetch(domain:medium.com)"
     ]
   },
   "enabledPlugins": {
