@@ -1,6 +1,6 @@
 # Epic 10 — Face-Level Topology Selection & Geometry-Aware Datum Creation
 
-> **Status:** ~95% Complete (all core engine + frontend components implemented)
+> **Status:** Complete except for parity hardening
 > **Completed through:** Commits `782d9dc` and `0aac00f`
 > **Dependency:** Epic 5 (Datum CRUD) — complete. Epic 3 (OCCT import pipeline) — complete.
 >
@@ -9,11 +9,10 @@
 > - Prompt 2 (Frontend Topology Index): Complete. `BodyGeometryIndex` (`body-geometry-index.ts`) with O(1) triangleToFace lookup from partIndex. Face highlighting via vertex colors in `SceneGraphManager.highlightFace()`/`clearFaceHighlight()`. Face-aware hover in `PickingManager.updateHoveredFace()` with `pickSpatialData()` returning faceIndex. `getHoveredFace()` exposed for click consumption.
 > - Prompt 3 (Face-Aware Datum Creation Mode): Complete. `sendCreateDatumFromFace()` wired in connection.ts. Create-datum mode uses hoveredFace to send `CreateDatumFromFaceCommand`. Surface class label mapping in `surfaceClassToLabel()`. Result handler updates mechanism store.
 >
-> **Minor gaps:**
-> - Torus faces classified as `Other` (not a separate `Toroidal` type) — minor, spec called for distinct Torus type
-> - No end-to-end protocol seam test (import STEP → CreateDatumFromFace → verify result)
-> - Face-type tooltip during hover not implemented (status message after creation works)
-> - OCCT 8 migration: Build in progress (OCCT 8.0.0 RC4 via custom vcpkg overlay port). May require API fixes in `face_classifier.cpp` and `cad_import.cpp`.
+> **Remaining hardening before close-out:**
+> - Add explicit toroidal surface support to `FaceSurfaceClass`
+> - Strengthen the native seam to cover both planar and cylindrical faces plus invalid indices
+> - Keep validating the OCCT 8 overlay build as the migration settles
 
 Three prompts. Prompt 1 is a BLOCKER spike. Prompts 2 and 3 can run in parallel after Prompt 1 succeeds.
 

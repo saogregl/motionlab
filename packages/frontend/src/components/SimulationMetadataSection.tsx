@@ -1,4 +1,5 @@
-import { InspectorSection, PropertyRow } from '@motionlab/ui';
+import { InspectorSection, PropertyRow, formatEngValue } from '@motionlab/ui';
+import { Activity } from 'lucide-react';
 import { getMeasuredFps } from '../engine/connection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 
@@ -9,21 +10,25 @@ export function SimulationMetadataSection() {
   const stepCount = useSimulationStore((s) => s.stepCount);
 
   return (
-    <InspectorSection title="Simulation">
+    <InspectorSection title="Simulation" icon={<Activity className="size-3.5" />}>
       <PropertyRow label="Duration" unit="s" numeric>
-        <span>{simTime.toFixed(3)}</span>
+        <span className="font-[family-name:var(--font-mono)] tabular-nums">
+          {formatEngValue(simTime)}
+        </span>
       </PropertyRow>
       <PropertyRow label="Step Count" numeric>
-        <span>{stepCount}</span>
+        <span className="font-[family-name:var(--font-mono)] tabular-nums">{stepCount}</span>
       </PropertyRow>
       <PropertyRow label="Timestep" unit="s" numeric>
-        <span>{TIMESTEP.toFixed(6)}</span>
+        <span className="font-[family-name:var(--font-mono)] tabular-nums">
+          {formatEngValue(TIMESTEP)}
+        </span>
       </PropertyRow>
       <PropertyRow label="Solver">
         <span className="text-2xs">NSC</span>
       </PropertyRow>
       <PropertyRow label="Frame Rate" unit="fps" numeric>
-        <span>{getMeasuredFps()}</span>
+        <span className="font-[family-name:var(--font-mono)] tabular-nums">{getMeasuredFps()}</span>
       </PropertyRow>
     </InspectorSection>
   );

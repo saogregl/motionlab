@@ -1,5 +1,5 @@
 import { InspectorPanel, InspectorSection, PropertyRow } from '@motionlab/ui';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Anchor } from 'lucide-react';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSimulationStore } from '../stores/simulation.js';
 
@@ -12,13 +12,13 @@ export function MechanismInspector() {
 
   return (
     <InspectorPanel entityName="Mechanism" entityType="Overview">
-      <InspectorSection title="Ground">
+      <InspectorSection title="Ground" icon={<Anchor className="size-3.5" />}>
         <PropertyRow label="Ground Body">
           <span className="text-2xs truncate">{groundBody?.name ?? 'First body (default)'}</span>
         </PropertyRow>
       </InspectorSection>
       {simState !== 'idle' && compilationDiagnostics && compilationDiagnostics.length > 0 && (
-        <InspectorSection title="Last Compilation">
+        <InspectorSection title="Last Compilation" icon={<AlertTriangle className="size-3.5" />}>
           {compilationDiagnostics.map((d, i) => (
             <PropertyRow
               key={i}

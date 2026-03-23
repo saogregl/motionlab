@@ -6,7 +6,19 @@ const config: ForgeConfig = {
     asar: true,
     extraResource: [
       `native/engine/build/release/motionlab-engine${process.platform === 'win32' ? '.exe' : ''}`,
+      'resources/templates',
     ],
+    // macOS file association (Epic 20.2)
+    extendInfo: {
+      CFBundleDocumentTypes: [
+        {
+          CFBundleTypeName: 'MotionLab Project',
+          CFBundleTypeExtensions: ['motionlab'],
+          CFBundleTypeRole: 'Editor',
+          LSHandlerRank: 'Owner',
+        },
+      ],
+    },
   },
   makers: [
     {
@@ -16,7 +28,12 @@ const config: ForgeConfig = {
     },
     {
       name: '@electron-forge/maker-deb',
-      config: {},
+      config: {
+        options: {
+          mimeType: ['application/x-motionlab-project'],
+          categories: ['Science', 'Engineering'],
+        },
+      },
       platforms: ['linux'],
     },
   ],

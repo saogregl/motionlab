@@ -1,4 +1,5 @@
 import { cn } from '../../lib/utils';
+import { formatEngValue } from '../../lib/format';
 
 interface InertiaMatrixDisplayProps {
   ixx: number;
@@ -7,21 +8,37 @@ interface InertiaMatrixDisplayProps {
   ixy: number;
   ixz: number;
   iyz: number;
-  /** Decimal places (default 6) */
-  precision?: number;
-  /** Unit label (default "kg m\u00b2") */
+  /** Significant digits (default 4) */
+  sigFigs?: number;
+  /** Unit label (default "kg m²") */
   unit?: string;
   className?: string;
 }
 
+function HeaderCell({ label }: { label: string }) {
+  return (
+    <div className="flex h-5 items-center justify-center bg-[var(--layer-recessed)] text-[10px] font-semibold text-[var(--text-tertiary)]">
+      {label}
+    </div>
+  );
+}
+
+function RowLabel({ label }: { label: string }) {
+  return (
+    <div className="flex h-6 items-center justify-center bg-[var(--layer-recessed)] ps-1 pe-1 text-[10px] font-semibold text-[var(--text-tertiary)]">
+      {label}
+    </div>
+  );
+}
+
 function Cell({
   value,
-  precision,
+  sigFigs,
   diagonal,
   mirror,
 }: {
   value: number;
-  precision: number;
+  sigFigs: number;
   diagonal?: boolean;
   mirror?: boolean;
 }) {
@@ -29,15 +46,15 @@ function Cell({
   return (
     <div
       className={cn(
-        'flex h-6 items-center justify-end rounded-[var(--radius-sm)] px-1.5 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tabular-nums text-right',
+        'flex h-6 items-center justify-end rounded-none px-1.5 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tabular-nums text-right',
         diagonal
-          ? 'bg-[var(--accent-soft)] font-medium text-[var(--text-primary)]'
-          : 'bg-[var(--field-base)]',
+          ? 'bg-[var(--inertia-diagonal)] font-medium text-[var(--inertia-diagonal-text)]'
+          : 'bg-[var(--field-elevated)]',
         mirror && 'text-[var(--text-tertiary)]',
         isNearZero && !diagonal && 'text-[var(--text-disabled)]',
       )}
     >
-      {value.toFixed(precision)}
+      {formatEngValue(value, sigFigs)}
     </div>
   );
 }
@@ -49,8 +66,8 @@ function InertiaMatrixDisplay({
   ixy,
   ixz,
   iyz,
-  precision = 6,
-  unit = 'kg m\u00b2',
+  sigFigs = 4,
+  unit = 'kg m²',
   className,
 }: InertiaMatrixDisplayProps) {
   return (
@@ -59,20 +76,28 @@ function InertiaMatrixDisplay({
       <div className="flex items-center justify-end pb-0.5">
         <span className="text-[10px] text-[var(--text-tertiary)]">{unit}</span>
       </div>
-      {/* 3x3 grid */}
-      <div className="grid grid-cols-3 gap-px">
-        {/* Row 0: Ixx  Ixy  Ixz */}
-        <Cell value={ixx} precision={precision} diagonal />
-        <Cell value={ixy} precision={precision} />
-        <Cell value={ixz} precision={precision} />
-        {/* Row 1: Ixy  Iyy  Iyz */}
-        <Cell value={ixy} precision={precision} mirror />
-        <Cell value={iyy} precision={precision} diagonal />
-        <Cell value={iyz} precision={precision} />
-        {/* Row 2: Ixz  Iyz  Izz */}
-        <Cell value={ixz} precision={precision} mirror />
-        <Cell value={iyz} precision={precision} mirror />
-        <Cell value={izz} precision={precision} diagonal />
+      {/* 4x4 grid: label col + 3 data cols, header row + 3 data rows */}
+      <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-px overflow-hidden rounded-[var(--radius-md)] border border-[var(--inspector-grid-border)] bg-[var(--inspector-grid-border)]">
+        {/* Header row */}
+        <div className="bg-[var(--layer-recessed)]" />
+        <HeaderCell label="xx" />
+        <HeaderCell label="yy" />
+        <HeaderCell label="zz" />
+        {/* Row 0: Ixx */}
+        <RowLabel label="Ixx" />
+        <Cell value={ixx} sigFigs={sigFigs} diagonal />
+        <Cell value={ixy} sigFigs={sigFigs} />
+        <Cell value={ixz} sigFigs={sigFigs} />
+        {/* Row 1: Iyy */}
+        <RowLabel label="Ixy" />
+        <Cell value={ixy} sigFigs={sigFigs} mirror />
+        <Cell value={iyy} sigFigs={sigFigs} diagonal />
+        <Cell value={iyz} sigFigs={sigFigs} />
+        {/* Row 2: Izz */}
+        <RowLabel label="Ixz" />
+        <Cell value={ixz} sigFigs={sigFigs} mirror />
+        <Cell value={iyz} sigFigs={sigFigs} mirror />
+        <Cell value={izz} sigFigs={sigFigs} diagonal />
       </div>
     </div>
   );

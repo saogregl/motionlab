@@ -1,18 +1,30 @@
 import type { LucideIcon } from 'lucide-react';
 
+export type CommandCategory = 'file' | 'edit' | 'create' | 'simulate' | 'view' | 'help';
+
 export interface CommandDef {
-  /** Stable identifier, e.g. 'authoring.create-datum'. Used as React key. */
+  /** Stable identifier using dot-notation, e.g. 'create.datum', 'sim.play'. */
   id: string;
-  /** Display label shown in the palette. */
+  /** Display label shown in toolbar, palette, and menus. */
   label: string;
-  /** Lucide icon component, rendered to the left of the label. */
+  /** Lucide icon component. */
   icon?: LucideIcon;
-  /** Keyboard shortcut hint string, e.g. 'Ctrl+S'. Display-only. */
+  /** Category for grouping in toolbar and palette. */
+  category: CommandCategory;
+  /**
+   * Keyboard shortcut definition.
+   * Format: modifier keys joined with '+', e.g. 'Ctrl+S', 'Ctrl+Shift+Z', 'D', 'Space'.
+   * Used for both display and actual binding.
+   */
   shortcut?: string;
-  /** When true, the item is grayed out and unselectable. */
-  disabled?: boolean;
-  /** Called when the user selects this command. May be async (e.g. file dialog). */
-  action: () => void | Promise<void>;
+  /**
+   * Returns whether the command is currently executable.
+   * Called imperatively (reads store state via .getState()).
+   * If omitted, command is always enabled.
+   */
+  enabled?: () => boolean;
+  /** Execute the command. May be async. */
+  execute: () => void | Promise<void>;
 }
 
 export interface CommandGroup {

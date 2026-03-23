@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type ToolMode = 'select' | 'create-datum' | 'create-joint';
+export type ToolMode = 'select' | 'create-datum' | 'create-joint' | 'create-load';
 
 export type GizmoMode = 'translate' | 'rotate' | 'off';
 

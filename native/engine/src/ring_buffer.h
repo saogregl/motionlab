@@ -13,8 +13,8 @@ struct BufferedFrame {
     double sim_time;
     uint64_t step_count;
     std::vector<BodyPose> body_poses;
-    std::vector<JointState> joint_states;
-    std::unordered_map<std::string, size_t> joint_index_by_id;
+    std::vector<ChannelValue> channel_values;
+    std::unordered_map<std::string, size_t> channel_index_by_id;
 };
 
 class SimulationRingBuffer {

@@ -1,47 +1,132 @@
-// ---------------------------------------------------------------------------
-// SimulationRuntime — Chrono 9.0 integration
-//
-// Chrono version: 9.0.1 (via FetchContent)
-// Modules used:  ChronoEngine core only (no Irrlicht, vehicle, postprocess)
-// Contact system: NSC (Non-Smooth Contact) — suitable for constrained
-//   multibody dynamics without requiring SMC penalty parameters.
-// Gotchas:
-//   - Chrono quaternions are (w, x, y, z); our proto Quat is also (w, x, y, z).
-//   - Chrono's default gravity is (0, -9.81, 0) matching our Y-up convention.
-//   - Joint frames use Z-axis as the constraint axis (revolute rotation axis,
-//     prismatic translation axis).
-//   - ChLinkLock family requires the joint frame in absolute coordinates.
-//     We compute this from the parent datum's body pose + datum local pose.
-//
-// Chrono 8→9 migration notes:
-//   - ChVector<> renamed to ChVector3d
-//   - ChQuaternion<> aliased as ChQuaterniond
-//   - ChCoordsys<> aliased as ChCoordsysd
-//   - GetRelM() → GetRelCoordsys() on ChLinkMarkers
-//   - GetRelWvel() → GetRelativeAngVel()
-//   - Default OpenMP threads changed to 1 (explicit SetNumThreads needed)
-// ---------------------------------------------------------------------------
-
 #include "simulation.h"
-#include "engine/log.h"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
+#include <memory>
+#include <string>
 #include <unordered_map>
 
+#include "chrono/functions/ChFunctionConst.h"
 #include "chrono/physics/ChBody.h"
+#include "chrono/physics/ChLink.h"
+#include "chrono/physics/ChLinkDistance.h"
 #include "chrono/physics/ChLinkLock.h"
+#include "chrono/physics/ChLinkMotorLinearForce.h"
+#include "chrono/physics/ChLinkMotorLinearPosition.h"
+#include "chrono/physics/ChLinkMotorLinearSpeed.h"
+#include "chrono/physics/ChLinkMotorRotationAngle.h"
+#include "chrono/physics/ChLinkMotorRotationSpeed.h"
+#include "chrono/physics/ChLinkMotorRotationTorque.h"
+#include "chrono/physics/ChLinkTSDA.h"
+#include "chrono/physics/ChLinkUniversal.h"
 #include "chrono/physics/ChSystemNSC.h"
+#include "chrono/solver/ChSolverPSOR.h"
+#include "chrono/solver/ChSolverBB.h"
+#include "chrono/solver/ChSolverAPGD.h"
+#include "chrono/solver/ChIterativeSolverLS.h"
 
+#include "engine/log.h"
 #include "mechanism/mechanism.pb.h"
 
 using namespace chrono;
 
 namespace motionlab::engine {
 
-// ---------------------------------------------------------------------------
-// Impl
-// ---------------------------------------------------------------------------
+namespace mech = motionlab::mechanism;
+
+namespace {
+
+struct WorldFrame {
+    ChVector3d pos;
+    ChQuaterniond rot;
+};
+
+WorldFrame compute_datum_world_frame(const mech::Pose& body_pose,
+                                     const mech::Pose& datum_local_pose) {
+    const auto& bp = body_pose.position();
+    const auto& bo = body_pose.orientation();
+    ChVector3d body_pos(bp.x(), bp.y(), bp.z());
+    ChQuaterniond body_rot(bo.w(), bo.x(), bo.y(), bo.z());
+
+    const auto& dp = datum_local_pose.position();
+    const auto& dr = datum_local_pose.orientation();
+    ChVector3d datum_local_pos(dp.x(), dp.y(), dp.z());
+    ChQuaterniond datum_local_rot(dr.w(), dr.x(), dr.y(), dr.z());
+
+    return {body_rot.Rotate(datum_local_pos) + body_pos, body_rot * datum_local_rot};
+}
+
+ChVector3d vec3_to_chrono(const mech::Vec3& v) {
+    return {v.x(), v.y(), v.z()};
+}
+
+std::array<double, 3> chrono_vec_to_array(const ChVector3d& v) {
+    return {v.x(), v.y(), v.z()};
+}
+
+void set_vec3(mech::Vec3* out, const ChVector3d& v) {
+    out->set_x(v.x());
+    out->set_y(v.y());
+    out->set_z(v.z());
+}
+
+double angle_from_quat_z(const ChQuaterniond& q) {
+    return 2.0 * std::atan2(q.e3(), q.e0());
+}
+
+void append_scalar_channel(std::vector<ChannelDescriptor>& out,
+                           const std::string& id,
+                           const std::string& name,
+                           const std::string& unit) {
+    out.push_back({id, name, unit, 1});
+}
+
+void append_vector_channel(std::vector<ChannelDescriptor>& out,
+                           const std::string& id,
+                           const std::string& name,
+                           const std::string& unit) {
+    out.push_back({id, name, unit, 2});
+}
+
+ChannelValue make_scalar_value(const std::string& id, double value) {
+    ChannelValue cv;
+    cv.channel_id = id;
+    cv.data_type = 1;
+    cv.scalar = value;
+    return cv;
+}
+
+ChannelValue make_vector_value(const std::string& id, const ChVector3d& value) {
+    ChannelValue cv;
+    cv.channel_id = id;
+    cv.data_type = 2;
+    cv.vector[0] = value.x();
+    cv.vector[1] = value.y();
+    cv.vector[2] = value.z();
+    return cv;
+}
+
+static const char* solver_type_name(SolverType type) {
+    switch (type) {
+        case SolverType::PSOR: return "PSOR";
+        case SolverType::BARZILAI_BORWEIN: return "BARZILAI_BORWEIN";
+        case SolverType::APGD: return "APGD";
+        case SolverType::MINRES: return "MINRES";
+    }
+    return "UNKNOWN";
+}
+
+static const char* integrator_type_name(IntegratorType type) {
+    switch (type) {
+        case IntegratorType::EULER_IMPLICIT_LINEARIZED: return "EULER_IMPLICIT_LINEARIZED";
+        case IntegratorType::HHT: return "HHT";
+        case IntegratorType::NEWMARK: return "NEWMARK";
+    }
+    return "UNKNOWN";
+}
+
+} // namespace
 
 struct SimulationRuntime::Impl {
     SimState state = SimState::IDLE;
@@ -49,84 +134,55 @@ struct SimulationRuntime::Impl {
     uint64_t step_count = 0;
     double timestep = 0.001;
 
-    // Chrono system — created fresh on each compile()
     std::unique_ptr<ChSystemNSC> system;
-
-    // Authored-ID → Chrono body mapping
     std::unordered_map<std::string, std::shared_ptr<ChBody>> body_map;
 
-    // Authored-ID → Chrono link mapping
-    struct LinkEntry {
-        std::shared_ptr<ChLinkLock> link;
-        int joint_type; // motionlab::mechanism::JointType enum value
+    struct JointRuntime {
+        std::shared_ptr<ChLink> link;
+        int joint_type = 0;
         std::string name;
     };
-    std::unordered_map<std::string, LinkEntry> link_map;
+    std::unordered_map<std::string, JointRuntime> joint_map;
 
-    // Initial body poses for reset()
+    struct PointLoadRuntime {
+        std::string id;
+        std::string name;
+        std::shared_ptr<ChBody> body;
+        ChVector3d vector{0, 0, 0};
+        ChVector3d point_local{0, 0, 0};
+        bool local_frame = true;
+        bool torque_only = false;
+    };
+    std::unordered_map<std::string, PointLoadRuntime> point_loads;
+
+    struct SpringRuntime {
+        std::string id;
+        std::string name;
+        std::shared_ptr<ChLinkTSDA> link;
+    };
+    std::unordered_map<std::string, SpringRuntime> springs;
+
+    struct ActuatorRuntime {
+        std::string id;
+        std::string name;
+        int control_mode = 0;
+        double command_value = 0.0;
+        std::shared_ptr<ChLinkMotorRotation> rotation_motor;
+        std::shared_ptr<ChLinkMotorLinear> linear_motor;
+    };
+    std::unordered_map<std::string, ActuatorRuntime> actuators;
+
     std::unordered_map<std::string, BodyPose> initial_poses;
 };
 
-// ---------------------------------------------------------------------------
-// Construction / destruction
-// ---------------------------------------------------------------------------
-
-SimulationRuntime::SimulationRuntime()
-    : impl_(std::make_unique<Impl>()) {}
-
+SimulationRuntime::SimulationRuntime() : impl_(std::make_unique<Impl>()) {}
 SimulationRuntime::~SimulationRuntime() = default;
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-namespace {
-
-// Compute world-space frame for a datum given its parent body's pose and
-// the datum's local_pose. Returns position and orientation in absolute coords.
-struct WorldFrame {
-    ChVector3d pos;
-    ChQuaterniond rot;
-};
-
-WorldFrame compute_datum_world_frame(
-    const motionlab::mechanism::Pose& body_pose,
-    const motionlab::mechanism::Pose& datum_local_pose
-) {
-    // Body world pose
-    const auto& bp = body_pose.position();
-    const auto& bo = body_pose.orientation();
-    ChVector3d body_pos(bp.x(), bp.y(), bp.z());
-    ChQuaterniond body_rot(bo.w(), bo.x(), bo.y(), bo.z());
-
-    // Datum local pose
-    const auto& dp = datum_local_pose.position();
-    const auto& dr = datum_local_pose.orientation();
-    ChVector3d datum_local_pos(dp.x(), dp.y(), dp.z());
-    ChQuaterniond datum_local_rot(dr.w(), dr.x(), dr.y(), dr.z());
-
-    // World = body_rot * local_pos + body_pos
-    ChVector3d world_pos = body_rot.Rotate(datum_local_pos) + body_pos;
-    ChQuaterniond world_rot = body_rot * datum_local_rot;
-
-    return { world_pos, world_rot };
-}
-
-} // anonymous namespace
-
-// ---------------------------------------------------------------------------
-// compile()
-// ---------------------------------------------------------------------------
-
-CompilationResult SimulationRuntime::compile(
-    const motionlab::mechanism::Mechanism& mechanism,
-    const SimulationConfig& config
-) {
+CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
+                                             const SimulationConfig& config) {
     CompilationResult result;
-    result.success = false;
     impl_->state = SimState::COMPILING;
-
-    // --- Validation ---
+    result.success = false;
 
     if (mechanism.bodies_size() == 0) {
         result.error_message = "Mechanism has no bodies";
@@ -135,273 +191,451 @@ CompilationResult SimulationRuntime::compile(
         return result;
     }
 
-    // Build lookup maps for bodies and datums
-    std::unordered_map<std::string, const motionlab::mechanism::Body*> body_lookup;
+    std::unordered_map<std::string, const mech::Body*> body_lookup;
     for (const auto& body : mechanism.bodies()) {
-        if (!body.has_id()) continue;
-        body_lookup[body.id().id()] = &body;
+        if (body.has_id()) {
+            body_lookup[body.id().id()] = &body;
+        }
     }
 
-    std::unordered_map<std::string, const motionlab::mechanism::Datum*> datum_lookup;
+    std::unordered_map<std::string, const mech::Datum*> datum_lookup;
     for (const auto& datum : mechanism.datums()) {
-        if (!datum.has_id()) continue;
-        datum_lookup[datum.id().id()] = &datum;
-    }
-
-    // Validate joints reference existing bodies and datums
-    for (const auto& joint : mechanism.joints()) {
-        const std::string joint_name = joint.name().empty()
-            ? joint.id().id() : joint.name();
-
-        if (!joint.has_parent_datum_id() || !joint.has_child_datum_id()) {
-            result.error_message = "Joint '" + joint_name + "' is missing datum references";
-            result.diagnostics.push_back(
-                "Joint '" + joint_name + "' must reference both a parent and child datum.");
-            impl_->state = SimState::ERROR;
-            return result;
-        }
-
-        const auto parent_it = datum_lookup.find(joint.parent_datum_id().id());
-        if (parent_it == datum_lookup.end()) {
-            result.error_message = "Joint '" + joint_name +
-                "' references nonexistent parent datum '" + joint.parent_datum_id().id() + "'";
-            impl_->state = SimState::ERROR;
-            return result;
-        }
-
-        const auto child_it = datum_lookup.find(joint.child_datum_id().id());
-        if (child_it == datum_lookup.end()) {
-            result.error_message = "Joint '" + joint_name +
-                "' references nonexistent child datum '" + joint.child_datum_id().id() + "'";
-            impl_->state = SimState::ERROR;
-            return result;
-        }
-
-        // Validate that datum parent bodies exist
-        const auto* parent_datum = parent_it->second;
-        if (body_lookup.find(parent_datum->parent_body_id().id()) == body_lookup.end()) {
-            result.error_message = "Datum '" + parent_datum->name() +
-                "' references nonexistent parent body '" +
-                parent_datum->parent_body_id().id() + "'";
-            impl_->state = SimState::ERROR;
-            return result;
-        }
-
-        const auto* child_datum = child_it->second;
-        if (body_lookup.find(child_datum->parent_body_id().id()) == body_lookup.end()) {
-            result.error_message = "Datum '" + child_datum->name() +
-                "' references nonexistent parent body '" +
-                child_datum->parent_body_id().id() + "'";
-            impl_->state = SimState::ERROR;
-            return result;
+        if (datum.has_id()) {
+            datum_lookup[datum.id().id()] = &datum;
         }
     }
 
-    // Validate body mass properties
+    std::unordered_map<std::string, const mech::Actuator*> actuator_by_joint;
+    for (const auto& actuator : mechanism.actuators()) {
+        std::string joint_id;
+        switch (actuator.config_case()) {
+            case mech::Actuator::kRevoluteMotor:
+                joint_id = actuator.revolute_motor().joint_id().id();
+                break;
+            case mech::Actuator::kPrismaticMotor:
+                joint_id = actuator.prismatic_motor().joint_id().id();
+                break;
+            case mech::Actuator::CONFIG_NOT_SET:
+                result.error_message = "Actuator config is required";
+                impl_->state = SimState::ERROR;
+                return result;
+        }
+        if (joint_id.empty()) {
+            result.error_message = "Actuator is missing a target joint";
+            impl_->state = SimState::ERROR;
+            return result;
+        }
+        if (actuator_by_joint.contains(joint_id)) {
+            result.error_message = "Only one actuator may target a joint in this pass";
+            impl_->state = SimState::ERROR;
+            return result;
+        }
+        actuator_by_joint[joint_id] = &actuator;
+    }
+
     for (const auto& body : mechanism.bodies()) {
-        if (body.has_mass_properties() && body.mass_properties().mass() <= 0) {
-            const std::string body_name = body.name().empty()
-                ? body.id().id() : body.name();
-            result.error_message = "Body '" + body_name +
-                "' has zero or negative mass (" +
-                std::to_string(body.mass_properties().mass()) + ")";
+        if (body.has_mass_properties() && body.mass_properties().mass() <= 0.0) {
+            result.error_message = "Body '" + body.name() + "' has zero or negative mass";
             impl_->state = SimState::ERROR;
             return result;
         }
     }
-
-    // --- Build Chrono system ---
 
     impl_->system = std::make_unique<ChSystemNSC>();
     impl_->system->SetGravitationalAcceleration(
         ChVector3d(config.gravity[0], config.gravity[1], config.gravity[2]));
     impl_->timestep = config.timestep;
+
+    // --- Solver ---
+    switch (config.solver.type) {
+        case SolverType::PSOR: {
+            auto solver = chrono_types::make_shared<ChSolverPSOR>();
+            solver->SetMaxIterations(config.solver.max_iterations);
+            solver->SetTolerance(config.solver.tolerance);
+            impl_->system->SetSolver(solver);
+            break;
+        }
+        case SolverType::BARZILAI_BORWEIN: {
+            auto solver = chrono_types::make_shared<ChSolverBB>();
+            solver->SetMaxIterations(config.solver.max_iterations);
+            solver->SetTolerance(config.solver.tolerance);
+            impl_->system->SetSolver(solver);
+            break;
+        }
+        case SolverType::APGD: {
+            auto solver = chrono_types::make_shared<ChSolverAPGD>();
+            solver->SetMaxIterations(config.solver.max_iterations);
+            solver->SetTolerance(config.solver.tolerance);
+            impl_->system->SetSolver(solver);
+            break;
+        }
+        case SolverType::MINRES: {
+            auto solver = chrono_types::make_shared<ChSolverMINRES>();
+            solver->SetMaxIterations(config.solver.max_iterations);
+            solver->SetTolerance(config.solver.tolerance);
+            impl_->system->SetSolver(solver);
+            break;
+        }
+    }
+
+    // --- Integrator ---
+    switch (config.solver.integrator) {
+        case IntegratorType::EULER_IMPLICIT_LINEARIZED:
+            impl_->system->SetTimestepperType(ChTimestepper::Type::EULER_IMPLICIT_LINEARIZED);
+            break;
+        case IntegratorType::HHT:
+            impl_->system->SetTimestepperType(ChTimestepper::Type::HHT);
+            break;
+        case IntegratorType::NEWMARK:
+            impl_->system->SetTimestepperType(ChTimestepper::Type::NEWMARK);
+            break;
+    }
+
+    spdlog::info("Solver: type={}, max_iter={}, tol={:.2e}, integrator={}",
+                 solver_type_name(config.solver.type),
+                 config.solver.max_iterations,
+                 config.solver.tolerance,
+                 integrator_type_name(config.solver.integrator));
+
     impl_->body_map.clear();
-    impl_->link_map.clear();
+    impl_->joint_map.clear();
+    impl_->point_loads.clear();
+    impl_->springs.clear();
+    impl_->actuators.clear();
     impl_->initial_poses.clear();
     impl_->current_time = 0.0;
     impl_->step_count = 0;
 
-    // Check if any body has is_fixed set
     bool any_fixed = false;
     for (const auto& body : mechanism.bodies()) {
-        if (body.is_fixed()) { any_fixed = true; break; }
+        if (body.is_fixed()) {
+            any_fixed = true;
+            break;
+        }
     }
 
-    // Create Chrono bodies
     bool first_body = true;
     for (const auto& body : mechanism.bodies()) {
         const std::string id = body.id().id();
         auto ch_body = chrono_types::make_shared<ChBody>();
 
-        // Mass properties
-        double mass = 1.0;
-        ChVector3d inertia_xx(0.1, 0.1, 0.1);
-        ChVector3d inertia_xy(0.0, 0.0, 0.0);
+        const auto& mp = body.mass_properties();
+        ch_body->SetMass(mp.mass());
+        ch_body->SetInertiaXX({mp.ixx(), mp.iyy(), mp.izz()});
+        ch_body->SetInertiaXY({mp.ixy(), mp.ixz(), mp.iyz()});
 
-        if (body.has_mass_properties()) {
-            const auto& mp = body.mass_properties();
-            mass = mp.mass();
-            inertia_xx = ChVector3d(mp.ixx(), mp.iyy(), mp.izz());
-            inertia_xy = ChVector3d(mp.ixy(), mp.ixz(), mp.iyz());
-        }
-
-        ch_body->SetMass(mass);
-        ch_body->SetInertiaXX(inertia_xx);
-        ch_body->SetInertiaXY(inertia_xy);
-
-        // Pose
-        ChVector3d pos(0, 0, 0);
-        ChQuaterniond rot(1, 0, 0, 0); // identity quaternion (w=1)
-
-        if (body.has_pose()) {
-            const auto& p = body.pose();
-            if (p.has_position()) {
-                pos = ChVector3d(p.position().x(), p.position().y(), p.position().z());
-            }
-            if (p.has_orientation()) {
-                rot = ChQuaterniond(
-                    p.orientation().w(),
-                    p.orientation().x(),
-                    p.orientation().y(),
-                    p.orientation().z()
-                );
-            }
-        }
-
+        const auto& p = body.pose();
+        ChVector3d pos(p.position().x(), p.position().y(), p.position().z());
+        ChQuaterniond rot(p.orientation().w(), p.orientation().x(),
+                          p.orientation().y(), p.orientation().z());
         ch_body->SetPos(pos);
         ch_body->SetRot(rot);
 
-        // Fix body if is_fixed is set, or fall back to first body if none are marked
-        bool fix_this = body.is_fixed() || (!any_fixed && first_body);
-        if (fix_this) {
-            ch_body->SetFixed(true);
-            result.diagnostics.push_back(
-                "Body '" + body.name() + "' treated as ground (fixed).");
+        const bool fixed = body.is_fixed() || (!any_fixed && first_body);
+        ch_body->SetFixed(fixed);
+        if (fixed) {
+            result.diagnostics.push_back("Body '" + body.name() + "' treated as ground (fixed).");
         }
         first_body = false;
 
         impl_->system->AddBody(ch_body);
         impl_->body_map[id] = ch_body;
-        spdlog::debug("Chrono body '{}' mass={:.3f} fixed={} pos=({:.3f},{:.3f},{:.3f})",
-                      body.name(), mass, fix_this, pos.x(), pos.y(), pos.z());
 
-        // Save initial pose for reset
         BodyPose initial;
         initial.body_id = id;
         initial.position[0] = pos.x();
         initial.position[1] = pos.y();
         initial.position[2] = pos.z();
-        initial.orientation[0] = rot.e0(); // w
-        initial.orientation[1] = rot.e1(); // x
-        initial.orientation[2] = rot.e2(); // y
-        initial.orientation[3] = rot.e3(); // z
+        initial.orientation[0] = rot.e0();
+        initial.orientation[1] = rot.e1();
+        initial.orientation[2] = rot.e2();
+        initial.orientation[3] = rot.e3();
         impl_->initial_poses[id] = initial;
     }
 
-    // Check for disconnected bodies (bodies not referenced by any joint)
-    std::unordered_map<std::string, bool> body_connected;
-    for (const auto& [id, _] : impl_->body_map) {
-        body_connected[id] = false;
-    }
     for (const auto& joint : mechanism.joints()) {
-        const auto* parent_datum = datum_lookup[joint.parent_datum_id().id()];
-        const auto* child_datum = datum_lookup[joint.child_datum_id().id()];
-        body_connected[parent_datum->parent_body_id().id()] = true;
-        body_connected[child_datum->parent_body_id().id()] = true;
-    }
-    for (const auto& [id, connected] : body_connected) {
-        if (!connected && impl_->body_map.size() > 1) {
-            const auto* body = body_lookup[id];
-            result.diagnostics.push_back(
-                "Warning: Body '" + body->name() +
-                "' is not connected to any joint.");
-        }
-    }
-
-    // Create Chrono joints
-    for (const auto& joint : mechanism.joints()) {
-        const std::string joint_id = joint.id().id();
-        const std::string joint_name = joint.name().empty() ? joint_id : joint.name();
-
-        const auto* parent_datum = datum_lookup[joint.parent_datum_id().id()];
-        const auto* child_datum = datum_lookup[joint.child_datum_id().id()];
-
-        auto parent_body_it = impl_->body_map.find(parent_datum->parent_body_id().id());
-        auto child_body_it = impl_->body_map.find(child_datum->parent_body_id().id());
-
-        const auto* parent_body_proto = body_lookup[parent_datum->parent_body_id().id()];
-
-        // Compute world frame for the joint from the parent datum
-        WorldFrame wf = compute_datum_world_frame(
-            parent_body_proto->pose(),
-            parent_datum->local_pose()
-        );
-
-        std::shared_ptr<ChLinkLock> ch_link;
-
-        switch (joint.type()) {
-            case motionlab::mechanism::JOINT_TYPE_REVOLUTE:
-                ch_link = chrono_types::make_shared<ChLinkLockRevolute>();
-                break;
-            case motionlab::mechanism::JOINT_TYPE_PRISMATIC:
-                ch_link = chrono_types::make_shared<ChLinkLockPrismatic>();
-                break;
-            case motionlab::mechanism::JOINT_TYPE_FIXED:
-                ch_link = chrono_types::make_shared<ChLinkLockLock>();
-                break;
-            case motionlab::mechanism::JOINT_TYPE_SPHERICAL:
-                ch_link = chrono_types::make_shared<ChLinkLockSpherical>();
-                break;
-            case motionlab::mechanism::JOINT_TYPE_CYLINDRICAL:
-                ch_link = chrono_types::make_shared<ChLinkLockCylindrical>();
-                break;
-            case motionlab::mechanism::JOINT_TYPE_PLANAR:
-                ch_link = chrono_types::make_shared<ChLinkLockPlanar>();
-                break;
-            default:
-                result.diagnostics.push_back(
-                    "Warning: Joint '" + joint_name +
-                    "' has unspecified type, defaulting to fixed.");
-                ch_link = chrono_types::make_shared<ChLinkLockLock>();
-                break;
+        const auto parent_it = datum_lookup.find(joint.parent_datum_id().id());
+        const auto child_it = datum_lookup.find(joint.child_datum_id().id());
+        if (parent_it == datum_lookup.end() || child_it == datum_lookup.end()) {
+            result.error_message = "Joint '" + joint.name() + "' references nonexistent datum";
+            impl_->state = SimState::ERROR;
+            return result;
         }
 
-        ch_link->Initialize(
-            parent_body_it->second,
-            child_body_it->second,
-            ChFramed(wf.pos, wf.rot)
-        );
+        const auto* parent_datum = parent_it->second;
+        const auto* child_datum = child_it->second;
+        const auto parent_body_proto_it = body_lookup.find(parent_datum->parent_body_id().id());
+        const auto child_body_proto_it = body_lookup.find(child_datum->parent_body_id().id());
+        const auto parent_body_it = impl_->body_map.find(parent_datum->parent_body_id().id());
+        const auto child_body_it = impl_->body_map.find(child_datum->parent_body_id().id());
+        if (parent_body_proto_it == body_lookup.end() ||
+            child_body_proto_it == body_lookup.end() ||
+            parent_body_it == impl_->body_map.end() ||
+            child_body_it == impl_->body_map.end()) {
+            result.error_message = "Joint '" + joint.name() + "' references nonexistent body";
+            impl_->state = SimState::ERROR;
+            return result;
+        }
 
-        // Enforce joint limits if specified
-        if (joint.lower_limit() != 0.0 || joint.upper_limit() != 0.0) {
+        const auto* parent_body_proto = parent_body_proto_it->second;
+        auto parent_body = parent_body_it->second;
+        auto child_body = child_body_it->second;
+
+        WorldFrame wf = compute_datum_world_frame(parent_body_proto->pose(), parent_datum->local_pose());
+        const auto actuator_it = actuator_by_joint.find(joint.id().id());
+
+        std::shared_ptr<ChLink> link;
+        if (actuator_it != actuator_by_joint.end()) {
+            const auto& actuator = *actuator_it->second;
+            if (joint.type() == mech::JOINT_TYPE_REVOLUTE) {
+                switch (actuator.revolute_motor().control_mode()) {
+                    case mech::ACTUATOR_CONTROL_MODE_POSITION: {
+                        auto motor = chrono_types::make_shared<ChLinkMotorRotationAngle>();
+                        motor->SetAngleFunction(
+                            chrono_types::make_shared<ChFunctionConst>(actuator.revolute_motor().command_value()));
+                        motor->Initialize(parent_body, child_body, ChFramed(wf.pos, wf.rot));
+                        link = motor;
+                        impl_->actuators[actuator.id().id()] = {
+                            actuator.id().id(), actuator.name(),
+                            static_cast<int>(actuator.revolute_motor().control_mode()),
+                            actuator.revolute_motor().command_value(), motor, nullptr};
+                        break;
+                    }
+                    case mech::ACTUATOR_CONTROL_MODE_SPEED: {
+                        auto motor = chrono_types::make_shared<ChLinkMotorRotationSpeed>();
+                        motor->SetSpeedFunction(
+                            chrono_types::make_shared<ChFunctionConst>(actuator.revolute_motor().command_value()));
+                        motor->Initialize(parent_body, child_body, ChFramed(wf.pos, wf.rot));
+                        link = motor;
+                        impl_->actuators[actuator.id().id()] = {
+                            actuator.id().id(), actuator.name(),
+                            static_cast<int>(actuator.revolute_motor().control_mode()),
+                            actuator.revolute_motor().command_value(), motor, nullptr};
+                        break;
+                    }
+                    case mech::ACTUATOR_CONTROL_MODE_EFFORT: {
+                        auto motor = chrono_types::make_shared<ChLinkMotorRotationTorque>();
+                        motor->SetTorqueFunction(
+                            chrono_types::make_shared<ChFunctionConst>(actuator.revolute_motor().command_value()));
+                        motor->Initialize(parent_body, child_body, ChFramed(wf.pos, wf.rot));
+                        link = motor;
+                        impl_->actuators[actuator.id().id()] = {
+                            actuator.id().id(), actuator.name(),
+                            static_cast<int>(actuator.revolute_motor().control_mode()),
+                            actuator.revolute_motor().command_value(), motor, nullptr};
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            } else if (joint.type() == mech::JOINT_TYPE_PRISMATIC) {
+                switch (actuator_it->second->prismatic_motor().control_mode()) {
+                    case mech::ACTUATOR_CONTROL_MODE_POSITION: {
+                        auto motor = chrono_types::make_shared<ChLinkMotorLinearPosition>();
+                        motor->SetMotionFunction(
+                            chrono_types::make_shared<ChFunctionConst>(actuator.prismatic_motor().command_value()));
+                        motor->Initialize(parent_body, child_body, ChFramed(wf.pos, wf.rot));
+                        link = motor;
+                        impl_->actuators[actuator.id().id()] = {
+                            actuator.id().id(), actuator.name(),
+                            static_cast<int>(actuator.prismatic_motor().control_mode()),
+                            actuator.prismatic_motor().command_value(), nullptr, motor};
+                        break;
+                    }
+                    case mech::ACTUATOR_CONTROL_MODE_SPEED: {
+                        auto motor = chrono_types::make_shared<ChLinkMotorLinearSpeed>();
+                        motor->SetSpeedFunction(
+                            chrono_types::make_shared<ChFunctionConst>(actuator.prismatic_motor().command_value()));
+                        motor->Initialize(parent_body, child_body, ChFramed(wf.pos, wf.rot));
+                        link = motor;
+                        impl_->actuators[actuator.id().id()] = {
+                            actuator.id().id(), actuator.name(),
+                            static_cast<int>(actuator.prismatic_motor().control_mode()),
+                            actuator.prismatic_motor().command_value(), nullptr, motor};
+                        break;
+                    }
+                    case mech::ACTUATOR_CONTROL_MODE_EFFORT: {
+                        auto motor = chrono_types::make_shared<ChLinkMotorLinearForce>();
+                        motor->SetForceFunction(
+                            chrono_types::make_shared<ChFunctionConst>(actuator.prismatic_motor().command_value()));
+                        motor->Initialize(parent_body, child_body, ChFramed(wf.pos, wf.rot));
+                        link = motor;
+                        impl_->actuators[actuator.id().id()] = {
+                            actuator.id().id(), actuator.name(),
+                            static_cast<int>(actuator.prismatic_motor().control_mode()),
+                            actuator.prismatic_motor().command_value(), nullptr, motor};
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+        }
+
+        if (!link) {
+            std::shared_ptr<ChLinkLock> lock_link;
             switch (joint.type()) {
-                case motionlab::mechanism::JOINT_TYPE_REVOLUTE:
-                    ch_link->LimitRz().SetActive(true);
-                    ch_link->LimitRz().SetMin(joint.lower_limit());
-                    ch_link->LimitRz().SetMax(joint.upper_limit());
+                case mech::JOINT_TYPE_REVOLUTE:
+                    lock_link = chrono_types::make_shared<ChLinkLockRevolute>();
                     break;
-                case motionlab::mechanism::JOINT_TYPE_PRISMATIC:
-                    ch_link->LimitZ().SetActive(true);
-                    ch_link->LimitZ().SetMin(joint.lower_limit());
-                    ch_link->LimitZ().SetMax(joint.upper_limit());
+                case mech::JOINT_TYPE_PRISMATIC:
+                    lock_link = chrono_types::make_shared<ChLinkLockPrismatic>();
                     break;
-                case motionlab::mechanism::JOINT_TYPE_CYLINDRICAL:
-                    // Apply limits to translation DOF
-                    ch_link->LimitZ().SetActive(true);
-                    ch_link->LimitZ().SetMin(joint.lower_limit());
-                    ch_link->LimitZ().SetMax(joint.upper_limit());
+                case mech::JOINT_TYPE_FIXED:
+                    lock_link = chrono_types::make_shared<ChLinkLockLock>();
+                    break;
+                case mech::JOINT_TYPE_SPHERICAL:
+                    lock_link = chrono_types::make_shared<ChLinkLockSpherical>();
+                    break;
+                case mech::JOINT_TYPE_CYLINDRICAL:
+                    lock_link = chrono_types::make_shared<ChLinkLockCylindrical>();
+                    break;
+                case mech::JOINT_TYPE_PLANAR:
+                    lock_link = chrono_types::make_shared<ChLinkLockPlanar>();
+                    break;
+                case mech::JOINT_TYPE_POINT_LINE:
+                    lock_link = chrono_types::make_shared<ChLinkLockPointLine>();
+                    break;
+                case mech::JOINT_TYPE_POINT_PLANE:
+                    lock_link = chrono_types::make_shared<ChLinkLockPointPlane>();
                     break;
                 default:
                     break;
             }
+
+            if (lock_link) {
+                lock_link->Initialize(parent_body, child_body, ChFramed(wf.pos, wf.rot));
+                if (joint.type() == mech::JOINT_TYPE_REVOLUTE && joint.has_revolute() &&
+                    joint.revolute().has_angle_limit()) {
+                    lock_link->LimitRz().SetActive(true);
+                    lock_link->LimitRz().SetMin(joint.revolute().angle_limit().lower());
+                    lock_link->LimitRz().SetMax(joint.revolute().angle_limit().upper());
+                } else if (joint.type() == mech::JOINT_TYPE_PRISMATIC && joint.has_prismatic() &&
+                           joint.prismatic().has_translation_limit()) {
+                    lock_link->LimitZ().SetActive(true);
+                    lock_link->LimitZ().SetMin(joint.prismatic().translation_limit().lower());
+                    lock_link->LimitZ().SetMax(joint.prismatic().translation_limit().upper());
+                } else if (joint.type() == mech::JOINT_TYPE_CYLINDRICAL && joint.has_cylindrical()) {
+                    if (joint.cylindrical().has_translation_limit()) {
+                        lock_link->LimitZ().SetActive(true);
+                        lock_link->LimitZ().SetMin(joint.cylindrical().translation_limit().lower());
+                        lock_link->LimitZ().SetMax(joint.cylindrical().translation_limit().upper());
+                    }
+                    if (joint.cylindrical().has_rotation_limit()) {
+                        lock_link->LimitRz().SetActive(true);
+                        lock_link->LimitRz().SetMin(joint.cylindrical().rotation_limit().lower());
+                        lock_link->LimitRz().SetMax(joint.cylindrical().rotation_limit().upper());
+                    }
+                }
+                link = lock_link;
+            } else if (joint.type() == mech::JOINT_TYPE_UNIVERSAL) {
+                auto universal = chrono_types::make_shared<ChLinkUniversal>();
+                universal->Initialize(parent_body, child_body, ChFrame<>(wf.pos, wf.rot));
+                link = universal;
+                if (joint.has_universal() &&
+                    (joint.universal().has_rotation_x_limit() || joint.universal().has_rotation_y_limit())) {
+                    result.diagnostics.push_back(
+                        "Joint '" + joint.name() + "': universal limits are not enforced in this pass.");
+                }
+            } else if (joint.type() == mech::JOINT_TYPE_DISTANCE) {
+                auto distance = chrono_types::make_shared<ChLinkDistance>();
+                const auto& p1 = parent_datum->local_pose().position();
+                const auto& p2 = child_datum->local_pose().position();
+                distance->Initialize(parent_body, child_body, true,
+                                     {p1.x(), p1.y(), p1.z()},
+                                     {p2.x(), p2.y(), p2.z()},
+                                     true);
+                link = distance;
+                if (joint.has_distance() && joint.distance().has_distance_limit()) {
+                    result.diagnostics.push_back(
+                        "Joint '" + joint.name() + "': distance limit range is approximated as a fixed distance in this pass.");
+                }
+            }
         }
 
-        impl_->system->AddLink(ch_link);
-        impl_->link_map[joint_id] = { ch_link, static_cast<int>(joint.type()), joint_name };
-        spdlog::debug("Chrono joint '{}' type={} at ({:.3f},{:.3f},{:.3f})",
-                      joint_name, static_cast<int>(joint.type()),
-                      wf.pos.x(), wf.pos.y(), wf.pos.z());
+        if (!link) {
+            result.error_message = "Unsupported joint type during compile";
+            impl_->state = SimState::ERROR;
+            return result;
+        }
+
+        impl_->system->AddLink(link);
+        impl_->joint_map[joint.id().id()] = {link, static_cast<int>(joint.type()), joint.name()};
+    }
+
+    for (const auto& load : mechanism.loads()) {
+        switch (load.config_case()) {
+            case mech::Load::kPointForce: {
+                const auto datum_it = datum_lookup.find(load.point_force().datum_id().id());
+                if (datum_it == datum_lookup.end()) {
+                    result.error_message = "Load '" + load.name() + "' references nonexistent datum";
+                    impl_->state = SimState::ERROR;
+                    return result;
+                }
+                const auto* datum = datum_it->second;
+                auto body = impl_->body_map[datum->parent_body_id().id()];
+                const auto& p = datum->local_pose().position();
+                impl_->point_loads[load.id().id()] = {
+                    load.id().id(), load.name(), body,
+                    vec3_to_chrono(load.point_force().vector()),
+                    {p.x(), p.y(), p.z()},
+                    load.point_force().reference_frame() != mech::REFERENCE_FRAME_WORLD,
+                    false};
+                break;
+            }
+            case mech::Load::kPointTorque: {
+                const auto datum_it = datum_lookup.find(load.point_torque().datum_id().id());
+                if (datum_it == datum_lookup.end()) {
+                    result.error_message = "Load '" + load.name() + "' references nonexistent datum";
+                    impl_->state = SimState::ERROR;
+                    return result;
+                }
+                const auto* datum = datum_it->second;
+                auto body = impl_->body_map[datum->parent_body_id().id()];
+                const auto& p = datum->local_pose().position();
+                impl_->point_loads[load.id().id()] = {
+                    load.id().id(), load.name(), body,
+                    vec3_to_chrono(load.point_torque().vector()),
+                    {p.x(), p.y(), p.z()},
+                    load.point_torque().reference_frame() != mech::REFERENCE_FRAME_WORLD,
+                    true};
+                break;
+            }
+            case mech::Load::kLinearSpringDamper: {
+                const auto parent_it = datum_lookup.find(load.linear_spring_damper().parent_datum_id().id());
+                const auto child_it = datum_lookup.find(load.linear_spring_damper().child_datum_id().id());
+                if (parent_it == datum_lookup.end() || child_it == datum_lookup.end()) {
+                    result.error_message = "Spring load '" + load.name() + "' references nonexistent datum";
+                    impl_->state = SimState::ERROR;
+                    return result;
+                }
+                auto spring = chrono_types::make_shared<ChLinkTSDA>();
+                const auto& p1 = parent_it->second->local_pose().position();
+                const auto& p2 = child_it->second->local_pose().position();
+                spring->Initialize(impl_->body_map[parent_it->second->parent_body_id().id()],
+                                   impl_->body_map[child_it->second->parent_body_id().id()],
+                                   true,
+                                   {p1.x(), p1.y(), p1.z()},
+                                   {p2.x(), p2.y(), p2.z()});
+                spring->SetRestLength(load.linear_spring_damper().rest_length());
+                spring->SetSpringCoefficient(load.linear_spring_damper().stiffness());
+                spring->SetDampingCoefficient(load.linear_spring_damper().damping());
+                impl_->system->AddLink(spring);
+                impl_->springs[load.id().id()] = {load.id().id(), load.name(), spring};
+                break;
+            }
+            case mech::Load::CONFIG_NOT_SET:
+                result.error_message = "Load config is required";
+                impl_->state = SimState::ERROR;
+                return result;
+        }
+    }
+
+    // Bridge string diagnostics into structured format
+    for (const auto& diag : result.diagnostics) {
+        CompilationDiagnostic sd;
+        sd.message = diag;
+        result.structured_diagnostics.push_back(std::move(sd));
     }
 
     result.success = true;
@@ -409,68 +643,61 @@ CompilationResult SimulationRuntime::compile(
     return result;
 }
 
-// ---------------------------------------------------------------------------
-// step()
-// ---------------------------------------------------------------------------
-
 void SimulationRuntime::step(double dt) {
     if (!impl_->system) {
-        spdlog::warn("step: system is null!");
         return;
     }
+
     impl_->state = SimState::RUNNING;
+    for (auto& [_, body] : impl_->body_map) {
+        body->EmptyAccumulators();
+    }
+    for (const auto& [_, load] : impl_->point_loads) {
+        if (load.torque_only) {
+            load.body->AccumulateTorque(load.vector, load.local_frame);
+        } else {
+            if (load.local_frame) {
+                load.body->AccumulateForce(load.vector, load.point_local, true);
+            } else {
+                const auto world_point = load.body->TransformPointLocalToParent(load.point_local);
+                load.body->AccumulateForce(load.vector, world_point, false);
+            }
+        }
+    }
+
     impl_->system->DoStepDynamics(dt);
     impl_->current_time += dt;
     impl_->step_count++;
-    // Log every 1000 steps (~1 second at dt=0.001)
-    if (impl_->step_count % 1000 == 0) {
-        auto grav = impl_->system->GetGravitationalAcceleration();
-        spdlog::info("step {}: gravity=({:.2f},{:.2f},{:.2f}) nbodies={} nlinks={}",
-            impl_->step_count, grav.x(), grav.y(), grav.z(),
-            impl_->system->GetBodies().size(), impl_->system->GetLinks().size());
-        for (const auto& [id, ch_body] : impl_->body_map) {
-            spdlog::info("  body '{}': fixed={} mass={:.3f} pos=({:.4f},{:.4f},{:.4f}) vel=({:.4f},{:.4f},{:.4f})",
-                id, ch_body->IsFixed(), ch_body->GetMass(),
-                ch_body->GetPos().x(), ch_body->GetPos().y(), ch_body->GetPos().z(),
-                ch_body->GetPosDt().x(), ch_body->GetPosDt().y(), ch_body->GetPosDt().z());
-        }
-    }
 }
 
 void SimulationRuntime::pause() {
-    if (!impl_->system) return;
-    impl_->state = SimState::PAUSED;
+    if (impl_->system) {
+        impl_->state = SimState::PAUSED;
+    }
 }
 
-// ---------------------------------------------------------------------------
-// reset()
-// ---------------------------------------------------------------------------
-
 void SimulationRuntime::reset() {
-    if (!impl_->system) return;
+    if (!impl_->system) {
+        return;
+    }
 
-    for (auto& [id, ch_body] : impl_->body_map) {
-        const auto it = impl_->initial_poses.find(id);
-        if (it == impl_->initial_poses.end()) continue;
-
-        const auto& pose = it->second;
-        ch_body->SetPos(ChVector3d(pose.position[0], pose.position[1], pose.position[2]));
-        ch_body->SetRot(ChQuaterniond(
-            pose.orientation[0], pose.orientation[1],
-            pose.orientation[2], pose.orientation[3]
-        ));
-        ch_body->SetPosDt(ChVector3d(0, 0, 0));
-        ch_body->SetRotDt(ChQuaterniond(1, 0, 0, 0));
+    for (auto& [id, body] : impl_->body_map) {
+        const auto pose_it = impl_->initial_poses.find(id);
+        if (pose_it == impl_->initial_poses.end()) {
+            continue;
+        }
+        const auto& pose = pose_it->second;
+        body->SetPos({pose.position[0], pose.position[1], pose.position[2]});
+        body->SetRot({pose.orientation[0], pose.orientation[1], pose.orientation[2], pose.orientation[3]});
+        body->SetPosDt({0, 0, 0});
+        body->SetRotDt({1, 0, 0, 0});
+        body->EmptyAccumulators();
     }
 
     impl_->current_time = 0.0;
     impl_->step_count = 0;
     impl_->state = SimState::IDLE;
 }
-
-// ---------------------------------------------------------------------------
-// Readback
-// ---------------------------------------------------------------------------
 
 SimState SimulationRuntime::getState() const {
     return impl_->state;
@@ -487,136 +714,217 @@ uint64_t SimulationRuntime::getStepCount() const {
 std::vector<BodyPose> SimulationRuntime::getBodyPoses() const {
     std::vector<BodyPose> poses;
     poses.reserve(impl_->body_map.size());
-
-    for (const auto& [id, ch_body] : impl_->body_map) {
-        BodyPose bp;
-        bp.body_id = id;
-
-        const auto& pos = ch_body->GetPos();
-        bp.position[0] = pos.x();
-        bp.position[1] = pos.y();
-        bp.position[2] = pos.z();
-
-        const auto& rot = ch_body->GetRot();
-        bp.orientation[0] = rot.e0(); // w
-        bp.orientation[1] = rot.e1(); // x
-        bp.orientation[2] = rot.e2(); // y
-        bp.orientation[3] = rot.e3(); // z
-
-        poses.push_back(std::move(bp));
+    for (const auto& [id, body] : impl_->body_map) {
+        BodyPose pose;
+        pose.body_id = id;
+        const auto pos = body->GetPos();
+        const auto rot = body->GetRot();
+        pose.position[0] = pos.x();
+        pose.position[1] = pos.y();
+        pose.position[2] = pos.z();
+        pose.orientation[0] = rot.e0();
+        pose.orientation[1] = rot.e1();
+        pose.orientation[2] = rot.e2();
+        pose.orientation[3] = rot.e3();
+        poses.push_back(pose);
     }
-
     return poses;
 }
 
 std::vector<JointState> SimulationRuntime::getJointStates() const {
     std::vector<JointState> states;
-    states.reserve(impl_->link_map.size());
+    for (const auto& [id, entry] : impl_->joint_map) {
+        JointState state{};
+        state.joint_id = id;
+        const auto reaction = entry.link->GetReaction2();
+        state.reaction_force[0] = reaction.force.x();
+        state.reaction_force[1] = reaction.force.y();
+        state.reaction_force[2] = reaction.force.z();
+        state.reaction_torque[0] = reaction.torque.x();
+        state.reaction_torque[1] = reaction.torque.y();
+        state.reaction_torque[2] = reaction.torque.z();
 
-    for (const auto& [id, entry] : impl_->link_map) {
-        JointState js;
-        js.joint_id = id;
-
-        // Generalized coordinate — depends on joint type
-        // Revolute: relative rotation angle around Z axis
-        // Prismatic: relative displacement along Z axis
-        const auto& rel_pos = entry.link->GetRelCoordsys().pos;
-        const auto& rel_rot = entry.link->GetRelCoordsys().rot;
-
-        if (entry.joint_type == motionlab::mechanism::JOINT_TYPE_REVOLUTE) {
-            // Relative angle from quaternion — extract rotation around Z
-            // For small angles: angle ≈ 2 * atan2(qz, qw)
-            js.position = 2.0 * std::atan2(rel_rot.e3(), rel_rot.e0());
-            // Relative angular velocity around Z
-            const auto& rel_wvel = entry.link->GetRelativeAngVel();
-            js.velocity = rel_wvel.z();
-        } else if (entry.joint_type == motionlab::mechanism::JOINT_TYPE_PRISMATIC) {
-            js.position = rel_pos.z();
-            const auto& rel_vel = entry.link->GetRelCoordsysDt().pos;
-            js.velocity = rel_vel.z();
-        } else if (entry.joint_type == motionlab::mechanism::JOINT_TYPE_SPHERICAL) {
-            // Magnitude of relative rotation (scalar summary of 3-DOF rotation)
-            double angle = 2.0 * std::acos(std::clamp(std::abs(rel_rot.e0()), 0.0, 1.0));
-            js.position = angle;
-            const auto& rel_wvel = entry.link->GetRelativeAngVel();
-            js.velocity = rel_wvel.Length();
-        } else if (entry.joint_type == motionlab::mechanism::JOINT_TYPE_CYLINDRICAL) {
-            // Primary DOF: translation along Z
-            js.position = rel_pos.z();
-            const auto& rel_vel = entry.link->GetRelCoordsysDt().pos;
-            js.velocity = rel_vel.z();
-        } else if (entry.joint_type == motionlab::mechanism::JOINT_TYPE_PLANAR) {
-            // Primary DOF: translation in XY plane
-            js.position = std::sqrt(rel_pos.x() * rel_pos.x() + rel_pos.z() * rel_pos.z());
-            const auto& rel_vel = entry.link->GetRelCoordsysDt().pos;
-            js.velocity = std::sqrt(rel_vel.x() * rel_vel.x() + rel_vel.z() * rel_vel.z());
-        } else {
-            js.position = 0.0;
-            js.velocity = 0.0;
+        if (entry.joint_type == mech::JOINT_TYPE_REVOLUTE) {
+            if (auto motor = std::dynamic_pointer_cast<ChLinkMotorRotation>(entry.link)) {
+                state.position = motor->GetMotorAngle();
+                state.velocity = motor->GetMotorAngleDt();
+            } else if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
+                const auto& rel_rot = lock->GetRelCoordsys().rot;
+                state.position = angle_from_quat_z(rel_rot);
+                state.velocity = lock->GetRelativeAngVel().z();
+            }
+            states.push_back(state);
+        } else if (entry.joint_type == mech::JOINT_TYPE_PRISMATIC) {
+            if (auto motor = std::dynamic_pointer_cast<ChLinkMotorLinear>(entry.link)) {
+                state.position = motor->GetMotorPos();
+                state.velocity = motor->GetMotorPosDt();
+            } else if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
+                state.position = lock->GetRelCoordsys().pos.z();
+                state.velocity = lock->GetRelCoordsysDt().pos.z();
+            }
+            states.push_back(state);
         }
-
-        // Reaction forces/torques (in link frame)
-        const auto react_force = entry.link->GetReaction2().force;
-        const auto react_torque = entry.link->GetReaction2().torque;
-
-        js.reaction_force[0] = react_force.x();
-        js.reaction_force[1] = react_force.y();
-        js.reaction_force[2] = react_force.z();
-
-        js.reaction_torque[0] = react_torque.x();
-        js.reaction_torque[1] = react_torque.y();
-        js.reaction_torque[2] = react_torque.z();
-
-        states.push_back(std::move(js));
     }
-
     return states;
 }
 
 std::vector<ChannelDescriptor> SimulationRuntime::getChannelDescriptors() const {
     std::vector<ChannelDescriptor> descriptors;
 
-    for (const auto& [id, entry] : impl_->link_map) {
-        std::string pos_unit, vel_unit;
+    for (const auto& [id, entry] : impl_->joint_map) {
+        const std::string prefix = "joint/" + id + "/";
         switch (entry.joint_type) {
-            case motionlab::mechanism::JOINT_TYPE_REVOLUTE:
-            case motionlab::mechanism::JOINT_TYPE_SPHERICAL:
-                pos_unit = "rad";
-                vel_unit = "rad/s";
+            case mech::JOINT_TYPE_REVOLUTE:
+                append_scalar_channel(descriptors, prefix + "coord/rot_z", entry.name + " Rotation", "rad");
+                append_scalar_channel(descriptors, prefix + "coord_rate/rot_z", entry.name + " Angular Velocity", "rad/s");
+                break;
+            case mech::JOINT_TYPE_PRISMATIC:
+                append_scalar_channel(descriptors, prefix + "coord/trans_z", entry.name + " Translation", "m");
+                append_scalar_channel(descriptors, prefix + "coord_rate/trans_z", entry.name + " Translation Rate", "m/s");
+                break;
+            case mech::JOINT_TYPE_CYLINDRICAL:
+                append_scalar_channel(descriptors, prefix + "coord/trans_z", entry.name + " Translation", "m");
+                append_scalar_channel(descriptors, prefix + "coord_rate/trans_z", entry.name + " Translation Rate", "m/s");
+                append_scalar_channel(descriptors, prefix + "coord/rot_z", entry.name + " Rotation", "rad");
+                append_scalar_channel(descriptors, prefix + "coord_rate/rot_z", entry.name + " Angular Velocity", "rad/s");
+                break;
+            case mech::JOINT_TYPE_PLANAR:
+                append_scalar_channel(descriptors, prefix + "coord/trans_x", entry.name + " Translation X", "m");
+                append_scalar_channel(descriptors, prefix + "coord/trans_z", entry.name + " Translation Z", "m");
+                append_scalar_channel(descriptors, prefix + "coord_rate/trans_x", entry.name + " Translation Rate X", "m/s");
+                append_scalar_channel(descriptors, prefix + "coord_rate/trans_z", entry.name + " Translation Rate Z", "m/s");
+                break;
+            case mech::JOINT_TYPE_SPHERICAL:
+            case mech::JOINT_TYPE_UNIVERSAL:
+                append_vector_channel(descriptors, prefix + "coord/rot_vec", entry.name + " Rotation Vector", "rad");
+                append_vector_channel(descriptors, prefix + "coord_rate/ang_vel", entry.name + " Angular Velocity", "rad/s");
+                break;
+            case mech::JOINT_TYPE_DISTANCE:
+                append_scalar_channel(descriptors, prefix + "coord/distance", entry.name + " Distance", "m");
+                append_scalar_channel(descriptors, prefix + "coord_rate/distance", entry.name + " Distance Rate", "m/s");
                 break;
             default:
-                pos_unit = "m";
-                vel_unit = "m/s";
                 break;
         }
+        append_vector_channel(descriptors, prefix + "reaction_force", entry.name + " Reaction Force", "N");
+        append_vector_channel(descriptors, prefix + "reaction_torque", entry.name + " Reaction Torque", "Nm");
+    }
 
-        descriptors.push_back({
-            "joint/" + id + "/position",
-            entry.name + " Position",
-            pos_unit,
-            1 // SCALAR
-        });
-        descriptors.push_back({
-            "joint/" + id + "/velocity",
-            entry.name + " Velocity",
-            vel_unit,
-            1 // SCALAR
-        });
-        descriptors.push_back({
-            "joint/" + id + "/reaction_force",
-            entry.name + " Reaction Force",
-            "N",
-            2 // VEC3
-        });
-        descriptors.push_back({
-            "joint/" + id + "/reaction_torque",
-            entry.name + " Reaction Torque",
-            "Nm",
-            2 // VEC3
-        });
+    for (const auto& [id, load] : impl_->point_loads) {
+        const auto prefix = "load/" + id + "/";
+        append_vector_channel(descriptors, prefix + (load.torque_only ? "applied_torque" : "applied_force"),
+                              load.name + (load.torque_only ? " Torque" : " Force"),
+                              load.torque_only ? "Nm" : "N");
+    }
+
+    for (const auto& [id, spring] : impl_->springs) {
+        const auto prefix = "load/" + id + "/";
+        append_scalar_channel(descriptors, prefix + "length", spring.name + " Length", "m");
+        append_scalar_channel(descriptors, prefix + "length_rate", spring.name + " Length Rate", "m/s");
+        append_scalar_channel(descriptors, prefix + "force", spring.name + " Force", "N");
+    }
+
+    for (const auto& [id, actuator] : impl_->actuators) {
+        const auto prefix = "actuator/" + id + "/";
+        append_scalar_channel(descriptors, prefix + "command", actuator.name + " Command", "");
+        append_scalar_channel(descriptors, prefix + "effort", actuator.name + " Effort",
+                              actuator.rotation_motor ? "Nm" : "N");
     }
 
     return descriptors;
+}
+
+std::vector<ChannelValue> SimulationRuntime::getChannelValues() const {
+    std::vector<ChannelValue> values;
+
+    for (const auto& [id, entry] : impl_->joint_map) {
+        const auto prefix = "joint/" + id + "/";
+        const auto reaction = entry.link->GetReaction2();
+        values.push_back(make_vector_value(prefix + "reaction_force", reaction.force));
+        values.push_back(make_vector_value(prefix + "reaction_torque", reaction.torque));
+
+        if (entry.joint_type == mech::JOINT_TYPE_REVOLUTE) {
+            double pos = 0.0;
+            double vel = 0.0;
+            if (auto motor = std::dynamic_pointer_cast<ChLinkMotorRotation>(entry.link)) {
+                pos = motor->GetMotorAngle();
+                vel = motor->GetMotorAngleDt();
+            } else if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
+                pos = angle_from_quat_z(lock->GetRelCoordsys().rot);
+                vel = lock->GetRelativeAngVel().z();
+            }
+            values.push_back(make_scalar_value(prefix + "coord/rot_z", pos));
+            values.push_back(make_scalar_value(prefix + "coord_rate/rot_z", vel));
+        } else if (entry.joint_type == mech::JOINT_TYPE_PRISMATIC) {
+            double pos = 0.0;
+            double vel = 0.0;
+            if (auto motor = std::dynamic_pointer_cast<ChLinkMotorLinear>(entry.link)) {
+                pos = motor->GetMotorPos();
+                vel = motor->GetMotorPosDt();
+            } else if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
+                pos = lock->GetRelCoordsys().pos.z();
+                vel = lock->GetRelCoordsysDt().pos.z();
+            }
+            values.push_back(make_scalar_value(prefix + "coord/trans_z", pos));
+            values.push_back(make_scalar_value(prefix + "coord_rate/trans_z", vel));
+        } else if (entry.joint_type == mech::JOINT_TYPE_CYLINDRICAL) {
+            if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
+                values.push_back(make_scalar_value(prefix + "coord/trans_z", lock->GetRelCoordsys().pos.z()));
+                values.push_back(make_scalar_value(prefix + "coord_rate/trans_z", lock->GetRelCoordsysDt().pos.z()));
+                values.push_back(make_scalar_value(prefix + "coord/rot_z", angle_from_quat_z(lock->GetRelCoordsys().rot)));
+                values.push_back(make_scalar_value(prefix + "coord_rate/rot_z", lock->GetRelativeAngVel().z()));
+            }
+        } else if (entry.joint_type == mech::JOINT_TYPE_PLANAR) {
+            if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
+                values.push_back(make_scalar_value(prefix + "coord/trans_x", lock->GetRelCoordsys().pos.x()));
+                values.push_back(make_scalar_value(prefix + "coord/trans_z", lock->GetRelCoordsys().pos.z()));
+                values.push_back(make_scalar_value(prefix + "coord_rate/trans_x", lock->GetRelCoordsysDt().pos.x()));
+                values.push_back(make_scalar_value(prefix + "coord_rate/trans_z", lock->GetRelCoordsysDt().pos.z()));
+            }
+        } else if (entry.joint_type == mech::JOINT_TYPE_SPHERICAL || entry.joint_type == mech::JOINT_TYPE_UNIVERSAL) {
+            if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
+                const auto q = lock->GetRelCoordsys().rot;
+                ChVector3d rot_vec(q.e1(), q.e2(), q.e3());
+                values.push_back(make_vector_value(prefix + "coord/rot_vec", rot_vec));
+                values.push_back(make_vector_value(prefix + "coord_rate/ang_vel", lock->GetRelativeAngVel()));
+            } else if (auto universal = std::dynamic_pointer_cast<ChLinkUniversal>(entry.link)) {
+                const auto frame1 = universal->GetFrame1Rel();
+                const auto frame2 = universal->GetFrame2Rel();
+                ChQuaterniond q = frame2.GetRot().GetConjugate() * frame1.GetRot();
+                values.push_back(make_vector_value(prefix + "coord/rot_vec", {q.e1(), q.e2(), q.e3()}));
+                values.push_back(make_vector_value(prefix + "coord_rate/ang_vel", reaction.torque));
+            }
+        } else if (entry.joint_type == mech::JOINT_TYPE_DISTANCE) {
+            if (auto distance = std::dynamic_pointer_cast<ChLinkDistance>(entry.link)) {
+                values.push_back(make_scalar_value(prefix + "coord/distance", distance->GetCurrentDistance()));
+                values.push_back(make_scalar_value(prefix + "coord_rate/distance", 0.0));
+            }
+        }
+    }
+
+    for (const auto& [id, load] : impl_->point_loads) {
+        values.push_back(make_vector_value("load/" + id + "/" + (load.torque_only ? "applied_torque" : "applied_force"),
+                                           load.vector));
+    }
+
+    for (const auto& [id, spring] : impl_->springs) {
+        values.push_back(make_scalar_value("load/" + id + "/length", spring.link->GetLength()));
+        values.push_back(make_scalar_value("load/" + id + "/length_rate", spring.link->GetVelocity()));
+        values.push_back(make_scalar_value("load/" + id + "/force", spring.link->GetForce()));
+    }
+
+    for (const auto& [id, actuator] : impl_->actuators) {
+        values.push_back(make_scalar_value("actuator/" + id + "/command", actuator.command_value));
+        if (actuator.rotation_motor) {
+            values.push_back(make_scalar_value("actuator/" + id + "/effort",
+                                               actuator.rotation_motor->GetMotorTorque()));
+        } else if (actuator.linear_motor) {
+            values.push_back(make_scalar_value("actuator/" + id + "/effort",
+                                               actuator.linear_motor->GetMotorForce()));
+        }
+    }
+
+    return values;
 }
 
 } // namespace motionlab::engine

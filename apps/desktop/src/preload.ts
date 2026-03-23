@@ -40,6 +40,57 @@ interface MotionLabAPI {
   onCheckDirty(callback: () => boolean): void;
   /** Open the application logs folder in the system file manager. */
   showLogsFolder(): Promise<void>;
+  /** Save project bytes to an existing path without showing a dialog. */
+  saveProjectToPath(
+    data: Uint8Array,
+    filePath: string,
+  ): Promise<{ saved: boolean; filePath: string }>;
+  /** Update the native window title (taskbar/dock). */
+  setWindowTitle(title: string): void;
+  /** Get the list of recently opened projects. */
+  getRecentProjects(): Promise<
+    Array<{ name: string; filePath: string; lastOpened: string }>
+  >;
+  /** Add or update a project in the recent list. */
+  addRecentProject(project: { name: string; filePath: string }): Promise<void>;
+  /** Remove a project from the recent list by file path. */
+  removeRecentProject(filePath: string): Promise<void>;
+  /** Register a callback invoked by the main process auto-save timer. */
+  onAutoSaveTick(callback: () => void): void;
+  /** Write auto-save data to the autosave file. */
+  autoSaveWrite(
+    data: Uint8Array,
+    projectPath: string | null,
+  ): Promise<{ saved: boolean; path: string }>;
+  /** Delete the autosave file for a project after a successful manual save. */
+  autoSaveCleanup(projectPath: string | null): Promise<void>;
+  /** Check for autosave files from a previous crash. */
+  checkAutoSaveRecovery(): Promise<
+    Array<{ name: string; originalPath: string | null; autoSavePath: string; modifiedAt: string }>
+  >;
+  /** Read autosave file contents for crash recovery. */
+  readAutoSave(autoSavePath: string): Promise<Uint8Array>;
+  /** Discard an autosave file (user chose not to recover). */
+  discardAutoSave(autoSavePath: string): Promise<void>;
+  /** Register a callback for file-open requests (file associations, CLI args). */
+  onOpenFileRequest(callback: (filePath: string) => void): void;
+  /** Read a project file by path without showing a dialog. */
+  readFileByPath(
+    filePath: string,
+  ): Promise<{ data: Uint8Array; filePath: string; projectName: string } | null>;
+  /** Get the list of available project templates. */
+  getTemplates(): Promise<
+    Array<{
+      id: string;
+      name: string;
+      description: string;
+      filename: string;
+      icon: string;
+      category: string;
+    }>
+  >;
+  /** Read a template file by filename, returning its raw bytes. */
+  openTemplate(filename: string): Promise<Uint8Array>;
 }
 
 const api: MotionLabAPI = {
@@ -70,6 +121,30 @@ const api: MotionLabAPI = {
     });
   },
   showLogsFolder: () => ipcRenderer.invoke('show-logs-folder'),
+  saveProjectToPath: (data: Uint8Array, filePath: string) =>
+    ipcRenderer.invoke('save-project-to-path', data, filePath),
+  setWindowTitle: (title: string) => ipcRenderer.send('set-window-title', title),
+  getRecentProjects: () => ipcRenderer.invoke('get-recent-projects'),
+  addRecentProject: (project: { name: string; filePath: string }) =>
+    ipcRenderer.invoke('add-recent-project', project),
+  removeRecentProject: (filePath: string) =>
+    ipcRenderer.invoke('remove-recent-project', filePath),
+  onAutoSaveTick: (callback) => {
+    ipcRenderer.on('auto-save-tick', () => callback());
+  },
+  autoSaveWrite: (data: Uint8Array, projectPath: string | null) =>
+    ipcRenderer.invoke('auto-save-write', data, projectPath),
+  autoSaveCleanup: (projectPath: string | null) =>
+    ipcRenderer.invoke('auto-save-cleanup', projectPath),
+  checkAutoSaveRecovery: () => ipcRenderer.invoke('check-autosave-recovery'),
+  readAutoSave: (autoSavePath: string) => ipcRenderer.invoke('read-autosave', autoSavePath),
+  discardAutoSave: (autoSavePath: string) => ipcRenderer.invoke('discard-autosave', autoSavePath),
+  onOpenFileRequest: (callback) => {
+    ipcRenderer.on('open-file-request', (_event, filePath: string) => callback(filePath));
+  },
+  readFileByPath: (filePath: string) => ipcRenderer.invoke('read-file-by-path', filePath),
+  getTemplates: () => ipcRenderer.invoke('get-templates'),
+  openTemplate: (filename: string) => ipcRenderer.invoke('open-template', filename),
 };
 
 contextBridge.exposeInMainWorld('motionlab', api);

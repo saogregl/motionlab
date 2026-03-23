@@ -159,4 +159,91 @@ describe('SceneGraphManager', () => {
     sgm.dispose();
     expect(sgm.getAllEntities()).toHaveLength(0);
   });
+
+  // --- focusOnEntities (Epic 11) ---
+
+  it('focusOnEntities does nothing for empty list', () => {
+    const initialTarget = camera.target.clone();
+    const initialRadius = camera.radius;
+    sgm.focusOnEntities([]);
+    expect(camera.target.x).toBe(initialTarget.x);
+    expect(camera.radius).toBe(initialRadius);
+  });
+
+  it('focusOnEntities delegates to focusOnEntity for single ID', () => {
+    sgm.addBody('b1', 'Body1', minimalMesh, offsetPose);
+    sgm.focusOnEntities(['b1']);
+    // Camera should have been adjusted toward the entity
+    // (animateCameraToTarget sets up an animation, but NullEngine doesn't tick)
+    // Verify no error is thrown and the entity was looked up
+    expect(sgm.getEntity('b1')).toBeDefined();
+  });
+
+  it('focusOnEntities handles multiple bodies', () => {
+    sgm.addBody('b1', 'Body1', minimalMesh, defaultPose);
+    sgm.addBody('b2', 'Body2', minimalMesh, offsetPose);
+    // Should not throw for multi-entity focus
+    expect(() => sgm.focusOnEntities(['b1', 'b2'])).not.toThrow();
+  });
+
+  it('focusOnEntities handles mixed entity types (body + datum)', () => {
+    sgm.addBody('b1', 'Body1', minimalMesh, defaultPose);
+    sgm.addDatum('d1', 'b1', offsetPose);
+    expect(() => sgm.focusOnEntities(['b1', 'd1'])).not.toThrow();
+  });
+
+  it('focusOnEntities skips unknown IDs gracefully', () => {
+    sgm.addBody('b1', 'Body1', minimalMesh, defaultPose);
+    expect(() => sgm.focusOnEntities(['b1', 'nonexistent'])).not.toThrow();
+  });
+
+  it('focusOnEntities does nothing when all IDs are unknown', () => {
+    const initialRadius = camera.radius;
+    sgm.focusOnEntities(['x', 'y', 'z']);
+    // Camera should not have changed (no animation started)
+    expect(camera.radius).toBe(initialRadius);
+  });
+
+  it('highlightFace tints one face and clearFaceHighlight resets colors', () => {
+    const twoFaceMesh: MeshDataInput = {
+      vertices: new Float32Array([
+        0, 0, 0,
+        1, 0, 0,
+        0, 1, 0,
+        1, 1, 0,
+      ]),
+      indices: new Uint32Array([
+        0, 1, 2,
+        1, 3, 2,
+      ]),
+      normals: new Float32Array([
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
+      ]),
+    };
+
+    const entity = sgm.addBody('b1', 'Body1', twoFaceMesh, defaultPose, new Uint32Array([1, 1]));
+    const mesh = entity.meshes[0];
+    const initialColors = mesh.getVerticesData('color');
+    expect(initialColors).not.toBeNull();
+    expect(initialColors?.every((value) => value === 1)).toBe(true);
+
+    sgm.highlightFace('b1', 1);
+
+    const highlightedColors = mesh.getVerticesData('color');
+    expect(highlightedColors).not.toBeNull();
+    expect(highlightedColors?.[4]).toBeCloseTo(0.4);
+    expect(highlightedColors?.[5]).toBeCloseTo(0.7);
+    expect(highlightedColors?.[6]).toBeCloseTo(1.0);
+    expect(highlightedColors?.[12]).toBeCloseTo(0.4);
+    expect(highlightedColors?.[13]).toBeCloseTo(0.7);
+    expect(highlightedColors?.[14]).toBeCloseTo(1.0);
+
+    sgm.clearFaceHighlight('b1');
+
+    const clearedColors = mesh.getVerticesData('color');
+    expect(clearedColors?.every((value) => value === 1)).toBe(true);
+  });
 });

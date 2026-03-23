@@ -8,6 +8,7 @@ describe('Selection store', () => {
       selectedIds: new Set(),
       hoveredId: null,
       lastSelectedId: null,
+      selectionFilter: null,
     });
   });
 
@@ -74,5 +75,109 @@ describe('Selection store', () => {
     const ref = useSelectionStore.getState();
     useSelectionStore.getState().setHovered('x');
     expect(useSelectionStore.getState()).toBe(ref);
+  });
+
+  // --- selectRange (Epic 11) ---
+
+  describe('selectRange', () => {
+    const ordered = ['a', 'b', 'c', 'd', 'e'];
+
+    it('selects range from anchor to target (forward)', () => {
+      useSelectionStore.getState().select('b'); // anchor = 'b'
+      useSelectionStore.getState().selectRange('d', ordered);
+      const s = useSelectionStore.getState();
+      expect(s.selectedIds).toEqual(new Set(['b', 'c', 'd']));
+      expect(s.lastSelectedId).toBe('d');
+    });
+
+    it('selects range from anchor to target (backward)', () => {
+      useSelectionStore.getState().select('d'); // anchor = 'd'
+      useSelectionStore.getState().selectRange('b', ordered);
+      const s = useSelectionStore.getState();
+      expect(s.selectedIds).toEqual(new Set(['b', 'c', 'd']));
+      expect(s.lastSelectedId).toBe('b');
+    });
+
+    it('adds range to existing selection', () => {
+      useSelectionStore.getState().select('a');
+      useSelectionStore.getState().addToSelection('c'); // anchor = 'c'
+      useSelectionStore.getState().selectRange('e', ordered);
+      const s = useSelectionStore.getState();
+      expect(s.selectedIds).toEqual(new Set(['a', 'c', 'd', 'e']));
+    });
+
+    it('falls back to single select when no anchor', () => {
+      // lastSelectedId is null
+      useSelectionStore.getState().selectRange('c', ordered);
+      const s = useSelectionStore.getState();
+      expect(s.selectedIds).toEqual(new Set(['c']));
+      expect(s.lastSelectedId).toBe('c');
+    });
+
+    it('falls back to single select when anchor not in ordered list', () => {
+      useSelectionStore.getState().select('z'); // anchor = 'z', not in ordered
+      useSelectionStore.getState().selectRange('c', ordered);
+      const s = useSelectionStore.getState();
+      expect(s.selectedIds).toEqual(new Set(['c']));
+    });
+
+    it('falls back to single select when target not in ordered list', () => {
+      useSelectionStore.getState().select('b');
+      useSelectionStore.getState().selectRange('z', ordered);
+      const s = useSelectionStore.getState();
+      expect(s.selectedIds).toEqual(new Set(['z']));
+    });
+
+    it('handles same anchor and target', () => {
+      useSelectionStore.getState().select('c');
+      useSelectionStore.getState().selectRange('c', ordered);
+      const s = useSelectionStore.getState();
+      expect(s.selectedIds.has('c')).toBe(true);
+    });
+  });
+
+  // --- selectAll (Epic 11) ---
+
+  describe('selectAll', () => {
+    it('selects all provided IDs', () => {
+      useSelectionStore.getState().selectAll(['a', 'b', 'c']);
+      const s = useSelectionStore.getState();
+      expect(s.selectedIds).toEqual(new Set(['a', 'b', 'c']));
+      expect(s.lastSelectedId).toBe('c');
+    });
+
+    it('handles empty list', () => {
+      useSelectionStore.getState().select('a');
+      useSelectionStore.getState().selectAll([]);
+      const s = useSelectionStore.getState();
+      expect(s.selectedIds.size).toBe(0);
+      expect(s.lastSelectedId).toBeNull();
+    });
+
+    it('replaces existing selection', () => {
+      useSelectionStore.getState().select('x');
+      useSelectionStore.getState().selectAll(['a', 'b']);
+      expect(useSelectionStore.getState().selectedIds).toEqual(new Set(['a', 'b']));
+    });
+  });
+
+  // --- selectionFilter (Epic 11) ---
+
+  describe('selectionFilter', () => {
+    it('defaults to null (no filter)', () => {
+      expect(useSelectionStore.getState().selectionFilter).toBeNull();
+    });
+
+    it('setSelectionFilter stores the filter', () => {
+      const filter = new Set(['body', 'datum'] as const);
+      useSelectionStore.getState().setSelectionFilter(filter);
+      expect(useSelectionStore.getState().selectionFilter).toBe(filter);
+    });
+
+    it('setSelectionFilter to null clears filter', () => {
+      useSelectionStore.getState().setSelectionFilter(new Set(['joint'] as const));
+      useSelectionStore.getState().setSelectionFilter(null);
+      expect(useSelectionStore.getState().selectionFilter).toBeNull();
+    });
   });
 });

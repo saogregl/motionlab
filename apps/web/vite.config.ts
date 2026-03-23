@@ -10,12 +10,6 @@ export default defineConfig({
       '@/': `${path.resolve(__dirname, '../../packages/ui/src')}/`,
     },
   },
-  css: {
-    transformer: 'postcss',
-  },
-  build: {
-    cssMinify: 'esbuild',
-  },
   server: {
     port: 5173,
   },

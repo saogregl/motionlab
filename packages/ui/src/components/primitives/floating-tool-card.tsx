@@ -111,9 +111,9 @@ function FloatingToolCard({
       ref={cardRef}
       data-slot="floating-tool-card"
       className={cn(
-        'absolute w-[260px] max-w-[300px]',
-        'bg-[var(--layer-elevated)] border border-[var(--border-default)]',
-        'rounded-[var(--radius-md)] shadow-[var(--shadow-overlay)]',
+        'absolute w-[240px] max-w-[300px]',
+        'bg-[var(--layer-elevated)] border border-[var(--border-default)] border-t-2 border-t-[var(--accent-primary)]',
+        'rounded-[var(--radius-sm)] shadow-[var(--shadow-overlay)]',
         'z-[var(--z-floating)]',
         'animate-in fade-in-0 slide-in-from-bottom-1 duration-[var(--duration-normal)]',
         className,
@@ -125,7 +125,7 @@ function FloatingToolCard({
         data-slot="floating-tool-card-header"
         role="toolbar"
         className={cn(
-          'flex h-7 items-center gap-1.5 px-2',
+          'flex h-6 items-center gap-1.5 ps-2 pe-1',
           'border-b border-[var(--border-subtle)]',
           isDragging ? 'cursor-grabbing' : 'cursor-grab',
         )}
@@ -142,7 +142,7 @@ function FloatingToolCard({
             {icon}
           </span>
         )}
-        <span className="min-w-0 flex-1 truncate text-[length:var(--text-sm)] font-semibold text-[var(--text-primary)]">
+        <span className="min-w-0 flex-1 truncate text-[length:var(--text-xs)] font-semibold text-[var(--text-primary)]">
           {title}
         </span>
         {onClose && (
@@ -166,7 +166,7 @@ function FloatingToolCard({
       {footer && (
         <div
           data-slot="floating-tool-card-footer"
-          className="flex items-center justify-end gap-1.5 px-2 py-1.5 border-t border-[var(--border-subtle)]"
+          className="flex items-center justify-end gap-1.5 ps-2 pe-1.5 py-1 border-t border-[var(--border-subtle)]"
         >
           {footer}
         </div>

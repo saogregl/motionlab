@@ -1,6 +1,8 @@
 import { create, fromBinary, toBinary } from '@bufbuild/protobuf';
 import { describe, expect, it } from 'vitest';
 import {
+  ActuatorControlMode,
+  ActuatorSchema,
   AssetReferenceSchema,
   BodyDisplayDataSchema,
   BodySchema,
@@ -9,12 +11,22 @@ import {
   ElementIdSchema,
   JointSchema,
   JointType,
+  LinearSpringDamperLoadSchema,
+  LoadSchema,
+  PointForceLoadSchema,
+  PointTorqueLoadSchema,
+  PrismaticJointConfigSchema,
+  PrismaticMotorActuatorSchema,
   MassPropertiesSchema,
   MechanismSchema,
   PoseSchema,
   ProjectFileSchema,
   ProjectMetadataSchema,
   QuatSchema,
+  RangeSchema,
+  ReferenceFrame,
+  RevoluteJointConfigSchema,
+  RevoluteMotorActuatorSchema,
   Vec3Schema,
 } from '../generated/mechanism/mechanism_pb.js';
 import {
@@ -24,6 +36,8 @@ import {
   CommandSchema,
   CompilationResultEventSchema,
   CompileMechanismCommandSchema,
+  CreateActuatorCommandSchema,
+  CreateActuatorResultSchema,
   CreateDatumCommandSchema,
   CreateDatumFromFaceCommandSchema,
   CreateDatumFromFaceResultSchema,
@@ -31,10 +45,16 @@ import {
   CreateDatumResultSchema,
   CreateJointCommandSchema,
   CreateJointResultSchema,
+  CreateLoadCommandSchema,
+  CreateLoadResultSchema,
+  DeleteActuatorCommandSchema,
+  DeleteActuatorResultSchema,
   DeleteDatumCommandSchema,
   DeleteDatumResultSchema,
   DeleteJointCommandSchema,
   DeleteJointResultSchema,
+  DeleteLoadCommandSchema,
+  DeleteLoadResultSchema,
   EngineStatus_State,
   EngineStatusSchema,
   EventSchema,
@@ -65,8 +85,12 @@ import {
   SimulationStateEventSchema,
   SimulationTraceSchema,
   TimeSampleSchema,
+  UpdateActuatorCommandSchema,
+  UpdateActuatorResultSchema,
   UpdateJointCommandSchema,
   UpdateJointResultSchema,
+  UpdateLoadCommandSchema,
+  UpdateLoadResultSchema,
 } from '../generated/protocol/transport_pb.js';
 
 describe('Mechanism binary round-trip', () => {
@@ -114,6 +138,40 @@ describe('Mechanism binary round-trip', () => {
           childDatumId: create(ElementIdSchema, { id: 'datum-002' }),
           lowerLimit: -3.14,
           upperLimit: 3.14,
+          config: {
+            case: 'revolute',
+            value: create(RevoluteJointConfigSchema, {
+              angleLimit: create(RangeSchema, { lower: -3.14, upper: 3.14 }),
+            }),
+          },
+        }),
+      ],
+      loads: [
+        create(LoadSchema, {
+          id: create(ElementIdSchema, { id: 'load-001' }),
+          name: 'Force1',
+          config: {
+            case: 'pointForce',
+            value: create(PointForceLoadSchema, {
+              datumId: create(ElementIdSchema, { id: 'datum-001' }),
+              vector: create(Vec3Schema, { x: 0, y: -10, z: 0 }),
+              referenceFrame: ReferenceFrame.WORLD,
+            }),
+          },
+        }),
+      ],
+      actuators: [
+        create(ActuatorSchema, {
+          id: create(ElementIdSchema, { id: 'actuator-001' }),
+          name: 'Motor1',
+          config: {
+            case: 'revoluteMotor',
+            value: create(RevoluteMotorActuatorSchema, {
+              jointId: create(ElementIdSchema, { id: 'joint-001' }),
+              controlMode: ActuatorControlMode.SPEED,
+              commandValue: 2.5,
+            }),
+          },
         }),
       ],
     });
@@ -138,6 +196,15 @@ describe('Mechanism binary round-trip', () => {
     expect(restored.joints[0].upperLimit).toBe(3.14);
     expect(restored.joints[0].parentDatumId?.id).toBe('datum-001');
     expect(restored.joints[0].childDatumId?.id).toBe('datum-002');
+    expect(restored.joints[0].config.case).toBe('revolute');
+    if (restored.joints[0].config.case === 'revolute') {
+      expect(restored.joints[0].config.value.angleLimit?.lower).toBe(-3.14);
+      expect(restored.joints[0].config.value.angleLimit?.upper).toBe(3.14);
+    }
+    expect(restored.loads).toHaveLength(1);
+    expect(restored.loads[0].config.case).toBe('pointForce');
+    expect(restored.actuators).toHaveLength(1);
+    expect(restored.actuators[0].config.case).toBe('revoluteMotor');
   });
 });
 
@@ -495,6 +562,35 @@ describe('Datum CRUD round-trip', () => {
     }
   });
 
+  it('should round-trip the toroidal face surface class enum', () => {
+    const event = create(EventSchema, {
+      sequenceId: 56n,
+      payload: {
+        case: 'createDatumFromFaceResult',
+        value: create(CreateDatumFromFaceResultSchema, {
+          result: {
+            case: 'success',
+            value: create(CreateDatumFromFaceSuccessSchema, {
+              faceIndex: 3,
+              surfaceClass: FaceSurfaceClass.TOROIDAL,
+            }),
+          },
+        }),
+      },
+    });
+
+    const bytes = toBinary(EventSchema, event);
+    const restored = fromBinary(EventSchema, bytes);
+
+    expect(restored.payload.case).toBe('createDatumFromFaceResult');
+    if (restored.payload.case === 'createDatumFromFaceResult') {
+      expect(restored.payload.value.result.case).toBe('success');
+      if (restored.payload.value.result.case === 'success') {
+        expect(restored.payload.value.result.value.surfaceClass).toBe(FaceSurfaceClass.TOROIDAL);
+      }
+    }
+  });
+
   it('should round-trip DeleteDatumCommand and DeleteDatumResult', () => {
     const cmd = create(CommandSchema, {
       sequenceId: 60n,
@@ -597,12 +693,20 @@ describe('Joint CRUD round-trip', () => {
       payload: {
         case: 'createJoint',
         value: create(CreateJointCommandSchema, {
-          parentDatumId: create(ElementIdSchema, { id: 'datum-001' }),
-          childDatumId: create(ElementIdSchema, { id: 'datum-002' }),
-          type: JointType.REVOLUTE,
-          name: 'RevJoint1',
-          lowerLimit: -3.14,
-          upperLimit: 3.14,
+          draft: create(JointSchema, {
+            name: 'RevJoint1',
+            type: JointType.REVOLUTE,
+            parentDatumId: create(ElementIdSchema, { id: 'datum-001' }),
+            childDatumId: create(ElementIdSchema, { id: 'datum-002' }),
+            lowerLimit: -3.14,
+            upperLimit: 3.14,
+            config: {
+              case: 'revolute',
+              value: create(RevoluteJointConfigSchema, {
+                angleLimit: create(RangeSchema, { lower: -3.14, upper: 3.14 }),
+              }),
+            },
+          }),
         }),
       },
     });
@@ -613,12 +717,13 @@ describe('Joint CRUD round-trip', () => {
     expect(restored.sequenceId).toBe(80n);
     expect(restored.payload.case).toBe('createJoint');
     if (restored.payload.case === 'createJoint') {
-      expect(restored.payload.value.parentDatumId?.id).toBe('datum-001');
-      expect(restored.payload.value.childDatumId?.id).toBe('datum-002');
-      expect(restored.payload.value.type).toBe(JointType.REVOLUTE);
-      expect(restored.payload.value.name).toBe('RevJoint1');
-      expect(restored.payload.value.lowerLimit).toBe(-3.14);
-      expect(restored.payload.value.upperLimit).toBe(3.14);
+      expect(restored.payload.value.draft?.parentDatumId?.id).toBe('datum-001');
+      expect(restored.payload.value.draft?.childDatumId?.id).toBe('datum-002');
+      expect(restored.payload.value.draft?.type).toBe(JointType.REVOLUTE);
+      expect(restored.payload.value.draft?.name).toBe('RevJoint1');
+      expect(restored.payload.value.draft?.lowerLimit).toBe(-3.14);
+      expect(restored.payload.value.draft?.upperLimit).toBe(3.14);
+      expect(restored.payload.value.draft?.config.case).toBe('revolute');
     }
   });
 
@@ -638,6 +743,12 @@ describe('Joint CRUD round-trip', () => {
               childDatumId: create(ElementIdSchema, { id: 'datum-002' }),
               lowerLimit: -3.14,
               upperLimit: 3.14,
+              config: {
+                case: 'revolute',
+                value: create(RevoluteJointConfigSchema, {
+                  angleLimit: create(RangeSchema, { lower: -3.14, upper: 3.14 }),
+                }),
+              },
             }),
           },
         }),
@@ -695,10 +806,17 @@ describe('Joint CRUD round-trip', () => {
       payload: {
         case: 'updateJoint',
         value: create(UpdateJointCommandSchema, {
-          jointId: create(ElementIdSchema, { id: 'joint-001' }),
-          name: 'UpdatedName',
-          type: JointType.PRISMATIC,
-          // lowerLimit and upperLimit intentionally omitted (optional)
+          joint: create(JointSchema, {
+            id: create(ElementIdSchema, { id: 'joint-001' }),
+            name: 'UpdatedName',
+            type: JointType.PRISMATIC,
+            parentDatumId: create(ElementIdSchema, { id: 'datum-001' }),
+            childDatumId: create(ElementIdSchema, { id: 'datum-002' }),
+            config: {
+              case: 'prismatic',
+              value: create(PrismaticJointConfigSchema, {}),
+            },
+          }),
         }),
       },
     });
@@ -709,11 +827,13 @@ describe('Joint CRUD round-trip', () => {
     expect(restored.sequenceId).toBe(83n);
     expect(restored.payload.case).toBe('updateJoint');
     if (restored.payload.case === 'updateJoint') {
-      expect(restored.payload.value.jointId?.id).toBe('joint-001');
-      expect(restored.payload.value.name).toBe('UpdatedName');
-      expect(restored.payload.value.type).toBe(JointType.PRISMATIC);
-      expect(restored.payload.value.lowerLimit).toBeUndefined();
-      expect(restored.payload.value.upperLimit).toBeUndefined();
+      expect(restored.payload.value.joint?.id?.id).toBe('joint-001');
+      expect(restored.payload.value.joint?.name).toBe('UpdatedName');
+      expect(restored.payload.value.joint?.type).toBe(JointType.PRISMATIC);
+      expect(restored.payload.value.joint?.config.case).toBe('prismatic');
+      if (restored.payload.value.joint?.config.case === 'prismatic') {
+        expect(restored.payload.value.joint.config.value.translationLimit).toBeUndefined();
+      }
     }
   });
 
@@ -731,8 +851,12 @@ describe('Joint CRUD round-trip', () => {
               type: JointType.PRISMATIC,
               parentDatumId: create(ElementIdSchema, { id: 'datum-001' }),
               childDatumId: create(ElementIdSchema, { id: 'datum-002' }),
-              lowerLimit: 0,
-              upperLimit: 100,
+              config: {
+                case: 'prismatic',
+                value: create(PrismaticJointConfigSchema, {
+                  translationLimit: create(RangeSchema, { lower: 0, upper: 100 }),
+                }),
+              },
             }),
           },
         }),
@@ -792,6 +916,422 @@ describe('Joint CRUD round-trip', () => {
         expect(restoredEvt.payload.value.result.value.id).toBe('joint-001');
       }
     }
+  });
+});
+
+describe('Load and actuator CRUD round-trip', () => {
+  it('should round-trip load commands and results', () => {
+    const load = create(LoadSchema, {
+      id: create(ElementIdSchema, { id: 'load-001' }),
+      name: 'Force1',
+      config: {
+        case: 'pointForce',
+        value: create(PointForceLoadSchema, {
+          datumId: create(ElementIdSchema, { id: 'datum-001' }),
+          vector: create(Vec3Schema, { x: 5, y: -3, z: 0 }),
+          referenceFrame: ReferenceFrame.WORLD,
+        }),
+      },
+    });
+
+    const createCmd = create(CommandSchema, {
+      sequenceId: 86n,
+      payload: {
+        case: 'createLoad',
+        value: create(CreateLoadCommandSchema, { draft: load }),
+      },
+    });
+    const updateCmd = create(CommandSchema, {
+      sequenceId: 87n,
+      payload: {
+        case: 'updateLoad',
+        value: create(UpdateLoadCommandSchema, { load }),
+      },
+    });
+    const deleteCmd = create(CommandSchema, {
+      sequenceId: 88n,
+      payload: {
+        case: 'deleteLoad',
+        value: create(DeleteLoadCommandSchema, {
+          loadId: create(ElementIdSchema, { id: 'load-001' }),
+        }),
+      },
+    });
+
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe('createLoad');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe('updateLoad');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe('deleteLoad');
+
+    const createEvent = create(EventSchema, {
+      sequenceId: 86n,
+      payload: {
+        case: 'createLoadResult',
+        value: create(CreateLoadResultSchema, {
+          result: { case: 'load', value: load },
+        }),
+      },
+    });
+    const updateEvent = create(EventSchema, {
+      sequenceId: 87n,
+      payload: {
+        case: 'updateLoadResult',
+        value: create(UpdateLoadResultSchema, {
+          result: { case: 'load', value: load },
+        }),
+      },
+    });
+    const deleteEvent = create(EventSchema, {
+      sequenceId: 88n,
+      payload: {
+        case: 'deleteLoadResult',
+        value: create(DeleteLoadResultSchema, {
+          result: {
+            case: 'deletedId',
+            value: create(ElementIdSchema, { id: 'load-001' }),
+          },
+        }),
+      },
+    });
+
+    const restoredCreate = fromBinary(EventSchema, toBinary(EventSchema, createEvent));
+    const restoredUpdate = fromBinary(EventSchema, toBinary(EventSchema, updateEvent));
+    const restoredDelete = fromBinary(EventSchema, toBinary(EventSchema, deleteEvent));
+
+    expect(restoredCreate.payload.case).toBe('createLoadResult');
+    expect(restoredUpdate.payload.case).toBe('updateLoadResult');
+    expect(restoredDelete.payload.case).toBe('deleteLoadResult');
+  });
+
+  it('should round-trip pointTorque load commands and results', () => {
+    const load = create(LoadSchema, {
+      id: create(ElementIdSchema, { id: 'load-002' }),
+      name: 'Torque1',
+      config: {
+        case: 'pointTorque',
+        value: create(PointTorqueLoadSchema, {
+          datumId: create(ElementIdSchema, { id: 'datum-002' }),
+          vector: create(Vec3Schema, { x: 0, y: 0, z: 10 }),
+          referenceFrame: ReferenceFrame.DATUM_LOCAL,
+        }),
+      },
+    });
+
+    const createCmd = create(CommandSchema, {
+      sequenceId: 92n,
+      payload: {
+        case: 'createLoad',
+        value: create(CreateLoadCommandSchema, { draft: load }),
+      },
+    });
+    const updateCmd = create(CommandSchema, {
+      sequenceId: 93n,
+      payload: {
+        case: 'updateLoad',
+        value: create(UpdateLoadCommandSchema, { load }),
+      },
+    });
+    const deleteCmd = create(CommandSchema, {
+      sequenceId: 94n,
+      payload: {
+        case: 'deleteLoad',
+        value: create(DeleteLoadCommandSchema, {
+          loadId: create(ElementIdSchema, { id: 'load-002' }),
+        }),
+      },
+    });
+
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe('createLoad');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe('updateLoad');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe('deleteLoad');
+
+    const createEvent = create(EventSchema, {
+      sequenceId: 92n,
+      payload: {
+        case: 'createLoadResult',
+        value: create(CreateLoadResultSchema, {
+          result: { case: 'load', value: load },
+        }),
+      },
+    });
+    const updateEvent = create(EventSchema, {
+      sequenceId: 93n,
+      payload: {
+        case: 'updateLoadResult',
+        value: create(UpdateLoadResultSchema, {
+          result: { case: 'load', value: load },
+        }),
+      },
+    });
+    const deleteEvent = create(EventSchema, {
+      sequenceId: 94n,
+      payload: {
+        case: 'deleteLoadResult',
+        value: create(DeleteLoadResultSchema, {
+          result: {
+            case: 'deletedId',
+            value: create(ElementIdSchema, { id: 'load-002' }),
+          },
+        }),
+      },
+    });
+
+    const restoredCreate = fromBinary(EventSchema, toBinary(EventSchema, createEvent));
+    const restoredUpdate = fromBinary(EventSchema, toBinary(EventSchema, updateEvent));
+    const restoredDelete = fromBinary(EventSchema, toBinary(EventSchema, deleteEvent));
+
+    expect(restoredCreate.payload.case).toBe('createLoadResult');
+    expect(restoredUpdate.payload.case).toBe('updateLoadResult');
+    expect(restoredDelete.payload.case).toBe('deleteLoadResult');
+  });
+
+  it('should round-trip linearSpringDamper load commands and results', () => {
+    const load = create(LoadSchema, {
+      id: create(ElementIdSchema, { id: 'load-003' }),
+      name: 'Spring1',
+      config: {
+        case: 'linearSpringDamper',
+        value: create(LinearSpringDamperLoadSchema, {
+          parentDatumId: create(ElementIdSchema, { id: 'datum-003' }),
+          childDatumId: create(ElementIdSchema, { id: 'datum-004' }),
+          stiffness: 500,
+          damping: 10,
+          restLength: 0.25,
+        }),
+      },
+    });
+
+    const createCmd = create(CommandSchema, {
+      sequenceId: 95n,
+      payload: {
+        case: 'createLoad',
+        value: create(CreateLoadCommandSchema, { draft: load }),
+      },
+    });
+    const updateCmd = create(CommandSchema, {
+      sequenceId: 96n,
+      payload: {
+        case: 'updateLoad',
+        value: create(UpdateLoadCommandSchema, { load }),
+      },
+    });
+    const deleteCmd = create(CommandSchema, {
+      sequenceId: 97n,
+      payload: {
+        case: 'deleteLoad',
+        value: create(DeleteLoadCommandSchema, {
+          loadId: create(ElementIdSchema, { id: 'load-003' }),
+        }),
+      },
+    });
+
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe('createLoad');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe('updateLoad');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe('deleteLoad');
+
+    const createEvent = create(EventSchema, {
+      sequenceId: 95n,
+      payload: {
+        case: 'createLoadResult',
+        value: create(CreateLoadResultSchema, {
+          result: { case: 'load', value: load },
+        }),
+      },
+    });
+    const updateEvent = create(EventSchema, {
+      sequenceId: 96n,
+      payload: {
+        case: 'updateLoadResult',
+        value: create(UpdateLoadResultSchema, {
+          result: { case: 'load', value: load },
+        }),
+      },
+    });
+    const deleteEvent = create(EventSchema, {
+      sequenceId: 97n,
+      payload: {
+        case: 'deleteLoadResult',
+        value: create(DeleteLoadResultSchema, {
+          result: {
+            case: 'deletedId',
+            value: create(ElementIdSchema, { id: 'load-003' }),
+          },
+        }),
+      },
+    });
+
+    const restoredCreate = fromBinary(EventSchema, toBinary(EventSchema, createEvent));
+    const restoredUpdate = fromBinary(EventSchema, toBinary(EventSchema, updateEvent));
+    const restoredDelete = fromBinary(EventSchema, toBinary(EventSchema, deleteEvent));
+
+    expect(restoredCreate.payload.case).toBe('createLoadResult');
+    expect(restoredUpdate.payload.case).toBe('updateLoadResult');
+    expect(restoredDelete.payload.case).toBe('deleteLoadResult');
+  });
+
+  it('should round-trip actuator commands and results', () => {
+    const actuator = create(ActuatorSchema, {
+      id: create(ElementIdSchema, { id: 'actuator-001' }),
+      name: 'Motor1',
+      config: {
+        case: 'revoluteMotor',
+        value: create(RevoluteMotorActuatorSchema, {
+          jointId: create(ElementIdSchema, { id: 'joint-001' }),
+          controlMode: ActuatorControlMode.EFFORT,
+          commandValue: 12,
+          effortLimit: 20,
+        }),
+      },
+    });
+
+    const createCmd = create(CommandSchema, {
+      sequenceId: 89n,
+      payload: {
+        case: 'createActuator',
+        value: create(CreateActuatorCommandSchema, { draft: actuator }),
+      },
+    });
+    const updateCmd = create(CommandSchema, {
+      sequenceId: 90n,
+      payload: {
+        case: 'updateActuator',
+        value: create(UpdateActuatorCommandSchema, { actuator }),
+      },
+    });
+    const deleteCmd = create(CommandSchema, {
+      sequenceId: 91n,
+      payload: {
+        case: 'deleteActuator',
+        value: create(DeleteActuatorCommandSchema, {
+          actuatorId: create(ElementIdSchema, { id: 'actuator-001' }),
+        }),
+      },
+    });
+
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe('createActuator');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe('updateActuator');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe('deleteActuator');
+
+    const createEvent = create(EventSchema, {
+      sequenceId: 89n,
+      payload: {
+        case: 'createActuatorResult',
+        value: create(CreateActuatorResultSchema, {
+          result: { case: 'actuator', value: actuator },
+        }),
+      },
+    });
+    const updateEvent = create(EventSchema, {
+      sequenceId: 90n,
+      payload: {
+        case: 'updateActuatorResult',
+        value: create(UpdateActuatorResultSchema, {
+          result: { case: 'actuator', value: actuator },
+        }),
+      },
+    });
+    const deleteEvent = create(EventSchema, {
+      sequenceId: 91n,
+      payload: {
+        case: 'deleteActuatorResult',
+        value: create(DeleteActuatorResultSchema, {
+          result: {
+            case: 'deletedId',
+            value: create(ElementIdSchema, { id: 'actuator-001' }),
+          },
+        }),
+      },
+    });
+
+    const restoredCreate = fromBinary(EventSchema, toBinary(EventSchema, createEvent));
+    const restoredUpdate = fromBinary(EventSchema, toBinary(EventSchema, updateEvent));
+    const restoredDelete = fromBinary(EventSchema, toBinary(EventSchema, deleteEvent));
+
+    expect(restoredCreate.payload.case).toBe('createActuatorResult');
+    expect(restoredUpdate.payload.case).toBe('updateActuatorResult');
+    expect(restoredDelete.payload.case).toBe('deleteActuatorResult');
+  });
+
+  it('should round-trip prismaticMotor actuator commands and results', () => {
+    const actuator = create(ActuatorSchema, {
+      id: create(ElementIdSchema, { id: 'actuator-002' }),
+      name: 'LinearMotor1',
+      config: {
+        case: 'prismaticMotor',
+        value: create(PrismaticMotorActuatorSchema, {
+          jointId: create(ElementIdSchema, { id: 'joint-002' }),
+          controlMode: ActuatorControlMode.POSITION,
+          commandValue: 0.5,
+          effortLimit: 100,
+        }),
+      },
+    });
+
+    const createCmd = create(CommandSchema, {
+      sequenceId: 98n,
+      payload: {
+        case: 'createActuator',
+        value: create(CreateActuatorCommandSchema, { draft: actuator }),
+      },
+    });
+    const updateCmd = create(CommandSchema, {
+      sequenceId: 99n,
+      payload: {
+        case: 'updateActuator',
+        value: create(UpdateActuatorCommandSchema, { actuator }),
+      },
+    });
+    const deleteCmd = create(CommandSchema, {
+      sequenceId: 100n,
+      payload: {
+        case: 'deleteActuator',
+        value: create(DeleteActuatorCommandSchema, {
+          actuatorId: create(ElementIdSchema, { id: 'actuator-002' }),
+        }),
+      },
+    });
+
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe('createActuator');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe('updateActuator');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe('deleteActuator');
+
+    const createEvent = create(EventSchema, {
+      sequenceId: 98n,
+      payload: {
+        case: 'createActuatorResult',
+        value: create(CreateActuatorResultSchema, {
+          result: { case: 'actuator', value: actuator },
+        }),
+      },
+    });
+    const updateEvent = create(EventSchema, {
+      sequenceId: 99n,
+      payload: {
+        case: 'updateActuatorResult',
+        value: create(UpdateActuatorResultSchema, {
+          result: { case: 'actuator', value: actuator },
+        }),
+      },
+    });
+    const deleteEvent = create(EventSchema, {
+      sequenceId: 100n,
+      payload: {
+        case: 'deleteActuatorResult',
+        value: create(DeleteActuatorResultSchema, {
+          result: {
+            case: 'deletedId',
+            value: create(ElementIdSchema, { id: 'actuator-002' }),
+          },
+        }),
+      },
+    });
+
+    const restoredCreate = fromBinary(EventSchema, toBinary(EventSchema, createEvent));
+    const restoredUpdate = fromBinary(EventSchema, toBinary(EventSchema, updateEvent));
+    const restoredDelete = fromBinary(EventSchema, toBinary(EventSchema, deleteEvent));
+
+    expect(restoredCreate.payload.case).toBe('createActuatorResult');
+    expect(restoredUpdate.payload.case).toBe('updateActuatorResult');
+    expect(restoredDelete.payload.case).toBe('deleteActuatorResult');
   });
 });
 
@@ -1521,5 +2061,136 @@ describe('Project save/load round-trip (Epic 6.4)', () => {
       0, 0, 0, 1, 0, 0, 0, 1, 0,
     ]);
     expect(restored.bodyDisplayData[0].partIndex).toEqual([1]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Epic 13: New command builder round-trips
+// ---------------------------------------------------------------------------
+import {
+  createCreateBodyCommand,
+  createDeleteBodyCommand,
+  createAttachGeometryCommand,
+  createDetachGeometryCommand,
+  createUpdateBodyCommand,
+  createUpdateMassPropertiesCommand,
+  parseEvent,
+} from '../transport.js';
+
+describe('Epic 13 command builder round-trips', () => {
+  it('createCreateBodyCommand round-trips', () => {
+    const bytes = createCreateBodyCommand('TestBody', {
+      massProperties: {
+        mass: 2.5,
+        centerOfMass: { x: 1, y: 0, z: 0 },
+        ixx: 1, iyy: 2, izz: 3, ixy: 0, ixz: 0, iyz: 0,
+      },
+      pose: {
+        position: { x: 0, y: 0, z: 1 },
+        orientation: { x: 0, y: 0, z: 0, w: 1 },
+      },
+      isFixed: true,
+    });
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('createBody');
+    if (cmd.payload.case === 'createBody') {
+      expect(cmd.payload.value.name).toBe('TestBody');
+      expect(cmd.payload.value.isFixed).toBe(true);
+      expect(cmd.payload.value.massProperties?.mass).toBe(2.5);
+      expect(cmd.payload.value.pose?.position?.x).toBe(0);
+      expect(cmd.payload.value.pose?.position?.z).toBe(1);
+    }
+  });
+
+  it('createCreateBodyCommand with no options', () => {
+    const bytes = createCreateBodyCommand('EmptyBody');
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('createBody');
+    if (cmd.payload.case === 'createBody') {
+      expect(cmd.payload.value.name).toBe('EmptyBody');
+      expect(cmd.payload.value.isFixed).toBe(false);
+    }
+  });
+
+  it('createDeleteBodyCommand round-trips', () => {
+    const bytes = createDeleteBodyCommand('body-123');
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('deleteBody');
+    if (cmd.payload.case === 'deleteBody') {
+      expect(cmd.payload.value.bodyId?.id).toBe('body-123');
+    }
+  });
+
+  it('createUpdateBodyCommand round-trips name and fixed state', () => {
+    const bytes = createUpdateBodyCommand('body-123', {
+      isFixed: true,
+      name: 'Renamed Body',
+    });
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('updateBody');
+    if (cmd.payload.case === 'updateBody') {
+      expect(cmd.payload.value.bodyId?.id).toBe('body-123');
+      expect(cmd.payload.value.isFixed).toBe(true);
+      expect(cmd.payload.value.name).toBe('Renamed Body');
+    }
+  });
+
+  it('createAttachGeometryCommand round-trips', () => {
+    const bytes = createAttachGeometryCommand('geom-1', 'body-2', {
+      position: { x: 1, y: 2, z: 3 },
+      orientation: { x: 0, y: 0, z: 0, w: 1 },
+    });
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('attachGeometry');
+    if (cmd.payload.case === 'attachGeometry') {
+      expect(cmd.payload.value.geometryId?.id).toBe('geom-1');
+      expect(cmd.payload.value.targetBodyId?.id).toBe('body-2');
+      expect(cmd.payload.value.localPose?.position?.x).toBe(1);
+    }
+  });
+
+  it('createAttachGeometryCommand without localPose', () => {
+    const bytes = createAttachGeometryCommand('geom-1', 'body-2');
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('attachGeometry');
+    if (cmd.payload.case === 'attachGeometry') {
+      expect(cmd.payload.value.geometryId?.id).toBe('geom-1');
+      expect(cmd.payload.value.localPose).toBeUndefined();
+    }
+  });
+
+  it('createDetachGeometryCommand round-trips', () => {
+    const bytes = createDetachGeometryCommand('geom-99');
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('detachGeometry');
+    if (cmd.payload.case === 'detachGeometry') {
+      expect(cmd.payload.value.geometryId?.id).toBe('geom-99');
+    }
+  });
+
+  it('createUpdateMassPropertiesCommand with override', () => {
+    const bytes = createUpdateMassPropertiesCommand('body-1', true, {
+      mass: 10,
+      centerOfMass: { x: 0, y: 0, z: 0 },
+      ixx: 5, iyy: 5, izz: 5, ixy: 0, ixz: 0, iyz: 0,
+    });
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('updateMassProperties');
+    if (cmd.payload.case === 'updateMassProperties') {
+      expect(cmd.payload.value.bodyId?.id).toBe('body-1');
+      expect(cmd.payload.value.massOverride).toBe(true);
+      expect(cmd.payload.value.massProperties?.mass).toBe(10);
+    }
+  });
+
+  it('createUpdateMassPropertiesCommand revert to computed', () => {
+    const bytes = createUpdateMassPropertiesCommand('body-1', false);
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('updateMassProperties');
+    if (cmd.payload.case === 'updateMassProperties') {
+      expect(cmd.payload.value.bodyId?.id).toBe('body-1');
+      expect(cmd.payload.value.massOverride).toBe(false);
+      expect(cmd.payload.value.massProperties).toBeUndefined();
+    }
   });
 });

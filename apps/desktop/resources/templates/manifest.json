@@ -1,0 +1,44 @@
+{
+  "templates": [
+    {
+      "id": "empty",
+      "name": "Empty Project",
+      "description": "A blank canvas with default simulation settings.",
+      "filename": "empty.motionlab",
+      "icon": "file-plus",
+      "category": "basics"
+    },
+    {
+      "id": "simple-pendulum",
+      "name": "Simple Pendulum",
+      "description": "A single arm swinging under gravity. Demonstrates revolute joints and basic dynamics.",
+      "filename": "simple-pendulum.motionlab",
+      "icon": "rotate-ccw",
+      "category": "basics"
+    },
+    {
+      "id": "four-bar-linkage",
+      "name": "Four-Bar Linkage",
+      "description": "A classic planar mechanism with four revolute joints forming a closed kinematic chain.",
+      "filename": "four-bar-linkage.motionlab",
+      "icon": "box",
+      "category": "linkages"
+    },
+    {
+      "id": "slider-crank",
+      "name": "Slider-Crank",
+      "description": "Crank, connecting rod, and slider with revolute and prismatic joints.",
+      "filename": "slider-crank.motionlab",
+      "icon": "move-horizontal",
+      "category": "linkages"
+    },
+    {
+      "id": "double-pendulum",
+      "name": "Double Pendulum",
+      "description": "Two arms in series — a classic example of chaotic dynamics.",
+      "filename": "double-pendulum.motionlab",
+      "icon": "git-branch",
+      "category": "dynamics"
+    }
+  ]
+}

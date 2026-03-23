@@ -79,7 +79,9 @@
       "Bash(xargs -0 ls -lt)",
       "Bash(xdpyinfo)",
       "Bash(hyprctl monitors:*)",
-      "Skill(update-config)"
+      "Skill(update-config)",
+      "Bash(cmake:*)",
+      "Bash(ctest:*)"
     ]
   },
   "enabledPlugins": {

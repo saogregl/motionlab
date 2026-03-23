@@ -11,12 +11,8 @@ export default defineConfig({
       '@/': `${path.resolve(__dirname, '../../packages/ui/src')}/`,
     },
   },
-  css: {
-    transformer: 'postcss',
-  },
   build: {
     outDir: '../.vite/renderer/main_window',
     emptyOutDir: true,
-    cssMinify: 'esbuild',
   },
 });

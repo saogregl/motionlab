@@ -22,6 +22,7 @@
 #include <gp_Dir.hxx>
 #include <gp_Pnt.hxx>
 #include <gp_Sphere.hxx>
+#include <gp_Torus.hxx>
 #include <gp_Vec.hxx>
 
 namespace motionlab::engine {
@@ -204,6 +205,15 @@ std::optional<FaceDatumPose> classify_face_for_datum(const TopoDS_Shape& body_sh
             const gp_Sphere sphere = surface.Sphere();
             set_position(result.position, sphere.Location());
             result.surface_class = FaceDatumSurfaceClass::Spherical;
+            return result;
+        }
+
+        case GeomAbs_Torus: {
+            const gp_Torus torus = surface.Torus();
+            set_position(result.position, torus.Location());
+            const auto orientation = quaternion_from_z(torus.Axis().Direction());
+            std::copy(orientation.begin(), orientation.end(), result.orientation);
+            result.surface_class = FaceDatumSurfaceClass::Toroidal;
             return result;
         }
 

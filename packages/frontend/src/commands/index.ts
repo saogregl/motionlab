@@ -1,17 +1,13 @@
-import { useAuthoringCommands } from './use-authoring-commands.js';
-import { useHelpCommands } from './use-help-commands.js';
-import { useSettingsCommands } from './use-settings-commands.js';
-import { useSimulationCommands } from './use-simulation-commands.js';
-import { useViewCommands } from './use-view-commands.js';
-
-export type { CommandDef, CommandGroup } from './types.js';
-
-export function useAllCommandGroups() {
-  return [
-    useAuthoringCommands(),
-    useSimulationCommands(),
-    useSettingsCommands(),
-    useViewCommands(),
-    useHelpCommands(),
-  ];
-}
+export type { CommandCategory, CommandDef, CommandGroup } from './types.js';
+export {
+  clearRegistry,
+  executeCommand,
+  getAllCommands,
+  getCommand,
+  getCommandsByCategory,
+  registerCommand,
+  registerCommands,
+} from './registry.js';
+export { useCommand, useCommandGroups, useCommandsByCategory } from './use-commands.js';
+export { initCommands } from './init.js';
+export { initShortcutManager } from './shortcut-manager.js';

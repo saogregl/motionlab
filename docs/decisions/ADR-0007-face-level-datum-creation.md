@@ -24,6 +24,8 @@ This introduces two durable contract questions:
 
 5. **Faces are transient interaction targets, not first-class selected authored entities.** Face hover/highlight stays inside the viewport runtime and does not enter the durable selection model or mechanism state.
 
+6. **Surface classification remains backend-agnostic but includes toroidal faces when available.** The wire reports a stable `FaceSurfaceClass` enum rather than backend-native surface objects or type names.
+
 ## Consequences
 
 - Positive: The engine remains the authority for geometry semantics and datum placement.

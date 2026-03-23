@@ -206,6 +206,14 @@ target_link_libraries(generate-pendulum-example PRIVATE
 )
 motionlab_target_warnings(generate-pendulum-example)
 
+add_executable(generate-templates
+  tools/generate_templates.cpp
+)
+target_link_libraries(generate-templates PRIVATE
+  motionlab-engine-lib
+)
+motionlab_target_warnings(generate-templates)
+
 # ──────────────────────────────────────────────
 # Tests
 # ──────────────────────────────────────────────

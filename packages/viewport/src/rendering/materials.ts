@@ -1,5 +1,7 @@
 import { type AbstractMesh, Color3, PBRMaterial, type Scene } from '@babylonjs/core';
 
+import { ACCENT } from './colors.js';
+
 export type MaterialPreset =
   | 'cad-default'
   | 'steel'
@@ -47,13 +49,12 @@ const PRESETS: Record<MaterialPreset, PresetDefinition> = {
   },
 };
 
-const ACCENT_COLOR = new Color3(0.06, 0.38, 0.996); // --accent-primary: #0f62fe
 const SELECTION_TINT_FACTOR = 0.15;
 
 export interface MaterialFactory {
   getMaterial: (preset: MaterialPreset) => PBRMaterial;
   getDefaultMaterial: () => PBRMaterial;
-  applySelectionTint: (mesh: AbstractMesh) => void;
+  applySelectionTint: (mesh: AbstractMesh, accentColor?: Color3) => void;
   removeSelectionTint: (mesh: AbstractMesh) => void;
   dispose: () => void;
 }
@@ -85,7 +86,7 @@ export function createMaterialFactory(scene: Scene): MaterialFactory {
     return getMaterial('cad-default');
   }
 
-  function applySelectionTint(mesh: AbstractMesh): void {
+  function applySelectionTint(mesh: AbstractMesh, accentColor?: Color3): void {
     const mat = mesh.material;
     if (!mat || !(mat instanceof PBRMaterial) || !mat.albedoColor) return;
 
@@ -97,7 +98,8 @@ export function createMaterialFactory(scene: Scene): MaterialFactory {
     if (!original) return;
     // We need a per-mesh material clone to avoid tinting all meshes sharing the material
     const tinted = mat.clone(`${mat.name}_selected`) as PBRMaterial;
-    tinted.albedoColor = Color3.Lerp(original, ACCENT_COLOR, SELECTION_TINT_FACTOR);
+    const tintTarget = accentColor ?? ACCENT;
+    tinted.albedoColor = Color3.Lerp(original, tintTarget, SELECTION_TINT_FACTOR);
     mesh.material = tinted;
   }
 

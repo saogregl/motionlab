@@ -303,6 +303,30 @@ struct TransportServer::Impl {
                 if (!authenticated) break;
                 enqueue_command(cmd.sequence_id(), cmd.delete_joint(), &Impl::handle_delete_joint);
                 break;
+            case protocol::Command::kCreateLoad:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.create_load(), &Impl::handle_create_load);
+                break;
+            case protocol::Command::kUpdateLoad:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.update_load(), &Impl::handle_update_load);
+                break;
+            case protocol::Command::kDeleteLoad:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.delete_load(), &Impl::handle_delete_load);
+                break;
+            case protocol::Command::kCreateActuator:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.create_actuator(), &Impl::handle_create_actuator);
+                break;
+            case protocol::Command::kUpdateActuator:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.update_actuator(), &Impl::handle_update_actuator);
+                break;
+            case protocol::Command::kDeleteActuator:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.delete_actuator(), &Impl::handle_delete_actuator);
+                break;
             case protocol::Command::kCompileMechanism:
                 if (!authenticated) break;
                 enqueue_command(cmd.sequence_id(), cmd.compile_mechanism(), &Impl::handle_compile_mechanism);
@@ -326,6 +350,30 @@ struct TransportServer::Impl {
             case protocol::Command::kRelocateAsset:
                 if (!authenticated) break;
                 enqueue_command(cmd.sequence_id(), cmd.relocate_asset(), &Impl::handle_relocate_asset);
+                break;
+            case protocol::Command::kNewProject:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.new_project(), &Impl::handle_new_project);
+                break;
+            case protocol::Command::kCreateBody:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.create_body(), &Impl::handle_create_body);
+                break;
+            case protocol::Command::kDeleteBody:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.delete_body(), &Impl::handle_delete_body);
+                break;
+            case protocol::Command::kAttachGeometry:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.attach_geometry(), &Impl::handle_attach_geometry);
+                break;
+            case protocol::Command::kDetachGeometry:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.detach_geometry(), &Impl::handle_detach_geometry);
+                break;
+            case protocol::Command::kUpdateMassProperties:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.update_mass_properties(), &Impl::handle_update_mass_properties);
                 break;
             default:
                 break;
@@ -384,19 +432,7 @@ struct TransportServer::Impl {
 
     void populate_proto_datum(mechanism::Datum* datum,
                                const engine::MechanismState::DatumEntry& entry) {
-        datum->mutable_id()->set_id(entry.id);
-        datum->set_name(entry.name);
-        datum->mutable_parent_body_id()->set_id(entry.parent_body_id);
-        auto* pose = datum->mutable_local_pose();
-        auto* p = pose->mutable_position();
-        p->set_x(entry.position[0]);
-        p->set_y(entry.position[1]);
-        p->set_z(entry.position[2]);
-        auto* q = pose->mutable_orientation();
-        q->set_w(entry.orientation[0]);
-        q->set_x(entry.orientation[1]);
-        q->set_y(entry.orientation[2]);
-        q->set_z(entry.orientation[3]);
+        *datum = entry;
     }
 
     protocol::FaceSurfaceClass to_proto_surface_class(engine::FaceDatumSurfaceClass surface_class) {
@@ -409,6 +445,8 @@ struct TransportServer::Impl {
                 return protocol::FACE_SURFACE_CLASS_CONICAL;
             case engine::FaceDatumSurfaceClass::Spherical:
                 return protocol::FACE_SURFACE_CLASS_SPHERICAL;
+            case engine::FaceDatumSurfaceClass::Toroidal:
+                return protocol::FACE_SURFACE_CLASS_TOROIDAL;
             case engine::FaceDatumSurfaceClass::Other:
             default:
                 return protocol::FACE_SURFACE_CLASS_OTHER;
@@ -442,7 +480,7 @@ struct TransportServer::Impl {
         auto* cr = event.mutable_create_datum_result();
         if (result.has_value()) {
             populate_proto_datum(cr->mutable_datum(), result.value());
-            spdlog::debug("Created datum '{}' (id={}) on body {}", cmd.name(), result->id, parent_id);
+            spdlog::debug("Created datum '{}' (id={}) on body {}", cmd.name(), result->id().id(), parent_id);
         } else {
             spdlog::warn("Failed to create datum '{}': parent body not found: {}", cmd.name(), parent_id);
             cr->set_error_message("Parent body not found: " + parent_id);
@@ -461,7 +499,17 @@ struct TransportServer::Impl {
             send_event(ws, event);
             return;
         }
-        const TopoDS_Shape* shape = shape_registry.get(body_id);
+        // Resolve body_id -> geometry_id for shape lookup
+        const TopoDS_Shape* shape = nullptr;
+        auto body_geoms = mechanism_state.get_body_geometries(body_id);
+        for (const auto* geom : body_geoms) {
+            shape = shape_registry.get(geom->id().id());
+            if (shape) break;
+        }
+        // Fallback: legacy shape stored by body_id
+        if (!shape) {
+            shape = shape_registry.get(body_id);
+        }
 
         protocol::Event event;
         event.set_sequence_id(sequence_id);
@@ -572,13 +620,17 @@ struct TransportServer::Impl {
 
     void populate_proto_joint(mechanism::Joint* proto_joint,
                                const engine::MechanismState::JointEntry& entry) {
-        proto_joint->mutable_id()->set_id(entry.id);
-        proto_joint->set_name(entry.name);
-        proto_joint->set_type(static_cast<mechanism::JointType>(entry.type));
-        proto_joint->mutable_parent_datum_id()->set_id(entry.parent_datum_id);
-        proto_joint->mutable_child_datum_id()->set_id(entry.child_datum_id);
-        proto_joint->set_lower_limit(entry.lower_limit);
-        proto_joint->set_upper_limit(entry.upper_limit);
+        *proto_joint = entry;
+    }
+
+    void populate_proto_load(mechanism::Load* proto_load,
+                              const engine::MechanismState::LoadEntry& entry) {
+        *proto_load = entry;
+    }
+
+    void populate_proto_actuator(mechanism::Actuator* proto_actuator,
+                                  const engine::MechanismState::ActuatorEntry& entry) {
+        *proto_actuator = entry;
     }
 
     void handle_update_body(ix::WebSocket& ws, uint64_t sequence_id,
@@ -597,6 +649,9 @@ struct TransportServer::Impl {
         if (cmd.has_is_fixed()) {
             mechanism_state.set_body_fixed(body_id, cmd.is_fixed());
         }
+        if (cmd.has_name()) {
+            mechanism_state.rename_body(body_id, cmd.name());
+        }
 
         // Build response Body proto from mechanism_state
         auto body_proto = mechanism_state.build_body_proto(body_id);
@@ -607,25 +662,161 @@ struct TransportServer::Impl {
         send_event(ws, event);
     }
 
+    // ──────────────────────────────────────────────
+    // Body & Geometry CRUD (Epic 13)
+    // ──────────────────────────────────────────────
+
+    void handle_create_body(ix::WebSocket& ws, uint64_t sequence_id,
+                             const protocol::CreateBodyCommand& cmd) {
+        double pos[3] = {0, 0, 0};
+        double orient[4] = {1, 0, 0, 0};
+        if (cmd.has_pose()) {
+            pos[0] = cmd.pose().position().x();
+            pos[1] = cmd.pose().position().y();
+            pos[2] = cmd.pose().position().z();
+            orient[0] = cmd.pose().orientation().w();
+            orient[1] = cmd.pose().orientation().x();
+            orient[2] = cmd.pose().orientation().y();
+            orient[3] = cmd.pose().orientation().z();
+        }
+
+        const mechanism::MassProperties* mass_ptr = cmd.has_mass_properties() ? &cmd.mass_properties() : nullptr;
+        std::string body_id = mechanism_state.create_body(cmd.name(), pos, orient, mass_ptr, cmd.is_fixed());
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_create_body_result();
+        auto body_proto = mechanism_state.build_body_proto(body_id);
+        if (body_proto.has_value()) {
+            *result->mutable_body() = std::move(body_proto.value());
+            spdlog::debug("Created body '{}' (id={})", cmd.name(), body_id);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_delete_body(ix::WebSocket& ws, uint64_t sequence_id,
+                             const protocol::DeleteBodyCommand& cmd) {
+        std::string body_id = cmd.has_body_id() ? cmd.body_id().id() : "";
+
+        // Clean up import context data
+        import_project.remove_body_data(body_id);
+
+        bool ok = mechanism_state.delete_body(body_id);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_delete_body_result();
+        if (ok) {
+            result->mutable_deleted_id()->set_id(body_id);
+            spdlog::debug("Deleted body (id={})", body_id);
+        } else {
+            result->set_error_message("Body not found: " + body_id);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_attach_geometry(ix::WebSocket& ws, uint64_t sequence_id,
+                                 const protocol::AttachGeometryCommand& cmd) {
+        std::string geom_id = cmd.has_geometry_id() ? cmd.geometry_id().id() : "";
+        std::string body_id = cmd.has_target_body_id() ? cmd.target_body_id().id() : "";
+        const auto* existing_geometry = mechanism_state.get_geometry(geom_id);
+        const std::string old_parent_id = existing_geometry ? existing_geometry->parent_body_id().id() : "";
+        double pos[3] = {0, 0, 0};
+        double orient[4] = {1, 0, 0, 0};
+        if (cmd.has_local_pose()) {
+            pos[0] = cmd.local_pose().position().x();
+            pos[1] = cmd.local_pose().position().y();
+            pos[2] = cmd.local_pose().position().z();
+            orient[0] = cmd.local_pose().orientation().w();
+            orient[1] = cmd.local_pose().orientation().x();
+            orient[2] = cmd.local_pose().orientation().y();
+            orient[3] = cmd.local_pose().orientation().z();
+        }
+
+        auto result = mechanism_state.attach_geometry(geom_id, body_id, pos, orient);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* ar = event.mutable_attach_geometry_result();
+        if (result.entry.has_value()) {
+            *ar->mutable_geometry() = result.entry.value();
+            import_project.reparent_geometry_data(geom_id, old_parent_id, body_id);
+            if (!old_parent_id.empty() && old_parent_id != body_id) {
+                auto old_parent_body = mechanism_state.build_body_proto(old_parent_id);
+                if (old_parent_body.has_value()) {
+                    *ar->mutable_old_parent_body() = std::move(old_parent_body.value());
+                }
+            }
+            auto new_parent_body = mechanism_state.build_body_proto(body_id);
+            if (new_parent_body.has_value()) {
+                *ar->mutable_new_parent_body() = std::move(new_parent_body.value());
+            }
+        } else {
+            ar->set_error_message(result.error);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_detach_geometry(ix::WebSocket& ws, uint64_t sequence_id,
+                                 const protocol::DetachGeometryCommand& cmd) {
+        std::string geom_id = cmd.has_geometry_id() ? cmd.geometry_id().id() : "";
+        const auto* existing_geometry = mechanism_state.get_geometry(geom_id);
+        const std::string old_parent_id = existing_geometry ? existing_geometry->parent_body_id().id() : "";
+        auto result = mechanism_state.detach_geometry(geom_id);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* dr = event.mutable_detach_geometry_result();
+        if (result.entry.has_value()) {
+            dr->mutable_detached_id()->set_id(geom_id);
+            *dr->mutable_geometry() = result.entry.value();
+            import_project.reparent_geometry_data(geom_id, old_parent_id, "");
+            if (!old_parent_id.empty()) {
+                auto former_parent_body = mechanism_state.build_body_proto(old_parent_id);
+                if (former_parent_body.has_value()) {
+                    *dr->mutable_former_parent_body() = std::move(former_parent_body.value());
+                }
+            }
+        } else {
+            dr->set_error_message(result.error);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_update_mass_properties(ix::WebSocket& ws, uint64_t sequence_id,
+                                        const protocol::UpdateMassPropertiesCommand& cmd) {
+        std::string body_id = cmd.has_body_id() ? cmd.body_id().id() : "";
+
+        const mechanism::MassProperties* mass_ptr = cmd.has_mass_properties() ? &cmd.mass_properties() : nullptr;
+        bool ok = mechanism_state.set_mass_override(body_id, cmd.mass_override(), mass_ptr);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_update_mass_properties_result();
+        if (ok) {
+            auto body_proto = mechanism_state.build_body_proto(body_id);
+            if (body_proto.has_value()) {
+                *result->mutable_body() = std::move(body_proto.value());
+            }
+        } else {
+            result->set_error_message("Body not found: " + body_id);
+        }
+        send_event(ws, event);
+    }
+
     void handle_create_joint(ix::WebSocket& ws, uint64_t sequence_id,
                               const protocol::CreateJointCommand& cmd) {
-        std::string parent_datum_id = cmd.has_parent_datum_id() ? cmd.parent_datum_id().id() : "";
-        std::string child_datum_id = cmd.has_child_datum_id() ? cmd.child_datum_id().id() : "";
-        int type = static_cast<int>(cmd.type());
-
-        auto result = mechanism_state.create_joint(
-            parent_datum_id, child_datum_id, type,
-            cmd.name(), cmd.lower_limit(), cmd.upper_limit());
+        auto result = mechanism_state.create_joint(cmd.draft());
 
         protocol::Event event;
         event.set_sequence_id(sequence_id);
         auto* cr = event.mutable_create_joint_result();
         if (result.entry.has_value()) {
             populate_proto_joint(cr->mutable_joint(), result.entry.value());
-            spdlog::debug("Created joint '{}' (id={}) type={} datums={}->{}",
-                          cmd.name(), result.entry->id, type, parent_datum_id, child_datum_id);
+            spdlog::debug("Created joint '{}' (id={})",
+                          result.entry->name(), result.entry->id().id());
         } else {
-            spdlog::warn("Failed to create joint '{}': {}", cmd.name(), result.error);
+            spdlog::warn("Failed to create joint: {}", result.error);
             cr->set_error_message(result.error);
         }
         send_event(ws, event);
@@ -633,19 +824,7 @@ struct TransportServer::Impl {
 
     void handle_update_joint(ix::WebSocket& ws, uint64_t sequence_id,
                               const protocol::UpdateJointCommand& cmd) {
-        std::string joint_id = cmd.has_joint_id() ? cmd.joint_id().id() : "";
-
-        std::optional<std::string> name;
-        std::optional<int> type;
-        std::optional<double> lower_limit;
-        std::optional<double> upper_limit;
-
-        if (cmd.has_name()) name = cmd.name();
-        if (cmd.has_type()) type = static_cast<int>(cmd.type());
-        if (cmd.has_lower_limit()) lower_limit = cmd.lower_limit();
-        if (cmd.has_upper_limit()) upper_limit = cmd.upper_limit();
-
-        auto result = mechanism_state.update_joint(joint_id, name, type, lower_limit, upper_limit);
+        auto result = mechanism_state.update_joint(cmd.joint());
 
         protocol::Event event;
         event.set_sequence_id(sequence_id);
@@ -670,6 +849,98 @@ struct TransportServer::Impl {
             dr->mutable_deleted_id()->set_id(joint_id);
         } else {
             dr->set_error_message("Joint not found: " + joint_id);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_create_load(ix::WebSocket& ws, uint64_t sequence_id,
+                             const protocol::CreateLoadCommand& cmd) {
+        auto result = mechanism_state.create_load(cmd.draft());
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* cr = event.mutable_create_load_result();
+        if (result.entry.has_value()) {
+            populate_proto_load(cr->mutable_load(), result.entry.value());
+        } else {
+            cr->set_error_message(result.error);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_update_load(ix::WebSocket& ws, uint64_t sequence_id,
+                             const protocol::UpdateLoadCommand& cmd) {
+        auto result = mechanism_state.update_load(cmd.load());
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* ur = event.mutable_update_load_result();
+        if (result.entry.has_value()) {
+            populate_proto_load(ur->mutable_load(), result.entry.value());
+        } else {
+            ur->set_error_message(result.error);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_delete_load(ix::WebSocket& ws, uint64_t sequence_id,
+                             const protocol::DeleteLoadCommand& cmd) {
+        const std::string load_id = cmd.has_load_id() ? cmd.load_id().id() : "";
+        bool ok = mechanism_state.delete_load(load_id);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* dr = event.mutable_delete_load_result();
+        if (ok) {
+            dr->mutable_deleted_id()->set_id(load_id);
+        } else {
+            dr->set_error_message("Load not found: " + load_id);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_create_actuator(ix::WebSocket& ws, uint64_t sequence_id,
+                                 const protocol::CreateActuatorCommand& cmd) {
+        auto result = mechanism_state.create_actuator(cmd.draft());
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* cr = event.mutable_create_actuator_result();
+        if (result.entry.has_value()) {
+            populate_proto_actuator(cr->mutable_actuator(), result.entry.value());
+        } else {
+            cr->set_error_message(result.error);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_update_actuator(ix::WebSocket& ws, uint64_t sequence_id,
+                                 const protocol::UpdateActuatorCommand& cmd) {
+        auto result = mechanism_state.update_actuator(cmd.actuator());
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* ur = event.mutable_update_actuator_result();
+        if (result.entry.has_value()) {
+            populate_proto_actuator(ur->mutable_actuator(), result.entry.value());
+        } else {
+            ur->set_error_message(result.error);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_delete_actuator(ix::WebSocket& ws, uint64_t sequence_id,
+                                 const protocol::DeleteActuatorCommand& cmd) {
+        const std::string actuator_id = cmd.has_actuator_id() ? cmd.actuator_id().id() : "";
+        bool ok = mechanism_state.delete_actuator(actuator_id);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* dr = event.mutable_delete_actuator_result();
+        if (ok) {
+            dr->mutable_deleted_id()->set_id(actuator_id);
+        } else {
+            dr->set_error_message("Actuator not found: " + actuator_id);
         }
         send_event(ws, event);
     }
@@ -707,12 +978,28 @@ struct TransportServer::Impl {
             });
     }
 
+    void handle_new_project(ix::WebSocket& ws, uint64_t sequence_id,
+                             const protocol::NewProjectCommand& /*cmd*/) {
+        runtime_session.stop_thread();
+        mechanism_state.clear();
+        shape_registry.clear();
+        import_project.clear();
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_new_project_result();
+        result->set_success(true);
+        send_event(ws, event);
+    }
+
     // ──────────────────────────────────────────────
     // Simulation lifecycle (Epic 7.2)
     // ──────────────────────────────────────────────
 
     void handle_compile_mechanism(ix::WebSocket& ws, uint64_t sequence_id,
                                     const protocol::CompileMechanismCommand& compile_cmd) {
+        // Pre-compile: ensure aggregate masses are current for all non-override bodies
+        mechanism_state.refresh_aggregate_masses();
         runtime_session.handle_compile_mechanism(
             ws, sequence_id, compile_cmd, mechanism_state.build_mechanism_proto());
     }

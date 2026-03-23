@@ -12,6 +12,7 @@ enum class FaceDatumSurfaceClass {
     Cylindrical,
     Conical,
     Spherical,
+    Toroidal,
     Other
 };
 

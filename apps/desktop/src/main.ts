@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
@@ -22,6 +23,175 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 
 const supervisor = new EngineSupervisor();
 let quitting = false;
+
+// ---------------------------------------------------------------------------
+// Recent projects persistence (Epic 20.1)
+// ---------------------------------------------------------------------------
+
+interface RecentProject {
+  name: string;
+  filePath: string;
+  lastOpened: string;
+}
+
+const MAX_RECENT = 10;
+
+function recentProjectsPath(): string {
+  return path.join(app.getPath('userData'), 'recent-projects.json');
+}
+
+async function readRecentProjects(): Promise<RecentProject[]> {
+  try {
+    const raw = await fs.readFile(recentProjectsPath(), 'utf-8');
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed?.recentProjects) ? parsed.recentProjects : [];
+  } catch {
+    return [];
+  }
+}
+
+async function writeRecentProjects(list: RecentProject[]): Promise<void> {
+  await fs.writeFile(recentProjectsPath(), JSON.stringify({ recentProjects: list }, null, 2));
+}
+
+async function addRecentProject(project: { name: string; filePath: string }): Promise<void> {
+  const list = await readRecentProjects();
+  const filtered = list.filter((p) => p.filePath !== project.filePath);
+  filtered.unshift({
+    name: project.name,
+    filePath: project.filePath,
+    lastOpened: new Date().toISOString(),
+  });
+  await writeRecentProjects(filtered.slice(0, MAX_RECENT));
+}
+
+// ---------------------------------------------------------------------------
+// Auto-save persistence (Epic 20.2)
+// ---------------------------------------------------------------------------
+
+const AUTO_SAVE_INTERVAL_MS = 2 * 60 * 1000; // 2 minutes
+let autoSaveTimer: ReturnType<typeof setInterval> | null = null;
+let currentProjectPath: string | null = null;
+let untitledAutoSaveId: string | null = null;
+
+function autoSaveDir(): string {
+  return path.join(app.getPath('userData'), 'autosave');
+}
+
+function getAutoSavePath(projectPath: string | null): string {
+  if (projectPath) {
+    return `${projectPath}.autosave`;
+  }
+  // For unsaved projects, use a stable ID per session
+  if (!untitledAutoSaveId) {
+    untitledAutoSaveId = `untitled-${Date.now()}`;
+  }
+  return path.join(autoSaveDir(), `${untitledAutoSaveId}.motionlab.autosave`);
+}
+
+async function deleteAutoSaveFile(projectPath: string | null): Promise<void> {
+  try {
+    await fs.unlink(getAutoSavePath(projectPath));
+  } catch {
+    /* ignore ENOENT */
+  }
+}
+
+async function cleanAllAutoSaves(): Promise<void> {
+  // Clean untitled autosaves
+  try {
+    const dir = autoSaveDir();
+    const entries = await fs.readdir(dir);
+    for (const entry of entries) {
+      if (entry.endsWith('.autosave')) {
+        try {
+          await fs.unlink(path.join(dir, entry));
+        } catch {
+          /* ignore */
+        }
+      }
+    }
+  } catch {
+    /* ignore if dir doesn't exist */
+  }
+  // Clean project-sibling autosave
+  if (currentProjectPath) {
+    await deleteAutoSaveFile(currentProjectPath);
+  }
+}
+
+interface RecoverableProject {
+  name: string;
+  originalPath: string | null;
+  autoSavePath: string;
+  modifiedAt: string;
+}
+
+async function scanForAutoSaves(): Promise<RecoverableProject[]> {
+  const results: RecoverableProject[] = [];
+
+  // Scan userData/autosave/ for untitled autosaves
+  try {
+    const dir = autoSaveDir();
+    const entries = await fs.readdir(dir);
+    for (const entry of entries) {
+      if (!entry.endsWith('.autosave')) continue;
+      const fullPath = path.join(dir, entry);
+      try {
+        const stat = await fs.stat(fullPath);
+        const name = entry.replace('.motionlab.autosave', '').replace(/^untitled-\d+$/, 'Untitled');
+        results.push({
+          name,
+          originalPath: null,
+          autoSavePath: fullPath,
+          modifiedAt: stat.mtime.toISOString(),
+        });
+      } catch {
+        /* skip unreadable */
+      }
+    }
+  } catch {
+    /* dir may not exist */
+  }
+
+  // Check recent project paths for .autosave siblings
+  const recent = await readRecentProjects();
+  for (const project of recent) {
+    const autoSavePath = `${project.filePath}.autosave`;
+    try {
+      const stat = await fs.stat(autoSavePath);
+      results.push({
+        name: project.name,
+        originalPath: project.filePath,
+        autoSavePath,
+        modifiedAt: stat.mtime.toISOString(),
+      });
+    } catch {
+      /* no autosave for this project */
+    }
+  }
+
+  return results;
+}
+
+function startAutoSaveTimer(): void {
+  stopAutoSaveTimer();
+  autoSaveTimer = setInterval(() => {
+    const win = BrowserWindow.getAllWindows()[0];
+    if (win) win.webContents.send('auto-save-tick');
+  }, AUTO_SAVE_INTERVAL_MS);
+}
+
+function stopAutoSaveTimer(): void {
+  if (autoSaveTimer) {
+    clearInterval(autoSaveTimer);
+    autoSaveTimer = null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
 function broadcastToRenderers(channel: string, data: unknown): void {
   for (const win of BrowserWindow.getAllWindows()) {
@@ -48,6 +218,14 @@ function createWindow(): BrowserWindow {
   // Notify renderer when maximized state changes (snap, double-click, etc.)
   win.on('maximize', () => win.webContents.send('window-maximized-changed', true));
   win.on('unmaximize', () => win.webContents.send('window-maximized-changed', false));
+
+  // Send pending file-open request after the renderer is ready (Epic 20.2)
+  win.webContents.on('did-finish-load', () => {
+    if (pendingOpenFile) {
+      win.webContents.send('open-file-request', pendingOpenFile);
+      pendingOpenFile = null;
+    }
+  });
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     win.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
@@ -87,6 +265,47 @@ async function startEngineWithRetry(): Promise<EngineEndpoint | null> {
     }
     return null;
   }
+}
+
+// ---------------------------------------------------------------------------
+// File associations & single instance (Epic 20.2)
+// ---------------------------------------------------------------------------
+
+let pendingOpenFile: string | null = null;
+
+// macOS: handle open-file before app is ready
+app.on('open-file', (event, filePath) => {
+  event.preventDefault();
+  const win = BrowserWindow.getAllWindows()[0];
+  if (win) {
+    win.webContents.send('open-file-request', filePath);
+  } else {
+    pendingOpenFile = filePath;
+  }
+});
+
+// Single instance lock — reuse existing window when double-clicking a .motionlab file
+const gotLock = app.requestSingleInstanceLock();
+if (!gotLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (_event, argv) => {
+    const file = argv.find((a) => a.endsWith('.motionlab') && !a.startsWith('-'));
+    if (file) {
+      const win = BrowserWindow.getAllWindows()[0];
+      if (win) {
+        win.webContents.send('open-file-request', path.resolve(file));
+        if (win.isMinimized()) win.restore();
+        win.focus();
+      }
+    }
+  });
+}
+
+// Check command-line args for a .motionlab file
+const fileArg = process.argv.find((a) => a.endsWith('.motionlab') && !a.startsWith('-'));
+if (fileArg) {
+  pendingOpenFile = path.resolve(fileArg);
 }
 
 app.whenReady().then(() => {
@@ -137,6 +356,10 @@ app.whenReady().then(() => {
     });
     if (result.canceled || !result.filePath) return { saved: false };
     await fs.writeFile(result.filePath, Buffer.from(data));
+    const projectName = defaultName ?? path.basename(result.filePath, '.motionlab');
+    await addRecentProject({ name: projectName, filePath: result.filePath });
+    currentProjectPath = result.filePath;
+    untitledAutoSaveId = null; // Reset untitled ID after Save As
     return { saved: true, filePath: result.filePath };
   });
 
@@ -153,6 +376,10 @@ app.whenReady().then(() => {
     if (result.canceled || !result.filePaths[0]) return null;
     const filePath = result.filePaths[0];
     const buffer = await fs.readFile(filePath);
+    const projectName = path.basename(filePath, '.motionlab');
+    await addRecentProject({ name: projectName, filePath });
+    currentProjectPath = filePath;
+    untitledAutoSaveId = null;
     return { data: new Uint8Array(buffer), filePath };
   });
 
@@ -160,6 +387,101 @@ app.whenReady().then(() => {
   ipcMain.handle('show-logs-folder', async () => {
     const logDir = path.join(app.getPath('userData'), 'logs');
     await shell.openPath(logDir);
+  });
+
+  // Save project to existing path without dialog (Epic 20.1)
+  ipcMain.handle('save-project-to-path', async (_event, data: Uint8Array, filePath: string) => {
+    await fs.writeFile(filePath, Buffer.from(data));
+    currentProjectPath = filePath;
+    return { saved: true, filePath };
+  });
+
+  // Window title sync (Epic 20.1)
+  ipcMain.on('set-window-title', (event, title: string) => {
+    BrowserWindow.fromWebContents(event.sender)?.setTitle(title);
+  });
+
+  // Recent projects (Epic 20.1)
+  ipcMain.handle('get-recent-projects', () => readRecentProjects());
+  ipcMain.handle('add-recent-project', async (_event, project: { name: string; filePath: string }) => {
+    await addRecentProject(project);
+  });
+  ipcMain.handle('remove-recent-project', async (_event, filePath: string) => {
+    const list = await readRecentProjects();
+    await writeRecentProjects(list.filter((p) => p.filePath !== filePath));
+  });
+
+  // Auto-save IPC (Epic 20.2)
+  ipcMain.handle('auto-save-write', async (_event, data: Uint8Array, projectPath: string | null) => {
+    const savePath = getAutoSavePath(projectPath);
+    await fs.mkdir(path.dirname(savePath), { recursive: true });
+    await fs.writeFile(savePath, Buffer.from(data));
+    return { saved: true, path: savePath };
+  });
+
+  ipcMain.handle('auto-save-cleanup', async (_event, projectPath: string | null) => {
+    await deleteAutoSaveFile(projectPath);
+  });
+
+  // Crash recovery IPC (Epic 20.2)
+  ipcMain.handle('check-autosave-recovery', () => scanForAutoSaves());
+
+  ipcMain.handle('read-autosave', async (_event, autoSavePath: string) => {
+    const buffer = await fs.readFile(autoSavePath);
+    return new Uint8Array(buffer);
+  });
+
+  ipcMain.handle('discard-autosave', async (_event, autoSavePath: string) => {
+    try {
+      await fs.unlink(autoSavePath);
+    } catch {
+      /* ignore */
+    }
+  });
+
+  // Read project file by path without dialog (Epic 20.2)
+  ipcMain.handle('read-file-by-path', async (_event, filePath: string) => {
+    try {
+      const buffer = await fs.readFile(filePath);
+      const projectName = path.basename(filePath, '.motionlab');
+      await addRecentProject({ name: projectName, filePath });
+      return { data: new Uint8Array(buffer), filePath, projectName };
+    } catch {
+      return null;
+    }
+  });
+
+  // Templates (Epic 20.3)
+  function resolveTemplatesDir(): string {
+    if (app.isPackaged) {
+      return path.join(process.resourcesPath, 'templates');
+    }
+    let repoRoot = path.resolve(app.getAppPath());
+    for (let i = 0; i < 6; i++) {
+      if (existsSync(path.join(repoRoot, 'pnpm-workspace.yaml'))) break;
+      repoRoot = path.dirname(repoRoot);
+    }
+    return path.join(repoRoot, 'apps', 'desktop', 'resources', 'templates');
+  }
+
+  ipcMain.handle('get-templates', async () => {
+    try {
+      const templatesDir = resolveTemplatesDir();
+      const manifestPath = path.join(templatesDir, 'manifest.json');
+      const raw = await fs.readFile(manifestPath, 'utf-8');
+      const manifest = JSON.parse(raw);
+      return Array.isArray(manifest?.templates) ? manifest.templates : [];
+    } catch {
+      return [];
+    }
+  });
+
+  ipcMain.handle('open-template', async (_event, templateFilename: string) => {
+    const templatesDir = resolveTemplatesDir();
+    const safeName = path.basename(templateFilename);
+    const filePath = path.join(templatesDir, safeName);
+    const buffer = await fs.readFile(filePath);
+    return new Uint8Array(buffer);
   });
 
   // Broadcast crash/restart status to all renderer windows
@@ -195,7 +517,11 @@ app.whenReady().then(() => {
     });
   });
 
+  // Ensure autosave directory exists (Epic 20.2)
+  fs.mkdir(autoSaveDir(), { recursive: true }).catch(() => {});
+
   createWindow();
+  startAutoSaveTimer();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -243,6 +569,10 @@ app.on('before-quit', async (e) => {
 
   quitting = true;
 
+  // Clean up auto-save on clean exit (Epic 20.2)
+  stopAutoSaveTimer();
+  await cleanAllAutoSaves();
+
   // Notify renderers so they can close WebSocket connections
   broadcastToRenderers('engine-status-changed', { status: 'shutting_down' });
 
@@ -255,6 +585,8 @@ app.on('before-quit', async (e) => {
 
 app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
+    stopAutoSaveTimer();
+    await cleanAllAutoSaves();
     await supervisor.shutdown();
     app.quit();
   }

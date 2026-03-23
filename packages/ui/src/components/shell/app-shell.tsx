@@ -18,6 +18,8 @@ interface AppShellProps {
   bottomDock?: ReactNode;
   /** Workspace tab bar (32px, bottom of screen) */
   tabBar?: ReactNode;
+  /** Status bar (24px, very bottom of window) */
+  statusBar?: ReactNode;
   className?: string;
 }
 
@@ -29,6 +31,7 @@ function AppShell({
   rightPanel,
   bottomDock,
   tabBar,
+  statusBar,
   className,
 }: AppShellProps) {
   return (
@@ -113,6 +116,9 @@ function AppShell({
 
       {/* Row 4: Workspace tab bar */}
       {tabBar}
+
+      {/* Row 5: Status bar */}
+      {statusBar}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import type React from 'react';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { cn } from '../../lib/utils';
 import { ScrollArea } from '../ui/scroll-area';
@@ -34,6 +34,8 @@ interface TreeViewProps {
   multiSelect?: boolean;
   /** Called when Delete key is pressed with selected IDs */
   onDelete?: (ids: Set<string>) => void;
+  /** ID to programmatically scroll into view (e.g. from external selection) */
+  scrollToId?: string | null;
   /** Estimated row height (default 28px from --tree-row-h) */
   estimateSize?: number;
   /** Overscan count (default 5) */
@@ -61,6 +63,7 @@ function TreeView({
   renderRow,
   multiSelect = false,
   onDelete,
+  scrollToId,
   estimateSize = 26,
   overscan = 5,
   className,
@@ -108,6 +111,15 @@ function TreeView({
     estimateSize: () => estimateSize,
     overscan,
   });
+
+  // Auto-scroll to a specific node when scrollToId changes
+  useEffect(() => {
+    if (!scrollToId) return;
+    const idx = visibleNodes.findIndex((n) => n.id === scrollToId);
+    if (idx >= 0) {
+      virtualizer.scrollToIndex(idx, { align: 'auto' });
+    }
+  }, [scrollToId, visibleNodes, virtualizer]);
 
   const toggleExpand = useCallback(
     (id: string) => {

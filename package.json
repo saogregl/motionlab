@@ -24,6 +24,7 @@
     "bootstrap": "bash scripts/bootstrap.sh",
     "generate:proto": "node scripts/buf-generate.mjs",
     "generate:examples": "cmake --build native/engine/build/dev-linux --target generate-pendulum-example && native/engine/build/dev-linux/generate-pendulum-example apps/desktop/examples",
+    "generate:templates": "cmake --build native/engine/build/dev-linux --target generate-templates && native/engine/build/dev-linux/generate-templates apps/desktop/resources/templates",
     "build:engine": "cmake --preset release-linux -S native/engine && cmake --build native/engine/build/release-linux --config Release && mkdir -p native/engine/build/release && cp native/engine/build/release-linux/motionlab-engine native/engine/build/release/",
     "build:engine:win": "cmake --preset release-mingw -S native/engine && cmake --build native/engine/build/release-mingw --config Release && mkdir -p native/engine/build/release && cp native/engine/build/release-mingw/motionlab-engine.exe native/engine/build/release/",
     "package:desktop": "pnpm run build:engine && pnpm --filter @motionlab/desktop run package",
@@ -50,9 +51,6 @@
       "electron",
       "esbuild"
     ],
-    "overrides": {
-      "@tailwindcss/vite>vite": "^8.0.0",
-      "@vitejs/plugin-react>vite": "^8.0.0"
-    }
+    "overrides": {}
   }
 }

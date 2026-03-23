@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { cn } from '../../lib/utils';
+import { formatEngValue } from '../../lib/format';
 import { quatToEulerDeg } from '../../lib/quat-math';
 import { AxisColorLabel } from '../primitives/axis-color-label';
 import type { Axis } from '../primitives/axis-color-label';
@@ -10,7 +11,9 @@ type OrientationMode = 'euler' | 'quaternion';
 interface QuatDisplayProps {
   /** Quaternion value */
   value: { x: number; y: number; z: number; w: number };
-  /** Decimal places (default 4) */
+  /** Significant digits (default 4) */
+  sigFigs?: number;
+  /** @deprecated Use sigFigs instead */
   precision?: number;
   /** Default display mode (default 'euler') */
   defaultMode?: OrientationMode;
@@ -24,24 +27,26 @@ const QUAT_COMPONENTS = ['x', 'y', 'z', 'w'] as const;
 
 function QuatDisplay({
   value,
-  precision = 4,
+  sigFigs,
+  precision,
   defaultMode = 'euler',
   label = 'Orientation',
   className,
 }: QuatDisplayProps) {
   const [mode, setMode] = useState<OrientationMode>(defaultMode);
   const euler = mode === 'euler' ? quatToEulerDeg(value) : null;
+  const sf = sigFigs ?? (precision != null ? undefined : 4);
 
   return (
     <div data-slot="quat-display" className={cn(className)}>
       {/* Header with toggle */}
-      <div className="flex h-[var(--inspector-row-h)] items-center px-1.5">
+      <div className="flex h-5 items-center px-1.5">
         <span className="text-[length:var(--text-2xs)] font-semibold uppercase tracking-[0.05em] text-[var(--text-secondary)]">
           {label}
         </span>
         <button
           type="button"
-          className="ml-auto rounded-[var(--radius-sm)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-tertiary)] hover:bg-[var(--layer-raised-hover)] hover:text-[var(--text-secondary)] transition-colors duration-[var(--duration-fast)]"
+          className="ml-auto rounded-full border border-[var(--border-subtle)] bg-[var(--field-elevated)] px-2 py-0.5 text-[10px] font-semibold text-[var(--text-secondary)] transition-colors duration-[var(--duration-fast)] hover:border-[var(--border-field-hover)] hover:bg-[var(--field-elevated-hover)]"
           onClick={() => setMode((m) => (m === 'euler' ? 'quaternion' : 'euler'))}
         >
           {mode === 'euler' ? 'DEG' : 'QUAT'}
@@ -54,11 +59,11 @@ function QuatDisplay({
           {AXES.map((axis) => (
             <div
               key={axis}
-              className="flex items-center gap-1 rounded-[var(--radius-sm)] bg-[var(--field-base)] px-1.5 h-6"
+              className="flex items-center gap-1 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--field-elevated)] px-1 h-6"
             >
               <AxisColorLabel axis={axis} className="shrink-0" />
               <span className="flex-1 text-right font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tabular-nums text-[var(--text-primary)]">
-                {euler[axis].toFixed(precision)}°
+                {sf != null ? `${formatEngValue(euler[axis], sf)}°` : `${euler[axis].toFixed(precision!)}°`}
               </span>
             </div>
           ))}
@@ -69,13 +74,13 @@ function QuatDisplay({
           {QUAT_COMPONENTS.map((comp) => (
             <div
               key={comp}
-              className="flex items-center gap-1 rounded-[var(--radius-sm)] bg-[var(--field-base)] px-1.5 h-6"
+              className="flex items-center gap-1 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--field-elevated)] px-1 h-6"
             >
               <span className="text-[10px] font-bold text-[var(--text-tertiary)]">
                 {comp.toUpperCase()}
               </span>
               <span className="flex-1 text-right font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tabular-nums text-[var(--text-primary)]">
-                {value[comp].toFixed(precision)}
+                {sf != null ? formatEngValue(value[comp], sf) : value[comp].toFixed(precision!)}
               </span>
             </div>
           ))}

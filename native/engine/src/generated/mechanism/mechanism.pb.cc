@@ -53,6 +53,50 @@ struct Vec3DefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 Vec3DefaultTypeInternal _Vec3_default_instance_;
+template <typename>
+PROTOBUF_CONSTEXPR SphericalJointConfig::SphericalJointConfig(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::internal::ZeroFieldsBase(SphericalJointConfig_class_data_.base()){}
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::internal::ZeroFieldsBase() {
+}
+#endif  // PROTOBUF_CUSTOM_VTABLE
+struct SphericalJointConfigDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR SphericalJointConfigDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~SphericalJointConfigDefaultTypeInternal() {}
+  union {
+    SphericalJointConfig _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SphericalJointConfigDefaultTypeInternal _SphericalJointConfig_default_instance_;
+
+inline constexpr Range::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        lower_{0},
+        upper_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR Range::Range(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(Range_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct RangeDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR RangeDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~RangeDefaultTypeInternal() {}
+  union {
+    Range _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RangeDefaultTypeInternal _Range_default_instance_;
 
 inline constexpr Quat::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -114,6 +158,60 @@ struct ProjectMetadataDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ProjectMetadataDefaultTypeInternal _ProjectMetadata_default_instance_;
+template <typename>
+PROTOBUF_CONSTEXPR PointPlaneJointConfig::PointPlaneJointConfig(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::internal::ZeroFieldsBase(PointPlaneJointConfig_class_data_.base()){}
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::internal::ZeroFieldsBase() {
+}
+#endif  // PROTOBUF_CUSTOM_VTABLE
+struct PointPlaneJointConfigDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR PointPlaneJointConfigDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~PointPlaneJointConfigDefaultTypeInternal() {}
+  union {
+    PointPlaneJointConfig _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PointPlaneJointConfigDefaultTypeInternal _PointPlaneJointConfig_default_instance_;
+template <typename>
+PROTOBUF_CONSTEXPR PointLineJointConfig::PointLineJointConfig(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::internal::ZeroFieldsBase(PointLineJointConfig_class_data_.base()){}
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::internal::ZeroFieldsBase() {
+}
+#endif  // PROTOBUF_CUSTOM_VTABLE
+struct PointLineJointConfigDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR PointLineJointConfigDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~PointLineJointConfigDefaultTypeInternal() {}
+  union {
+    PointLineJointConfig _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PointLineJointConfigDefaultTypeInternal _PointLineJointConfig_default_instance_;
+template <typename>
+PROTOBUF_CONSTEXPR FixedJointConfig::FixedJointConfig(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::internal::ZeroFieldsBase(FixedJointConfig_class_data_.base()){}
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::internal::ZeroFieldsBase() {
+}
+#endif  // PROTOBUF_CUSTOM_VTABLE
+struct FixedJointConfigDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR FixedJointConfigDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~FixedJointConfigDefaultTypeInternal() {}
+  union {
+    FixedJointConfig _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 FixedJointConfigDefaultTypeInternal _FixedJointConfig_default_instance_;
 
 inline constexpr ElementId::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -203,6 +301,138 @@ struct AssetReferenceDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 AssetReferenceDefaultTypeInternal _AssetReference_default_instance_;
 
+inline constexpr UniversalJointConfig::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        rotation_x_limit_{nullptr},
+        rotation_y_limit_{nullptr} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR UniversalJointConfig::UniversalJointConfig(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(UniversalJointConfig_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct UniversalJointConfigDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR UniversalJointConfigDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~UniversalJointConfigDefaultTypeInternal() {}
+  union {
+    UniversalJointConfig _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 UniversalJointConfigDefaultTypeInternal _UniversalJointConfig_default_instance_;
+
+inline constexpr RevoluteMotorActuator::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        joint_id_{nullptr},
+        command_value_{0},
+        effort_limit_{0},
+        control_mode_{static_cast< ::motionlab::mechanism::ActuatorControlMode >(0)} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR RevoluteMotorActuator::RevoluteMotorActuator(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(RevoluteMotorActuator_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct RevoluteMotorActuatorDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR RevoluteMotorActuatorDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~RevoluteMotorActuatorDefaultTypeInternal() {}
+  union {
+    RevoluteMotorActuator _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RevoluteMotorActuatorDefaultTypeInternal _RevoluteMotorActuator_default_instance_;
+
+inline constexpr RevoluteJointConfig::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        angle_limit_{nullptr} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR RevoluteJointConfig::RevoluteJointConfig(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(RevoluteJointConfig_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct RevoluteJointConfigDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR RevoluteJointConfigDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~RevoluteJointConfigDefaultTypeInternal() {}
+  union {
+    RevoluteJointConfig _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RevoluteJointConfigDefaultTypeInternal _RevoluteJointConfig_default_instance_;
+
+inline constexpr PrismaticMotorActuator::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        joint_id_{nullptr},
+        command_value_{0},
+        effort_limit_{0},
+        control_mode_{static_cast< ::motionlab::mechanism::ActuatorControlMode >(0)} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR PrismaticMotorActuator::PrismaticMotorActuator(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(PrismaticMotorActuator_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct PrismaticMotorActuatorDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR PrismaticMotorActuatorDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~PrismaticMotorActuatorDefaultTypeInternal() {}
+  union {
+    PrismaticMotorActuator _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PrismaticMotorActuatorDefaultTypeInternal _PrismaticMotorActuator_default_instance_;
+
+inline constexpr PrismaticJointConfig::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        translation_limit_{nullptr} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR PrismaticJointConfig::PrismaticJointConfig(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(PrismaticJointConfig_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct PrismaticJointConfigDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR PrismaticJointConfigDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~PrismaticJointConfigDefaultTypeInternal() {}
+  union {
+    PrismaticJointConfig _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PrismaticJointConfigDefaultTypeInternal _PrismaticJointConfig_default_instance_;
+
 inline constexpr Pose::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
@@ -228,6 +458,87 @@ struct PoseDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PoseDefaultTypeInternal _Pose_default_instance_;
+
+inline constexpr PointTorqueLoad::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        datum_id_{nullptr},
+        vector_{nullptr},
+        reference_frame_{static_cast< ::motionlab::mechanism::ReferenceFrame >(0)} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR PointTorqueLoad::PointTorqueLoad(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(PointTorqueLoad_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct PointTorqueLoadDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR PointTorqueLoadDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~PointTorqueLoadDefaultTypeInternal() {}
+  union {
+    PointTorqueLoad _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PointTorqueLoadDefaultTypeInternal _PointTorqueLoad_default_instance_;
+
+inline constexpr PointForceLoad::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        datum_id_{nullptr},
+        vector_{nullptr},
+        reference_frame_{static_cast< ::motionlab::mechanism::ReferenceFrame >(0)} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR PointForceLoad::PointForceLoad(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(PointForceLoad_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct PointForceLoadDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR PointForceLoadDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~PointForceLoadDefaultTypeInternal() {}
+  union {
+    PointForceLoad _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PointForceLoadDefaultTypeInternal _PointForceLoad_default_instance_;
+
+inline constexpr PlanarJointConfig::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        translation_x_limit_{nullptr},
+        translation_y_limit_{nullptr},
+        rotation_limit_{nullptr} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR PlanarJointConfig::PlanarJointConfig(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(PlanarJointConfig_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct PlanarJointConfigDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR PlanarJointConfigDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~PlanarJointConfigDefaultTypeInternal() {}
+  union {
+    PlanarJointConfig _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PlanarJointConfigDefaultTypeInternal _PlanarJointConfig_default_instance_;
 
 inline constexpr MassProperties::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -261,38 +572,120 @@ struct MassPropertiesDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MassPropertiesDefaultTypeInternal _MassProperties_default_instance_;
 
-inline constexpr Joint::Impl_::Impl_(
+inline constexpr LinearSpringDamperLoad::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
-        name_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
-        id_{nullptr},
         parent_datum_id_{nullptr},
         child_datum_id_{nullptr},
-        lower_limit_{0},
-        upper_limit_{0},
-        type_{static_cast< ::motionlab::mechanism::JointType >(0)} {}
+        rest_length_{0},
+        stiffness_{0},
+        damping_{0} {}
 
 template <typename>
-PROTOBUF_CONSTEXPR Joint::Joint(::_pbi::ConstantInitialized)
+PROTOBUF_CONSTEXPR LinearSpringDamperLoad::LinearSpringDamperLoad(::_pbi::ConstantInitialized)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(Joint_class_data_.base()),
+    : ::google::protobuf::Message(LinearSpringDamperLoad_class_data_.base()),
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(),
 #endif  // PROTOBUF_CUSTOM_VTABLE
       _impl_(::_pbi::ConstantInitialized()) {
 }
-struct JointDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR JointDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~JointDefaultTypeInternal() {}
+struct LinearSpringDamperLoadDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR LinearSpringDamperLoadDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~LinearSpringDamperLoadDefaultTypeInternal() {}
   union {
-    Joint _instance;
+    LinearSpringDamperLoad _instance;
   };
 };
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 JointDefaultTypeInternal _Joint_default_instance_;
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 LinearSpringDamperLoadDefaultTypeInternal _LinearSpringDamperLoad_default_instance_;
+
+inline constexpr GeometryDisplayData::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        part_index_{},
+        _part_index_cached_byte_size_{0},
+        geometry_id_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        unit_system_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        display_mesh_{nullptr},
+        density_{0},
+        tessellation_quality_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR GeometryDisplayData::GeometryDisplayData(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(GeometryDisplayData_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct GeometryDisplayDataDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR GeometryDisplayDataDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~GeometryDisplayDataDefaultTypeInternal() {}
+  union {
+    GeometryDisplayData _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GeometryDisplayDataDefaultTypeInternal _GeometryDisplayData_default_instance_;
+
+inline constexpr DistanceJointConfig::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        distance_limit_{nullptr} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR DistanceJointConfig::DistanceJointConfig(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(DistanceJointConfig_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct DistanceJointConfigDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR DistanceJointConfigDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~DistanceJointConfigDefaultTypeInternal() {}
+  union {
+    DistanceJointConfig _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DistanceJointConfigDefaultTypeInternal _DistanceJointConfig_default_instance_;
+
+inline constexpr CylindricalJointConfig::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        translation_limit_{nullptr},
+        rotation_limit_{nullptr} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR CylindricalJointConfig::CylindricalJointConfig(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(CylindricalJointConfig_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct CylindricalJointConfigDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR CylindricalJointConfigDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CylindricalJointConfigDefaultTypeInternal() {}
+  union {
+    CylindricalJointConfig _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CylindricalJointConfigDefaultTypeInternal _CylindricalJointConfig_default_instance_;
 
 inline constexpr BodyDisplayData::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -328,6 +721,105 @@ struct BodyDisplayDataDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 BodyDisplayDataDefaultTypeInternal _BodyDisplayData_default_instance_;
+
+inline constexpr Load::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        id_{nullptr},
+        config_{},
+        _oneof_case_{} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR Load::Load(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(Load_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct LoadDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR LoadDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~LoadDefaultTypeInternal() {}
+  union {
+    Load _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 LoadDefaultTypeInternal _Load_default_instance_;
+
+inline constexpr Joint::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        id_{nullptr},
+        parent_datum_id_{nullptr},
+        child_datum_id_{nullptr},
+        lower_limit_{0},
+        upper_limit_{0},
+        type_{static_cast< ::motionlab::mechanism::JointType >(0)},
+        config_{},
+        _oneof_case_{} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR Joint::Joint(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(Joint_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct JointDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR JointDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~JointDefaultTypeInternal() {}
+  union {
+    Joint _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 JointDefaultTypeInternal _Joint_default_instance_;
+
+inline constexpr Geometry::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        id_{nullptr},
+        parent_body_id_{nullptr},
+        local_pose_{nullptr},
+        source_asset_ref_{nullptr},
+        display_mesh_{nullptr},
+        computed_mass_properties_{nullptr},
+        face_count_{0u} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR Geometry::Geometry(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(Geometry_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct GeometryDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR GeometryDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~GeometryDefaultTypeInternal() {}
+  union {
+    Geometry _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GeometryDefaultTypeInternal _Geometry_default_instance_;
 
 inline constexpr Datum::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -369,7 +861,8 @@ inline constexpr Body::Impl_::Impl_(
         pose_{nullptr},
         mass_properties_{nullptr},
         source_asset_ref_{nullptr},
-        is_fixed_{false} {}
+        is_fixed_{false},
+        mass_override_{false} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR Body::Body(::_pbi::ConstantInitialized)
@@ -391,12 +884,45 @@ struct BodyDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 BodyDefaultTypeInternal _Body_default_instance_;
 
+inline constexpr Actuator::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        id_{nullptr},
+        config_{},
+        _oneof_case_{} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR Actuator::Actuator(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(Actuator_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct ActuatorDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ActuatorDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~ActuatorDefaultTypeInternal() {}
+  union {
+    Actuator _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ActuatorDefaultTypeInternal _Actuator_default_instance_;
+
 inline constexpr Mechanism::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
         bodies_{},
         datums_{},
         joints_{},
+        loads_{},
+        actuators_{},
+        geometries_{},
         name_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
@@ -426,6 +952,7 @@ inline constexpr ProjectFile::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
         body_display_data_{},
+        geometry_display_data_{},
         metadata_{nullptr},
         mechanism_{nullptr},
         version_{0u} {}
@@ -452,7 +979,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 }  // namespace mechanism
 }  // namespace motionlab
 static const ::_pb::EnumDescriptor* PROTOBUF_NONNULL
-    file_level_enum_descriptors_mechanism_2fmechanism_2eproto[1];
+    file_level_enum_descriptors_mechanism_2fmechanism_2eproto[3];
 static constexpr const ::_pb::ServiceDescriptor* PROTOBUF_NONNULL* PROTOBUF_NULLABLE
     file_level_service_descriptors_mechanism_2fmechanism_2eproto = nullptr;
 const ::uint32_t
@@ -509,6 +1036,13 @@ const ::uint32_t
         0,
         1,
         0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Range, _impl_._has_bits_),
+        5, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Range, _impl_.lower_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Range, _impl_.upper_),
+        0,
+        1,
+        0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::MassProperties, _impl_._has_bits_),
         11, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::MassProperties, _impl_.mass_),
@@ -538,19 +1072,40 @@ const ::uint32_t
         2,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Body, _impl_._has_bits_),
-        9, // hasbit index offset
+        10, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Body, _impl_.id_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Body, _impl_.name_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Body, _impl_.pose_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Body, _impl_.mass_properties_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Body, _impl_.source_asset_ref_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Body, _impl_.is_fixed_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Body, _impl_.mass_override_),
         1,
         0,
         2,
         3,
         4,
         5,
+        6,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Geometry, _impl_._has_bits_),
+        11, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Geometry, _impl_.id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Geometry, _impl_.name_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Geometry, _impl_.parent_body_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Geometry, _impl_.local_pose_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Geometry, _impl_.source_asset_ref_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Geometry, _impl_.display_mesh_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Geometry, _impl_.computed_mass_properties_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Geometry, _impl_.face_count_),
+        1,
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Datum, _impl_._has_bits_),
         7, // hasbit index offset
@@ -563,8 +1118,51 @@ const ::uint32_t
         2,
         3,
         0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::RevoluteJointConfig, _impl_._has_bits_),
+        4, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::RevoluteJointConfig, _impl_.angle_limit_),
+        0,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PrismaticJointConfig, _impl_._has_bits_),
+        4, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PrismaticJointConfig, _impl_.translation_limit_),
+        0,
+        0x000, // bitmap
+        0x000, // bitmap
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::CylindricalJointConfig, _impl_._has_bits_),
+        5, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::CylindricalJointConfig, _impl_.translation_limit_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::CylindricalJointConfig, _impl_.rotation_limit_),
+        0,
+        1,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PlanarJointConfig, _impl_._has_bits_),
+        6, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PlanarJointConfig, _impl_.translation_x_limit_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PlanarJointConfig, _impl_.translation_y_limit_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PlanarJointConfig, _impl_.rotation_limit_),
+        0,
+        1,
+        2,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::UniversalJointConfig, _impl_._has_bits_),
+        5, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::UniversalJointConfig, _impl_.rotation_x_limit_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::UniversalJointConfig, _impl_.rotation_y_limit_),
+        0,
+        1,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::DistanceJointConfig, _impl_._has_bits_),
+        4, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::DistanceJointConfig, _impl_.distance_limit_),
+        0,
+        0x000, // bitmap
+        0x000, // bitmap
+        0x085, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_._has_bits_),
-        10, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_._oneof_case_[0]),
+        22, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.id_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.name_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.type_),
@@ -572,6 +1170,17 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.child_datum_id_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.lower_limit_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.upper_limit_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_.config_),
         1,
         0,
         6,
@@ -579,19 +1188,116 @@ const ::uint32_t
         3,
         4,
         5,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PointForceLoad, _impl_._has_bits_),
+        6, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PointForceLoad, _impl_.datum_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PointForceLoad, _impl_.vector_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PointForceLoad, _impl_.reference_frame_),
+        0,
+        1,
+        2,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PointTorqueLoad, _impl_._has_bits_),
+        6, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PointTorqueLoad, _impl_.datum_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PointTorqueLoad, _impl_.vector_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PointTorqueLoad, _impl_.reference_frame_),
+        0,
+        1,
+        2,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::LinearSpringDamperLoad, _impl_._has_bits_),
+        8, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::LinearSpringDamperLoad, _impl_.parent_datum_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::LinearSpringDamperLoad, _impl_.child_datum_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::LinearSpringDamperLoad, _impl_.rest_length_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::LinearSpringDamperLoad, _impl_.stiffness_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::LinearSpringDamperLoad, _impl_.damping_),
+        0,
+        1,
+        2,
+        3,
+        4,
+        0x085, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Load, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Load, _impl_._oneof_case_[0]),
+        10, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Load, _impl_.id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Load, _impl_.name_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Load, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Load, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Load, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Load, _impl_.config_),
+        1,
+        0,
+        ~0u,
+        ~0u,
+        ~0u,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::RevoluteMotorActuator, _impl_._has_bits_),
+        7, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::RevoluteMotorActuator, _impl_.joint_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::RevoluteMotorActuator, _impl_.control_mode_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::RevoluteMotorActuator, _impl_.command_value_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::RevoluteMotorActuator, _impl_.effort_limit_),
+        0,
+        3,
+        1,
+        2,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PrismaticMotorActuator, _impl_._has_bits_),
+        7, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PrismaticMotorActuator, _impl_.joint_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PrismaticMotorActuator, _impl_.control_mode_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PrismaticMotorActuator, _impl_.command_value_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::PrismaticMotorActuator, _impl_.effort_limit_),
+        0,
+        3,
+        1,
+        2,
+        0x085, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Actuator, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Actuator, _impl_._oneof_case_[0]),
+        9, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Actuator, _impl_.id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Actuator, _impl_.name_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Actuator, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Actuator, _impl_.config_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Actuator, _impl_.config_),
+        1,
+        0,
+        ~0u,
+        ~0u,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Mechanism, _impl_._has_bits_),
-        8, // hasbit index offset
+        11, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Mechanism, _impl_.id_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Mechanism, _impl_.name_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Mechanism, _impl_.bodies_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Mechanism, _impl_.datums_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Mechanism, _impl_.joints_),
-        4,
-        3,
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Mechanism, _impl_.loads_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Mechanism, _impl_.actuators_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Mechanism, _impl_.geometries_),
+        7,
+        6,
         0,
         1,
         2,
+        3,
+        4,
+        5,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::BodyDisplayData, _impl_._has_bits_),
         9, // hasbit index offset
@@ -608,16 +1314,33 @@ const ::uint32_t
         5,
         2,
         0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::GeometryDisplayData, _impl_._has_bits_),
+        9, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::GeometryDisplayData, _impl_.geometry_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::GeometryDisplayData, _impl_.display_mesh_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::GeometryDisplayData, _impl_.part_index_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::GeometryDisplayData, _impl_.density_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::GeometryDisplayData, _impl_.tessellation_quality_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::GeometryDisplayData, _impl_.unit_system_),
+        1,
+        3,
+        0,
+        4,
+        5,
+        2,
+        0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::ProjectFile, _impl_._has_bits_),
-        7, // hasbit index offset
+        8, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::ProjectFile, _impl_.version_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::ProjectFile, _impl_.metadata_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::ProjectFile, _impl_.mechanism_),
         PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::ProjectFile, _impl_.body_display_data_),
-        3,
-        1,
+        PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::ProjectFile, _impl_.geometry_display_data_),
+        4,
         2,
+        3,
         0,
+        1,
 };
 
 static const ::_pbi::MigrationSchema
@@ -628,14 +1351,34 @@ static const ::_pbi::MigrationSchema
         {23, sizeof(::motionlab::mechanism::Vec3)},
         {32, sizeof(::motionlab::mechanism::Quat)},
         {43, sizeof(::motionlab::mechanism::Pose)},
-        {50, sizeof(::motionlab::mechanism::MassProperties)},
-        {69, sizeof(::motionlab::mechanism::DisplayMesh)},
-        {78, sizeof(::motionlab::mechanism::Body)},
-        {93, sizeof(::motionlab::mechanism::Datum)},
-        {104, sizeof(::motionlab::mechanism::Joint)},
-        {121, sizeof(::motionlab::mechanism::Mechanism)},
-        {134, sizeof(::motionlab::mechanism::BodyDisplayData)},
-        {149, sizeof(::motionlab::mechanism::ProjectFile)},
+        {50, sizeof(::motionlab::mechanism::Range)},
+        {57, sizeof(::motionlab::mechanism::MassProperties)},
+        {76, sizeof(::motionlab::mechanism::DisplayMesh)},
+        {85, sizeof(::motionlab::mechanism::Body)},
+        {102, sizeof(::motionlab::mechanism::Geometry)},
+        {121, sizeof(::motionlab::mechanism::Datum)},
+        {132, sizeof(::motionlab::mechanism::RevoluteJointConfig)},
+        {137, sizeof(::motionlab::mechanism::PrismaticJointConfig)},
+        {142, sizeof(::motionlab::mechanism::FixedJointConfig)},
+        {143, sizeof(::motionlab::mechanism::SphericalJointConfig)},
+        {144, sizeof(::motionlab::mechanism::CylindricalJointConfig)},
+        {151, sizeof(::motionlab::mechanism::PlanarJointConfig)},
+        {160, sizeof(::motionlab::mechanism::UniversalJointConfig)},
+        {167, sizeof(::motionlab::mechanism::DistanceJointConfig)},
+        {172, sizeof(::motionlab::mechanism::PointLineJointConfig)},
+        {173, sizeof(::motionlab::mechanism::PointPlaneJointConfig)},
+        {174, sizeof(::motionlab::mechanism::Joint)},
+        {213, sizeof(::motionlab::mechanism::PointForceLoad)},
+        {222, sizeof(::motionlab::mechanism::PointTorqueLoad)},
+        {231, sizeof(::motionlab::mechanism::LinearSpringDamperLoad)},
+        {244, sizeof(::motionlab::mechanism::Load)},
+        {259, sizeof(::motionlab::mechanism::RevoluteMotorActuator)},
+        {270, sizeof(::motionlab::mechanism::PrismaticMotorActuator)},
+        {281, sizeof(::motionlab::mechanism::Actuator)},
+        {294, sizeof(::motionlab::mechanism::Mechanism)},
+        {313, sizeof(::motionlab::mechanism::BodyDisplayData)},
+        {328, sizeof(::motionlab::mechanism::GeometryDisplayData)},
+        {343, sizeof(::motionlab::mechanism::ProjectFile)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::motionlab::mechanism::_ElementId_default_instance_._instance,
@@ -644,13 +1387,33 @@ static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::motionlab::mechanism::_Vec3_default_instance_._instance,
     &::motionlab::mechanism::_Quat_default_instance_._instance,
     &::motionlab::mechanism::_Pose_default_instance_._instance,
+    &::motionlab::mechanism::_Range_default_instance_._instance,
     &::motionlab::mechanism::_MassProperties_default_instance_._instance,
     &::motionlab::mechanism::_DisplayMesh_default_instance_._instance,
     &::motionlab::mechanism::_Body_default_instance_._instance,
+    &::motionlab::mechanism::_Geometry_default_instance_._instance,
     &::motionlab::mechanism::_Datum_default_instance_._instance,
+    &::motionlab::mechanism::_RevoluteJointConfig_default_instance_._instance,
+    &::motionlab::mechanism::_PrismaticJointConfig_default_instance_._instance,
+    &::motionlab::mechanism::_FixedJointConfig_default_instance_._instance,
+    &::motionlab::mechanism::_SphericalJointConfig_default_instance_._instance,
+    &::motionlab::mechanism::_CylindricalJointConfig_default_instance_._instance,
+    &::motionlab::mechanism::_PlanarJointConfig_default_instance_._instance,
+    &::motionlab::mechanism::_UniversalJointConfig_default_instance_._instance,
+    &::motionlab::mechanism::_DistanceJointConfig_default_instance_._instance,
+    &::motionlab::mechanism::_PointLineJointConfig_default_instance_._instance,
+    &::motionlab::mechanism::_PointPlaneJointConfig_default_instance_._instance,
     &::motionlab::mechanism::_Joint_default_instance_._instance,
+    &::motionlab::mechanism::_PointForceLoad_default_instance_._instance,
+    &::motionlab::mechanism::_PointTorqueLoad_default_instance_._instance,
+    &::motionlab::mechanism::_LinearSpringDamperLoad_default_instance_._instance,
+    &::motionlab::mechanism::_Load_default_instance_._instance,
+    &::motionlab::mechanism::_RevoluteMotorActuator_default_instance_._instance,
+    &::motionlab::mechanism::_PrismaticMotorActuator_default_instance_._instance,
+    &::motionlab::mechanism::_Actuator_default_instance_._instance,
     &::motionlab::mechanism::_Mechanism_default_instance_._instance,
     &::motionlab::mechanism::_BodyDisplayData_default_instance_._instance,
+    &::motionlab::mechanism::_GeometryDisplayData_default_instance_._instance,
     &::motionlab::mechanism::_ProjectFile_default_instance_._instance,
 };
 const char descriptor_table_protodef_mechanism_2fmechanism_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
@@ -668,72 +1431,196 @@ const char descriptor_table_protodef_mechanism_2fmechanism_2eproto[] ABSL_ATTRIB
     "\001x\022\014\n\001y\030\003 \001(\001R\001y\022\014\n\001z\030\004 \001(\001R\001z\"z\n\004Pose\0225"
     "\n\010position\030\001 \001(\0132\031.motionlab.mechanism.V"
     "ec3R\010position\022;\n\013orientation\030\002 \001(\0132\031.mot"
-    "ionlab.mechanism.QuatR\013orientation\"\321\001\n\016M"
-    "assProperties\022\022\n\004mass\030\001 \001(\001R\004mass\022\?\n\016cen"
-    "ter_of_mass\030\002 \001(\0132\031.motionlab.mechanism."
-    "Vec3R\014centerOfMass\022\020\n\003ixx\030\003 \001(\001R\003ixx\022\020\n\003"
-    "iyy\030\004 \001(\001R\003iyy\022\020\n\003izz\030\005 \001(\001R\003izz\022\020\n\003ixy\030"
-    "\006 \001(\001R\003ixy\022\020\n\003ixz\030\007 \001(\001R\003ixz\022\020\n\003iyz\030\010 \001("
-    "\001R\003iyz\"]\n\013DisplayMesh\022\032\n\010vertices\030\001 \003(\002R"
-    "\010vertices\022\030\n\007indices\030\002 \003(\rR\007indices\022\030\n\007n"
-    "ormals\030\003 \003(\002R\007normals\"\261\002\n\004Body\022.\n\002id\030\001 \001"
-    "(\0132\036.motionlab.mechanism.ElementIdR\002id\022\022"
-    "\n\004name\030\002 \001(\tR\004name\022-\n\004pose\030\003 \001(\0132\031.motio"
-    "nlab.mechanism.PoseR\004pose\022L\n\017mass_proper"
-    "ties\030\004 \001(\0132#.motionlab.mechanism.MassPro"
-    "pertiesR\016massProperties\022M\n\020source_asset_"
-    "ref\030\005 \001(\0132#.motionlab.mechanism.AssetRef"
-    "erenceR\016sourceAssetRef\022\031\n\010is_fixed\030\006 \001(\010"
-    "R\007isFixed\"\313\001\n\005Datum\022.\n\002id\030\001 \001(\0132\036.motion"
+    "ionlab.mechanism.QuatR\013orientation\"3\n\005Ra"
+    "nge\022\024\n\005lower\030\001 \001(\001R\005lower\022\024\n\005upper\030\002 \001(\001"
+    "R\005upper\"\321\001\n\016MassProperties\022\022\n\004mass\030\001 \001(\001"
+    "R\004mass\022\?\n\016center_of_mass\030\002 \001(\0132\031.motionl"
+    "ab.mechanism.Vec3R\014centerOfMass\022\020\n\003ixx\030\003"
+    " \001(\001R\003ixx\022\020\n\003iyy\030\004 \001(\001R\003iyy\022\020\n\003izz\030\005 \001(\001"
+    "R\003izz\022\020\n\003ixy\030\006 \001(\001R\003ixy\022\020\n\003ixz\030\007 \001(\001R\003ix"
+    "z\022\020\n\003iyz\030\010 \001(\001R\003iyz\"]\n\013DisplayMesh\022\032\n\010ve"
+    "rtices\030\001 \003(\002R\010vertices\022\030\n\007indices\030\002 \003(\rR"
+    "\007indices\022\030\n\007normals\030\003 \003(\002R\007normals\"\332\002\n\004B"
+    "ody\022.\n\002id\030\001 \001(\0132\036.motionlab.mechanism.El"
+    "ementIdR\002id\022\022\n\004name\030\002 \001(\tR\004name\022-\n\004pose\030"
+    "\003 \001(\0132\031.motionlab.mechanism.PoseR\004pose\022L"
+    "\n\017mass_properties\030\004 \001(\0132#.motionlab.mech"
+    "anism.MassPropertiesR\016massProperties\022Q\n\020"
+    "source_asset_ref\030\005 \001(\0132#.motionlab.mecha"
+    "nism.AssetReferenceB\002\030\001R\016sourceAssetRef\022"
+    "\031\n\010is_fixed\030\006 \001(\010R\007isFixed\022#\n\rmass_overr"
+    "ide\030\007 \001(\010R\014massOverride\"\340\003\n\010Geometry\022.\n\002"
+    "id\030\001 \001(\0132\036.motionlab.mechanism.ElementId"
+    "R\002id\022\022\n\004name\030\002 \001(\tR\004name\022D\n\016parent_body_"
+    "id\030\003 \001(\0132\036.motionlab.mechanism.ElementId"
+    "R\014parentBodyId\0228\n\nlocal_pose\030\004 \001(\0132\031.mot"
+    "ionlab.mechanism.PoseR\tlocalPose\022M\n\020sour"
+    "ce_asset_ref\030\005 \001(\0132#.motionlab.mechanism"
+    ".AssetReferenceR\016sourceAssetRef\022C\n\014displ"
+    "ay_mesh\030\006 \001(\0132 .motionlab.mechanism.Disp"
+    "layMeshR\013displayMesh\022]\n\030computed_mass_pr"
+    "operties\030\007 \001(\0132#.motionlab.mechanism.Mas"
+    "sPropertiesR\026computedMassProperties\022\035\n\nf"
+    "ace_count\030\010 \001(\rR\tfaceCount\"\313\001\n\005Datum\022.\n\002"
+    "id\030\001 \001(\0132\036.motionlab.mechanism.ElementId"
+    "R\002id\022\022\n\004name\030\002 \001(\tR\004name\022D\n\016parent_body_"
+    "id\030\003 \001(\0132\036.motionlab.mechanism.ElementId"
+    "R\014parentBodyId\0228\n\nlocal_pose\030\004 \001(\0132\031.mot"
+    "ionlab.mechanism.PoseR\tlocalPose\"R\n\023Revo"
+    "luteJointConfig\022;\n\013angle_limit\030\001 \001(\0132\032.m"
+    "otionlab.mechanism.RangeR\nangleLimit\"_\n\024"
+    "PrismaticJointConfig\022G\n\021translation_limi"
+    "t\030\001 \001(\0132\032.motionlab.mechanism.RangeR\020tra"
+    "nslationLimit\"\022\n\020FixedJointConfig\"\026\n\024Sph"
+    "ericalJointConfig\"\244\001\n\026CylindricalJointCo"
+    "nfig\022G\n\021translation_limit\030\001 \001(\0132\032.motion"
+    "lab.mechanism.RangeR\020translationLimit\022A\n"
+    "\016rotation_limit\030\002 \001(\0132\032.motionlab.mechan"
+    "ism.RangeR\rrotationLimit\"\356\001\n\021PlanarJoint"
+    "Config\022J\n\023translation_x_limit\030\001 \001(\0132\032.mo"
+    "tionlab.mechanism.RangeR\021translationXLim"
+    "it\022J\n\023translation_y_limit\030\002 \001(\0132\032.motion"
+    "lab.mechanism.RangeR\021translationYLimit\022A"
+    "\n\016rotation_limit\030\003 \001(\0132\032.motionlab.mecha"
+    "nism.RangeR\rrotationLimit\"\242\001\n\024UniversalJ"
+    "ointConfig\022D\n\020rotation_x_limit\030\001 \001(\0132\032.m"
+    "otionlab.mechanism.RangeR\016rotationXLimit"
+    "\022D\n\020rotation_y_limit\030\002 \001(\0132\032.motionlab.m"
+    "echanism.RangeR\016rotationYLimit\"X\n\023Distan"
+    "ceJointConfig\022A\n\016distance_limit\030\001 \001(\0132\032."
+    "motionlab.mechanism.RangeR\rdistanceLimit"
+    "\"\026\n\024PointLineJointConfig\"\027\n\025PointPlaneJo"
+    "intConfig\"\277\010\n\005Joint\022.\n\002id\030\001 \001(\0132\036.motion"
     "lab.mechanism.ElementIdR\002id\022\022\n\004name\030\002 \001("
-    "\tR\004name\022D\n\016parent_body_id\030\003 \001(\0132\036.motion"
-    "lab.mechanism.ElementIdR\014parentBodyId\0228\n"
-    "\nlocal_pose\030\004 \001(\0132\031.motionlab.mechanism."
-    "PoseR\tlocalPose\"\317\002\n\005Joint\022.\n\002id\030\001 \001(\0132\036."
-    "motionlab.mechanism.ElementIdR\002id\022\022\n\004nam"
-    "e\030\002 \001(\tR\004name\0222\n\004type\030\003 \001(\0162\036.motionlab."
-    "mechanism.JointTypeR\004type\022F\n\017parent_datu"
-    "m_id\030\004 \001(\0132\036.motionlab.mechanism.Element"
-    "IdR\rparentDatumId\022D\n\016child_datum_id\030\005 \001("
-    "\0132\036.motionlab.mechanism.ElementIdR\014child"
-    "DatumId\022\037\n\013lower_limit\030\006 \001(\001R\nlowerLimit"
-    "\022\037\n\013upper_limit\030\007 \001(\001R\nupperLimit\"\352\001\n\tMe"
-    "chanism\022.\n\002id\030\001 \001(\0132\036.motionlab.mechanis"
-    "m.ElementIdR\002id\022\022\n\004name\030\002 \001(\tR\004name\0221\n\006b"
-    "odies\030\003 \003(\0132\031.motionlab.mechanism.BodyR\006"
-    "bodies\0222\n\006datums\030\004 \003(\0132\032.motionlab.mecha"
-    "nism.DatumR\006datums\0222\n\006joints\030\005 \003(\0132\032.mot"
-    "ionlab.mechanism.JointR\006joints\"\374\001\n\017BodyD"
-    "isplayData\022\027\n\007body_id\030\001 \001(\tR\006bodyId\022C\n\014d"
-    "isplay_mesh\030\002 \001(\0132 .motionlab.mechanism."
-    "DisplayMeshR\013displayMesh\022\035\n\npart_index\030\003"
-    " \003(\rR\tpartIndex\022\030\n\007density\030\004 \001(\001R\007densit"
-    "y\0221\n\024tessellation_quality\030\005 \001(\001R\023tessell"
-    "ationQuality\022\037\n\013unit_system\030\006 \001(\tR\nunitS"
-    "ystem\"\371\001\n\013ProjectFile\022\030\n\007version\030\001 \001(\rR\007"
-    "version\022@\n\010metadata\030\002 \001(\0132$.motionlab.me"
-    "chanism.ProjectMetadataR\010metadata\022<\n\tmec"
-    "hanism\030\003 \001(\0132\036.motionlab.mechanism.Mecha"
-    "nismR\tmechanism\022P\n\021body_display_data\030\004 \003"
-    "(\0132$.motionlab.mechanism.BodyDisplayData"
-    "R\017bodyDisplayData*\275\001\n\tJointType\022\032\n\026JOINT"
-    "_TYPE_UNSPECIFIED\020\000\022\027\n\023JOINT_TYPE_REVOLU"
-    "TE\020\001\022\030\n\024JOINT_TYPE_PRISMATIC\020\002\022\024\n\020JOINT_"
-    "TYPE_FIXED\020\003\022\030\n\024JOINT_TYPE_SPHERICAL\020\004\022\032"
-    "\n\026JOINT_TYPE_CYLINDRICAL\020\005\022\025\n\021JOINT_TYPE"
-    "_PLANAR\020\006b\006proto3"
+    "\tR\004name\0222\n\004type\030\003 \001(\0162\036.motionlab.mechan"
+    "ism.JointTypeR\004type\022F\n\017parent_datum_id\030\004"
+    " \001(\0132\036.motionlab.mechanism.ElementIdR\rpa"
+    "rentDatumId\022D\n\016child_datum_id\030\005 \001(\0132\036.mo"
+    "tionlab.mechanism.ElementIdR\014childDatumI"
+    "d\022#\n\013lower_limit\030\006 \001(\001B\002\030\001R\nlowerLimit\022#"
+    "\n\013upper_limit\030\007 \001(\001B\002\030\001R\nupperLimit\022F\n\010r"
+    "evolute\030\010 \001(\0132(.motionlab.mechanism.Revo"
+    "luteJointConfigH\000R\010revolute\022I\n\tprismatic"
+    "\030\t \001(\0132).motionlab.mechanism.PrismaticJo"
+    "intConfigH\000R\tprismatic\022=\n\005fixed\030\n \001(\0132%."
+    "motionlab.mechanism.FixedJointConfigH\000R\005"
+    "fixed\022I\n\tspherical\030\013 \001(\0132).motionlab.mec"
+    "hanism.SphericalJointConfigH\000R\tspherical"
+    "\022O\n\013cylindrical\030\014 \001(\0132+.motionlab.mechan"
+    "ism.CylindricalJointConfigH\000R\013cylindrica"
+    "l\022@\n\006planar\030\r \001(\0132&.motionlab.mechanism."
+    "PlanarJointConfigH\000R\006planar\022I\n\tuniversal"
+    "\030\016 \001(\0132).motionlab.mechanism.UniversalJo"
+    "intConfigH\000R\tuniversal\022F\n\010distance\030\017 \001(\013"
+    "2(.motionlab.mechanism.DistanceJointConf"
+    "igH\000R\010distance\022J\n\npoint_line\030\020 \001(\0132).mot"
+    "ionlab.mechanism.PointLineJointConfigH\000R"
+    "\tpointLine\022M\n\013point_plane\030\021 \001(\0132*.motion"
+    "lab.mechanism.PointPlaneJointConfigH\000R\np"
+    "ointPlaneB\010\n\006config\"\314\001\n\016PointForceLoad\0229"
+    "\n\010datum_id\030\001 \001(\0132\036.motionlab.mechanism.E"
+    "lementIdR\007datumId\0221\n\006vector\030\002 \001(\0132\031.moti"
+    "onlab.mechanism.Vec3R\006vector\022L\n\017referenc"
+    "e_frame\030\003 \001(\0162#.motionlab.mechanism.Refe"
+    "renceFrameR\016referenceFrame\"\315\001\n\017PointTorq"
+    "ueLoad\0229\n\010datum_id\030\001 \001(\0132\036.motionlab.mec"
+    "hanism.ElementIdR\007datumId\0221\n\006vector\030\002 \001("
+    "\0132\031.motionlab.mechanism.Vec3R\006vector\022L\n\017"
+    "reference_frame\030\003 \001(\0162#.motionlab.mechan"
+    "ism.ReferenceFrameR\016referenceFrame\"\377\001\n\026L"
+    "inearSpringDamperLoad\022F\n\017parent_datum_id"
+    "\030\001 \001(\0132\036.motionlab.mechanism.ElementIdR\r"
+    "parentDatumId\022D\n\016child_datum_id\030\002 \001(\0132\036."
+    "motionlab.mechanism.ElementIdR\014childDatu"
+    "mId\022\037\n\013rest_length\030\003 \001(\001R\nrestLength\022\034\n\t"
+    "stiffness\030\004 \001(\001R\tstiffness\022\030\n\007damping\030\005 "
+    "\001(\001R\007damping\"\310\002\n\004Load\022.\n\002id\030\001 \001(\0132\036.moti"
+    "onlab.mechanism.ElementIdR\002id\022\022\n\004name\030\002 "
+    "\001(\tR\004name\022F\n\013point_force\030\003 \001(\0132#.motionl"
+    "ab.mechanism.PointForceLoadH\000R\npointForc"
+    "e\022I\n\014point_torque\030\004 \001(\0132$.motionlab.mech"
+    "anism.PointTorqueLoadH\000R\013pointTorque\022_\n\024"
+    "linear_spring_damper\030\005 \001(\0132+.motionlab.m"
+    "echanism.LinearSpringDamperLoadH\000R\022linea"
+    "rSpringDamperB\010\n\006config\"\375\001\n\025RevoluteMoto"
+    "rActuator\0229\n\010joint_id\030\001 \001(\0132\036.motionlab."
+    "mechanism.ElementIdR\007jointId\022K\n\014control_"
+    "mode\030\002 \001(\0162(.motionlab.mechanism.Actuato"
+    "rControlModeR\013controlMode\022#\n\rcommand_val"
+    "ue\030\003 \001(\001R\014commandValue\022&\n\014effort_limit\030\004"
+    " \001(\001H\000R\013effortLimit\210\001\001B\017\n\r_effort_limit\""
+    "\376\001\n\026PrismaticMotorActuator\0229\n\010joint_id\030\001"
+    " \001(\0132\036.motionlab.mechanism.ElementIdR\007jo"
+    "intId\022K\n\014control_mode\030\002 \001(\0162(.motionlab."
+    "mechanism.ActuatorControlModeR\013controlMo"
+    "de\022#\n\rcommand_value\030\003 \001(\001R\014commandValue\022"
+    "&\n\014effort_limit\030\004 \001(\001H\000R\013effortLimit\210\001\001B"
+    "\017\n\r_effort_limit\"\205\002\n\010Actuator\022.\n\002id\030\001 \001("
+    "\0132\036.motionlab.mechanism.ElementIdR\002id\022\022\n"
+    "\004name\030\002 \001(\tR\004name\022S\n\016revolute_motor\030\003 \001("
+    "\0132*.motionlab.mechanism.RevoluteMotorAct"
+    "uatorH\000R\rrevoluteMotor\022V\n\017prismatic_moto"
+    "r\030\004 \001(\0132+.motionlab.mechanism.PrismaticM"
+    "otorActuatorH\000R\016prismaticMotorB\010\n\006config"
+    "\"\227\003\n\tMechanism\022.\n\002id\030\001 \001(\0132\036.motionlab.m"
+    "echanism.ElementIdR\002id\022\022\n\004name\030\002 \001(\tR\004na"
+    "me\0221\n\006bodies\030\003 \003(\0132\031.motionlab.mechanism"
+    ".BodyR\006bodies\0222\n\006datums\030\004 \003(\0132\032.motionla"
+    "b.mechanism.DatumR\006datums\0222\n\006joints\030\005 \003("
+    "\0132\032.motionlab.mechanism.JointR\006joints\022/\n"
+    "\005loads\030\006 \003(\0132\031.motionlab.mechanism.LoadR"
+    "\005loads\022;\n\tactuators\030\007 \003(\0132\035.motionlab.me"
+    "chanism.ActuatorR\tactuators\022=\n\ngeometrie"
+    "s\030\010 \003(\0132\035.motionlab.mechanism.GeometryR\n"
+    "geometries\"\374\001\n\017BodyDisplayData\022\027\n\007body_i"
+    "d\030\001 \001(\tR\006bodyId\022C\n\014display_mesh\030\002 \001(\0132 ."
+    "motionlab.mechanism.DisplayMeshR\013display"
+    "Mesh\022\035\n\npart_index\030\003 \003(\rR\tpartIndex\022\030\n\007d"
+    "ensity\030\004 \001(\001R\007density\0221\n\024tessellation_qu"
+    "ality\030\005 \001(\001R\023tessellationQuality\022\037\n\013unit"
+    "_system\030\006 \001(\tR\nunitSystem\"\210\002\n\023GeometryDi"
+    "splayData\022\037\n\013geometry_id\030\001 \001(\tR\ngeometry"
+    "Id\022C\n\014display_mesh\030\002 \001(\0132 .motionlab.mec"
+    "hanism.DisplayMeshR\013displayMesh\022\035\n\npart_"
+    "index\030\003 \003(\rR\tpartIndex\022\030\n\007density\030\004 \001(\001R"
+    "\007density\0221\n\024tessellation_quality\030\005 \001(\001R\023"
+    "tessellationQuality\022\037\n\013unit_system\030\006 \001(\t"
+    "R\nunitSystem\"\327\002\n\013ProjectFile\022\030\n\007version\030"
+    "\001 \001(\rR\007version\022@\n\010metadata\030\002 \001(\0132$.motio"
+    "nlab.mechanism.ProjectMetadataR\010metadata"
+    "\022<\n\tmechanism\030\003 \001(\0132\036.motionlab.mechanis"
+    "m.MechanismR\tmechanism\022P\n\021body_display_d"
+    "ata\030\004 \003(\0132$.motionlab.mechanism.BodyDisp"
+    "layDataR\017bodyDisplayData\022\\\n\025geometry_dis"
+    "play_data\030\005 \003(\0132(.motionlab.mechanism.Ge"
+    "ometryDisplayDataR\023geometryDisplayData*\247"
+    "\002\n\tJointType\022\032\n\026JOINT_TYPE_UNSPECIFIED\020\000"
+    "\022\027\n\023JOINT_TYPE_REVOLUTE\020\001\022\030\n\024JOINT_TYPE_"
+    "PRISMATIC\020\002\022\024\n\020JOINT_TYPE_FIXED\020\003\022\030\n\024JOI"
+    "NT_TYPE_SPHERICAL\020\004\022\032\n\026JOINT_TYPE_CYLIND"
+    "RICAL\020\005\022\025\n\021JOINT_TYPE_PLANAR\020\006\022\030\n\024JOINT_"
+    "TYPE_UNIVERSAL\020\007\022\027\n\023JOINT_TYPE_DISTANCE\020"
+    "\010\022\031\n\025JOINT_TYPE_POINT_LINE\020\t\022\032\n\026JOINT_TY"
+    "PE_POINT_PLANE\020\n*m\n\016ReferenceFrame\022\037\n\033RE"
+    "FERENCE_FRAME_UNSPECIFIED\020\000\022\037\n\033REFERENCE"
+    "_FRAME_DATUM_LOCAL\020\001\022\031\n\025REFERENCE_FRAME_"
+    "WORLD\020\002*\243\001\n\023ActuatorControlMode\022%\n!ACTUA"
+    "TOR_CONTROL_MODE_UNSPECIFIED\020\000\022\"\n\036ACTUAT"
+    "OR_CONTROL_MODE_POSITION\020\001\022\037\n\033ACTUATOR_C"
+    "ONTROL_MODE_SPEED\020\002\022 \n\034ACTUATOR_CONTROL_"
+    "MODE_EFFORT\020\003b\006proto3"
 };
 static ::absl::once_flag descriptor_table_mechanism_2fmechanism_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_mechanism_2fmechanism_2eproto = {
     false,
     false,
-    2657,
+    7621,
     descriptor_table_protodef_mechanism_2fmechanism_2eproto,
     "mechanism/mechanism.proto",
     &descriptor_table_mechanism_2fmechanism_2eproto_once,
     nullptr,
     0,
-    14,
+    34,
     schemas,
     file_default_instances,
     TableStruct_mechanism_2fmechanism_2eproto::offsets,
@@ -747,7 +1634,19 @@ const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL JointType_descriptor(
   return file_level_enum_descriptors_mechanism_2fmechanism_2eproto[0];
 }
 PROTOBUF_CONSTINIT const uint32_t JointType_internal_data_[] = {
-    458752u, 0u, };
+    720896u, 0u, };
+const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL ReferenceFrame_descriptor() {
+  ::google::protobuf::internal::AssignDescriptors(&descriptor_table_mechanism_2fmechanism_2eproto);
+  return file_level_enum_descriptors_mechanism_2fmechanism_2eproto[1];
+}
+PROTOBUF_CONSTINIT const uint32_t ReferenceFrame_internal_data_[] = {
+    196608u, 0u, };
+const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL ActuatorControlMode_descriptor() {
+  ::google::protobuf::internal::AssignDescriptors(&descriptor_table_mechanism_2fmechanism_2eproto);
+  return file_level_enum_descriptors_mechanism_2fmechanism_2eproto[2];
+}
+PROTOBUF_CONSTINIT const uint32_t ActuatorControlMode_internal_data_[] = {
+    262144u, 0u, };
 // ===================================================================
 
 class ElementId::_Internal {
@@ -2729,6 +3628,297 @@ void Pose::InternalSwap(Pose* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
 }
 // ===================================================================
 
+class Range::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<Range>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(Range, _impl_._has_bits_);
+};
+
+Range::Range(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, Range_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.Range)
+}
+Range::Range(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Range& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, Range_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(from._impl_) {
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+PROTOBUF_NDEBUG_INLINE Range::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void Range::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, lower_),
+           0,
+           offsetof(Impl_, upper_) -
+               offsetof(Impl_, lower_) +
+               sizeof(Impl_::upper_));
+}
+Range::~Range() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.Range)
+  SharedDtor(*this);
+}
+inline void Range::SharedDtor(MessageLite& self) {
+  Range& this_ = static_cast<Range&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL Range::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) Range(arena);
+}
+constexpr auto Range::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(Range),
+                                            alignof(Range));
+}
+constexpr auto Range::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_Range_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &Range::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<Range>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &Range::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<Range>(), &Range::ByteSizeLong,
+              &Range::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(Range, _impl_._cached_size_),
+          false,
+      },
+      &Range::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull Range_class_data_ =
+        Range::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+Range::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&Range_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(Range_class_data_.tc_table);
+  return Range_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 0, 0, 2>
+Range::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(Range, _impl_._has_bits_),
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    Range_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::Range>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // double upper = 2 [json_name = "upper"];
+    {::_pbi::TcParser::FastF64S1,
+     {17, 1, 0,
+      PROTOBUF_FIELD_OFFSET(Range, _impl_.upper_)}},
+    // double lower = 1 [json_name = "lower"];
+    {::_pbi::TcParser::FastF64S1,
+     {9, 0, 0,
+      PROTOBUF_FIELD_OFFSET(Range, _impl_.lower_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // double lower = 1 [json_name = "lower"];
+    {PROTOBUF_FIELD_OFFSET(Range, _impl_.lower_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // double upper = 2 [json_name = "upper"];
+    {PROTOBUF_FIELD_OFFSET(Range, _impl_.upper_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+  }},
+  // no aux_entries
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void Range::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.Range)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    ::memset(&_impl_.lower_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.upper_) -
+        reinterpret_cast<char*>(&_impl_.lower_)) + sizeof(_impl_.upper_));
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL Range::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const Range& this_ = static_cast<const Range&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL Range::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const Range& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.Range)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // double lower = 1 [json_name = "lower"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_lower()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          1, this_._internal_lower(), target);
+    }
+  }
+
+  // double upper = 2 [json_name = "upper"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_upper()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          2, this_._internal_upper(), target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.Range)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t Range::ByteSizeLong(const MessageLite& base) {
+  const Range& this_ = static_cast<const Range&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t Range::ByteSizeLong() const {
+  const Range& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.Range)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    // double lower = 1 [json_name = "lower"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_lower()) != 0) {
+        total_size += 9;
+      }
+    }
+    // double upper = 2 [json_name = "upper"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_upper()) != 0) {
+        total_size += 9;
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void Range::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<Range*>(&to_msg);
+  auto& from = static_cast<const Range&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.Range)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_lower()) != 0) {
+        _this->_impl_.lower_ = from._impl_.lower_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_upper()) != 0) {
+        _this->_impl_.upper_ = from._impl_.upper_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void Range::CopyFrom(const Range& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.Range)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void Range::InternalSwap(Range* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(Range, _impl_.upper_)
+      + sizeof(Range::_impl_.upper_)
+      - PROTOBUF_FIELD_OFFSET(Range, _impl_.lower_)>(
+          reinterpret_cast<char*>(&_impl_.lower_),
+          reinterpret_cast<char*>(&other->_impl_.lower_));
+}
+
+::google::protobuf::Metadata Range::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
 class MassProperties::_Internal {
  public:
   using HasBits =
@@ -3614,7 +4804,13 @@ Body::Body(
   _impl_.source_asset_ref_ = (CheckHasBit(cached_has_bits, 0x00000010U))
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.source_asset_ref_)
                 : nullptr;
-  _impl_.is_fixed_ = from._impl_.is_fixed_;
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, is_fixed_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, is_fixed_),
+           offsetof(Impl_, mass_override_) -
+               offsetof(Impl_, is_fixed_) +
+               sizeof(Impl_::mass_override_));
 
   // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.Body)
 }
@@ -3629,9 +4825,9 @@ inline void Body::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   ::memset(reinterpret_cast<char*>(&_impl_) +
                offsetof(Impl_, id_),
            0,
-           offsetof(Impl_, is_fixed_) -
+           offsetof(Impl_, mass_override_) -
                offsetof(Impl_, id_) +
-               sizeof(Impl_::is_fixed_));
+               sizeof(Impl_::mass_override_));
 }
 Body::~Body() {
   // @@protoc_insertion_point(destructor:motionlab.mechanism.Body)
@@ -3695,16 +4891,16 @@ Body::GetClassData() const {
   return Body_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 6, 4, 37, 2>
+const ::_pbi::TcParseTable<3, 7, 4, 37, 2>
 Body::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Body, _impl_._has_bits_),
     0, // no _extensions_
-    6, 56,  // max_field_number, fast_idx_mask
+    7, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967232,  // skipmap
+    4294967168,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    6,  // num_field_entries
+    7,  // num_field_entries
     4,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     Body_class_data_.base(),
@@ -3731,7 +4927,7 @@ Body::_table_ = {
     {::_pbi::TcParser::FastMtS1,
      {34, 3, 2,
       PROTOBUF_FIELD_OFFSET(Body, _impl_.mass_properties_)}},
-    // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef"];
+    // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef", deprecated = true];
     {::_pbi::TcParser::FastMtS1,
      {42, 4, 3,
       PROTOBUF_FIELD_OFFSET(Body, _impl_.source_asset_ref_)}},
@@ -3739,7 +4935,10 @@ Body::_table_ = {
     {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(Body, _impl_.is_fixed_), 5>(),
      {48, 5, 0,
       PROTOBUF_FIELD_OFFSET(Body, _impl_.is_fixed_)}},
-    {::_pbi::TcParser::MiniParse, {}},
+    // bool mass_override = 7 [json_name = "massOverride"];
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(Body, _impl_.mass_override_), 6>(),
+     {56, 6, 0,
+      PROTOBUF_FIELD_OFFSET(Body, _impl_.mass_override_)}},
   }}, {{
     65535, 65535
   }}, {{
@@ -3751,10 +4950,12 @@ Body::_table_ = {
     {PROTOBUF_FIELD_OFFSET(Body, _impl_.pose_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // .motionlab.mechanism.MassProperties mass_properties = 4 [json_name = "massProperties"];
     {PROTOBUF_FIELD_OFFSET(Body, _impl_.mass_properties_), _Internal::kHasBitsOffset + 3, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef"];
+    // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef", deprecated = true];
     {PROTOBUF_FIELD_OFFSET(Body, _impl_.source_asset_ref_), _Internal::kHasBitsOffset + 4, 3, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // bool is_fixed = 6 [json_name = "isFixed"];
     {PROTOBUF_FIELD_OFFSET(Body, _impl_.is_fixed_), _Internal::kHasBitsOffset + 5, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    // bool mass_override = 7 [json_name = "massOverride"];
+    {PROTOBUF_FIELD_OFFSET(Body, _impl_.mass_override_), _Internal::kHasBitsOffset + 6, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
@@ -3797,7 +4998,9 @@ PROTOBUF_NOINLINE void Body::Clear() {
       _impl_.source_asset_ref_->Clear();
     }
   }
-  _impl_.is_fixed_ = false;
+  ::memset(&_impl_.is_fixed_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.mass_override_) -
+      reinterpret_cast<char*>(&_impl_.is_fixed_)) + sizeof(_impl_.mass_override_));
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -3852,7 +5055,7 @@ PROTOBUF_NOINLINE void Body::Clear() {
         stream);
   }
 
-  // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef"];
+  // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef", deprecated = true];
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         5, *this_._impl_.source_asset_ref_, this_._impl_.source_asset_ref_->GetCachedSize(), target,
@@ -3865,6 +5068,15 @@ PROTOBUF_NOINLINE void Body::Clear() {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteBoolToArray(
           6, this_._internal_is_fixed(), target);
+    }
+  }
+
+  // bool mass_override = 7 [json_name = "massOverride"];
+  if (CheckHasBit(cached_has_bits, 0x00000040U)) {
+    if (this_._internal_mass_override() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteBoolToArray(
+          7, this_._internal_mass_override(), target);
     }
   }
 
@@ -3893,7 +5105,7 @@ PROTOBUF_NOINLINE void Body::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000003fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000007fU)) {
     // string name = 2 [json_name = "name"];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_name().empty()) {
@@ -3916,7 +5128,7 @@ PROTOBUF_NOINLINE void Body::Clear() {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.mass_properties_);
     }
-    // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef"];
+    // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef", deprecated = true];
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.source_asset_ref_);
@@ -3924,6 +5136,12 @@ PROTOBUF_NOINLINE void Body::Clear() {
     // bool is_fixed = 6 [json_name = "isFixed"];
     if (CheckHasBit(cached_has_bits, 0x00000020U)) {
       if (this_._internal_is_fixed() != 0) {
+        total_size += 2;
+      }
+    }
+    // bool mass_override = 7 [json_name = "massOverride"];
+    if (CheckHasBit(cached_has_bits, 0x00000040U)) {
+      if (this_._internal_mass_override() != 0) {
         total_size += 2;
       }
     }
@@ -3947,7 +5165,7 @@ void Body::MergeImpl(::google::protobuf::MessageLite& to_msg,
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000003fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000007fU)) {
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!from._internal_name().empty()) {
         _this->_internal_set_name(from._internal_name());
@@ -3994,6 +5212,11 @@ void Body::MergeImpl(::google::protobuf::MessageLite& to_msg,
         _this->_impl_.is_fixed_ = from._impl_.is_fixed_;
       }
     }
+    if (CheckHasBit(cached_has_bits, 0x00000040U)) {
+      if (from._internal_mass_override() != 0) {
+        _this->_impl_.mass_override_ = from._impl_.mass_override_;
+      }
+    }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
@@ -4016,14 +5239,548 @@ void Body::InternalSwap(Body* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Body, _impl_.is_fixed_)
-      + sizeof(Body::_impl_.is_fixed_)
+      PROTOBUF_FIELD_OFFSET(Body, _impl_.mass_override_)
+      + sizeof(Body::_impl_.mass_override_)
       - PROTOBUF_FIELD_OFFSET(Body, _impl_.id_)>(
           reinterpret_cast<char*>(&_impl_.id_),
           reinterpret_cast<char*>(&other->_impl_.id_));
 }
 
 ::google::protobuf::Metadata Body::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class Geometry::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<Geometry>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(Geometry, _impl_._has_bits_);
+};
+
+Geometry::Geometry(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, Geometry_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.Geometry)
+}
+PROTOBUF_NDEBUG_INLINE Geometry::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::Geometry& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        name_(arena, from.name_) {}
+
+Geometry::Geometry(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const Geometry& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, Geometry_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  Geometry* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.id_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.id_)
+                : nullptr;
+  _impl_.parent_body_id_ = (CheckHasBit(cached_has_bits, 0x00000004U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.parent_body_id_)
+                : nullptr;
+  _impl_.local_pose_ = (CheckHasBit(cached_has_bits, 0x00000008U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.local_pose_)
+                : nullptr;
+  _impl_.source_asset_ref_ = (CheckHasBit(cached_has_bits, 0x00000010U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.source_asset_ref_)
+                : nullptr;
+  _impl_.display_mesh_ = (CheckHasBit(cached_has_bits, 0x00000020U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.display_mesh_)
+                : nullptr;
+  _impl_.computed_mass_properties_ = (CheckHasBit(cached_has_bits, 0x00000040U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.computed_mass_properties_)
+                : nullptr;
+  _impl_.face_count_ = from._impl_.face_count_;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.Geometry)
+}
+PROTOBUF_NDEBUG_INLINE Geometry::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        name_(arena) {}
+
+inline void Geometry::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, id_),
+           0,
+           offsetof(Impl_, face_count_) -
+               offsetof(Impl_, id_) +
+               sizeof(Impl_::face_count_));
+}
+Geometry::~Geometry() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.Geometry)
+  SharedDtor(*this);
+}
+inline void Geometry::SharedDtor(MessageLite& self) {
+  Geometry& this_ = static_cast<Geometry&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.name_.Destroy();
+  delete this_._impl_.id_;
+  delete this_._impl_.parent_body_id_;
+  delete this_._impl_.local_pose_;
+  delete this_._impl_.source_asset_ref_;
+  delete this_._impl_.display_mesh_;
+  delete this_._impl_.computed_mass_properties_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL Geometry::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) Geometry(arena);
+}
+constexpr auto Geometry::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(Geometry),
+                                            alignof(Geometry));
+}
+constexpr auto Geometry::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_Geometry_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &Geometry::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<Geometry>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &Geometry::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<Geometry>(), &Geometry::ByteSizeLong,
+              &Geometry::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(Geometry, _impl_._cached_size_),
+          false,
+      },
+      &Geometry::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull Geometry_class_data_ =
+        Geometry::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+Geometry::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&Geometry_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(Geometry_class_data_.tc_table);
+  return Geometry_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<3, 8, 6, 49, 2>
+Geometry::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(Geometry, _impl_._has_bits_),
+    0, // no _extensions_
+    8, 56,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967040,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    8,  // num_field_entries
+    6,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    Geometry_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::Geometry>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // uint32 face_count = 8 [json_name = "faceCount"];
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Geometry, _impl_.face_count_), 7>(),
+     {64, 7, 0,
+      PROTOBUF_FIELD_OFFSET(Geometry, _impl_.face_count_)}},
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 1, 0,
+      PROTOBUF_FIELD_OFFSET(Geometry, _impl_.id_)}},
+    // string name = 2 [json_name = "name"];
+    {::_pbi::TcParser::FastUS1,
+     {18, 0, 0,
+      PROTOBUF_FIELD_OFFSET(Geometry, _impl_.name_)}},
+    // .motionlab.mechanism.ElementId parent_body_id = 3 [json_name = "parentBodyId"];
+    {::_pbi::TcParser::FastMtS1,
+     {26, 2, 1,
+      PROTOBUF_FIELD_OFFSET(Geometry, _impl_.parent_body_id_)}},
+    // .motionlab.mechanism.Pose local_pose = 4 [json_name = "localPose"];
+    {::_pbi::TcParser::FastMtS1,
+     {34, 3, 2,
+      PROTOBUF_FIELD_OFFSET(Geometry, _impl_.local_pose_)}},
+    // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef"];
+    {::_pbi::TcParser::FastMtS1,
+     {42, 4, 3,
+      PROTOBUF_FIELD_OFFSET(Geometry, _impl_.source_asset_ref_)}},
+    // .motionlab.mechanism.DisplayMesh display_mesh = 6 [json_name = "displayMesh"];
+    {::_pbi::TcParser::FastMtS1,
+     {50, 5, 4,
+      PROTOBUF_FIELD_OFFSET(Geometry, _impl_.display_mesh_)}},
+    // .motionlab.mechanism.MassProperties computed_mass_properties = 7 [json_name = "computedMassProperties"];
+    {::_pbi::TcParser::FastMtS1,
+     {58, 6, 5,
+      PROTOBUF_FIELD_OFFSET(Geometry, _impl_.computed_mass_properties_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+    {PROTOBUF_FIELD_OFFSET(Geometry, _impl_.id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string name = 2 [json_name = "name"];
+    {PROTOBUF_FIELD_OFFSET(Geometry, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // .motionlab.mechanism.ElementId parent_body_id = 3 [json_name = "parentBodyId"];
+    {PROTOBUF_FIELD_OFFSET(Geometry, _impl_.parent_body_id_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.Pose local_pose = 4 [json_name = "localPose"];
+    {PROTOBUF_FIELD_OFFSET(Geometry, _impl_.local_pose_), _Internal::kHasBitsOffset + 3, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef"];
+    {PROTOBUF_FIELD_OFFSET(Geometry, _impl_.source_asset_ref_), _Internal::kHasBitsOffset + 4, 3, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.DisplayMesh display_mesh = 6 [json_name = "displayMesh"];
+    {PROTOBUF_FIELD_OFFSET(Geometry, _impl_.display_mesh_), _Internal::kHasBitsOffset + 5, 4, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.MassProperties computed_mass_properties = 7 [json_name = "computedMassProperties"];
+    {PROTOBUF_FIELD_OFFSET(Geometry, _impl_.computed_mass_properties_), _Internal::kHasBitsOffset + 6, 5, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // uint32 face_count = 8 [json_name = "faceCount"];
+    {PROTOBUF_FIELD_OFFSET(Geometry, _impl_.face_count_), _Internal::kHasBitsOffset + 7, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Pose>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::AssetReference>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::DisplayMesh>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::MassProperties>()},
+  }},
+  {{
+    "\34\0\4\0\0\0\0\0\0\0\0\0\0\0\0\0"
+    "motionlab.mechanism.Geometry"
+    "name"
+  }},
+};
+PROTOBUF_NOINLINE void Geometry::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.Geometry)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000007fU)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _impl_.name_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.id_ != nullptr);
+      _impl_.id_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      ABSL_DCHECK(_impl_.parent_body_id_ != nullptr);
+      _impl_.parent_body_id_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      ABSL_DCHECK(_impl_.local_pose_ != nullptr);
+      _impl_.local_pose_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      ABSL_DCHECK(_impl_.source_asset_ref_ != nullptr);
+      _impl_.source_asset_ref_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+      ABSL_DCHECK(_impl_.display_mesh_ != nullptr);
+      _impl_.display_mesh_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000040U)) {
+      ABSL_DCHECK(_impl_.computed_mass_properties_ != nullptr);
+      _impl_.computed_mass_properties_->Clear();
+    }
+  }
+  _impl_.face_count_ = 0u;
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL Geometry::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const Geometry& this_ = static_cast<const Geometry&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL Geometry::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const Geometry& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.Geometry)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.id_, this_._impl_.id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // string name = 2 [json_name = "name"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!this_._internal_name().empty()) {
+      const ::std::string& _s = this_._internal_name();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.mechanism.Geometry.name");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+    }
+  }
+
+  // .motionlab.mechanism.ElementId parent_body_id = 3 [json_name = "parentBodyId"];
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        3, *this_._impl_.parent_body_id_, this_._impl_.parent_body_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.Pose local_pose = 4 [json_name = "localPose"];
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        4, *this_._impl_.local_pose_, this_._impl_.local_pose_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef"];
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        5, *this_._impl_.source_asset_ref_, this_._impl_.source_asset_ref_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.DisplayMesh display_mesh = 6 [json_name = "displayMesh"];
+  if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        6, *this_._impl_.display_mesh_, this_._impl_.display_mesh_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.MassProperties computed_mass_properties = 7 [json_name = "computedMassProperties"];
+  if (CheckHasBit(cached_has_bits, 0x00000040U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        7, *this_._impl_.computed_mass_properties_, this_._impl_.computed_mass_properties_->GetCachedSize(), target,
+        stream);
+  }
+
+  // uint32 face_count = 8 [json_name = "faceCount"];
+  if (CheckHasBit(cached_has_bits, 0x00000080U)) {
+    if (this_._internal_face_count() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
+          8, this_._internal_face_count(), target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.Geometry)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t Geometry::ByteSizeLong(const MessageLite& base) {
+  const Geometry& this_ = static_cast<const Geometry&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t Geometry::ByteSizeLong() const {
+  const Geometry& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.Geometry)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x000000ffU)) {
+    // string name = 2 [json_name = "name"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!this_._internal_name().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_name());
+      }
+    }
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.id_);
+    }
+    // .motionlab.mechanism.ElementId parent_body_id = 3 [json_name = "parentBodyId"];
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.parent_body_id_);
+    }
+    // .motionlab.mechanism.Pose local_pose = 4 [json_name = "localPose"];
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.local_pose_);
+    }
+    // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef"];
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.source_asset_ref_);
+    }
+    // .motionlab.mechanism.DisplayMesh display_mesh = 6 [json_name = "displayMesh"];
+    if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.display_mesh_);
+    }
+    // .motionlab.mechanism.MassProperties computed_mass_properties = 7 [json_name = "computedMassProperties"];
+    if (CheckHasBit(cached_has_bits, 0x00000040U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.computed_mass_properties_);
+    }
+    // uint32 face_count = 8 [json_name = "faceCount"];
+    if (CheckHasBit(cached_has_bits, 0x00000080U)) {
+      if (this_._internal_face_count() != 0) {
+        total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
+            this_._internal_face_count());
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void Geometry::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<Geometry*>(&to_msg);
+  auto& from = static_cast<const Geometry&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.Geometry)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x000000ffU)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!from._internal_name().empty()) {
+        _this->_internal_set_name(from._internal_name());
+      } else {
+        if (_this->_impl_.name_.IsDefault()) {
+          _this->_internal_set_name("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.id_ != nullptr);
+      if (_this->_impl_.id_ == nullptr) {
+        _this->_impl_.id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.id_);
+      } else {
+        _this->_impl_.id_->MergeFrom(*from._impl_.id_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      ABSL_DCHECK(from._impl_.parent_body_id_ != nullptr);
+      if (_this->_impl_.parent_body_id_ == nullptr) {
+        _this->_impl_.parent_body_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.parent_body_id_);
+      } else {
+        _this->_impl_.parent_body_id_->MergeFrom(*from._impl_.parent_body_id_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      ABSL_DCHECK(from._impl_.local_pose_ != nullptr);
+      if (_this->_impl_.local_pose_ == nullptr) {
+        _this->_impl_.local_pose_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.local_pose_);
+      } else {
+        _this->_impl_.local_pose_->MergeFrom(*from._impl_.local_pose_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      ABSL_DCHECK(from._impl_.source_asset_ref_ != nullptr);
+      if (_this->_impl_.source_asset_ref_ == nullptr) {
+        _this->_impl_.source_asset_ref_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.source_asset_ref_);
+      } else {
+        _this->_impl_.source_asset_ref_->MergeFrom(*from._impl_.source_asset_ref_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+      ABSL_DCHECK(from._impl_.display_mesh_ != nullptr);
+      if (_this->_impl_.display_mesh_ == nullptr) {
+        _this->_impl_.display_mesh_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.display_mesh_);
+      } else {
+        _this->_impl_.display_mesh_->MergeFrom(*from._impl_.display_mesh_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000040U)) {
+      ABSL_DCHECK(from._impl_.computed_mass_properties_ != nullptr);
+      if (_this->_impl_.computed_mass_properties_ == nullptr) {
+        _this->_impl_.computed_mass_properties_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.computed_mass_properties_);
+      } else {
+        _this->_impl_.computed_mass_properties_->MergeFrom(*from._impl_.computed_mass_properties_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000080U)) {
+      if (from._internal_face_count() != 0) {
+        _this->_impl_.face_count_ = from._impl_.face_count_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void Geometry::CopyFrom(const Geometry& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.Geometry)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void Geometry::InternalSwap(Geometry* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(Geometry, _impl_.face_count_)
+      + sizeof(Geometry::_impl_.face_count_)
+      - PROTOBUF_FIELD_OFFSET(Geometry, _impl_.id_)>(
+          reinterpret_cast<char*>(&_impl_.id_),
+          reinterpret_cast<char*>(&other->_impl_.id_));
+}
+
+::google::protobuf::Metadata Geometry::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
@@ -4428,14 +6185,2394 @@ void Datum::InternalSwap(Datum* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
 }
 // ===================================================================
 
+class RevoluteJointConfig::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<RevoluteJointConfig>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(RevoluteJointConfig, _impl_._has_bits_);
+};
+
+RevoluteJointConfig::RevoluteJointConfig(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, RevoluteJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.RevoluteJointConfig)
+}
+PROTOBUF_NDEBUG_INLINE RevoluteJointConfig::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::RevoluteJointConfig& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
+RevoluteJointConfig::RevoluteJointConfig(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const RevoluteJointConfig& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, RevoluteJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  RevoluteJointConfig* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.angle_limit_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.angle_limit_)
+                : nullptr;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.RevoluteJointConfig)
+}
+PROTOBUF_NDEBUG_INLINE RevoluteJointConfig::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void RevoluteJointConfig::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.angle_limit_ = {};
+}
+RevoluteJointConfig::~RevoluteJointConfig() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.RevoluteJointConfig)
+  SharedDtor(*this);
+}
+inline void RevoluteJointConfig::SharedDtor(MessageLite& self) {
+  RevoluteJointConfig& this_ = static_cast<RevoluteJointConfig&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.angle_limit_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL RevoluteJointConfig::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) RevoluteJointConfig(arena);
+}
+constexpr auto RevoluteJointConfig::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(RevoluteJointConfig),
+                                            alignof(RevoluteJointConfig));
+}
+constexpr auto RevoluteJointConfig::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_RevoluteJointConfig_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &RevoluteJointConfig::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<RevoluteJointConfig>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &RevoluteJointConfig::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<RevoluteJointConfig>(), &RevoluteJointConfig::ByteSizeLong,
+              &RevoluteJointConfig::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(RevoluteJointConfig, _impl_._cached_size_),
+          false,
+      },
+      &RevoluteJointConfig::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull RevoluteJointConfig_class_data_ =
+        RevoluteJointConfig::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+RevoluteJointConfig::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&RevoluteJointConfig_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(RevoluteJointConfig_class_data_.tc_table);
+  return RevoluteJointConfig_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 1, 0, 2>
+RevoluteJointConfig::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(RevoluteJointConfig, _impl_._has_bits_),
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    RevoluteJointConfig_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::RevoluteJointConfig>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // .motionlab.mechanism.Range angle_limit = 1 [json_name = "angleLimit"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(RevoluteJointConfig, _impl_.angle_limit_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.Range angle_limit = 1 [json_name = "angleLimit"];
+    {PROTOBUF_FIELD_OFFSET(RevoluteJointConfig, _impl_.angle_limit_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Range>()},
+  }},
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void RevoluteJointConfig::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.RevoluteJointConfig)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(_impl_.angle_limit_ != nullptr);
+    _impl_.angle_limit_->Clear();
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL RevoluteJointConfig::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const RevoluteJointConfig& this_ = static_cast<const RevoluteJointConfig&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL RevoluteJointConfig::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const RevoluteJointConfig& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.RevoluteJointConfig)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.Range angle_limit = 1 [json_name = "angleLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.angle_limit_, this_._impl_.angle_limit_->GetCachedSize(), target,
+        stream);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.RevoluteJointConfig)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t RevoluteJointConfig::ByteSizeLong(const MessageLite& base) {
+  const RevoluteJointConfig& this_ = static_cast<const RevoluteJointConfig&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t RevoluteJointConfig::ByteSizeLong() const {
+  const RevoluteJointConfig& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.RevoluteJointConfig)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+   {
+    // .motionlab.mechanism.Range angle_limit = 1 [json_name = "angleLimit"];
+    cached_has_bits = this_._impl_._has_bits_[0];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.angle_limit_);
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void RevoluteJointConfig::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<RevoluteJointConfig*>(&to_msg);
+  auto& from = static_cast<const RevoluteJointConfig&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.RevoluteJointConfig)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(from._impl_.angle_limit_ != nullptr);
+    if (_this->_impl_.angle_limit_ == nullptr) {
+      _this->_impl_.angle_limit_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.angle_limit_);
+    } else {
+      _this->_impl_.angle_limit_->MergeFrom(*from._impl_.angle_limit_);
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void RevoluteJointConfig::CopyFrom(const RevoluteJointConfig& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.RevoluteJointConfig)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void RevoluteJointConfig::InternalSwap(RevoluteJointConfig* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  swap(_impl_.angle_limit_, other->_impl_.angle_limit_);
+}
+
+::google::protobuf::Metadata RevoluteJointConfig::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class PrismaticJointConfig::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<PrismaticJointConfig>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(PrismaticJointConfig, _impl_._has_bits_);
+};
+
+PrismaticJointConfig::PrismaticJointConfig(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PrismaticJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.PrismaticJointConfig)
+}
+PROTOBUF_NDEBUG_INLINE PrismaticJointConfig::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::PrismaticJointConfig& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
+PrismaticJointConfig::PrismaticJointConfig(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const PrismaticJointConfig& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PrismaticJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  PrismaticJointConfig* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.translation_limit_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.translation_limit_)
+                : nullptr;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.PrismaticJointConfig)
+}
+PROTOBUF_NDEBUG_INLINE PrismaticJointConfig::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void PrismaticJointConfig::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.translation_limit_ = {};
+}
+PrismaticJointConfig::~PrismaticJointConfig() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.PrismaticJointConfig)
+  SharedDtor(*this);
+}
+inline void PrismaticJointConfig::SharedDtor(MessageLite& self) {
+  PrismaticJointConfig& this_ = static_cast<PrismaticJointConfig&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.translation_limit_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL PrismaticJointConfig::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) PrismaticJointConfig(arena);
+}
+constexpr auto PrismaticJointConfig::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(PrismaticJointConfig),
+                                            alignof(PrismaticJointConfig));
+}
+constexpr auto PrismaticJointConfig::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_PrismaticJointConfig_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &PrismaticJointConfig::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<PrismaticJointConfig>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &PrismaticJointConfig::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<PrismaticJointConfig>(), &PrismaticJointConfig::ByteSizeLong,
+              &PrismaticJointConfig::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(PrismaticJointConfig, _impl_._cached_size_),
+          false,
+      },
+      &PrismaticJointConfig::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull PrismaticJointConfig_class_data_ =
+        PrismaticJointConfig::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+PrismaticJointConfig::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&PrismaticJointConfig_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(PrismaticJointConfig_class_data_.tc_table);
+  return PrismaticJointConfig_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 1, 0, 2>
+PrismaticJointConfig::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(PrismaticJointConfig, _impl_._has_bits_),
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    PrismaticJointConfig_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::PrismaticJointConfig>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // .motionlab.mechanism.Range translation_limit = 1 [json_name = "translationLimit"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(PrismaticJointConfig, _impl_.translation_limit_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.Range translation_limit = 1 [json_name = "translationLimit"];
+    {PROTOBUF_FIELD_OFFSET(PrismaticJointConfig, _impl_.translation_limit_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Range>()},
+  }},
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void PrismaticJointConfig::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.PrismaticJointConfig)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(_impl_.translation_limit_ != nullptr);
+    _impl_.translation_limit_->Clear();
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL PrismaticJointConfig::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const PrismaticJointConfig& this_ = static_cast<const PrismaticJointConfig&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL PrismaticJointConfig::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const PrismaticJointConfig& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.PrismaticJointConfig)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.Range translation_limit = 1 [json_name = "translationLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.translation_limit_, this_._impl_.translation_limit_->GetCachedSize(), target,
+        stream);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.PrismaticJointConfig)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t PrismaticJointConfig::ByteSizeLong(const MessageLite& base) {
+  const PrismaticJointConfig& this_ = static_cast<const PrismaticJointConfig&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t PrismaticJointConfig::ByteSizeLong() const {
+  const PrismaticJointConfig& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.PrismaticJointConfig)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+   {
+    // .motionlab.mechanism.Range translation_limit = 1 [json_name = "translationLimit"];
+    cached_has_bits = this_._impl_._has_bits_[0];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.translation_limit_);
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void PrismaticJointConfig::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<PrismaticJointConfig*>(&to_msg);
+  auto& from = static_cast<const PrismaticJointConfig&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.PrismaticJointConfig)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(from._impl_.translation_limit_ != nullptr);
+    if (_this->_impl_.translation_limit_ == nullptr) {
+      _this->_impl_.translation_limit_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.translation_limit_);
+    } else {
+      _this->_impl_.translation_limit_->MergeFrom(*from._impl_.translation_limit_);
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void PrismaticJointConfig::CopyFrom(const PrismaticJointConfig& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.PrismaticJointConfig)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void PrismaticJointConfig::InternalSwap(PrismaticJointConfig* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  swap(_impl_.translation_limit_, other->_impl_.translation_limit_);
+}
+
+::google::protobuf::Metadata PrismaticJointConfig::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class FixedJointConfig::_Internal {
+ public:
+};
+
+FixedJointConfig::FixedJointConfig(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::internal::ZeroFieldsBase(arena, FixedJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.FixedJointConfig)
+}
+FixedJointConfig::FixedJointConfig(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const FixedJointConfig& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::internal::ZeroFieldsBase(arena, FixedJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  FixedJointConfig* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.FixedJointConfig)
+}
+
+inline void* PROTOBUF_NONNULL FixedJointConfig::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) FixedJointConfig(arena);
+}
+constexpr auto FixedJointConfig::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(FixedJointConfig),
+                                            alignof(FixedJointConfig));
+}
+constexpr auto FixedJointConfig::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_FixedJointConfig_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &FixedJointConfig::MergeImpl,
+          ::google::protobuf::internal::ZeroFieldsBase::GetNewImpl<FixedJointConfig>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &FixedJointConfig::SharedDtor,
+          ::google::protobuf::internal::ZeroFieldsBase::GetClearImpl<FixedJointConfig>(), &FixedJointConfig::ByteSizeLong,
+              &FixedJointConfig::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(FixedJointConfig, _impl_._cached_size_),
+          false,
+      },
+      &FixedJointConfig::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull FixedJointConfig_class_data_ =
+        FixedJointConfig::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+FixedJointConfig::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&FixedJointConfig_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(FixedJointConfig_class_data_.tc_table);
+  return FixedJointConfig_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 0, 0, 0, 2>
+FixedJointConfig::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    0, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967295,  // skipmap
+    offsetof(decltype(_table_), field_names),  // no field_entries
+    0,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    FixedJointConfig_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::FixedJointConfig>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, // no field_entries, or aux_entries
+  {{
+  }},
+};
+
+
+
+
+
+
+
+::google::protobuf::Metadata FixedJointConfig::GetMetadata() const {
+  return ::google::protobuf::internal::ZeroFieldsBase::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class SphericalJointConfig::_Internal {
+ public:
+};
+
+SphericalJointConfig::SphericalJointConfig(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::internal::ZeroFieldsBase(arena, SphericalJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.SphericalJointConfig)
+}
+SphericalJointConfig::SphericalJointConfig(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const SphericalJointConfig& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::internal::ZeroFieldsBase(arena, SphericalJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SphericalJointConfig* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.SphericalJointConfig)
+}
+
+inline void* PROTOBUF_NONNULL SphericalJointConfig::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) SphericalJointConfig(arena);
+}
+constexpr auto SphericalJointConfig::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(SphericalJointConfig),
+                                            alignof(SphericalJointConfig));
+}
+constexpr auto SphericalJointConfig::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_SphericalJointConfig_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &SphericalJointConfig::MergeImpl,
+          ::google::protobuf::internal::ZeroFieldsBase::GetNewImpl<SphericalJointConfig>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &SphericalJointConfig::SharedDtor,
+          ::google::protobuf::internal::ZeroFieldsBase::GetClearImpl<SphericalJointConfig>(), &SphericalJointConfig::ByteSizeLong,
+              &SphericalJointConfig::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(SphericalJointConfig, _impl_._cached_size_),
+          false,
+      },
+      &SphericalJointConfig::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull SphericalJointConfig_class_data_ =
+        SphericalJointConfig::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+SphericalJointConfig::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&SphericalJointConfig_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(SphericalJointConfig_class_data_.tc_table);
+  return SphericalJointConfig_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 0, 0, 0, 2>
+SphericalJointConfig::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    0, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967295,  // skipmap
+    offsetof(decltype(_table_), field_names),  // no field_entries
+    0,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    SphericalJointConfig_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::SphericalJointConfig>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, // no field_entries, or aux_entries
+  {{
+  }},
+};
+
+
+
+
+
+
+
+::google::protobuf::Metadata SphericalJointConfig::GetMetadata() const {
+  return ::google::protobuf::internal::ZeroFieldsBase::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class CylindricalJointConfig::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<CylindricalJointConfig>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(CylindricalJointConfig, _impl_._has_bits_);
+};
+
+CylindricalJointConfig::CylindricalJointConfig(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CylindricalJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.CylindricalJointConfig)
+}
+PROTOBUF_NDEBUG_INLINE CylindricalJointConfig::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::CylindricalJointConfig& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
+CylindricalJointConfig::CylindricalJointConfig(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const CylindricalJointConfig& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CylindricalJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  CylindricalJointConfig* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.translation_limit_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.translation_limit_)
+                : nullptr;
+  _impl_.rotation_limit_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.rotation_limit_)
+                : nullptr;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.CylindricalJointConfig)
+}
+PROTOBUF_NDEBUG_INLINE CylindricalJointConfig::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void CylindricalJointConfig::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, translation_limit_),
+           0,
+           offsetof(Impl_, rotation_limit_) -
+               offsetof(Impl_, translation_limit_) +
+               sizeof(Impl_::rotation_limit_));
+}
+CylindricalJointConfig::~CylindricalJointConfig() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.CylindricalJointConfig)
+  SharedDtor(*this);
+}
+inline void CylindricalJointConfig::SharedDtor(MessageLite& self) {
+  CylindricalJointConfig& this_ = static_cast<CylindricalJointConfig&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.translation_limit_;
+  delete this_._impl_.rotation_limit_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL CylindricalJointConfig::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) CylindricalJointConfig(arena);
+}
+constexpr auto CylindricalJointConfig::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(CylindricalJointConfig),
+                                            alignof(CylindricalJointConfig));
+}
+constexpr auto CylindricalJointConfig::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_CylindricalJointConfig_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &CylindricalJointConfig::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<CylindricalJointConfig>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &CylindricalJointConfig::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<CylindricalJointConfig>(), &CylindricalJointConfig::ByteSizeLong,
+              &CylindricalJointConfig::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(CylindricalJointConfig, _impl_._cached_size_),
+          false,
+      },
+      &CylindricalJointConfig::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull CylindricalJointConfig_class_data_ =
+        CylindricalJointConfig::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+CylindricalJointConfig::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&CylindricalJointConfig_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(CylindricalJointConfig_class_data_.tc_table);
+  return CylindricalJointConfig_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 2, 0, 2>
+CylindricalJointConfig::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(CylindricalJointConfig, _impl_._has_bits_),
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    2,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    CylindricalJointConfig_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::CylindricalJointConfig>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // .motionlab.mechanism.Range rotation_limit = 2 [json_name = "rotationLimit"];
+    {::_pbi::TcParser::FastMtS1,
+     {18, 1, 1,
+      PROTOBUF_FIELD_OFFSET(CylindricalJointConfig, _impl_.rotation_limit_)}},
+    // .motionlab.mechanism.Range translation_limit = 1 [json_name = "translationLimit"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(CylindricalJointConfig, _impl_.translation_limit_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.Range translation_limit = 1 [json_name = "translationLimit"];
+    {PROTOBUF_FIELD_OFFSET(CylindricalJointConfig, _impl_.translation_limit_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.Range rotation_limit = 2 [json_name = "rotationLimit"];
+    {PROTOBUF_FIELD_OFFSET(CylindricalJointConfig, _impl_.rotation_limit_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Range>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Range>()},
+  }},
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void CylindricalJointConfig::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.CylindricalJointConfig)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(_impl_.translation_limit_ != nullptr);
+      _impl_.translation_limit_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.rotation_limit_ != nullptr);
+      _impl_.rotation_limit_->Clear();
+    }
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL CylindricalJointConfig::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const CylindricalJointConfig& this_ = static_cast<const CylindricalJointConfig&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL CylindricalJointConfig::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const CylindricalJointConfig& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.CylindricalJointConfig)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.Range translation_limit = 1 [json_name = "translationLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.translation_limit_, this_._impl_.translation_limit_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.Range rotation_limit = 2 [json_name = "rotationLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        2, *this_._impl_.rotation_limit_, this_._impl_.rotation_limit_->GetCachedSize(), target,
+        stream);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.CylindricalJointConfig)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t CylindricalJointConfig::ByteSizeLong(const MessageLite& base) {
+  const CylindricalJointConfig& this_ = static_cast<const CylindricalJointConfig&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t CylindricalJointConfig::ByteSizeLong() const {
+  const CylindricalJointConfig& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.CylindricalJointConfig)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    // .motionlab.mechanism.Range translation_limit = 1 [json_name = "translationLimit"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.translation_limit_);
+    }
+    // .motionlab.mechanism.Range rotation_limit = 2 [json_name = "rotationLimit"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.rotation_limit_);
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void CylindricalJointConfig::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<CylindricalJointConfig*>(&to_msg);
+  auto& from = static_cast<const CylindricalJointConfig&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.CylindricalJointConfig)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(from._impl_.translation_limit_ != nullptr);
+      if (_this->_impl_.translation_limit_ == nullptr) {
+        _this->_impl_.translation_limit_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.translation_limit_);
+      } else {
+        _this->_impl_.translation_limit_->MergeFrom(*from._impl_.translation_limit_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.rotation_limit_ != nullptr);
+      if (_this->_impl_.rotation_limit_ == nullptr) {
+        _this->_impl_.rotation_limit_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.rotation_limit_);
+      } else {
+        _this->_impl_.rotation_limit_->MergeFrom(*from._impl_.rotation_limit_);
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void CylindricalJointConfig::CopyFrom(const CylindricalJointConfig& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.CylindricalJointConfig)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void CylindricalJointConfig::InternalSwap(CylindricalJointConfig* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(CylindricalJointConfig, _impl_.rotation_limit_)
+      + sizeof(CylindricalJointConfig::_impl_.rotation_limit_)
+      - PROTOBUF_FIELD_OFFSET(CylindricalJointConfig, _impl_.translation_limit_)>(
+          reinterpret_cast<char*>(&_impl_.translation_limit_),
+          reinterpret_cast<char*>(&other->_impl_.translation_limit_));
+}
+
+::google::protobuf::Metadata CylindricalJointConfig::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class PlanarJointConfig::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<PlanarJointConfig>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(PlanarJointConfig, _impl_._has_bits_);
+};
+
+PlanarJointConfig::PlanarJointConfig(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PlanarJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.PlanarJointConfig)
+}
+PROTOBUF_NDEBUG_INLINE PlanarJointConfig::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::PlanarJointConfig& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
+PlanarJointConfig::PlanarJointConfig(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const PlanarJointConfig& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PlanarJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  PlanarJointConfig* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.translation_x_limit_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.translation_x_limit_)
+                : nullptr;
+  _impl_.translation_y_limit_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.translation_y_limit_)
+                : nullptr;
+  _impl_.rotation_limit_ = (CheckHasBit(cached_has_bits, 0x00000004U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.rotation_limit_)
+                : nullptr;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.PlanarJointConfig)
+}
+PROTOBUF_NDEBUG_INLINE PlanarJointConfig::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void PlanarJointConfig::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, translation_x_limit_),
+           0,
+           offsetof(Impl_, rotation_limit_) -
+               offsetof(Impl_, translation_x_limit_) +
+               sizeof(Impl_::rotation_limit_));
+}
+PlanarJointConfig::~PlanarJointConfig() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.PlanarJointConfig)
+  SharedDtor(*this);
+}
+inline void PlanarJointConfig::SharedDtor(MessageLite& self) {
+  PlanarJointConfig& this_ = static_cast<PlanarJointConfig&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.translation_x_limit_;
+  delete this_._impl_.translation_y_limit_;
+  delete this_._impl_.rotation_limit_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL PlanarJointConfig::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) PlanarJointConfig(arena);
+}
+constexpr auto PlanarJointConfig::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(PlanarJointConfig),
+                                            alignof(PlanarJointConfig));
+}
+constexpr auto PlanarJointConfig::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_PlanarJointConfig_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &PlanarJointConfig::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<PlanarJointConfig>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &PlanarJointConfig::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<PlanarJointConfig>(), &PlanarJointConfig::ByteSizeLong,
+              &PlanarJointConfig::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(PlanarJointConfig, _impl_._cached_size_),
+          false,
+      },
+      &PlanarJointConfig::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull PlanarJointConfig_class_data_ =
+        PlanarJointConfig::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+PlanarJointConfig::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&PlanarJointConfig_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(PlanarJointConfig_class_data_.tc_table);
+  return PlanarJointConfig_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 3, 3, 0, 2>
+PlanarJointConfig::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(PlanarJointConfig, _impl_._has_bits_),
+    0, // no _extensions_
+    3, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967288,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    3,  // num_field_entries
+    3,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    PlanarJointConfig_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::PlanarJointConfig>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // .motionlab.mechanism.Range translation_x_limit = 1 [json_name = "translationXLimit"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(PlanarJointConfig, _impl_.translation_x_limit_)}},
+    // .motionlab.mechanism.Range translation_y_limit = 2 [json_name = "translationYLimit"];
+    {::_pbi::TcParser::FastMtS1,
+     {18, 1, 1,
+      PROTOBUF_FIELD_OFFSET(PlanarJointConfig, _impl_.translation_y_limit_)}},
+    // .motionlab.mechanism.Range rotation_limit = 3 [json_name = "rotationLimit"];
+    {::_pbi::TcParser::FastMtS1,
+     {26, 2, 2,
+      PROTOBUF_FIELD_OFFSET(PlanarJointConfig, _impl_.rotation_limit_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.Range translation_x_limit = 1 [json_name = "translationXLimit"];
+    {PROTOBUF_FIELD_OFFSET(PlanarJointConfig, _impl_.translation_x_limit_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.Range translation_y_limit = 2 [json_name = "translationYLimit"];
+    {PROTOBUF_FIELD_OFFSET(PlanarJointConfig, _impl_.translation_y_limit_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.Range rotation_limit = 3 [json_name = "rotationLimit"];
+    {PROTOBUF_FIELD_OFFSET(PlanarJointConfig, _impl_.rotation_limit_), _Internal::kHasBitsOffset + 2, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Range>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Range>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Range>()},
+  }},
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void PlanarJointConfig::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.PlanarJointConfig)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(_impl_.translation_x_limit_ != nullptr);
+      _impl_.translation_x_limit_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.translation_y_limit_ != nullptr);
+      _impl_.translation_y_limit_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      ABSL_DCHECK(_impl_.rotation_limit_ != nullptr);
+      _impl_.rotation_limit_->Clear();
+    }
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL PlanarJointConfig::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const PlanarJointConfig& this_ = static_cast<const PlanarJointConfig&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL PlanarJointConfig::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const PlanarJointConfig& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.PlanarJointConfig)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.Range translation_x_limit = 1 [json_name = "translationXLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.translation_x_limit_, this_._impl_.translation_x_limit_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.Range translation_y_limit = 2 [json_name = "translationYLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        2, *this_._impl_.translation_y_limit_, this_._impl_.translation_y_limit_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.Range rotation_limit = 3 [json_name = "rotationLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        3, *this_._impl_.rotation_limit_, this_._impl_.rotation_limit_->GetCachedSize(), target,
+        stream);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.PlanarJointConfig)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t PlanarJointConfig::ByteSizeLong(const MessageLite& base) {
+  const PlanarJointConfig& this_ = static_cast<const PlanarJointConfig&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t PlanarJointConfig::ByteSizeLong() const {
+  const PlanarJointConfig& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.PlanarJointConfig)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    // .motionlab.mechanism.Range translation_x_limit = 1 [json_name = "translationXLimit"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.translation_x_limit_);
+    }
+    // .motionlab.mechanism.Range translation_y_limit = 2 [json_name = "translationYLimit"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.translation_y_limit_);
+    }
+    // .motionlab.mechanism.Range rotation_limit = 3 [json_name = "rotationLimit"];
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.rotation_limit_);
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void PlanarJointConfig::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<PlanarJointConfig*>(&to_msg);
+  auto& from = static_cast<const PlanarJointConfig&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.PlanarJointConfig)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(from._impl_.translation_x_limit_ != nullptr);
+      if (_this->_impl_.translation_x_limit_ == nullptr) {
+        _this->_impl_.translation_x_limit_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.translation_x_limit_);
+      } else {
+        _this->_impl_.translation_x_limit_->MergeFrom(*from._impl_.translation_x_limit_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.translation_y_limit_ != nullptr);
+      if (_this->_impl_.translation_y_limit_ == nullptr) {
+        _this->_impl_.translation_y_limit_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.translation_y_limit_);
+      } else {
+        _this->_impl_.translation_y_limit_->MergeFrom(*from._impl_.translation_y_limit_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      ABSL_DCHECK(from._impl_.rotation_limit_ != nullptr);
+      if (_this->_impl_.rotation_limit_ == nullptr) {
+        _this->_impl_.rotation_limit_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.rotation_limit_);
+      } else {
+        _this->_impl_.rotation_limit_->MergeFrom(*from._impl_.rotation_limit_);
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void PlanarJointConfig::CopyFrom(const PlanarJointConfig& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.PlanarJointConfig)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void PlanarJointConfig::InternalSwap(PlanarJointConfig* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(PlanarJointConfig, _impl_.rotation_limit_)
+      + sizeof(PlanarJointConfig::_impl_.rotation_limit_)
+      - PROTOBUF_FIELD_OFFSET(PlanarJointConfig, _impl_.translation_x_limit_)>(
+          reinterpret_cast<char*>(&_impl_.translation_x_limit_),
+          reinterpret_cast<char*>(&other->_impl_.translation_x_limit_));
+}
+
+::google::protobuf::Metadata PlanarJointConfig::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class UniversalJointConfig::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<UniversalJointConfig>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(UniversalJointConfig, _impl_._has_bits_);
+};
+
+UniversalJointConfig::UniversalJointConfig(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, UniversalJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.UniversalJointConfig)
+}
+PROTOBUF_NDEBUG_INLINE UniversalJointConfig::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::UniversalJointConfig& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
+UniversalJointConfig::UniversalJointConfig(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const UniversalJointConfig& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, UniversalJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  UniversalJointConfig* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.rotation_x_limit_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.rotation_x_limit_)
+                : nullptr;
+  _impl_.rotation_y_limit_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.rotation_y_limit_)
+                : nullptr;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.UniversalJointConfig)
+}
+PROTOBUF_NDEBUG_INLINE UniversalJointConfig::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void UniversalJointConfig::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, rotation_x_limit_),
+           0,
+           offsetof(Impl_, rotation_y_limit_) -
+               offsetof(Impl_, rotation_x_limit_) +
+               sizeof(Impl_::rotation_y_limit_));
+}
+UniversalJointConfig::~UniversalJointConfig() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.UniversalJointConfig)
+  SharedDtor(*this);
+}
+inline void UniversalJointConfig::SharedDtor(MessageLite& self) {
+  UniversalJointConfig& this_ = static_cast<UniversalJointConfig&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.rotation_x_limit_;
+  delete this_._impl_.rotation_y_limit_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL UniversalJointConfig::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) UniversalJointConfig(arena);
+}
+constexpr auto UniversalJointConfig::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(UniversalJointConfig),
+                                            alignof(UniversalJointConfig));
+}
+constexpr auto UniversalJointConfig::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_UniversalJointConfig_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &UniversalJointConfig::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<UniversalJointConfig>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &UniversalJointConfig::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<UniversalJointConfig>(), &UniversalJointConfig::ByteSizeLong,
+              &UniversalJointConfig::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(UniversalJointConfig, _impl_._cached_size_),
+          false,
+      },
+      &UniversalJointConfig::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull UniversalJointConfig_class_data_ =
+        UniversalJointConfig::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+UniversalJointConfig::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&UniversalJointConfig_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(UniversalJointConfig_class_data_.tc_table);
+  return UniversalJointConfig_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 2, 0, 2>
+UniversalJointConfig::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(UniversalJointConfig, _impl_._has_bits_),
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    2,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    UniversalJointConfig_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::UniversalJointConfig>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // .motionlab.mechanism.Range rotation_y_limit = 2 [json_name = "rotationYLimit"];
+    {::_pbi::TcParser::FastMtS1,
+     {18, 1, 1,
+      PROTOBUF_FIELD_OFFSET(UniversalJointConfig, _impl_.rotation_y_limit_)}},
+    // .motionlab.mechanism.Range rotation_x_limit = 1 [json_name = "rotationXLimit"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(UniversalJointConfig, _impl_.rotation_x_limit_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.Range rotation_x_limit = 1 [json_name = "rotationXLimit"];
+    {PROTOBUF_FIELD_OFFSET(UniversalJointConfig, _impl_.rotation_x_limit_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.Range rotation_y_limit = 2 [json_name = "rotationYLimit"];
+    {PROTOBUF_FIELD_OFFSET(UniversalJointConfig, _impl_.rotation_y_limit_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Range>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Range>()},
+  }},
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void UniversalJointConfig::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.UniversalJointConfig)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(_impl_.rotation_x_limit_ != nullptr);
+      _impl_.rotation_x_limit_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.rotation_y_limit_ != nullptr);
+      _impl_.rotation_y_limit_->Clear();
+    }
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL UniversalJointConfig::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const UniversalJointConfig& this_ = static_cast<const UniversalJointConfig&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL UniversalJointConfig::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const UniversalJointConfig& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.UniversalJointConfig)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.Range rotation_x_limit = 1 [json_name = "rotationXLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.rotation_x_limit_, this_._impl_.rotation_x_limit_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.Range rotation_y_limit = 2 [json_name = "rotationYLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        2, *this_._impl_.rotation_y_limit_, this_._impl_.rotation_y_limit_->GetCachedSize(), target,
+        stream);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.UniversalJointConfig)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t UniversalJointConfig::ByteSizeLong(const MessageLite& base) {
+  const UniversalJointConfig& this_ = static_cast<const UniversalJointConfig&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t UniversalJointConfig::ByteSizeLong() const {
+  const UniversalJointConfig& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.UniversalJointConfig)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    // .motionlab.mechanism.Range rotation_x_limit = 1 [json_name = "rotationXLimit"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.rotation_x_limit_);
+    }
+    // .motionlab.mechanism.Range rotation_y_limit = 2 [json_name = "rotationYLimit"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.rotation_y_limit_);
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void UniversalJointConfig::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<UniversalJointConfig*>(&to_msg);
+  auto& from = static_cast<const UniversalJointConfig&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.UniversalJointConfig)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(from._impl_.rotation_x_limit_ != nullptr);
+      if (_this->_impl_.rotation_x_limit_ == nullptr) {
+        _this->_impl_.rotation_x_limit_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.rotation_x_limit_);
+      } else {
+        _this->_impl_.rotation_x_limit_->MergeFrom(*from._impl_.rotation_x_limit_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.rotation_y_limit_ != nullptr);
+      if (_this->_impl_.rotation_y_limit_ == nullptr) {
+        _this->_impl_.rotation_y_limit_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.rotation_y_limit_);
+      } else {
+        _this->_impl_.rotation_y_limit_->MergeFrom(*from._impl_.rotation_y_limit_);
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void UniversalJointConfig::CopyFrom(const UniversalJointConfig& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.UniversalJointConfig)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void UniversalJointConfig::InternalSwap(UniversalJointConfig* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(UniversalJointConfig, _impl_.rotation_y_limit_)
+      + sizeof(UniversalJointConfig::_impl_.rotation_y_limit_)
+      - PROTOBUF_FIELD_OFFSET(UniversalJointConfig, _impl_.rotation_x_limit_)>(
+          reinterpret_cast<char*>(&_impl_.rotation_x_limit_),
+          reinterpret_cast<char*>(&other->_impl_.rotation_x_limit_));
+}
+
+::google::protobuf::Metadata UniversalJointConfig::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class DistanceJointConfig::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<DistanceJointConfig>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(DistanceJointConfig, _impl_._has_bits_);
+};
+
+DistanceJointConfig::DistanceJointConfig(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, DistanceJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.DistanceJointConfig)
+}
+PROTOBUF_NDEBUG_INLINE DistanceJointConfig::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::DistanceJointConfig& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
+DistanceJointConfig::DistanceJointConfig(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const DistanceJointConfig& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, DistanceJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  DistanceJointConfig* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.distance_limit_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.distance_limit_)
+                : nullptr;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.DistanceJointConfig)
+}
+PROTOBUF_NDEBUG_INLINE DistanceJointConfig::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void DistanceJointConfig::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.distance_limit_ = {};
+}
+DistanceJointConfig::~DistanceJointConfig() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.DistanceJointConfig)
+  SharedDtor(*this);
+}
+inline void DistanceJointConfig::SharedDtor(MessageLite& self) {
+  DistanceJointConfig& this_ = static_cast<DistanceJointConfig&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.distance_limit_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL DistanceJointConfig::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) DistanceJointConfig(arena);
+}
+constexpr auto DistanceJointConfig::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(DistanceJointConfig),
+                                            alignof(DistanceJointConfig));
+}
+constexpr auto DistanceJointConfig::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_DistanceJointConfig_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &DistanceJointConfig::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<DistanceJointConfig>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &DistanceJointConfig::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<DistanceJointConfig>(), &DistanceJointConfig::ByteSizeLong,
+              &DistanceJointConfig::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(DistanceJointConfig, _impl_._cached_size_),
+          false,
+      },
+      &DistanceJointConfig::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull DistanceJointConfig_class_data_ =
+        DistanceJointConfig::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+DistanceJointConfig::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&DistanceJointConfig_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(DistanceJointConfig_class_data_.tc_table);
+  return DistanceJointConfig_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 1, 0, 2>
+DistanceJointConfig::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(DistanceJointConfig, _impl_._has_bits_),
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    DistanceJointConfig_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::DistanceJointConfig>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // .motionlab.mechanism.Range distance_limit = 1 [json_name = "distanceLimit"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(DistanceJointConfig, _impl_.distance_limit_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.Range distance_limit = 1 [json_name = "distanceLimit"];
+    {PROTOBUF_FIELD_OFFSET(DistanceJointConfig, _impl_.distance_limit_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Range>()},
+  }},
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void DistanceJointConfig::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.DistanceJointConfig)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(_impl_.distance_limit_ != nullptr);
+    _impl_.distance_limit_->Clear();
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL DistanceJointConfig::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const DistanceJointConfig& this_ = static_cast<const DistanceJointConfig&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL DistanceJointConfig::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const DistanceJointConfig& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.DistanceJointConfig)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.Range distance_limit = 1 [json_name = "distanceLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.distance_limit_, this_._impl_.distance_limit_->GetCachedSize(), target,
+        stream);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.DistanceJointConfig)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t DistanceJointConfig::ByteSizeLong(const MessageLite& base) {
+  const DistanceJointConfig& this_ = static_cast<const DistanceJointConfig&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t DistanceJointConfig::ByteSizeLong() const {
+  const DistanceJointConfig& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.DistanceJointConfig)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+   {
+    // .motionlab.mechanism.Range distance_limit = 1 [json_name = "distanceLimit"];
+    cached_has_bits = this_._impl_._has_bits_[0];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.distance_limit_);
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void DistanceJointConfig::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<DistanceJointConfig*>(&to_msg);
+  auto& from = static_cast<const DistanceJointConfig&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.DistanceJointConfig)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(from._impl_.distance_limit_ != nullptr);
+    if (_this->_impl_.distance_limit_ == nullptr) {
+      _this->_impl_.distance_limit_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.distance_limit_);
+    } else {
+      _this->_impl_.distance_limit_->MergeFrom(*from._impl_.distance_limit_);
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void DistanceJointConfig::CopyFrom(const DistanceJointConfig& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.DistanceJointConfig)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void DistanceJointConfig::InternalSwap(DistanceJointConfig* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  swap(_impl_.distance_limit_, other->_impl_.distance_limit_);
+}
+
+::google::protobuf::Metadata DistanceJointConfig::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class PointLineJointConfig::_Internal {
+ public:
+};
+
+PointLineJointConfig::PointLineJointConfig(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::internal::ZeroFieldsBase(arena, PointLineJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.PointLineJointConfig)
+}
+PointLineJointConfig::PointLineJointConfig(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const PointLineJointConfig& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::internal::ZeroFieldsBase(arena, PointLineJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  PointLineJointConfig* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.PointLineJointConfig)
+}
+
+inline void* PROTOBUF_NONNULL PointLineJointConfig::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) PointLineJointConfig(arena);
+}
+constexpr auto PointLineJointConfig::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(PointLineJointConfig),
+                                            alignof(PointLineJointConfig));
+}
+constexpr auto PointLineJointConfig::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_PointLineJointConfig_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &PointLineJointConfig::MergeImpl,
+          ::google::protobuf::internal::ZeroFieldsBase::GetNewImpl<PointLineJointConfig>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &PointLineJointConfig::SharedDtor,
+          ::google::protobuf::internal::ZeroFieldsBase::GetClearImpl<PointLineJointConfig>(), &PointLineJointConfig::ByteSizeLong,
+              &PointLineJointConfig::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(PointLineJointConfig, _impl_._cached_size_),
+          false,
+      },
+      &PointLineJointConfig::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull PointLineJointConfig_class_data_ =
+        PointLineJointConfig::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+PointLineJointConfig::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&PointLineJointConfig_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(PointLineJointConfig_class_data_.tc_table);
+  return PointLineJointConfig_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 0, 0, 0, 2>
+PointLineJointConfig::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    0, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967295,  // skipmap
+    offsetof(decltype(_table_), field_names),  // no field_entries
+    0,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    PointLineJointConfig_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::PointLineJointConfig>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, // no field_entries, or aux_entries
+  {{
+  }},
+};
+
+
+
+
+
+
+
+::google::protobuf::Metadata PointLineJointConfig::GetMetadata() const {
+  return ::google::protobuf::internal::ZeroFieldsBase::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class PointPlaneJointConfig::_Internal {
+ public:
+};
+
+PointPlaneJointConfig::PointPlaneJointConfig(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::internal::ZeroFieldsBase(arena, PointPlaneJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.PointPlaneJointConfig)
+}
+PointPlaneJointConfig::PointPlaneJointConfig(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const PointPlaneJointConfig& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::internal::ZeroFieldsBase(arena, PointPlaneJointConfig_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  PointPlaneJointConfig* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.PointPlaneJointConfig)
+}
+
+inline void* PROTOBUF_NONNULL PointPlaneJointConfig::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) PointPlaneJointConfig(arena);
+}
+constexpr auto PointPlaneJointConfig::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(PointPlaneJointConfig),
+                                            alignof(PointPlaneJointConfig));
+}
+constexpr auto PointPlaneJointConfig::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_PointPlaneJointConfig_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &PointPlaneJointConfig::MergeImpl,
+          ::google::protobuf::internal::ZeroFieldsBase::GetNewImpl<PointPlaneJointConfig>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &PointPlaneJointConfig::SharedDtor,
+          ::google::protobuf::internal::ZeroFieldsBase::GetClearImpl<PointPlaneJointConfig>(), &PointPlaneJointConfig::ByteSizeLong,
+              &PointPlaneJointConfig::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(PointPlaneJointConfig, _impl_._cached_size_),
+          false,
+      },
+      &PointPlaneJointConfig::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull PointPlaneJointConfig_class_data_ =
+        PointPlaneJointConfig::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+PointPlaneJointConfig::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&PointPlaneJointConfig_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(PointPlaneJointConfig_class_data_.tc_table);
+  return PointPlaneJointConfig_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 0, 0, 0, 2>
+PointPlaneJointConfig::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    0, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967295,  // skipmap
+    offsetof(decltype(_table_), field_names),  // no field_entries
+    0,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    PointPlaneJointConfig_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::PointPlaneJointConfig>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, // no field_entries, or aux_entries
+  {{
+  }},
+};
+
+
+
+
+
+
+
+::google::protobuf::Metadata PointPlaneJointConfig::GetMetadata() const {
+  return ::google::protobuf::internal::ZeroFieldsBase::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
 class Joint::_Internal {
  public:
   using HasBits =
       decltype(::std::declval<Joint>()._impl_._has_bits_);
   static constexpr ::int32_t kHasBitsOffset =
       8 * PROTOBUF_FIELD_OFFSET(Joint, _impl_._has_bits_);
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Joint, _impl_._oneof_case_);
 };
 
+void Joint::set_allocated_revolute(::motionlab::mechanism::RevoluteJointConfig* PROTOBUF_NULLABLE revolute) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (revolute) {
+    ::google::protobuf::Arena* submessage_arena = revolute->GetArena();
+    if (message_arena != submessage_arena) {
+      revolute = ::google::protobuf::internal::GetOwnedMessage(message_arena, revolute, submessage_arena);
+    }
+    set_has_revolute();
+    _impl_.config_.revolute_ = revolute;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.revolute)
+}
+void Joint::set_allocated_prismatic(::motionlab::mechanism::PrismaticJointConfig* PROTOBUF_NULLABLE prismatic) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (prismatic) {
+    ::google::protobuf::Arena* submessage_arena = prismatic->GetArena();
+    if (message_arena != submessage_arena) {
+      prismatic = ::google::protobuf::internal::GetOwnedMessage(message_arena, prismatic, submessage_arena);
+    }
+    set_has_prismatic();
+    _impl_.config_.prismatic_ = prismatic;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.prismatic)
+}
+void Joint::set_allocated_fixed(::motionlab::mechanism::FixedJointConfig* PROTOBUF_NULLABLE fixed) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (fixed) {
+    ::google::protobuf::Arena* submessage_arena = fixed->GetArena();
+    if (message_arena != submessage_arena) {
+      fixed = ::google::protobuf::internal::GetOwnedMessage(message_arena, fixed, submessage_arena);
+    }
+    set_has_fixed();
+    _impl_.config_.fixed_ = fixed;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.fixed)
+}
+void Joint::set_allocated_spherical(::motionlab::mechanism::SphericalJointConfig* PROTOBUF_NULLABLE spherical) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (spherical) {
+    ::google::protobuf::Arena* submessage_arena = spherical->GetArena();
+    if (message_arena != submessage_arena) {
+      spherical = ::google::protobuf::internal::GetOwnedMessage(message_arena, spherical, submessage_arena);
+    }
+    set_has_spherical();
+    _impl_.config_.spherical_ = spherical;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.spherical)
+}
+void Joint::set_allocated_cylindrical(::motionlab::mechanism::CylindricalJointConfig* PROTOBUF_NULLABLE cylindrical) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (cylindrical) {
+    ::google::protobuf::Arena* submessage_arena = cylindrical->GetArena();
+    if (message_arena != submessage_arena) {
+      cylindrical = ::google::protobuf::internal::GetOwnedMessage(message_arena, cylindrical, submessage_arena);
+    }
+    set_has_cylindrical();
+    _impl_.config_.cylindrical_ = cylindrical;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.cylindrical)
+}
+void Joint::set_allocated_planar(::motionlab::mechanism::PlanarJointConfig* PROTOBUF_NULLABLE planar) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (planar) {
+    ::google::protobuf::Arena* submessage_arena = planar->GetArena();
+    if (message_arena != submessage_arena) {
+      planar = ::google::protobuf::internal::GetOwnedMessage(message_arena, planar, submessage_arena);
+    }
+    set_has_planar();
+    _impl_.config_.planar_ = planar;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.planar)
+}
+void Joint::set_allocated_universal(::motionlab::mechanism::UniversalJointConfig* PROTOBUF_NULLABLE universal) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (universal) {
+    ::google::protobuf::Arena* submessage_arena = universal->GetArena();
+    if (message_arena != submessage_arena) {
+      universal = ::google::protobuf::internal::GetOwnedMessage(message_arena, universal, submessage_arena);
+    }
+    set_has_universal();
+    _impl_.config_.universal_ = universal;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.universal)
+}
+void Joint::set_allocated_distance(::motionlab::mechanism::DistanceJointConfig* PROTOBUF_NULLABLE distance) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (distance) {
+    ::google::protobuf::Arena* submessage_arena = distance->GetArena();
+    if (message_arena != submessage_arena) {
+      distance = ::google::protobuf::internal::GetOwnedMessage(message_arena, distance, submessage_arena);
+    }
+    set_has_distance();
+    _impl_.config_.distance_ = distance;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.distance)
+}
+void Joint::set_allocated_point_line(::motionlab::mechanism::PointLineJointConfig* PROTOBUF_NULLABLE point_line) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (point_line) {
+    ::google::protobuf::Arena* submessage_arena = point_line->GetArena();
+    if (message_arena != submessage_arena) {
+      point_line = ::google::protobuf::internal::GetOwnedMessage(message_arena, point_line, submessage_arena);
+    }
+    set_has_point_line();
+    _impl_.config_.point_line_ = point_line;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.point_line)
+}
+void Joint::set_allocated_point_plane(::motionlab::mechanism::PointPlaneJointConfig* PROTOBUF_NULLABLE point_plane) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (point_plane) {
+    ::google::protobuf::Arena* submessage_arena = point_plane->GetArena();
+    if (message_arena != submessage_arena) {
+      point_plane = ::google::protobuf::internal::GetOwnedMessage(message_arena, point_plane, submessage_arena);
+    }
+    set_has_point_plane();
+    _impl_.config_.point_plane_ = point_plane;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.point_plane)
+}
 Joint::Joint(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, Joint_class_data_.base()) {
@@ -4451,7 +8588,9 @@ PROTOBUF_NDEBUG_INLINE Joint::Impl_::Impl_(
     [[maybe_unused]] const ::motionlab::mechanism::Joint& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
-        name_(arena, from.name_) {}
+        name_(arena, from.name_),
+        config_{},
+        _oneof_case_{from._oneof_case_[0]} {}
 
 Joint::Joint(
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
@@ -4483,6 +8622,40 @@ Joint::Joint(
            offsetof(Impl_, type_) -
                offsetof(Impl_, lower_limit_) +
                sizeof(Impl_::type_));
+  switch (config_case()) {
+    case CONFIG_NOT_SET:
+      break;
+      case kRevolute:
+        _impl_.config_.revolute_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.revolute_);
+        break;
+      case kPrismatic:
+        _impl_.config_.prismatic_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.prismatic_);
+        break;
+      case kFixed:
+        _impl_.config_.fixed_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.fixed_);
+        break;
+      case kSpherical:
+        _impl_.config_.spherical_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.spherical_);
+        break;
+      case kCylindrical:
+        _impl_.config_.cylindrical_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.cylindrical_);
+        break;
+      case kPlanar:
+        _impl_.config_.planar_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.planar_);
+        break;
+      case kUniversal:
+        _impl_.config_.universal_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.universal_);
+        break;
+      case kDistance:
+        _impl_.config_.distance_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.distance_);
+        break;
+      case kPointLine:
+        _impl_.config_.point_line_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.point_line_);
+        break;
+      case kPointPlane:
+        _impl_.config_.point_plane_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.point_plane_);
+        break;
+  }
 
   // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.Joint)
 }
@@ -4490,7 +8663,9 @@ PROTOBUF_NDEBUG_INLINE Joint::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0},
-        name_(arena) {}
+        name_(arena),
+        config_{},
+        _oneof_case_{} {}
 
 inline void Joint::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
@@ -4516,8 +8691,103 @@ inline void Joint::SharedDtor(MessageLite& self) {
   delete this_._impl_.id_;
   delete this_._impl_.parent_datum_id_;
   delete this_._impl_.child_datum_id_;
+  if (this_.has_config()) {
+    this_.clear_config();
+  }
   this_._impl_.~Impl_();
 }
+
+void Joint::clear_config() {
+// @@protoc_insertion_point(one_of_clear_start:motionlab.mechanism.Joint)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (config_case()) {
+    case kRevolute: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.revolute_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.revolute_);
+      }
+      break;
+    }
+    case kPrismatic: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.prismatic_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.prismatic_);
+      }
+      break;
+    }
+    case kFixed: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.fixed_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.fixed_);
+      }
+      break;
+    }
+    case kSpherical: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.spherical_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.spherical_);
+      }
+      break;
+    }
+    case kCylindrical: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.cylindrical_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.cylindrical_);
+      }
+      break;
+    }
+    case kPlanar: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.planar_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.planar_);
+      }
+      break;
+    }
+    case kUniversal: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.universal_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.universal_);
+      }
+      break;
+    }
+    case kDistance: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.distance_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.distance_);
+      }
+      break;
+    }
+    case kPointLine: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.point_line_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.point_line_);
+      }
+      break;
+    }
+    case kPointPlane: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.point_plane_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.point_plane_);
+      }
+      break;
+    }
+    case CONFIG_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = CONFIG_NOT_SET;
+}
+
 
 inline void* PROTOBUF_NONNULL Joint::PlacementNew_(
     const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
@@ -4562,17 +8832,17 @@ Joint::GetClassData() const {
   return Joint_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 7, 3, 38, 2>
+const ::_pbi::TcParseTable<3, 17, 13, 54, 2>
 Joint::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Joint, _impl_._has_bits_),
     0, // no _extensions_
-    7, 56,  // max_field_number, fast_idx_mask
+    17, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967168,  // skipmap
+    4294836224,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    7,  // num_field_entries
-    3,  // num_aux_entries
+    17,  // num_field_entries
+    13,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     Joint_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -4602,11 +8872,11 @@ Joint::_table_ = {
     {::_pbi::TcParser::FastMtS1,
      {42, 3, 2,
       PROTOBUF_FIELD_OFFSET(Joint, _impl_.child_datum_id_)}},
-    // double lower_limit = 6 [json_name = "lowerLimit"];
+    // double lower_limit = 6 [json_name = "lowerLimit", deprecated = true];
     {::_pbi::TcParser::FastF64S1,
      {49, 4, 0,
       PROTOBUF_FIELD_OFFSET(Joint, _impl_.lower_limit_)}},
-    // double upper_limit = 7 [json_name = "upperLimit"];
+    // double upper_limit = 7 [json_name = "upperLimit", deprecated = true];
     {::_pbi::TcParser::FastF64S1,
      {57, 5, 0,
       PROTOBUF_FIELD_OFFSET(Joint, _impl_.upper_limit_)}},
@@ -4623,18 +8893,48 @@ Joint::_table_ = {
     {PROTOBUF_FIELD_OFFSET(Joint, _impl_.parent_datum_id_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // .motionlab.mechanism.ElementId child_datum_id = 5 [json_name = "childDatumId"];
     {PROTOBUF_FIELD_OFFSET(Joint, _impl_.child_datum_id_), _Internal::kHasBitsOffset + 3, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // double lower_limit = 6 [json_name = "lowerLimit"];
+    // double lower_limit = 6 [json_name = "lowerLimit", deprecated = true];
     {PROTOBUF_FIELD_OFFSET(Joint, _impl_.lower_limit_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double upper_limit = 7 [json_name = "upperLimit"];
+    // double upper_limit = 7 [json_name = "upperLimit", deprecated = true];
     {PROTOBUF_FIELD_OFFSET(Joint, _impl_.upper_limit_), _Internal::kHasBitsOffset + 5, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // .motionlab.mechanism.RevoluteJointConfig revolute = 8 [json_name = "revolute"];
+    {PROTOBUF_FIELD_OFFSET(Joint, _impl_.config_.revolute_), _Internal::kOneofCaseOffset + 0, 3, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.PrismaticJointConfig prismatic = 9 [json_name = "prismatic"];
+    {PROTOBUF_FIELD_OFFSET(Joint, _impl_.config_.prismatic_), _Internal::kOneofCaseOffset + 0, 4, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.FixedJointConfig fixed = 10 [json_name = "fixed"];
+    {PROTOBUF_FIELD_OFFSET(Joint, _impl_.config_.fixed_), _Internal::kOneofCaseOffset + 0, 5, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.SphericalJointConfig spherical = 11 [json_name = "spherical"];
+    {PROTOBUF_FIELD_OFFSET(Joint, _impl_.config_.spherical_), _Internal::kOneofCaseOffset + 0, 6, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.CylindricalJointConfig cylindrical = 12 [json_name = "cylindrical"];
+    {PROTOBUF_FIELD_OFFSET(Joint, _impl_.config_.cylindrical_), _Internal::kOneofCaseOffset + 0, 7, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.PlanarJointConfig planar = 13 [json_name = "planar"];
+    {PROTOBUF_FIELD_OFFSET(Joint, _impl_.config_.planar_), _Internal::kOneofCaseOffset + 0, 8, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.UniversalJointConfig universal = 14 [json_name = "universal"];
+    {PROTOBUF_FIELD_OFFSET(Joint, _impl_.config_.universal_), _Internal::kOneofCaseOffset + 0, 9, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.DistanceJointConfig distance = 15 [json_name = "distance"];
+    {PROTOBUF_FIELD_OFFSET(Joint, _impl_.config_.distance_), _Internal::kOneofCaseOffset + 0, 10, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.PointLineJointConfig point_line = 16 [json_name = "pointLine"];
+    {PROTOBUF_FIELD_OFFSET(Joint, _impl_.config_.point_line_), _Internal::kOneofCaseOffset + 0, 11, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.PointPlaneJointConfig point_plane = 17 [json_name = "pointPlane"];
+    {PROTOBUF_FIELD_OFFSET(Joint, _impl_.config_.point_plane_), _Internal::kOneofCaseOffset + 0, 12, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::RevoluteJointConfig>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::PrismaticJointConfig>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::FixedJointConfig>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::SphericalJointConfig>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::CylindricalJointConfig>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::PlanarJointConfig>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::UniversalJointConfig>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::DistanceJointConfig>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::PointLineJointConfig>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::PointPlaneJointConfig>()},
   }},
   {{
-    "\31\0\4\0\0\0\0\0"
+    "\31\0\4\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
     "motionlab.mechanism.Joint"
     "name"
   }},
@@ -4669,6 +8969,7 @@ PROTOBUF_NOINLINE void Joint::Clear() {
         reinterpret_cast<char*>(&_impl_.type_) -
         reinterpret_cast<char*>(&_impl_.lower_limit_)) + sizeof(_impl_.type_));
   }
+  clear_config();
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -4732,7 +9033,7 @@ PROTOBUF_NOINLINE void Joint::Clear() {
         stream);
   }
 
-  // double lower_limit = 6 [json_name = "lowerLimit"];
+  // double lower_limit = 6 [json_name = "lowerLimit", deprecated = true];
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_lower_limit()) != 0) {
       target = stream->EnsureSpace(target);
@@ -4741,7 +9042,7 @@ PROTOBUF_NOINLINE void Joint::Clear() {
     }
   }
 
-  // double upper_limit = 7 [json_name = "upperLimit"];
+  // double upper_limit = 7 [json_name = "upperLimit", deprecated = true];
   if (CheckHasBit(cached_has_bits, 0x00000020U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_upper_limit()) != 0) {
       target = stream->EnsureSpace(target);
@@ -4750,6 +9051,70 @@ PROTOBUF_NOINLINE void Joint::Clear() {
     }
   }
 
+  switch (this_.config_case()) {
+    case kRevolute: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          8, *this_._impl_.config_.revolute_, this_._impl_.config_.revolute_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kPrismatic: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          9, *this_._impl_.config_.prismatic_, this_._impl_.config_.prismatic_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kFixed: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          10, *this_._impl_.config_.fixed_, this_._impl_.config_.fixed_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kSpherical: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          11, *this_._impl_.config_.spherical_, this_._impl_.config_.spherical_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kCylindrical: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          12, *this_._impl_.config_.cylindrical_, this_._impl_.config_.cylindrical_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kPlanar: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          13, *this_._impl_.config_.planar_, this_._impl_.config_.planar_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kUniversal: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          14, *this_._impl_.config_.universal_, this_._impl_.config_.universal_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kDistance: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          15, *this_._impl_.config_.distance_, this_._impl_.config_.distance_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kPointLine: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          16, *this_._impl_.config_.point_line_, this_._impl_.config_.point_line_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kPointPlane: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          17, *this_._impl_.config_.point_plane_, this_._impl_.config_.point_plane_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    default:
+      break;
+  }
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -4798,13 +9163,13 @@ PROTOBUF_NOINLINE void Joint::Clear() {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.child_datum_id_);
     }
-    // double lower_limit = 6 [json_name = "lowerLimit"];
+    // double lower_limit = 6 [json_name = "lowerLimit", deprecated = true];
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_lower_limit()) != 0) {
         total_size += 9;
       }
     }
-    // double upper_limit = 7 [json_name = "upperLimit"];
+    // double upper_limit = 7 [json_name = "upperLimit", deprecated = true];
     if (CheckHasBit(cached_has_bits, 0x00000020U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_upper_limit()) != 0) {
         total_size += 9;
@@ -4816,6 +9181,71 @@ PROTOBUF_NOINLINE void Joint::Clear() {
         total_size += 1 +
                       ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
       }
+    }
+  }
+  switch (this_.config_case()) {
+    // .motionlab.mechanism.RevoluteJointConfig revolute = 8 [json_name = "revolute"];
+    case kRevolute: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.revolute_);
+      break;
+    }
+    // .motionlab.mechanism.PrismaticJointConfig prismatic = 9 [json_name = "prismatic"];
+    case kPrismatic: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.prismatic_);
+      break;
+    }
+    // .motionlab.mechanism.FixedJointConfig fixed = 10 [json_name = "fixed"];
+    case kFixed: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.fixed_);
+      break;
+    }
+    // .motionlab.mechanism.SphericalJointConfig spherical = 11 [json_name = "spherical"];
+    case kSpherical: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.spherical_);
+      break;
+    }
+    // .motionlab.mechanism.CylindricalJointConfig cylindrical = 12 [json_name = "cylindrical"];
+    case kCylindrical: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.cylindrical_);
+      break;
+    }
+    // .motionlab.mechanism.PlanarJointConfig planar = 13 [json_name = "planar"];
+    case kPlanar: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.planar_);
+      break;
+    }
+    // .motionlab.mechanism.UniversalJointConfig universal = 14 [json_name = "universal"];
+    case kUniversal: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.universal_);
+      break;
+    }
+    // .motionlab.mechanism.DistanceJointConfig distance = 15 [json_name = "distance"];
+    case kDistance: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.distance_);
+      break;
+    }
+    // .motionlab.mechanism.PointLineJointConfig point_line = 16 [json_name = "pointLine"];
+    case kPointLine: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.point_line_);
+      break;
+    }
+    // .motionlab.mechanism.PointPlaneJointConfig point_plane = 17 [json_name = "pointPlane"];
+    case kPointPlane: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.point_plane_);
+      break;
+    }
+    case CONFIG_NOT_SET: {
+      break;
     }
   }
   return this_.MaybeComputeUnknownFieldsSize(total_size,
@@ -4888,6 +9318,102 @@ void Joint::MergeImpl(::google::protobuf::MessageLite& to_msg,
     }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
+  if (const uint32_t oneof_from_case =
+          from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_config();
+      }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kRevolute: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.revolute_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.revolute_);
+        } else {
+          _this->_impl_.config_.revolute_->MergeFrom(*from._impl_.config_.revolute_);
+        }
+        break;
+      }
+      case kPrismatic: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.prismatic_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.prismatic_);
+        } else {
+          _this->_impl_.config_.prismatic_->MergeFrom(*from._impl_.config_.prismatic_);
+        }
+        break;
+      }
+      case kFixed: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.fixed_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.fixed_);
+        } else {
+          _this->_impl_.config_.fixed_->MergeFrom(*from._impl_.config_.fixed_);
+        }
+        break;
+      }
+      case kSpherical: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.spherical_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.spherical_);
+        } else {
+          _this->_impl_.config_.spherical_->MergeFrom(*from._impl_.config_.spherical_);
+        }
+        break;
+      }
+      case kCylindrical: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.cylindrical_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.cylindrical_);
+        } else {
+          _this->_impl_.config_.cylindrical_->MergeFrom(*from._impl_.config_.cylindrical_);
+        }
+        break;
+      }
+      case kPlanar: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.planar_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.planar_);
+        } else {
+          _this->_impl_.config_.planar_->MergeFrom(*from._impl_.config_.planar_);
+        }
+        break;
+      }
+      case kUniversal: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.universal_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.universal_);
+        } else {
+          _this->_impl_.config_.universal_->MergeFrom(*from._impl_.config_.universal_);
+        }
+        break;
+      }
+      case kDistance: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.distance_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.distance_);
+        } else {
+          _this->_impl_.config_.distance_->MergeFrom(*from._impl_.config_.distance_);
+        }
+        break;
+      }
+      case kPointLine: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.point_line_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.point_line_);
+        } else {
+          _this->_impl_.config_.point_line_->MergeFrom(*from._impl_.config_.point_line_);
+        }
+        break;
+      }
+      case kPointPlane: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.point_plane_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.point_plane_);
+        } else {
+          _this->_impl_.config_.point_plane_->MergeFrom(*from._impl_.config_.point_plane_);
+        }
+        break;
+      }
+      case CONFIG_NOT_SET:
+        break;
+    }
+  }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
 }
@@ -4913,9 +9439,2840 @@ void Joint::InternalSwap(Joint* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
       - PROTOBUF_FIELD_OFFSET(Joint, _impl_.id_)>(
           reinterpret_cast<char*>(&_impl_.id_),
           reinterpret_cast<char*>(&other->_impl_.id_));
+  swap(_impl_.config_, other->_impl_.config_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
 }
 
 ::google::protobuf::Metadata Joint::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class PointForceLoad::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<PointForceLoad>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(PointForceLoad, _impl_._has_bits_);
+};
+
+PointForceLoad::PointForceLoad(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PointForceLoad_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.PointForceLoad)
+}
+PROTOBUF_NDEBUG_INLINE PointForceLoad::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::PointForceLoad& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
+PointForceLoad::PointForceLoad(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const PointForceLoad& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PointForceLoad_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  PointForceLoad* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.datum_id_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.datum_id_)
+                : nullptr;
+  _impl_.vector_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.vector_)
+                : nullptr;
+  _impl_.reference_frame_ = from._impl_.reference_frame_;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.PointForceLoad)
+}
+PROTOBUF_NDEBUG_INLINE PointForceLoad::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void PointForceLoad::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, datum_id_),
+           0,
+           offsetof(Impl_, reference_frame_) -
+               offsetof(Impl_, datum_id_) +
+               sizeof(Impl_::reference_frame_));
+}
+PointForceLoad::~PointForceLoad() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.PointForceLoad)
+  SharedDtor(*this);
+}
+inline void PointForceLoad::SharedDtor(MessageLite& self) {
+  PointForceLoad& this_ = static_cast<PointForceLoad&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.datum_id_;
+  delete this_._impl_.vector_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL PointForceLoad::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) PointForceLoad(arena);
+}
+constexpr auto PointForceLoad::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(PointForceLoad),
+                                            alignof(PointForceLoad));
+}
+constexpr auto PointForceLoad::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_PointForceLoad_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &PointForceLoad::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<PointForceLoad>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &PointForceLoad::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<PointForceLoad>(), &PointForceLoad::ByteSizeLong,
+              &PointForceLoad::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(PointForceLoad, _impl_._cached_size_),
+          false,
+      },
+      &PointForceLoad::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull PointForceLoad_class_data_ =
+        PointForceLoad::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+PointForceLoad::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&PointForceLoad_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(PointForceLoad_class_data_.tc_table);
+  return PointForceLoad_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 3, 2, 0, 2>
+PointForceLoad::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(PointForceLoad, _impl_._has_bits_),
+    0, // no _extensions_
+    3, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967288,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    3,  // num_field_entries
+    2,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    PointForceLoad_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::PointForceLoad>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(PointForceLoad, _impl_.datum_id_)}},
+    // .motionlab.mechanism.Vec3 vector = 2 [json_name = "vector"];
+    {::_pbi::TcParser::FastMtS1,
+     {18, 1, 1,
+      PROTOBUF_FIELD_OFFSET(PointForceLoad, _impl_.vector_)}},
+    // .motionlab.mechanism.ReferenceFrame reference_frame = 3 [json_name = "referenceFrame"];
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(PointForceLoad, _impl_.reference_frame_), 2>(),
+     {24, 2, 0,
+      PROTOBUF_FIELD_OFFSET(PointForceLoad, _impl_.reference_frame_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    {PROTOBUF_FIELD_OFFSET(PointForceLoad, _impl_.datum_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.Vec3 vector = 2 [json_name = "vector"];
+    {PROTOBUF_FIELD_OFFSET(PointForceLoad, _impl_.vector_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.ReferenceFrame reference_frame = 3 [json_name = "referenceFrame"];
+    {PROTOBUF_FIELD_OFFSET(PointForceLoad, _impl_.reference_frame_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Vec3>()},
+  }},
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void PointForceLoad::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.PointForceLoad)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(_impl_.datum_id_ != nullptr);
+      _impl_.datum_id_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.vector_ != nullptr);
+      _impl_.vector_->Clear();
+    }
+  }
+  _impl_.reference_frame_ = 0;
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL PointForceLoad::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const PointForceLoad& this_ = static_cast<const PointForceLoad&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL PointForceLoad::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const PointForceLoad& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.PointForceLoad)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.datum_id_, this_._impl_.datum_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.Vec3 vector = 2 [json_name = "vector"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        2, *this_._impl_.vector_, this_._impl_.vector_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.ReferenceFrame reference_frame = 3 [json_name = "referenceFrame"];
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (this_._internal_reference_frame() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteEnumToArray(
+          3, this_._internal_reference_frame(), target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.PointForceLoad)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t PointForceLoad::ByteSizeLong(const MessageLite& base) {
+  const PointForceLoad& this_ = static_cast<const PointForceLoad&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t PointForceLoad::ByteSizeLong() const {
+  const PointForceLoad& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.PointForceLoad)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.datum_id_);
+    }
+    // .motionlab.mechanism.Vec3 vector = 2 [json_name = "vector"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.vector_);
+    }
+    // .motionlab.mechanism.ReferenceFrame reference_frame = 3 [json_name = "referenceFrame"];
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (this_._internal_reference_frame() != 0) {
+        total_size += 1 +
+                      ::_pbi::WireFormatLite::EnumSize(this_._internal_reference_frame());
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void PointForceLoad::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<PointForceLoad*>(&to_msg);
+  auto& from = static_cast<const PointForceLoad&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.PointForceLoad)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(from._impl_.datum_id_ != nullptr);
+      if (_this->_impl_.datum_id_ == nullptr) {
+        _this->_impl_.datum_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.datum_id_);
+      } else {
+        _this->_impl_.datum_id_->MergeFrom(*from._impl_.datum_id_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.vector_ != nullptr);
+      if (_this->_impl_.vector_ == nullptr) {
+        _this->_impl_.vector_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.vector_);
+      } else {
+        _this->_impl_.vector_->MergeFrom(*from._impl_.vector_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (from._internal_reference_frame() != 0) {
+        _this->_impl_.reference_frame_ = from._impl_.reference_frame_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void PointForceLoad::CopyFrom(const PointForceLoad& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.PointForceLoad)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void PointForceLoad::InternalSwap(PointForceLoad* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(PointForceLoad, _impl_.reference_frame_)
+      + sizeof(PointForceLoad::_impl_.reference_frame_)
+      - PROTOBUF_FIELD_OFFSET(PointForceLoad, _impl_.datum_id_)>(
+          reinterpret_cast<char*>(&_impl_.datum_id_),
+          reinterpret_cast<char*>(&other->_impl_.datum_id_));
+}
+
+::google::protobuf::Metadata PointForceLoad::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class PointTorqueLoad::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<PointTorqueLoad>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(PointTorqueLoad, _impl_._has_bits_);
+};
+
+PointTorqueLoad::PointTorqueLoad(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PointTorqueLoad_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.PointTorqueLoad)
+}
+PROTOBUF_NDEBUG_INLINE PointTorqueLoad::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::PointTorqueLoad& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
+PointTorqueLoad::PointTorqueLoad(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const PointTorqueLoad& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PointTorqueLoad_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  PointTorqueLoad* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.datum_id_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.datum_id_)
+                : nullptr;
+  _impl_.vector_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.vector_)
+                : nullptr;
+  _impl_.reference_frame_ = from._impl_.reference_frame_;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.PointTorqueLoad)
+}
+PROTOBUF_NDEBUG_INLINE PointTorqueLoad::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void PointTorqueLoad::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, datum_id_),
+           0,
+           offsetof(Impl_, reference_frame_) -
+               offsetof(Impl_, datum_id_) +
+               sizeof(Impl_::reference_frame_));
+}
+PointTorqueLoad::~PointTorqueLoad() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.PointTorqueLoad)
+  SharedDtor(*this);
+}
+inline void PointTorqueLoad::SharedDtor(MessageLite& self) {
+  PointTorqueLoad& this_ = static_cast<PointTorqueLoad&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.datum_id_;
+  delete this_._impl_.vector_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL PointTorqueLoad::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) PointTorqueLoad(arena);
+}
+constexpr auto PointTorqueLoad::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(PointTorqueLoad),
+                                            alignof(PointTorqueLoad));
+}
+constexpr auto PointTorqueLoad::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_PointTorqueLoad_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &PointTorqueLoad::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<PointTorqueLoad>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &PointTorqueLoad::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<PointTorqueLoad>(), &PointTorqueLoad::ByteSizeLong,
+              &PointTorqueLoad::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(PointTorqueLoad, _impl_._cached_size_),
+          false,
+      },
+      &PointTorqueLoad::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull PointTorqueLoad_class_data_ =
+        PointTorqueLoad::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+PointTorqueLoad::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&PointTorqueLoad_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(PointTorqueLoad_class_data_.tc_table);
+  return PointTorqueLoad_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 3, 2, 0, 2>
+PointTorqueLoad::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(PointTorqueLoad, _impl_._has_bits_),
+    0, // no _extensions_
+    3, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967288,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    3,  // num_field_entries
+    2,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    PointTorqueLoad_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::PointTorqueLoad>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(PointTorqueLoad, _impl_.datum_id_)}},
+    // .motionlab.mechanism.Vec3 vector = 2 [json_name = "vector"];
+    {::_pbi::TcParser::FastMtS1,
+     {18, 1, 1,
+      PROTOBUF_FIELD_OFFSET(PointTorqueLoad, _impl_.vector_)}},
+    // .motionlab.mechanism.ReferenceFrame reference_frame = 3 [json_name = "referenceFrame"];
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(PointTorqueLoad, _impl_.reference_frame_), 2>(),
+     {24, 2, 0,
+      PROTOBUF_FIELD_OFFSET(PointTorqueLoad, _impl_.reference_frame_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    {PROTOBUF_FIELD_OFFSET(PointTorqueLoad, _impl_.datum_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.Vec3 vector = 2 [json_name = "vector"];
+    {PROTOBUF_FIELD_OFFSET(PointTorqueLoad, _impl_.vector_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.ReferenceFrame reference_frame = 3 [json_name = "referenceFrame"];
+    {PROTOBUF_FIELD_OFFSET(PointTorqueLoad, _impl_.reference_frame_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Vec3>()},
+  }},
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void PointTorqueLoad::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.PointTorqueLoad)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(_impl_.datum_id_ != nullptr);
+      _impl_.datum_id_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.vector_ != nullptr);
+      _impl_.vector_->Clear();
+    }
+  }
+  _impl_.reference_frame_ = 0;
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL PointTorqueLoad::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const PointTorqueLoad& this_ = static_cast<const PointTorqueLoad&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL PointTorqueLoad::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const PointTorqueLoad& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.PointTorqueLoad)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.datum_id_, this_._impl_.datum_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.Vec3 vector = 2 [json_name = "vector"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        2, *this_._impl_.vector_, this_._impl_.vector_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.ReferenceFrame reference_frame = 3 [json_name = "referenceFrame"];
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (this_._internal_reference_frame() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteEnumToArray(
+          3, this_._internal_reference_frame(), target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.PointTorqueLoad)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t PointTorqueLoad::ByteSizeLong(const MessageLite& base) {
+  const PointTorqueLoad& this_ = static_cast<const PointTorqueLoad&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t PointTorqueLoad::ByteSizeLong() const {
+  const PointTorqueLoad& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.PointTorqueLoad)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.datum_id_);
+    }
+    // .motionlab.mechanism.Vec3 vector = 2 [json_name = "vector"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.vector_);
+    }
+    // .motionlab.mechanism.ReferenceFrame reference_frame = 3 [json_name = "referenceFrame"];
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (this_._internal_reference_frame() != 0) {
+        total_size += 1 +
+                      ::_pbi::WireFormatLite::EnumSize(this_._internal_reference_frame());
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void PointTorqueLoad::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<PointTorqueLoad*>(&to_msg);
+  auto& from = static_cast<const PointTorqueLoad&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.PointTorqueLoad)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(from._impl_.datum_id_ != nullptr);
+      if (_this->_impl_.datum_id_ == nullptr) {
+        _this->_impl_.datum_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.datum_id_);
+      } else {
+        _this->_impl_.datum_id_->MergeFrom(*from._impl_.datum_id_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.vector_ != nullptr);
+      if (_this->_impl_.vector_ == nullptr) {
+        _this->_impl_.vector_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.vector_);
+      } else {
+        _this->_impl_.vector_->MergeFrom(*from._impl_.vector_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (from._internal_reference_frame() != 0) {
+        _this->_impl_.reference_frame_ = from._impl_.reference_frame_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void PointTorqueLoad::CopyFrom(const PointTorqueLoad& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.PointTorqueLoad)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void PointTorqueLoad::InternalSwap(PointTorqueLoad* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(PointTorqueLoad, _impl_.reference_frame_)
+      + sizeof(PointTorqueLoad::_impl_.reference_frame_)
+      - PROTOBUF_FIELD_OFFSET(PointTorqueLoad, _impl_.datum_id_)>(
+          reinterpret_cast<char*>(&_impl_.datum_id_),
+          reinterpret_cast<char*>(&other->_impl_.datum_id_));
+}
+
+::google::protobuf::Metadata PointTorqueLoad::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class LinearSpringDamperLoad::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<LinearSpringDamperLoad>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_._has_bits_);
+};
+
+LinearSpringDamperLoad::LinearSpringDamperLoad(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, LinearSpringDamperLoad_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.LinearSpringDamperLoad)
+}
+PROTOBUF_NDEBUG_INLINE LinearSpringDamperLoad::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::LinearSpringDamperLoad& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
+LinearSpringDamperLoad::LinearSpringDamperLoad(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const LinearSpringDamperLoad& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, LinearSpringDamperLoad_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  LinearSpringDamperLoad* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.parent_datum_id_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.parent_datum_id_)
+                : nullptr;
+  _impl_.child_datum_id_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.child_datum_id_)
+                : nullptr;
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, rest_length_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, rest_length_),
+           offsetof(Impl_, damping_) -
+               offsetof(Impl_, rest_length_) +
+               sizeof(Impl_::damping_));
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.LinearSpringDamperLoad)
+}
+PROTOBUF_NDEBUG_INLINE LinearSpringDamperLoad::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void LinearSpringDamperLoad::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, parent_datum_id_),
+           0,
+           offsetof(Impl_, damping_) -
+               offsetof(Impl_, parent_datum_id_) +
+               sizeof(Impl_::damping_));
+}
+LinearSpringDamperLoad::~LinearSpringDamperLoad() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.LinearSpringDamperLoad)
+  SharedDtor(*this);
+}
+inline void LinearSpringDamperLoad::SharedDtor(MessageLite& self) {
+  LinearSpringDamperLoad& this_ = static_cast<LinearSpringDamperLoad&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.parent_datum_id_;
+  delete this_._impl_.child_datum_id_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL LinearSpringDamperLoad::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) LinearSpringDamperLoad(arena);
+}
+constexpr auto LinearSpringDamperLoad::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(LinearSpringDamperLoad),
+                                            alignof(LinearSpringDamperLoad));
+}
+constexpr auto LinearSpringDamperLoad::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_LinearSpringDamperLoad_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &LinearSpringDamperLoad::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<LinearSpringDamperLoad>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &LinearSpringDamperLoad::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<LinearSpringDamperLoad>(), &LinearSpringDamperLoad::ByteSizeLong,
+              &LinearSpringDamperLoad::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_._cached_size_),
+          false,
+      },
+      &LinearSpringDamperLoad::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull LinearSpringDamperLoad_class_data_ =
+        LinearSpringDamperLoad::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+LinearSpringDamperLoad::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&LinearSpringDamperLoad_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(LinearSpringDamperLoad_class_data_.tc_table);
+  return LinearSpringDamperLoad_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<3, 5, 2, 0, 2>
+LinearSpringDamperLoad::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_._has_bits_),
+    0, // no _extensions_
+    5, 56,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967264,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    5,  // num_field_entries
+    2,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    LinearSpringDamperLoad_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::LinearSpringDamperLoad>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_.parent_datum_id_)}},
+    // .motionlab.mechanism.ElementId child_datum_id = 2 [json_name = "childDatumId"];
+    {::_pbi::TcParser::FastMtS1,
+     {18, 1, 1,
+      PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_.child_datum_id_)}},
+    // double rest_length = 3 [json_name = "restLength"];
+    {::_pbi::TcParser::FastF64S1,
+     {25, 2, 0,
+      PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_.rest_length_)}},
+    // double stiffness = 4 [json_name = "stiffness"];
+    {::_pbi::TcParser::FastF64S1,
+     {33, 3, 0,
+      PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_.stiffness_)}},
+    // double damping = 5 [json_name = "damping"];
+    {::_pbi::TcParser::FastF64S1,
+     {41, 4, 0,
+      PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_.damping_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
+    {PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_.parent_datum_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.ElementId child_datum_id = 2 [json_name = "childDatumId"];
+    {PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_.child_datum_id_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // double rest_length = 3 [json_name = "restLength"];
+    {PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_.rest_length_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // double stiffness = 4 [json_name = "stiffness"];
+    {PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_.stiffness_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // double damping = 5 [json_name = "damping"];
+    {PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_.damping_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+  }},
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void LinearSpringDamperLoad::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.LinearSpringDamperLoad)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(_impl_.parent_datum_id_ != nullptr);
+      _impl_.parent_datum_id_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.child_datum_id_ != nullptr);
+      _impl_.child_datum_id_->Clear();
+    }
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001cU)) {
+    ::memset(&_impl_.rest_length_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.damping_) -
+        reinterpret_cast<char*>(&_impl_.rest_length_)) + sizeof(_impl_.damping_));
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL LinearSpringDamperLoad::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const LinearSpringDamperLoad& this_ = static_cast<const LinearSpringDamperLoad&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL LinearSpringDamperLoad::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const LinearSpringDamperLoad& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.LinearSpringDamperLoad)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.parent_datum_id_, this_._impl_.parent_datum_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.ElementId child_datum_id = 2 [json_name = "childDatumId"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        2, *this_._impl_.child_datum_id_, this_._impl_.child_datum_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // double rest_length = 3 [json_name = "restLength"];
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_rest_length()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          3, this_._internal_rest_length(), target);
+    }
+  }
+
+  // double stiffness = 4 [json_name = "stiffness"];
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_stiffness()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          4, this_._internal_stiffness(), target);
+    }
+  }
+
+  // double damping = 5 [json_name = "damping"];
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_damping()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          5, this_._internal_damping(), target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.LinearSpringDamperLoad)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t LinearSpringDamperLoad::ByteSizeLong(const MessageLite& base) {
+  const LinearSpringDamperLoad& this_ = static_cast<const LinearSpringDamperLoad&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t LinearSpringDamperLoad::ByteSizeLong() const {
+  const LinearSpringDamperLoad& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.LinearSpringDamperLoad)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+    // .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.parent_datum_id_);
+    }
+    // .motionlab.mechanism.ElementId child_datum_id = 2 [json_name = "childDatumId"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.child_datum_id_);
+    }
+    // double rest_length = 3 [json_name = "restLength"];
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_rest_length()) != 0) {
+        total_size += 9;
+      }
+    }
+    // double stiffness = 4 [json_name = "stiffness"];
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_stiffness()) != 0) {
+        total_size += 9;
+      }
+    }
+    // double damping = 5 [json_name = "damping"];
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_damping()) != 0) {
+        total_size += 9;
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void LinearSpringDamperLoad::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<LinearSpringDamperLoad*>(&to_msg);
+  auto& from = static_cast<const LinearSpringDamperLoad&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.LinearSpringDamperLoad)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(from._impl_.parent_datum_id_ != nullptr);
+      if (_this->_impl_.parent_datum_id_ == nullptr) {
+        _this->_impl_.parent_datum_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.parent_datum_id_);
+      } else {
+        _this->_impl_.parent_datum_id_->MergeFrom(*from._impl_.parent_datum_id_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.child_datum_id_ != nullptr);
+      if (_this->_impl_.child_datum_id_ == nullptr) {
+        _this->_impl_.child_datum_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.child_datum_id_);
+      } else {
+        _this->_impl_.child_datum_id_->MergeFrom(*from._impl_.child_datum_id_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_rest_length()) != 0) {
+        _this->_impl_.rest_length_ = from._impl_.rest_length_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_stiffness()) != 0) {
+        _this->_impl_.stiffness_ = from._impl_.stiffness_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_damping()) != 0) {
+        _this->_impl_.damping_ = from._impl_.damping_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void LinearSpringDamperLoad::CopyFrom(const LinearSpringDamperLoad& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.LinearSpringDamperLoad)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void LinearSpringDamperLoad::InternalSwap(LinearSpringDamperLoad* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_.damping_)
+      + sizeof(LinearSpringDamperLoad::_impl_.damping_)
+      - PROTOBUF_FIELD_OFFSET(LinearSpringDamperLoad, _impl_.parent_datum_id_)>(
+          reinterpret_cast<char*>(&_impl_.parent_datum_id_),
+          reinterpret_cast<char*>(&other->_impl_.parent_datum_id_));
+}
+
+::google::protobuf::Metadata LinearSpringDamperLoad::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class Load::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<Load>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(Load, _impl_._has_bits_);
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Load, _impl_._oneof_case_);
+};
+
+void Load::set_allocated_point_force(::motionlab::mechanism::PointForceLoad* PROTOBUF_NULLABLE point_force) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (point_force) {
+    ::google::protobuf::Arena* submessage_arena = point_force->GetArena();
+    if (message_arena != submessage_arena) {
+      point_force = ::google::protobuf::internal::GetOwnedMessage(message_arena, point_force, submessage_arena);
+    }
+    set_has_point_force();
+    _impl_.config_.point_force_ = point_force;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Load.point_force)
+}
+void Load::set_allocated_point_torque(::motionlab::mechanism::PointTorqueLoad* PROTOBUF_NULLABLE point_torque) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (point_torque) {
+    ::google::protobuf::Arena* submessage_arena = point_torque->GetArena();
+    if (message_arena != submessage_arena) {
+      point_torque = ::google::protobuf::internal::GetOwnedMessage(message_arena, point_torque, submessage_arena);
+    }
+    set_has_point_torque();
+    _impl_.config_.point_torque_ = point_torque;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Load.point_torque)
+}
+void Load::set_allocated_linear_spring_damper(::motionlab::mechanism::LinearSpringDamperLoad* PROTOBUF_NULLABLE linear_spring_damper) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (linear_spring_damper) {
+    ::google::protobuf::Arena* submessage_arena = linear_spring_damper->GetArena();
+    if (message_arena != submessage_arena) {
+      linear_spring_damper = ::google::protobuf::internal::GetOwnedMessage(message_arena, linear_spring_damper, submessage_arena);
+    }
+    set_has_linear_spring_damper();
+    _impl_.config_.linear_spring_damper_ = linear_spring_damper;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Load.linear_spring_damper)
+}
+Load::Load(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, Load_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.Load)
+}
+PROTOBUF_NDEBUG_INLINE Load::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::Load& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        name_(arena, from.name_),
+        config_{},
+        _oneof_case_{from._oneof_case_[0]} {}
+
+Load::Load(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const Load& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, Load_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  Load* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.id_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.id_)
+                : nullptr;
+  switch (config_case()) {
+    case CONFIG_NOT_SET:
+      break;
+      case kPointForce:
+        _impl_.config_.point_force_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.point_force_);
+        break;
+      case kPointTorque:
+        _impl_.config_.point_torque_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.point_torque_);
+        break;
+      case kLinearSpringDamper:
+        _impl_.config_.linear_spring_damper_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.linear_spring_damper_);
+        break;
+  }
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.Load)
+}
+PROTOBUF_NDEBUG_INLINE Load::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        name_(arena),
+        config_{},
+        _oneof_case_{} {}
+
+inline void Load::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.id_ = {};
+}
+Load::~Load() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.Load)
+  SharedDtor(*this);
+}
+inline void Load::SharedDtor(MessageLite& self) {
+  Load& this_ = static_cast<Load&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.name_.Destroy();
+  delete this_._impl_.id_;
+  if (this_.has_config()) {
+    this_.clear_config();
+  }
+  this_._impl_.~Impl_();
+}
+
+void Load::clear_config() {
+// @@protoc_insertion_point(one_of_clear_start:motionlab.mechanism.Load)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (config_case()) {
+    case kPointForce: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.point_force_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.point_force_);
+      }
+      break;
+    }
+    case kPointTorque: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.point_torque_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.point_torque_);
+      }
+      break;
+    }
+    case kLinearSpringDamper: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.linear_spring_damper_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.linear_spring_damper_);
+      }
+      break;
+    }
+    case CONFIG_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = CONFIG_NOT_SET;
+}
+
+
+inline void* PROTOBUF_NONNULL Load::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) Load(arena);
+}
+constexpr auto Load::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(Load),
+                                            alignof(Load));
+}
+constexpr auto Load::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_Load_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &Load::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<Load>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &Load::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<Load>(), &Load::ByteSizeLong,
+              &Load::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(Load, _impl_._cached_size_),
+          false,
+      },
+      &Load::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull Load_class_data_ =
+        Load::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+Load::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&Load_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(Load_class_data_.tc_table);
+  return Load_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 5, 4, 37, 2>
+Load::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(Load, _impl_._has_bits_),
+    0, // no _extensions_
+    5, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967264,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    5,  // num_field_entries
+    4,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    Load_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::Load>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // string name = 2 [json_name = "name"];
+    {::_pbi::TcParser::FastUS1,
+     {18, 0, 0,
+      PROTOBUF_FIELD_OFFSET(Load, _impl_.name_)}},
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 1, 0,
+      PROTOBUF_FIELD_OFFSET(Load, _impl_.id_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+    {PROTOBUF_FIELD_OFFSET(Load, _impl_.id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string name = 2 [json_name = "name"];
+    {PROTOBUF_FIELD_OFFSET(Load, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // .motionlab.mechanism.PointForceLoad point_force = 3 [json_name = "pointForce"];
+    {PROTOBUF_FIELD_OFFSET(Load, _impl_.config_.point_force_), _Internal::kOneofCaseOffset + 0, 1, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.PointTorqueLoad point_torque = 4 [json_name = "pointTorque"];
+    {PROTOBUF_FIELD_OFFSET(Load, _impl_.config_.point_torque_), _Internal::kOneofCaseOffset + 0, 2, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.LinearSpringDamperLoad linear_spring_damper = 5 [json_name = "linearSpringDamper"];
+    {PROTOBUF_FIELD_OFFSET(Load, _impl_.config_.linear_spring_damper_), _Internal::kOneofCaseOffset + 0, 3, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::PointForceLoad>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::PointTorqueLoad>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::LinearSpringDamperLoad>()},
+  }},
+  {{
+    "\30\0\4\0\0\0\0\0"
+    "motionlab.mechanism.Load"
+    "name"
+  }},
+};
+PROTOBUF_NOINLINE void Load::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.Load)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _impl_.name_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.id_ != nullptr);
+      _impl_.id_->Clear();
+    }
+  }
+  clear_config();
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL Load::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const Load& this_ = static_cast<const Load&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL Load::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const Load& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.Load)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.id_, this_._impl_.id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // string name = 2 [json_name = "name"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!this_._internal_name().empty()) {
+      const ::std::string& _s = this_._internal_name();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.mechanism.Load.name");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+    }
+  }
+
+  switch (this_.config_case()) {
+    case kPointForce: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          3, *this_._impl_.config_.point_force_, this_._impl_.config_.point_force_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kPointTorque: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          4, *this_._impl_.config_.point_torque_, this_._impl_.config_.point_torque_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kLinearSpringDamper: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          5, *this_._impl_.config_.linear_spring_damper_, this_._impl_.config_.linear_spring_damper_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    default:
+      break;
+  }
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.Load)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t Load::ByteSizeLong(const MessageLite& base) {
+  const Load& this_ = static_cast<const Load&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t Load::ByteSizeLong() const {
+  const Load& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.Load)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    // string name = 2 [json_name = "name"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!this_._internal_name().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_name());
+      }
+    }
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.id_);
+    }
+  }
+  switch (this_.config_case()) {
+    // .motionlab.mechanism.PointForceLoad point_force = 3 [json_name = "pointForce"];
+    case kPointForce: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.point_force_);
+      break;
+    }
+    // .motionlab.mechanism.PointTorqueLoad point_torque = 4 [json_name = "pointTorque"];
+    case kPointTorque: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.point_torque_);
+      break;
+    }
+    // .motionlab.mechanism.LinearSpringDamperLoad linear_spring_damper = 5 [json_name = "linearSpringDamper"];
+    case kLinearSpringDamper: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.linear_spring_damper_);
+      break;
+    }
+    case CONFIG_NOT_SET: {
+      break;
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void Load::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<Load*>(&to_msg);
+  auto& from = static_cast<const Load&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.Load)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!from._internal_name().empty()) {
+        _this->_internal_set_name(from._internal_name());
+      } else {
+        if (_this->_impl_.name_.IsDefault()) {
+          _this->_internal_set_name("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.id_ != nullptr);
+      if (_this->_impl_.id_ == nullptr) {
+        _this->_impl_.id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.id_);
+      } else {
+        _this->_impl_.id_->MergeFrom(*from._impl_.id_);
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  if (const uint32_t oneof_from_case =
+          from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_config();
+      }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kPointForce: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.point_force_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.point_force_);
+        } else {
+          _this->_impl_.config_.point_force_->MergeFrom(*from._impl_.config_.point_force_);
+        }
+        break;
+      }
+      case kPointTorque: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.point_torque_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.point_torque_);
+        } else {
+          _this->_impl_.config_.point_torque_->MergeFrom(*from._impl_.config_.point_torque_);
+        }
+        break;
+      }
+      case kLinearSpringDamper: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.linear_spring_damper_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.linear_spring_damper_);
+        } else {
+          _this->_impl_.config_.linear_spring_damper_->MergeFrom(*from._impl_.config_.linear_spring_damper_);
+        }
+        break;
+      }
+      case CONFIG_NOT_SET:
+        break;
+    }
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void Load::CopyFrom(const Load& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.Load)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void Load::InternalSwap(Load* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
+  swap(_impl_.id_, other->_impl_.id_);
+  swap(_impl_.config_, other->_impl_.config_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
+}
+
+::google::protobuf::Metadata Load::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class RevoluteMotorActuator::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<RevoluteMotorActuator>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(RevoluteMotorActuator, _impl_._has_bits_);
+};
+
+RevoluteMotorActuator::RevoluteMotorActuator(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, RevoluteMotorActuator_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.RevoluteMotorActuator)
+}
+PROTOBUF_NDEBUG_INLINE RevoluteMotorActuator::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::RevoluteMotorActuator& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
+RevoluteMotorActuator::RevoluteMotorActuator(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const RevoluteMotorActuator& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, RevoluteMotorActuator_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  RevoluteMotorActuator* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.joint_id_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.joint_id_)
+                : nullptr;
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, command_value_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, command_value_),
+           offsetof(Impl_, control_mode_) -
+               offsetof(Impl_, command_value_) +
+               sizeof(Impl_::control_mode_));
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.RevoluteMotorActuator)
+}
+PROTOBUF_NDEBUG_INLINE RevoluteMotorActuator::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void RevoluteMotorActuator::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, joint_id_),
+           0,
+           offsetof(Impl_, control_mode_) -
+               offsetof(Impl_, joint_id_) +
+               sizeof(Impl_::control_mode_));
+}
+RevoluteMotorActuator::~RevoluteMotorActuator() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.RevoluteMotorActuator)
+  SharedDtor(*this);
+}
+inline void RevoluteMotorActuator::SharedDtor(MessageLite& self) {
+  RevoluteMotorActuator& this_ = static_cast<RevoluteMotorActuator&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.joint_id_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL RevoluteMotorActuator::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) RevoluteMotorActuator(arena);
+}
+constexpr auto RevoluteMotorActuator::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(RevoluteMotorActuator),
+                                            alignof(RevoluteMotorActuator));
+}
+constexpr auto RevoluteMotorActuator::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_RevoluteMotorActuator_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &RevoluteMotorActuator::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<RevoluteMotorActuator>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &RevoluteMotorActuator::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<RevoluteMotorActuator>(), &RevoluteMotorActuator::ByteSizeLong,
+              &RevoluteMotorActuator::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(RevoluteMotorActuator, _impl_._cached_size_),
+          false,
+      },
+      &RevoluteMotorActuator::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull RevoluteMotorActuator_class_data_ =
+        RevoluteMotorActuator::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+RevoluteMotorActuator::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&RevoluteMotorActuator_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(RevoluteMotorActuator_class_data_.tc_table);
+  return RevoluteMotorActuator_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 4, 1, 0, 2>
+RevoluteMotorActuator::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(RevoluteMotorActuator, _impl_._has_bits_),
+    0, // no _extensions_
+    4, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967280,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    4,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    RevoluteMotorActuator_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::RevoluteMotorActuator>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // optional double effort_limit = 4 [json_name = "effortLimit"];
+    {::_pbi::TcParser::FastF64S1,
+     {33, 2, 0,
+      PROTOBUF_FIELD_OFFSET(RevoluteMotorActuator, _impl_.effort_limit_)}},
+    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(RevoluteMotorActuator, _impl_.joint_id_)}},
+    // .motionlab.mechanism.ActuatorControlMode control_mode = 2 [json_name = "controlMode"];
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(RevoluteMotorActuator, _impl_.control_mode_), 3>(),
+     {16, 3, 0,
+      PROTOBUF_FIELD_OFFSET(RevoluteMotorActuator, _impl_.control_mode_)}},
+    // double command_value = 3 [json_name = "commandValue"];
+    {::_pbi::TcParser::FastF64S1,
+     {25, 1, 0,
+      PROTOBUF_FIELD_OFFSET(RevoluteMotorActuator, _impl_.command_value_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    {PROTOBUF_FIELD_OFFSET(RevoluteMotorActuator, _impl_.joint_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.ActuatorControlMode control_mode = 2 [json_name = "controlMode"];
+    {PROTOBUF_FIELD_OFFSET(RevoluteMotorActuator, _impl_.control_mode_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+    // double command_value = 3 [json_name = "commandValue"];
+    {PROTOBUF_FIELD_OFFSET(RevoluteMotorActuator, _impl_.command_value_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // optional double effort_limit = 4 [json_name = "effortLimit"];
+    {PROTOBUF_FIELD_OFFSET(RevoluteMotorActuator, _impl_.effort_limit_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+  }},
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void RevoluteMotorActuator::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.RevoluteMotorActuator)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(_impl_.joint_id_ != nullptr);
+    _impl_.joint_id_->Clear();
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000eU)) {
+    ::memset(&_impl_.command_value_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.control_mode_) -
+        reinterpret_cast<char*>(&_impl_.command_value_)) + sizeof(_impl_.control_mode_));
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL RevoluteMotorActuator::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const RevoluteMotorActuator& this_ = static_cast<const RevoluteMotorActuator&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL RevoluteMotorActuator::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const RevoluteMotorActuator& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.RevoluteMotorActuator)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.joint_id_, this_._impl_.joint_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.ActuatorControlMode control_mode = 2 [json_name = "controlMode"];
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (this_._internal_control_mode() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteEnumToArray(
+          2, this_._internal_control_mode(), target);
+    }
+  }
+
+  // double command_value = 3 [json_name = "commandValue"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_command_value()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          3, this_._internal_command_value(), target);
+    }
+  }
+
+  // optional double effort_limit = 4 [json_name = "effortLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+        4, this_._internal_effort_limit(), target);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.RevoluteMotorActuator)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t RevoluteMotorActuator::ByteSizeLong(const MessageLite& base) {
+  const RevoluteMotorActuator& this_ = static_cast<const RevoluteMotorActuator&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t RevoluteMotorActuator::ByteSizeLong() const {
+  const RevoluteMotorActuator& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.RevoluteMotorActuator)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  total_size += static_cast<bool>(0x00000004U & cached_has_bits) * 9;
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000bU)) {
+    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.joint_id_);
+    }
+    // double command_value = 3 [json_name = "commandValue"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_command_value()) != 0) {
+        total_size += 9;
+      }
+    }
+    // .motionlab.mechanism.ActuatorControlMode control_mode = 2 [json_name = "controlMode"];
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (this_._internal_control_mode() != 0) {
+        total_size += 1 +
+                      ::_pbi::WireFormatLite::EnumSize(this_._internal_control_mode());
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void RevoluteMotorActuator::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<RevoluteMotorActuator*>(&to_msg);
+  auto& from = static_cast<const RevoluteMotorActuator&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.RevoluteMotorActuator)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(from._impl_.joint_id_ != nullptr);
+      if (_this->_impl_.joint_id_ == nullptr) {
+        _this->_impl_.joint_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.joint_id_);
+      } else {
+        _this->_impl_.joint_id_->MergeFrom(*from._impl_.joint_id_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_command_value()) != 0) {
+        _this->_impl_.command_value_ = from._impl_.command_value_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      _this->_impl_.effort_limit_ = from._impl_.effort_limit_;
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (from._internal_control_mode() != 0) {
+        _this->_impl_.control_mode_ = from._impl_.control_mode_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void RevoluteMotorActuator::CopyFrom(const RevoluteMotorActuator& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.RevoluteMotorActuator)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void RevoluteMotorActuator::InternalSwap(RevoluteMotorActuator* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(RevoluteMotorActuator, _impl_.control_mode_)
+      + sizeof(RevoluteMotorActuator::_impl_.control_mode_)
+      - PROTOBUF_FIELD_OFFSET(RevoluteMotorActuator, _impl_.joint_id_)>(
+          reinterpret_cast<char*>(&_impl_.joint_id_),
+          reinterpret_cast<char*>(&other->_impl_.joint_id_));
+}
+
+::google::protobuf::Metadata RevoluteMotorActuator::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class PrismaticMotorActuator::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<PrismaticMotorActuator>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(PrismaticMotorActuator, _impl_._has_bits_);
+};
+
+PrismaticMotorActuator::PrismaticMotorActuator(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PrismaticMotorActuator_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.PrismaticMotorActuator)
+}
+PROTOBUF_NDEBUG_INLINE PrismaticMotorActuator::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::PrismaticMotorActuator& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
+PrismaticMotorActuator::PrismaticMotorActuator(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const PrismaticMotorActuator& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PrismaticMotorActuator_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  PrismaticMotorActuator* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.joint_id_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.joint_id_)
+                : nullptr;
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, command_value_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, command_value_),
+           offsetof(Impl_, control_mode_) -
+               offsetof(Impl_, command_value_) +
+               sizeof(Impl_::control_mode_));
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.PrismaticMotorActuator)
+}
+PROTOBUF_NDEBUG_INLINE PrismaticMotorActuator::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0} {}
+
+inline void PrismaticMotorActuator::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, joint_id_),
+           0,
+           offsetof(Impl_, control_mode_) -
+               offsetof(Impl_, joint_id_) +
+               sizeof(Impl_::control_mode_));
+}
+PrismaticMotorActuator::~PrismaticMotorActuator() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.PrismaticMotorActuator)
+  SharedDtor(*this);
+}
+inline void PrismaticMotorActuator::SharedDtor(MessageLite& self) {
+  PrismaticMotorActuator& this_ = static_cast<PrismaticMotorActuator&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.joint_id_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL PrismaticMotorActuator::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) PrismaticMotorActuator(arena);
+}
+constexpr auto PrismaticMotorActuator::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(PrismaticMotorActuator),
+                                            alignof(PrismaticMotorActuator));
+}
+constexpr auto PrismaticMotorActuator::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_PrismaticMotorActuator_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &PrismaticMotorActuator::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<PrismaticMotorActuator>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &PrismaticMotorActuator::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<PrismaticMotorActuator>(), &PrismaticMotorActuator::ByteSizeLong,
+              &PrismaticMotorActuator::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(PrismaticMotorActuator, _impl_._cached_size_),
+          false,
+      },
+      &PrismaticMotorActuator::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull PrismaticMotorActuator_class_data_ =
+        PrismaticMotorActuator::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+PrismaticMotorActuator::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&PrismaticMotorActuator_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(PrismaticMotorActuator_class_data_.tc_table);
+  return PrismaticMotorActuator_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 4, 1, 0, 2>
+PrismaticMotorActuator::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(PrismaticMotorActuator, _impl_._has_bits_),
+    0, // no _extensions_
+    4, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967280,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    4,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    PrismaticMotorActuator_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::PrismaticMotorActuator>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // optional double effort_limit = 4 [json_name = "effortLimit"];
+    {::_pbi::TcParser::FastF64S1,
+     {33, 2, 0,
+      PROTOBUF_FIELD_OFFSET(PrismaticMotorActuator, _impl_.effort_limit_)}},
+    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(PrismaticMotorActuator, _impl_.joint_id_)}},
+    // .motionlab.mechanism.ActuatorControlMode control_mode = 2 [json_name = "controlMode"];
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(PrismaticMotorActuator, _impl_.control_mode_), 3>(),
+     {16, 3, 0,
+      PROTOBUF_FIELD_OFFSET(PrismaticMotorActuator, _impl_.control_mode_)}},
+    // double command_value = 3 [json_name = "commandValue"];
+    {::_pbi::TcParser::FastF64S1,
+     {25, 1, 0,
+      PROTOBUF_FIELD_OFFSET(PrismaticMotorActuator, _impl_.command_value_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    {PROTOBUF_FIELD_OFFSET(PrismaticMotorActuator, _impl_.joint_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.ActuatorControlMode control_mode = 2 [json_name = "controlMode"];
+    {PROTOBUF_FIELD_OFFSET(PrismaticMotorActuator, _impl_.control_mode_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+    // double command_value = 3 [json_name = "commandValue"];
+    {PROTOBUF_FIELD_OFFSET(PrismaticMotorActuator, _impl_.command_value_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // optional double effort_limit = 4 [json_name = "effortLimit"];
+    {PROTOBUF_FIELD_OFFSET(PrismaticMotorActuator, _impl_.effort_limit_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+  }},
+  {{
+  }},
+};
+PROTOBUF_NOINLINE void PrismaticMotorActuator::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.PrismaticMotorActuator)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(_impl_.joint_id_ != nullptr);
+    _impl_.joint_id_->Clear();
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000eU)) {
+    ::memset(&_impl_.command_value_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.control_mode_) -
+        reinterpret_cast<char*>(&_impl_.command_value_)) + sizeof(_impl_.control_mode_));
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL PrismaticMotorActuator::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const PrismaticMotorActuator& this_ = static_cast<const PrismaticMotorActuator&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL PrismaticMotorActuator::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const PrismaticMotorActuator& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.PrismaticMotorActuator)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.joint_id_, this_._impl_.joint_id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.ActuatorControlMode control_mode = 2 [json_name = "controlMode"];
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (this_._internal_control_mode() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteEnumToArray(
+          2, this_._internal_control_mode(), target);
+    }
+  }
+
+  // double command_value = 3 [json_name = "commandValue"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_command_value()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          3, this_._internal_command_value(), target);
+    }
+  }
+
+  // optional double effort_limit = 4 [json_name = "effortLimit"];
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+        4, this_._internal_effort_limit(), target);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.PrismaticMotorActuator)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t PrismaticMotorActuator::ByteSizeLong(const MessageLite& base) {
+  const PrismaticMotorActuator& this_ = static_cast<const PrismaticMotorActuator&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t PrismaticMotorActuator::ByteSizeLong() const {
+  const PrismaticMotorActuator& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.PrismaticMotorActuator)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  total_size += static_cast<bool>(0x00000004U & cached_has_bits) * 9;
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000bU)) {
+    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.joint_id_);
+    }
+    // double command_value = 3 [json_name = "commandValue"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_command_value()) != 0) {
+        total_size += 9;
+      }
+    }
+    // .motionlab.mechanism.ActuatorControlMode control_mode = 2 [json_name = "controlMode"];
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (this_._internal_control_mode() != 0) {
+        total_size += 1 +
+                      ::_pbi::WireFormatLite::EnumSize(this_._internal_control_mode());
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void PrismaticMotorActuator::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<PrismaticMotorActuator*>(&to_msg);
+  auto& from = static_cast<const PrismaticMotorActuator&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.PrismaticMotorActuator)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(from._impl_.joint_id_ != nullptr);
+      if (_this->_impl_.joint_id_ == nullptr) {
+        _this->_impl_.joint_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.joint_id_);
+      } else {
+        _this->_impl_.joint_id_->MergeFrom(*from._impl_.joint_id_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_command_value()) != 0) {
+        _this->_impl_.command_value_ = from._impl_.command_value_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      _this->_impl_.effort_limit_ = from._impl_.effort_limit_;
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (from._internal_control_mode() != 0) {
+        _this->_impl_.control_mode_ = from._impl_.control_mode_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void PrismaticMotorActuator::CopyFrom(const PrismaticMotorActuator& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.PrismaticMotorActuator)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void PrismaticMotorActuator::InternalSwap(PrismaticMotorActuator* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(PrismaticMotorActuator, _impl_.control_mode_)
+      + sizeof(PrismaticMotorActuator::_impl_.control_mode_)
+      - PROTOBUF_FIELD_OFFSET(PrismaticMotorActuator, _impl_.joint_id_)>(
+          reinterpret_cast<char*>(&_impl_.joint_id_),
+          reinterpret_cast<char*>(&other->_impl_.joint_id_));
+}
+
+::google::protobuf::Metadata PrismaticMotorActuator::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class Actuator::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<Actuator>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(Actuator, _impl_._has_bits_);
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::motionlab::mechanism::Actuator, _impl_._oneof_case_);
+};
+
+void Actuator::set_allocated_revolute_motor(::motionlab::mechanism::RevoluteMotorActuator* PROTOBUF_NULLABLE revolute_motor) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (revolute_motor) {
+    ::google::protobuf::Arena* submessage_arena = revolute_motor->GetArena();
+    if (message_arena != submessage_arena) {
+      revolute_motor = ::google::protobuf::internal::GetOwnedMessage(message_arena, revolute_motor, submessage_arena);
+    }
+    set_has_revolute_motor();
+    _impl_.config_.revolute_motor_ = revolute_motor;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Actuator.revolute_motor)
+}
+void Actuator::set_allocated_prismatic_motor(::motionlab::mechanism::PrismaticMotorActuator* PROTOBUF_NULLABLE prismatic_motor) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_config();
+  if (prismatic_motor) {
+    ::google::protobuf::Arena* submessage_arena = prismatic_motor->GetArena();
+    if (message_arena != submessage_arena) {
+      prismatic_motor = ::google::protobuf::internal::GetOwnedMessage(message_arena, prismatic_motor, submessage_arena);
+    }
+    set_has_prismatic_motor();
+    _impl_.config_.prismatic_motor_ = prismatic_motor;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Actuator.prismatic_motor)
+}
+Actuator::Actuator(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, Actuator_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.Actuator)
+}
+PROTOBUF_NDEBUG_INLINE Actuator::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::Actuator& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        name_(arena, from.name_),
+        config_{},
+        _oneof_case_{from._oneof_case_[0]} {}
+
+Actuator::Actuator(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const Actuator& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, Actuator_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  Actuator* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.id_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.id_)
+                : nullptr;
+  switch (config_case()) {
+    case CONFIG_NOT_SET:
+      break;
+      case kRevoluteMotor:
+        _impl_.config_.revolute_motor_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.revolute_motor_);
+        break;
+      case kPrismaticMotor:
+        _impl_.config_.prismatic_motor_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.prismatic_motor_);
+        break;
+  }
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.Actuator)
+}
+PROTOBUF_NDEBUG_INLINE Actuator::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        name_(arena),
+        config_{},
+        _oneof_case_{} {}
+
+inline void Actuator::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.id_ = {};
+}
+Actuator::~Actuator() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.Actuator)
+  SharedDtor(*this);
+}
+inline void Actuator::SharedDtor(MessageLite& self) {
+  Actuator& this_ = static_cast<Actuator&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.name_.Destroy();
+  delete this_._impl_.id_;
+  if (this_.has_config()) {
+    this_.clear_config();
+  }
+  this_._impl_.~Impl_();
+}
+
+void Actuator::clear_config() {
+// @@protoc_insertion_point(one_of_clear_start:motionlab.mechanism.Actuator)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (config_case()) {
+    case kRevoluteMotor: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.revolute_motor_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.revolute_motor_);
+      }
+      break;
+    }
+    case kPrismaticMotor: {
+      if (GetArena() == nullptr) {
+        delete _impl_.config_.prismatic_motor_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.config_.prismatic_motor_);
+      }
+      break;
+    }
+    case CONFIG_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = CONFIG_NOT_SET;
+}
+
+
+inline void* PROTOBUF_NONNULL Actuator::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) Actuator(arena);
+}
+constexpr auto Actuator::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(Actuator),
+                                            alignof(Actuator));
+}
+constexpr auto Actuator::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_Actuator_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &Actuator::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<Actuator>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &Actuator::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<Actuator>(), &Actuator::ByteSizeLong,
+              &Actuator::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(Actuator, _impl_._cached_size_),
+          false,
+      },
+      &Actuator::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull Actuator_class_data_ =
+        Actuator::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+Actuator::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&Actuator_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(Actuator_class_data_.tc_table);
+  return Actuator_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 4, 3, 41, 2>
+Actuator::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(Actuator, _impl_._has_bits_),
+    0, // no _extensions_
+    4, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967280,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    4,  // num_field_entries
+    3,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    Actuator_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::Actuator>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // string name = 2 [json_name = "name"];
+    {::_pbi::TcParser::FastUS1,
+     {18, 0, 0,
+      PROTOBUF_FIELD_OFFSET(Actuator, _impl_.name_)}},
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+    {::_pbi::TcParser::FastMtS1,
+     {10, 1, 0,
+      PROTOBUF_FIELD_OFFSET(Actuator, _impl_.id_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+    {PROTOBUF_FIELD_OFFSET(Actuator, _impl_.id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string name = 2 [json_name = "name"];
+    {PROTOBUF_FIELD_OFFSET(Actuator, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // .motionlab.mechanism.RevoluteMotorActuator revolute_motor = 3 [json_name = "revoluteMotor"];
+    {PROTOBUF_FIELD_OFFSET(Actuator, _impl_.config_.revolute_motor_), _Internal::kOneofCaseOffset + 0, 1, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.PrismaticMotorActuator prismatic_motor = 4 [json_name = "prismaticMotor"];
+    {PROTOBUF_FIELD_OFFSET(Actuator, _impl_.config_.prismatic_motor_), _Internal::kOneofCaseOffset + 0, 2, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::RevoluteMotorActuator>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::PrismaticMotorActuator>()},
+  }},
+  {{
+    "\34\0\4\0\0\0\0\0"
+    "motionlab.mechanism.Actuator"
+    "name"
+  }},
+};
+PROTOBUF_NOINLINE void Actuator::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.Actuator)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _impl_.name_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.id_ != nullptr);
+      _impl_.id_->Clear();
+    }
+  }
+  clear_config();
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL Actuator::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const Actuator& this_ = static_cast<const Actuator&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL Actuator::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const Actuator& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.Actuator)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        1, *this_._impl_.id_, this_._impl_.id_->GetCachedSize(), target,
+        stream);
+  }
+
+  // string name = 2 [json_name = "name"];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!this_._internal_name().empty()) {
+      const ::std::string& _s = this_._internal_name();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.mechanism.Actuator.name");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+    }
+  }
+
+  switch (this_.config_case()) {
+    case kRevoluteMotor: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          3, *this_._impl_.config_.revolute_motor_, this_._impl_.config_.revolute_motor_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kPrismaticMotor: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          4, *this_._impl_.config_.prismatic_motor_, this_._impl_.config_.prismatic_motor_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    default:
+      break;
+  }
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.Actuator)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t Actuator::ByteSizeLong(const MessageLite& base) {
+  const Actuator& this_ = static_cast<const Actuator&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t Actuator::ByteSizeLong() const {
+  const Actuator& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.Actuator)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    // string name = 2 [json_name = "name"];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!this_._internal_name().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_name());
+      }
+    }
+    // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.id_);
+    }
+  }
+  switch (this_.config_case()) {
+    // .motionlab.mechanism.RevoluteMotorActuator revolute_motor = 3 [json_name = "revoluteMotor"];
+    case kRevoluteMotor: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.revolute_motor_);
+      break;
+    }
+    // .motionlab.mechanism.PrismaticMotorActuator prismatic_motor = 4 [json_name = "prismaticMotor"];
+    case kPrismaticMotor: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.config_.prismatic_motor_);
+      break;
+    }
+    case CONFIG_NOT_SET: {
+      break;
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void Actuator::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<Actuator*>(&to_msg);
+  auto& from = static_cast<const Actuator&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.Actuator)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!from._internal_name().empty()) {
+        _this->_internal_set_name(from._internal_name());
+      } else {
+        if (_this->_impl_.name_.IsDefault()) {
+          _this->_internal_set_name("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.id_ != nullptr);
+      if (_this->_impl_.id_ == nullptr) {
+        _this->_impl_.id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.id_);
+      } else {
+        _this->_impl_.id_->MergeFrom(*from._impl_.id_);
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  if (const uint32_t oneof_from_case =
+          from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_config();
+      }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kRevoluteMotor: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.revolute_motor_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.revolute_motor_);
+        } else {
+          _this->_impl_.config_.revolute_motor_->MergeFrom(*from._impl_.config_.revolute_motor_);
+        }
+        break;
+      }
+      case kPrismaticMotor: {
+        if (oneof_needs_init) {
+          _this->_impl_.config_.prismatic_motor_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.config_.prismatic_motor_);
+        } else {
+          _this->_impl_.config_.prismatic_motor_->MergeFrom(*from._impl_.config_.prismatic_motor_);
+        }
+        break;
+      }
+      case CONFIG_NOT_SET:
+        break;
+    }
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void Actuator::CopyFrom(const Actuator& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.Actuator)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void Actuator::InternalSwap(Actuator* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
+  swap(_impl_.id_, other->_impl_.id_);
+  swap(_impl_.config_, other->_impl_.config_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
+}
+
+::google::protobuf::Metadata Actuator::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
@@ -4946,6 +12303,9 @@ PROTOBUF_NDEBUG_INLINE Mechanism::Impl_::Impl_(
         bodies_{visibility, arena, from.bodies_},
         datums_{visibility, arena, from.datums_},
         joints_{visibility, arena, from.joints_},
+        loads_{visibility, arena, from.loads_},
+        actuators_{visibility, arena, from.actuators_},
+        geometries_{visibility, arena, from.geometries_},
         name_(arena, from.name_) {}
 
 Mechanism::Mechanism(
@@ -4962,7 +12322,7 @@ Mechanism::Mechanism(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
   ::uint32_t cached_has_bits = _impl_._has_bits_[0];
-  _impl_.id_ = (CheckHasBit(cached_has_bits, 0x00000010U))
+  _impl_.id_ = (CheckHasBit(cached_has_bits, 0x00000080U))
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.id_)
                 : nullptr;
 
@@ -4975,6 +12335,9 @@ PROTOBUF_NDEBUG_INLINE Mechanism::Impl_::Impl_(
         bodies_{visibility, arena},
         datums_{visibility, arena},
         joints_{visibility, arena},
+        loads_{visibility, arena},
+        actuators_{visibility, arena},
+        geometries_{visibility, arena},
         name_(arena) {}
 
 inline void Mechanism::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
@@ -5014,6 +12377,18 @@ constexpr auto Mechanism::InternalNewImpl_() {
                   ::google::protobuf::Message::internal_visibility()),
       PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.joints_) +
           decltype(Mechanism::_impl_.joints_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+      PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.loads_) +
+          decltype(Mechanism::_impl_.loads_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+      PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.actuators_) +
+          decltype(Mechanism::_impl_.actuators_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+      PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.geometries_) +
+          decltype(Mechanism::_impl_.geometries_)::
               InternalGetArenaOffset(
                   ::google::protobuf::Message::internal_visibility()),
   });
@@ -5060,17 +12435,17 @@ Mechanism::GetClassData() const {
   return Mechanism_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 5, 4, 42, 2>
+const ::_pbi::TcParseTable<3, 8, 7, 50, 2>
 Mechanism::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Mechanism, _impl_._has_bits_),
     0, // no _extensions_
-    5, 56,  // max_field_number, fast_idx_mask
+    8, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967264,  // skipmap
+    4294967040,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    5,  // num_field_entries
-    4,  // num_aux_entries
+    8,  // num_field_entries
+    7,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     Mechanism_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -5079,14 +12454,17 @@ Mechanism::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::mechanism::Mechanism>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
+    // repeated .motionlab.mechanism.Geometry geometries = 8 [json_name = "geometries"];
+    {::_pbi::TcParser::FastMtR1,
+     {66, 5, 6,
+      PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.geometries_)}},
     // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
     {::_pbi::TcParser::FastMtS1,
-     {10, 4, 0,
+     {10, 7, 0,
       PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.id_)}},
     // string name = 2 [json_name = "name"];
     {::_pbi::TcParser::FastUS1,
-     {18, 3, 0,
+     {18, 6, 0,
       PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.name_)}},
     // repeated .motionlab.mechanism.Body bodies = 3 [json_name = "bodies"];
     {::_pbi::TcParser::FastMtR1,
@@ -5100,30 +12478,45 @@ Mechanism::_table_ = {
     {::_pbi::TcParser::FastMtR1,
      {42, 2, 3,
       PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.joints_)}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
+    // repeated .motionlab.mechanism.Load loads = 6 [json_name = "loads"];
+    {::_pbi::TcParser::FastMtR1,
+     {50, 3, 4,
+      PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.loads_)}},
+    // repeated .motionlab.mechanism.Actuator actuators = 7 [json_name = "actuators"];
+    {::_pbi::TcParser::FastMtR1,
+     {58, 4, 5,
+      PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.actuators_)}},
   }}, {{
     65535, 65535
   }}, {{
     // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
-    {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.id_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.id_), _Internal::kHasBitsOffset + 7, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // string name = 2 [json_name = "name"];
-    {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.name_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.name_), _Internal::kHasBitsOffset + 6, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // repeated .motionlab.mechanism.Body bodies = 3 [json_name = "bodies"];
     {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.bodies_), _Internal::kHasBitsOffset + 0, 1, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
     // repeated .motionlab.mechanism.Datum datums = 4 [json_name = "datums"];
     {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.datums_), _Internal::kHasBitsOffset + 1, 2, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
     // repeated .motionlab.mechanism.Joint joints = 5 [json_name = "joints"];
     {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.joints_), _Internal::kHasBitsOffset + 2, 3, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+    // repeated .motionlab.mechanism.Load loads = 6 [json_name = "loads"];
+    {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.loads_), _Internal::kHasBitsOffset + 3, 4, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+    // repeated .motionlab.mechanism.Actuator actuators = 7 [json_name = "actuators"];
+    {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.actuators_), _Internal::kHasBitsOffset + 4, 5, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+    // repeated .motionlab.mechanism.Geometry geometries = 8 [json_name = "geometries"];
+    {PROTOBUF_FIELD_OFFSET(Mechanism, _impl_.geometries_), _Internal::kHasBitsOffset + 5, 6, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::Body>()},
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::Datum>()},
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::Joint>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Load>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Actuator>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Geometry>()},
   }},
   {{
-    "\35\0\4\0\0\0\0\0"
+    "\35\0\4\0\0\0\0\0\0\0\0\0\0\0\0\0"
     "motionlab.mechanism.Mechanism"
     "name"
   }},
@@ -5136,7 +12529,7 @@ PROTOBUF_NOINLINE void Mechanism::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x000000ffU)) {
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       _impl_.bodies_.Clear();
     }
@@ -5146,10 +12539,19 @@ PROTOBUF_NOINLINE void Mechanism::Clear() {
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000004U)) {
       _impl_.joints_.Clear();
     }
-    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000008U)) {
+      _impl_.loads_.Clear();
+    }
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000010U)) {
+      _impl_.actuators_.Clear();
+    }
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000020U)) {
+      _impl_.geometries_.Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000040U)) {
       _impl_.name_.ClearNonDefaultToEmpty();
     }
-    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000080U)) {
       ABSL_DCHECK(_impl_.id_ != nullptr);
       _impl_.id_->Clear();
     }
@@ -5178,14 +12580,14 @@ PROTOBUF_NOINLINE void Mechanism::Clear() {
 
   cached_has_bits = this_._impl_._has_bits_[0];
   // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
-  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000080U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.id_, this_._impl_.id_->GetCachedSize(), target,
         stream);
   }
 
   // string name = 2 [json_name = "name"];
-  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000040U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
       ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
@@ -5233,6 +12635,45 @@ PROTOBUF_NOINLINE void Mechanism::Clear() {
     }
   }
 
+  // repeated .motionlab.mechanism.Load loads = 6 [json_name = "loads"];
+  if (CheckHasBitForRepeated(cached_has_bits, 0x00000008U)) {
+    for (unsigned i = 0, n = static_cast<unsigned>(
+                             this_._internal_loads_size());
+         i < n; i++) {
+      const auto& repfield = this_._internal_loads().Get(i);
+      target =
+          ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+              6, repfield, repfield.GetCachedSize(),
+              target, stream);
+    }
+  }
+
+  // repeated .motionlab.mechanism.Actuator actuators = 7 [json_name = "actuators"];
+  if (CheckHasBitForRepeated(cached_has_bits, 0x00000010U)) {
+    for (unsigned i = 0, n = static_cast<unsigned>(
+                             this_._internal_actuators_size());
+         i < n; i++) {
+      const auto& repfield = this_._internal_actuators().Get(i);
+      target =
+          ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+              7, repfield, repfield.GetCachedSize(),
+              target, stream);
+    }
+  }
+
+  // repeated .motionlab.mechanism.Geometry geometries = 8 [json_name = "geometries"];
+  if (CheckHasBitForRepeated(cached_has_bits, 0x00000020U)) {
+    for (unsigned i = 0, n = static_cast<unsigned>(
+                             this_._internal_geometries_size());
+         i < n; i++) {
+      const auto& repfield = this_._internal_geometries().Get(i);
+      target =
+          ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+              8, repfield, repfield.GetCachedSize(),
+              target, stream);
+    }
+  }
+
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -5258,7 +12699,7 @@ PROTOBUF_NOINLINE void Mechanism::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x000000ffU)) {
     // repeated .motionlab.mechanism.Body bodies = 3 [json_name = "bodies"];
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       total_size += 1UL * this_._internal_bodies_size();
@@ -5280,15 +12721,36 @@ PROTOBUF_NOINLINE void Mechanism::Clear() {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
+    // repeated .motionlab.mechanism.Load loads = 6 [json_name = "loads"];
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000008U)) {
+      total_size += 1UL * this_._internal_loads_size();
+      for (const auto& msg : this_._internal_loads()) {
+        total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
+      }
+    }
+    // repeated .motionlab.mechanism.Actuator actuators = 7 [json_name = "actuators"];
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000010U)) {
+      total_size += 1UL * this_._internal_actuators_size();
+      for (const auto& msg : this_._internal_actuators()) {
+        total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
+      }
+    }
+    // repeated .motionlab.mechanism.Geometry geometries = 8 [json_name = "geometries"];
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000020U)) {
+      total_size += 1UL * this_._internal_geometries_size();
+      for (const auto& msg : this_._internal_geometries()) {
+        total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
+      }
+    }
     // string name = 2 [json_name = "name"];
-    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000040U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
     // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
-    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000080U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.id_);
     }
@@ -5312,7 +12774,7 @@ void Mechanism::MergeImpl(::google::protobuf::MessageLite& to_msg,
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x000000ffU)) {
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       _this->_internal_mutable_bodies()->InternalMergeFromWithArena(
           ::google::protobuf::MessageLite::internal_visibility(), arena,
@@ -5328,7 +12790,22 @@ void Mechanism::MergeImpl(::google::protobuf::MessageLite& to_msg,
           ::google::protobuf::MessageLite::internal_visibility(), arena,
           from._internal_joints());
     }
-    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000008U)) {
+      _this->_internal_mutable_loads()->InternalMergeFromWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), arena,
+          from._internal_loads());
+    }
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000010U)) {
+      _this->_internal_mutable_actuators()->InternalMergeFromWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), arena,
+          from._internal_actuators());
+    }
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000020U)) {
+      _this->_internal_mutable_geometries()->InternalMergeFromWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), arena,
+          from._internal_geometries());
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000040U)) {
       if (!from._internal_name().empty()) {
         _this->_internal_set_name(from._internal_name());
       } else {
@@ -5337,7 +12814,7 @@ void Mechanism::MergeImpl(::google::protobuf::MessageLite& to_msg,
         }
       }
     }
-    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000080U)) {
       ABSL_DCHECK(from._impl_.id_ != nullptr);
       if (_this->_impl_.id_ == nullptr) {
         _this->_impl_.id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.id_);
@@ -5368,6 +12845,9 @@ void Mechanism::InternalSwap(Mechanism* PROTOBUF_RESTRICT PROTOBUF_NONNULL other
   _impl_.bodies_.InternalSwap(&other->_impl_.bodies_);
   _impl_.datums_.InternalSwap(&other->_impl_.datums_);
   _impl_.joints_.InternalSwap(&other->_impl_.joints_);
+  _impl_.loads_.InternalSwap(&other->_impl_.loads_);
+  _impl_.actuators_.InternalSwap(&other->_impl_.actuators_);
+  _impl_.geometries_.InternalSwap(&other->_impl_.geometries_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
   swap(_impl_.id_, other->_impl_.id_);
 }
@@ -5860,6 +13340,489 @@ void BodyDisplayData::InternalSwap(BodyDisplayData* PROTOBUF_RESTRICT PROTOBUF_N
 }
 // ===================================================================
 
+class GeometryDisplayData::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<GeometryDisplayData>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_._has_bits_);
+};
+
+GeometryDisplayData::GeometryDisplayData(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, GeometryDisplayData_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.mechanism.GeometryDisplayData)
+}
+PROTOBUF_NDEBUG_INLINE GeometryDisplayData::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::mechanism::GeometryDisplayData& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        part_index_{visibility, arena, from.part_index_},
+        _part_index_cached_byte_size_{0},
+        geometry_id_(arena, from.geometry_id_),
+        unit_system_(arena, from.unit_system_) {}
+
+GeometryDisplayData::GeometryDisplayData(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const GeometryDisplayData& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, GeometryDisplayData_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  GeometryDisplayData* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.display_mesh_ = (CheckHasBit(cached_has_bits, 0x00000008U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.display_mesh_)
+                : nullptr;
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, density_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, density_),
+           offsetof(Impl_, tessellation_quality_) -
+               offsetof(Impl_, density_) +
+               sizeof(Impl_::tessellation_quality_));
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.mechanism.GeometryDisplayData)
+}
+PROTOBUF_NDEBUG_INLINE GeometryDisplayData::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        part_index_{visibility, arena},
+        _part_index_cached_byte_size_{0},
+        geometry_id_(arena),
+        unit_system_(arena) {}
+
+inline void GeometryDisplayData::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, display_mesh_),
+           0,
+           offsetof(Impl_, tessellation_quality_) -
+               offsetof(Impl_, display_mesh_) +
+               sizeof(Impl_::tessellation_quality_));
+}
+GeometryDisplayData::~GeometryDisplayData() {
+  // @@protoc_insertion_point(destructor:motionlab.mechanism.GeometryDisplayData)
+  SharedDtor(*this);
+}
+inline void GeometryDisplayData::SharedDtor(MessageLite& self) {
+  GeometryDisplayData& this_ = static_cast<GeometryDisplayData&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.geometry_id_.Destroy();
+  this_._impl_.unit_system_.Destroy();
+  delete this_._impl_.display_mesh_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL GeometryDisplayData::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) GeometryDisplayData(arena);
+}
+constexpr auto GeometryDisplayData::InternalNewImpl_() {
+  constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
+      PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.part_index_) +
+          decltype(GeometryDisplayData::_impl_.part_index_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+  });
+  if (arena_bits.has_value()) {
+    return ::google::protobuf::internal::MessageCreator::CopyInit(
+        sizeof(GeometryDisplayData), alignof(GeometryDisplayData), *arena_bits);
+  } else {
+    return ::google::protobuf::internal::MessageCreator(&GeometryDisplayData::PlacementNew_,
+                                 sizeof(GeometryDisplayData),
+                                 alignof(GeometryDisplayData));
+  }
+}
+constexpr auto GeometryDisplayData::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_GeometryDisplayData_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &GeometryDisplayData::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<GeometryDisplayData>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &GeometryDisplayData::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<GeometryDisplayData>(), &GeometryDisplayData::ByteSizeLong,
+              &GeometryDisplayData::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_._cached_size_),
+          false,
+      },
+      &GeometryDisplayData::kDescriptorMethods,
+      &descriptor_table_mechanism_2fmechanism_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull GeometryDisplayData_class_data_ =
+        GeometryDisplayData::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+GeometryDisplayData::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&GeometryDisplayData_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(GeometryDisplayData_class_data_.tc_table);
+  return GeometryDisplayData_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<3, 6, 1, 70, 2>
+GeometryDisplayData::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_._has_bits_),
+    0, // no _extensions_
+    6, 56,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967232,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    6,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    GeometryDisplayData_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::mechanism::GeometryDisplayData>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // string geometry_id = 1 [json_name = "geometryId"];
+    {::_pbi::TcParser::FastUS1,
+     {10, 1, 0,
+      PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.geometry_id_)}},
+    // .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
+    {::_pbi::TcParser::FastMtS1,
+     {18, 3, 0,
+      PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.display_mesh_)}},
+    // repeated uint32 part_index = 3 [json_name = "partIndex"];
+    {::_pbi::TcParser::FastV32P1,
+     {26, 0, 0,
+      PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.part_index_)}},
+    // double density = 4 [json_name = "density"];
+    {::_pbi::TcParser::FastF64S1,
+     {33, 4, 0,
+      PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.density_)}},
+    // double tessellation_quality = 5 [json_name = "tessellationQuality"];
+    {::_pbi::TcParser::FastF64S1,
+     {41, 5, 0,
+      PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.tessellation_quality_)}},
+    // string unit_system = 6 [json_name = "unitSystem"];
+    {::_pbi::TcParser::FastUS1,
+     {50, 2, 0,
+      PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.unit_system_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // string geometry_id = 1 [json_name = "geometryId"];
+    {PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.geometry_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
+    {PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.display_mesh_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // repeated uint32 part_index = 3 [json_name = "partIndex"];
+    {PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.part_index_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kPackedUInt32)},
+    // double density = 4 [json_name = "density"];
+    {PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.density_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // double tessellation_quality = 5 [json_name = "tessellationQuality"];
+    {PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.tessellation_quality_), _Internal::kHasBitsOffset + 5, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    // string unit_system = 6 [json_name = "unitSystem"];
+    {PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.unit_system_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::DisplayMesh>()},
+  }},
+  {{
+    "\47\13\0\0\0\0\13\0"
+    "motionlab.mechanism.GeometryDisplayData"
+    "geometry_id"
+    "unit_system"
+  }},
+};
+PROTOBUF_NOINLINE void GeometryDisplayData::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.mechanism.GeometryDisplayData)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+      _impl_.part_index_.Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      _impl_.geometry_id_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      _impl_.unit_system_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      ABSL_DCHECK(_impl_.display_mesh_ != nullptr);
+      _impl_.display_mesh_->Clear();
+    }
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x00000030U)) {
+    ::memset(&_impl_.density_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.tessellation_quality_) -
+        reinterpret_cast<char*>(&_impl_.density_)) + sizeof(_impl_.tessellation_quality_));
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL GeometryDisplayData::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const GeometryDisplayData& this_ = static_cast<const GeometryDisplayData&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL GeometryDisplayData::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const GeometryDisplayData& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.mechanism.GeometryDisplayData)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // string geometry_id = 1 [json_name = "geometryId"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (!this_._internal_geometry_id().empty()) {
+      const ::std::string& _s = this_._internal_geometry_id();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.mechanism.GeometryDisplayData.geometry_id");
+      target = stream->WriteStringMaybeAliased(1, _s, target);
+    }
+  }
+
+  // .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        2, *this_._impl_.display_mesh_, this_._impl_.display_mesh_->GetCachedSize(), target,
+        stream);
+  }
+
+  // repeated uint32 part_index = 3 [json_name = "partIndex"];
+  if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+    {
+      int byte_size = this_._impl_._part_index_cached_byte_size_.Get();
+      if (byte_size > 0) {
+        target = stream->WriteUInt32Packed(
+            3, this_._internal_part_index(), byte_size, target);
+      }
+    }
+  }
+
+  // double density = 4 [json_name = "density"];
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_density()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          4, this_._internal_density(), target);
+    }
+  }
+
+  // double tessellation_quality = 5 [json_name = "tessellationQuality"];
+  if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_tessellation_quality()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          5, this_._internal_tessellation_quality(), target);
+    }
+  }
+
+  // string unit_system = 6 [json_name = "unitSystem"];
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (!this_._internal_unit_system().empty()) {
+      const ::std::string& _s = this_._internal_unit_system();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.mechanism.GeometryDisplayData.unit_system");
+      target = stream->WriteStringMaybeAliased(6, _s, target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.mechanism.GeometryDisplayData)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t GeometryDisplayData::ByteSizeLong(const MessageLite& base) {
+  const GeometryDisplayData& this_ = static_cast<const GeometryDisplayData&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t GeometryDisplayData::ByteSizeLong() const {
+  const GeometryDisplayData& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.mechanism.GeometryDisplayData)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000003fU)) {
+    // repeated uint32 part_index = 3 [json_name = "partIndex"];
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+      total_size +=
+          ::_pbi::WireFormatLite::UInt32SizeWithPackedTagSize(
+              this_._internal_part_index(), 1,
+              this_._impl_._part_index_cached_byte_size_);
+    }
+    // string geometry_id = 1 [json_name = "geometryId"];
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (!this_._internal_geometry_id().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_geometry_id());
+      }
+    }
+    // string unit_system = 6 [json_name = "unitSystem"];
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (!this_._internal_unit_system().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_unit_system());
+      }
+    }
+    // .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.display_mesh_);
+    }
+    // double density = 4 [json_name = "density"];
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_density()) != 0) {
+        total_size += 9;
+      }
+    }
+    // double tessellation_quality = 5 [json_name = "tessellationQuality"];
+    if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_tessellation_quality()) != 0) {
+        total_size += 9;
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void GeometryDisplayData::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<GeometryDisplayData*>(&to_msg);
+  auto& from = static_cast<const GeometryDisplayData&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.mechanism.GeometryDisplayData)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000003fU)) {
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+      _this->_internal_mutable_part_index()->MergeFrom(from._internal_part_index());
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (!from._internal_geometry_id().empty()) {
+        _this->_internal_set_geometry_id(from._internal_geometry_id());
+      } else {
+        if (_this->_impl_.geometry_id_.IsDefault()) {
+          _this->_internal_set_geometry_id("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (!from._internal_unit_system().empty()) {
+        _this->_internal_set_unit_system(from._internal_unit_system());
+      } else {
+        if (_this->_impl_.unit_system_.IsDefault()) {
+          _this->_internal_set_unit_system("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      ABSL_DCHECK(from._impl_.display_mesh_ != nullptr);
+      if (_this->_impl_.display_mesh_ == nullptr) {
+        _this->_impl_.display_mesh_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.display_mesh_);
+      } else {
+        _this->_impl_.display_mesh_->MergeFrom(*from._impl_.display_mesh_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_density()) != 0) {
+        _this->_impl_.density_ = from._impl_.density_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000020U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_tessellation_quality()) != 0) {
+        _this->_impl_.tessellation_quality_ = from._impl_.tessellation_quality_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void GeometryDisplayData::CopyFrom(const GeometryDisplayData& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.mechanism.GeometryDisplayData)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void GeometryDisplayData::InternalSwap(GeometryDisplayData* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  _impl_.part_index_.InternalSwap(&other->_impl_.part_index_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.geometry_id_, &other->_impl_.geometry_id_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.unit_system_, &other->_impl_.unit_system_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.tessellation_quality_)
+      + sizeof(GeometryDisplayData::_impl_.tessellation_quality_)
+      - PROTOBUF_FIELD_OFFSET(GeometryDisplayData, _impl_.display_mesh_)>(
+          reinterpret_cast<char*>(&_impl_.display_mesh_),
+          reinterpret_cast<char*>(&other->_impl_.display_mesh_));
+}
+
+::google::protobuf::Metadata GeometryDisplayData::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
 class ProjectFile::_Internal {
  public:
   using HasBits =
@@ -5883,7 +13846,8 @@ PROTOBUF_NDEBUG_INLINE ProjectFile::Impl_::Impl_(
     [[maybe_unused]] const ::motionlab::mechanism::ProjectFile& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
-        body_display_data_{visibility, arena, from.body_display_data_} {}
+        body_display_data_{visibility, arena, from.body_display_data_},
+        geometry_display_data_{visibility, arena, from.geometry_display_data_} {}
 
 ProjectFile::ProjectFile(
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
@@ -5899,10 +13863,10 @@ ProjectFile::ProjectFile(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
   ::uint32_t cached_has_bits = _impl_._has_bits_[0];
-  _impl_.metadata_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+  _impl_.metadata_ = (CheckHasBit(cached_has_bits, 0x00000004U))
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.metadata_)
                 : nullptr;
-  _impl_.mechanism_ = (CheckHasBit(cached_has_bits, 0x00000004U))
+  _impl_.mechanism_ = (CheckHasBit(cached_has_bits, 0x00000008U))
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.mechanism_)
                 : nullptr;
   _impl_.version_ = from._impl_.version_;
@@ -5913,7 +13877,8 @@ PROTOBUF_NDEBUG_INLINE ProjectFile::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0},
-        body_display_data_{visibility, arena} {}
+        body_display_data_{visibility, arena},
+        geometry_display_data_{visibility, arena} {}
 
 inline void ProjectFile::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
@@ -5949,6 +13914,10 @@ constexpr auto ProjectFile::InternalNewImpl_() {
   constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
       PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.body_display_data_) +
           decltype(ProjectFile::_impl_.body_display_data_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+      PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.geometry_display_data_) +
+          decltype(ProjectFile::_impl_.geometry_display_data_)::
               InternalGetArenaOffset(
                   ::google::protobuf::Message::internal_visibility()),
   });
@@ -5995,17 +13964,17 @@ ProjectFile::GetClassData() const {
   return ProjectFile_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 4, 3, 0, 2>
+const ::_pbi::TcParseTable<3, 5, 4, 0, 2>
 ProjectFile::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_._has_bits_),
     0, // no _extensions_
-    4, 24,  // max_field_number, fast_idx_mask
+    5, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967280,  // skipmap
+    4294967264,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    4,  // num_field_entries
-    3,  // num_aux_entries
+    5,  // num_field_entries
+    4,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     ProjectFile_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -6014,38 +13983,48 @@ ProjectFile::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::mechanism::ProjectFile>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // uint32 version = 1 [json_name = "version"];
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(ProjectFile, _impl_.version_), 4>(),
+     {8, 4, 0,
+      PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.version_)}},
+    // .motionlab.mechanism.ProjectMetadata metadata = 2 [json_name = "metadata"];
+    {::_pbi::TcParser::FastMtS1,
+     {18, 2, 0,
+      PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.metadata_)}},
+    // .motionlab.mechanism.Mechanism mechanism = 3 [json_name = "mechanism"];
+    {::_pbi::TcParser::FastMtS1,
+     {26, 3, 1,
+      PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.mechanism_)}},
     // repeated .motionlab.mechanism.BodyDisplayData body_display_data = 4 [json_name = "bodyDisplayData"];
     {::_pbi::TcParser::FastMtR1,
      {34, 0, 2,
       PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.body_display_data_)}},
-    // uint32 version = 1 [json_name = "version"];
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(ProjectFile, _impl_.version_), 3>(),
-     {8, 3, 0,
-      PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.version_)}},
-    // .motionlab.mechanism.ProjectMetadata metadata = 2 [json_name = "metadata"];
-    {::_pbi::TcParser::FastMtS1,
-     {18, 1, 0,
-      PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.metadata_)}},
-    // .motionlab.mechanism.Mechanism mechanism = 3 [json_name = "mechanism"];
-    {::_pbi::TcParser::FastMtS1,
-     {26, 2, 1,
-      PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.mechanism_)}},
+    // repeated .motionlab.mechanism.GeometryDisplayData geometry_display_data = 5 [json_name = "geometryDisplayData"];
+    {::_pbi::TcParser::FastMtR1,
+     {42, 1, 3,
+      PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.geometry_display_data_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
     // uint32 version = 1 [json_name = "version"];
-    {PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.version_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
+    {PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.version_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
     // .motionlab.mechanism.ProjectMetadata metadata = 2 [json_name = "metadata"];
-    {PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.metadata_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    {PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.metadata_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // .motionlab.mechanism.Mechanism mechanism = 3 [json_name = "mechanism"];
-    {PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.mechanism_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    {PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.mechanism_), _Internal::kHasBitsOffset + 3, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // repeated .motionlab.mechanism.BodyDisplayData body_display_data = 4 [json_name = "bodyDisplayData"];
     {PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.body_display_data_), _Internal::kHasBitsOffset + 0, 2, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+    // repeated .motionlab.mechanism.GeometryDisplayData geometry_display_data = 5 [json_name = "geometryDisplayData"];
+    {PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.geometry_display_data_), _Internal::kHasBitsOffset + 1, 3, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::ProjectMetadata>()},
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::Mechanism>()},
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::BodyDisplayData>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::GeometryDisplayData>()},
   }},
   {{
   }},
@@ -6058,15 +14037,18 @@ PROTOBUF_NOINLINE void ProjectFile::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       _impl_.body_display_data_.Clear();
     }
-    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
+      _impl_.geometry_display_data_.Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       ABSL_DCHECK(_impl_.metadata_ != nullptr);
       _impl_.metadata_->Clear();
     }
-    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       ABSL_DCHECK(_impl_.mechanism_ != nullptr);
       _impl_.mechanism_->Clear();
     }
@@ -6096,7 +14078,7 @@ PROTOBUF_NOINLINE void ProjectFile::Clear() {
 
   cached_has_bits = this_._impl_._has_bits_[0];
   // uint32 version = 1 [json_name = "version"];
-  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     if (this_._internal_version() != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
@@ -6105,14 +14087,14 @@ PROTOBUF_NOINLINE void ProjectFile::Clear() {
   }
 
   // .motionlab.mechanism.ProjectMetadata metadata = 2 [json_name = "metadata"];
-  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.metadata_, this_._impl_.metadata_->GetCachedSize(), target,
         stream);
   }
 
   // .motionlab.mechanism.Mechanism mechanism = 3 [json_name = "mechanism"];
-  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.mechanism_, this_._impl_.mechanism_->GetCachedSize(), target,
         stream);
@@ -6127,6 +14109,19 @@ PROTOBUF_NOINLINE void ProjectFile::Clear() {
       target =
           ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
               4, repfield, repfield.GetCachedSize(),
+              target, stream);
+    }
+  }
+
+  // repeated .motionlab.mechanism.GeometryDisplayData geometry_display_data = 5 [json_name = "geometryDisplayData"];
+  if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
+    for (unsigned i = 0, n = static_cast<unsigned>(
+                             this_._internal_geometry_display_data_size());
+         i < n; i++) {
+      const auto& repfield = this_._internal_geometry_display_data().Get(i);
+      target =
+          ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+              5, repfield, repfield.GetCachedSize(),
               target, stream);
     }
   }
@@ -6156,7 +14151,7 @@ PROTOBUF_NOINLINE void ProjectFile::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
     // repeated .motionlab.mechanism.BodyDisplayData body_display_data = 4 [json_name = "bodyDisplayData"];
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       total_size += 1UL * this_._internal_body_display_data_size();
@@ -6164,18 +14159,25 @@ PROTOBUF_NOINLINE void ProjectFile::Clear() {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
+    // repeated .motionlab.mechanism.GeometryDisplayData geometry_display_data = 5 [json_name = "geometryDisplayData"];
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
+      total_size += 1UL * this_._internal_geometry_display_data_size();
+      for (const auto& msg : this_._internal_geometry_display_data()) {
+        total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
+      }
+    }
     // .motionlab.mechanism.ProjectMetadata metadata = 2 [json_name = "metadata"];
-    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.metadata_);
     }
     // .motionlab.mechanism.Mechanism mechanism = 3 [json_name = "mechanism"];
-    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.mechanism_);
     }
     // uint32 version = 1 [json_name = "version"];
-    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       if (this_._internal_version() != 0) {
         total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
             this_._internal_version());
@@ -6201,13 +14203,18 @@ void ProjectFile::MergeImpl(::google::protobuf::MessageLite& to_msg,
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       _this->_internal_mutable_body_display_data()->InternalMergeFromWithArena(
           ::google::protobuf::MessageLite::internal_visibility(), arena,
           from._internal_body_display_data());
     }
-    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
+      _this->_internal_mutable_geometry_display_data()->InternalMergeFromWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), arena,
+          from._internal_geometry_display_data());
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       ABSL_DCHECK(from._impl_.metadata_ != nullptr);
       if (_this->_impl_.metadata_ == nullptr) {
         _this->_impl_.metadata_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.metadata_);
@@ -6215,7 +14222,7 @@ void ProjectFile::MergeImpl(::google::protobuf::MessageLite& to_msg,
         _this->_impl_.metadata_->MergeFrom(*from._impl_.metadata_);
       }
     }
-    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       ABSL_DCHECK(from._impl_.mechanism_ != nullptr);
       if (_this->_impl_.mechanism_ == nullptr) {
         _this->_impl_.mechanism_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.mechanism_);
@@ -6223,7 +14230,7 @@ void ProjectFile::MergeImpl(::google::protobuf::MessageLite& to_msg,
         _this->_impl_.mechanism_->MergeFrom(*from._impl_.mechanism_);
       }
     }
-    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       if (from._internal_version() != 0) {
         _this->_impl_.version_ = from._impl_.version_;
       }
@@ -6247,6 +14254,7 @@ void ProjectFile::InternalSwap(ProjectFile* PROTOBUF_RESTRICT PROTOBUF_NONNULL o
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   _impl_.body_display_data_.InternalSwap(&other->_impl_.body_display_data_);
+  _impl_.geometry_display_data_.InternalSwap(&other->_impl_.geometry_display_data_);
   ::google::protobuf::internal::memswap<
       PROTOBUF_FIELD_OFFSET(ProjectFile, _impl_.version_)
       + sizeof(ProjectFile::_impl_.version_)

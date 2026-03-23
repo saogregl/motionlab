@@ -25,12 +25,21 @@ export interface BodyPose {
 export interface BodyState {
   id: string;
   name: string;
-  meshData: MeshData;
-  partIndex?: Uint32Array;
   massProperties: BodyMassProperties;
   pose: BodyPose;
-  sourceAssetRef: { contentHash: string; originalFilename: string };
   isFixed?: boolean;
+  massOverride?: boolean;
+}
+
+export interface GeometryState {
+  id: string;
+  name: string;
+  parentBodyId: string | null;
+  localPose: BodyPose;
+  meshData: MeshData;
+  partIndex?: Uint32Array;
+  computedMassProperties: BodyMassProperties;
+  sourceAssetRef: { contentHash: string; originalFilename: string };
 }
 
 export interface DatumState {
@@ -38,9 +47,10 @@ export interface DatumState {
   name: string;
   parentBodyId: string;
   localPose: BodyPose;
+  surfaceClass?: 'planar' | 'cylindrical' | 'conical' | 'spherical' | 'toroidal' | 'other';
 }
 
-export type JointTypeId = 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar';
+export type JointTypeId = 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar' | 'universal' | 'distance' | 'point-line' | 'point-plane';
 
 export interface JointState {
   id: string;
@@ -52,10 +62,32 @@ export interface JointState {
   upperLimit: number;
 }
 
+export type LoadTypeId = 'point-force' | 'point-torque' | 'spring-damper';
+export type ReferenceFrameId = 'datum-local' | 'world';
+
+export interface LoadState {
+  id: string;
+  name: string;
+  type: LoadTypeId;
+  /** Datum for point force / point torque */
+  datumId?: string;
+  vector?: { x: number; y: number; z: number };
+  referenceFrame?: ReferenceFrameId;
+  /** Spring-damper parent datum */
+  parentDatumId?: string;
+  /** Spring-damper child datum */
+  childDatumId?: string;
+  restLength?: number;
+  stiffness?: number;
+  damping?: number;
+}
+
 export interface MechanismState {
   bodies: Map<string, BodyState>;
+  geometries: Map<string, GeometryState>;
   datums: Map<string, DatumState>;
   joints: Map<string, JointState>;
+  loads: Map<string, LoadState>;
   importing: boolean;
   importError: string | null;
   projectName: string;
@@ -63,6 +95,12 @@ export interface MechanismState {
   isDirty: boolean;
   addBodies: (bodies: BodyState[]) => void;
   removeBody: (id: string) => void;
+  addGeometries: (geometries: GeometryState[]) => void;
+  removeGeometry: (id: string) => void;
+  updateGeometryParent: (id: string, parentBodyId: string | null) => void;
+  updateGeometry: (id: string, updates: Partial<Omit<GeometryState, 'id'>>) => void;
+  updateBodyMass: (id: string, massProperties: BodyMassProperties, massOverride: boolean) => void;
+  addBodiesWithGeometries: (bodies: BodyState[], geometries: GeometryState[]) => void;
   addDatum: (datum: DatumState) => void;
   removeDatum: (id: string) => void;
   renameDatum: (id: string, name: string) => void;
@@ -70,7 +108,11 @@ export interface MechanismState {
   addJoint: (joint: JointState) => void;
   updateJoint: (id: string, updates: Partial<Omit<JointState, 'id'>>) => void;
   removeJoint: (id: string) => void;
+  addLoad: (load: LoadState) => void;
+  updateLoad: (id: string, updates: Partial<Omit<LoadState, 'id'>>) => void;
+  removeLoad: (id: string) => void;
   clear: () => void;
+  resetProject: () => void;
   setImporting: (v: boolean) => void;
   setImportError: (e: string | null) => void;
   setProjectMeta: (name: string, filePath: string | null) => void;
@@ -80,8 +122,10 @@ export interface MechanismState {
 
 export const useMechanismStore = create<MechanismState>()((set) => ({
   bodies: new Map<string, BodyState>(),
+  geometries: new Map<string, GeometryState>(),
   datums: new Map<string, DatumState>(),
   joints: new Map<string, JointState>(),
+  loads: new Map<string, LoadState>(),
   importing: false,
   importError: null,
   projectName: 'Untitled',
@@ -102,6 +146,62 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       const next = new Map(state.bodies);
       next.delete(id);
       return { bodies: next, isDirty: true };
+    }),
+
+  addGeometries: (geometries) =>
+    set((state) => {
+      const next = new Map(state.geometries);
+      for (const geom of geometries) {
+        next.set(geom.id, geom);
+      }
+      return { geometries: next, isDirty: true };
+    }),
+
+  removeGeometry: (id) =>
+    set((state) => {
+      const next = new Map(state.geometries);
+      next.delete(id);
+      return { geometries: next, isDirty: true };
+    }),
+
+  updateGeometryParent: (id, parentBodyId) =>
+    set((state) => {
+      const existing = state.geometries.get(id);
+      if (!existing) return {};
+      const next = new Map(state.geometries);
+      next.set(id, { ...existing, parentBodyId });
+      return { geometries: next, isDirty: true };
+    }),
+
+  updateGeometry: (id, updates) =>
+    set((state) => {
+      const existing = state.geometries.get(id);
+      if (!existing) return {};
+      const next = new Map(state.geometries);
+      next.set(id, { ...existing, ...updates });
+      return { geometries: next, isDirty: true };
+    }),
+
+  updateBodyMass: (id, massProperties, massOverride) =>
+    set((state) => {
+      const existing = state.bodies.get(id);
+      if (!existing) return {};
+      const next = new Map(state.bodies);
+      next.set(id, { ...existing, massProperties, massOverride });
+      return { bodies: next, isDirty: true };
+    }),
+
+  addBodiesWithGeometries: (bodies, geometries) =>
+    set((state) => {
+      const nextBodies = new Map(state.bodies);
+      for (const body of bodies) {
+        nextBodies.set(body.id, body);
+      }
+      const nextGeometries = new Map(state.geometries);
+      for (const geom of geometries) {
+        nextGeometries.set(geom.id, geom);
+      }
+      return { bodies: nextBodies, geometries: nextGeometries, isDirty: true };
     }),
 
   addDatum: (datum) =>
@@ -159,12 +259,50 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       return { joints: next, isDirty: true };
     }),
 
+  addLoad: (load) =>
+    set((state) => {
+      const next = new Map(state.loads);
+      next.set(load.id, load);
+      return { loads: next, isDirty: true };
+    }),
+
+  updateLoad: (id, updates) =>
+    set((state) => {
+      const existing = state.loads.get(id);
+      if (!existing) return {};
+      const next = new Map(state.loads);
+      next.set(id, { ...existing, ...updates });
+      return { loads: next, isDirty: true };
+    }),
+
+  removeLoad: (id) =>
+    set((state) => {
+      const next = new Map(state.loads);
+      next.delete(id);
+      return { loads: next, isDirty: true };
+    }),
+
   clear: () =>
     set({
       bodies: new Map<string, BodyState>(),
+      geometries: new Map<string, GeometryState>(),
       datums: new Map<string, DatumState>(),
       joints: new Map<string, JointState>(),
+      loads: new Map<string, LoadState>(),
       importError: null,
+    }),
+
+  resetProject: () =>
+    set({
+      bodies: new Map<string, BodyState>(),
+      geometries: new Map<string, GeometryState>(),
+      datums: new Map<string, DatumState>(),
+      joints: new Map<string, JointState>(),
+      loads: new Map<string, LoadState>(),
+      importError: null,
+      projectName: 'Untitled',
+      projectFilePath: null,
+      isDirty: false,
     }),
 
   setImporting: (v) => set({ importing: v }),

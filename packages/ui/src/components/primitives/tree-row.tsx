@@ -71,10 +71,10 @@ function TreeRow({
       data-disabled={disabled || undefined}
       data-drag-target={dragTarget || undefined}
       className={cn(
-        'group/tree-row h-[var(--tree-row-h)]',
-        'hover:bg-[var(--hover-overlay)]',
-        'data-[selected]:bg-[var(--selection-row)]',
-        'data-[selected]:data-[focused]:shadow-[inset_1.5px_0_0_var(--accent-primary)]',
+        'group/tree-row h-[var(--tree-row-h)] cursor-pointer',
+        'hover:bg-[var(--layer-base-hover)]',
+        'data-[selected]:bg-[var(--selection-row)] data-[selected]:animate-[selection-pulse_300ms_ease-out]',
+        'data-[selected]:data-[focused]:shadow-[inset_2px_0_0_var(--accent-primary)]',
         'data-[selected]:not([data-focused]):bg-[var(--selection-row-inactive)]',
         'data-[disabled]:opacity-50 data-[disabled]:text-[var(--text-disabled)]',
         'data-[drag-target]:bg-[var(--selection-drag-bg)] data-[drag-target]:border-y-2 data-[drag-target]:border-y-[var(--selection-drag-border)]',
@@ -135,7 +135,7 @@ function TreeRow({
         {icon && (
           <span
             data-slot="tree-row-icon"
-            className="mr-1.5 flex size-3.5 shrink-0 items-center justify-center"
+            className="mr-1 flex size-3.5 shrink-0 items-center justify-center"
           >
             {icon}
           </span>
@@ -144,7 +144,7 @@ function TreeRow({
         {/* Name */}
         <span
           data-slot="tree-row-name"
-          className="min-w-0 flex-1 truncate font-normal text-[length:var(--text-xs)] text-[var(--text-primary)]"
+          className="min-w-0 flex-1 truncate font-normal text-[length:var(--text-xs)] text-[var(--text-primary)] group-data-[selected]/tree-row:font-medium"
         >
           {name}
         </span>
@@ -224,6 +224,8 @@ interface GroupHeaderRowProps {
   /** Expanded state */
   expanded?: boolean;
   onToggleExpand?: () => void;
+  /** Trailing action slot (e.g. add button), shown on hover */
+  actions?: ReactNode;
   className?: string;
 }
 
@@ -233,14 +235,15 @@ function GroupHeaderRow({
   level = 0,
   expanded,
   onToggleExpand,
+  actions,
   className,
 }: GroupHeaderRowProps) {
   return (
     <div
       data-slot="group-header-row"
       className={cn(
-        'flex h-[var(--tree-row-h)] items-center pr-2',
-        'hover:bg-[var(--hover-overlay)]',
+        'group/group-header flex h-[var(--tree-row-h)] items-center pr-2',
+        'hover:bg-[var(--layer-base-hover)]',
         className,
       )}
       style={{ paddingLeft: `calc(var(--space-1) + ${level} * var(--tree-indent))` }}
@@ -274,6 +277,17 @@ function GroupHeaderRow({
           <span className="ml-1 font-normal text-[var(--text-disabled)]">({count})</span>
         )}
       </span>
+
+      {/* Trailing action slot */}
+      {actions && (
+        <span
+          className="ml-auto flex items-center opacity-0 group-hover/group-header:opacity-100"
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+        >
+          {actions}
+        </span>
+      )}
     </div>
   );
 }

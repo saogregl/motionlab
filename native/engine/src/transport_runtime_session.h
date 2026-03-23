@@ -24,11 +24,6 @@ class RuntimeSession {
 public:
     using SendEventFn = std::function<void(ix::WebSocket&, const protocol::Event&)>;
 
-    struct ChannelMapping {
-        std::string joint_id;
-        int measurement = -1; // 0=position, 1=velocity, 2=reaction_force, 3=reaction_torque
-    };
-
     RuntimeSession() = default;
     ~RuntimeSession();
 
@@ -56,20 +51,17 @@ private:
     static constexpr double FRAME_INTERVAL = 1.0 / 60.0;
     static constexpr int TRACE_BATCH_INTERVAL = 10;
 
-    static ChannelMapping build_channel_mapping(const std::string& channel_id);
     void simulation_loop();
-    const engine::JointState* find_joint_state(const engine::BufferedFrame& frame,
-                                               const ChannelMapping& mapping) const;
+    const engine::ChannelValue* find_channel_value(const engine::BufferedFrame& frame,
+                                                   const std::string& channel_id) const;
     void send_event(ix::WebSocket& ws, const protocol::Event& event);
     void send_sim_state_event();
     void send_sim_frame();
     void send_sim_frame_data(const std::vector<engine::BodyPose>& poses,
-                             const std::vector<engine::JointState>& joint_states,
                              double sim_time,
                              uint64_t step_count);
     void send_trace_batch();
     void send_trace_window(const engine::ChannelDescriptor& desc,
-                           const ChannelMapping& mapping,
                            const std::vector<const engine::BufferedFrame*>& frames);
 
     SendEventFn send_event_;
@@ -85,7 +77,6 @@ private:
     uint64_t trace_batch_step_ = 0;
     size_t trace_channel_index_ = 0;
     std::vector<engine::ChannelDescriptor> channel_descriptors_;
-    std::vector<ChannelMapping> channel_mappings_;
     double sim_dt_ = 0.001;
 };
 

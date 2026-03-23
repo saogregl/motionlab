@@ -13,6 +13,10 @@
 | [ADR-0009](ADR-0009-project-save-load-contract.md) | Project Save/Load Contract | Accepted | Engine-authoritative serialization via SaveProject/LoadProject Command→Result; ProjectFile is self-contained binary protobuf with version field; display meshes embedded for offline rendering. |
 | [ADR-0010](ADR-0010-protocol-v2-native-boundary-cleanup.md) | Protocol v2 Native Boundary Cleanup | Accepted | Protocol v2 aligns asset references, import unit handling, datum pose updates, and paused-state semantics across engine and frontend contracts. |
 | [ADR-0011](ADR-0011-missing-asset-recovery-contract.md) | Missing Asset Recovery and Cache Validation Contract | Accepted | LoadProjectSuccess reports missing/changed assets; RelocateAssetCommand enables re-import from a new path; BodyDisplayData carries import parameters for cache key reconstruction. |
+| [ADR-0012](ADR-0012-protocol-v3-multibody-contract.md) | Protocol v3 Multibody Contract | Accepted | Protocol v3 adds typed joints, first-class loads and actuators, channel-native non-pose outputs, and project file v2 migration. |
+| [ADR-0013](ADR-0013-body-geometry-separation.md) | Body-Geometry Separation | Accepted | Protocol v4 separates Body (physics) from Geometry (visual/CAD), adds mass override, empty body creation, geometry attach/detach, and project file v3 migration. |
+| [ADR-0014](ADR-0014-entity-type-aware-selection-visuals.md) | Entity-Type-Aware Selection Visuals | Accepted | SelectionVisuals API changes from plain mesh arrays to SelectionMeshEntry (mesh + entityType), enabling per-type color-coded selection and hover rendering. |
+| [ADR-0015](ADR-0015-simulation-settings-transport-contract.md) | Simulation Settings Transport Contract | Proposed | SimulationSettings extends to solver, contact, and duration; CompilationDiagnostic replaces string diagnostics; enum names are product-facing. |
 
 ## Adding a New ADR
 

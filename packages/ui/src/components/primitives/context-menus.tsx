@@ -1,6 +1,24 @@
 import type { ReactNode } from 'react';
 
 import {
+  ArrowLeftRight,
+  Crosshair,
+  Eye,
+  EyeOff,
+  FlipVertical,
+  Focus,
+  Link2,
+  MousePointerClick,
+  Pencil,
+  RefreshCw,
+  ScanSearch,
+  Settings2,
+  Trash2,
+  Unlink,
+  Wrench,
+} from 'lucide-react';
+
+import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
@@ -15,6 +33,7 @@ import {
 /* ── Shared item class for consistent 28px height + 12px padding ── */
 
 const itemCls = 'h-7 px-3';
+const iconCls = 'size-3.5 shrink-0 text-text-tertiary';
 
 /* ── BodyContextMenu ── */
 
@@ -23,61 +42,88 @@ interface BodyContextMenuProps {
   isHidden?: boolean;
   onSelectInViewport?: () => void;
   onIsolate?: () => void;
+  isolateDisabledReason?: string;
   onToggleVisibility?: () => void;
+  visibilityDisabledReason?: string;
   onCreateDatum?: () => void;
+  createDatumDisabledReason?: string;
   onCreateJoint?: () => void;
+  createJointDisabledReason?: string;
   onRename?: () => void;
+  renameDisabledReason?: string;
   onProperties?: () => void;
   onDelete?: () => void;
+  deleteDisabledReason?: string;
 }
 
-function BodyContextMenu({
-  children,
+function BodyContextMenuItems({
   isHidden,
   onSelectInViewport,
   onIsolate,
+  isolateDisabledReason,
   onToggleVisibility,
+  visibilityDisabledReason,
   onCreateDatum,
+  createDatumDisabledReason,
   onCreateJoint,
+  createJointDisabledReason,
   onRename,
+  renameDisabledReason,
   onProperties,
   onDelete,
-}: BodyContextMenuProps) {
+  deleteDisabledReason,
+}: Omit<BodyContextMenuProps, 'children'>) {
+  return (
+    <>
+      <ContextMenuItem className={itemCls} onSelect={onSelectInViewport}>
+        <MousePointerClick className={iconCls} />
+        Select in Viewport
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} onSelect={onIsolate} disabled={!onIsolate} title={!onIsolate ? isolateDisabledReason : undefined}>
+        <ScanSearch className={iconCls} />
+        Isolate
+        <ContextMenuShortcut>I</ContextMenuShortcut>
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} onSelect={onToggleVisibility} disabled={!onToggleVisibility} title={!onToggleVisibility ? visibilityDisabledReason : undefined}>
+        {isHidden ? <Eye className={iconCls} /> : <EyeOff className={iconCls} />}
+        {isHidden ? 'Show' : 'Hide'}
+        <ContextMenuShortcut>H</ContextMenuShortcut>
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} onSelect={onCreateDatum} disabled={!onCreateDatum} title={!onCreateDatum ? createDatumDisabledReason : undefined}>
+        <Crosshair className={iconCls} />
+        Create Datum on Body
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} onSelect={onCreateJoint} disabled={!onCreateJoint} title={!onCreateJoint ? createJointDisabledReason : undefined}>
+        <Link2 className={iconCls} />
+        Create Joint from Body
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} onSelect={onRename} disabled={!onRename} title={!onRename ? renameDisabledReason : undefined}>
+        <Pencil className={iconCls} />
+        Rename
+        <ContextMenuShortcut>F2</ContextMenuShortcut>
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} onSelect={onProperties}>
+        <Settings2 className={iconCls} />
+        Properties
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} variant="destructive" onSelect={onDelete} disabled={!onDelete} title={!onDelete ? deleteDisabledReason : undefined}>
+        <Trash2 className={iconCls} />
+        Delete
+        <ContextMenuShortcut>Del</ContextMenuShortcut>
+      </ContextMenuItem>
+    </>
+  );
+}
+
+function BodyContextMenu({ children, ...rest }: BodyContextMenuProps) {
   return (
     <ContextMenu>
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
       <ContextMenuContent className="w-[220px]">
-        <ContextMenuItem className={itemCls} onSelect={onSelectInViewport}>
-          Select in Viewport
-        </ContextMenuItem>
-        <ContextMenuItem className={itemCls} onSelect={onIsolate}>
-          Isolate
-          <ContextMenuShortcut>I</ContextMenuShortcut>
-        </ContextMenuItem>
-        <ContextMenuItem className={itemCls} onSelect={onToggleVisibility}>
-          {isHidden ? 'Show' : 'Hide'}
-          <ContextMenuShortcut>H</ContextMenuShortcut>
-        </ContextMenuItem>
-        <ContextMenuSeparator />
-        <ContextMenuItem className={itemCls} onSelect={onCreateDatum}>
-          Create Datum on Body
-        </ContextMenuItem>
-        <ContextMenuItem className={itemCls} onSelect={onCreateJoint}>
-          Create Joint from Body
-        </ContextMenuItem>
-        <ContextMenuSeparator />
-        <ContextMenuItem className={itemCls} onSelect={onRename}>
-          Rename
-          <ContextMenuShortcut>F2</ContextMenuShortcut>
-        </ContextMenuItem>
-        <ContextMenuItem className={itemCls} onSelect={onProperties}>
-          Properties
-        </ContextMenuItem>
-        <ContextMenuSeparator />
-        <ContextMenuItem className={itemCls} variant="destructive" onSelect={onDelete}>
-          Delete
-          <ContextMenuShortcut>Del</ContextMenuShortcut>
-        </ContextMenuItem>
+        <BodyContextMenuItems {...rest} />
       </ContextMenuContent>
     </ContextMenu>
   );
@@ -93,68 +139,96 @@ interface JointContextMenuProps {
   onFocusViewport?: () => void;
   onEditJoint?: () => void;
   onChangeType?: (type: string) => void;
+  changeTypeDisabledReason?: string;
   onSwapBodies?: () => void;
+  swapBodiesDisabledReason?: string;
   onReverseDirection?: () => void;
+  reverseDirectionDisabledReason?: string;
   onRename?: () => void;
+  renameDisabledReason?: string;
   onProperties?: () => void;
   onDelete?: () => void;
+  deleteDisabledReason?: string;
 }
 
-function JointContextMenu({
-  children,
+function JointContextMenuItems({
   onSelectInViewport,
   onFocusViewport,
   onEditJoint,
   onChangeType,
+  changeTypeDisabledReason,
   onSwapBodies,
+  swapBodiesDisabledReason,
   onReverseDirection,
+  reverseDirectionDisabledReason,
   onRename,
+  renameDisabledReason,
   onProperties,
   onDelete,
-}: JointContextMenuProps) {
+  deleteDisabledReason,
+}: Omit<JointContextMenuProps, 'children'>) {
+  return (
+    <>
+      <ContextMenuItem className={itemCls} onSelect={onSelectInViewport}>
+        <MousePointerClick className={iconCls} />
+        Select in Viewport
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} onSelect={onFocusViewport}>
+        <Focus className={iconCls} />
+        Focus Viewport on Joint
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} onSelect={onEditJoint}>
+        <Wrench className={iconCls} />
+        Edit Joint
+      </ContextMenuItem>
+      <ContextMenuSub>
+        <ContextMenuSubTrigger className={itemCls} disabled={!onChangeType} title={!onChangeType ? changeTypeDisabledReason : undefined}>
+          <RefreshCw className={iconCls} />
+          Change Type
+        </ContextMenuSubTrigger>
+        <ContextMenuSubContent>
+          {jointTypes.map((type) => (
+            <ContextMenuItem key={type} className={itemCls} onSelect={() => onChangeType?.(type)}>
+              {type}
+            </ContextMenuItem>
+          ))}
+        </ContextMenuSubContent>
+      </ContextMenuSub>
+      <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} onSelect={onSwapBodies} disabled={!onSwapBodies} title={!onSwapBodies ? swapBodiesDisabledReason : undefined}>
+        <ArrowLeftRight className={iconCls} />
+        Swap Bodies
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} onSelect={onReverseDirection} disabled={!onReverseDirection} title={!onReverseDirection ? reverseDirectionDisabledReason : undefined}>
+        <FlipVertical className={iconCls} />
+        Reverse Direction
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} onSelect={onRename} disabled={!onRename} title={!onRename ? renameDisabledReason : undefined}>
+        <Pencil className={iconCls} />
+        Rename
+        <ContextMenuShortcut>F2</ContextMenuShortcut>
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} onSelect={onProperties}>
+        <Settings2 className={iconCls} />
+        Properties
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} variant="destructive" onSelect={onDelete} disabled={!onDelete} title={!onDelete ? deleteDisabledReason : undefined}>
+        <Trash2 className={iconCls} />
+        Delete
+        <ContextMenuShortcut>Del</ContextMenuShortcut>
+      </ContextMenuItem>
+    </>
+  );
+}
+
+function JointContextMenu({ children, ...rest }: JointContextMenuProps) {
   return (
     <ContextMenu>
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
       <ContextMenuContent className="w-[220px]">
-        <ContextMenuItem className={itemCls} onSelect={onSelectInViewport}>
-          Select in Viewport
-        </ContextMenuItem>
-        <ContextMenuItem className={itemCls} onSelect={onFocusViewport}>
-          Focus Viewport on Joint
-        </ContextMenuItem>
-        <ContextMenuSeparator />
-        <ContextMenuItem className={itemCls} onSelect={onEditJoint}>
-          Edit Joint
-        </ContextMenuItem>
-        <ContextMenuSub>
-          <ContextMenuSubTrigger className={itemCls}>Change Type</ContextMenuSubTrigger>
-          <ContextMenuSubContent>
-            {jointTypes.map((type) => (
-              <ContextMenuItem key={type} className={itemCls} onSelect={() => onChangeType?.(type)}>
-                {type}
-              </ContextMenuItem>
-            ))}
-          </ContextMenuSubContent>
-        </ContextMenuSub>
-        <ContextMenuSeparator />
-        <ContextMenuItem className={itemCls} onSelect={onSwapBodies}>
-          Swap Bodies
-        </ContextMenuItem>
-        <ContextMenuItem className={itemCls} onSelect={onReverseDirection}>
-          Reverse Direction
-        </ContextMenuItem>
-        <ContextMenuSeparator />
-        <ContextMenuItem className={itemCls} onSelect={onRename}>
-          Rename
-          <ContextMenuShortcut>F2</ContextMenuShortcut>
-        </ContextMenuItem>
-        <ContextMenuItem className={itemCls} onSelect={onProperties}>
-          Properties
-        </ContextMenuItem>
-        <ContextMenuItem className={itemCls} variant="destructive" onSelect={onDelete}>
-          Delete
-          <ContextMenuShortcut>Del</ContextMenuShortcut>
-        </ContextMenuItem>
+        <JointContextMenuItems {...rest} />
       </ContextMenuContent>
     </ContextMenu>
   );
@@ -167,50 +241,134 @@ interface DatumContextMenuProps {
   onSelectInViewport?: () => void;
   onFocusViewport?: () => void;
   onCreateJoint?: () => void;
+  createJointDisabledReason?: string;
   onRename?: () => void;
+  renameDisabledReason?: string;
   onProperties?: () => void;
   onDelete?: () => void;
+  deleteDisabledReason?: string;
 }
 
-function DatumContextMenu({
-  children,
+function DatumContextMenuItems({
   onSelectInViewport,
   onFocusViewport,
   onCreateJoint,
+  createJointDisabledReason,
   onRename,
+  renameDisabledReason,
   onProperties,
   onDelete,
-}: DatumContextMenuProps) {
+  deleteDisabledReason,
+}: Omit<DatumContextMenuProps, 'children'>) {
+  return (
+    <>
+      <ContextMenuItem className={itemCls} onSelect={onSelectInViewport}>
+        <MousePointerClick className={iconCls} />
+        Select in Viewport
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} onSelect={onFocusViewport}>
+        <Focus className={iconCls} />
+        Focus Viewport on Datum
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} onSelect={onCreateJoint} disabled={!onCreateJoint} title={!onCreateJoint ? createJointDisabledReason : undefined}>
+        <Link2 className={iconCls} />
+        Create Joint from Datum
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} onSelect={onRename} disabled={!onRename} title={!onRename ? renameDisabledReason : undefined}>
+        <Pencil className={iconCls} />
+        Rename
+        <ContextMenuShortcut>F2</ContextMenuShortcut>
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} onSelect={onProperties}>
+        <Settings2 className={iconCls} />
+        Properties
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} variant="destructive" onSelect={onDelete} disabled={!onDelete} title={!onDelete ? deleteDisabledReason : undefined}>
+        <Trash2 className={iconCls} />
+        Delete
+        <ContextMenuShortcut>Del</ContextMenuShortcut>
+      </ContextMenuItem>
+    </>
+  );
+}
+
+function DatumContextMenu({ children, ...rest }: DatumContextMenuProps) {
   return (
     <ContextMenu>
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
       <ContextMenuContent className="w-[220px]">
-        <ContextMenuItem className={itemCls} onSelect={onSelectInViewport}>
-          Select in Viewport
-        </ContextMenuItem>
-        <ContextMenuItem className={itemCls} onSelect={onFocusViewport}>
-          Focus Viewport on Datum
-        </ContextMenuItem>
-        <ContextMenuSeparator />
-        <ContextMenuItem className={itemCls} onSelect={onCreateJoint}>
-          Create Joint from Datum
-        </ContextMenuItem>
-        <ContextMenuSeparator />
-        <ContextMenuItem className={itemCls} onSelect={onRename}>
-          Rename
-          <ContextMenuShortcut>F2</ContextMenuShortcut>
-        </ContextMenuItem>
-        <ContextMenuItem className={itemCls} onSelect={onProperties}>
-          Properties
-        </ContextMenuItem>
-        <ContextMenuItem className={itemCls} variant="destructive" onSelect={onDelete}>
-          Delete
-          <ContextMenuShortcut>Del</ContextMenuShortcut>
-        </ContextMenuItem>
+        <DatumContextMenuItems {...rest} />
       </ContextMenuContent>
     </ContextMenu>
   );
 }
 
-export { BodyContextMenu, JointContextMenu, DatumContextMenu };
-export type { BodyContextMenuProps, JointContextMenuProps, DatumContextMenuProps };
+/* ── GeometryContextMenu ── */
+
+interface GeometryContextMenuProps {
+  children: ReactNode;
+  isParented?: boolean;
+  onSelectInViewport?: () => void;
+  onFocusViewport?: () => void;
+  focusDisabledReason?: string;
+  onAttachToBody?: () => void;
+  attachDisabledReason?: string;
+  onDetachFromBody?: () => void;
+  detachDisabledReason?: string;
+  onProperties?: () => void;
+}
+
+function GeometryContextMenuItems({
+  isParented,
+  onSelectInViewport,
+  onFocusViewport,
+  focusDisabledReason,
+  onAttachToBody,
+  attachDisabledReason,
+  onDetachFromBody,
+  detachDisabledReason,
+  onProperties,
+}: Omit<GeometryContextMenuProps, 'children'>) {
+  return (
+    <>
+      <ContextMenuItem className={itemCls} onSelect={onSelectInViewport}>
+        <MousePointerClick className={iconCls} />
+        Select in Viewport
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} onSelect={onFocusViewport} disabled={!onFocusViewport} title={!onFocusViewport ? focusDisabledReason : undefined}>
+        <Focus className={iconCls} />
+        Focus Viewport on Geometry
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} onSelect={onAttachToBody} disabled={!onAttachToBody} title={!onAttachToBody ? attachDisabledReason : undefined}>
+        <Link2 className={iconCls} />
+        Attach to Body…
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} onSelect={onDetachFromBody} disabled={!onDetachFromBody || !isParented} title={!onDetachFromBody ? detachDisabledReason : !isParented ? 'Geometry is not attached to a body' : undefined}>
+        <Unlink className={iconCls} />
+        Detach from Body
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} onSelect={onProperties}>
+        <Settings2 className={iconCls} />
+        Properties
+      </ContextMenuItem>
+    </>
+  );
+}
+
+function GeometryContextMenu({ children, ...rest }: GeometryContextMenuProps) {
+  return (
+    <ContextMenu>
+      <ContextMenuTrigger>{children}</ContextMenuTrigger>
+      <ContextMenuContent className="w-[220px]">
+        <GeometryContextMenuItems {...rest} />
+      </ContextMenuContent>
+    </ContextMenu>
+  );
+}
+
+export { BodyContextMenu, BodyContextMenuItems, JointContextMenu, JointContextMenuItems, DatumContextMenu, DatumContextMenuItems, GeometryContextMenu, GeometryContextMenuItems };
+export type { BodyContextMenuProps, JointContextMenuProps, DatumContextMenuProps, GeometryContextMenuProps };

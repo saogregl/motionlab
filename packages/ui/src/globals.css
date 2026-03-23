@@ -47,6 +47,7 @@
   --text-lg: 1rem; /* 16px */
   --text-xl: 1.125rem; /* 18px */
   --text-2xl: 1.5rem; /* 24px */
+  --text-3xs: 0.625rem; /* 10px — status labels, all-caps metadata */
 
   /* ── Line heights ── */
   --leading-tight: 1.2;
@@ -83,7 +84,7 @@
   --z-toast: 70;
 
   /* ── Layout ── */
-  --topbar-h: 40px;
+  --topbar-h: 38px;
   --toolbar-h: 32px;
   --panel-left-w: 260px;
   --panel-left-min: 200px;
@@ -95,11 +96,12 @@
   --bottom-dock-min: 160px;
   --bottom-dock-max: 400px;
   --bottom-tabs-h: 28px;
+  --statusbar-h: 24px;
 
   /* ── Tree ── */
-  --tree-row-h: 26px;
-  --tree-icon-size: 16px;
-  --tree-indent: 14px;
+  --tree-row-h: 24px;
+  --tree-icon-size: 14px;
+  --tree-indent: 12px;
   --tree-row-gap: 0px;
   --tree-guide-color: rgba(0, 0, 0, 0.08);
   --tree-header-gap: 6px;
@@ -110,8 +112,17 @@
 
   /* ── Inspector ── */
   --inspector-section-gap: 2px;
-  --inspector-row-h: 28px;
-  --inspector-label-w: 84px;
+  --inspector-row-h: 26px;
+  --inspector-label-w: 80px;
+
+  /* ── Elevated field — pops above layer-base for inspector inputs ── */
+  --field-elevated: #ffffff;
+  --field-elevated-hover: #f4f4f4;
+
+  /* ── Inertia matrix ── */
+  --inertia-diagonal: #dbeafe;
+  --inertia-diagonal-text: #1e40af;
+  --inspector-grid-border: var(--border-default);
 
   /* ── Surface colors (light) — Carbon g10 ── */
   --bg-app: #f4f4f4;
@@ -268,6 +279,15 @@
   --field-recessed: #393939;
   --field-recessed-hover: #474747;
 
+  /* Elevated field — dark override */
+  --field-elevated: #333333;
+  --field-elevated-hover: #3d3d3d;
+
+  /* Inertia matrix — dark override */
+  --inertia-diagonal: rgba(69, 137, 255, 0.25);
+  --inertia-diagonal-text: #a5c8ff;
+  --inspector-grid-border: #393939;
+
   --border-default: #525252;
   --border-strong: #6f6f6f;
   --border-subtle: #393939;
@@ -330,13 +350,13 @@
 
 /* ── Compact density ── */
 .compact {
-  --tree-row-h: 22px;
+  --tree-row-h: 20px;
   --tree-icon-size: 14px;
   --tree-indent: 12px;
   --tree-header-gap: 4px;
-  --inspector-row-h: 24px;
+  --inspector-row-h: 22px;
   --inspector-label-w: 88px;
-  --topbar-h: 36px;
+  --topbar-h: 34px;
   --toolbar-h: 28px;
   --text-base: 0.8125rem;
   --text-sm: 0.75rem;
@@ -354,6 +374,9 @@
   --radius-lg: 4px;
   --radius-xl: 6px;
   --radius-2xl: 8px;
+
+  /* Typography — status scale */
+  --text-3xs: 0.625rem;
 
   /* shadcn compat color mappings */
   --color-background: var(--background);
@@ -520,4 +543,38 @@
     border-color: var(--accent-primary);
     outline: none;
   }
+  .text-status {
+    font-size: var(--text-3xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: var(--weight-medium);
+  }
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--layer-recessed) 25%,
+      var(--layer-base-hover) 50%,
+      var(--layer-recessed) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+  .animate-value-flash {
+    animation: value-flash 200ms ease-out;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes selection-pulse {
+  0% { background-color: var(--selection-fill-strong); }
+  100% { background-color: var(--selection-row); }
+}
+
+@keyframes value-flash {
+  0% { background-color: var(--accent-soft); }
+  100% { background-color: transparent; }
 }

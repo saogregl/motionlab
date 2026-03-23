@@ -25,6 +25,7 @@
 #endif
 
 #include <BRepPrimAPI_MakeBox.hxx>
+#include <BRepPrimAPI_MakeCylinder.hxx>
 #include <gp_Pnt.hxx>
 #include <STEPCAFControl_Writer.hxx>
 #include <TDataStd_Name.hxx>
@@ -41,6 +42,22 @@ using namespace motionlab::protocol;
 namespace fs = std::filesystem;
 
 static const std::string TEST_TOKEN = "test-token-12345";
+
+static void fill_revolute_joint_draft(motionlab::protocol::CreateJointCommand* cmd,
+                                      const std::string& parent_datum_id,
+                                      const std::string& child_datum_id,
+                                      const std::string& name,
+                                      double lower,
+                                      double upper) {
+    auto* draft = cmd->mutable_draft();
+    draft->set_name(name);
+    draft->set_type(motionlab::mechanism::JOINT_TYPE_REVOLUTE);
+    draft->mutable_parent_datum_id()->set_id(parent_datum_id);
+    draft->mutable_child_datum_id()->set_id(child_datum_id);
+    auto* revolute = draft->mutable_revolute();
+    revolute->mutable_angle_limit()->set_lower(lower);
+    revolute->mutable_angle_limit()->set_upper(upper);
+}
 
 static std::string write_face_test_step_file() {
     auto path = fs::temp_directory_path() / "motionlab_face_test_box.step";
@@ -61,6 +78,36 @@ static std::string write_face_test_step_file() {
     TopoDS_Shape box2 = BRepPrimAPI_MakeBox(gp_Pnt(50.0, 0.0, 0.0), 8.0, 15.0, 25.0).Shape();
     TDF_Label box2_label = shape_tool->AddShape(box2);
     TDataStd_Name::Set(box2_label, "FaceTestBox2");
+
+    STEPCAFControl_Writer writer;
+    writer.SetNameMode(true);
+    writer.SetColorMode(false);
+    writer.SetLayerMode(false);
+    writer.Transfer(doc, STEPControl_AsIs);
+    IFSelect_ReturnStatus status = writer.Write(path.string().c_str());
+    assert(status == IFSelect_RetDone);
+
+    app->Close(doc);
+    return path.string();
+}
+
+static std::string write_mixed_face_test_step_file() {
+    auto path = fs::temp_directory_path() / "motionlab_face_test_mixed.step";
+
+    Handle(XCAFApp_Application) app = XCAFApp_Application::GetApplication();
+    Handle(TDocStd_Document) doc;
+    app->NewDocument("MDTV-XCAF", doc);
+
+    Handle(XCAFDoc_ShapeTool) shape_tool =
+        XCAFDoc_DocumentTool::ShapeTool(doc->Main());
+
+    TopoDS_Shape box = BRepPrimAPI_MakeBox(10.0, 20.0, 30.0).Shape();
+    TDF_Label box_label = shape_tool->AddShape(box);
+    TDataStd_Name::Set(box_label, "PlanarBox");
+
+    TopoDS_Shape cylinder = BRepPrimAPI_MakeCylinder(5.0, 40.0).Shape();
+    TDF_Label cylinder_label = shape_tool->AddShape(cylinder);
+    TDataStd_Name::Set(cylinder_label, "CylBody");
 
     STEPCAFControl_Writer writer;
     writer.SetNameMode(true);
@@ -389,12 +436,7 @@ static void test_create_joint_invalid_datum(uint16_t port) {
     Command cmd;
     cmd.set_sequence_id(300);
     auto* cj = cmd.mutable_create_joint();
-    cj->mutable_parent_datum_id()->set_id("bad-datum-1");
-    cj->mutable_child_datum_id()->set_id("bad-datum-2");
-    cj->set_type(motionlab::mechanism::JOINT_TYPE_REVOLUTE);
-    cj->set_name("BadJoint");
-    cj->set_lower_limit(-1.0);
-    cj->set_upper_limit(1.0);
+    fill_revolute_joint_draft(cj, "bad-datum-1", "bad-datum-2", "BadJoint", -1.0, 1.0);
     client.send_command(cmd);
 
     const auto& evt = client.wait_for_message(2);
@@ -435,46 +477,127 @@ static void test_delete_joint_nonexistent(uint16_t port) {
     std::cout << "  PASS: delete joint nonexistent" << std::endl;
 }
 
-static void test_create_datum_from_face_after_import(uint16_t port,
-                                                     const std::string& step_file,
-                                                     const char* label) {
+static const Event* create_datum_from_face_and_expect(
+    TestClient& client,
+    size_t& scan_from,
+    const std::string& body_id,
+    uint32_t face_index,
+    uint64_t sequence_id,
+    FaceSurfaceClass expected_surface_class) {
+    Command face_cmd;
+    face_cmd.set_sequence_id(sequence_id);
+    auto* create = face_cmd.mutable_create_datum_from_face();
+    create->mutable_parent_body_id()->set_id(body_id);
+    create->set_face_index(face_index);
+    create->set_name("Face Datum");
+    client.send_command(face_cmd);
+
+    const auto* face_evt = client.wait_for_response(sequence_id, scan_from, 10000);
+    assert(face_evt != nullptr);
+    assert(face_evt->payload_case() == Event::kCreateDatumFromFaceResult);
+    assert(face_evt->create_datum_from_face_result().result_case() == CreateDatumFromFaceResult::kSuccess);
+    assert(face_evt->create_datum_from_face_result().success().surface_class() == expected_surface_class);
+    assert(face_evt->create_datum_from_face_result().success().face_index() == face_index);
+    assert(face_evt->create_datum_from_face_result().success().datum().parent_body_id().id() == body_id);
+    return face_evt;
+}
+
+static void test_face_aware_datum_creation_mixed_fixture(uint16_t port,
+                                                         const std::string& step_file,
+                                                         const char* label) {
     TestClient client;
     client.connect(port);
 
     client.send_command(make_handshake(1, TEST_TOKEN));
-    client.wait_for_message(1); // ack + status
+    client.wait_for_message(1);
+
+    size_t scan_from = client.message_count();
 
     Command import_cmd;
-    import_cmd.set_sequence_id(400);
+    import_cmd.set_sequence_id(500);
     import_cmd.mutable_import_asset()->set_file_path(step_file);
     client.send_command(import_cmd);
 
-    const auto& import_evt = client.wait_for_message(2, 5000);
-    assert(import_evt.sequence_id() == 400);
-    assert(import_evt.payload_case() == Event::kImportAssetResult);
-    assert(import_evt.import_asset_result().success());
-    assert(import_evt.import_asset_result().bodies_size() >= 1);
+    const auto* import_evt = client.wait_for_response(500, scan_from, 10000);
+    assert(import_evt != nullptr);
+    assert(import_evt->payload_case() == Event::kImportAssetResult);
+    assert(import_evt->import_asset_result().success());
+    assert(import_evt->import_asset_result().bodies_size() == 2);
 
-    const auto& body = import_evt.import_asset_result().bodies(0);
-    assert(body.part_index_size() > 0);
+    const auto* box_body = static_cast<const BodyImportResult*>(nullptr);
+    const auto* cyl_body = static_cast<const BodyImportResult*>(nullptr);
+    for (const auto& body : import_evt->import_asset_result().bodies()) {
+        assert(body.part_index_size() > 0);
+        uint64_t triangle_count = 0;
+        for (int i = 0; i < body.part_index_size(); ++i) {
+            assert(body.part_index(i) > 0);
+            triangle_count += body.part_index(i);
+        }
+        assert(triangle_count == static_cast<uint64_t>(body.display_mesh().indices_size() / 3));
 
-    Command face_cmd;
-    face_cmd.set_sequence_id(401);
-    auto* create = face_cmd.mutable_create_datum_from_face();
-    create->mutable_parent_body_id()->set_id(body.body_id());
-    create->set_face_index(0);
-    create->set_name("Face Datum");
-    client.send_command(face_cmd);
+        if (body.name() == "PlanarBox") {
+            box_body = &body;
+        } else if (body.name() == "CylBody") {
+            cyl_body = &body;
+        }
+    }
 
-    const auto& face_evt = client.wait_for_message(3, 5000);
-    assert(face_evt.sequence_id() == 401);
-    assert(face_evt.payload_case() == Event::kCreateDatumFromFaceResult);
-    assert(face_evt.create_datum_from_face_result().result_case() ==
-           CreateDatumFromFaceResult::kSuccess);
-    const auto& success = face_evt.create_datum_from_face_result().success();
-    assert(success.face_index() == 0);
-    assert(success.surface_class() == FACE_SURFACE_CLASS_PLANAR);
-    assert(success.datum().parent_body_id().id() == body.body_id());
+    assert(box_body != nullptr);
+    assert(cyl_body != nullptr);
+
+    const auto* planar_evt =
+        create_datum_from_face_and_expect(client, scan_from, box_body->body_id(), 0, 501, FACE_SURFACE_CLASS_PLANAR);
+    const auto& planar_datum = planar_evt->create_datum_from_face_result().success().datum();
+    assert(std::abs(planar_datum.local_pose().orientation().w()) <= 1.0);
+
+    bool found_cylindrical = false;
+    for (int face_index = 0; face_index < cyl_body->part_index_size(); ++face_index) {
+        Command face_cmd;
+        const uint64_t sequence_id = 510 + static_cast<uint64_t>(face_index);
+        face_cmd.set_sequence_id(sequence_id);
+        auto* create = face_cmd.mutable_create_datum_from_face();
+        create->mutable_parent_body_id()->set_id(cyl_body->body_id());
+        create->set_face_index(static_cast<uint32_t>(face_index));
+        create->set_name("Cylinder Datum");
+        client.send_command(face_cmd);
+
+        const auto* face_evt = client.wait_for_response(sequence_id, scan_from, 10000);
+        assert(face_evt != nullptr);
+        assert(face_evt->payload_case() == Event::kCreateDatumFromFaceResult);
+        if (face_evt->create_datum_from_face_result().result_case() != CreateDatumFromFaceResult::kSuccess) {
+            continue;
+        }
+
+        const auto& success = face_evt->create_datum_from_face_result().success();
+        if (success.surface_class() != FACE_SURFACE_CLASS_CYLINDRICAL) {
+            continue;
+        }
+
+        const auto& datum = success.datum();
+        const double max_abs_position = std::max({
+            std::abs(datum.local_pose().position().x()),
+            std::abs(datum.local_pose().position().y()),
+            std::abs(datum.local_pose().position().z()),
+        });
+        assert(max_abs_position < 0.1);
+        found_cylindrical = true;
+        break;
+    }
+    assert(found_cylindrical);
+
+    Command invalid_face_cmd;
+    invalid_face_cmd.set_sequence_id(599);
+    auto* invalid_face = invalid_face_cmd.mutable_create_datum_from_face();
+    invalid_face->mutable_parent_body_id()->set_id(cyl_body->body_id());
+    invalid_face->set_face_index(9999);
+    invalid_face->set_name("Invalid Face Datum");
+    client.send_command(invalid_face_cmd);
+
+    const auto* invalid_face_evt = client.wait_for_response(599, scan_from, 10000);
+    assert(invalid_face_evt != nullptr);
+    assert(invalid_face_evt->payload_case() == Event::kCreateDatumFromFaceResult);
+    assert(invalid_face_evt->create_datum_from_face_result().result_case() == CreateDatumFromFaceResult::kErrorMessage);
+    assert(invalid_face_evt->create_datum_from_face_result().error_message().find("Face index out of range") != std::string::npos);
 
     client.close();
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -675,11 +798,13 @@ static void test_import_unit_system_and_project_roundtrip(uint16_t port) {
     const auto& success = load_evt->load_project_result().success();
     assert(success.bodies_size() >= 1);
     assert(success.mechanism().bodies_size() >= 1);
+    // After body-geometry decoupling, source_asset_ref lives on Geometry, not Body.
+    // BodyImportResult still carries it for backward compat.
     assert(success.bodies(0).has_source_asset_ref());
-    assert(success.mechanism().bodies(0).has_source_asset_ref());
     assert(success.bodies(0).source_asset_ref().content_hash() == body.source_asset_ref().content_hash());
-    assert(success.mechanism().bodies(0).source_asset_ref().content_hash() == body.source_asset_ref().content_hash());
     assert(success.bodies(0).source_asset_ref().original_filename() == body.source_asset_ref().original_filename());
+    // Mechanism geometries carry the asset ref now
+    assert(success.mechanism().geometries_size() >= 1);
 
     client.close();
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -748,12 +873,7 @@ static void test_output_channels_and_scrub(uint16_t port, const std::string& ste
     Command jcmd;
     jcmd.set_sequence_id(503);
     auto* cj = jcmd.mutable_create_joint();
-    cj->mutable_parent_datum_id()->set_id(datum1_id);
-    cj->mutable_child_datum_id()->set_id(datum2_id);
-    cj->set_type(motionlab::mechanism::JOINT_TYPE_REVOLUTE);
-    cj->set_name("RevJoint1");
-    cj->set_lower_limit(-3.14);
-    cj->set_upper_limit(3.14);
+    fill_revolute_joint_draft(cj, datum1_id, datum2_id, "RevJoint1", -3.14, 3.14);
     client.send_command(jcmd);
 
     const auto* j_evt = client.wait_for_response(503, scan_from);
@@ -780,10 +900,9 @@ static void test_output_channels_and_scrub(uint16_t port, const std::string& ste
         const auto& ch = compile_evt->compilation_result().channels(i);
         assert(!ch.channel_id().empty());
         assert(!ch.name().empty());
-        assert(!ch.unit().empty());
         assert(ch.data_type() != CHANNEL_DATA_TYPE_UNSPECIFIED);
 
-        if (ch.channel_id().find("/position") != std::string::npos) {
+        if (ch.channel_id() == "joint/" + j_evt->create_joint_result().joint().id().id() + "/coord/rot_z") {
             found_position = true;
             assert(ch.unit() == "rad"); // revolute joint
             assert(ch.data_type() == CHANNEL_DATA_TYPE_SCALAR);
@@ -861,6 +980,7 @@ int main() {
 
     std::cout << "Engine integration tests" << std::endl;
     std::string step_file = write_face_test_step_file();
+    std::string mixed_step_file = write_mixed_face_test_step_file();
 
     test_version_constants();
 
@@ -885,7 +1005,7 @@ int main() {
     test_delete_datum_nonexistent(port);
     test_create_joint_invalid_datum(port);
     test_delete_joint_nonexistent(port);
-    test_create_datum_from_face_after_import(port, step_file, "create datum from face after cold import");
+    test_face_aware_datum_creation_mixed_fixture(port, mixed_step_file, "create datum from face after cold import");
     test_update_datum_pose(port);
     test_import_unit_system_and_project_roundtrip(port);
     test_output_channels_and_scrub(port, step_file);
@@ -904,7 +1024,7 @@ int main() {
     std::thread cache_server_thread([&cache_server]() { cache_server.run(); });
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-    test_create_datum_from_face_after_import(port, step_file, "create datum from face after cached import");
+    test_face_aware_datum_creation_mixed_fixture(port, mixed_step_file, "create datum from face after cached import");
 
     cache_server.stop();
     cache_server_thread.join();
@@ -914,6 +1034,7 @@ int main() {
 
     std::error_code ec;
     fs::remove(step_file, ec);
+    fs::remove(mixed_step_file, ec);
 
     std::cout << "All engine tests passed." << std::endl;
     return 0;

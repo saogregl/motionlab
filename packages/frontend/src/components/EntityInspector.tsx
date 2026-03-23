@@ -4,6 +4,7 @@ import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { BodyInspector } from './BodyInspector.js';
 import { DatumInspector } from './DatumInspector.js';
+import { GeometryInspector } from './GeometryInspector.js';
 import { JointInspector } from './JointInspector.js';
 import { MechanismInspector } from './MechanismInspector.js';
 import { SimulationMetadataSection } from './SimulationMetadataSection.js';
@@ -15,8 +16,10 @@ import { SimulationMetadataSection } from './SimulationMetadataSection.js';
 export function EntityInspector() {
   const selectedIds = useSelectionStore((s) => s.selectedIds);
   const bodies = useMechanismStore((s) => s.bodies);
+  const geometries = useMechanismStore((s) => s.geometries);
   const datums = useMechanismStore((s) => s.datums);
   const joints = useMechanismStore((s) => s.joints);
+  const loads = useMechanismStore((s) => s.loads);
   const simState = useSimulationStore((s) => s.state);
 
   const showSimMeta = simState !== 'idle';
@@ -39,6 +42,14 @@ export function EntityInspector() {
       </>
     );
   }
+  if (geometries.has(firstId)) {
+    return (
+      <>
+        <GeometryInspector />
+        {showSimMeta && <SimulationMetadataSection />}
+      </>
+    );
+  }
   if (datums.has(firstId)) {
     return (
       <>
@@ -51,6 +62,19 @@ export function EntityInspector() {
     return (
       <>
         <JointInspector jointId={firstId} />
+        {showSimMeta && <SimulationMetadataSection />}
+      </>
+    );
+  }
+  if (loads.has(firstId)) {
+    const load = loads.get(firstId);
+    return (
+      <>
+        <InspectorPanel>
+          <div className="ps-3 pe-3 py-2 text-[length:var(--text-xs)] text-[var(--text-tertiary)]">
+            {load?.name ?? 'Load'} ({load?.type ?? 'unknown'}) — full inspector coming in Prompt 3.
+          </div>
+        </InspectorPanel>
         {showSimMeta && <SimulationMetadataSection />}
       </>
     );

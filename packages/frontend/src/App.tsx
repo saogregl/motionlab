@@ -8,32 +8,51 @@ import {
   LeftPanel,
   RightPanel,
   StatusBadge,
+  StatusBar,
   ThemeToggle,
+  Toaster,
   TooltipProvider,
   TopBar,
   useDensity,
   useTheme,
 } from '@motionlab/ui';
 import { FolderOpen, Import, Save } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { initCommands } from './commands/init.js';
+import { executeCommand } from './commands/registry.js';
+import { initShortcutManager } from './commands/shortcut-manager.js';
 import { AboutDialog } from './components/AboutDialog.js';
 import { CommandPalette } from './components/CommandPalette.js';
+import { CrashRecoveryDialog } from './components/CrashRecoveryDialog.js';
 import { MissingAssetsDialog } from './components/MissingAssetsDialog.js';
 import { EntityInspector } from './components/EntityInspector.js';
 import { ImportSettingsDialog } from './components/ImportSettingsDialog.js';
 import { KeyboardShortcutsDialog } from './components/KeyboardShortcutsDialog.js';
 import { ProjectTree } from './components/ProjectTree.js';
 import { SimulationSettingsDialog } from './components/SimulationSettingsDialog.js';
-import { SimulationToolbar } from './components/SimulationToolbar.js';
+import { MainToolbar } from './components/MainToolbar.js';
 import { TimelinePanel } from './components/TimelinePanel.js';
 import { ViewportOverlay } from './components/ViewportOverlay.js';
-import { onMissingAssets, sendImportAsset, sendLoadProject, sendSaveProject } from './engine/connection.js';
+import { WelcomeScreen } from './components/WelcomeScreen.js';
+import { onMissingAssets, sendAutoSave, sendImportAsset, sendLoadProject } from './engine/connection.js';
 import { useDialogStore } from './stores/dialogs.js';
 import type { ConnectionStatus } from './stores/engine-connection.js';
 import { useEngineConnection } from './stores/engine-connection.js';
+import { useImportFlowStore } from './stores/import-flow.js';
 import { useMechanismStore } from './stores/mechanism.js';
 import { useSimulationStore } from './stores/simulation.js';
-import { useUILayoutStore } from './stores/ui-layout.js';
+import type { RecoverableProject } from './types/motionlab.js';
+
+type StatusBarConnectionState = 'connected' | 'connecting' | 'disconnected' | 'error';
+
+const CONNECTION_TO_BAR: Record<ConnectionStatus, StatusBarConnectionState> = {
+  discovering: 'connecting',
+  connecting: 'connecting',
+  handshaking: 'connecting',
+  ready: 'connected',
+  error: 'error',
+  disconnected: 'disconnected',
+};
 
 const CONNECTION_TO_STATUS: Record<ConnectionStatus, StatusType> = {
   discovering: 'stale',
@@ -77,70 +96,33 @@ function EngineStatusBadge() {
 }
 
 function ImportButton() {
-  const status = useEngineConnection((s) => s.status);
   const importing = useMechanismStore((s) => s.importing);
-  const setImporting = useMechanismStore((s) => s.setImporting);
-  const setImportError = useMechanismStore((s) => s.setImportError);
-  const [pendingFilePath, setPendingFilePath] = useState<string | null>(null);
-
   const isDesktop = !!window.motionlab?.openFileDialog;
-  const disabled = !isDesktop || status !== 'ready' || importing;
-
-  const handleClick = async () => {
-    if (!window.motionlab) return;
-    try {
-      const filePath = await window.motionlab.openFileDialog({
-        filters: [
-          { name: 'CAD Files', extensions: ['step', 'stp', 'iges', 'igs'] },
-          { name: 'All Files', extensions: ['*'] },
-        ],
-      });
-      if (!filePath) return;
-      setPendingFilePath(filePath);
-    } catch {
-      setImportError('Failed to open file dialog');
-    }
-  };
-
-  return (
-    <>
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={disabled}
-        onClick={handleClick}
-        title={!isDesktop ? 'Desktop app required' : undefined}
-      >
-        <Import className="size-3.5 mr-1.5" />
-        {importing ? 'Importing…' : 'Import'}
-      </Button>
-      <ImportSettingsDialog
-        open={!!pendingFilePath}
-        filePath={pendingFilePath ?? ''}
-        onConfirm={(options) => {
-          if (!pendingFilePath) return;
-          setImportError(null);
-          setImporting(true);
-          sendImportAsset(pendingFilePath, options);
-          setPendingFilePath(null);
-        }}
-        onCancel={() => setPendingFilePath(null)}
-      />
-    </>
-  );
-}
-
-function SaveButton() {
-  const status = useEngineConnection((s) => s.status);
-  const projectName = useMechanismStore((s) => s.projectName);
-  const disabled = status !== 'ready';
+  const disabled = !isDesktop || useEngineConnection((s) => s.status !== 'ready') || importing;
 
   return (
     <Button
       variant="outline"
       size="sm"
       disabled={disabled}
-      onClick={() => sendSaveProject(projectName)}
+      onClick={() => executeCommand('file.import-cad')}
+      title={!isDesktop ? 'Desktop app required' : undefined}
+    >
+      <Import className="size-3.5 mr-1.5" />
+      {importing ? 'Importing…' : 'Import'}
+    </Button>
+  );
+}
+
+function SaveButton() {
+  const disabled = useEngineConnection((s) => s.status !== 'ready');
+
+  return (
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={disabled}
+      onClick={() => executeCommand('file.save')}
       title="Save project (Ctrl+S)"
     >
       <Save className="size-3.5 mr-1.5" />
@@ -150,26 +132,14 @@ function SaveButton() {
 }
 
 function OpenButton() {
-  const status = useEngineConnection((s) => s.status);
-  const disabled = status !== 'ready';
-
-  const handleClick = async () => {
-    if (!window.motionlab) return;
-    try {
-      const result = await window.motionlab.openProjectFile();
-      if (!result) return;
-      sendLoadProject(result.data);
-    } catch {
-      console.error('Failed to open project file');
-    }
-  };
+  const disabled = useEngineConnection((s) => s.status !== 'ready');
 
   return (
     <Button
       variant="outline"
       size="sm"
       disabled={disabled}
-      onClick={handleClick}
+      onClick={() => executeCommand('file.open')}
       title="Open project (Ctrl+O)"
     >
       <FolderOpen className="size-3.5 mr-1.5" />
@@ -193,6 +163,31 @@ function TopBarActions() {
   );
 }
 
+function StatusBarContainer() {
+  const connStatus = useEngineConnection((s) => s.status);
+  const simState = useSimulationStore((s) => s.state);
+  const simTime = useSimulationStore((s) => s.simTime);
+  const maxSimTime = useSimulationStore((s) => s.maxSimTime);
+  const bodies = useMechanismStore((s) => s.bodies);
+  const joints = useMechanismStore((s) => s.joints);
+
+  return (
+    <StatusBar
+      connectionState={CONNECTION_TO_BAR[connStatus]}
+      simulationState={simState}
+      currentTime={simTime}
+      duration={maxSimTime}
+      entityCounts={{
+        bodies: bodies.size,
+        joints: joints.size,
+      }}
+    />
+  );
+}
+
+// Initialize command registry before first render
+initCommands();
+
 export function App() {
   const connect = useEngineConnection((s) => s.connect);
   const projectName = useMechanismStore((s) => s.projectName);
@@ -202,12 +197,48 @@ export function App() {
   const openDialogFn = useDialogStore((s) => s.open);
 
   const [missingAssets, setMissingAssets] = useState<MissingAssetInfo[]>([]);
+  const [recoverableProjects, setRecoverableProjects] = useState<RecoverableProject[]>([]);
+  const pendingImportFilePath = useImportFlowStore((s) => s.pendingFilePath);
+  const closeImportDialog = useImportFlowStore((s) => s.closeImportDialog);
+  const setImporting = useMechanismStore((s) => s.setImporting);
+  const setImportError = useMechanismStore((s) => s.setImportError);
+
+  // Check for crash recovery autosave files on mount (Epic 20.2)
+  useEffect(() => {
+    window.motionlab?.checkAutoSaveRecovery?.()
+      .then((projects) => {
+        if (projects && projects.length > 0) {
+          setRecoverableProjects(projects);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     connect();
     // Register dirty check callback for before-quit dialog (desktop only)
     if (typeof window.motionlab?.onCheckDirty === 'function') {
       window.motionlab.onCheckDirty(() => useMechanismStore.getState().isDirty);
+    }
+    // Register auto-save tick handler (Epic 20.2)
+    if (typeof window.motionlab?.onAutoSaveTick === 'function') {
+      window.motionlab.onAutoSaveTick(() => {
+        const { isDirty, projectName } = useMechanismStore.getState();
+        if (!isDirty) return;
+        sendAutoSave(projectName);
+      });
+    }
+    // Register file-open handler for file associations / CLI args (Epic 20.2)
+    if (typeof window.motionlab?.onOpenFileRequest === 'function') {
+      window.motionlab.onOpenFileRequest(async (filePath: string) => {
+        const { isDirty } = useMechanismStore.getState();
+        if (isDirty) {
+          const confirmed = window.confirm('You have unsaved changes. Discard them?');
+          if (!confirmed) return;
+        }
+        const file = await window.motionlab!.readFileByPath!(filePath);
+        if (file) sendLoadProject(file.data);
+      });
     }
   }, [connect]);
 
@@ -220,38 +251,14 @@ export function App() {
     return () => { onMissingAssets(null); };
   }, [openDialogFn]);
 
-  const handleSave = useCallback(() => {
-    const status = useEngineConnection.getState().status;
-    if (status !== 'ready') return;
-    sendSaveProject(useMechanismStore.getState().projectName);
-  }, []);
-
-  const handleOpen = useCallback(async () => {
-    const status = useEngineConnection.getState().status;
-    if (status !== 'ready' || !window.motionlab) return;
-    const result = await window.motionlab.openProjectFile();
-    if (!result) return;
-    sendLoadProject(result.data);
-  }, []);
-
+  // Sync native window title with project name and dirty state
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-        e.preventDefault();
-        handleSave();
-      }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'o') {
-        e.preventDefault();
-        handleOpen();
-      }
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') {
-        e.preventDefault();
-        useUILayoutStore.getState().toggleChartPanel();
-      }
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [handleSave, handleOpen]);
+    const title = `${projectName}${isDirty ? '*' : ''} — MotionLab`;
+    window.motionlab?.setWindowTitle?.(title);
+  }, [projectName, isDirty]);
+
+  // Centralized keyboard shortcut manager — reads bindings from command registry
+  useEffect(() => initShortcutManager(), []);
 
   return (
     <TooltipProvider>
@@ -264,7 +271,7 @@ export function App() {
             actions={<TopBarActions />}
           />
         }
-        toolbar={<SimulationToolbar />}
+        toolbar={<MainToolbar />}
         leftPanel={
           <LeftPanel>
             <ProjectTree />
@@ -277,8 +284,23 @@ export function App() {
           </RightPanel>
         }
         bottomDock={<TimelinePanel />}
+        statusBar={<StatusBarContainer />}
       />
+      <WelcomeScreen />
+      <Toaster />
       <CommandPalette />
+      <ImportSettingsDialog
+        open={!!pendingImportFilePath}
+        filePath={pendingImportFilePath ?? ''}
+        onConfirm={(options) => {
+          if (!pendingImportFilePath) return;
+          setImportError(null);
+          setImporting(true);
+          sendImportAsset(pendingImportFilePath, options);
+          closeImportDialog();
+        }}
+        onCancel={closeImportDialog}
+      />
       <SimulationSettingsDialog open={openDialog === 'sim-settings'} onClose={closeDialog} />
       <KeyboardShortcutsDialog open={openDialog === 'shortcuts'} onClose={closeDialog} />
       <AboutDialog open={openDialog === 'about'} onClose={closeDialog} />
@@ -287,6 +309,12 @@ export function App() {
         onClose={closeDialog}
         missingAssets={missingAssets}
       />
+      {recoverableProjects.length > 0 && (
+        <CrashRecoveryDialog
+          recoverableProjects={recoverableProjects}
+          onClose={() => setRecoverableProjects([])}
+        />
+      )}
     </TooltipProvider>
   );
 }

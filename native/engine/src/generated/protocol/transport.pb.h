@@ -58,14 +58,28 @@ namespace motionlab {
 namespace protocol {
 enum ChannelDataType : int;
 extern const uint32_t ChannelDataType_internal_data_[];
+enum DiagnosticSeverity : int;
+extern const uint32_t DiagnosticSeverity_internal_data_[];
 enum EngineStatus_State : int;
 extern const uint32_t EngineStatus_State_internal_data_[];
 enum FaceSurfaceClass : int;
 extern const uint32_t FaceSurfaceClass_internal_data_[];
+enum IntegratorType : int;
+extern const uint32_t IntegratorType_internal_data_[];
 enum SimStateEnum : int;
 extern const uint32_t SimStateEnum_internal_data_[];
 enum SimulationAction : int;
 extern const uint32_t SimulationAction_internal_data_[];
+enum SolverType : int;
+extern const uint32_t SolverType_internal_data_[];
+class AttachGeometryCommand;
+struct AttachGeometryCommandDefaultTypeInternal;
+extern AttachGeometryCommandDefaultTypeInternal _AttachGeometryCommand_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull AttachGeometryCommand_class_data_;
+class AttachGeometryResult;
+struct AttachGeometryResultDefaultTypeInternal;
+extern AttachGeometryResultDefaultTypeInternal _AttachGeometryResult_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull AttachGeometryResult_class_data_;
 class BodyImportResult;
 struct BodyImportResultDefaultTypeInternal;
 extern BodyImportResultDefaultTypeInternal _BodyImportResult_default_instance_;
@@ -78,6 +92,10 @@ class Command;
 struct CommandDefaultTypeInternal;
 extern CommandDefaultTypeInternal _Command_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull Command_class_data_;
+class CompilationDiagnostic;
+struct CompilationDiagnosticDefaultTypeInternal;
+extern CompilationDiagnosticDefaultTypeInternal _CompilationDiagnostic_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull CompilationDiagnostic_class_data_;
 class CompilationResultEvent;
 struct CompilationResultEventDefaultTypeInternal;
 extern CompilationResultEventDefaultTypeInternal _CompilationResultEvent_default_instance_;
@@ -86,6 +104,26 @@ class CompileMechanismCommand;
 struct CompileMechanismCommandDefaultTypeInternal;
 extern CompileMechanismCommandDefaultTypeInternal _CompileMechanismCommand_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull CompileMechanismCommand_class_data_;
+class ContactSettings;
+struct ContactSettingsDefaultTypeInternal;
+extern ContactSettingsDefaultTypeInternal _ContactSettings_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull ContactSettings_class_data_;
+class CreateActuatorCommand;
+struct CreateActuatorCommandDefaultTypeInternal;
+extern CreateActuatorCommandDefaultTypeInternal _CreateActuatorCommand_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull CreateActuatorCommand_class_data_;
+class CreateActuatorResult;
+struct CreateActuatorResultDefaultTypeInternal;
+extern CreateActuatorResultDefaultTypeInternal _CreateActuatorResult_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull CreateActuatorResult_class_data_;
+class CreateBodyCommand;
+struct CreateBodyCommandDefaultTypeInternal;
+extern CreateBodyCommandDefaultTypeInternal _CreateBodyCommand_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull CreateBodyCommand_class_data_;
+class CreateBodyResult;
+struct CreateBodyResultDefaultTypeInternal;
+extern CreateBodyResultDefaultTypeInternal _CreateBodyResult_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull CreateBodyResult_class_data_;
 class CreateDatumCommand;
 struct CreateDatumCommandDefaultTypeInternal;
 extern CreateDatumCommandDefaultTypeInternal _CreateDatumCommand_default_instance_;
@@ -114,6 +152,30 @@ class CreateJointResult;
 struct CreateJointResultDefaultTypeInternal;
 extern CreateJointResultDefaultTypeInternal _CreateJointResult_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull CreateJointResult_class_data_;
+class CreateLoadCommand;
+struct CreateLoadCommandDefaultTypeInternal;
+extern CreateLoadCommandDefaultTypeInternal _CreateLoadCommand_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull CreateLoadCommand_class_data_;
+class CreateLoadResult;
+struct CreateLoadResultDefaultTypeInternal;
+extern CreateLoadResultDefaultTypeInternal _CreateLoadResult_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull CreateLoadResult_class_data_;
+class DeleteActuatorCommand;
+struct DeleteActuatorCommandDefaultTypeInternal;
+extern DeleteActuatorCommandDefaultTypeInternal _DeleteActuatorCommand_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull DeleteActuatorCommand_class_data_;
+class DeleteActuatorResult;
+struct DeleteActuatorResultDefaultTypeInternal;
+extern DeleteActuatorResultDefaultTypeInternal _DeleteActuatorResult_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull DeleteActuatorResult_class_data_;
+class DeleteBodyCommand;
+struct DeleteBodyCommandDefaultTypeInternal;
+extern DeleteBodyCommandDefaultTypeInternal _DeleteBodyCommand_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull DeleteBodyCommand_class_data_;
+class DeleteBodyResult;
+struct DeleteBodyResultDefaultTypeInternal;
+extern DeleteBodyResultDefaultTypeInternal _DeleteBodyResult_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull DeleteBodyResult_class_data_;
 class DeleteDatumCommand;
 struct DeleteDatumCommandDefaultTypeInternal;
 extern DeleteDatumCommandDefaultTypeInternal _DeleteDatumCommand_default_instance_;
@@ -130,6 +192,22 @@ class DeleteJointResult;
 struct DeleteJointResultDefaultTypeInternal;
 extern DeleteJointResultDefaultTypeInternal _DeleteJointResult_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull DeleteJointResult_class_data_;
+class DeleteLoadCommand;
+struct DeleteLoadCommandDefaultTypeInternal;
+extern DeleteLoadCommandDefaultTypeInternal _DeleteLoadCommand_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull DeleteLoadCommand_class_data_;
+class DeleteLoadResult;
+struct DeleteLoadResultDefaultTypeInternal;
+extern DeleteLoadResultDefaultTypeInternal _DeleteLoadResult_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull DeleteLoadResult_class_data_;
+class DetachGeometryCommand;
+struct DetachGeometryCommandDefaultTypeInternal;
+extern DetachGeometryCommandDefaultTypeInternal _DetachGeometryCommand_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull DetachGeometryCommand_class_data_;
+class DetachGeometryResult;
+struct DetachGeometryResultDefaultTypeInternal;
+extern DetachGeometryResultDefaultTypeInternal _DetachGeometryResult_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull DetachGeometryResult_class_data_;
 class EngineStatus;
 struct EngineStatusDefaultTypeInternal;
 extern EngineStatusDefaultTypeInternal _EngineStatus_default_instance_;
@@ -138,6 +216,10 @@ class Event;
 struct EventDefaultTypeInternal;
 extern EventDefaultTypeInternal _Event_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull Event_class_data_;
+class GeometryImportResult;
+struct GeometryImportResultDefaultTypeInternal;
+extern GeometryImportResultDefaultTypeInternal _GeometryImportResult_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull GeometryImportResult_class_data_;
 class Handshake;
 struct HandshakeDefaultTypeInternal;
 extern HandshakeDefaultTypeInternal _Handshake_default_instance_;
@@ -182,6 +264,14 @@ class MissingAssetInfo;
 struct MissingAssetInfoDefaultTypeInternal;
 extern MissingAssetInfoDefaultTypeInternal _MissingAssetInfo_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull MissingAssetInfo_class_data_;
+class NewProjectCommand;
+struct NewProjectCommandDefaultTypeInternal;
+extern NewProjectCommandDefaultTypeInternal _NewProjectCommand_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull NewProjectCommand_class_data_;
+class NewProjectResult;
+struct NewProjectResultDefaultTypeInternal;
+extern NewProjectResultDefaultTypeInternal _NewProjectResult_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull NewProjectResult_class_data_;
 class OutputChannelDescriptor;
 struct OutputChannelDescriptorDefaultTypeInternal;
 extern OutputChannelDescriptorDefaultTypeInternal _OutputChannelDescriptor_default_instance_;
@@ -246,10 +336,22 @@ class SimulationTrace;
 struct SimulationTraceDefaultTypeInternal;
 extern SimulationTraceDefaultTypeInternal _SimulationTrace_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull SimulationTrace_class_data_;
+class SolverSettings;
+struct SolverSettingsDefaultTypeInternal;
+extern SolverSettingsDefaultTypeInternal _SolverSettings_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull SolverSettings_class_data_;
 class TimeSample;
 struct TimeSampleDefaultTypeInternal;
 extern TimeSampleDefaultTypeInternal _TimeSample_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull TimeSample_class_data_;
+class UpdateActuatorCommand;
+struct UpdateActuatorCommandDefaultTypeInternal;
+extern UpdateActuatorCommandDefaultTypeInternal _UpdateActuatorCommand_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull UpdateActuatorCommand_class_data_;
+class UpdateActuatorResult;
+struct UpdateActuatorResultDefaultTypeInternal;
+extern UpdateActuatorResultDefaultTypeInternal _UpdateActuatorResult_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull UpdateActuatorResult_class_data_;
 class UpdateBodyCommand;
 struct UpdateBodyCommandDefaultTypeInternal;
 extern UpdateBodyCommandDefaultTypeInternal _UpdateBodyCommand_default_instance_;
@@ -274,6 +376,22 @@ class UpdateJointResult;
 struct UpdateJointResultDefaultTypeInternal;
 extern UpdateJointResultDefaultTypeInternal _UpdateJointResult_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull UpdateJointResult_class_data_;
+class UpdateLoadCommand;
+struct UpdateLoadCommandDefaultTypeInternal;
+extern UpdateLoadCommandDefaultTypeInternal _UpdateLoadCommand_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull UpdateLoadCommand_class_data_;
+class UpdateLoadResult;
+struct UpdateLoadResultDefaultTypeInternal;
+extern UpdateLoadResultDefaultTypeInternal _UpdateLoadResult_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull UpdateLoadResult_class_data_;
+class UpdateMassPropertiesCommand;
+struct UpdateMassPropertiesCommandDefaultTypeInternal;
+extern UpdateMassPropertiesCommandDefaultTypeInternal _UpdateMassPropertiesCommand_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull UpdateMassPropertiesCommand_class_data_;
+class UpdateMassPropertiesResult;
+struct UpdateMassPropertiesResultDefaultTypeInternal;
+extern UpdateMassPropertiesResultDefaultTypeInternal _UpdateMassPropertiesResult_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull UpdateMassPropertiesResult_class_data_;
 }  // namespace protocol
 }  // namespace motionlab
 namespace google {
@@ -282,17 +400,26 @@ template <>
 internal::EnumTraitsT<::motionlab::protocol::ChannelDataType_internal_data_>
     internal::EnumTraitsImpl::value<::motionlab::protocol::ChannelDataType>;
 template <>
+internal::EnumTraitsT<::motionlab::protocol::DiagnosticSeverity_internal_data_>
+    internal::EnumTraitsImpl::value<::motionlab::protocol::DiagnosticSeverity>;
+template <>
 internal::EnumTraitsT<::motionlab::protocol::EngineStatus_State_internal_data_>
     internal::EnumTraitsImpl::value<::motionlab::protocol::EngineStatus_State>;
 template <>
 internal::EnumTraitsT<::motionlab::protocol::FaceSurfaceClass_internal_data_>
     internal::EnumTraitsImpl::value<::motionlab::protocol::FaceSurfaceClass>;
 template <>
+internal::EnumTraitsT<::motionlab::protocol::IntegratorType_internal_data_>
+    internal::EnumTraitsImpl::value<::motionlab::protocol::IntegratorType>;
+template <>
 internal::EnumTraitsT<::motionlab::protocol::SimStateEnum_internal_data_>
     internal::EnumTraitsImpl::value<::motionlab::protocol::SimStateEnum>;
 template <>
 internal::EnumTraitsT<::motionlab::protocol::SimulationAction_internal_data_>
     internal::EnumTraitsImpl::value<::motionlab::protocol::SimulationAction>;
+template <>
+internal::EnumTraitsT<::motionlab::protocol::SolverType_internal_data_>
+    internal::EnumTraitsImpl::value<::motionlab::protocol::SolverType>;
 }  // namespace protobuf
 }  // namespace google
 
@@ -345,6 +472,7 @@ enum FaceSurfaceClass : int {
   FACE_SURFACE_CLASS_CONICAL = 3,
   FACE_SURFACE_CLASS_SPHERICAL = 4,
   FACE_SURFACE_CLASS_OTHER = 5,
+  FACE_SURFACE_CLASS_TOROIDAL = 6,
   FaceSurfaceClass_INT_MIN_SENTINEL_DO_NOT_USE_ =
       ::std::numeric_limits<::int32_t>::min(),
   FaceSurfaceClass_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -355,11 +483,11 @@ extern const uint32_t FaceSurfaceClass_internal_data_[];
 inline constexpr FaceSurfaceClass FaceSurfaceClass_MIN =
     static_cast<FaceSurfaceClass>(0);
 inline constexpr FaceSurfaceClass FaceSurfaceClass_MAX =
-    static_cast<FaceSurfaceClass>(5);
+    static_cast<FaceSurfaceClass>(6);
 inline bool FaceSurfaceClass_IsValid(int value) {
-  return 0 <= value && value <= 5;
+  return 0 <= value && value <= 6;
 }
-inline constexpr int FaceSurfaceClass_ARRAYSIZE = 5 + 1;
+inline constexpr int FaceSurfaceClass_ARRAYSIZE = 6 + 1;
 const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL FaceSurfaceClass_descriptor();
 template <typename T>
 const ::std::string& FaceSurfaceClass_Name(T value) {
@@ -370,12 +498,124 @@ const ::std::string& FaceSurfaceClass_Name(T value) {
 }
 template <>
 inline const ::std::string& FaceSurfaceClass_Name(FaceSurfaceClass value) {
-  return ::google::protobuf::internal::NameOfDenseEnum<FaceSurfaceClass_descriptor, 0, 5>(
+  return ::google::protobuf::internal::NameOfDenseEnum<FaceSurfaceClass_descriptor, 0, 6>(
       static_cast<int>(value));
 }
 inline bool FaceSurfaceClass_Parse(
     ::absl::string_view name, FaceSurfaceClass* PROTOBUF_NONNULL value) {
   return ::google::protobuf::internal::ParseNamedEnum<FaceSurfaceClass>(FaceSurfaceClass_descriptor(), name,
+                                           value);
+}
+enum SolverType : int {
+  SOLVER_PSOR = 0,
+  SOLVER_BARZILAI_BORWEIN = 1,
+  SOLVER_APGD = 2,
+  SOLVER_MINRES = 3,
+  SolverType_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      ::std::numeric_limits<::int32_t>::min(),
+  SolverType_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      ::std::numeric_limits<::int32_t>::max(),
+};
+
+extern const uint32_t SolverType_internal_data_[];
+inline constexpr SolverType SolverType_MIN =
+    static_cast<SolverType>(0);
+inline constexpr SolverType SolverType_MAX =
+    static_cast<SolverType>(3);
+inline bool SolverType_IsValid(int value) {
+  return 0 <= value && value <= 3;
+}
+inline constexpr int SolverType_ARRAYSIZE = 3 + 1;
+const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL SolverType_descriptor();
+template <typename T>
+const ::std::string& SolverType_Name(T value) {
+  static_assert(::std::is_same<T, SolverType>::value ||
+                    ::std::is_integral<T>::value,
+                "Incorrect type passed to SolverType_Name().");
+  return SolverType_Name(static_cast<SolverType>(value));
+}
+template <>
+inline const ::std::string& SolverType_Name(SolverType value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<SolverType_descriptor, 0, 3>(
+      static_cast<int>(value));
+}
+inline bool SolverType_Parse(
+    ::absl::string_view name, SolverType* PROTOBUF_NONNULL value) {
+  return ::google::protobuf::internal::ParseNamedEnum<SolverType>(SolverType_descriptor(), name,
+                                           value);
+}
+enum IntegratorType : int {
+  INTEGRATOR_EULER_IMPLICIT_LINEARIZED = 0,
+  INTEGRATOR_HHT = 1,
+  INTEGRATOR_NEWMARK = 2,
+  IntegratorType_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      ::std::numeric_limits<::int32_t>::min(),
+  IntegratorType_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      ::std::numeric_limits<::int32_t>::max(),
+};
+
+extern const uint32_t IntegratorType_internal_data_[];
+inline constexpr IntegratorType IntegratorType_MIN =
+    static_cast<IntegratorType>(0);
+inline constexpr IntegratorType IntegratorType_MAX =
+    static_cast<IntegratorType>(2);
+inline bool IntegratorType_IsValid(int value) {
+  return 0 <= value && value <= 2;
+}
+inline constexpr int IntegratorType_ARRAYSIZE = 2 + 1;
+const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL IntegratorType_descriptor();
+template <typename T>
+const ::std::string& IntegratorType_Name(T value) {
+  static_assert(::std::is_same<T, IntegratorType>::value ||
+                    ::std::is_integral<T>::value,
+                "Incorrect type passed to IntegratorType_Name().");
+  return IntegratorType_Name(static_cast<IntegratorType>(value));
+}
+template <>
+inline const ::std::string& IntegratorType_Name(IntegratorType value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<IntegratorType_descriptor, 0, 2>(
+      static_cast<int>(value));
+}
+inline bool IntegratorType_Parse(
+    ::absl::string_view name, IntegratorType* PROTOBUF_NONNULL value) {
+  return ::google::protobuf::internal::ParseNamedEnum<IntegratorType>(IntegratorType_descriptor(), name,
+                                           value);
+}
+enum DiagnosticSeverity : int {
+  DIAGNOSTIC_INFO = 0,
+  DIAGNOSTIC_WARNING = 1,
+  DIAGNOSTIC_ERROR = 2,
+  DiagnosticSeverity_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      ::std::numeric_limits<::int32_t>::min(),
+  DiagnosticSeverity_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      ::std::numeric_limits<::int32_t>::max(),
+};
+
+extern const uint32_t DiagnosticSeverity_internal_data_[];
+inline constexpr DiagnosticSeverity DiagnosticSeverity_MIN =
+    static_cast<DiagnosticSeverity>(0);
+inline constexpr DiagnosticSeverity DiagnosticSeverity_MAX =
+    static_cast<DiagnosticSeverity>(2);
+inline bool DiagnosticSeverity_IsValid(int value) {
+  return 0 <= value && value <= 2;
+}
+inline constexpr int DiagnosticSeverity_ARRAYSIZE = 2 + 1;
+const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL DiagnosticSeverity_descriptor();
+template <typename T>
+const ::std::string& DiagnosticSeverity_Name(T value) {
+  static_assert(::std::is_same<T, DiagnosticSeverity>::value ||
+                    ::std::is_integral<T>::value,
+                "Incorrect type passed to DiagnosticSeverity_Name().");
+  return DiagnosticSeverity_Name(static_cast<DiagnosticSeverity>(value));
+}
+template <>
+inline const ::std::string& DiagnosticSeverity_Name(DiagnosticSeverity value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<DiagnosticSeverity_descriptor, 0, 2>(
+      static_cast<int>(value));
+}
+inline bool DiagnosticSeverity_Parse(
+    ::absl::string_view name, DiagnosticSeverity* PROTOBUF_NONNULL value) {
+  return ::google::protobuf::internal::ParseNamedEnum<DiagnosticSeverity>(DiagnosticSeverity_descriptor(), name,
                                            value);
 }
 enum SimulationAction : int {
@@ -499,6 +739,232 @@ inline bool ChannelDataType_Parse(
 
 // -------------------------------------------------------------------
 
+class SolverSettings final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.SolverSettings) */ {
+ public:
+  inline SolverSettings() : SolverSettings(nullptr) {}
+  ~SolverSettings() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(SolverSettings* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(SolverSettings));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR SolverSettings(::google::protobuf::internal::ConstantInitialized);
+
+  inline SolverSettings(const SolverSettings& from) : SolverSettings(nullptr, from) {}
+  inline SolverSettings(SolverSettings&& from) noexcept
+      : SolverSettings(nullptr, ::std::move(from)) {}
+  inline SolverSettings& operator=(const SolverSettings& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SolverSettings& operator=(SolverSettings&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const SolverSettings& default_instance() {
+    return *reinterpret_cast<const SolverSettings*>(
+        &_SolverSettings_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 55;
+  friend void swap(SolverSettings& a, SolverSettings& b) { a.Swap(&b); }
+  inline void Swap(SolverSettings* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SolverSettings* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  SolverSettings* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<SolverSettings>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const SolverSettings& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const SolverSettings& from) { SolverSettings::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(SolverSettings* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.SolverSettings"; }
+
+  explicit SolverSettings(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  SolverSettings(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const SolverSettings& from);
+  SolverSettings(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, SolverSettings&& from) noexcept
+      : SolverSettings(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kTypeFieldNumber = 1,
+    kMaxIterationsFieldNumber = 2,
+    kToleranceFieldNumber = 3,
+    kIntegratorFieldNumber = 4,
+  };
+  // .motionlab.protocol.SolverType type = 1 [json_name = "type"];
+  void clear_type() ;
+  ::motionlab::protocol::SolverType type() const;
+  void set_type(::motionlab::protocol::SolverType value);
+
+  private:
+  ::motionlab::protocol::SolverType _internal_type() const;
+  void _internal_set_type(::motionlab::protocol::SolverType value);
+
+  public:
+  // int32 max_iterations = 2 [json_name = "maxIterations"];
+  void clear_max_iterations() ;
+  ::int32_t max_iterations() const;
+  void set_max_iterations(::int32_t value);
+
+  private:
+  ::int32_t _internal_max_iterations() const;
+  void _internal_set_max_iterations(::int32_t value);
+
+  public:
+  // double tolerance = 3 [json_name = "tolerance"];
+  void clear_tolerance() ;
+  double tolerance() const;
+  void set_tolerance(double value);
+
+  private:
+  double _internal_tolerance() const;
+  void _internal_set_tolerance(double value);
+
+  public:
+  // .motionlab.protocol.IntegratorType integrator = 4 [json_name = "integrator"];
+  void clear_integrator() ;
+  ::motionlab::protocol::IntegratorType integrator() const;
+  void set_integrator(::motionlab::protocol::IntegratorType value);
+
+  private:
+  ::motionlab::protocol::IntegratorType _internal_integrator() const;
+  void _internal_set_integrator(::motionlab::protocol::IntegratorType value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.SolverSettings)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<2, 4,
+                                   0, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const SolverSettings& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    int type_;
+    ::int32_t max_iterations_;
+    double tolerance_;
+    int integrator_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull SolverSettings_class_data_;
+// -------------------------------------------------------------------
+
 class SimulationStateEvent final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:motionlab.protocol.SimulationStateEvent) */ {
  public:
@@ -554,7 +1020,7 @@ class SimulationStateEvent final : public ::google::protobuf::Message
     return *reinterpret_cast<const SimulationStateEvent*>(
         &_SimulationStateEvent_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 36;
+  static constexpr int kIndexInFileMessages = 62;
   friend void swap(SimulationStateEvent& a, SimulationStateEvent& b) { a.Swap(&b); }
   inline void Swap(SimulationStateEvent* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -768,7 +1234,7 @@ class SimulationControlCommand final : public ::google::protobuf::Message
     return *reinterpret_cast<const SimulationControlCommand*>(
         &_SimulationControlCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 34;
+  static constexpr int kIndexInFileMessages = 60;
   friend void swap(SimulationControlCommand& a, SimulationControlCommand& b) { a.Swap(&b); }
   inline void Swap(SimulationControlCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -958,7 +1424,7 @@ class ScrubCommand final : public ::google::protobuf::Message
     return *reinterpret_cast<const ScrubCommand*>(
         &_ScrubCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 43;
+  static constexpr int kIndexInFileMessages = 69;
   friend void swap(ScrubCommand& a, ScrubCommand& b) { a.Swap(&b); }
   inline void Swap(ScrubCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -1153,7 +1619,7 @@ class SaveProjectResult final : public ::google::protobuf::Message
     kErrorMessage = 2,
     RESULT_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 45;
+  static constexpr int kIndexInFileMessages = 71;
   friend void swap(SaveProjectResult& a, SaveProjectResult& b) { a.Swap(&b); }
   inline void Swap(SaveProjectResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -1377,7 +1843,7 @@ class SaveProjectCommand final : public ::google::protobuf::Message
     return *reinterpret_cast<const SaveProjectCommand*>(
         &_SaveProjectCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 44;
+  static constexpr int kIndexInFileMessages = 70;
   friend void swap(SaveProjectCommand& a, SaveProjectCommand& b) { a.Swap(&b); }
   inline void Swap(SaveProjectCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -2159,7 +2625,7 @@ class OutputChannelDescriptor final : public ::google::protobuf::Message
     return *reinterpret_cast<const OutputChannelDescriptor*>(
         &_OutputChannelDescriptor_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 40;
+  static constexpr int kIndexInFileMessages = 66;
   friend void swap(OutputChannelDescriptor& a, OutputChannelDescriptor& b) { a.Swap(&b); }
   inline void Swap(OutputChannelDescriptor* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -2345,6 +2811,408 @@ class OutputChannelDescriptor final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull OutputChannelDescriptor_class_data_;
 // -------------------------------------------------------------------
 
+class NewProjectResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.NewProjectResult) */ {
+ public:
+  inline NewProjectResult() : NewProjectResult(nullptr) {}
+  ~NewProjectResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(NewProjectResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(NewProjectResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR NewProjectResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline NewProjectResult(const NewProjectResult& from) : NewProjectResult(nullptr, from) {}
+  inline NewProjectResult(NewProjectResult&& from) noexcept
+      : NewProjectResult(nullptr, ::std::move(from)) {}
+  inline NewProjectResult& operator=(const NewProjectResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline NewProjectResult& operator=(NewProjectResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const NewProjectResult& default_instance() {
+    return *reinterpret_cast<const NewProjectResult*>(
+        &_NewProjectResult_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 79;
+  friend void swap(NewProjectResult& a, NewProjectResult& b) { a.Swap(&b); }
+  inline void Swap(NewProjectResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(NewProjectResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  NewProjectResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<NewProjectResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const NewProjectResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const NewProjectResult& from) { NewProjectResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(NewProjectResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.NewProjectResult"; }
+
+  explicit NewProjectResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  NewProjectResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const NewProjectResult& from);
+  NewProjectResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, NewProjectResult&& from) noexcept
+      : NewProjectResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kErrorMessageFieldNumber = 2,
+    kSuccessFieldNumber = 1,
+  };
+  // string error_message = 2 [json_name = "errorMessage"];
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  // bool success = 1 [json_name = "success"];
+  void clear_success() ;
+  bool success() const;
+  void set_success(bool value);
+
+  private:
+  bool _internal_success() const;
+  void _internal_set_success(bool value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.NewProjectResult)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<1, 2,
+                                   0, 57,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const NewProjectResult& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr error_message_;
+    bool success_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull NewProjectResult_class_data_;
+// -------------------------------------------------------------------
+
+class NewProjectCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.NewProjectCommand) */ {
+ public:
+  inline NewProjectCommand() : NewProjectCommand(nullptr) {}
+  ~NewProjectCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(NewProjectCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(NewProjectCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR NewProjectCommand(::google::protobuf::internal::ConstantInitialized);
+
+  inline NewProjectCommand(const NewProjectCommand& from) : NewProjectCommand(nullptr, from) {}
+  inline NewProjectCommand(NewProjectCommand&& from) noexcept
+      : NewProjectCommand(nullptr, ::std::move(from)) {}
+  inline NewProjectCommand& operator=(const NewProjectCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline NewProjectCommand& operator=(NewProjectCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const NewProjectCommand& default_instance() {
+    return *reinterpret_cast<const NewProjectCommand*>(
+        &_NewProjectCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 78;
+  friend void swap(NewProjectCommand& a, NewProjectCommand& b) { a.Swap(&b); }
+  inline void Swap(NewProjectCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(NewProjectCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  NewProjectCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<NewProjectCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const NewProjectCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const NewProjectCommand& from) { NewProjectCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(NewProjectCommand* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.NewProjectCommand"; }
+
+  explicit NewProjectCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  NewProjectCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const NewProjectCommand& from);
+  NewProjectCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, NewProjectCommand&& from) noexcept
+      : NewProjectCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kProjectNameFieldNumber = 1,
+  };
+  // string project_name = 1 [json_name = "projectName"];
+  void clear_project_name() ;
+  const ::std::string& project_name() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_project_name(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_project_name();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_project_name();
+  void set_allocated_project_name(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_project_name() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_project_name(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_project_name();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.NewProjectCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   0, 57,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const NewProjectCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr project_name_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull NewProjectCommand_class_data_;
+// -------------------------------------------------------------------
+
 class LoadProjectCommand final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:motionlab.protocol.LoadProjectCommand) */ {
  public:
@@ -2400,7 +3268,7 @@ class LoadProjectCommand final : public ::google::protobuf::Message
     return *reinterpret_cast<const LoadProjectCommand*>(
         &_LoadProjectCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 46;
+  static constexpr int kIndexInFileMessages = 72;
   friend void swap(LoadProjectCommand& a, LoadProjectCommand& b) { a.Swap(&b); }
   inline void Swap(LoadProjectCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -2990,30 +3858,30 @@ class EngineStatus final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull EngineStatus_class_data_;
 // -------------------------------------------------------------------
 
-class UpdateJointCommand final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdateJointCommand) */ {
+class ContactSettings final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.ContactSettings) */ {
  public:
-  inline UpdateJointCommand() : UpdateJointCommand(nullptr) {}
-  ~UpdateJointCommand() PROTOBUF_FINAL;
+  inline ContactSettings() : ContactSettings(nullptr) {}
+  ~ContactSettings() PROTOBUF_FINAL;
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(UpdateJointCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+  void operator delete(ContactSettings* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
     SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(UpdateJointCommand));
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(ContactSettings));
   }
 #endif
 
   template <typename = void>
-  explicit PROTOBUF_CONSTEXPR UpdateJointCommand(::google::protobuf::internal::ConstantInitialized);
+  explicit PROTOBUF_CONSTEXPR ContactSettings(::google::protobuf::internal::ConstantInitialized);
 
-  inline UpdateJointCommand(const UpdateJointCommand& from) : UpdateJointCommand(nullptr, from) {}
-  inline UpdateJointCommand(UpdateJointCommand&& from) noexcept
-      : UpdateJointCommand(nullptr, ::std::move(from)) {}
-  inline UpdateJointCommand& operator=(const UpdateJointCommand& from) {
+  inline ContactSettings(const ContactSettings& from) : ContactSettings(nullptr, from) {}
+  inline ContactSettings(ContactSettings&& from) noexcept
+      : ContactSettings(nullptr, ::std::move(from)) {}
+  inline ContactSettings& operator=(const ContactSettings& from) {
     CopyFrom(from);
     return *this;
   }
-  inline UpdateJointCommand& operator=(UpdateJointCommand&& from) noexcept {
+  inline ContactSettings& operator=(ContactSettings&& from) noexcept {
     if (this == &from) return *this;
     if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
       InternalSwap(&from);
@@ -3041,13 +3909,13 @@ class UpdateJointCommand final : public ::google::protobuf::Message
   static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const UpdateJointCommand& default_instance() {
-    return *reinterpret_cast<const UpdateJointCommand*>(
-        &_UpdateJointCommand_default_instance_);
+  static const ContactSettings& default_instance() {
+    return *reinterpret_cast<const ContactSettings*>(
+        &_ContactSettings_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 27;
-  friend void swap(UpdateJointCommand& a, UpdateJointCommand& b) { a.Swap(&b); }
-  inline void Swap(UpdateJointCommand* PROTOBUF_NONNULL other) {
+  static constexpr int kIndexInFileMessages = 56;
+  friend void swap(ContactSettings& a, ContactSettings& b) { a.Swap(&b); }
+  inline void Swap(ContactSettings* PROTOBUF_NONNULL other) {
     if (other == this) return;
     if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
       InternalSwap(other);
@@ -3055,7 +3923,7 @@ class UpdateJointCommand final : public ::google::protobuf::Message
       ::google::protobuf::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(UpdateJointCommand* PROTOBUF_NONNULL other) {
+  void UnsafeArenaSwap(ContactSettings* PROTOBUF_NONNULL other) {
     if (other == this) return;
     ABSL_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -3063,13 +3931,13 @@ class UpdateJointCommand final : public ::google::protobuf::Message
 
   // implements Message ----------------------------------------------
 
-  UpdateJointCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<UpdateJointCommand>(arena);
+  ContactSettings* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<ContactSettings>(arena);
   }
   using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const UpdateJointCommand& from);
+  void CopyFrom(const ContactSettings& from);
   using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const UpdateJointCommand& from) { UpdateJointCommand::MergeImpl(*this, from); }
+  void MergeFrom(const ContactSettings& from) { ContactSettings::MergeImpl(*this, from); }
 
   private:
   static void MergeImpl(::google::protobuf::MessageLite& to_msg,
@@ -3105,17 +3973,17 @@ class UpdateJointCommand final : public ::google::protobuf::Message
   private:
   void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   static void SharedDtor(MessageLite& self);
-  void InternalSwap(UpdateJointCommand* PROTOBUF_NONNULL other);
+  void InternalSwap(ContactSettings* PROTOBUF_NONNULL other);
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "motionlab.protocol.UpdateJointCommand"; }
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.ContactSettings"; }
 
-  explicit UpdateJointCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  UpdateJointCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const UpdateJointCommand& from);
-  UpdateJointCommand(
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, UpdateJointCommand&& from) noexcept
-      : UpdateJointCommand(arena) {
+  explicit ContactSettings(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  ContactSettings(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const ContactSettings& from);
+  ContactSettings(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, ContactSettings&& from) noexcept
+      : ContactSettings(arena) {
     *this = ::std::move(from);
   }
   const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
@@ -3132,82 +4000,68 @@ class UpdateJointCommand final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kNameFieldNumber = 2,
-    kJointIdFieldNumber = 1,
-    kLowerLimitFieldNumber = 4,
-    kUpperLimitFieldNumber = 5,
-    kTypeFieldNumber = 3,
+    kFrictionFieldNumber = 1,
+    kRestitutionFieldNumber = 2,
+    kComplianceFieldNumber = 3,
+    kDampingFieldNumber = 4,
+    kEnableContactFieldNumber = 5,
   };
-  // optional string name = 2 [json_name = "name"];
-  bool has_name() const;
-  void clear_name() ;
-  const ::std::string& name() const;
-  template <typename Arg_ = const ::std::string&, typename... Args_>
-  void set_name(Arg_&& arg, Args_... args);
-  ::std::string* PROTOBUF_NONNULL mutable_name();
-  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_name();
-  void set_allocated_name(::std::string* PROTOBUF_NULLABLE value);
+  // double friction = 1 [json_name = "friction"];
+  void clear_friction() ;
+  double friction() const;
+  void set_friction(double value);
 
   private:
-  const ::std::string& _internal_name() const;
-  PROTOBUF_ALWAYS_INLINE void _internal_set_name(const ::std::string& value);
-  ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
+  double _internal_friction() const;
+  void _internal_set_friction(double value);
 
   public:
-  // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
-  bool has_joint_id() const;
-  void clear_joint_id() ;
-  const ::motionlab::mechanism::ElementId& joint_id() const;
-  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_joint_id();
-  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_joint_id();
-  void set_allocated_joint_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_joint_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_joint_id();
+  // double restitution = 2 [json_name = "restitution"];
+  void clear_restitution() ;
+  double restitution() const;
+  void set_restitution(double value);
 
   private:
-  const ::motionlab::mechanism::ElementId& _internal_joint_id() const;
-  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_joint_id();
+  double _internal_restitution() const;
+  void _internal_set_restitution(double value);
 
   public:
-  // optional double lower_limit = 4 [json_name = "lowerLimit"];
-  bool has_lower_limit() const;
-  void clear_lower_limit() ;
-  double lower_limit() const;
-  void set_lower_limit(double value);
+  // double compliance = 3 [json_name = "compliance"];
+  void clear_compliance() ;
+  double compliance() const;
+  void set_compliance(double value);
 
   private:
-  double _internal_lower_limit() const;
-  void _internal_set_lower_limit(double value);
+  double _internal_compliance() const;
+  void _internal_set_compliance(double value);
 
   public:
-  // optional double upper_limit = 5 [json_name = "upperLimit"];
-  bool has_upper_limit() const;
-  void clear_upper_limit() ;
-  double upper_limit() const;
-  void set_upper_limit(double value);
+  // double damping = 4 [json_name = "damping"];
+  void clear_damping() ;
+  double damping() const;
+  void set_damping(double value);
 
   private:
-  double _internal_upper_limit() const;
-  void _internal_set_upper_limit(double value);
+  double _internal_damping() const;
+  void _internal_set_damping(double value);
 
   public:
-  // optional .motionlab.mechanism.JointType type = 3 [json_name = "type"];
-  bool has_type() const;
-  void clear_type() ;
-  ::motionlab::mechanism::JointType type() const;
-  void set_type(::motionlab::mechanism::JointType value);
+  // bool enable_contact = 5 [json_name = "enableContact"];
+  void clear_enable_contact() ;
+  bool enable_contact() const;
+  void set_enable_contact(bool value);
 
   private:
-  ::motionlab::mechanism::JointType _internal_type() const;
-  void _internal_set_type(::motionlab::mechanism::JointType value);
+  bool _internal_enable_contact() const;
+  void _internal_set_enable_contact(bool value);
 
   public:
-  // @@protoc_insertion_point(class_scope:motionlab.protocol.UpdateJointCommand)
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.ContactSettings)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<3, 5,
-                                   1, 50,
+                                   0, 0,
                                    2>
       _table_;
 
@@ -3225,21 +4079,286 @@ class UpdateJointCommand final : public ::google::protobuf::Message
     inline explicit Impl_(
         ::google::protobuf::internal::InternalVisibility visibility,
         ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-        const UpdateJointCommand& from_msg);
+        const ContactSettings& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::google::protobuf::internal::ArenaStringPtr name_;
-    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE joint_id_;
-    double lower_limit_;
-    double upper_limit_;
-    int type_;
+    double friction_;
+    double restitution_;
+    double compliance_;
+    double damping_;
+    bool enable_contact_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
   friend struct ::TableStruct_protocol_2ftransport_2eproto;
 };
 
-extern const ::google::protobuf::internal::ClassDataFull UpdateJointCommand_class_data_;
+extern const ::google::protobuf::internal::ClassDataFull ContactSettings_class_data_;
+// -------------------------------------------------------------------
+
+class CompilationDiagnostic final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.CompilationDiagnostic) */ {
+ public:
+  inline CompilationDiagnostic() : CompilationDiagnostic(nullptr) {}
+  ~CompilationDiagnostic() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(CompilationDiagnostic* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(CompilationDiagnostic));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR CompilationDiagnostic(::google::protobuf::internal::ConstantInitialized);
+
+  inline CompilationDiagnostic(const CompilationDiagnostic& from) : CompilationDiagnostic(nullptr, from) {}
+  inline CompilationDiagnostic(CompilationDiagnostic&& from) noexcept
+      : CompilationDiagnostic(nullptr, ::std::move(from)) {}
+  inline CompilationDiagnostic& operator=(const CompilationDiagnostic& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CompilationDiagnostic& operator=(CompilationDiagnostic&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CompilationDiagnostic& default_instance() {
+    return *reinterpret_cast<const CompilationDiagnostic*>(
+        &_CompilationDiagnostic_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 57;
+  friend void swap(CompilationDiagnostic& a, CompilationDiagnostic& b) { a.Swap(&b); }
+  inline void Swap(CompilationDiagnostic* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CompilationDiagnostic* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CompilationDiagnostic* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<CompilationDiagnostic>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CompilationDiagnostic& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const CompilationDiagnostic& from) { CompilationDiagnostic::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(CompilationDiagnostic* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.CompilationDiagnostic"; }
+
+  explicit CompilationDiagnostic(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  CompilationDiagnostic(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CompilationDiagnostic& from);
+  CompilationDiagnostic(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CompilationDiagnostic&& from) noexcept
+      : CompilationDiagnostic(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kAffectedEntityIdsFieldNumber = 3,
+    kMessageFieldNumber = 2,
+    kSuggestionFieldNumber = 4,
+    kCodeFieldNumber = 5,
+    kSeverityFieldNumber = 1,
+  };
+  // repeated string affected_entity_ids = 3 [json_name = "affectedEntityIds"];
+  int affected_entity_ids_size() const;
+  private:
+  int _internal_affected_entity_ids_size() const;
+
+  public:
+  void clear_affected_entity_ids() ;
+  const ::std::string& affected_entity_ids(int index) const;
+  ::std::string* PROTOBUF_NONNULL mutable_affected_entity_ids(int index);
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_affected_entity_ids(int index, Arg_&& value, Args_... args);
+  ::std::string* PROTOBUF_NONNULL add_affected_entity_ids();
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void add_affected_entity_ids(Arg_&& value, Args_... args);
+  const ::google::protobuf::RepeatedPtrField<::std::string>& affected_entity_ids() const;
+  ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL mutable_affected_entity_ids();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<::std::string>& _internal_affected_entity_ids() const;
+  ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL _internal_mutable_affected_entity_ids();
+
+  public:
+  // string message = 2 [json_name = "message"];
+  void clear_message() ;
+  const ::std::string& message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_message();
+  void set_allocated_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_message();
+
+  public:
+  // string suggestion = 4 [json_name = "suggestion"];
+  void clear_suggestion() ;
+  const ::std::string& suggestion() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_suggestion(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_suggestion();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_suggestion();
+  void set_allocated_suggestion(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_suggestion() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_suggestion(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_suggestion();
+
+  public:
+  // string code = 5 [json_name = "code"];
+  void clear_code() ;
+  const ::std::string& code() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_code(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_code();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_code();
+  void set_allocated_code(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_code() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_code(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_code();
+
+  public:
+  // .motionlab.protocol.DiagnosticSeverity severity = 1 [json_name = "severity"];
+  void clear_severity() ;
+  ::motionlab::protocol::DiagnosticSeverity severity() const;
+  void set_severity(::motionlab::protocol::DiagnosticSeverity value);
+
+  private:
+  ::motionlab::protocol::DiagnosticSeverity _internal_severity() const;
+  void _internal_set_severity(::motionlab::protocol::DiagnosticSeverity value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.CompilationDiagnostic)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<3, 5,
+                                   0, 89,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const CompilationDiagnostic& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::RepeatedPtrField<::std::string> affected_entity_ids_;
+    ::google::protobuf::internal::ArenaStringPtr message_;
+    ::google::protobuf::internal::ArenaStringPtr suggestion_;
+    ::google::protobuf::internal::ArenaStringPtr code_;
+    int severity_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull CompilationDiagnostic_class_data_;
 // -------------------------------------------------------------------
 
 class UpdateBodyCommand final : public ::google::protobuf::Message
@@ -3297,7 +4416,7 @@ class UpdateBodyCommand final : public ::google::protobuf::Message
     return *reinterpret_cast<const UpdateBodyCommand*>(
         &_UpdateBodyCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 24;
+  static constexpr int kIndexInFileMessages = 25;
   friend void swap(UpdateBodyCommand& a, UpdateBodyCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateBodyCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -3384,9 +4503,26 @@ class UpdateBodyCommand final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
+    kNameFieldNumber = 3,
     kBodyIdFieldNumber = 1,
     kIsFixedFieldNumber = 2,
   };
+  // optional string name = 3 [json_name = "name"];
+  bool has_name() const;
+  void clear_name() ;
+  const ::std::string& name() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_name(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_name();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_name();
+  void set_allocated_name(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_name() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_name(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
+
+  public:
   // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
   bool has_body_id() const;
   void clear_body_id() ;
@@ -3417,8 +4553,8 @@ class UpdateBodyCommand final : public ::google::protobuf::Message
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<1, 2,
-                                   1, 0,
+  static const ::google::protobuf::internal::TcParseTable<2, 3,
+                                   1, 49,
                                    2>
       _table_;
 
@@ -3439,6 +4575,7 @@ class UpdateBodyCommand final : public ::google::protobuf::Message
         const UpdateBodyCommand& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr name_;
     ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE body_id_;
     bool is_fixed_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -3510,7 +4647,7 @@ class TimeSample final : public ::google::protobuf::Message
     kVector = 3,
     VALUE_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 41;
+  static constexpr int kIndexInFileMessages = 67;
   friend void swap(TimeSample& a, TimeSample& b) { a.Swap(&b); }
   inline void Swap(TimeSample* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -3745,7 +4882,7 @@ class SimulationSettings final : public ::google::protobuf::Message
     return *reinterpret_cast<const SimulationSettings*>(
         &_SimulationSettings_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 32;
+  static constexpr int kIndexInFileMessages = 58;
   friend void swap(SimulationSettings& a, SimulationSettings& b) { a.Swap(&b); }
   inline void Swap(SimulationSettings* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -3833,7 +4970,10 @@ class SimulationSettings final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kGravityFieldNumber = 2,
+    kSolverFieldNumber = 3,
+    kContactFieldNumber = 4,
     kTimestepFieldNumber = 1,
+    kDurationFieldNumber = 5,
   };
   // .motionlab.mechanism.Vec3 gravity = 2 [json_name = "gravity"];
   bool has_gravity() const;
@@ -3850,6 +4990,36 @@ class SimulationSettings final : public ::google::protobuf::Message
   ::motionlab::mechanism::Vec3* PROTOBUF_NONNULL _internal_mutable_gravity();
 
   public:
+  // .motionlab.protocol.SolverSettings solver = 3 [json_name = "solver"];
+  bool has_solver() const;
+  void clear_solver() ;
+  const ::motionlab::protocol::SolverSettings& solver() const;
+  [[nodiscard]] ::motionlab::protocol::SolverSettings* PROTOBUF_NULLABLE release_solver();
+  ::motionlab::protocol::SolverSettings* PROTOBUF_NONNULL mutable_solver();
+  void set_allocated_solver(::motionlab::protocol::SolverSettings* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_solver(::motionlab::protocol::SolverSettings* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::SolverSettings* PROTOBUF_NULLABLE unsafe_arena_release_solver();
+
+  private:
+  const ::motionlab::protocol::SolverSettings& _internal_solver() const;
+  ::motionlab::protocol::SolverSettings* PROTOBUF_NONNULL _internal_mutable_solver();
+
+  public:
+  // .motionlab.protocol.ContactSettings contact = 4 [json_name = "contact"];
+  bool has_contact() const;
+  void clear_contact() ;
+  const ::motionlab::protocol::ContactSettings& contact() const;
+  [[nodiscard]] ::motionlab::protocol::ContactSettings* PROTOBUF_NULLABLE release_contact();
+  ::motionlab::protocol::ContactSettings* PROTOBUF_NONNULL mutable_contact();
+  void set_allocated_contact(::motionlab::protocol::ContactSettings* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_contact(::motionlab::protocol::ContactSettings* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::ContactSettings* PROTOBUF_NULLABLE unsafe_arena_release_contact();
+
+  private:
+  const ::motionlab::protocol::ContactSettings& _internal_contact() const;
+  ::motionlab::protocol::ContactSettings* PROTOBUF_NONNULL _internal_mutable_contact();
+
+  public:
   // double timestep = 1 [json_name = "timestep"];
   void clear_timestep() ;
   double timestep() const;
@@ -3860,12 +5030,22 @@ class SimulationSettings final : public ::google::protobuf::Message
   void _internal_set_timestep(double value);
 
   public:
+  // double duration = 5 [json_name = "duration"];
+  void clear_duration() ;
+  double duration() const;
+  void set_duration(double value);
+
+  private:
+  double _internal_duration() const;
+  void _internal_set_duration(double value);
+
+  public:
   // @@protoc_insertion_point(class_scope:motionlab.protocol.SimulationSettings)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<1, 2,
-                                   1, 0,
+  static const ::google::protobuf::internal::TcParseTable<3, 5,
+                                   3, 0,
                                    2>
       _table_;
 
@@ -3887,7 +5067,10 @@ class SimulationSettings final : public ::google::protobuf::Message
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::motionlab::mechanism::Vec3* PROTOBUF_NULLABLE gravity_;
+    ::motionlab::protocol::SolverSettings* PROTOBUF_NULLABLE solver_;
+    ::motionlab::protocol::ContactSettings* PROTOBUF_NULLABLE contact_;
     double timestep_;
+    double duration_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -3952,7 +5135,7 @@ class RenameDatumCommand final : public ::google::protobuf::Message
     return *reinterpret_cast<const RenameDatumCommand*>(
         &_RenameDatumCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 15;
+  static constexpr int kIndexInFileMessages = 16;
   friend void swap(RenameDatumCommand& a, RenameDatumCommand& b) { a.Swap(&b); }
   inline void Swap(RenameDatumCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -4164,7 +5347,7 @@ class RelocateAssetCommand final : public ::google::protobuf::Message
     return *reinterpret_cast<const RelocateAssetCommand*>(
         &_RelocateAssetCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 50;
+  static constexpr int kIndexInFileMessages = 76;
   friend void swap(RelocateAssetCommand& a, RelocateAssetCommand& b) { a.Swap(&b); }
   inline void Swap(RelocateAssetCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -4393,7 +5576,7 @@ class MissingAssetInfo final : public ::google::protobuf::Message
     return *reinterpret_cast<const MissingAssetInfo*>(
         &_MissingAssetInfo_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 49;
+  static constexpr int kIndexInFileMessages = 75;
   friend void swap(MissingAssetInfo& a, MissingAssetInfo& b) { a.Swap(&b); }
   inline void Swap(MissingAssetInfo* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -4639,7 +5822,7 @@ class JointStateData final : public ::google::protobuf::Message
     return *reinterpret_cast<const JointStateData*>(
         &_JointStateData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 38;
+  static constexpr int kIndexInFileMessages = 64;
   friend void swap(JointStateData& a, JointStateData& b) { a.Swap(&b); }
   inline void Swap(JointStateData* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -5485,6 +6668,628 @@ class Handshake final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull Handshake_class_data_;
 // -------------------------------------------------------------------
 
+class DetachGeometryCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.DetachGeometryCommand) */ {
+ public:
+  inline DetachGeometryCommand() : DetachGeometryCommand(nullptr) {}
+  ~DetachGeometryCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(DetachGeometryCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(DetachGeometryCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR DetachGeometryCommand(::google::protobuf::internal::ConstantInitialized);
+
+  inline DetachGeometryCommand(const DetachGeometryCommand& from) : DetachGeometryCommand(nullptr, from) {}
+  inline DetachGeometryCommand(DetachGeometryCommand&& from) noexcept
+      : DetachGeometryCommand(nullptr, ::std::move(from)) {}
+  inline DetachGeometryCommand& operator=(const DetachGeometryCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline DetachGeometryCommand& operator=(DetachGeometryCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const DetachGeometryCommand& default_instance() {
+    return *reinterpret_cast<const DetachGeometryCommand*>(
+        &_DetachGeometryCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 33;
+  friend void swap(DetachGeometryCommand& a, DetachGeometryCommand& b) { a.Swap(&b); }
+  inline void Swap(DetachGeometryCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(DetachGeometryCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  DetachGeometryCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<DetachGeometryCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const DetachGeometryCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const DetachGeometryCommand& from) { DetachGeometryCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(DetachGeometryCommand* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.DetachGeometryCommand"; }
+
+  explicit DetachGeometryCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  DetachGeometryCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const DetachGeometryCommand& from);
+  DetachGeometryCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, DetachGeometryCommand&& from) noexcept
+      : DetachGeometryCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kGeometryIdFieldNumber = 1,
+  };
+  // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+  bool has_geometry_id() const;
+  void clear_geometry_id() ;
+  const ::motionlab::mechanism::ElementId& geometry_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_geometry_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_geometry_id();
+  void set_allocated_geometry_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_geometry_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_geometry_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_geometry_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_geometry_id();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.DetachGeometryCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   1, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const DetachGeometryCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE geometry_id_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull DetachGeometryCommand_class_data_;
+// -------------------------------------------------------------------
+
+class DeleteLoadResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.DeleteLoadResult) */ {
+ public:
+  inline DeleteLoadResult() : DeleteLoadResult(nullptr) {}
+  ~DeleteLoadResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(DeleteLoadResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(DeleteLoadResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR DeleteLoadResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline DeleteLoadResult(const DeleteLoadResult& from) : DeleteLoadResult(nullptr, from) {}
+  inline DeleteLoadResult(DeleteLoadResult&& from) noexcept
+      : DeleteLoadResult(nullptr, ::std::move(from)) {}
+  inline DeleteLoadResult& operator=(const DeleteLoadResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline DeleteLoadResult& operator=(DeleteLoadResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const DeleteLoadResult& default_instance() {
+    return *reinterpret_cast<const DeleteLoadResult*>(
+        &_DeleteLoadResult_default_instance_);
+  }
+  enum ResultCase {
+    kDeletedId = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 48;
+  friend void swap(DeleteLoadResult& a, DeleteLoadResult& b) { a.Swap(&b); }
+  inline void Swap(DeleteLoadResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(DeleteLoadResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  DeleteLoadResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<DeleteLoadResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const DeleteLoadResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const DeleteLoadResult& from) { DeleteLoadResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(DeleteLoadResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.DeleteLoadResult"; }
+
+  explicit DeleteLoadResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  DeleteLoadResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const DeleteLoadResult& from);
+  DeleteLoadResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, DeleteLoadResult&& from) noexcept
+      : DeleteLoadResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kDeletedIdFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+  bool has_deleted_id() const;
+  private:
+  bool _internal_has_deleted_id() const;
+
+  public:
+  void clear_deleted_id() ;
+  const ::motionlab::mechanism::ElementId& deleted_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_deleted_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_deleted_id();
+  void set_allocated_deleted_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_deleted_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_deleted_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_deleted_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_deleted_id();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.DeleteLoadResult)
+ private:
+  class _Internal;
+  void set_has_deleted_id();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 2,
+                                   1, 57,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const DeleteLoadResult& from_msg);
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE deleted_id_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull DeleteLoadResult_class_data_;
+// -------------------------------------------------------------------
+
+class DeleteLoadCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.DeleteLoadCommand) */ {
+ public:
+  inline DeleteLoadCommand() : DeleteLoadCommand(nullptr) {}
+  ~DeleteLoadCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(DeleteLoadCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(DeleteLoadCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR DeleteLoadCommand(::google::protobuf::internal::ConstantInitialized);
+
+  inline DeleteLoadCommand(const DeleteLoadCommand& from) : DeleteLoadCommand(nullptr, from) {}
+  inline DeleteLoadCommand(DeleteLoadCommand&& from) noexcept
+      : DeleteLoadCommand(nullptr, ::std::move(from)) {}
+  inline DeleteLoadCommand& operator=(const DeleteLoadCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline DeleteLoadCommand& operator=(DeleteLoadCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const DeleteLoadCommand& default_instance() {
+    return *reinterpret_cast<const DeleteLoadCommand*>(
+        &_DeleteLoadCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 45;
+  friend void swap(DeleteLoadCommand& a, DeleteLoadCommand& b) { a.Swap(&b); }
+  inline void Swap(DeleteLoadCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(DeleteLoadCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  DeleteLoadCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<DeleteLoadCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const DeleteLoadCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const DeleteLoadCommand& from) { DeleteLoadCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(DeleteLoadCommand* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.DeleteLoadCommand"; }
+
+  explicit DeleteLoadCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  DeleteLoadCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const DeleteLoadCommand& from);
+  DeleteLoadCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, DeleteLoadCommand&& from) noexcept
+      : DeleteLoadCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kLoadIdFieldNumber = 1,
+  };
+  // .motionlab.mechanism.ElementId load_id = 1 [json_name = "loadId"];
+  bool has_load_id() const;
+  void clear_load_id() ;
+  const ::motionlab::mechanism::ElementId& load_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_load_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_load_id();
+  void set_allocated_load_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_load_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_load_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_load_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_load_id();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.DeleteLoadCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   1, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const DeleteLoadCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE load_id_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull DeleteLoadCommand_class_data_;
+// -------------------------------------------------------------------
+
 class DeleteJointResult final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:motionlab.protocol.DeleteJointResult) */ {
  public:
@@ -5545,7 +7350,7 @@ class DeleteJointResult final : public ::google::protobuf::Message
     kErrorMessage = 2,
     RESULT_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 31;
+  static constexpr int kIndexInFileMessages = 42;
   friend void swap(DeleteJointResult& a, DeleteJointResult& b) { a.Swap(&b); }
   inline void Swap(DeleteJointResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -5772,7 +7577,7 @@ class DeleteJointCommand final : public ::google::protobuf::Message
     return *reinterpret_cast<const DeleteJointCommand*>(
         &_DeleteJointCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 28;
+  static constexpr int kIndexInFileMessages = 39;
   friend void swap(DeleteJointCommand& a, DeleteJointCommand& b) { a.Swap(&b); }
   inline void Swap(DeleteJointCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -5972,7 +7777,7 @@ class DeleteDatumResult final : public ::google::protobuf::Message
     kErrorMessage = 2,
     RESULT_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 20;
+  static constexpr int kIndexInFileMessages = 21;
   friend void swap(DeleteDatumResult& a, DeleteDatumResult& b) { a.Swap(&b); }
   inline void Swap(DeleteDatumResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -6199,7 +8004,7 @@ class DeleteDatumCommand final : public ::google::protobuf::Message
     return *reinterpret_cast<const DeleteDatumCommand*>(
         &_DeleteDatumCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 14;
+  static constexpr int kIndexInFileMessages = 15;
   friend void swap(DeleteDatumCommand& a, DeleteDatumCommand& b) { a.Swap(&b); }
   inline void Swap(DeleteDatumCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -6339,30 +8144,30 @@ class DeleteDatumCommand final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull DeleteDatumCommand_class_data_;
 // -------------------------------------------------------------------
 
-class CreateJointCommand final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:motionlab.protocol.CreateJointCommand) */ {
+class DeleteBodyResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.DeleteBodyResult) */ {
  public:
-  inline CreateJointCommand() : CreateJointCommand(nullptr) {}
-  ~CreateJointCommand() PROTOBUF_FINAL;
+  inline DeleteBodyResult() : DeleteBodyResult(nullptr) {}
+  ~DeleteBodyResult() PROTOBUF_FINAL;
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(CreateJointCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+  void operator delete(DeleteBodyResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
     SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(CreateJointCommand));
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(DeleteBodyResult));
   }
 #endif
 
   template <typename = void>
-  explicit PROTOBUF_CONSTEXPR CreateJointCommand(::google::protobuf::internal::ConstantInitialized);
+  explicit PROTOBUF_CONSTEXPR DeleteBodyResult(::google::protobuf::internal::ConstantInitialized);
 
-  inline CreateJointCommand(const CreateJointCommand& from) : CreateJointCommand(nullptr, from) {}
-  inline CreateJointCommand(CreateJointCommand&& from) noexcept
-      : CreateJointCommand(nullptr, ::std::move(from)) {}
-  inline CreateJointCommand& operator=(const CreateJointCommand& from) {
+  inline DeleteBodyResult(const DeleteBodyResult& from) : DeleteBodyResult(nullptr, from) {}
+  inline DeleteBodyResult(DeleteBodyResult&& from) noexcept
+      : DeleteBodyResult(nullptr, ::std::move(from)) {}
+  inline DeleteBodyResult& operator=(const DeleteBodyResult& from) {
     CopyFrom(from);
     return *this;
   }
-  inline CreateJointCommand& operator=(CreateJointCommand&& from) noexcept {
+  inline DeleteBodyResult& operator=(DeleteBodyResult&& from) noexcept {
     if (this == &from) return *this;
     if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
       InternalSwap(&from);
@@ -6390,13 +8195,18 @@ class CreateJointCommand final : public ::google::protobuf::Message
   static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const CreateJointCommand& default_instance() {
-    return *reinterpret_cast<const CreateJointCommand*>(
-        &_CreateJointCommand_default_instance_);
+  static const DeleteBodyResult& default_instance() {
+    return *reinterpret_cast<const DeleteBodyResult*>(
+        &_DeleteBodyResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 26;
-  friend void swap(CreateJointCommand& a, CreateJointCommand& b) { a.Swap(&b); }
-  inline void Swap(CreateJointCommand* PROTOBUF_NONNULL other) {
+  enum ResultCase {
+    kDeletedId = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 30;
+  friend void swap(DeleteBodyResult& a, DeleteBodyResult& b) { a.Swap(&b); }
+  inline void Swap(DeleteBodyResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
     if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
       InternalSwap(other);
@@ -6404,7 +8214,7 @@ class CreateJointCommand final : public ::google::protobuf::Message
       ::google::protobuf::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(CreateJointCommand* PROTOBUF_NONNULL other) {
+  void UnsafeArenaSwap(DeleteBodyResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
     ABSL_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -6412,13 +8222,13 @@ class CreateJointCommand final : public ::google::protobuf::Message
 
   // implements Message ----------------------------------------------
 
-  CreateJointCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<CreateJointCommand>(arena);
+  DeleteBodyResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<DeleteBodyResult>(arena);
   }
   using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const CreateJointCommand& from);
+  void CopyFrom(const DeleteBodyResult& from);
   using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const CreateJointCommand& from) { CreateJointCommand::MergeImpl(*this, from); }
+  void MergeFrom(const DeleteBodyResult& from) { DeleteBodyResult::MergeImpl(*this, from); }
 
   private:
   static void MergeImpl(::google::protobuf::MessageLite& to_msg,
@@ -6454,17 +8264,17 @@ class CreateJointCommand final : public ::google::protobuf::Message
   private:
   void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   static void SharedDtor(MessageLite& self);
-  void InternalSwap(CreateJointCommand* PROTOBUF_NONNULL other);
+  void InternalSwap(DeleteBodyResult* PROTOBUF_NONNULL other);
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "motionlab.protocol.CreateJointCommand"; }
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.DeleteBodyResult"; }
 
-  explicit CreateJointCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  CreateJointCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CreateJointCommand& from);
-  CreateJointCommand(
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CreateJointCommand&& from) noexcept
-      : CreateJointCommand(arena) {
+  explicit DeleteBodyResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  DeleteBodyResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const DeleteBodyResult& from);
+  DeleteBodyResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, DeleteBodyResult&& from) noexcept
+      : DeleteBodyResult(arena) {
     *this = ::std::move(from);
   }
   const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
@@ -6481,94 +8291,56 @@ class CreateJointCommand final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kNameFieldNumber = 4,
-    kParentDatumIdFieldNumber = 1,
-    kChildDatumIdFieldNumber = 2,
-    kLowerLimitFieldNumber = 5,
-    kUpperLimitFieldNumber = 6,
-    kTypeFieldNumber = 3,
+    kDeletedIdFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
   };
-  // string name = 4 [json_name = "name"];
-  void clear_name() ;
-  const ::std::string& name() const;
+  // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+  bool has_deleted_id() const;
+  private:
+  bool _internal_has_deleted_id() const;
+
+  public:
+  void clear_deleted_id() ;
+  const ::motionlab::mechanism::ElementId& deleted_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_deleted_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_deleted_id();
+  void set_allocated_deleted_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_deleted_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_deleted_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_deleted_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_deleted_id();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
-  void set_name(Arg_&& arg, Args_... args);
-  ::std::string* PROTOBUF_NONNULL mutable_name();
-  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_name();
-  void set_allocated_name(::std::string* PROTOBUF_NULLABLE value);
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
 
   private:
-  const ::std::string& _internal_name() const;
-  PROTOBUF_ALWAYS_INLINE void _internal_set_name(const ::std::string& value);
-  ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
 
   public:
-  // .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
-  bool has_parent_datum_id() const;
-  void clear_parent_datum_id() ;
-  const ::motionlab::mechanism::ElementId& parent_datum_id() const;
-  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_parent_datum_id();
-  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_parent_datum_id();
-  void set_allocated_parent_datum_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_parent_datum_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_parent_datum_id();
-
-  private:
-  const ::motionlab::mechanism::ElementId& _internal_parent_datum_id() const;
-  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_parent_datum_id();
-
-  public:
-  // .motionlab.mechanism.ElementId child_datum_id = 2 [json_name = "childDatumId"];
-  bool has_child_datum_id() const;
-  void clear_child_datum_id() ;
-  const ::motionlab::mechanism::ElementId& child_datum_id() const;
-  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_child_datum_id();
-  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_child_datum_id();
-  void set_allocated_child_datum_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_child_datum_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_child_datum_id();
-
-  private:
-  const ::motionlab::mechanism::ElementId& _internal_child_datum_id() const;
-  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_child_datum_id();
-
-  public:
-  // double lower_limit = 5 [json_name = "lowerLimit"];
-  void clear_lower_limit() ;
-  double lower_limit() const;
-  void set_lower_limit(double value);
-
-  private:
-  double _internal_lower_limit() const;
-  void _internal_set_lower_limit(double value);
-
-  public:
-  // double upper_limit = 6 [json_name = "upperLimit"];
-  void clear_upper_limit() ;
-  double upper_limit() const;
-  void set_upper_limit(double value);
-
-  private:
-  double _internal_upper_limit() const;
-  void _internal_set_upper_limit(double value);
-
-  public:
-  // .motionlab.mechanism.JointType type = 3 [json_name = "type"];
-  void clear_type() ;
-  ::motionlab::mechanism::JointType type() const;
-  void set_type(::motionlab::mechanism::JointType value);
-
-  private:
-  ::motionlab::mechanism::JointType _internal_type() const;
-  void _internal_set_type(::motionlab::mechanism::JointType value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:motionlab.protocol.CreateJointCommand)
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.DeleteBodyResult)
  private:
   class _Internal;
+  void set_has_deleted_id();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<3, 6,
-                                   2, 50,
+  static const ::google::protobuf::internal::TcParseTable<0, 2,
+                                   1, 57,
                                    2>
       _table_;
 
@@ -6586,22 +8358,644 @@ class CreateJointCommand final : public ::google::protobuf::Message
     inline explicit Impl_(
         ::google::protobuf::internal::InternalVisibility visibility,
         ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-        const CreateJointCommand& from_msg);
-    ::google::protobuf::internal::HasBits<1> _has_bits_;
+        const DeleteBodyResult& from_msg);
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE deleted_id_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::google::protobuf::internal::ArenaStringPtr name_;
-    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE parent_datum_id_;
-    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE child_datum_id_;
-    double lower_limit_;
-    double upper_limit_;
-    int type_;
+    ::uint32_t _oneof_case_[1];
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
   friend struct ::TableStruct_protocol_2ftransport_2eproto;
 };
 
-extern const ::google::protobuf::internal::ClassDataFull CreateJointCommand_class_data_;
+extern const ::google::protobuf::internal::ClassDataFull DeleteBodyResult_class_data_;
+// -------------------------------------------------------------------
+
+class DeleteBodyCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.DeleteBodyCommand) */ {
+ public:
+  inline DeleteBodyCommand() : DeleteBodyCommand(nullptr) {}
+  ~DeleteBodyCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(DeleteBodyCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(DeleteBodyCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR DeleteBodyCommand(::google::protobuf::internal::ConstantInitialized);
+
+  inline DeleteBodyCommand(const DeleteBodyCommand& from) : DeleteBodyCommand(nullptr, from) {}
+  inline DeleteBodyCommand(DeleteBodyCommand&& from) noexcept
+      : DeleteBodyCommand(nullptr, ::std::move(from)) {}
+  inline DeleteBodyCommand& operator=(const DeleteBodyCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline DeleteBodyCommand& operator=(DeleteBodyCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const DeleteBodyCommand& default_instance() {
+    return *reinterpret_cast<const DeleteBodyCommand*>(
+        &_DeleteBodyCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 29;
+  friend void swap(DeleteBodyCommand& a, DeleteBodyCommand& b) { a.Swap(&b); }
+  inline void Swap(DeleteBodyCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(DeleteBodyCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  DeleteBodyCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<DeleteBodyCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const DeleteBodyCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const DeleteBodyCommand& from) { DeleteBodyCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(DeleteBodyCommand* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.DeleteBodyCommand"; }
+
+  explicit DeleteBodyCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  DeleteBodyCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const DeleteBodyCommand& from);
+  DeleteBodyCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, DeleteBodyCommand&& from) noexcept
+      : DeleteBodyCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kBodyIdFieldNumber = 1,
+  };
+  // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+  bool has_body_id() const;
+  void clear_body_id() ;
+  const ::motionlab::mechanism::ElementId& body_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_body_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_body_id();
+  void set_allocated_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_body_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_body_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_body_id();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.DeleteBodyCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   1, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const DeleteBodyCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE body_id_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull DeleteBodyCommand_class_data_;
+// -------------------------------------------------------------------
+
+class DeleteActuatorResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.DeleteActuatorResult) */ {
+ public:
+  inline DeleteActuatorResult() : DeleteActuatorResult(nullptr) {}
+  ~DeleteActuatorResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(DeleteActuatorResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(DeleteActuatorResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR DeleteActuatorResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline DeleteActuatorResult(const DeleteActuatorResult& from) : DeleteActuatorResult(nullptr, from) {}
+  inline DeleteActuatorResult(DeleteActuatorResult&& from) noexcept
+      : DeleteActuatorResult(nullptr, ::std::move(from)) {}
+  inline DeleteActuatorResult& operator=(const DeleteActuatorResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline DeleteActuatorResult& operator=(DeleteActuatorResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const DeleteActuatorResult& default_instance() {
+    return *reinterpret_cast<const DeleteActuatorResult*>(
+        &_DeleteActuatorResult_default_instance_);
+  }
+  enum ResultCase {
+    kDeletedId = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 54;
+  friend void swap(DeleteActuatorResult& a, DeleteActuatorResult& b) { a.Swap(&b); }
+  inline void Swap(DeleteActuatorResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(DeleteActuatorResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  DeleteActuatorResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<DeleteActuatorResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const DeleteActuatorResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const DeleteActuatorResult& from) { DeleteActuatorResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(DeleteActuatorResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.DeleteActuatorResult"; }
+
+  explicit DeleteActuatorResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  DeleteActuatorResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const DeleteActuatorResult& from);
+  DeleteActuatorResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, DeleteActuatorResult&& from) noexcept
+      : DeleteActuatorResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kDeletedIdFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+  bool has_deleted_id() const;
+  private:
+  bool _internal_has_deleted_id() const;
+
+  public:
+  void clear_deleted_id() ;
+  const ::motionlab::mechanism::ElementId& deleted_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_deleted_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_deleted_id();
+  void set_allocated_deleted_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_deleted_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_deleted_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_deleted_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_deleted_id();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.DeleteActuatorResult)
+ private:
+  class _Internal;
+  void set_has_deleted_id();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 2,
+                                   1, 61,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const DeleteActuatorResult& from_msg);
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE deleted_id_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull DeleteActuatorResult_class_data_;
+// -------------------------------------------------------------------
+
+class DeleteActuatorCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.DeleteActuatorCommand) */ {
+ public:
+  inline DeleteActuatorCommand() : DeleteActuatorCommand(nullptr) {}
+  ~DeleteActuatorCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(DeleteActuatorCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(DeleteActuatorCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR DeleteActuatorCommand(::google::protobuf::internal::ConstantInitialized);
+
+  inline DeleteActuatorCommand(const DeleteActuatorCommand& from) : DeleteActuatorCommand(nullptr, from) {}
+  inline DeleteActuatorCommand(DeleteActuatorCommand&& from) noexcept
+      : DeleteActuatorCommand(nullptr, ::std::move(from)) {}
+  inline DeleteActuatorCommand& operator=(const DeleteActuatorCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline DeleteActuatorCommand& operator=(DeleteActuatorCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const DeleteActuatorCommand& default_instance() {
+    return *reinterpret_cast<const DeleteActuatorCommand*>(
+        &_DeleteActuatorCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 51;
+  friend void swap(DeleteActuatorCommand& a, DeleteActuatorCommand& b) { a.Swap(&b); }
+  inline void Swap(DeleteActuatorCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(DeleteActuatorCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  DeleteActuatorCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<DeleteActuatorCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const DeleteActuatorCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const DeleteActuatorCommand& from) { DeleteActuatorCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(DeleteActuatorCommand* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.DeleteActuatorCommand"; }
+
+  explicit DeleteActuatorCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  DeleteActuatorCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const DeleteActuatorCommand& from);
+  DeleteActuatorCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, DeleteActuatorCommand&& from) noexcept
+      : DeleteActuatorCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kActuatorIdFieldNumber = 1,
+  };
+  // .motionlab.mechanism.ElementId actuator_id = 1 [json_name = "actuatorId"];
+  bool has_actuator_id() const;
+  void clear_actuator_id() ;
+  const ::motionlab::mechanism::ElementId& actuator_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_actuator_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_actuator_id();
+  void set_allocated_actuator_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_actuator_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_actuator_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_actuator_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_actuator_id();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.DeleteActuatorCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   1, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const DeleteActuatorCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE actuator_id_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull DeleteActuatorCommand_class_data_;
 // -------------------------------------------------------------------
 
 class CreateDatumFromFaceCommand final : public ::google::protobuf::Message
@@ -6659,7 +9053,7 @@ class CreateDatumFromFaceCommand final : public ::google::protobuf::Message
     return *reinterpret_cast<const CreateDatumFromFaceCommand*>(
         &_CreateDatumFromFaceCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 16;
+  static constexpr int kIndexInFileMessages = 17;
   friend void swap(CreateDatumFromFaceCommand& a, CreateDatumFromFaceCommand& b) { a.Swap(&b); }
   inline void Swap(CreateDatumFromFaceCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -6883,7 +9277,7 @@ class CompilationResultEvent final : public ::google::protobuf::Message
     return *reinterpret_cast<const CompilationResultEvent*>(
         &_CompilationResultEvent_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 35;
+  static constexpr int kIndexInFileMessages = 61;
   friend void swap(CompilationResultEvent& a, CompilationResultEvent& b) { a.Swap(&b); }
   inline void Swap(CompilationResultEvent* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -6972,25 +9366,26 @@ class CompilationResultEvent final : public ::google::protobuf::Message
   enum : int {
     kDiagnosticsFieldNumber = 3,
     kChannelsFieldNumber = 4,
+    kStructuredDiagnosticsFieldNumber = 5,
     kErrorMessageFieldNumber = 2,
     kSuccessFieldNumber = 1,
   };
-  // repeated string diagnostics = 3 [json_name = "diagnostics"];
-  int diagnostics_size() const;
+  // repeated string diagnostics = 3 [json_name = "diagnostics", deprecated = true];
+  [[deprecated]]  int diagnostics_size() const;
   private:
   int _internal_diagnostics_size() const;
 
   public:
-  void clear_diagnostics() ;
-  const ::std::string& diagnostics(int index) const;
-  ::std::string* PROTOBUF_NONNULL mutable_diagnostics(int index);
+  [[deprecated]]  void clear_diagnostics() ;
+  [[deprecated]] const ::std::string& diagnostics(int index) const;
+  [[deprecated]] ::std::string* PROTOBUF_NONNULL mutable_diagnostics(int index);
   template <typename Arg_ = const ::std::string&, typename... Args_>
-  void set_diagnostics(int index, Arg_&& value, Args_... args);
-  ::std::string* PROTOBUF_NONNULL add_diagnostics();
+  [[deprecated]] void set_diagnostics(int index, Arg_&& value, Args_... args);
+  [[deprecated]] ::std::string* PROTOBUF_NONNULL add_diagnostics();
   template <typename Arg_ = const ::std::string&, typename... Args_>
-  void add_diagnostics(Arg_&& value, Args_... args);
-  const ::google::protobuf::RepeatedPtrField<::std::string>& diagnostics() const;
-  ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL mutable_diagnostics();
+  [[deprecated]] void add_diagnostics(Arg_&& value, Args_... args);
+  [[deprecated]] const ::google::protobuf::RepeatedPtrField<::std::string>& diagnostics() const;
+  [[deprecated]] ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL mutable_diagnostics();
 
   private:
   const ::google::protobuf::RepeatedPtrField<::std::string>& _internal_diagnostics() const;
@@ -7014,6 +9409,23 @@ class CompilationResultEvent final : public ::google::protobuf::Message
   const ::motionlab::protocol::OutputChannelDescriptor& channels(int index) const;
   ::motionlab::protocol::OutputChannelDescriptor* PROTOBUF_NONNULL add_channels();
   const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::OutputChannelDescriptor>& channels() const;
+  // repeated .motionlab.protocol.CompilationDiagnostic structured_diagnostics = 5 [json_name = "structuredDiagnostics"];
+  int structured_diagnostics_size() const;
+  private:
+  int _internal_structured_diagnostics_size() const;
+
+  public:
+  void clear_structured_diagnostics() ;
+  ::motionlab::protocol::CompilationDiagnostic* PROTOBUF_NONNULL mutable_structured_diagnostics(int index);
+  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::CompilationDiagnostic>* PROTOBUF_NONNULL mutable_structured_diagnostics();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::CompilationDiagnostic>& _internal_structured_diagnostics() const;
+  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::CompilationDiagnostic>* PROTOBUF_NONNULL _internal_mutable_structured_diagnostics();
+  public:
+  const ::motionlab::protocol::CompilationDiagnostic& structured_diagnostics(int index) const;
+  ::motionlab::protocol::CompilationDiagnostic* PROTOBUF_NONNULL add_structured_diagnostics();
+  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::CompilationDiagnostic>& structured_diagnostics() const;
   // string error_message = 2 [json_name = "errorMessage"];
   void clear_error_message() ;
   const ::std::string& error_message() const;
@@ -7043,8 +9455,8 @@ class CompilationResultEvent final : public ::google::protobuf::Message
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<2, 4,
-                                   1, 74,
+  static const ::google::protobuf::internal::TcParseTable<3, 5,
+                                   2, 74,
                                    2>
       _table_;
 
@@ -7067,6 +9479,7 @@ class CompilationResultEvent final : public ::google::protobuf::Message
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::RepeatedPtrField<::std::string> diagnostics_;
     ::google::protobuf::RepeatedPtrField< ::motionlab::protocol::OutputChannelDescriptor > channels_;
+    ::google::protobuf::RepeatedPtrField< ::motionlab::protocol::CompilationDiagnostic > structured_diagnostics_;
     ::google::protobuf::internal::ArenaStringPtr error_message_;
     bool success_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -7133,7 +9546,7 @@ class BodyPoseData final : public ::google::protobuf::Message
     return *reinterpret_cast<const BodyPoseData*>(
         &_BodyPoseData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 37;
+  static constexpr int kIndexInFileMessages = 63;
   friend void swap(BodyPoseData& a, BodyPoseData& b) { a.Swap(&b); }
   inline void Swap(BodyPoseData* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -7307,30 +9720,30 @@ class BodyPoseData final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull BodyPoseData_class_data_;
 // -------------------------------------------------------------------
 
-class UpdateJointResult final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdateJointResult) */ {
+class UpdateMassPropertiesCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdateMassPropertiesCommand) */ {
  public:
-  inline UpdateJointResult() : UpdateJointResult(nullptr) {}
-  ~UpdateJointResult() PROTOBUF_FINAL;
+  inline UpdateMassPropertiesCommand() : UpdateMassPropertiesCommand(nullptr) {}
+  ~UpdateMassPropertiesCommand() PROTOBUF_FINAL;
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(UpdateJointResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+  void operator delete(UpdateMassPropertiesCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
     SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(UpdateJointResult));
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(UpdateMassPropertiesCommand));
   }
 #endif
 
   template <typename = void>
-  explicit PROTOBUF_CONSTEXPR UpdateJointResult(::google::protobuf::internal::ConstantInitialized);
+  explicit PROTOBUF_CONSTEXPR UpdateMassPropertiesCommand(::google::protobuf::internal::ConstantInitialized);
 
-  inline UpdateJointResult(const UpdateJointResult& from) : UpdateJointResult(nullptr, from) {}
-  inline UpdateJointResult(UpdateJointResult&& from) noexcept
-      : UpdateJointResult(nullptr, ::std::move(from)) {}
-  inline UpdateJointResult& operator=(const UpdateJointResult& from) {
+  inline UpdateMassPropertiesCommand(const UpdateMassPropertiesCommand& from) : UpdateMassPropertiesCommand(nullptr, from) {}
+  inline UpdateMassPropertiesCommand(UpdateMassPropertiesCommand&& from) noexcept
+      : UpdateMassPropertiesCommand(nullptr, ::std::move(from)) {}
+  inline UpdateMassPropertiesCommand& operator=(const UpdateMassPropertiesCommand& from) {
     CopyFrom(from);
     return *this;
   }
-  inline UpdateJointResult& operator=(UpdateJointResult&& from) noexcept {
+  inline UpdateMassPropertiesCommand& operator=(UpdateMassPropertiesCommand&& from) noexcept {
     if (this == &from) return *this;
     if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
       InternalSwap(&from);
@@ -7358,18 +9771,13 @@ class UpdateJointResult final : public ::google::protobuf::Message
   static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const UpdateJointResult& default_instance() {
-    return *reinterpret_cast<const UpdateJointResult*>(
-        &_UpdateJointResult_default_instance_);
+  static const UpdateMassPropertiesCommand& default_instance() {
+    return *reinterpret_cast<const UpdateMassPropertiesCommand*>(
+        &_UpdateMassPropertiesCommand_default_instance_);
   }
-  enum ResultCase {
-    kJoint = 1,
-    kErrorMessage = 2,
-    RESULT_NOT_SET = 0,
-  };
-  static constexpr int kIndexInFileMessages = 30;
-  friend void swap(UpdateJointResult& a, UpdateJointResult& b) { a.Swap(&b); }
-  inline void Swap(UpdateJointResult* PROTOBUF_NONNULL other) {
+  static constexpr int kIndexInFileMessages = 35;
+  friend void swap(UpdateMassPropertiesCommand& a, UpdateMassPropertiesCommand& b) { a.Swap(&b); }
+  inline void Swap(UpdateMassPropertiesCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
     if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
       InternalSwap(other);
@@ -7377,7 +9785,7 @@ class UpdateJointResult final : public ::google::protobuf::Message
       ::google::protobuf::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(UpdateJointResult* PROTOBUF_NONNULL other) {
+  void UnsafeArenaSwap(UpdateMassPropertiesCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
     ABSL_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -7385,13 +9793,13 @@ class UpdateJointResult final : public ::google::protobuf::Message
 
   // implements Message ----------------------------------------------
 
-  UpdateJointResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<UpdateJointResult>(arena);
+  UpdateMassPropertiesCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<UpdateMassPropertiesCommand>(arena);
   }
   using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const UpdateJointResult& from);
+  void CopyFrom(const UpdateMassPropertiesCommand& from);
   using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const UpdateJointResult& from) { UpdateJointResult::MergeImpl(*this, from); }
+  void MergeFrom(const UpdateMassPropertiesCommand& from) { UpdateMassPropertiesCommand::MergeImpl(*this, from); }
 
   private:
   static void MergeImpl(::google::protobuf::MessageLite& to_msg,
@@ -7427,17 +9835,17 @@ class UpdateJointResult final : public ::google::protobuf::Message
   private:
   void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   static void SharedDtor(MessageLite& self);
-  void InternalSwap(UpdateJointResult* PROTOBUF_NONNULL other);
+  void InternalSwap(UpdateMassPropertiesCommand* PROTOBUF_NONNULL other);
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "motionlab.protocol.UpdateJointResult"; }
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.UpdateMassPropertiesCommand"; }
 
-  explicit UpdateJointResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  UpdateJointResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const UpdateJointResult& from);
-  UpdateJointResult(
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, UpdateJointResult&& from) noexcept
-      : UpdateJointResult(arena) {
+  explicit UpdateMassPropertiesCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  UpdateMassPropertiesCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const UpdateMassPropertiesCommand& from);
+  UpdateMassPropertiesCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, UpdateMassPropertiesCommand&& from) noexcept
+      : UpdateMassPropertiesCommand(arena) {
     *this = ::std::move(from);
   }
   const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
@@ -7454,56 +9862,56 @@ class UpdateJointResult final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kJointFieldNumber = 1,
-    kErrorMessageFieldNumber = 2,
+    kBodyIdFieldNumber = 1,
+    kMassPropertiesFieldNumber = 3,
+    kMassOverrideFieldNumber = 2,
   };
-  // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
-  bool has_joint() const;
-  private:
-  bool _internal_has_joint() const;
-
-  public:
-  void clear_joint() ;
-  const ::motionlab::mechanism::Joint& joint() const;
-  [[nodiscard]] ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE release_joint();
-  ::motionlab::mechanism::Joint* PROTOBUF_NONNULL mutable_joint();
-  void set_allocated_joint(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_joint(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE unsafe_arena_release_joint();
+  // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+  bool has_body_id() const;
+  void clear_body_id() ;
+  const ::motionlab::mechanism::ElementId& body_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_body_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_body_id();
+  void set_allocated_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_body_id();
 
   private:
-  const ::motionlab::mechanism::Joint& _internal_joint() const;
-  ::motionlab::mechanism::Joint* PROTOBUF_NONNULL _internal_mutable_joint();
+  const ::motionlab::mechanism::ElementId& _internal_body_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_body_id();
 
   public:
-  // string error_message = 2 [json_name = "errorMessage"];
-  bool has_error_message() const;
-  void clear_error_message() ;
-  const ::std::string& error_message() const;
-  template <typename Arg_ = const ::std::string&, typename... Args_>
-  void set_error_message(Arg_&& arg, Args_... args);
-  ::std::string* PROTOBUF_NONNULL mutable_error_message();
-  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
-  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+  // .motionlab.mechanism.MassProperties mass_properties = 3 [json_name = "massProperties"];
+  bool has_mass_properties() const;
+  void clear_mass_properties() ;
+  const ::motionlab::mechanism::MassProperties& mass_properties() const;
+  [[nodiscard]] ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE release_mass_properties();
+  ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL mutable_mass_properties();
+  void set_allocated_mass_properties(::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_mass_properties(::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE unsafe_arena_release_mass_properties();
 
   private:
-  const ::std::string& _internal_error_message() const;
-  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
-  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+  const ::motionlab::mechanism::MassProperties& _internal_mass_properties() const;
+  ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL _internal_mutable_mass_properties();
 
   public:
-  void clear_result();
-  ResultCase result_case() const;
-  // @@protoc_insertion_point(class_scope:motionlab.protocol.UpdateJointResult)
+  // bool mass_override = 2 [json_name = "massOverride"];
+  void clear_mass_override() ;
+  bool mass_override() const;
+  void set_mass_override(bool value);
+
+  private:
+  bool _internal_mass_override() const;
+  void _internal_set_mass_override(bool value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.UpdateMassPropertiesCommand)
  private:
   class _Internal;
-  void set_has_joint();
-  void set_has_error_message();
-  inline bool has_result() const;
-  inline void clear_has_result();
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<0, 2,
-                                   1, 58,
+  static const ::google::protobuf::internal::TcParseTable<2, 3,
+                                   2, 0,
                                    2>
       _table_;
 
@@ -7521,22 +9929,19 @@ class UpdateJointResult final : public ::google::protobuf::Message
     inline explicit Impl_(
         ::google::protobuf::internal::InternalVisibility visibility,
         ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-        const UpdateJointResult& from_msg);
-    union ResultUnion {
-      constexpr ResultUnion() : _constinit_{} {}
-      ::google::protobuf::internal::ConstantInitialized _constinit_;
-      ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE joint_;
-      ::google::protobuf::internal::ArenaStringPtr error_message_;
-    } result_;
+        const UpdateMassPropertiesCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::uint32_t _oneof_case_[1];
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE body_id_;
+    ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE mass_properties_;
+    bool mass_override_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
   friend struct ::TableStruct_protocol_2ftransport_2eproto;
 };
 
-extern const ::google::protobuf::internal::ClassDataFull UpdateJointResult_class_data_;
+extern const ::google::protobuf::internal::ClassDataFull UpdateMassPropertiesCommand_class_data_;
 // -------------------------------------------------------------------
 
 class UpdateDatumPoseCommand final : public ::google::protobuf::Message
@@ -7594,7 +9999,7 @@ class UpdateDatumPoseCommand final : public ::google::protobuf::Message
     return *reinterpret_cast<const UpdateDatumPoseCommand*>(
         &_UpdateDatumPoseCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 22;
+  static constexpr int kIndexInFileMessages = 23;
   friend void swap(UpdateDatumPoseCommand& a, UpdateDatumPoseCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateDatumPoseCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -7806,7 +10211,7 @@ class SimulationTrace final : public ::google::protobuf::Message
     return *reinterpret_cast<const SimulationTrace*>(
         &_SimulationTrace_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 42;
+  static constexpr int kIndexInFileMessages = 68;
   friend void swap(SimulationTrace& a, SimulationTrace& b) { a.Swap(&b); }
   inline void Swap(SimulationTrace* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -8020,7 +10425,7 @@ class SimulationFrame final : public ::google::protobuf::Message
     return *reinterpret_cast<const SimulationFrame*>(
         &_SimulationFrame_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 39;
+  static constexpr int kIndexInFileMessages = 65;
   friend void swap(SimulationFrame& a, SimulationFrame& b) { a.Swap(&b); }
   inline void Swap(SimulationFrame* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -8129,23 +10534,23 @@ class SimulationFrame final : public ::google::protobuf::Message
   const ::motionlab::protocol::BodyPoseData& body_poses(int index) const;
   ::motionlab::protocol::BodyPoseData* PROTOBUF_NONNULL add_body_poses();
   const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::BodyPoseData>& body_poses() const;
-  // repeated .motionlab.protocol.JointStateData joint_states = 4 [json_name = "jointStates"];
-  int joint_states_size() const;
+  // repeated .motionlab.protocol.JointStateData joint_states = 4 [json_name = "jointStates", deprecated = true];
+  [[deprecated]]  int joint_states_size() const;
   private:
   int _internal_joint_states_size() const;
 
   public:
-  void clear_joint_states() ;
-  ::motionlab::protocol::JointStateData* PROTOBUF_NONNULL mutable_joint_states(int index);
-  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::JointStateData>* PROTOBUF_NONNULL mutable_joint_states();
+  [[deprecated]]  void clear_joint_states() ;
+  [[deprecated]] ::motionlab::protocol::JointStateData* PROTOBUF_NONNULL mutable_joint_states(int index);
+  [[deprecated]] ::google::protobuf::RepeatedPtrField<::motionlab::protocol::JointStateData>* PROTOBUF_NONNULL mutable_joint_states();
 
   private:
   const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::JointStateData>& _internal_joint_states() const;
   ::google::protobuf::RepeatedPtrField<::motionlab::protocol::JointStateData>* PROTOBUF_NONNULL _internal_mutable_joint_states();
   public:
-  const ::motionlab::protocol::JointStateData& joint_states(int index) const;
-  ::motionlab::protocol::JointStateData* PROTOBUF_NONNULL add_joint_states();
-  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::JointStateData>& joint_states() const;
+  [[deprecated]] const ::motionlab::protocol::JointStateData& joint_states(int index) const;
+  [[deprecated]] ::motionlab::protocol::JointStateData* PROTOBUF_NONNULL add_joint_states();
+  [[deprecated]] const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::JointStateData>& joint_states() const;
   // double sim_time = 1 [json_name = "simTime"];
   void clear_sim_time() ;
   double sim_time() const;
@@ -8205,30 +10610,30 @@ class SimulationFrame final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull SimulationFrame_class_data_;
 // -------------------------------------------------------------------
 
-class CreateJointResult final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:motionlab.protocol.CreateJointResult) */ {
+class GeometryImportResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.GeometryImportResult) */ {
  public:
-  inline CreateJointResult() : CreateJointResult(nullptr) {}
-  ~CreateJointResult() PROTOBUF_FINAL;
+  inline GeometryImportResult() : GeometryImportResult(nullptr) {}
+  ~GeometryImportResult() PROTOBUF_FINAL;
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(CreateJointResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+  void operator delete(GeometryImportResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
     SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(CreateJointResult));
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(GeometryImportResult));
   }
 #endif
 
   template <typename = void>
-  explicit PROTOBUF_CONSTEXPR CreateJointResult(::google::protobuf::internal::ConstantInitialized);
+  explicit PROTOBUF_CONSTEXPR GeometryImportResult(::google::protobuf::internal::ConstantInitialized);
 
-  inline CreateJointResult(const CreateJointResult& from) : CreateJointResult(nullptr, from) {}
-  inline CreateJointResult(CreateJointResult&& from) noexcept
-      : CreateJointResult(nullptr, ::std::move(from)) {}
-  inline CreateJointResult& operator=(const CreateJointResult& from) {
+  inline GeometryImportResult(const GeometryImportResult& from) : GeometryImportResult(nullptr, from) {}
+  inline GeometryImportResult(GeometryImportResult&& from) noexcept
+      : GeometryImportResult(nullptr, ::std::move(from)) {}
+  inline GeometryImportResult& operator=(const GeometryImportResult& from) {
     CopyFrom(from);
     return *this;
   }
-  inline CreateJointResult& operator=(CreateJointResult&& from) noexcept {
+  inline GeometryImportResult& operator=(GeometryImportResult&& from) noexcept {
     if (this == &from) return *this;
     if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
       InternalSwap(&from);
@@ -8256,18 +10661,13 @@ class CreateJointResult final : public ::google::protobuf::Message
   static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const CreateJointResult& default_instance() {
-    return *reinterpret_cast<const CreateJointResult*>(
-        &_CreateJointResult_default_instance_);
+  static const GeometryImportResult& default_instance() {
+    return *reinterpret_cast<const GeometryImportResult*>(
+        &_GeometryImportResult_default_instance_);
   }
-  enum ResultCase {
-    kJoint = 1,
-    kErrorMessage = 2,
-    RESULT_NOT_SET = 0,
-  };
-  static constexpr int kIndexInFileMessages = 29;
-  friend void swap(CreateJointResult& a, CreateJointResult& b) { a.Swap(&b); }
-  inline void Swap(CreateJointResult* PROTOBUF_NONNULL other) {
+  static constexpr int kIndexInFileMessages = 11;
+  friend void swap(GeometryImportResult& a, GeometryImportResult& b) { a.Swap(&b); }
+  inline void Swap(GeometryImportResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
     if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
       InternalSwap(other);
@@ -8275,7 +10675,7 @@ class CreateJointResult final : public ::google::protobuf::Message
       ::google::protobuf::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(CreateJointResult* PROTOBUF_NONNULL other) {
+  void UnsafeArenaSwap(GeometryImportResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
     ABSL_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -8283,13 +10683,13 @@ class CreateJointResult final : public ::google::protobuf::Message
 
   // implements Message ----------------------------------------------
 
-  CreateJointResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<CreateJointResult>(arena);
+  GeometryImportResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<GeometryImportResult>(arena);
   }
   using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const CreateJointResult& from);
+  void CopyFrom(const GeometryImportResult& from);
   using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const CreateJointResult& from) { CreateJointResult::MergeImpl(*this, from); }
+  void MergeFrom(const GeometryImportResult& from) { GeometryImportResult::MergeImpl(*this, from); }
 
   private:
   static void MergeImpl(::google::protobuf::MessageLite& to_msg,
@@ -8325,17 +10725,17 @@ class CreateJointResult final : public ::google::protobuf::Message
   private:
   void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   static void SharedDtor(MessageLite& self);
-  void InternalSwap(CreateJointResult* PROTOBUF_NONNULL other);
+  void InternalSwap(GeometryImportResult* PROTOBUF_NONNULL other);
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "motionlab.protocol.CreateJointResult"; }
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.GeometryImportResult"; }
 
-  explicit CreateJointResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  CreateJointResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CreateJointResult& from);
-  CreateJointResult(
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CreateJointResult&& from) noexcept
-      : CreateJointResult(arena) {
+  explicit GeometryImportResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  GeometryImportResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const GeometryImportResult& from);
+  GeometryImportResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, GeometryImportResult&& from) noexcept
+      : GeometryImportResult(arena) {
     *this = ::std::move(from);
   }
   const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
@@ -8352,56 +10752,144 @@ class CreateJointResult final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kJointFieldNumber = 1,
-    kErrorMessageFieldNumber = 2,
+    kPartIndexFieldNumber = 8,
+    kGeometryIdFieldNumber = 1,
+    kBodyIdFieldNumber = 2,
+    kNameFieldNumber = 3,
+    kDisplayMeshFieldNumber = 4,
+    kComputedMassPropertiesFieldNumber = 5,
+    kPoseFieldNumber = 6,
+    kSourceAssetRefFieldNumber = 7,
   };
-  // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
-  bool has_joint() const;
+  // repeated uint32 part_index = 8 [json_name = "partIndex"];
+  int part_index_size() const;
   private:
-  bool _internal_has_joint() const;
+  int _internal_part_index_size() const;
 
   public:
-  void clear_joint() ;
-  const ::motionlab::mechanism::Joint& joint() const;
-  [[nodiscard]] ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE release_joint();
-  ::motionlab::mechanism::Joint* PROTOBUF_NONNULL mutable_joint();
-  void set_allocated_joint(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_joint(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE unsafe_arena_release_joint();
+  void clear_part_index() ;
+  ::uint32_t part_index(int index) const;
+  void set_part_index(int index, ::uint32_t value);
+  void add_part_index(::uint32_t value);
+  const ::google::protobuf::RepeatedField<::uint32_t>& part_index() const;
+  ::google::protobuf::RepeatedField<::uint32_t>* PROTOBUF_NONNULL mutable_part_index();
 
   private:
-  const ::motionlab::mechanism::Joint& _internal_joint() const;
-  ::motionlab::mechanism::Joint* PROTOBUF_NONNULL _internal_mutable_joint();
+  const ::google::protobuf::RepeatedField<::uint32_t>& _internal_part_index() const;
+  ::google::protobuf::RepeatedField<::uint32_t>* PROTOBUF_NONNULL _internal_mutable_part_index();
 
   public:
-  // string error_message = 2 [json_name = "errorMessage"];
-  bool has_error_message() const;
-  void clear_error_message() ;
-  const ::std::string& error_message() const;
+  // string geometry_id = 1 [json_name = "geometryId"];
+  void clear_geometry_id() ;
+  const ::std::string& geometry_id() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
-  void set_error_message(Arg_&& arg, Args_... args);
-  ::std::string* PROTOBUF_NONNULL mutable_error_message();
-  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
-  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+  void set_geometry_id(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_geometry_id();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_geometry_id();
+  void set_allocated_geometry_id(::std::string* PROTOBUF_NULLABLE value);
 
   private:
-  const ::std::string& _internal_error_message() const;
-  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
-  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+  const ::std::string& _internal_geometry_id() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_geometry_id(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_geometry_id();
 
   public:
-  void clear_result();
-  ResultCase result_case() const;
-  // @@protoc_insertion_point(class_scope:motionlab.protocol.CreateJointResult)
+  // string body_id = 2 [json_name = "bodyId"];
+  void clear_body_id() ;
+  const ::std::string& body_id() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_body_id(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_body_id();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_body_id();
+  void set_allocated_body_id(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_body_id() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_body_id(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_body_id();
+
+  public:
+  // string name = 3 [json_name = "name"];
+  void clear_name() ;
+  const ::std::string& name() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_name(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_name();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_name();
+  void set_allocated_name(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_name() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_name(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
+
+  public:
+  // .motionlab.mechanism.DisplayMesh display_mesh = 4 [json_name = "displayMesh"];
+  bool has_display_mesh() const;
+  void clear_display_mesh() ;
+  const ::motionlab::mechanism::DisplayMesh& display_mesh() const;
+  [[nodiscard]] ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE release_display_mesh();
+  ::motionlab::mechanism::DisplayMesh* PROTOBUF_NONNULL mutable_display_mesh();
+  void set_allocated_display_mesh(::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_display_mesh(::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE unsafe_arena_release_display_mesh();
+
+  private:
+  const ::motionlab::mechanism::DisplayMesh& _internal_display_mesh() const;
+  ::motionlab::mechanism::DisplayMesh* PROTOBUF_NONNULL _internal_mutable_display_mesh();
+
+  public:
+  // .motionlab.mechanism.MassProperties computed_mass_properties = 5 [json_name = "computedMassProperties"];
+  bool has_computed_mass_properties() const;
+  void clear_computed_mass_properties() ;
+  const ::motionlab::mechanism::MassProperties& computed_mass_properties() const;
+  [[nodiscard]] ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE release_computed_mass_properties();
+  ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL mutable_computed_mass_properties();
+  void set_allocated_computed_mass_properties(::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_computed_mass_properties(::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE unsafe_arena_release_computed_mass_properties();
+
+  private:
+  const ::motionlab::mechanism::MassProperties& _internal_computed_mass_properties() const;
+  ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL _internal_mutable_computed_mass_properties();
+
+  public:
+  // .motionlab.mechanism.Pose pose = 6 [json_name = "pose"];
+  bool has_pose() const;
+  void clear_pose() ;
+  const ::motionlab::mechanism::Pose& pose() const;
+  [[nodiscard]] ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE release_pose();
+  ::motionlab::mechanism::Pose* PROTOBUF_NONNULL mutable_pose();
+  void set_allocated_pose(::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_pose(::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE unsafe_arena_release_pose();
+
+  private:
+  const ::motionlab::mechanism::Pose& _internal_pose() const;
+  ::motionlab::mechanism::Pose* PROTOBUF_NONNULL _internal_mutable_pose();
+
+  public:
+  // .motionlab.mechanism.AssetReference source_asset_ref = 7 [json_name = "sourceAssetRef"];
+  bool has_source_asset_ref() const;
+  void clear_source_asset_ref() ;
+  const ::motionlab::mechanism::AssetReference& source_asset_ref() const;
+  [[nodiscard]] ::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE release_source_asset_ref();
+  ::motionlab::mechanism::AssetReference* PROTOBUF_NONNULL mutable_source_asset_ref();
+  void set_allocated_source_asset_ref(::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_source_asset_ref(::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE unsafe_arena_release_source_asset_ref();
+
+  private:
+  const ::motionlab::mechanism::AssetReference& _internal_source_asset_ref() const;
+  ::motionlab::mechanism::AssetReference* PROTOBUF_NONNULL _internal_mutable_source_asset_ref();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.GeometryImportResult)
  private:
   class _Internal;
-  void set_has_joint();
-  void set_has_error_message();
-  inline bool has_result() const;
-  inline void clear_has_result();
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<0, 2,
-                                   1, 58,
+  static const ::google::protobuf::internal::TcParseTable<3, 8,
+                                   4, 78,
                                    2>
       _table_;
 
@@ -8419,22 +10907,25 @@ class CreateJointResult final : public ::google::protobuf::Message
     inline explicit Impl_(
         ::google::protobuf::internal::InternalVisibility visibility,
         ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-        const CreateJointResult& from_msg);
-    union ResultUnion {
-      constexpr ResultUnion() : _constinit_{} {}
-      ::google::protobuf::internal::ConstantInitialized _constinit_;
-      ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE joint_;
-      ::google::protobuf::internal::ArenaStringPtr error_message_;
-    } result_;
+        const GeometryImportResult& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::uint32_t _oneof_case_[1];
+    ::google::protobuf::RepeatedField<::uint32_t> part_index_;
+    ::google::protobuf::internal::CachedSize _part_index_cached_byte_size_;
+    ::google::protobuf::internal::ArenaStringPtr geometry_id_;
+    ::google::protobuf::internal::ArenaStringPtr body_id_;
+    ::google::protobuf::internal::ArenaStringPtr name_;
+    ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE display_mesh_;
+    ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE computed_mass_properties_;
+    ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE pose_;
+    ::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE source_asset_ref_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
   friend struct ::TableStruct_protocol_2ftransport_2eproto;
 };
 
-extern const ::google::protobuf::internal::ClassDataFull CreateJointResult_class_data_;
+extern const ::google::protobuf::internal::ClassDataFull GeometryImportResult_class_data_;
 // -------------------------------------------------------------------
 
 class CreateDatumCommand final : public ::google::protobuf::Message
@@ -8492,7 +10983,7 @@ class CreateDatumCommand final : public ::google::protobuf::Message
     return *reinterpret_cast<const CreateDatumCommand*>(
         &_CreateDatumCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 13;
+  static constexpr int kIndexInFileMessages = 14;
   friend void swap(CreateDatumCommand& a, CreateDatumCommand& b) { a.Swap(&b); }
   inline void Swap(CreateDatumCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -8666,6 +11157,247 @@ class CreateDatumCommand final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull CreateDatumCommand_class_data_;
 // -------------------------------------------------------------------
 
+class CreateBodyCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.CreateBodyCommand) */ {
+ public:
+  inline CreateBodyCommand() : CreateBodyCommand(nullptr) {}
+  ~CreateBodyCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(CreateBodyCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(CreateBodyCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR CreateBodyCommand(::google::protobuf::internal::ConstantInitialized);
+
+  inline CreateBodyCommand(const CreateBodyCommand& from) : CreateBodyCommand(nullptr, from) {}
+  inline CreateBodyCommand(CreateBodyCommand&& from) noexcept
+      : CreateBodyCommand(nullptr, ::std::move(from)) {}
+  inline CreateBodyCommand& operator=(const CreateBodyCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CreateBodyCommand& operator=(CreateBodyCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CreateBodyCommand& default_instance() {
+    return *reinterpret_cast<const CreateBodyCommand*>(
+        &_CreateBodyCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 27;
+  friend void swap(CreateBodyCommand& a, CreateBodyCommand& b) { a.Swap(&b); }
+  inline void Swap(CreateBodyCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CreateBodyCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CreateBodyCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<CreateBodyCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CreateBodyCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const CreateBodyCommand& from) { CreateBodyCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(CreateBodyCommand* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.CreateBodyCommand"; }
+
+  explicit CreateBodyCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  CreateBodyCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CreateBodyCommand& from);
+  CreateBodyCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CreateBodyCommand&& from) noexcept
+      : CreateBodyCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kNameFieldNumber = 1,
+    kMassPropertiesFieldNumber = 2,
+    kPoseFieldNumber = 3,
+    kIsFixedFieldNumber = 4,
+  };
+  // string name = 1 [json_name = "name"];
+  void clear_name() ;
+  const ::std::string& name() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_name(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_name();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_name();
+  void set_allocated_name(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_name() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_name(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
+
+  public:
+  // .motionlab.mechanism.MassProperties mass_properties = 2 [json_name = "massProperties"];
+  bool has_mass_properties() const;
+  void clear_mass_properties() ;
+  const ::motionlab::mechanism::MassProperties& mass_properties() const;
+  [[nodiscard]] ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE release_mass_properties();
+  ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL mutable_mass_properties();
+  void set_allocated_mass_properties(::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_mass_properties(::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE unsafe_arena_release_mass_properties();
+
+  private:
+  const ::motionlab::mechanism::MassProperties& _internal_mass_properties() const;
+  ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL _internal_mutable_mass_properties();
+
+  public:
+  // .motionlab.mechanism.Pose pose = 3 [json_name = "pose"];
+  bool has_pose() const;
+  void clear_pose() ;
+  const ::motionlab::mechanism::Pose& pose() const;
+  [[nodiscard]] ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE release_pose();
+  ::motionlab::mechanism::Pose* PROTOBUF_NONNULL mutable_pose();
+  void set_allocated_pose(::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_pose(::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE unsafe_arena_release_pose();
+
+  private:
+  const ::motionlab::mechanism::Pose& _internal_pose() const;
+  ::motionlab::mechanism::Pose* PROTOBUF_NONNULL _internal_mutable_pose();
+
+  public:
+  // bool is_fixed = 4 [json_name = "isFixed"];
+  void clear_is_fixed() ;
+  bool is_fixed() const;
+  void set_is_fixed(bool value);
+
+  private:
+  bool _internal_is_fixed() const;
+  void _internal_set_is_fixed(bool value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.CreateBodyCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<2, 4,
+                                   2, 49,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const CreateBodyCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr name_;
+    ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE mass_properties_;
+    ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE pose_;
+    bool is_fixed_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull CreateBodyCommand_class_data_;
+// -------------------------------------------------------------------
+
 class CompileMechanismCommand final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:motionlab.protocol.CompileMechanismCommand) */ {
  public:
@@ -8721,7 +11453,7 @@ class CompileMechanismCommand final : public ::google::protobuf::Message
     return *reinterpret_cast<const CompileMechanismCommand*>(
         &_CompileMechanismCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 33;
+  static constexpr int kIndexInFileMessages = 59;
   friend void swap(CompileMechanismCommand& a, CompileMechanismCommand& b) { a.Swap(&b); }
   inline void Swap(CompileMechanismCommand* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -9162,6 +11894,1321 @@ class BodyImportResult final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull BodyImportResult_class_data_;
 // -------------------------------------------------------------------
 
+class AttachGeometryCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.AttachGeometryCommand) */ {
+ public:
+  inline AttachGeometryCommand() : AttachGeometryCommand(nullptr) {}
+  ~AttachGeometryCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(AttachGeometryCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(AttachGeometryCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR AttachGeometryCommand(::google::protobuf::internal::ConstantInitialized);
+
+  inline AttachGeometryCommand(const AttachGeometryCommand& from) : AttachGeometryCommand(nullptr, from) {}
+  inline AttachGeometryCommand(AttachGeometryCommand&& from) noexcept
+      : AttachGeometryCommand(nullptr, ::std::move(from)) {}
+  inline AttachGeometryCommand& operator=(const AttachGeometryCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline AttachGeometryCommand& operator=(AttachGeometryCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const AttachGeometryCommand& default_instance() {
+    return *reinterpret_cast<const AttachGeometryCommand*>(
+        &_AttachGeometryCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 31;
+  friend void swap(AttachGeometryCommand& a, AttachGeometryCommand& b) { a.Swap(&b); }
+  inline void Swap(AttachGeometryCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(AttachGeometryCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  AttachGeometryCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<AttachGeometryCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const AttachGeometryCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const AttachGeometryCommand& from) { AttachGeometryCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(AttachGeometryCommand* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.AttachGeometryCommand"; }
+
+  explicit AttachGeometryCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  AttachGeometryCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const AttachGeometryCommand& from);
+  AttachGeometryCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, AttachGeometryCommand&& from) noexcept
+      : AttachGeometryCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kGeometryIdFieldNumber = 1,
+    kTargetBodyIdFieldNumber = 2,
+    kLocalPoseFieldNumber = 3,
+  };
+  // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+  bool has_geometry_id() const;
+  void clear_geometry_id() ;
+  const ::motionlab::mechanism::ElementId& geometry_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_geometry_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_geometry_id();
+  void set_allocated_geometry_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_geometry_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_geometry_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_geometry_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_geometry_id();
+
+  public:
+  // .motionlab.mechanism.ElementId target_body_id = 2 [json_name = "targetBodyId"];
+  bool has_target_body_id() const;
+  void clear_target_body_id() ;
+  const ::motionlab::mechanism::ElementId& target_body_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_target_body_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_target_body_id();
+  void set_allocated_target_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_target_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_target_body_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_target_body_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_target_body_id();
+
+  public:
+  // .motionlab.mechanism.Pose local_pose = 3 [json_name = "localPose"];
+  bool has_local_pose() const;
+  void clear_local_pose() ;
+  const ::motionlab::mechanism::Pose& local_pose() const;
+  [[nodiscard]] ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE release_local_pose();
+  ::motionlab::mechanism::Pose* PROTOBUF_NONNULL mutable_local_pose();
+  void set_allocated_local_pose(::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_local_pose(::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE unsafe_arena_release_local_pose();
+
+  private:
+  const ::motionlab::mechanism::Pose& _internal_local_pose() const;
+  ::motionlab::mechanism::Pose* PROTOBUF_NONNULL _internal_mutable_local_pose();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.AttachGeometryCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<2, 3,
+                                   3, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const AttachGeometryCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE geometry_id_;
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE target_body_id_;
+    ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE local_pose_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull AttachGeometryCommand_class_data_;
+// -------------------------------------------------------------------
+
+class UpdateMassPropertiesResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdateMassPropertiesResult) */ {
+ public:
+  inline UpdateMassPropertiesResult() : UpdateMassPropertiesResult(nullptr) {}
+  ~UpdateMassPropertiesResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(UpdateMassPropertiesResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(UpdateMassPropertiesResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR UpdateMassPropertiesResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline UpdateMassPropertiesResult(const UpdateMassPropertiesResult& from) : UpdateMassPropertiesResult(nullptr, from) {}
+  inline UpdateMassPropertiesResult(UpdateMassPropertiesResult&& from) noexcept
+      : UpdateMassPropertiesResult(nullptr, ::std::move(from)) {}
+  inline UpdateMassPropertiesResult& operator=(const UpdateMassPropertiesResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline UpdateMassPropertiesResult& operator=(UpdateMassPropertiesResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const UpdateMassPropertiesResult& default_instance() {
+    return *reinterpret_cast<const UpdateMassPropertiesResult*>(
+        &_UpdateMassPropertiesResult_default_instance_);
+  }
+  enum ResultCase {
+    kBody = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 36;
+  friend void swap(UpdateMassPropertiesResult& a, UpdateMassPropertiesResult& b) { a.Swap(&b); }
+  inline void Swap(UpdateMassPropertiesResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(UpdateMassPropertiesResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  UpdateMassPropertiesResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<UpdateMassPropertiesResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const UpdateMassPropertiesResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const UpdateMassPropertiesResult& from) { UpdateMassPropertiesResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(UpdateMassPropertiesResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.UpdateMassPropertiesResult"; }
+
+  explicit UpdateMassPropertiesResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  UpdateMassPropertiesResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const UpdateMassPropertiesResult& from);
+  UpdateMassPropertiesResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, UpdateMassPropertiesResult&& from) noexcept
+      : UpdateMassPropertiesResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kBodyFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.mechanism.Body body = 1 [json_name = "body"];
+  bool has_body() const;
+  private:
+  bool _internal_has_body() const;
+
+  public:
+  void clear_body() ;
+  const ::motionlab::mechanism::Body& body() const;
+  [[nodiscard]] ::motionlab::mechanism::Body* PROTOBUF_NULLABLE release_body();
+  ::motionlab::mechanism::Body* PROTOBUF_NONNULL mutable_body();
+  void set_allocated_body(::motionlab::mechanism::Body* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_body(::motionlab::mechanism::Body* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Body* PROTOBUF_NULLABLE unsafe_arena_release_body();
+
+  private:
+  const ::motionlab::mechanism::Body& _internal_body() const;
+  ::motionlab::mechanism::Body* PROTOBUF_NONNULL _internal_mutable_body();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.UpdateMassPropertiesResult)
+ private:
+  class _Internal;
+  void set_has_body();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 2,
+                                   1, 67,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const UpdateMassPropertiesResult& from_msg);
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::mechanism::Body* PROTOBUF_NULLABLE body_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull UpdateMassPropertiesResult_class_data_;
+// -------------------------------------------------------------------
+
+class UpdateLoadResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdateLoadResult) */ {
+ public:
+  inline UpdateLoadResult() : UpdateLoadResult(nullptr) {}
+  ~UpdateLoadResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(UpdateLoadResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(UpdateLoadResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR UpdateLoadResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline UpdateLoadResult(const UpdateLoadResult& from) : UpdateLoadResult(nullptr, from) {}
+  inline UpdateLoadResult(UpdateLoadResult&& from) noexcept
+      : UpdateLoadResult(nullptr, ::std::move(from)) {}
+  inline UpdateLoadResult& operator=(const UpdateLoadResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline UpdateLoadResult& operator=(UpdateLoadResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const UpdateLoadResult& default_instance() {
+    return *reinterpret_cast<const UpdateLoadResult*>(
+        &_UpdateLoadResult_default_instance_);
+  }
+  enum ResultCase {
+    kLoad = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 47;
+  friend void swap(UpdateLoadResult& a, UpdateLoadResult& b) { a.Swap(&b); }
+  inline void Swap(UpdateLoadResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(UpdateLoadResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  UpdateLoadResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<UpdateLoadResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const UpdateLoadResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const UpdateLoadResult& from) { UpdateLoadResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(UpdateLoadResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.UpdateLoadResult"; }
+
+  explicit UpdateLoadResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  UpdateLoadResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const UpdateLoadResult& from);
+  UpdateLoadResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, UpdateLoadResult&& from) noexcept
+      : UpdateLoadResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kLoadFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.mechanism.Load load = 1 [json_name = "load"];
+  bool has_load() const;
+  private:
+  bool _internal_has_load() const;
+
+  public:
+  void clear_load() ;
+  const ::motionlab::mechanism::Load& load() const;
+  [[nodiscard]] ::motionlab::mechanism::Load* PROTOBUF_NULLABLE release_load();
+  ::motionlab::mechanism::Load* PROTOBUF_NONNULL mutable_load();
+  void set_allocated_load(::motionlab::mechanism::Load* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_load(::motionlab::mechanism::Load* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Load* PROTOBUF_NULLABLE unsafe_arena_release_load();
+
+  private:
+  const ::motionlab::mechanism::Load& _internal_load() const;
+  ::motionlab::mechanism::Load* PROTOBUF_NONNULL _internal_mutable_load();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.UpdateLoadResult)
+ private:
+  class _Internal;
+  void set_has_load();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 2,
+                                   1, 57,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const UpdateLoadResult& from_msg);
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::mechanism::Load* PROTOBUF_NULLABLE load_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull UpdateLoadResult_class_data_;
+// -------------------------------------------------------------------
+
+class UpdateLoadCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdateLoadCommand) */ {
+ public:
+  inline UpdateLoadCommand() : UpdateLoadCommand(nullptr) {}
+  ~UpdateLoadCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(UpdateLoadCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(UpdateLoadCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR UpdateLoadCommand(::google::protobuf::internal::ConstantInitialized);
+
+  inline UpdateLoadCommand(const UpdateLoadCommand& from) : UpdateLoadCommand(nullptr, from) {}
+  inline UpdateLoadCommand(UpdateLoadCommand&& from) noexcept
+      : UpdateLoadCommand(nullptr, ::std::move(from)) {}
+  inline UpdateLoadCommand& operator=(const UpdateLoadCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline UpdateLoadCommand& operator=(UpdateLoadCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const UpdateLoadCommand& default_instance() {
+    return *reinterpret_cast<const UpdateLoadCommand*>(
+        &_UpdateLoadCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 44;
+  friend void swap(UpdateLoadCommand& a, UpdateLoadCommand& b) { a.Swap(&b); }
+  inline void Swap(UpdateLoadCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(UpdateLoadCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  UpdateLoadCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<UpdateLoadCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const UpdateLoadCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const UpdateLoadCommand& from) { UpdateLoadCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(UpdateLoadCommand* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.UpdateLoadCommand"; }
+
+  explicit UpdateLoadCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  UpdateLoadCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const UpdateLoadCommand& from);
+  UpdateLoadCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, UpdateLoadCommand&& from) noexcept
+      : UpdateLoadCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kLoadFieldNumber = 1,
+  };
+  // .motionlab.mechanism.Load load = 1 [json_name = "load"];
+  bool has_load() const;
+  void clear_load() ;
+  const ::motionlab::mechanism::Load& load() const;
+  [[nodiscard]] ::motionlab::mechanism::Load* PROTOBUF_NULLABLE release_load();
+  ::motionlab::mechanism::Load* PROTOBUF_NONNULL mutable_load();
+  void set_allocated_load(::motionlab::mechanism::Load* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_load(::motionlab::mechanism::Load* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Load* PROTOBUF_NULLABLE unsafe_arena_release_load();
+
+  private:
+  const ::motionlab::mechanism::Load& _internal_load() const;
+  ::motionlab::mechanism::Load* PROTOBUF_NONNULL _internal_mutable_load();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.UpdateLoadCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   1, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const UpdateLoadCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::Load* PROTOBUF_NULLABLE load_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull UpdateLoadCommand_class_data_;
+// -------------------------------------------------------------------
+
+class UpdateJointResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdateJointResult) */ {
+ public:
+  inline UpdateJointResult() : UpdateJointResult(nullptr) {}
+  ~UpdateJointResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(UpdateJointResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(UpdateJointResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR UpdateJointResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline UpdateJointResult(const UpdateJointResult& from) : UpdateJointResult(nullptr, from) {}
+  inline UpdateJointResult(UpdateJointResult&& from) noexcept
+      : UpdateJointResult(nullptr, ::std::move(from)) {}
+  inline UpdateJointResult& operator=(const UpdateJointResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline UpdateJointResult& operator=(UpdateJointResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const UpdateJointResult& default_instance() {
+    return *reinterpret_cast<const UpdateJointResult*>(
+        &_UpdateJointResult_default_instance_);
+  }
+  enum ResultCase {
+    kJoint = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 41;
+  friend void swap(UpdateJointResult& a, UpdateJointResult& b) { a.Swap(&b); }
+  inline void Swap(UpdateJointResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(UpdateJointResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  UpdateJointResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<UpdateJointResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const UpdateJointResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const UpdateJointResult& from) { UpdateJointResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(UpdateJointResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.UpdateJointResult"; }
+
+  explicit UpdateJointResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  UpdateJointResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const UpdateJointResult& from);
+  UpdateJointResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, UpdateJointResult&& from) noexcept
+      : UpdateJointResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kJointFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+  bool has_joint() const;
+  private:
+  bool _internal_has_joint() const;
+
+  public:
+  void clear_joint() ;
+  const ::motionlab::mechanism::Joint& joint() const;
+  [[nodiscard]] ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE release_joint();
+  ::motionlab::mechanism::Joint* PROTOBUF_NONNULL mutable_joint();
+  void set_allocated_joint(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_joint(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE unsafe_arena_release_joint();
+
+  private:
+  const ::motionlab::mechanism::Joint& _internal_joint() const;
+  ::motionlab::mechanism::Joint* PROTOBUF_NONNULL _internal_mutable_joint();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.UpdateJointResult)
+ private:
+  class _Internal;
+  void set_has_joint();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 2,
+                                   1, 58,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const UpdateJointResult& from_msg);
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE joint_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull UpdateJointResult_class_data_;
+// -------------------------------------------------------------------
+
+class UpdateJointCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdateJointCommand) */ {
+ public:
+  inline UpdateJointCommand() : UpdateJointCommand(nullptr) {}
+  ~UpdateJointCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(UpdateJointCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(UpdateJointCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR UpdateJointCommand(::google::protobuf::internal::ConstantInitialized);
+
+  inline UpdateJointCommand(const UpdateJointCommand& from) : UpdateJointCommand(nullptr, from) {}
+  inline UpdateJointCommand(UpdateJointCommand&& from) noexcept
+      : UpdateJointCommand(nullptr, ::std::move(from)) {}
+  inline UpdateJointCommand& operator=(const UpdateJointCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline UpdateJointCommand& operator=(UpdateJointCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const UpdateJointCommand& default_instance() {
+    return *reinterpret_cast<const UpdateJointCommand*>(
+        &_UpdateJointCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 38;
+  friend void swap(UpdateJointCommand& a, UpdateJointCommand& b) { a.Swap(&b); }
+  inline void Swap(UpdateJointCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(UpdateJointCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  UpdateJointCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<UpdateJointCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const UpdateJointCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const UpdateJointCommand& from) { UpdateJointCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(UpdateJointCommand* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.UpdateJointCommand"; }
+
+  explicit UpdateJointCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  UpdateJointCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const UpdateJointCommand& from);
+  UpdateJointCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, UpdateJointCommand&& from) noexcept
+      : UpdateJointCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kJointFieldNumber = 1,
+  };
+  // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+  bool has_joint() const;
+  void clear_joint() ;
+  const ::motionlab::mechanism::Joint& joint() const;
+  [[nodiscard]] ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE release_joint();
+  ::motionlab::mechanism::Joint* PROTOBUF_NONNULL mutable_joint();
+  void set_allocated_joint(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_joint(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE unsafe_arena_release_joint();
+
+  private:
+  const ::motionlab::mechanism::Joint& _internal_joint() const;
+  ::motionlab::mechanism::Joint* PROTOBUF_NONNULL _internal_mutable_joint();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.UpdateJointCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   1, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const UpdateJointCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE joint_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull UpdateJointCommand_class_data_;
+// -------------------------------------------------------------------
+
 class UpdateDatumPoseResult final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdateDatumPoseResult) */ {
  public:
@@ -9222,7 +13269,7 @@ class UpdateDatumPoseResult final : public ::google::protobuf::Message
     kErrorMessage = 2,
     RESULT_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 23;
+  static constexpr int kIndexInFileMessages = 24;
   friend void swap(UpdateDatumPoseResult& a, UpdateDatumPoseResult& b) { a.Swap(&b); }
   inline void Swap(UpdateDatumPoseResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -9454,7 +13501,7 @@ class UpdateBodyResult final : public ::google::protobuf::Message
     kErrorMessage = 2,
     RESULT_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 25;
+  static constexpr int kIndexInFileMessages = 26;
   friend void swap(UpdateBodyResult& a, UpdateBodyResult& b) { a.Swap(&b); }
   inline void Swap(UpdateBodyResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -9626,6 +13673,433 @@ class UpdateBodyResult final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull UpdateBodyResult_class_data_;
 // -------------------------------------------------------------------
 
+class UpdateActuatorResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdateActuatorResult) */ {
+ public:
+  inline UpdateActuatorResult() : UpdateActuatorResult(nullptr) {}
+  ~UpdateActuatorResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(UpdateActuatorResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(UpdateActuatorResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR UpdateActuatorResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline UpdateActuatorResult(const UpdateActuatorResult& from) : UpdateActuatorResult(nullptr, from) {}
+  inline UpdateActuatorResult(UpdateActuatorResult&& from) noexcept
+      : UpdateActuatorResult(nullptr, ::std::move(from)) {}
+  inline UpdateActuatorResult& operator=(const UpdateActuatorResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline UpdateActuatorResult& operator=(UpdateActuatorResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const UpdateActuatorResult& default_instance() {
+    return *reinterpret_cast<const UpdateActuatorResult*>(
+        &_UpdateActuatorResult_default_instance_);
+  }
+  enum ResultCase {
+    kActuator = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 53;
+  friend void swap(UpdateActuatorResult& a, UpdateActuatorResult& b) { a.Swap(&b); }
+  inline void Swap(UpdateActuatorResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(UpdateActuatorResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  UpdateActuatorResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<UpdateActuatorResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const UpdateActuatorResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const UpdateActuatorResult& from) { UpdateActuatorResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(UpdateActuatorResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.UpdateActuatorResult"; }
+
+  explicit UpdateActuatorResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  UpdateActuatorResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const UpdateActuatorResult& from);
+  UpdateActuatorResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, UpdateActuatorResult&& from) noexcept
+      : UpdateActuatorResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kActuatorFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+  bool has_actuator() const;
+  private:
+  bool _internal_has_actuator() const;
+
+  public:
+  void clear_actuator() ;
+  const ::motionlab::mechanism::Actuator& actuator() const;
+  [[nodiscard]] ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE release_actuator();
+  ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL mutable_actuator();
+  void set_allocated_actuator(::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_actuator(::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE unsafe_arena_release_actuator();
+
+  private:
+  const ::motionlab::mechanism::Actuator& _internal_actuator() const;
+  ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL _internal_mutable_actuator();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.UpdateActuatorResult)
+ private:
+  class _Internal;
+  void set_has_actuator();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 2,
+                                   1, 61,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const UpdateActuatorResult& from_msg);
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE actuator_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull UpdateActuatorResult_class_data_;
+// -------------------------------------------------------------------
+
+class UpdateActuatorCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdateActuatorCommand) */ {
+ public:
+  inline UpdateActuatorCommand() : UpdateActuatorCommand(nullptr) {}
+  ~UpdateActuatorCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(UpdateActuatorCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(UpdateActuatorCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR UpdateActuatorCommand(::google::protobuf::internal::ConstantInitialized);
+
+  inline UpdateActuatorCommand(const UpdateActuatorCommand& from) : UpdateActuatorCommand(nullptr, from) {}
+  inline UpdateActuatorCommand(UpdateActuatorCommand&& from) noexcept
+      : UpdateActuatorCommand(nullptr, ::std::move(from)) {}
+  inline UpdateActuatorCommand& operator=(const UpdateActuatorCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline UpdateActuatorCommand& operator=(UpdateActuatorCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const UpdateActuatorCommand& default_instance() {
+    return *reinterpret_cast<const UpdateActuatorCommand*>(
+        &_UpdateActuatorCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 50;
+  friend void swap(UpdateActuatorCommand& a, UpdateActuatorCommand& b) { a.Swap(&b); }
+  inline void Swap(UpdateActuatorCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(UpdateActuatorCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  UpdateActuatorCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<UpdateActuatorCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const UpdateActuatorCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const UpdateActuatorCommand& from) { UpdateActuatorCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(UpdateActuatorCommand* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.UpdateActuatorCommand"; }
+
+  explicit UpdateActuatorCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  UpdateActuatorCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const UpdateActuatorCommand& from);
+  UpdateActuatorCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, UpdateActuatorCommand&& from) noexcept
+      : UpdateActuatorCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kActuatorFieldNumber = 1,
+  };
+  // .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+  bool has_actuator() const;
+  void clear_actuator() ;
+  const ::motionlab::mechanism::Actuator& actuator() const;
+  [[nodiscard]] ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE release_actuator();
+  ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL mutable_actuator();
+  void set_allocated_actuator(::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_actuator(::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE unsafe_arena_release_actuator();
+
+  private:
+  const ::motionlab::mechanism::Actuator& _internal_actuator() const;
+  ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL _internal_mutable_actuator();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.UpdateActuatorCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   1, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const UpdateActuatorCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE actuator_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull UpdateActuatorCommand_class_data_;
+// -------------------------------------------------------------------
+
 class RenameDatumResult final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:motionlab.protocol.RenameDatumResult) */ {
  public:
@@ -9686,7 +14160,7 @@ class RenameDatumResult final : public ::google::protobuf::Message
     kErrorMessage = 2,
     RESULT_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 21;
+  static constexpr int kIndexInFileMessages = 22;
   friend void swap(RenameDatumResult& a, RenameDatumResult& b) { a.Swap(&b); }
   inline void Swap(RenameDatumResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -9918,7 +14392,7 @@ class RelocateAssetResult final : public ::google::protobuf::Message
     kErrorMessage = 2,
     RESULT_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 51;
+  static constexpr int kIndexInFileMessages = 77;
   friend void swap(RelocateAssetResult& a, RelocateAssetResult& b) { a.Swap(&b); }
   inline void Swap(RelocateAssetResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -10145,7 +14619,7 @@ class ImportAssetResult final : public ::google::protobuf::Message
     return *reinterpret_cast<const ImportAssetResult*>(
         &_ImportAssetResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 11;
+  static constexpr int kIndexInFileMessages = 12;
   friend void swap(ImportAssetResult& a, ImportAssetResult& b) { a.Swap(&b); }
   inline void Swap(ImportAssetResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -10234,6 +14708,7 @@ class ImportAssetResult final : public ::google::protobuf::Message
   enum : int {
     kBodiesFieldNumber = 3,
     kDiagnosticsFieldNumber = 4,
+    kGeometriesFieldNumber = 5,
     kErrorMessageFieldNumber = 2,
     kSuccessFieldNumber = 1,
   };
@@ -10276,6 +14751,23 @@ class ImportAssetResult final : public ::google::protobuf::Message
   ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL _internal_mutable_diagnostics();
 
   public:
+  // repeated .motionlab.protocol.GeometryImportResult geometries = 5 [json_name = "geometries"];
+  int geometries_size() const;
+  private:
+  int _internal_geometries_size() const;
+
+  public:
+  void clear_geometries() ;
+  ::motionlab::protocol::GeometryImportResult* PROTOBUF_NONNULL mutable_geometries(int index);
+  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>* PROTOBUF_NONNULL mutable_geometries();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>& _internal_geometries() const;
+  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>* PROTOBUF_NONNULL _internal_mutable_geometries();
+  public:
+  const ::motionlab::protocol::GeometryImportResult& geometries(int index) const;
+  ::motionlab::protocol::GeometryImportResult* PROTOBUF_NONNULL add_geometries();
+  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>& geometries() const;
   // string error_message = 2 [json_name = "errorMessage"];
   void clear_error_message() ;
   const ::std::string& error_message() const;
@@ -10305,8 +14797,8 @@ class ImportAssetResult final : public ::google::protobuf::Message
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<2, 4,
-                                   1, 69,
+  static const ::google::protobuf::internal::TcParseTable<3, 5,
+                                   2, 69,
                                    2>
       _table_;
 
@@ -10329,6 +14821,7 @@ class ImportAssetResult final : public ::google::protobuf::Message
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::RepeatedPtrField< ::motionlab::protocol::BodyImportResult > bodies_;
     ::google::protobuf::RepeatedPtrField<::std::string> diagnostics_;
+    ::google::protobuf::RepeatedPtrField< ::motionlab::protocol::GeometryImportResult > geometries_;
     ::google::protobuf::internal::ArenaStringPtr error_message_;
     bool success_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -10338,6 +14831,1127 @@ class ImportAssetResult final : public ::google::protobuf::Message
 };
 
 extern const ::google::protobuf::internal::ClassDataFull ImportAssetResult_class_data_;
+// -------------------------------------------------------------------
+
+class DetachGeometryResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.DetachGeometryResult) */ {
+ public:
+  inline DetachGeometryResult() : DetachGeometryResult(nullptr) {}
+  ~DetachGeometryResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(DetachGeometryResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(DetachGeometryResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR DetachGeometryResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline DetachGeometryResult(const DetachGeometryResult& from) : DetachGeometryResult(nullptr, from) {}
+  inline DetachGeometryResult(DetachGeometryResult&& from) noexcept
+      : DetachGeometryResult(nullptr, ::std::move(from)) {}
+  inline DetachGeometryResult& operator=(const DetachGeometryResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline DetachGeometryResult& operator=(DetachGeometryResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const DetachGeometryResult& default_instance() {
+    return *reinterpret_cast<const DetachGeometryResult*>(
+        &_DetachGeometryResult_default_instance_);
+  }
+  enum ResultCase {
+    kDetachedId = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 34;
+  friend void swap(DetachGeometryResult& a, DetachGeometryResult& b) { a.Swap(&b); }
+  inline void Swap(DetachGeometryResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(DetachGeometryResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  DetachGeometryResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<DetachGeometryResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const DetachGeometryResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const DetachGeometryResult& from) { DetachGeometryResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(DetachGeometryResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.DetachGeometryResult"; }
+
+  explicit DetachGeometryResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  DetachGeometryResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const DetachGeometryResult& from);
+  DetachGeometryResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, DetachGeometryResult&& from) noexcept
+      : DetachGeometryResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kGeometryFieldNumber = 3,
+    kFormerParentBodyFieldNumber = 4,
+    kDetachedIdFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.mechanism.Geometry geometry = 3 [json_name = "geometry"];
+  bool has_geometry() const;
+  void clear_geometry() ;
+  const ::motionlab::mechanism::Geometry& geometry() const;
+  [[nodiscard]] ::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE release_geometry();
+  ::motionlab::mechanism::Geometry* PROTOBUF_NONNULL mutable_geometry();
+  void set_allocated_geometry(::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_geometry(::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE unsafe_arena_release_geometry();
+
+  private:
+  const ::motionlab::mechanism::Geometry& _internal_geometry() const;
+  ::motionlab::mechanism::Geometry* PROTOBUF_NONNULL _internal_mutable_geometry();
+
+  public:
+  // .motionlab.mechanism.Body former_parent_body = 4 [json_name = "formerParentBody"];
+  bool has_former_parent_body() const;
+  void clear_former_parent_body() ;
+  const ::motionlab::mechanism::Body& former_parent_body() const;
+  [[nodiscard]] ::motionlab::mechanism::Body* PROTOBUF_NULLABLE release_former_parent_body();
+  ::motionlab::mechanism::Body* PROTOBUF_NONNULL mutable_former_parent_body();
+  void set_allocated_former_parent_body(::motionlab::mechanism::Body* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_former_parent_body(::motionlab::mechanism::Body* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Body* PROTOBUF_NULLABLE unsafe_arena_release_former_parent_body();
+
+  private:
+  const ::motionlab::mechanism::Body& _internal_former_parent_body() const;
+  ::motionlab::mechanism::Body* PROTOBUF_NONNULL _internal_mutable_former_parent_body();
+
+  public:
+  // .motionlab.mechanism.ElementId detached_id = 1 [json_name = "detachedId"];
+  bool has_detached_id() const;
+  private:
+  bool _internal_has_detached_id() const;
+
+  public:
+  void clear_detached_id() ;
+  const ::motionlab::mechanism::ElementId& detached_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_detached_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_detached_id();
+  void set_allocated_detached_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_detached_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_detached_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_detached_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_detached_id();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.DetachGeometryResult)
+ private:
+  class _Internal;
+  void set_has_detached_id();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<1, 4,
+                                   3, 61,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const DetachGeometryResult& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE geometry_;
+    ::motionlab::mechanism::Body* PROTOBUF_NULLABLE former_parent_body_;
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE detached_id_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull DetachGeometryResult_class_data_;
+// -------------------------------------------------------------------
+
+class CreateLoadResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.CreateLoadResult) */ {
+ public:
+  inline CreateLoadResult() : CreateLoadResult(nullptr) {}
+  ~CreateLoadResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(CreateLoadResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(CreateLoadResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR CreateLoadResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline CreateLoadResult(const CreateLoadResult& from) : CreateLoadResult(nullptr, from) {}
+  inline CreateLoadResult(CreateLoadResult&& from) noexcept
+      : CreateLoadResult(nullptr, ::std::move(from)) {}
+  inline CreateLoadResult& operator=(const CreateLoadResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CreateLoadResult& operator=(CreateLoadResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CreateLoadResult& default_instance() {
+    return *reinterpret_cast<const CreateLoadResult*>(
+        &_CreateLoadResult_default_instance_);
+  }
+  enum ResultCase {
+    kLoad = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 46;
+  friend void swap(CreateLoadResult& a, CreateLoadResult& b) { a.Swap(&b); }
+  inline void Swap(CreateLoadResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CreateLoadResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CreateLoadResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<CreateLoadResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CreateLoadResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const CreateLoadResult& from) { CreateLoadResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(CreateLoadResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.CreateLoadResult"; }
+
+  explicit CreateLoadResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  CreateLoadResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CreateLoadResult& from);
+  CreateLoadResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CreateLoadResult&& from) noexcept
+      : CreateLoadResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kLoadFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.mechanism.Load load = 1 [json_name = "load"];
+  bool has_load() const;
+  private:
+  bool _internal_has_load() const;
+
+  public:
+  void clear_load() ;
+  const ::motionlab::mechanism::Load& load() const;
+  [[nodiscard]] ::motionlab::mechanism::Load* PROTOBUF_NULLABLE release_load();
+  ::motionlab::mechanism::Load* PROTOBUF_NONNULL mutable_load();
+  void set_allocated_load(::motionlab::mechanism::Load* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_load(::motionlab::mechanism::Load* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Load* PROTOBUF_NULLABLE unsafe_arena_release_load();
+
+  private:
+  const ::motionlab::mechanism::Load& _internal_load() const;
+  ::motionlab::mechanism::Load* PROTOBUF_NONNULL _internal_mutable_load();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.CreateLoadResult)
+ private:
+  class _Internal;
+  void set_has_load();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 2,
+                                   1, 57,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const CreateLoadResult& from_msg);
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::mechanism::Load* PROTOBUF_NULLABLE load_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull CreateLoadResult_class_data_;
+// -------------------------------------------------------------------
+
+class CreateLoadCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.CreateLoadCommand) */ {
+ public:
+  inline CreateLoadCommand() : CreateLoadCommand(nullptr) {}
+  ~CreateLoadCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(CreateLoadCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(CreateLoadCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR CreateLoadCommand(::google::protobuf::internal::ConstantInitialized);
+
+  inline CreateLoadCommand(const CreateLoadCommand& from) : CreateLoadCommand(nullptr, from) {}
+  inline CreateLoadCommand(CreateLoadCommand&& from) noexcept
+      : CreateLoadCommand(nullptr, ::std::move(from)) {}
+  inline CreateLoadCommand& operator=(const CreateLoadCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CreateLoadCommand& operator=(CreateLoadCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CreateLoadCommand& default_instance() {
+    return *reinterpret_cast<const CreateLoadCommand*>(
+        &_CreateLoadCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 43;
+  friend void swap(CreateLoadCommand& a, CreateLoadCommand& b) { a.Swap(&b); }
+  inline void Swap(CreateLoadCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CreateLoadCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CreateLoadCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<CreateLoadCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CreateLoadCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const CreateLoadCommand& from) { CreateLoadCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(CreateLoadCommand* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.CreateLoadCommand"; }
+
+  explicit CreateLoadCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  CreateLoadCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CreateLoadCommand& from);
+  CreateLoadCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CreateLoadCommand&& from) noexcept
+      : CreateLoadCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kDraftFieldNumber = 1,
+  };
+  // .motionlab.mechanism.Load draft = 1 [json_name = "draft"];
+  bool has_draft() const;
+  void clear_draft() ;
+  const ::motionlab::mechanism::Load& draft() const;
+  [[nodiscard]] ::motionlab::mechanism::Load* PROTOBUF_NULLABLE release_draft();
+  ::motionlab::mechanism::Load* PROTOBUF_NONNULL mutable_draft();
+  void set_allocated_draft(::motionlab::mechanism::Load* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_draft(::motionlab::mechanism::Load* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Load* PROTOBUF_NULLABLE unsafe_arena_release_draft();
+
+  private:
+  const ::motionlab::mechanism::Load& _internal_draft() const;
+  ::motionlab::mechanism::Load* PROTOBUF_NONNULL _internal_mutable_draft();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.CreateLoadCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   1, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const CreateLoadCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::Load* PROTOBUF_NULLABLE draft_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull CreateLoadCommand_class_data_;
+// -------------------------------------------------------------------
+
+class CreateJointResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.CreateJointResult) */ {
+ public:
+  inline CreateJointResult() : CreateJointResult(nullptr) {}
+  ~CreateJointResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(CreateJointResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(CreateJointResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR CreateJointResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline CreateJointResult(const CreateJointResult& from) : CreateJointResult(nullptr, from) {}
+  inline CreateJointResult(CreateJointResult&& from) noexcept
+      : CreateJointResult(nullptr, ::std::move(from)) {}
+  inline CreateJointResult& operator=(const CreateJointResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CreateJointResult& operator=(CreateJointResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CreateJointResult& default_instance() {
+    return *reinterpret_cast<const CreateJointResult*>(
+        &_CreateJointResult_default_instance_);
+  }
+  enum ResultCase {
+    kJoint = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 40;
+  friend void swap(CreateJointResult& a, CreateJointResult& b) { a.Swap(&b); }
+  inline void Swap(CreateJointResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CreateJointResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CreateJointResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<CreateJointResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CreateJointResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const CreateJointResult& from) { CreateJointResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(CreateJointResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.CreateJointResult"; }
+
+  explicit CreateJointResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  CreateJointResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CreateJointResult& from);
+  CreateJointResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CreateJointResult&& from) noexcept
+      : CreateJointResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kJointFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+  bool has_joint() const;
+  private:
+  bool _internal_has_joint() const;
+
+  public:
+  void clear_joint() ;
+  const ::motionlab::mechanism::Joint& joint() const;
+  [[nodiscard]] ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE release_joint();
+  ::motionlab::mechanism::Joint* PROTOBUF_NONNULL mutable_joint();
+  void set_allocated_joint(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_joint(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE unsafe_arena_release_joint();
+
+  private:
+  const ::motionlab::mechanism::Joint& _internal_joint() const;
+  ::motionlab::mechanism::Joint* PROTOBUF_NONNULL _internal_mutable_joint();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.CreateJointResult)
+ private:
+  class _Internal;
+  void set_has_joint();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 2,
+                                   1, 58,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const CreateJointResult& from_msg);
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE joint_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull CreateJointResult_class_data_;
+// -------------------------------------------------------------------
+
+class CreateJointCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.CreateJointCommand) */ {
+ public:
+  inline CreateJointCommand() : CreateJointCommand(nullptr) {}
+  ~CreateJointCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(CreateJointCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(CreateJointCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR CreateJointCommand(::google::protobuf::internal::ConstantInitialized);
+
+  inline CreateJointCommand(const CreateJointCommand& from) : CreateJointCommand(nullptr, from) {}
+  inline CreateJointCommand(CreateJointCommand&& from) noexcept
+      : CreateJointCommand(nullptr, ::std::move(from)) {}
+  inline CreateJointCommand& operator=(const CreateJointCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CreateJointCommand& operator=(CreateJointCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CreateJointCommand& default_instance() {
+    return *reinterpret_cast<const CreateJointCommand*>(
+        &_CreateJointCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 37;
+  friend void swap(CreateJointCommand& a, CreateJointCommand& b) { a.Swap(&b); }
+  inline void Swap(CreateJointCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CreateJointCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CreateJointCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<CreateJointCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CreateJointCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const CreateJointCommand& from) { CreateJointCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(CreateJointCommand* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.CreateJointCommand"; }
+
+  explicit CreateJointCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  CreateJointCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CreateJointCommand& from);
+  CreateJointCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CreateJointCommand&& from) noexcept
+      : CreateJointCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kDraftFieldNumber = 1,
+  };
+  // .motionlab.mechanism.Joint draft = 1 [json_name = "draft"];
+  bool has_draft() const;
+  void clear_draft() ;
+  const ::motionlab::mechanism::Joint& draft() const;
+  [[nodiscard]] ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE release_draft();
+  ::motionlab::mechanism::Joint* PROTOBUF_NONNULL mutable_draft();
+  void set_allocated_draft(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_draft(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE unsafe_arena_release_draft();
+
+  private:
+  const ::motionlab::mechanism::Joint& _internal_draft() const;
+  ::motionlab::mechanism::Joint* PROTOBUF_NONNULL _internal_mutable_draft();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.CreateJointCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   1, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const CreateJointCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE draft_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull CreateJointCommand_class_data_;
 // -------------------------------------------------------------------
 
 class CreateDatumResult final : public ::google::protobuf::Message
@@ -10400,7 +16014,7 @@ class CreateDatumResult final : public ::google::protobuf::Message
     kErrorMessage = 2,
     RESULT_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 18;
+  static constexpr int kIndexInFileMessages = 19;
   friend void swap(CreateDatumResult& a, CreateDatumResult& b) { a.Swap(&b); }
   inline void Swap(CreateDatumResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -10627,7 +16241,7 @@ class CreateDatumFromFaceSuccess final : public ::google::protobuf::Message
     return *reinterpret_cast<const CreateDatumFromFaceSuccess*>(
         &_CreateDatumFromFaceSuccess_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 17;
+  static constexpr int kIndexInFileMessages = 18;
   friend void swap(CreateDatumFromFaceSuccess& a, CreateDatumFromFaceSuccess& b) { a.Swap(&b); }
   inline void Swap(CreateDatumFromFaceSuccess* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -10791,6 +16405,1628 @@ class CreateDatumFromFaceSuccess final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull CreateDatumFromFaceSuccess_class_data_;
 // -------------------------------------------------------------------
 
+class CreateBodyResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.CreateBodyResult) */ {
+ public:
+  inline CreateBodyResult() : CreateBodyResult(nullptr) {}
+  ~CreateBodyResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(CreateBodyResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(CreateBodyResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR CreateBodyResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline CreateBodyResult(const CreateBodyResult& from) : CreateBodyResult(nullptr, from) {}
+  inline CreateBodyResult(CreateBodyResult&& from) noexcept
+      : CreateBodyResult(nullptr, ::std::move(from)) {}
+  inline CreateBodyResult& operator=(const CreateBodyResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CreateBodyResult& operator=(CreateBodyResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CreateBodyResult& default_instance() {
+    return *reinterpret_cast<const CreateBodyResult*>(
+        &_CreateBodyResult_default_instance_);
+  }
+  enum ResultCase {
+    kBody = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 28;
+  friend void swap(CreateBodyResult& a, CreateBodyResult& b) { a.Swap(&b); }
+  inline void Swap(CreateBodyResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CreateBodyResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CreateBodyResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<CreateBodyResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CreateBodyResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const CreateBodyResult& from) { CreateBodyResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(CreateBodyResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.CreateBodyResult"; }
+
+  explicit CreateBodyResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  CreateBodyResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CreateBodyResult& from);
+  CreateBodyResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CreateBodyResult&& from) noexcept
+      : CreateBodyResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kBodyFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.mechanism.Body body = 1 [json_name = "body"];
+  bool has_body() const;
+  private:
+  bool _internal_has_body() const;
+
+  public:
+  void clear_body() ;
+  const ::motionlab::mechanism::Body& body() const;
+  [[nodiscard]] ::motionlab::mechanism::Body* PROTOBUF_NULLABLE release_body();
+  ::motionlab::mechanism::Body* PROTOBUF_NONNULL mutable_body();
+  void set_allocated_body(::motionlab::mechanism::Body* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_body(::motionlab::mechanism::Body* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Body* PROTOBUF_NULLABLE unsafe_arena_release_body();
+
+  private:
+  const ::motionlab::mechanism::Body& _internal_body() const;
+  ::motionlab::mechanism::Body* PROTOBUF_NONNULL _internal_mutable_body();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.CreateBodyResult)
+ private:
+  class _Internal;
+  void set_has_body();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 2,
+                                   1, 57,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const CreateBodyResult& from_msg);
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::mechanism::Body* PROTOBUF_NULLABLE body_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull CreateBodyResult_class_data_;
+// -------------------------------------------------------------------
+
+class CreateActuatorResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.CreateActuatorResult) */ {
+ public:
+  inline CreateActuatorResult() : CreateActuatorResult(nullptr) {}
+  ~CreateActuatorResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(CreateActuatorResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(CreateActuatorResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR CreateActuatorResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline CreateActuatorResult(const CreateActuatorResult& from) : CreateActuatorResult(nullptr, from) {}
+  inline CreateActuatorResult(CreateActuatorResult&& from) noexcept
+      : CreateActuatorResult(nullptr, ::std::move(from)) {}
+  inline CreateActuatorResult& operator=(const CreateActuatorResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CreateActuatorResult& operator=(CreateActuatorResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CreateActuatorResult& default_instance() {
+    return *reinterpret_cast<const CreateActuatorResult*>(
+        &_CreateActuatorResult_default_instance_);
+  }
+  enum ResultCase {
+    kActuator = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 52;
+  friend void swap(CreateActuatorResult& a, CreateActuatorResult& b) { a.Swap(&b); }
+  inline void Swap(CreateActuatorResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CreateActuatorResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CreateActuatorResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<CreateActuatorResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CreateActuatorResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const CreateActuatorResult& from) { CreateActuatorResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(CreateActuatorResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.CreateActuatorResult"; }
+
+  explicit CreateActuatorResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  CreateActuatorResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CreateActuatorResult& from);
+  CreateActuatorResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CreateActuatorResult&& from) noexcept
+      : CreateActuatorResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kActuatorFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+  bool has_actuator() const;
+  private:
+  bool _internal_has_actuator() const;
+
+  public:
+  void clear_actuator() ;
+  const ::motionlab::mechanism::Actuator& actuator() const;
+  [[nodiscard]] ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE release_actuator();
+  ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL mutable_actuator();
+  void set_allocated_actuator(::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_actuator(::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE unsafe_arena_release_actuator();
+
+  private:
+  const ::motionlab::mechanism::Actuator& _internal_actuator() const;
+  ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL _internal_mutable_actuator();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.CreateActuatorResult)
+ private:
+  class _Internal;
+  void set_has_actuator();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 2,
+                                   1, 61,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const CreateActuatorResult& from_msg);
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE actuator_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull CreateActuatorResult_class_data_;
+// -------------------------------------------------------------------
+
+class CreateActuatorCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.CreateActuatorCommand) */ {
+ public:
+  inline CreateActuatorCommand() : CreateActuatorCommand(nullptr) {}
+  ~CreateActuatorCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(CreateActuatorCommand* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(CreateActuatorCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR CreateActuatorCommand(::google::protobuf::internal::ConstantInitialized);
+
+  inline CreateActuatorCommand(const CreateActuatorCommand& from) : CreateActuatorCommand(nullptr, from) {}
+  inline CreateActuatorCommand(CreateActuatorCommand&& from) noexcept
+      : CreateActuatorCommand(nullptr, ::std::move(from)) {}
+  inline CreateActuatorCommand& operator=(const CreateActuatorCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CreateActuatorCommand& operator=(CreateActuatorCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CreateActuatorCommand& default_instance() {
+    return *reinterpret_cast<const CreateActuatorCommand*>(
+        &_CreateActuatorCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 49;
+  friend void swap(CreateActuatorCommand& a, CreateActuatorCommand& b) { a.Swap(&b); }
+  inline void Swap(CreateActuatorCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CreateActuatorCommand* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CreateActuatorCommand* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<CreateActuatorCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CreateActuatorCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const CreateActuatorCommand& from) { CreateActuatorCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(CreateActuatorCommand* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.CreateActuatorCommand"; }
+
+  explicit CreateActuatorCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  CreateActuatorCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CreateActuatorCommand& from);
+  CreateActuatorCommand(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CreateActuatorCommand&& from) noexcept
+      : CreateActuatorCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kDraftFieldNumber = 1,
+  };
+  // .motionlab.mechanism.Actuator draft = 1 [json_name = "draft"];
+  bool has_draft() const;
+  void clear_draft() ;
+  const ::motionlab::mechanism::Actuator& draft() const;
+  [[nodiscard]] ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE release_draft();
+  ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL mutable_draft();
+  void set_allocated_draft(::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_draft(::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE unsafe_arena_release_draft();
+
+  private:
+  const ::motionlab::mechanism::Actuator& _internal_draft() const;
+  ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL _internal_mutable_draft();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.CreateActuatorCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   1, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const CreateActuatorCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE draft_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull CreateActuatorCommand_class_data_;
+// -------------------------------------------------------------------
+
+class AttachGeometryResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.AttachGeometryResult) */ {
+ public:
+  inline AttachGeometryResult() : AttachGeometryResult(nullptr) {}
+  ~AttachGeometryResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(AttachGeometryResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(AttachGeometryResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR AttachGeometryResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline AttachGeometryResult(const AttachGeometryResult& from) : AttachGeometryResult(nullptr, from) {}
+  inline AttachGeometryResult(AttachGeometryResult&& from) noexcept
+      : AttachGeometryResult(nullptr, ::std::move(from)) {}
+  inline AttachGeometryResult& operator=(const AttachGeometryResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline AttachGeometryResult& operator=(AttachGeometryResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const AttachGeometryResult& default_instance() {
+    return *reinterpret_cast<const AttachGeometryResult*>(
+        &_AttachGeometryResult_default_instance_);
+  }
+  enum ResultCase {
+    kGeometry = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 32;
+  friend void swap(AttachGeometryResult& a, AttachGeometryResult& b) { a.Swap(&b); }
+  inline void Swap(AttachGeometryResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(AttachGeometryResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  AttachGeometryResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<AttachGeometryResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const AttachGeometryResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const AttachGeometryResult& from) { AttachGeometryResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(AttachGeometryResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.AttachGeometryResult"; }
+
+  explicit AttachGeometryResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  AttachGeometryResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const AttachGeometryResult& from);
+  AttachGeometryResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, AttachGeometryResult&& from) noexcept
+      : AttachGeometryResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kOldParentBodyFieldNumber = 3,
+    kNewParentBodyFieldNumber = 4,
+    kGeometryFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.mechanism.Body old_parent_body = 3 [json_name = "oldParentBody"];
+  bool has_old_parent_body() const;
+  void clear_old_parent_body() ;
+  const ::motionlab::mechanism::Body& old_parent_body() const;
+  [[nodiscard]] ::motionlab::mechanism::Body* PROTOBUF_NULLABLE release_old_parent_body();
+  ::motionlab::mechanism::Body* PROTOBUF_NONNULL mutable_old_parent_body();
+  void set_allocated_old_parent_body(::motionlab::mechanism::Body* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_old_parent_body(::motionlab::mechanism::Body* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Body* PROTOBUF_NULLABLE unsafe_arena_release_old_parent_body();
+
+  private:
+  const ::motionlab::mechanism::Body& _internal_old_parent_body() const;
+  ::motionlab::mechanism::Body* PROTOBUF_NONNULL _internal_mutable_old_parent_body();
+
+  public:
+  // .motionlab.mechanism.Body new_parent_body = 4 [json_name = "newParentBody"];
+  bool has_new_parent_body() const;
+  void clear_new_parent_body() ;
+  const ::motionlab::mechanism::Body& new_parent_body() const;
+  [[nodiscard]] ::motionlab::mechanism::Body* PROTOBUF_NULLABLE release_new_parent_body();
+  ::motionlab::mechanism::Body* PROTOBUF_NONNULL mutable_new_parent_body();
+  void set_allocated_new_parent_body(::motionlab::mechanism::Body* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_new_parent_body(::motionlab::mechanism::Body* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Body* PROTOBUF_NULLABLE unsafe_arena_release_new_parent_body();
+
+  private:
+  const ::motionlab::mechanism::Body& _internal_new_parent_body() const;
+  ::motionlab::mechanism::Body* PROTOBUF_NONNULL _internal_mutable_new_parent_body();
+
+  public:
+  // .motionlab.mechanism.Geometry geometry = 1 [json_name = "geometry"];
+  bool has_geometry() const;
+  private:
+  bool _internal_has_geometry() const;
+
+  public:
+  void clear_geometry() ;
+  const ::motionlab::mechanism::Geometry& geometry() const;
+  [[nodiscard]] ::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE release_geometry();
+  ::motionlab::mechanism::Geometry* PROTOBUF_NONNULL mutable_geometry();
+  void set_allocated_geometry(::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_geometry(::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE unsafe_arena_release_geometry();
+
+  private:
+  const ::motionlab::mechanism::Geometry& _internal_geometry() const;
+  ::motionlab::mechanism::Geometry* PROTOBUF_NONNULL _internal_mutable_geometry();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.AttachGeometryResult)
+ private:
+  class _Internal;
+  void set_has_geometry();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<1, 4,
+                                   3, 61,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const AttachGeometryResult& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::Body* PROTOBUF_NULLABLE old_parent_body_;
+    ::motionlab::mechanism::Body* PROTOBUF_NULLABLE new_parent_body_;
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE geometry_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull AttachGeometryResult_class_data_;
+// -------------------------------------------------------------------
+
+class MechanismSnapshot final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.MechanismSnapshot) */ {
+ public:
+  inline MechanismSnapshot() : MechanismSnapshot(nullptr) {}
+  ~MechanismSnapshot() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(MechanismSnapshot* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(MechanismSnapshot));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR MechanismSnapshot(::google::protobuf::internal::ConstantInitialized);
+
+  inline MechanismSnapshot(const MechanismSnapshot& from) : MechanismSnapshot(nullptr, from) {}
+  inline MechanismSnapshot(MechanismSnapshot&& from) noexcept
+      : MechanismSnapshot(nullptr, ::std::move(from)) {}
+  inline MechanismSnapshot& operator=(const MechanismSnapshot& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline MechanismSnapshot& operator=(MechanismSnapshot&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const MechanismSnapshot& default_instance() {
+    return *reinterpret_cast<const MechanismSnapshot*>(
+        &_MechanismSnapshot_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 13;
+  friend void swap(MechanismSnapshot& a, MechanismSnapshot& b) { a.Swap(&b); }
+  inline void Swap(MechanismSnapshot* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(MechanismSnapshot* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  MechanismSnapshot* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<MechanismSnapshot>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const MechanismSnapshot& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const MechanismSnapshot& from) { MechanismSnapshot::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(MechanismSnapshot* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.MechanismSnapshot"; }
+
+  explicit MechanismSnapshot(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  MechanismSnapshot(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const MechanismSnapshot& from);
+  MechanismSnapshot(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, MechanismSnapshot&& from) noexcept
+      : MechanismSnapshot(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kMechanismFieldNumber = 1,
+  };
+  // .motionlab.mechanism.Mechanism mechanism = 1 [json_name = "mechanism"];
+  bool has_mechanism() const;
+  void clear_mechanism() ;
+  const ::motionlab::mechanism::Mechanism& mechanism() const;
+  [[nodiscard]] ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE release_mechanism();
+  ::motionlab::mechanism::Mechanism* PROTOBUF_NONNULL mutable_mechanism();
+  void set_allocated_mechanism(::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_mechanism(::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE unsafe_arena_release_mechanism();
+
+  private:
+  const ::motionlab::mechanism::Mechanism& _internal_mechanism() const;
+  ::motionlab::mechanism::Mechanism* PROTOBUF_NONNULL _internal_mutable_mechanism();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.MechanismSnapshot)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   1, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const MechanismSnapshot& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE mechanism_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull MechanismSnapshot_class_data_;
+// -------------------------------------------------------------------
+
+class LoadProjectSuccess final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.LoadProjectSuccess) */ {
+ public:
+  inline LoadProjectSuccess() : LoadProjectSuccess(nullptr) {}
+  ~LoadProjectSuccess() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(LoadProjectSuccess* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(LoadProjectSuccess));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR LoadProjectSuccess(::google::protobuf::internal::ConstantInitialized);
+
+  inline LoadProjectSuccess(const LoadProjectSuccess& from) : LoadProjectSuccess(nullptr, from) {}
+  inline LoadProjectSuccess(LoadProjectSuccess&& from) noexcept
+      : LoadProjectSuccess(nullptr, ::std::move(from)) {}
+  inline LoadProjectSuccess& operator=(const LoadProjectSuccess& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline LoadProjectSuccess& operator=(LoadProjectSuccess&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const LoadProjectSuccess& default_instance() {
+    return *reinterpret_cast<const LoadProjectSuccess*>(
+        &_LoadProjectSuccess_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 74;
+  friend void swap(LoadProjectSuccess& a, LoadProjectSuccess& b) { a.Swap(&b); }
+  inline void Swap(LoadProjectSuccess* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(LoadProjectSuccess* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  LoadProjectSuccess* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<LoadProjectSuccess>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const LoadProjectSuccess& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const LoadProjectSuccess& from) { LoadProjectSuccess::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(LoadProjectSuccess* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.LoadProjectSuccess"; }
+
+  explicit LoadProjectSuccess(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  LoadProjectSuccess(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const LoadProjectSuccess& from);
+  LoadProjectSuccess(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, LoadProjectSuccess&& from) noexcept
+      : LoadProjectSuccess(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kBodiesFieldNumber = 2,
+    kMissingAssetsFieldNumber = 4,
+    kGeometriesFieldNumber = 5,
+    kMechanismFieldNumber = 1,
+    kMetadataFieldNumber = 3,
+  };
+  // repeated .motionlab.protocol.BodyImportResult bodies = 2 [json_name = "bodies"];
+  int bodies_size() const;
+  private:
+  int _internal_bodies_size() const;
+
+  public:
+  void clear_bodies() ;
+  ::motionlab::protocol::BodyImportResult* PROTOBUF_NONNULL mutable_bodies(int index);
+  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::BodyImportResult>* PROTOBUF_NONNULL mutable_bodies();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::BodyImportResult>& _internal_bodies() const;
+  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::BodyImportResult>* PROTOBUF_NONNULL _internal_mutable_bodies();
+  public:
+  const ::motionlab::protocol::BodyImportResult& bodies(int index) const;
+  ::motionlab::protocol::BodyImportResult* PROTOBUF_NONNULL add_bodies();
+  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::BodyImportResult>& bodies() const;
+  // repeated .motionlab.protocol.MissingAssetInfo missing_assets = 4 [json_name = "missingAssets"];
+  int missing_assets_size() const;
+  private:
+  int _internal_missing_assets_size() const;
+
+  public:
+  void clear_missing_assets() ;
+  ::motionlab::protocol::MissingAssetInfo* PROTOBUF_NONNULL mutable_missing_assets(int index);
+  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::MissingAssetInfo>* PROTOBUF_NONNULL mutable_missing_assets();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::MissingAssetInfo>& _internal_missing_assets() const;
+  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::MissingAssetInfo>* PROTOBUF_NONNULL _internal_mutable_missing_assets();
+  public:
+  const ::motionlab::protocol::MissingAssetInfo& missing_assets(int index) const;
+  ::motionlab::protocol::MissingAssetInfo* PROTOBUF_NONNULL add_missing_assets();
+  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::MissingAssetInfo>& missing_assets() const;
+  // repeated .motionlab.protocol.GeometryImportResult geometries = 5 [json_name = "geometries"];
+  int geometries_size() const;
+  private:
+  int _internal_geometries_size() const;
+
+  public:
+  void clear_geometries() ;
+  ::motionlab::protocol::GeometryImportResult* PROTOBUF_NONNULL mutable_geometries(int index);
+  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>* PROTOBUF_NONNULL mutable_geometries();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>& _internal_geometries() const;
+  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>* PROTOBUF_NONNULL _internal_mutable_geometries();
+  public:
+  const ::motionlab::protocol::GeometryImportResult& geometries(int index) const;
+  ::motionlab::protocol::GeometryImportResult* PROTOBUF_NONNULL add_geometries();
+  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>& geometries() const;
+  // .motionlab.mechanism.Mechanism mechanism = 1 [json_name = "mechanism"];
+  bool has_mechanism() const;
+  void clear_mechanism() ;
+  const ::motionlab::mechanism::Mechanism& mechanism() const;
+  [[nodiscard]] ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE release_mechanism();
+  ::motionlab::mechanism::Mechanism* PROTOBUF_NONNULL mutable_mechanism();
+  void set_allocated_mechanism(::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_mechanism(::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE unsafe_arena_release_mechanism();
+
+  private:
+  const ::motionlab::mechanism::Mechanism& _internal_mechanism() const;
+  ::motionlab::mechanism::Mechanism* PROTOBUF_NONNULL _internal_mutable_mechanism();
+
+  public:
+  // .motionlab.mechanism.ProjectMetadata metadata = 3 [json_name = "metadata"];
+  bool has_metadata() const;
+  void clear_metadata() ;
+  const ::motionlab::mechanism::ProjectMetadata& metadata() const;
+  [[nodiscard]] ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NULLABLE release_metadata();
+  ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NONNULL mutable_metadata();
+  void set_allocated_metadata(::motionlab::mechanism::ProjectMetadata* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_metadata(::motionlab::mechanism::ProjectMetadata* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NULLABLE unsafe_arena_release_metadata();
+
+  private:
+  const ::motionlab::mechanism::ProjectMetadata& _internal_metadata() const;
+  ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NONNULL _internal_mutable_metadata();
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.LoadProjectSuccess)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<3, 5,
+                                   5, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const LoadProjectSuccess& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::RepeatedPtrField< ::motionlab::protocol::BodyImportResult > bodies_;
+    ::google::protobuf::RepeatedPtrField< ::motionlab::protocol::MissingAssetInfo > missing_assets_;
+    ::google::protobuf::RepeatedPtrField< ::motionlab::protocol::GeometryImportResult > geometries_;
+    ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE mechanism_;
+    ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NULLABLE metadata_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull LoadProjectSuccess_class_data_;
+// -------------------------------------------------------------------
+
+class CreateDatumFromFaceResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.CreateDatumFromFaceResult) */ {
+ public:
+  inline CreateDatumFromFaceResult() : CreateDatumFromFaceResult(nullptr) {}
+  ~CreateDatumFromFaceResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(CreateDatumFromFaceResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(CreateDatumFromFaceResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR CreateDatumFromFaceResult(::google::protobuf::internal::ConstantInitialized);
+
+  inline CreateDatumFromFaceResult(const CreateDatumFromFaceResult& from) : CreateDatumFromFaceResult(nullptr, from) {}
+  inline CreateDatumFromFaceResult(CreateDatumFromFaceResult&& from) noexcept
+      : CreateDatumFromFaceResult(nullptr, ::std::move(from)) {}
+  inline CreateDatumFromFaceResult& operator=(const CreateDatumFromFaceResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CreateDatumFromFaceResult& operator=(CreateDatumFromFaceResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CreateDatumFromFaceResult& default_instance() {
+    return *reinterpret_cast<const CreateDatumFromFaceResult*>(
+        &_CreateDatumFromFaceResult_default_instance_);
+  }
+  enum ResultCase {
+    kSuccess = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 20;
+  friend void swap(CreateDatumFromFaceResult& a, CreateDatumFromFaceResult& b) { a.Swap(&b); }
+  inline void Swap(CreateDatumFromFaceResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CreateDatumFromFaceResult* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CreateDatumFromFaceResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<CreateDatumFromFaceResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CreateDatumFromFaceResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const CreateDatumFromFaceResult& from) { CreateDatumFromFaceResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(CreateDatumFromFaceResult* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.CreateDatumFromFaceResult"; }
+
+  explicit CreateDatumFromFaceResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  CreateDatumFromFaceResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CreateDatumFromFaceResult& from);
+  CreateDatumFromFaceResult(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CreateDatumFromFaceResult&& from) noexcept
+      : CreateDatumFromFaceResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kSuccessFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.protocol.CreateDatumFromFaceSuccess success = 1 [json_name = "success"];
+  bool has_success() const;
+  private:
+  bool _internal_has_success() const;
+
+  public:
+  void clear_success() ;
+  const ::motionlab::protocol::CreateDatumFromFaceSuccess& success() const;
+  [[nodiscard]] ::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NULLABLE release_success();
+  ::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NONNULL mutable_success();
+  void set_allocated_success(::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_success(::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NULLABLE unsafe_arena_release_success();
+
+  private:
+  const ::motionlab::protocol::CreateDatumFromFaceSuccess& _internal_success() const;
+  ::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NONNULL _internal_mutable_success();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const ::std::string& error_message() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_error_message();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
+  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_error_message() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.CreateDatumFromFaceResult)
+ private:
+  class _Internal;
+  void set_has_success();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 2,
+                                   1, 66,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const CreateDatumFromFaceResult& from_msg);
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NULLABLE success_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull CreateDatumFromFaceResult_class_data_;
+// -------------------------------------------------------------------
+
 class Command final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:motionlab.protocol.Command) */ {
  public:
@@ -10859,12 +18095,24 @@ class Command final : public ::google::protobuf::Message
     kCreateJoint = 20,
     kUpdateJoint = 21,
     kDeleteJoint = 22,
+    kCreateLoad = 23,
+    kUpdateLoad = 24,
+    kDeleteLoad = 25,
+    kCreateActuator = 26,
+    kUpdateActuator = 27,
+    kDeleteActuator = 28,
+    kCreateBody = 50,
+    kDeleteBody = 51,
+    kAttachGeometry = 52,
+    kDetachGeometry = 53,
+    kUpdateMassProperties = 54,
     kCompileMechanism = 30,
     kSimulationControl = 31,
     kScrub = 32,
     kSaveProject = 40,
     kLoadProject = 41,
     kRelocateAsset = 42,
+    kNewProject = 43,
     PAYLOAD_NOT_SET = 0,
   };
   static constexpr int kIndexInFileMessages = 1;
@@ -10967,12 +18215,24 @@ class Command final : public ::google::protobuf::Message
     kCreateJointFieldNumber = 20,
     kUpdateJointFieldNumber = 21,
     kDeleteJointFieldNumber = 22,
+    kCreateLoadFieldNumber = 23,
+    kUpdateLoadFieldNumber = 24,
+    kDeleteLoadFieldNumber = 25,
+    kCreateActuatorFieldNumber = 26,
+    kUpdateActuatorFieldNumber = 27,
+    kDeleteActuatorFieldNumber = 28,
+    kCreateBodyFieldNumber = 50,
+    kDeleteBodyFieldNumber = 51,
+    kAttachGeometryFieldNumber = 52,
+    kDetachGeometryFieldNumber = 53,
+    kUpdateMassPropertiesFieldNumber = 54,
     kCompileMechanismFieldNumber = 30,
     kSimulationControlFieldNumber = 31,
     kScrubFieldNumber = 32,
     kSaveProjectFieldNumber = 40,
     kLoadProjectFieldNumber = 41,
     kRelocateAssetFieldNumber = 42,
+    kNewProjectFieldNumber = 43,
   };
   // uint64 sequence_id = 1 [json_name = "sequenceId"];
   void clear_sequence_id() ;
@@ -11212,6 +18472,215 @@ class Command final : public ::google::protobuf::Message
   ::motionlab::protocol::DeleteJointCommand* PROTOBUF_NONNULL _internal_mutable_delete_joint();
 
   public:
+  // .motionlab.protocol.CreateLoadCommand create_load = 23 [json_name = "createLoad"];
+  bool has_create_load() const;
+  private:
+  bool _internal_has_create_load() const;
+
+  public:
+  void clear_create_load() ;
+  const ::motionlab::protocol::CreateLoadCommand& create_load() const;
+  [[nodiscard]] ::motionlab::protocol::CreateLoadCommand* PROTOBUF_NULLABLE release_create_load();
+  ::motionlab::protocol::CreateLoadCommand* PROTOBUF_NONNULL mutable_create_load();
+  void set_allocated_create_load(::motionlab::protocol::CreateLoadCommand* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_create_load(::motionlab::protocol::CreateLoadCommand* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::CreateLoadCommand* PROTOBUF_NULLABLE unsafe_arena_release_create_load();
+
+  private:
+  const ::motionlab::protocol::CreateLoadCommand& _internal_create_load() const;
+  ::motionlab::protocol::CreateLoadCommand* PROTOBUF_NONNULL _internal_mutable_create_load();
+
+  public:
+  // .motionlab.protocol.UpdateLoadCommand update_load = 24 [json_name = "updateLoad"];
+  bool has_update_load() const;
+  private:
+  bool _internal_has_update_load() const;
+
+  public:
+  void clear_update_load() ;
+  const ::motionlab::protocol::UpdateLoadCommand& update_load() const;
+  [[nodiscard]] ::motionlab::protocol::UpdateLoadCommand* PROTOBUF_NULLABLE release_update_load();
+  ::motionlab::protocol::UpdateLoadCommand* PROTOBUF_NONNULL mutable_update_load();
+  void set_allocated_update_load(::motionlab::protocol::UpdateLoadCommand* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_update_load(::motionlab::protocol::UpdateLoadCommand* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::UpdateLoadCommand* PROTOBUF_NULLABLE unsafe_arena_release_update_load();
+
+  private:
+  const ::motionlab::protocol::UpdateLoadCommand& _internal_update_load() const;
+  ::motionlab::protocol::UpdateLoadCommand* PROTOBUF_NONNULL _internal_mutable_update_load();
+
+  public:
+  // .motionlab.protocol.DeleteLoadCommand delete_load = 25 [json_name = "deleteLoad"];
+  bool has_delete_load() const;
+  private:
+  bool _internal_has_delete_load() const;
+
+  public:
+  void clear_delete_load() ;
+  const ::motionlab::protocol::DeleteLoadCommand& delete_load() const;
+  [[nodiscard]] ::motionlab::protocol::DeleteLoadCommand* PROTOBUF_NULLABLE release_delete_load();
+  ::motionlab::protocol::DeleteLoadCommand* PROTOBUF_NONNULL mutable_delete_load();
+  void set_allocated_delete_load(::motionlab::protocol::DeleteLoadCommand* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_delete_load(::motionlab::protocol::DeleteLoadCommand* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::DeleteLoadCommand* PROTOBUF_NULLABLE unsafe_arena_release_delete_load();
+
+  private:
+  const ::motionlab::protocol::DeleteLoadCommand& _internal_delete_load() const;
+  ::motionlab::protocol::DeleteLoadCommand* PROTOBUF_NONNULL _internal_mutable_delete_load();
+
+  public:
+  // .motionlab.protocol.CreateActuatorCommand create_actuator = 26 [json_name = "createActuator"];
+  bool has_create_actuator() const;
+  private:
+  bool _internal_has_create_actuator() const;
+
+  public:
+  void clear_create_actuator() ;
+  const ::motionlab::protocol::CreateActuatorCommand& create_actuator() const;
+  [[nodiscard]] ::motionlab::protocol::CreateActuatorCommand* PROTOBUF_NULLABLE release_create_actuator();
+  ::motionlab::protocol::CreateActuatorCommand* PROTOBUF_NONNULL mutable_create_actuator();
+  void set_allocated_create_actuator(::motionlab::protocol::CreateActuatorCommand* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_create_actuator(::motionlab::protocol::CreateActuatorCommand* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::CreateActuatorCommand* PROTOBUF_NULLABLE unsafe_arena_release_create_actuator();
+
+  private:
+  const ::motionlab::protocol::CreateActuatorCommand& _internal_create_actuator() const;
+  ::motionlab::protocol::CreateActuatorCommand* PROTOBUF_NONNULL _internal_mutable_create_actuator();
+
+  public:
+  // .motionlab.protocol.UpdateActuatorCommand update_actuator = 27 [json_name = "updateActuator"];
+  bool has_update_actuator() const;
+  private:
+  bool _internal_has_update_actuator() const;
+
+  public:
+  void clear_update_actuator() ;
+  const ::motionlab::protocol::UpdateActuatorCommand& update_actuator() const;
+  [[nodiscard]] ::motionlab::protocol::UpdateActuatorCommand* PROTOBUF_NULLABLE release_update_actuator();
+  ::motionlab::protocol::UpdateActuatorCommand* PROTOBUF_NONNULL mutable_update_actuator();
+  void set_allocated_update_actuator(::motionlab::protocol::UpdateActuatorCommand* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_update_actuator(::motionlab::protocol::UpdateActuatorCommand* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::UpdateActuatorCommand* PROTOBUF_NULLABLE unsafe_arena_release_update_actuator();
+
+  private:
+  const ::motionlab::protocol::UpdateActuatorCommand& _internal_update_actuator() const;
+  ::motionlab::protocol::UpdateActuatorCommand* PROTOBUF_NONNULL _internal_mutable_update_actuator();
+
+  public:
+  // .motionlab.protocol.DeleteActuatorCommand delete_actuator = 28 [json_name = "deleteActuator"];
+  bool has_delete_actuator() const;
+  private:
+  bool _internal_has_delete_actuator() const;
+
+  public:
+  void clear_delete_actuator() ;
+  const ::motionlab::protocol::DeleteActuatorCommand& delete_actuator() const;
+  [[nodiscard]] ::motionlab::protocol::DeleteActuatorCommand* PROTOBUF_NULLABLE release_delete_actuator();
+  ::motionlab::protocol::DeleteActuatorCommand* PROTOBUF_NONNULL mutable_delete_actuator();
+  void set_allocated_delete_actuator(::motionlab::protocol::DeleteActuatorCommand* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_delete_actuator(::motionlab::protocol::DeleteActuatorCommand* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::DeleteActuatorCommand* PROTOBUF_NULLABLE unsafe_arena_release_delete_actuator();
+
+  private:
+  const ::motionlab::protocol::DeleteActuatorCommand& _internal_delete_actuator() const;
+  ::motionlab::protocol::DeleteActuatorCommand* PROTOBUF_NONNULL _internal_mutable_delete_actuator();
+
+  public:
+  // .motionlab.protocol.CreateBodyCommand create_body = 50 [json_name = "createBody"];
+  bool has_create_body() const;
+  private:
+  bool _internal_has_create_body() const;
+
+  public:
+  void clear_create_body() ;
+  const ::motionlab::protocol::CreateBodyCommand& create_body() const;
+  [[nodiscard]] ::motionlab::protocol::CreateBodyCommand* PROTOBUF_NULLABLE release_create_body();
+  ::motionlab::protocol::CreateBodyCommand* PROTOBUF_NONNULL mutable_create_body();
+  void set_allocated_create_body(::motionlab::protocol::CreateBodyCommand* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_create_body(::motionlab::protocol::CreateBodyCommand* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::CreateBodyCommand* PROTOBUF_NULLABLE unsafe_arena_release_create_body();
+
+  private:
+  const ::motionlab::protocol::CreateBodyCommand& _internal_create_body() const;
+  ::motionlab::protocol::CreateBodyCommand* PROTOBUF_NONNULL _internal_mutable_create_body();
+
+  public:
+  // .motionlab.protocol.DeleteBodyCommand delete_body = 51 [json_name = "deleteBody"];
+  bool has_delete_body() const;
+  private:
+  bool _internal_has_delete_body() const;
+
+  public:
+  void clear_delete_body() ;
+  const ::motionlab::protocol::DeleteBodyCommand& delete_body() const;
+  [[nodiscard]] ::motionlab::protocol::DeleteBodyCommand* PROTOBUF_NULLABLE release_delete_body();
+  ::motionlab::protocol::DeleteBodyCommand* PROTOBUF_NONNULL mutable_delete_body();
+  void set_allocated_delete_body(::motionlab::protocol::DeleteBodyCommand* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_delete_body(::motionlab::protocol::DeleteBodyCommand* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::DeleteBodyCommand* PROTOBUF_NULLABLE unsafe_arena_release_delete_body();
+
+  private:
+  const ::motionlab::protocol::DeleteBodyCommand& _internal_delete_body() const;
+  ::motionlab::protocol::DeleteBodyCommand* PROTOBUF_NONNULL _internal_mutable_delete_body();
+
+  public:
+  // .motionlab.protocol.AttachGeometryCommand attach_geometry = 52 [json_name = "attachGeometry"];
+  bool has_attach_geometry() const;
+  private:
+  bool _internal_has_attach_geometry() const;
+
+  public:
+  void clear_attach_geometry() ;
+  const ::motionlab::protocol::AttachGeometryCommand& attach_geometry() const;
+  [[nodiscard]] ::motionlab::protocol::AttachGeometryCommand* PROTOBUF_NULLABLE release_attach_geometry();
+  ::motionlab::protocol::AttachGeometryCommand* PROTOBUF_NONNULL mutable_attach_geometry();
+  void set_allocated_attach_geometry(::motionlab::protocol::AttachGeometryCommand* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_attach_geometry(::motionlab::protocol::AttachGeometryCommand* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::AttachGeometryCommand* PROTOBUF_NULLABLE unsafe_arena_release_attach_geometry();
+
+  private:
+  const ::motionlab::protocol::AttachGeometryCommand& _internal_attach_geometry() const;
+  ::motionlab::protocol::AttachGeometryCommand* PROTOBUF_NONNULL _internal_mutable_attach_geometry();
+
+  public:
+  // .motionlab.protocol.DetachGeometryCommand detach_geometry = 53 [json_name = "detachGeometry"];
+  bool has_detach_geometry() const;
+  private:
+  bool _internal_has_detach_geometry() const;
+
+  public:
+  void clear_detach_geometry() ;
+  const ::motionlab::protocol::DetachGeometryCommand& detach_geometry() const;
+  [[nodiscard]] ::motionlab::protocol::DetachGeometryCommand* PROTOBUF_NULLABLE release_detach_geometry();
+  ::motionlab::protocol::DetachGeometryCommand* PROTOBUF_NONNULL mutable_detach_geometry();
+  void set_allocated_detach_geometry(::motionlab::protocol::DetachGeometryCommand* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_detach_geometry(::motionlab::protocol::DetachGeometryCommand* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::DetachGeometryCommand* PROTOBUF_NULLABLE unsafe_arena_release_detach_geometry();
+
+  private:
+  const ::motionlab::protocol::DetachGeometryCommand& _internal_detach_geometry() const;
+  ::motionlab::protocol::DetachGeometryCommand* PROTOBUF_NONNULL _internal_mutable_detach_geometry();
+
+  public:
+  // .motionlab.protocol.UpdateMassPropertiesCommand update_mass_properties = 54 [json_name = "updateMassProperties"];
+  bool has_update_mass_properties() const;
+  private:
+  bool _internal_has_update_mass_properties() const;
+
+  public:
+  void clear_update_mass_properties() ;
+  const ::motionlab::protocol::UpdateMassPropertiesCommand& update_mass_properties() const;
+  [[nodiscard]] ::motionlab::protocol::UpdateMassPropertiesCommand* PROTOBUF_NULLABLE release_update_mass_properties();
+  ::motionlab::protocol::UpdateMassPropertiesCommand* PROTOBUF_NONNULL mutable_update_mass_properties();
+  void set_allocated_update_mass_properties(::motionlab::protocol::UpdateMassPropertiesCommand* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_update_mass_properties(::motionlab::protocol::UpdateMassPropertiesCommand* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::UpdateMassPropertiesCommand* PROTOBUF_NULLABLE unsafe_arena_release_update_mass_properties();
+
+  private:
+  const ::motionlab::protocol::UpdateMassPropertiesCommand& _internal_update_mass_properties() const;
+  ::motionlab::protocol::UpdateMassPropertiesCommand* PROTOBUF_NONNULL _internal_mutable_update_mass_properties();
+
+  public:
   // .motionlab.protocol.CompileMechanismCommand compile_mechanism = 30 [json_name = "compileMechanism"];
   bool has_compile_mechanism() const;
   private:
@@ -11326,6 +18795,25 @@ class Command final : public ::google::protobuf::Message
   ::motionlab::protocol::RelocateAssetCommand* PROTOBUF_NONNULL _internal_mutable_relocate_asset();
 
   public:
+  // .motionlab.protocol.NewProjectCommand new_project = 43 [json_name = "newProject"];
+  bool has_new_project() const;
+  private:
+  bool _internal_has_new_project() const;
+
+  public:
+  void clear_new_project() ;
+  const ::motionlab::protocol::NewProjectCommand& new_project() const;
+  [[nodiscard]] ::motionlab::protocol::NewProjectCommand* PROTOBUF_NULLABLE release_new_project();
+  ::motionlab::protocol::NewProjectCommand* PROTOBUF_NONNULL mutable_new_project();
+  void set_allocated_new_project(::motionlab::protocol::NewProjectCommand* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_new_project(::motionlab::protocol::NewProjectCommand* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::NewProjectCommand* PROTOBUF_NULLABLE unsafe_arena_release_new_project();
+
+  private:
+  const ::motionlab::protocol::NewProjectCommand& _internal_new_project() const;
+  ::motionlab::protocol::NewProjectCommand* PROTOBUF_NONNULL _internal_mutable_new_project();
+
+  public:
   void clear_payload();
   PayloadCase payload_case() const;
   // @@protoc_insertion_point(class_scope:motionlab.protocol.Command)
@@ -11343,17 +18831,29 @@ class Command final : public ::google::protobuf::Message
   void set_has_create_joint();
   void set_has_update_joint();
   void set_has_delete_joint();
+  void set_has_create_load();
+  void set_has_update_load();
+  void set_has_delete_load();
+  void set_has_create_actuator();
+  void set_has_update_actuator();
+  void set_has_delete_actuator();
+  void set_has_create_body();
+  void set_has_delete_body();
+  void set_has_attach_geometry();
+  void set_has_detach_geometry();
+  void set_has_update_mass_properties();
   void set_has_compile_mechanism();
   void set_has_simulation_control();
   void set_has_scrub();
   void set_has_save_project();
   void set_has_load_project();
   void set_has_relocate_asset();
+  void set_has_new_project();
   inline bool has_payload() const;
   inline void clear_has_payload();
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<0, 19,
-                                   18, 0,
+  static const ::google::protobuf::internal::TcParseTable<0, 31,
+                                   30, 0,
                                    7>
       _table_;
 
@@ -11390,12 +18890,24 @@ class Command final : public ::google::protobuf::Message
       ::google::protobuf::Message* PROTOBUF_NULLABLE create_joint_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE update_joint_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE delete_joint_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE create_load_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE update_load_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE delete_load_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE create_actuator_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE update_actuator_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE delete_actuator_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE create_body_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE delete_body_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE attach_geometry_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE detach_geometry_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE update_mass_properties_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE compile_mechanism_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE simulation_control_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE scrub_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE save_project_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE load_project_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE relocate_asset_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE new_project_;
     } payload_;
     ::uint32_t _oneof_case_[1];
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -11405,683 +18917,6 @@ class Command final : public ::google::protobuf::Message
 };
 
 extern const ::google::protobuf::internal::ClassDataFull Command_class_data_;
-// -------------------------------------------------------------------
-
-class MechanismSnapshot final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:motionlab.protocol.MechanismSnapshot) */ {
- public:
-  inline MechanismSnapshot() : MechanismSnapshot(nullptr) {}
-  ~MechanismSnapshot() PROTOBUF_FINAL;
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(MechanismSnapshot* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
-    SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(MechanismSnapshot));
-  }
-#endif
-
-  template <typename = void>
-  explicit PROTOBUF_CONSTEXPR MechanismSnapshot(::google::protobuf::internal::ConstantInitialized);
-
-  inline MechanismSnapshot(const MechanismSnapshot& from) : MechanismSnapshot(nullptr, from) {}
-  inline MechanismSnapshot(MechanismSnapshot&& from) noexcept
-      : MechanismSnapshot(nullptr, ::std::move(from)) {}
-  inline MechanismSnapshot& operator=(const MechanismSnapshot& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline MechanismSnapshot& operator=(MechanismSnapshot&& from) noexcept {
-    if (this == &from) return *this;
-    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const MechanismSnapshot& default_instance() {
-    return *reinterpret_cast<const MechanismSnapshot*>(
-        &_MechanismSnapshot_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages = 12;
-  friend void swap(MechanismSnapshot& a, MechanismSnapshot& b) { a.Swap(&b); }
-  inline void Swap(MechanismSnapshot* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(MechanismSnapshot* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  MechanismSnapshot* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<MechanismSnapshot>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const MechanismSnapshot& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const MechanismSnapshot& from) { MechanismSnapshot::MergeImpl(*this, from); }
-
-  private:
-  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
-                        const ::google::protobuf::MessageLite& from_msg);
-
-  public:
-  bool IsInitialized() const {
-    return true;
-  }
-  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
-  #if defined(PROTOBUF_CUSTOM_VTABLE)
-  private:
-  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
-  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
-
-  public:
-  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
-  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
-    return _InternalSerialize(*this, target, stream);
-  }
-  #else   // PROTOBUF_CUSTOM_VTABLE
-  ::size_t ByteSizeLong() const final;
-  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
-  #endif  // PROTOBUF_CUSTOM_VTABLE
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static void SharedDtor(MessageLite& self);
-  void InternalSwap(MechanismSnapshot* PROTOBUF_NONNULL other);
- private:
-  template <typename T>
-  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "motionlab.protocol.MechanismSnapshot"; }
-
-  explicit MechanismSnapshot(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  MechanismSnapshot(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const MechanismSnapshot& from);
-  MechanismSnapshot(
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, MechanismSnapshot&& from) noexcept
-      : MechanismSnapshot(arena) {
-    *this = ::std::move(from);
-  }
-  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
-  static void* PROTOBUF_NONNULL PlacementNew_(
-      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static constexpr auto InternalNewImpl_();
-
- public:
-  static constexpr auto InternalGenerateClassData_();
-
-  ::google::protobuf::Metadata GetMetadata() const;
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-  enum : int {
-    kMechanismFieldNumber = 1,
-  };
-  // .motionlab.mechanism.Mechanism mechanism = 1 [json_name = "mechanism"];
-  bool has_mechanism() const;
-  void clear_mechanism() ;
-  const ::motionlab::mechanism::Mechanism& mechanism() const;
-  [[nodiscard]] ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE release_mechanism();
-  ::motionlab::mechanism::Mechanism* PROTOBUF_NONNULL mutable_mechanism();
-  void set_allocated_mechanism(::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_mechanism(::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE unsafe_arena_release_mechanism();
-
-  private:
-  const ::motionlab::mechanism::Mechanism& _internal_mechanism() const;
-  ::motionlab::mechanism::Mechanism* PROTOBUF_NONNULL _internal_mutable_mechanism();
-
-  public:
-  // @@protoc_insertion_point(class_scope:motionlab.protocol.MechanismSnapshot)
- private:
-  class _Internal;
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<0, 1,
-                                   1, 0,
-                                   2>
-      _table_;
-
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-        const MechanismSnapshot& from_msg);
-    ::google::protobuf::internal::HasBits<1> _has_bits_;
-    ::google::protobuf::internal::CachedSize _cached_size_;
-    ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE mechanism_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_protocol_2ftransport_2eproto;
-};
-
-extern const ::google::protobuf::internal::ClassDataFull MechanismSnapshot_class_data_;
-// -------------------------------------------------------------------
-
-class LoadProjectSuccess final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:motionlab.protocol.LoadProjectSuccess) */ {
- public:
-  inline LoadProjectSuccess() : LoadProjectSuccess(nullptr) {}
-  ~LoadProjectSuccess() PROTOBUF_FINAL;
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(LoadProjectSuccess* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
-    SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(LoadProjectSuccess));
-  }
-#endif
-
-  template <typename = void>
-  explicit PROTOBUF_CONSTEXPR LoadProjectSuccess(::google::protobuf::internal::ConstantInitialized);
-
-  inline LoadProjectSuccess(const LoadProjectSuccess& from) : LoadProjectSuccess(nullptr, from) {}
-  inline LoadProjectSuccess(LoadProjectSuccess&& from) noexcept
-      : LoadProjectSuccess(nullptr, ::std::move(from)) {}
-  inline LoadProjectSuccess& operator=(const LoadProjectSuccess& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline LoadProjectSuccess& operator=(LoadProjectSuccess&& from) noexcept {
-    if (this == &from) return *this;
-    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const LoadProjectSuccess& default_instance() {
-    return *reinterpret_cast<const LoadProjectSuccess*>(
-        &_LoadProjectSuccess_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages = 48;
-  friend void swap(LoadProjectSuccess& a, LoadProjectSuccess& b) { a.Swap(&b); }
-  inline void Swap(LoadProjectSuccess* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(LoadProjectSuccess* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  LoadProjectSuccess* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<LoadProjectSuccess>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const LoadProjectSuccess& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const LoadProjectSuccess& from) { LoadProjectSuccess::MergeImpl(*this, from); }
-
-  private:
-  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
-                        const ::google::protobuf::MessageLite& from_msg);
-
-  public:
-  bool IsInitialized() const {
-    return true;
-  }
-  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
-  #if defined(PROTOBUF_CUSTOM_VTABLE)
-  private:
-  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
-  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
-
-  public:
-  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
-  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
-    return _InternalSerialize(*this, target, stream);
-  }
-  #else   // PROTOBUF_CUSTOM_VTABLE
-  ::size_t ByteSizeLong() const final;
-  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
-  #endif  // PROTOBUF_CUSTOM_VTABLE
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static void SharedDtor(MessageLite& self);
-  void InternalSwap(LoadProjectSuccess* PROTOBUF_NONNULL other);
- private:
-  template <typename T>
-  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "motionlab.protocol.LoadProjectSuccess"; }
-
-  explicit LoadProjectSuccess(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  LoadProjectSuccess(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const LoadProjectSuccess& from);
-  LoadProjectSuccess(
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, LoadProjectSuccess&& from) noexcept
-      : LoadProjectSuccess(arena) {
-    *this = ::std::move(from);
-  }
-  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
-  static void* PROTOBUF_NONNULL PlacementNew_(
-      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static constexpr auto InternalNewImpl_();
-
- public:
-  static constexpr auto InternalGenerateClassData_();
-
-  ::google::protobuf::Metadata GetMetadata() const;
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-  enum : int {
-    kBodiesFieldNumber = 2,
-    kMissingAssetsFieldNumber = 4,
-    kMechanismFieldNumber = 1,
-    kMetadataFieldNumber = 3,
-  };
-  // repeated .motionlab.protocol.BodyImportResult bodies = 2 [json_name = "bodies"];
-  int bodies_size() const;
-  private:
-  int _internal_bodies_size() const;
-
-  public:
-  void clear_bodies() ;
-  ::motionlab::protocol::BodyImportResult* PROTOBUF_NONNULL mutable_bodies(int index);
-  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::BodyImportResult>* PROTOBUF_NONNULL mutable_bodies();
-
-  private:
-  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::BodyImportResult>& _internal_bodies() const;
-  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::BodyImportResult>* PROTOBUF_NONNULL _internal_mutable_bodies();
-  public:
-  const ::motionlab::protocol::BodyImportResult& bodies(int index) const;
-  ::motionlab::protocol::BodyImportResult* PROTOBUF_NONNULL add_bodies();
-  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::BodyImportResult>& bodies() const;
-  // repeated .motionlab.protocol.MissingAssetInfo missing_assets = 4 [json_name = "missingAssets"];
-  int missing_assets_size() const;
-  private:
-  int _internal_missing_assets_size() const;
-
-  public:
-  void clear_missing_assets() ;
-  ::motionlab::protocol::MissingAssetInfo* PROTOBUF_NONNULL mutable_missing_assets(int index);
-  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::MissingAssetInfo>* PROTOBUF_NONNULL mutable_missing_assets();
-
-  private:
-  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::MissingAssetInfo>& _internal_missing_assets() const;
-  ::google::protobuf::RepeatedPtrField<::motionlab::protocol::MissingAssetInfo>* PROTOBUF_NONNULL _internal_mutable_missing_assets();
-  public:
-  const ::motionlab::protocol::MissingAssetInfo& missing_assets(int index) const;
-  ::motionlab::protocol::MissingAssetInfo* PROTOBUF_NONNULL add_missing_assets();
-  const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::MissingAssetInfo>& missing_assets() const;
-  // .motionlab.mechanism.Mechanism mechanism = 1 [json_name = "mechanism"];
-  bool has_mechanism() const;
-  void clear_mechanism() ;
-  const ::motionlab::mechanism::Mechanism& mechanism() const;
-  [[nodiscard]] ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE release_mechanism();
-  ::motionlab::mechanism::Mechanism* PROTOBUF_NONNULL mutable_mechanism();
-  void set_allocated_mechanism(::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_mechanism(::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE unsafe_arena_release_mechanism();
-
-  private:
-  const ::motionlab::mechanism::Mechanism& _internal_mechanism() const;
-  ::motionlab::mechanism::Mechanism* PROTOBUF_NONNULL _internal_mutable_mechanism();
-
-  public:
-  // .motionlab.mechanism.ProjectMetadata metadata = 3 [json_name = "metadata"];
-  bool has_metadata() const;
-  void clear_metadata() ;
-  const ::motionlab::mechanism::ProjectMetadata& metadata() const;
-  [[nodiscard]] ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NULLABLE release_metadata();
-  ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NONNULL mutable_metadata();
-  void set_allocated_metadata(::motionlab::mechanism::ProjectMetadata* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_metadata(::motionlab::mechanism::ProjectMetadata* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NULLABLE unsafe_arena_release_metadata();
-
-  private:
-  const ::motionlab::mechanism::ProjectMetadata& _internal_metadata() const;
-  ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NONNULL _internal_mutable_metadata();
-
-  public:
-  // @@protoc_insertion_point(class_scope:motionlab.protocol.LoadProjectSuccess)
- private:
-  class _Internal;
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<2, 4,
-                                   4, 0,
-                                   2>
-      _table_;
-
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-        const LoadProjectSuccess& from_msg);
-    ::google::protobuf::internal::HasBits<1> _has_bits_;
-    ::google::protobuf::internal::CachedSize _cached_size_;
-    ::google::protobuf::RepeatedPtrField< ::motionlab::protocol::BodyImportResult > bodies_;
-    ::google::protobuf::RepeatedPtrField< ::motionlab::protocol::MissingAssetInfo > missing_assets_;
-    ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE mechanism_;
-    ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NULLABLE metadata_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_protocol_2ftransport_2eproto;
-};
-
-extern const ::google::protobuf::internal::ClassDataFull LoadProjectSuccess_class_data_;
-// -------------------------------------------------------------------
-
-class CreateDatumFromFaceResult final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:motionlab.protocol.CreateDatumFromFaceResult) */ {
- public:
-  inline CreateDatumFromFaceResult() : CreateDatumFromFaceResult(nullptr) {}
-  ~CreateDatumFromFaceResult() PROTOBUF_FINAL;
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(CreateDatumFromFaceResult* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
-    SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(CreateDatumFromFaceResult));
-  }
-#endif
-
-  template <typename = void>
-  explicit PROTOBUF_CONSTEXPR CreateDatumFromFaceResult(::google::protobuf::internal::ConstantInitialized);
-
-  inline CreateDatumFromFaceResult(const CreateDatumFromFaceResult& from) : CreateDatumFromFaceResult(nullptr, from) {}
-  inline CreateDatumFromFaceResult(CreateDatumFromFaceResult&& from) noexcept
-      : CreateDatumFromFaceResult(nullptr, ::std::move(from)) {}
-  inline CreateDatumFromFaceResult& operator=(const CreateDatumFromFaceResult& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline CreateDatumFromFaceResult& operator=(CreateDatumFromFaceResult&& from) noexcept {
-    if (this == &from) return *this;
-    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const CreateDatumFromFaceResult& default_instance() {
-    return *reinterpret_cast<const CreateDatumFromFaceResult*>(
-        &_CreateDatumFromFaceResult_default_instance_);
-  }
-  enum ResultCase {
-    kSuccess = 1,
-    kErrorMessage = 2,
-    RESULT_NOT_SET = 0,
-  };
-  static constexpr int kIndexInFileMessages = 19;
-  friend void swap(CreateDatumFromFaceResult& a, CreateDatumFromFaceResult& b) { a.Swap(&b); }
-  inline void Swap(CreateDatumFromFaceResult* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(CreateDatumFromFaceResult* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  CreateDatumFromFaceResult* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<CreateDatumFromFaceResult>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const CreateDatumFromFaceResult& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const CreateDatumFromFaceResult& from) { CreateDatumFromFaceResult::MergeImpl(*this, from); }
-
-  private:
-  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
-                        const ::google::protobuf::MessageLite& from_msg);
-
-  public:
-  bool IsInitialized() const {
-    return true;
-  }
-  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
-  #if defined(PROTOBUF_CUSTOM_VTABLE)
-  private:
-  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
-  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
-
-  public:
-  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
-  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
-    return _InternalSerialize(*this, target, stream);
-  }
-  #else   // PROTOBUF_CUSTOM_VTABLE
-  ::size_t ByteSizeLong() const final;
-  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
-  #endif  // PROTOBUF_CUSTOM_VTABLE
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static void SharedDtor(MessageLite& self);
-  void InternalSwap(CreateDatumFromFaceResult* PROTOBUF_NONNULL other);
- private:
-  template <typename T>
-  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "motionlab.protocol.CreateDatumFromFaceResult"; }
-
-  explicit CreateDatumFromFaceResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  CreateDatumFromFaceResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CreateDatumFromFaceResult& from);
-  CreateDatumFromFaceResult(
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CreateDatumFromFaceResult&& from) noexcept
-      : CreateDatumFromFaceResult(arena) {
-    *this = ::std::move(from);
-  }
-  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
-  static void* PROTOBUF_NONNULL PlacementNew_(
-      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static constexpr auto InternalNewImpl_();
-
- public:
-  static constexpr auto InternalGenerateClassData_();
-
-  ::google::protobuf::Metadata GetMetadata() const;
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-  enum : int {
-    kSuccessFieldNumber = 1,
-    kErrorMessageFieldNumber = 2,
-  };
-  // .motionlab.protocol.CreateDatumFromFaceSuccess success = 1 [json_name = "success"];
-  bool has_success() const;
-  private:
-  bool _internal_has_success() const;
-
-  public:
-  void clear_success() ;
-  const ::motionlab::protocol::CreateDatumFromFaceSuccess& success() const;
-  [[nodiscard]] ::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NULLABLE release_success();
-  ::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NONNULL mutable_success();
-  void set_allocated_success(::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_success(::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NULLABLE value);
-  ::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NULLABLE unsafe_arena_release_success();
-
-  private:
-  const ::motionlab::protocol::CreateDatumFromFaceSuccess& _internal_success() const;
-  ::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NONNULL _internal_mutable_success();
-
-  public:
-  // string error_message = 2 [json_name = "errorMessage"];
-  bool has_error_message() const;
-  void clear_error_message() ;
-  const ::std::string& error_message() const;
-  template <typename Arg_ = const ::std::string&, typename... Args_>
-  void set_error_message(Arg_&& arg, Args_... args);
-  ::std::string* PROTOBUF_NONNULL mutable_error_message();
-  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_error_message();
-  void set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value);
-
-  private:
-  const ::std::string& _internal_error_message() const;
-  PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(const ::std::string& value);
-  ::std::string* PROTOBUF_NONNULL _internal_mutable_error_message();
-
-  public:
-  void clear_result();
-  ResultCase result_case() const;
-  // @@protoc_insertion_point(class_scope:motionlab.protocol.CreateDatumFromFaceResult)
- private:
-  class _Internal;
-  void set_has_success();
-  void set_has_error_message();
-  inline bool has_result() const;
-  inline void clear_has_result();
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<0, 2,
-                                   1, 66,
-                                   2>
-      _table_;
-
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-        const CreateDatumFromFaceResult& from_msg);
-    union ResultUnion {
-      constexpr ResultUnion() : _constinit_{} {}
-      ::google::protobuf::internal::ConstantInitialized _constinit_;
-      ::motionlab::protocol::CreateDatumFromFaceSuccess* PROTOBUF_NULLABLE success_;
-      ::google::protobuf::internal::ArenaStringPtr error_message_;
-    } result_;
-    ::google::protobuf::internal::CachedSize _cached_size_;
-    ::uint32_t _oneof_case_[1];
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_protocol_2ftransport_2eproto;
-};
-
-extern const ::google::protobuf::internal::ClassDataFull CreateDatumFromFaceResult_class_data_;
 // -------------------------------------------------------------------
 
 class LoadProjectResult final : public ::google::protobuf::Message
@@ -12144,7 +18979,7 @@ class LoadProjectResult final : public ::google::protobuf::Message
     kErrorMessage = 2,
     RESULT_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 47;
+  static constexpr int kIndexInFileMessages = 73;
   friend void swap(LoadProjectResult& a, LoadProjectResult& b) { a.Swap(&b); }
   inline void Swap(LoadProjectResult* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -12386,6 +19221,17 @@ class Event final : public ::google::protobuf::Message
     kUpdateJointResult = 21,
     kDeleteJointResult = 22,
     kUpdateDatumPoseResult = 23,
+    kCreateLoadResult = 24,
+    kUpdateLoadResult = 25,
+    kDeleteLoadResult = 26,
+    kCreateActuatorResult = 27,
+    kUpdateActuatorResult = 28,
+    kDeleteActuatorResult = 29,
+    kCreateBodyResult = 50,
+    kDeleteBodyResult = 51,
+    kAttachGeometryResult = 52,
+    kDetachGeometryResult = 53,
+    kUpdateMassPropertiesResult = 54,
     kCompilationResult = 30,
     kSimulationState = 31,
     kSimulationFrame = 32,
@@ -12393,6 +19239,7 @@ class Event final : public ::google::protobuf::Message
     kSaveProjectResult = 40,
     kLoadProjectResult = 41,
     kRelocateAssetResult = 42,
+    kNewProjectResult = 43,
     PAYLOAD_NOT_SET = 0,
   };
   static constexpr int kIndexInFileMessages = 2;
@@ -12497,6 +19344,17 @@ class Event final : public ::google::protobuf::Message
     kUpdateJointResultFieldNumber = 21,
     kDeleteJointResultFieldNumber = 22,
     kUpdateDatumPoseResultFieldNumber = 23,
+    kCreateLoadResultFieldNumber = 24,
+    kUpdateLoadResultFieldNumber = 25,
+    kDeleteLoadResultFieldNumber = 26,
+    kCreateActuatorResultFieldNumber = 27,
+    kUpdateActuatorResultFieldNumber = 28,
+    kDeleteActuatorResultFieldNumber = 29,
+    kCreateBodyResultFieldNumber = 50,
+    kDeleteBodyResultFieldNumber = 51,
+    kAttachGeometryResultFieldNumber = 52,
+    kDetachGeometryResultFieldNumber = 53,
+    kUpdateMassPropertiesResultFieldNumber = 54,
     kCompilationResultFieldNumber = 30,
     kSimulationStateFieldNumber = 31,
     kSimulationFrameFieldNumber = 32,
@@ -12504,6 +19362,7 @@ class Event final : public ::google::protobuf::Message
     kSaveProjectResultFieldNumber = 40,
     kLoadProjectResultFieldNumber = 41,
     kRelocateAssetResultFieldNumber = 42,
+    kNewProjectResultFieldNumber = 43,
   };
   // uint64 sequence_id = 1 [json_name = "sequenceId"];
   void clear_sequence_id() ;
@@ -12781,6 +19640,215 @@ class Event final : public ::google::protobuf::Message
   ::motionlab::protocol::UpdateDatumPoseResult* PROTOBUF_NONNULL _internal_mutable_update_datum_pose_result();
 
   public:
+  // .motionlab.protocol.CreateLoadResult create_load_result = 24 [json_name = "createLoadResult"];
+  bool has_create_load_result() const;
+  private:
+  bool _internal_has_create_load_result() const;
+
+  public:
+  void clear_create_load_result() ;
+  const ::motionlab::protocol::CreateLoadResult& create_load_result() const;
+  [[nodiscard]] ::motionlab::protocol::CreateLoadResult* PROTOBUF_NULLABLE release_create_load_result();
+  ::motionlab::protocol::CreateLoadResult* PROTOBUF_NONNULL mutable_create_load_result();
+  void set_allocated_create_load_result(::motionlab::protocol::CreateLoadResult* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_create_load_result(::motionlab::protocol::CreateLoadResult* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::CreateLoadResult* PROTOBUF_NULLABLE unsafe_arena_release_create_load_result();
+
+  private:
+  const ::motionlab::protocol::CreateLoadResult& _internal_create_load_result() const;
+  ::motionlab::protocol::CreateLoadResult* PROTOBUF_NONNULL _internal_mutable_create_load_result();
+
+  public:
+  // .motionlab.protocol.UpdateLoadResult update_load_result = 25 [json_name = "updateLoadResult"];
+  bool has_update_load_result() const;
+  private:
+  bool _internal_has_update_load_result() const;
+
+  public:
+  void clear_update_load_result() ;
+  const ::motionlab::protocol::UpdateLoadResult& update_load_result() const;
+  [[nodiscard]] ::motionlab::protocol::UpdateLoadResult* PROTOBUF_NULLABLE release_update_load_result();
+  ::motionlab::protocol::UpdateLoadResult* PROTOBUF_NONNULL mutable_update_load_result();
+  void set_allocated_update_load_result(::motionlab::protocol::UpdateLoadResult* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_update_load_result(::motionlab::protocol::UpdateLoadResult* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::UpdateLoadResult* PROTOBUF_NULLABLE unsafe_arena_release_update_load_result();
+
+  private:
+  const ::motionlab::protocol::UpdateLoadResult& _internal_update_load_result() const;
+  ::motionlab::protocol::UpdateLoadResult* PROTOBUF_NONNULL _internal_mutable_update_load_result();
+
+  public:
+  // .motionlab.protocol.DeleteLoadResult delete_load_result = 26 [json_name = "deleteLoadResult"];
+  bool has_delete_load_result() const;
+  private:
+  bool _internal_has_delete_load_result() const;
+
+  public:
+  void clear_delete_load_result() ;
+  const ::motionlab::protocol::DeleteLoadResult& delete_load_result() const;
+  [[nodiscard]] ::motionlab::protocol::DeleteLoadResult* PROTOBUF_NULLABLE release_delete_load_result();
+  ::motionlab::protocol::DeleteLoadResult* PROTOBUF_NONNULL mutable_delete_load_result();
+  void set_allocated_delete_load_result(::motionlab::protocol::DeleteLoadResult* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_delete_load_result(::motionlab::protocol::DeleteLoadResult* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::DeleteLoadResult* PROTOBUF_NULLABLE unsafe_arena_release_delete_load_result();
+
+  private:
+  const ::motionlab::protocol::DeleteLoadResult& _internal_delete_load_result() const;
+  ::motionlab::protocol::DeleteLoadResult* PROTOBUF_NONNULL _internal_mutable_delete_load_result();
+
+  public:
+  // .motionlab.protocol.CreateActuatorResult create_actuator_result = 27 [json_name = "createActuatorResult"];
+  bool has_create_actuator_result() const;
+  private:
+  bool _internal_has_create_actuator_result() const;
+
+  public:
+  void clear_create_actuator_result() ;
+  const ::motionlab::protocol::CreateActuatorResult& create_actuator_result() const;
+  [[nodiscard]] ::motionlab::protocol::CreateActuatorResult* PROTOBUF_NULLABLE release_create_actuator_result();
+  ::motionlab::protocol::CreateActuatorResult* PROTOBUF_NONNULL mutable_create_actuator_result();
+  void set_allocated_create_actuator_result(::motionlab::protocol::CreateActuatorResult* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_create_actuator_result(::motionlab::protocol::CreateActuatorResult* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::CreateActuatorResult* PROTOBUF_NULLABLE unsafe_arena_release_create_actuator_result();
+
+  private:
+  const ::motionlab::protocol::CreateActuatorResult& _internal_create_actuator_result() const;
+  ::motionlab::protocol::CreateActuatorResult* PROTOBUF_NONNULL _internal_mutable_create_actuator_result();
+
+  public:
+  // .motionlab.protocol.UpdateActuatorResult update_actuator_result = 28 [json_name = "updateActuatorResult"];
+  bool has_update_actuator_result() const;
+  private:
+  bool _internal_has_update_actuator_result() const;
+
+  public:
+  void clear_update_actuator_result() ;
+  const ::motionlab::protocol::UpdateActuatorResult& update_actuator_result() const;
+  [[nodiscard]] ::motionlab::protocol::UpdateActuatorResult* PROTOBUF_NULLABLE release_update_actuator_result();
+  ::motionlab::protocol::UpdateActuatorResult* PROTOBUF_NONNULL mutable_update_actuator_result();
+  void set_allocated_update_actuator_result(::motionlab::protocol::UpdateActuatorResult* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_update_actuator_result(::motionlab::protocol::UpdateActuatorResult* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::UpdateActuatorResult* PROTOBUF_NULLABLE unsafe_arena_release_update_actuator_result();
+
+  private:
+  const ::motionlab::protocol::UpdateActuatorResult& _internal_update_actuator_result() const;
+  ::motionlab::protocol::UpdateActuatorResult* PROTOBUF_NONNULL _internal_mutable_update_actuator_result();
+
+  public:
+  // .motionlab.protocol.DeleteActuatorResult delete_actuator_result = 29 [json_name = "deleteActuatorResult"];
+  bool has_delete_actuator_result() const;
+  private:
+  bool _internal_has_delete_actuator_result() const;
+
+  public:
+  void clear_delete_actuator_result() ;
+  const ::motionlab::protocol::DeleteActuatorResult& delete_actuator_result() const;
+  [[nodiscard]] ::motionlab::protocol::DeleteActuatorResult* PROTOBUF_NULLABLE release_delete_actuator_result();
+  ::motionlab::protocol::DeleteActuatorResult* PROTOBUF_NONNULL mutable_delete_actuator_result();
+  void set_allocated_delete_actuator_result(::motionlab::protocol::DeleteActuatorResult* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_delete_actuator_result(::motionlab::protocol::DeleteActuatorResult* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::DeleteActuatorResult* PROTOBUF_NULLABLE unsafe_arena_release_delete_actuator_result();
+
+  private:
+  const ::motionlab::protocol::DeleteActuatorResult& _internal_delete_actuator_result() const;
+  ::motionlab::protocol::DeleteActuatorResult* PROTOBUF_NONNULL _internal_mutable_delete_actuator_result();
+
+  public:
+  // .motionlab.protocol.CreateBodyResult create_body_result = 50 [json_name = "createBodyResult"];
+  bool has_create_body_result() const;
+  private:
+  bool _internal_has_create_body_result() const;
+
+  public:
+  void clear_create_body_result() ;
+  const ::motionlab::protocol::CreateBodyResult& create_body_result() const;
+  [[nodiscard]] ::motionlab::protocol::CreateBodyResult* PROTOBUF_NULLABLE release_create_body_result();
+  ::motionlab::protocol::CreateBodyResult* PROTOBUF_NONNULL mutable_create_body_result();
+  void set_allocated_create_body_result(::motionlab::protocol::CreateBodyResult* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_create_body_result(::motionlab::protocol::CreateBodyResult* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::CreateBodyResult* PROTOBUF_NULLABLE unsafe_arena_release_create_body_result();
+
+  private:
+  const ::motionlab::protocol::CreateBodyResult& _internal_create_body_result() const;
+  ::motionlab::protocol::CreateBodyResult* PROTOBUF_NONNULL _internal_mutable_create_body_result();
+
+  public:
+  // .motionlab.protocol.DeleteBodyResult delete_body_result = 51 [json_name = "deleteBodyResult"];
+  bool has_delete_body_result() const;
+  private:
+  bool _internal_has_delete_body_result() const;
+
+  public:
+  void clear_delete_body_result() ;
+  const ::motionlab::protocol::DeleteBodyResult& delete_body_result() const;
+  [[nodiscard]] ::motionlab::protocol::DeleteBodyResult* PROTOBUF_NULLABLE release_delete_body_result();
+  ::motionlab::protocol::DeleteBodyResult* PROTOBUF_NONNULL mutable_delete_body_result();
+  void set_allocated_delete_body_result(::motionlab::protocol::DeleteBodyResult* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_delete_body_result(::motionlab::protocol::DeleteBodyResult* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::DeleteBodyResult* PROTOBUF_NULLABLE unsafe_arena_release_delete_body_result();
+
+  private:
+  const ::motionlab::protocol::DeleteBodyResult& _internal_delete_body_result() const;
+  ::motionlab::protocol::DeleteBodyResult* PROTOBUF_NONNULL _internal_mutable_delete_body_result();
+
+  public:
+  // .motionlab.protocol.AttachGeometryResult attach_geometry_result = 52 [json_name = "attachGeometryResult"];
+  bool has_attach_geometry_result() const;
+  private:
+  bool _internal_has_attach_geometry_result() const;
+
+  public:
+  void clear_attach_geometry_result() ;
+  const ::motionlab::protocol::AttachGeometryResult& attach_geometry_result() const;
+  [[nodiscard]] ::motionlab::protocol::AttachGeometryResult* PROTOBUF_NULLABLE release_attach_geometry_result();
+  ::motionlab::protocol::AttachGeometryResult* PROTOBUF_NONNULL mutable_attach_geometry_result();
+  void set_allocated_attach_geometry_result(::motionlab::protocol::AttachGeometryResult* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_attach_geometry_result(::motionlab::protocol::AttachGeometryResult* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::AttachGeometryResult* PROTOBUF_NULLABLE unsafe_arena_release_attach_geometry_result();
+
+  private:
+  const ::motionlab::protocol::AttachGeometryResult& _internal_attach_geometry_result() const;
+  ::motionlab::protocol::AttachGeometryResult* PROTOBUF_NONNULL _internal_mutable_attach_geometry_result();
+
+  public:
+  // .motionlab.protocol.DetachGeometryResult detach_geometry_result = 53 [json_name = "detachGeometryResult"];
+  bool has_detach_geometry_result() const;
+  private:
+  bool _internal_has_detach_geometry_result() const;
+
+  public:
+  void clear_detach_geometry_result() ;
+  const ::motionlab::protocol::DetachGeometryResult& detach_geometry_result() const;
+  [[nodiscard]] ::motionlab::protocol::DetachGeometryResult* PROTOBUF_NULLABLE release_detach_geometry_result();
+  ::motionlab::protocol::DetachGeometryResult* PROTOBUF_NONNULL mutable_detach_geometry_result();
+  void set_allocated_detach_geometry_result(::motionlab::protocol::DetachGeometryResult* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_detach_geometry_result(::motionlab::protocol::DetachGeometryResult* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::DetachGeometryResult* PROTOBUF_NULLABLE unsafe_arena_release_detach_geometry_result();
+
+  private:
+  const ::motionlab::protocol::DetachGeometryResult& _internal_detach_geometry_result() const;
+  ::motionlab::protocol::DetachGeometryResult* PROTOBUF_NONNULL _internal_mutable_detach_geometry_result();
+
+  public:
+  // .motionlab.protocol.UpdateMassPropertiesResult update_mass_properties_result = 54 [json_name = "updateMassPropertiesResult"];
+  bool has_update_mass_properties_result() const;
+  private:
+  bool _internal_has_update_mass_properties_result() const;
+
+  public:
+  void clear_update_mass_properties_result() ;
+  const ::motionlab::protocol::UpdateMassPropertiesResult& update_mass_properties_result() const;
+  [[nodiscard]] ::motionlab::protocol::UpdateMassPropertiesResult* PROTOBUF_NULLABLE release_update_mass_properties_result();
+  ::motionlab::protocol::UpdateMassPropertiesResult* PROTOBUF_NONNULL mutable_update_mass_properties_result();
+  void set_allocated_update_mass_properties_result(::motionlab::protocol::UpdateMassPropertiesResult* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_update_mass_properties_result(::motionlab::protocol::UpdateMassPropertiesResult* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::UpdateMassPropertiesResult* PROTOBUF_NULLABLE unsafe_arena_release_update_mass_properties_result();
+
+  private:
+  const ::motionlab::protocol::UpdateMassPropertiesResult& _internal_update_mass_properties_result() const;
+  ::motionlab::protocol::UpdateMassPropertiesResult* PROTOBUF_NONNULL _internal_mutable_update_mass_properties_result();
+
+  public:
   // .motionlab.protocol.CompilationResultEvent compilation_result = 30 [json_name = "compilationResult"];
   bool has_compilation_result() const;
   private:
@@ -12914,6 +19982,25 @@ class Event final : public ::google::protobuf::Message
   ::motionlab::protocol::RelocateAssetResult* PROTOBUF_NONNULL _internal_mutable_relocate_asset_result();
 
   public:
+  // .motionlab.protocol.NewProjectResult new_project_result = 43 [json_name = "newProjectResult"];
+  bool has_new_project_result() const;
+  private:
+  bool _internal_has_new_project_result() const;
+
+  public:
+  void clear_new_project_result() ;
+  const ::motionlab::protocol::NewProjectResult& new_project_result() const;
+  [[nodiscard]] ::motionlab::protocol::NewProjectResult* PROTOBUF_NULLABLE release_new_project_result();
+  ::motionlab::protocol::NewProjectResult* PROTOBUF_NONNULL mutable_new_project_result();
+  void set_allocated_new_project_result(::motionlab::protocol::NewProjectResult* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_new_project_result(::motionlab::protocol::NewProjectResult* PROTOBUF_NULLABLE value);
+  ::motionlab::protocol::NewProjectResult* PROTOBUF_NULLABLE unsafe_arena_release_new_project_result();
+
+  private:
+  const ::motionlab::protocol::NewProjectResult& _internal_new_project_result() const;
+  ::motionlab::protocol::NewProjectResult* PROTOBUF_NONNULL _internal_mutable_new_project_result();
+
+  public:
   void clear_payload();
   PayloadCase payload_case() const;
   // @@protoc_insertion_point(class_scope:motionlab.protocol.Event)
@@ -12933,6 +20020,17 @@ class Event final : public ::google::protobuf::Message
   void set_has_update_joint_result();
   void set_has_delete_joint_result();
   void set_has_update_datum_pose_result();
+  void set_has_create_load_result();
+  void set_has_update_load_result();
+  void set_has_delete_load_result();
+  void set_has_create_actuator_result();
+  void set_has_update_actuator_result();
+  void set_has_delete_actuator_result();
+  void set_has_create_body_result();
+  void set_has_delete_body_result();
+  void set_has_attach_geometry_result();
+  void set_has_detach_geometry_result();
+  void set_has_update_mass_properties_result();
   void set_has_compilation_result();
   void set_has_simulation_state();
   void set_has_simulation_frame();
@@ -12940,12 +20038,13 @@ class Event final : public ::google::protobuf::Message
   void set_has_save_project_result();
   void set_has_load_project_result();
   void set_has_relocate_asset_result();
+  void set_has_new_project_result();
   inline bool has_payload() const;
   inline void clear_has_payload();
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<0, 22,
-                                   21, 0,
-                                   7>
+  static const ::google::protobuf::internal::TcParseTable<0, 34,
+                                   33, 0,
+                                   9>
       _table_;
 
   friend class ::google::protobuf::MessageLite;
@@ -12983,6 +20082,17 @@ class Event final : public ::google::protobuf::Message
       ::google::protobuf::Message* PROTOBUF_NULLABLE update_joint_result_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE delete_joint_result_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE update_datum_pose_result_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE create_load_result_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE update_load_result_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE delete_load_result_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE create_actuator_result_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE update_actuator_result_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE delete_actuator_result_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE create_body_result_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE delete_body_result_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE attach_geometry_result_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE detach_geometry_result_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE update_mass_properties_result_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE compilation_result_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE simulation_state_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE simulation_frame_;
@@ -12990,6 +20100,7 @@ class Event final : public ::google::protobuf::Message
       ::google::protobuf::Message* PROTOBUF_NULLABLE save_project_result_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE load_project_result_;
       ::google::protobuf::Message* PROTOBUF_NULLABLE relocate_asset_result_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE new_project_result_;
     } payload_;
     ::uint32_t _oneof_case_[1];
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -14119,6 +21230,908 @@ inline ::motionlab::protocol::DeleteJointCommand* PROTOBUF_NONNULL Command::muta
   return _msg;
 }
 
+// .motionlab.protocol.CreateLoadCommand create_load = 23 [json_name = "createLoad"];
+inline bool Command::has_create_load() const {
+  return payload_case() == kCreateLoad;
+}
+inline bool Command::_internal_has_create_load() const {
+  return payload_case() == kCreateLoad;
+}
+inline void Command::set_has_create_load() {
+  _impl_._oneof_case_[0] = kCreateLoad;
+}
+inline void Command::clear_create_load() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kCreateLoad) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.create_load_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.create_load_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::CreateLoadCommand* PROTOBUF_NULLABLE Command::release_create_load() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Command.create_load)
+  if (payload_case() == kCreateLoad) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::CreateLoadCommand*>(_impl_.payload_.create_load_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.create_load_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::CreateLoadCommand& Command::_internal_create_load() const {
+  return payload_case() == kCreateLoad ? static_cast<const ::motionlab::protocol::CreateLoadCommand&>(*reinterpret_cast<::motionlab::protocol::CreateLoadCommand*>(_impl_.payload_.create_load_))
+                     : reinterpret_cast<const ::motionlab::protocol::CreateLoadCommand&>(::motionlab::protocol::_CreateLoadCommand_default_instance_);
+}
+inline const ::motionlab::protocol::CreateLoadCommand& Command::create_load() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Command.create_load)
+  return _internal_create_load();
+}
+inline ::motionlab::protocol::CreateLoadCommand* PROTOBUF_NULLABLE Command::unsafe_arena_release_create_load() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Command.create_load)
+  if (payload_case() == kCreateLoad) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::CreateLoadCommand*>(_impl_.payload_.create_load_);
+    _impl_.payload_.create_load_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Command::unsafe_arena_set_allocated_create_load(
+    ::motionlab::protocol::CreateLoadCommand* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_create_load();
+    _impl_.payload_.create_load_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Command.create_load)
+}
+inline ::motionlab::protocol::CreateLoadCommand* PROTOBUF_NONNULL Command::_internal_mutable_create_load() {
+  if (payload_case() != kCreateLoad) {
+    clear_payload();
+    set_has_create_load();
+    _impl_.payload_.create_load_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::CreateLoadCommand>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::CreateLoadCommand*>(_impl_.payload_.create_load_);
+}
+inline ::motionlab::protocol::CreateLoadCommand* PROTOBUF_NONNULL Command::mutable_create_load()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::CreateLoadCommand* _msg = _internal_mutable_create_load();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.create_load)
+  return _msg;
+}
+
+// .motionlab.protocol.UpdateLoadCommand update_load = 24 [json_name = "updateLoad"];
+inline bool Command::has_update_load() const {
+  return payload_case() == kUpdateLoad;
+}
+inline bool Command::_internal_has_update_load() const {
+  return payload_case() == kUpdateLoad;
+}
+inline void Command::set_has_update_load() {
+  _impl_._oneof_case_[0] = kUpdateLoad;
+}
+inline void Command::clear_update_load() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kUpdateLoad) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.update_load_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.update_load_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::UpdateLoadCommand* PROTOBUF_NULLABLE Command::release_update_load() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Command.update_load)
+  if (payload_case() == kUpdateLoad) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::UpdateLoadCommand*>(_impl_.payload_.update_load_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.update_load_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::UpdateLoadCommand& Command::_internal_update_load() const {
+  return payload_case() == kUpdateLoad ? static_cast<const ::motionlab::protocol::UpdateLoadCommand&>(*reinterpret_cast<::motionlab::protocol::UpdateLoadCommand*>(_impl_.payload_.update_load_))
+                     : reinterpret_cast<const ::motionlab::protocol::UpdateLoadCommand&>(::motionlab::protocol::_UpdateLoadCommand_default_instance_);
+}
+inline const ::motionlab::protocol::UpdateLoadCommand& Command::update_load() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Command.update_load)
+  return _internal_update_load();
+}
+inline ::motionlab::protocol::UpdateLoadCommand* PROTOBUF_NULLABLE Command::unsafe_arena_release_update_load() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Command.update_load)
+  if (payload_case() == kUpdateLoad) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::UpdateLoadCommand*>(_impl_.payload_.update_load_);
+    _impl_.payload_.update_load_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Command::unsafe_arena_set_allocated_update_load(
+    ::motionlab::protocol::UpdateLoadCommand* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_update_load();
+    _impl_.payload_.update_load_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Command.update_load)
+}
+inline ::motionlab::protocol::UpdateLoadCommand* PROTOBUF_NONNULL Command::_internal_mutable_update_load() {
+  if (payload_case() != kUpdateLoad) {
+    clear_payload();
+    set_has_update_load();
+    _impl_.payload_.update_load_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::UpdateLoadCommand>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::UpdateLoadCommand*>(_impl_.payload_.update_load_);
+}
+inline ::motionlab::protocol::UpdateLoadCommand* PROTOBUF_NONNULL Command::mutable_update_load()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::UpdateLoadCommand* _msg = _internal_mutable_update_load();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.update_load)
+  return _msg;
+}
+
+// .motionlab.protocol.DeleteLoadCommand delete_load = 25 [json_name = "deleteLoad"];
+inline bool Command::has_delete_load() const {
+  return payload_case() == kDeleteLoad;
+}
+inline bool Command::_internal_has_delete_load() const {
+  return payload_case() == kDeleteLoad;
+}
+inline void Command::set_has_delete_load() {
+  _impl_._oneof_case_[0] = kDeleteLoad;
+}
+inline void Command::clear_delete_load() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kDeleteLoad) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.delete_load_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.delete_load_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::DeleteLoadCommand* PROTOBUF_NULLABLE Command::release_delete_load() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Command.delete_load)
+  if (payload_case() == kDeleteLoad) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DeleteLoadCommand*>(_impl_.payload_.delete_load_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.delete_load_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::DeleteLoadCommand& Command::_internal_delete_load() const {
+  return payload_case() == kDeleteLoad ? static_cast<const ::motionlab::protocol::DeleteLoadCommand&>(*reinterpret_cast<::motionlab::protocol::DeleteLoadCommand*>(_impl_.payload_.delete_load_))
+                     : reinterpret_cast<const ::motionlab::protocol::DeleteLoadCommand&>(::motionlab::protocol::_DeleteLoadCommand_default_instance_);
+}
+inline const ::motionlab::protocol::DeleteLoadCommand& Command::delete_load() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Command.delete_load)
+  return _internal_delete_load();
+}
+inline ::motionlab::protocol::DeleteLoadCommand* PROTOBUF_NULLABLE Command::unsafe_arena_release_delete_load() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Command.delete_load)
+  if (payload_case() == kDeleteLoad) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DeleteLoadCommand*>(_impl_.payload_.delete_load_);
+    _impl_.payload_.delete_load_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Command::unsafe_arena_set_allocated_delete_load(
+    ::motionlab::protocol::DeleteLoadCommand* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_delete_load();
+    _impl_.payload_.delete_load_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Command.delete_load)
+}
+inline ::motionlab::protocol::DeleteLoadCommand* PROTOBUF_NONNULL Command::_internal_mutable_delete_load() {
+  if (payload_case() != kDeleteLoad) {
+    clear_payload();
+    set_has_delete_load();
+    _impl_.payload_.delete_load_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::DeleteLoadCommand>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::DeleteLoadCommand*>(_impl_.payload_.delete_load_);
+}
+inline ::motionlab::protocol::DeleteLoadCommand* PROTOBUF_NONNULL Command::mutable_delete_load()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::DeleteLoadCommand* _msg = _internal_mutable_delete_load();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.delete_load)
+  return _msg;
+}
+
+// .motionlab.protocol.CreateActuatorCommand create_actuator = 26 [json_name = "createActuator"];
+inline bool Command::has_create_actuator() const {
+  return payload_case() == kCreateActuator;
+}
+inline bool Command::_internal_has_create_actuator() const {
+  return payload_case() == kCreateActuator;
+}
+inline void Command::set_has_create_actuator() {
+  _impl_._oneof_case_[0] = kCreateActuator;
+}
+inline void Command::clear_create_actuator() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kCreateActuator) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.create_actuator_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.create_actuator_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::CreateActuatorCommand* PROTOBUF_NULLABLE Command::release_create_actuator() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Command.create_actuator)
+  if (payload_case() == kCreateActuator) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::CreateActuatorCommand*>(_impl_.payload_.create_actuator_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.create_actuator_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::CreateActuatorCommand& Command::_internal_create_actuator() const {
+  return payload_case() == kCreateActuator ? static_cast<const ::motionlab::protocol::CreateActuatorCommand&>(*reinterpret_cast<::motionlab::protocol::CreateActuatorCommand*>(_impl_.payload_.create_actuator_))
+                     : reinterpret_cast<const ::motionlab::protocol::CreateActuatorCommand&>(::motionlab::protocol::_CreateActuatorCommand_default_instance_);
+}
+inline const ::motionlab::protocol::CreateActuatorCommand& Command::create_actuator() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Command.create_actuator)
+  return _internal_create_actuator();
+}
+inline ::motionlab::protocol::CreateActuatorCommand* PROTOBUF_NULLABLE Command::unsafe_arena_release_create_actuator() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Command.create_actuator)
+  if (payload_case() == kCreateActuator) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::CreateActuatorCommand*>(_impl_.payload_.create_actuator_);
+    _impl_.payload_.create_actuator_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Command::unsafe_arena_set_allocated_create_actuator(
+    ::motionlab::protocol::CreateActuatorCommand* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_create_actuator();
+    _impl_.payload_.create_actuator_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Command.create_actuator)
+}
+inline ::motionlab::protocol::CreateActuatorCommand* PROTOBUF_NONNULL Command::_internal_mutable_create_actuator() {
+  if (payload_case() != kCreateActuator) {
+    clear_payload();
+    set_has_create_actuator();
+    _impl_.payload_.create_actuator_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::CreateActuatorCommand>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::CreateActuatorCommand*>(_impl_.payload_.create_actuator_);
+}
+inline ::motionlab::protocol::CreateActuatorCommand* PROTOBUF_NONNULL Command::mutable_create_actuator()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::CreateActuatorCommand* _msg = _internal_mutable_create_actuator();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.create_actuator)
+  return _msg;
+}
+
+// .motionlab.protocol.UpdateActuatorCommand update_actuator = 27 [json_name = "updateActuator"];
+inline bool Command::has_update_actuator() const {
+  return payload_case() == kUpdateActuator;
+}
+inline bool Command::_internal_has_update_actuator() const {
+  return payload_case() == kUpdateActuator;
+}
+inline void Command::set_has_update_actuator() {
+  _impl_._oneof_case_[0] = kUpdateActuator;
+}
+inline void Command::clear_update_actuator() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kUpdateActuator) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.update_actuator_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.update_actuator_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::UpdateActuatorCommand* PROTOBUF_NULLABLE Command::release_update_actuator() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Command.update_actuator)
+  if (payload_case() == kUpdateActuator) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::UpdateActuatorCommand*>(_impl_.payload_.update_actuator_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.update_actuator_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::UpdateActuatorCommand& Command::_internal_update_actuator() const {
+  return payload_case() == kUpdateActuator ? static_cast<const ::motionlab::protocol::UpdateActuatorCommand&>(*reinterpret_cast<::motionlab::protocol::UpdateActuatorCommand*>(_impl_.payload_.update_actuator_))
+                     : reinterpret_cast<const ::motionlab::protocol::UpdateActuatorCommand&>(::motionlab::protocol::_UpdateActuatorCommand_default_instance_);
+}
+inline const ::motionlab::protocol::UpdateActuatorCommand& Command::update_actuator() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Command.update_actuator)
+  return _internal_update_actuator();
+}
+inline ::motionlab::protocol::UpdateActuatorCommand* PROTOBUF_NULLABLE Command::unsafe_arena_release_update_actuator() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Command.update_actuator)
+  if (payload_case() == kUpdateActuator) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::UpdateActuatorCommand*>(_impl_.payload_.update_actuator_);
+    _impl_.payload_.update_actuator_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Command::unsafe_arena_set_allocated_update_actuator(
+    ::motionlab::protocol::UpdateActuatorCommand* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_update_actuator();
+    _impl_.payload_.update_actuator_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Command.update_actuator)
+}
+inline ::motionlab::protocol::UpdateActuatorCommand* PROTOBUF_NONNULL Command::_internal_mutable_update_actuator() {
+  if (payload_case() != kUpdateActuator) {
+    clear_payload();
+    set_has_update_actuator();
+    _impl_.payload_.update_actuator_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::UpdateActuatorCommand>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::UpdateActuatorCommand*>(_impl_.payload_.update_actuator_);
+}
+inline ::motionlab::protocol::UpdateActuatorCommand* PROTOBUF_NONNULL Command::mutable_update_actuator()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::UpdateActuatorCommand* _msg = _internal_mutable_update_actuator();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.update_actuator)
+  return _msg;
+}
+
+// .motionlab.protocol.DeleteActuatorCommand delete_actuator = 28 [json_name = "deleteActuator"];
+inline bool Command::has_delete_actuator() const {
+  return payload_case() == kDeleteActuator;
+}
+inline bool Command::_internal_has_delete_actuator() const {
+  return payload_case() == kDeleteActuator;
+}
+inline void Command::set_has_delete_actuator() {
+  _impl_._oneof_case_[0] = kDeleteActuator;
+}
+inline void Command::clear_delete_actuator() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kDeleteActuator) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.delete_actuator_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.delete_actuator_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::DeleteActuatorCommand* PROTOBUF_NULLABLE Command::release_delete_actuator() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Command.delete_actuator)
+  if (payload_case() == kDeleteActuator) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DeleteActuatorCommand*>(_impl_.payload_.delete_actuator_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.delete_actuator_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::DeleteActuatorCommand& Command::_internal_delete_actuator() const {
+  return payload_case() == kDeleteActuator ? static_cast<const ::motionlab::protocol::DeleteActuatorCommand&>(*reinterpret_cast<::motionlab::protocol::DeleteActuatorCommand*>(_impl_.payload_.delete_actuator_))
+                     : reinterpret_cast<const ::motionlab::protocol::DeleteActuatorCommand&>(::motionlab::protocol::_DeleteActuatorCommand_default_instance_);
+}
+inline const ::motionlab::protocol::DeleteActuatorCommand& Command::delete_actuator() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Command.delete_actuator)
+  return _internal_delete_actuator();
+}
+inline ::motionlab::protocol::DeleteActuatorCommand* PROTOBUF_NULLABLE Command::unsafe_arena_release_delete_actuator() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Command.delete_actuator)
+  if (payload_case() == kDeleteActuator) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DeleteActuatorCommand*>(_impl_.payload_.delete_actuator_);
+    _impl_.payload_.delete_actuator_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Command::unsafe_arena_set_allocated_delete_actuator(
+    ::motionlab::protocol::DeleteActuatorCommand* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_delete_actuator();
+    _impl_.payload_.delete_actuator_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Command.delete_actuator)
+}
+inline ::motionlab::protocol::DeleteActuatorCommand* PROTOBUF_NONNULL Command::_internal_mutable_delete_actuator() {
+  if (payload_case() != kDeleteActuator) {
+    clear_payload();
+    set_has_delete_actuator();
+    _impl_.payload_.delete_actuator_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::DeleteActuatorCommand>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::DeleteActuatorCommand*>(_impl_.payload_.delete_actuator_);
+}
+inline ::motionlab::protocol::DeleteActuatorCommand* PROTOBUF_NONNULL Command::mutable_delete_actuator()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::DeleteActuatorCommand* _msg = _internal_mutable_delete_actuator();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.delete_actuator)
+  return _msg;
+}
+
+// .motionlab.protocol.CreateBodyCommand create_body = 50 [json_name = "createBody"];
+inline bool Command::has_create_body() const {
+  return payload_case() == kCreateBody;
+}
+inline bool Command::_internal_has_create_body() const {
+  return payload_case() == kCreateBody;
+}
+inline void Command::set_has_create_body() {
+  _impl_._oneof_case_[0] = kCreateBody;
+}
+inline void Command::clear_create_body() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kCreateBody) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.create_body_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.create_body_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::CreateBodyCommand* PROTOBUF_NULLABLE Command::release_create_body() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Command.create_body)
+  if (payload_case() == kCreateBody) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::CreateBodyCommand*>(_impl_.payload_.create_body_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.create_body_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::CreateBodyCommand& Command::_internal_create_body() const {
+  return payload_case() == kCreateBody ? static_cast<const ::motionlab::protocol::CreateBodyCommand&>(*reinterpret_cast<::motionlab::protocol::CreateBodyCommand*>(_impl_.payload_.create_body_))
+                     : reinterpret_cast<const ::motionlab::protocol::CreateBodyCommand&>(::motionlab::protocol::_CreateBodyCommand_default_instance_);
+}
+inline const ::motionlab::protocol::CreateBodyCommand& Command::create_body() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Command.create_body)
+  return _internal_create_body();
+}
+inline ::motionlab::protocol::CreateBodyCommand* PROTOBUF_NULLABLE Command::unsafe_arena_release_create_body() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Command.create_body)
+  if (payload_case() == kCreateBody) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::CreateBodyCommand*>(_impl_.payload_.create_body_);
+    _impl_.payload_.create_body_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Command::unsafe_arena_set_allocated_create_body(
+    ::motionlab::protocol::CreateBodyCommand* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_create_body();
+    _impl_.payload_.create_body_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Command.create_body)
+}
+inline ::motionlab::protocol::CreateBodyCommand* PROTOBUF_NONNULL Command::_internal_mutable_create_body() {
+  if (payload_case() != kCreateBody) {
+    clear_payload();
+    set_has_create_body();
+    _impl_.payload_.create_body_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::CreateBodyCommand>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::CreateBodyCommand*>(_impl_.payload_.create_body_);
+}
+inline ::motionlab::protocol::CreateBodyCommand* PROTOBUF_NONNULL Command::mutable_create_body()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::CreateBodyCommand* _msg = _internal_mutable_create_body();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.create_body)
+  return _msg;
+}
+
+// .motionlab.protocol.DeleteBodyCommand delete_body = 51 [json_name = "deleteBody"];
+inline bool Command::has_delete_body() const {
+  return payload_case() == kDeleteBody;
+}
+inline bool Command::_internal_has_delete_body() const {
+  return payload_case() == kDeleteBody;
+}
+inline void Command::set_has_delete_body() {
+  _impl_._oneof_case_[0] = kDeleteBody;
+}
+inline void Command::clear_delete_body() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kDeleteBody) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.delete_body_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.delete_body_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::DeleteBodyCommand* PROTOBUF_NULLABLE Command::release_delete_body() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Command.delete_body)
+  if (payload_case() == kDeleteBody) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DeleteBodyCommand*>(_impl_.payload_.delete_body_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.delete_body_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::DeleteBodyCommand& Command::_internal_delete_body() const {
+  return payload_case() == kDeleteBody ? static_cast<const ::motionlab::protocol::DeleteBodyCommand&>(*reinterpret_cast<::motionlab::protocol::DeleteBodyCommand*>(_impl_.payload_.delete_body_))
+                     : reinterpret_cast<const ::motionlab::protocol::DeleteBodyCommand&>(::motionlab::protocol::_DeleteBodyCommand_default_instance_);
+}
+inline const ::motionlab::protocol::DeleteBodyCommand& Command::delete_body() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Command.delete_body)
+  return _internal_delete_body();
+}
+inline ::motionlab::protocol::DeleteBodyCommand* PROTOBUF_NULLABLE Command::unsafe_arena_release_delete_body() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Command.delete_body)
+  if (payload_case() == kDeleteBody) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DeleteBodyCommand*>(_impl_.payload_.delete_body_);
+    _impl_.payload_.delete_body_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Command::unsafe_arena_set_allocated_delete_body(
+    ::motionlab::protocol::DeleteBodyCommand* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_delete_body();
+    _impl_.payload_.delete_body_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Command.delete_body)
+}
+inline ::motionlab::protocol::DeleteBodyCommand* PROTOBUF_NONNULL Command::_internal_mutable_delete_body() {
+  if (payload_case() != kDeleteBody) {
+    clear_payload();
+    set_has_delete_body();
+    _impl_.payload_.delete_body_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::DeleteBodyCommand>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::DeleteBodyCommand*>(_impl_.payload_.delete_body_);
+}
+inline ::motionlab::protocol::DeleteBodyCommand* PROTOBUF_NONNULL Command::mutable_delete_body()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::DeleteBodyCommand* _msg = _internal_mutable_delete_body();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.delete_body)
+  return _msg;
+}
+
+// .motionlab.protocol.AttachGeometryCommand attach_geometry = 52 [json_name = "attachGeometry"];
+inline bool Command::has_attach_geometry() const {
+  return payload_case() == kAttachGeometry;
+}
+inline bool Command::_internal_has_attach_geometry() const {
+  return payload_case() == kAttachGeometry;
+}
+inline void Command::set_has_attach_geometry() {
+  _impl_._oneof_case_[0] = kAttachGeometry;
+}
+inline void Command::clear_attach_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kAttachGeometry) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.attach_geometry_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.attach_geometry_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::AttachGeometryCommand* PROTOBUF_NULLABLE Command::release_attach_geometry() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Command.attach_geometry)
+  if (payload_case() == kAttachGeometry) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::AttachGeometryCommand*>(_impl_.payload_.attach_geometry_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.attach_geometry_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::AttachGeometryCommand& Command::_internal_attach_geometry() const {
+  return payload_case() == kAttachGeometry ? static_cast<const ::motionlab::protocol::AttachGeometryCommand&>(*reinterpret_cast<::motionlab::protocol::AttachGeometryCommand*>(_impl_.payload_.attach_geometry_))
+                     : reinterpret_cast<const ::motionlab::protocol::AttachGeometryCommand&>(::motionlab::protocol::_AttachGeometryCommand_default_instance_);
+}
+inline const ::motionlab::protocol::AttachGeometryCommand& Command::attach_geometry() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Command.attach_geometry)
+  return _internal_attach_geometry();
+}
+inline ::motionlab::protocol::AttachGeometryCommand* PROTOBUF_NULLABLE Command::unsafe_arena_release_attach_geometry() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Command.attach_geometry)
+  if (payload_case() == kAttachGeometry) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::AttachGeometryCommand*>(_impl_.payload_.attach_geometry_);
+    _impl_.payload_.attach_geometry_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Command::unsafe_arena_set_allocated_attach_geometry(
+    ::motionlab::protocol::AttachGeometryCommand* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_attach_geometry();
+    _impl_.payload_.attach_geometry_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Command.attach_geometry)
+}
+inline ::motionlab::protocol::AttachGeometryCommand* PROTOBUF_NONNULL Command::_internal_mutable_attach_geometry() {
+  if (payload_case() != kAttachGeometry) {
+    clear_payload();
+    set_has_attach_geometry();
+    _impl_.payload_.attach_geometry_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::AttachGeometryCommand>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::AttachGeometryCommand*>(_impl_.payload_.attach_geometry_);
+}
+inline ::motionlab::protocol::AttachGeometryCommand* PROTOBUF_NONNULL Command::mutable_attach_geometry()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::AttachGeometryCommand* _msg = _internal_mutable_attach_geometry();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.attach_geometry)
+  return _msg;
+}
+
+// .motionlab.protocol.DetachGeometryCommand detach_geometry = 53 [json_name = "detachGeometry"];
+inline bool Command::has_detach_geometry() const {
+  return payload_case() == kDetachGeometry;
+}
+inline bool Command::_internal_has_detach_geometry() const {
+  return payload_case() == kDetachGeometry;
+}
+inline void Command::set_has_detach_geometry() {
+  _impl_._oneof_case_[0] = kDetachGeometry;
+}
+inline void Command::clear_detach_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kDetachGeometry) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.detach_geometry_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.detach_geometry_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::DetachGeometryCommand* PROTOBUF_NULLABLE Command::release_detach_geometry() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Command.detach_geometry)
+  if (payload_case() == kDetachGeometry) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DetachGeometryCommand*>(_impl_.payload_.detach_geometry_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.detach_geometry_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::DetachGeometryCommand& Command::_internal_detach_geometry() const {
+  return payload_case() == kDetachGeometry ? static_cast<const ::motionlab::protocol::DetachGeometryCommand&>(*reinterpret_cast<::motionlab::protocol::DetachGeometryCommand*>(_impl_.payload_.detach_geometry_))
+                     : reinterpret_cast<const ::motionlab::protocol::DetachGeometryCommand&>(::motionlab::protocol::_DetachGeometryCommand_default_instance_);
+}
+inline const ::motionlab::protocol::DetachGeometryCommand& Command::detach_geometry() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Command.detach_geometry)
+  return _internal_detach_geometry();
+}
+inline ::motionlab::protocol::DetachGeometryCommand* PROTOBUF_NULLABLE Command::unsafe_arena_release_detach_geometry() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Command.detach_geometry)
+  if (payload_case() == kDetachGeometry) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DetachGeometryCommand*>(_impl_.payload_.detach_geometry_);
+    _impl_.payload_.detach_geometry_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Command::unsafe_arena_set_allocated_detach_geometry(
+    ::motionlab::protocol::DetachGeometryCommand* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_detach_geometry();
+    _impl_.payload_.detach_geometry_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Command.detach_geometry)
+}
+inline ::motionlab::protocol::DetachGeometryCommand* PROTOBUF_NONNULL Command::_internal_mutable_detach_geometry() {
+  if (payload_case() != kDetachGeometry) {
+    clear_payload();
+    set_has_detach_geometry();
+    _impl_.payload_.detach_geometry_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::DetachGeometryCommand>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::DetachGeometryCommand*>(_impl_.payload_.detach_geometry_);
+}
+inline ::motionlab::protocol::DetachGeometryCommand* PROTOBUF_NONNULL Command::mutable_detach_geometry()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::DetachGeometryCommand* _msg = _internal_mutable_detach_geometry();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.detach_geometry)
+  return _msg;
+}
+
+// .motionlab.protocol.UpdateMassPropertiesCommand update_mass_properties = 54 [json_name = "updateMassProperties"];
+inline bool Command::has_update_mass_properties() const {
+  return payload_case() == kUpdateMassProperties;
+}
+inline bool Command::_internal_has_update_mass_properties() const {
+  return payload_case() == kUpdateMassProperties;
+}
+inline void Command::set_has_update_mass_properties() {
+  _impl_._oneof_case_[0] = kUpdateMassProperties;
+}
+inline void Command::clear_update_mass_properties() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kUpdateMassProperties) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.update_mass_properties_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.update_mass_properties_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::UpdateMassPropertiesCommand* PROTOBUF_NULLABLE Command::release_update_mass_properties() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Command.update_mass_properties)
+  if (payload_case() == kUpdateMassProperties) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::UpdateMassPropertiesCommand*>(_impl_.payload_.update_mass_properties_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.update_mass_properties_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::UpdateMassPropertiesCommand& Command::_internal_update_mass_properties() const {
+  return payload_case() == kUpdateMassProperties ? static_cast<const ::motionlab::protocol::UpdateMassPropertiesCommand&>(*reinterpret_cast<::motionlab::protocol::UpdateMassPropertiesCommand*>(_impl_.payload_.update_mass_properties_))
+                     : reinterpret_cast<const ::motionlab::protocol::UpdateMassPropertiesCommand&>(::motionlab::protocol::_UpdateMassPropertiesCommand_default_instance_);
+}
+inline const ::motionlab::protocol::UpdateMassPropertiesCommand& Command::update_mass_properties() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Command.update_mass_properties)
+  return _internal_update_mass_properties();
+}
+inline ::motionlab::protocol::UpdateMassPropertiesCommand* PROTOBUF_NULLABLE Command::unsafe_arena_release_update_mass_properties() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Command.update_mass_properties)
+  if (payload_case() == kUpdateMassProperties) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::UpdateMassPropertiesCommand*>(_impl_.payload_.update_mass_properties_);
+    _impl_.payload_.update_mass_properties_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Command::unsafe_arena_set_allocated_update_mass_properties(
+    ::motionlab::protocol::UpdateMassPropertiesCommand* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_update_mass_properties();
+    _impl_.payload_.update_mass_properties_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Command.update_mass_properties)
+}
+inline ::motionlab::protocol::UpdateMassPropertiesCommand* PROTOBUF_NONNULL Command::_internal_mutable_update_mass_properties() {
+  if (payload_case() != kUpdateMassProperties) {
+    clear_payload();
+    set_has_update_mass_properties();
+    _impl_.payload_.update_mass_properties_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::UpdateMassPropertiesCommand>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::UpdateMassPropertiesCommand*>(_impl_.payload_.update_mass_properties_);
+}
+inline ::motionlab::protocol::UpdateMassPropertiesCommand* PROTOBUF_NONNULL Command::mutable_update_mass_properties()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::UpdateMassPropertiesCommand* _msg = _internal_mutable_update_mass_properties();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.update_mass_properties)
+  return _msg;
+}
+
 // .motionlab.protocol.CompileMechanismCommand compile_mechanism = 30 [json_name = "compileMechanism"];
 inline bool Command::has_compile_mechanism() const {
   return payload_case() == kCompileMechanism;
@@ -14608,6 +22621,88 @@ inline ::motionlab::protocol::RelocateAssetCommand* PROTOBUF_NONNULL Command::mu
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::motionlab::protocol::RelocateAssetCommand* _msg = _internal_mutable_relocate_asset();
   // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.relocate_asset)
+  return _msg;
+}
+
+// .motionlab.protocol.NewProjectCommand new_project = 43 [json_name = "newProject"];
+inline bool Command::has_new_project() const {
+  return payload_case() == kNewProject;
+}
+inline bool Command::_internal_has_new_project() const {
+  return payload_case() == kNewProject;
+}
+inline void Command::set_has_new_project() {
+  _impl_._oneof_case_[0] = kNewProject;
+}
+inline void Command::clear_new_project() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kNewProject) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.new_project_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.new_project_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::NewProjectCommand* PROTOBUF_NULLABLE Command::release_new_project() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Command.new_project)
+  if (payload_case() == kNewProject) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::NewProjectCommand*>(_impl_.payload_.new_project_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.new_project_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::NewProjectCommand& Command::_internal_new_project() const {
+  return payload_case() == kNewProject ? static_cast<const ::motionlab::protocol::NewProjectCommand&>(*reinterpret_cast<::motionlab::protocol::NewProjectCommand*>(_impl_.payload_.new_project_))
+                     : reinterpret_cast<const ::motionlab::protocol::NewProjectCommand&>(::motionlab::protocol::_NewProjectCommand_default_instance_);
+}
+inline const ::motionlab::protocol::NewProjectCommand& Command::new_project() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Command.new_project)
+  return _internal_new_project();
+}
+inline ::motionlab::protocol::NewProjectCommand* PROTOBUF_NULLABLE Command::unsafe_arena_release_new_project() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Command.new_project)
+  if (payload_case() == kNewProject) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::NewProjectCommand*>(_impl_.payload_.new_project_);
+    _impl_.payload_.new_project_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Command::unsafe_arena_set_allocated_new_project(
+    ::motionlab::protocol::NewProjectCommand* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_new_project();
+    _impl_.payload_.new_project_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Command.new_project)
+}
+inline ::motionlab::protocol::NewProjectCommand* PROTOBUF_NONNULL Command::_internal_mutable_new_project() {
+  if (payload_case() != kNewProject) {
+    clear_payload();
+    set_has_new_project();
+    _impl_.payload_.new_project_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::NewProjectCommand>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::NewProjectCommand*>(_impl_.payload_.new_project_);
+}
+inline ::motionlab::protocol::NewProjectCommand* PROTOBUF_NONNULL Command::mutable_new_project()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::NewProjectCommand* _msg = _internal_mutable_new_project();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.new_project)
   return _msg;
 }
 
@@ -15797,6 +23892,908 @@ inline ::motionlab::protocol::UpdateDatumPoseResult* PROTOBUF_NONNULL Event::mut
   return _msg;
 }
 
+// .motionlab.protocol.CreateLoadResult create_load_result = 24 [json_name = "createLoadResult"];
+inline bool Event::has_create_load_result() const {
+  return payload_case() == kCreateLoadResult;
+}
+inline bool Event::_internal_has_create_load_result() const {
+  return payload_case() == kCreateLoadResult;
+}
+inline void Event::set_has_create_load_result() {
+  _impl_._oneof_case_[0] = kCreateLoadResult;
+}
+inline void Event::clear_create_load_result() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kCreateLoadResult) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.create_load_result_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.create_load_result_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::CreateLoadResult* PROTOBUF_NULLABLE Event::release_create_load_result() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Event.create_load_result)
+  if (payload_case() == kCreateLoadResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::CreateLoadResult*>(_impl_.payload_.create_load_result_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.create_load_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::CreateLoadResult& Event::_internal_create_load_result() const {
+  return payload_case() == kCreateLoadResult ? static_cast<const ::motionlab::protocol::CreateLoadResult&>(*reinterpret_cast<::motionlab::protocol::CreateLoadResult*>(_impl_.payload_.create_load_result_))
+                     : reinterpret_cast<const ::motionlab::protocol::CreateLoadResult&>(::motionlab::protocol::_CreateLoadResult_default_instance_);
+}
+inline const ::motionlab::protocol::CreateLoadResult& Event::create_load_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Event.create_load_result)
+  return _internal_create_load_result();
+}
+inline ::motionlab::protocol::CreateLoadResult* PROTOBUF_NULLABLE Event::unsafe_arena_release_create_load_result() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Event.create_load_result)
+  if (payload_case() == kCreateLoadResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::CreateLoadResult*>(_impl_.payload_.create_load_result_);
+    _impl_.payload_.create_load_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Event::unsafe_arena_set_allocated_create_load_result(
+    ::motionlab::protocol::CreateLoadResult* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_create_load_result();
+    _impl_.payload_.create_load_result_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Event.create_load_result)
+}
+inline ::motionlab::protocol::CreateLoadResult* PROTOBUF_NONNULL Event::_internal_mutable_create_load_result() {
+  if (payload_case() != kCreateLoadResult) {
+    clear_payload();
+    set_has_create_load_result();
+    _impl_.payload_.create_load_result_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::CreateLoadResult>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::CreateLoadResult*>(_impl_.payload_.create_load_result_);
+}
+inline ::motionlab::protocol::CreateLoadResult* PROTOBUF_NONNULL Event::mutable_create_load_result()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::CreateLoadResult* _msg = _internal_mutable_create_load_result();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.create_load_result)
+  return _msg;
+}
+
+// .motionlab.protocol.UpdateLoadResult update_load_result = 25 [json_name = "updateLoadResult"];
+inline bool Event::has_update_load_result() const {
+  return payload_case() == kUpdateLoadResult;
+}
+inline bool Event::_internal_has_update_load_result() const {
+  return payload_case() == kUpdateLoadResult;
+}
+inline void Event::set_has_update_load_result() {
+  _impl_._oneof_case_[0] = kUpdateLoadResult;
+}
+inline void Event::clear_update_load_result() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kUpdateLoadResult) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.update_load_result_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.update_load_result_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::UpdateLoadResult* PROTOBUF_NULLABLE Event::release_update_load_result() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Event.update_load_result)
+  if (payload_case() == kUpdateLoadResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::UpdateLoadResult*>(_impl_.payload_.update_load_result_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.update_load_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::UpdateLoadResult& Event::_internal_update_load_result() const {
+  return payload_case() == kUpdateLoadResult ? static_cast<const ::motionlab::protocol::UpdateLoadResult&>(*reinterpret_cast<::motionlab::protocol::UpdateLoadResult*>(_impl_.payload_.update_load_result_))
+                     : reinterpret_cast<const ::motionlab::protocol::UpdateLoadResult&>(::motionlab::protocol::_UpdateLoadResult_default_instance_);
+}
+inline const ::motionlab::protocol::UpdateLoadResult& Event::update_load_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Event.update_load_result)
+  return _internal_update_load_result();
+}
+inline ::motionlab::protocol::UpdateLoadResult* PROTOBUF_NULLABLE Event::unsafe_arena_release_update_load_result() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Event.update_load_result)
+  if (payload_case() == kUpdateLoadResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::UpdateLoadResult*>(_impl_.payload_.update_load_result_);
+    _impl_.payload_.update_load_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Event::unsafe_arena_set_allocated_update_load_result(
+    ::motionlab::protocol::UpdateLoadResult* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_update_load_result();
+    _impl_.payload_.update_load_result_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Event.update_load_result)
+}
+inline ::motionlab::protocol::UpdateLoadResult* PROTOBUF_NONNULL Event::_internal_mutable_update_load_result() {
+  if (payload_case() != kUpdateLoadResult) {
+    clear_payload();
+    set_has_update_load_result();
+    _impl_.payload_.update_load_result_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::UpdateLoadResult>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::UpdateLoadResult*>(_impl_.payload_.update_load_result_);
+}
+inline ::motionlab::protocol::UpdateLoadResult* PROTOBUF_NONNULL Event::mutable_update_load_result()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::UpdateLoadResult* _msg = _internal_mutable_update_load_result();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.update_load_result)
+  return _msg;
+}
+
+// .motionlab.protocol.DeleteLoadResult delete_load_result = 26 [json_name = "deleteLoadResult"];
+inline bool Event::has_delete_load_result() const {
+  return payload_case() == kDeleteLoadResult;
+}
+inline bool Event::_internal_has_delete_load_result() const {
+  return payload_case() == kDeleteLoadResult;
+}
+inline void Event::set_has_delete_load_result() {
+  _impl_._oneof_case_[0] = kDeleteLoadResult;
+}
+inline void Event::clear_delete_load_result() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kDeleteLoadResult) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.delete_load_result_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.delete_load_result_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::DeleteLoadResult* PROTOBUF_NULLABLE Event::release_delete_load_result() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Event.delete_load_result)
+  if (payload_case() == kDeleteLoadResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DeleteLoadResult*>(_impl_.payload_.delete_load_result_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.delete_load_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::DeleteLoadResult& Event::_internal_delete_load_result() const {
+  return payload_case() == kDeleteLoadResult ? static_cast<const ::motionlab::protocol::DeleteLoadResult&>(*reinterpret_cast<::motionlab::protocol::DeleteLoadResult*>(_impl_.payload_.delete_load_result_))
+                     : reinterpret_cast<const ::motionlab::protocol::DeleteLoadResult&>(::motionlab::protocol::_DeleteLoadResult_default_instance_);
+}
+inline const ::motionlab::protocol::DeleteLoadResult& Event::delete_load_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Event.delete_load_result)
+  return _internal_delete_load_result();
+}
+inline ::motionlab::protocol::DeleteLoadResult* PROTOBUF_NULLABLE Event::unsafe_arena_release_delete_load_result() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Event.delete_load_result)
+  if (payload_case() == kDeleteLoadResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DeleteLoadResult*>(_impl_.payload_.delete_load_result_);
+    _impl_.payload_.delete_load_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Event::unsafe_arena_set_allocated_delete_load_result(
+    ::motionlab::protocol::DeleteLoadResult* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_delete_load_result();
+    _impl_.payload_.delete_load_result_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Event.delete_load_result)
+}
+inline ::motionlab::protocol::DeleteLoadResult* PROTOBUF_NONNULL Event::_internal_mutable_delete_load_result() {
+  if (payload_case() != kDeleteLoadResult) {
+    clear_payload();
+    set_has_delete_load_result();
+    _impl_.payload_.delete_load_result_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::DeleteLoadResult>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::DeleteLoadResult*>(_impl_.payload_.delete_load_result_);
+}
+inline ::motionlab::protocol::DeleteLoadResult* PROTOBUF_NONNULL Event::mutable_delete_load_result()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::DeleteLoadResult* _msg = _internal_mutable_delete_load_result();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.delete_load_result)
+  return _msg;
+}
+
+// .motionlab.protocol.CreateActuatorResult create_actuator_result = 27 [json_name = "createActuatorResult"];
+inline bool Event::has_create_actuator_result() const {
+  return payload_case() == kCreateActuatorResult;
+}
+inline bool Event::_internal_has_create_actuator_result() const {
+  return payload_case() == kCreateActuatorResult;
+}
+inline void Event::set_has_create_actuator_result() {
+  _impl_._oneof_case_[0] = kCreateActuatorResult;
+}
+inline void Event::clear_create_actuator_result() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kCreateActuatorResult) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.create_actuator_result_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.create_actuator_result_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::CreateActuatorResult* PROTOBUF_NULLABLE Event::release_create_actuator_result() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Event.create_actuator_result)
+  if (payload_case() == kCreateActuatorResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::CreateActuatorResult*>(_impl_.payload_.create_actuator_result_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.create_actuator_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::CreateActuatorResult& Event::_internal_create_actuator_result() const {
+  return payload_case() == kCreateActuatorResult ? static_cast<const ::motionlab::protocol::CreateActuatorResult&>(*reinterpret_cast<::motionlab::protocol::CreateActuatorResult*>(_impl_.payload_.create_actuator_result_))
+                     : reinterpret_cast<const ::motionlab::protocol::CreateActuatorResult&>(::motionlab::protocol::_CreateActuatorResult_default_instance_);
+}
+inline const ::motionlab::protocol::CreateActuatorResult& Event::create_actuator_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Event.create_actuator_result)
+  return _internal_create_actuator_result();
+}
+inline ::motionlab::protocol::CreateActuatorResult* PROTOBUF_NULLABLE Event::unsafe_arena_release_create_actuator_result() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Event.create_actuator_result)
+  if (payload_case() == kCreateActuatorResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::CreateActuatorResult*>(_impl_.payload_.create_actuator_result_);
+    _impl_.payload_.create_actuator_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Event::unsafe_arena_set_allocated_create_actuator_result(
+    ::motionlab::protocol::CreateActuatorResult* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_create_actuator_result();
+    _impl_.payload_.create_actuator_result_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Event.create_actuator_result)
+}
+inline ::motionlab::protocol::CreateActuatorResult* PROTOBUF_NONNULL Event::_internal_mutable_create_actuator_result() {
+  if (payload_case() != kCreateActuatorResult) {
+    clear_payload();
+    set_has_create_actuator_result();
+    _impl_.payload_.create_actuator_result_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::CreateActuatorResult>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::CreateActuatorResult*>(_impl_.payload_.create_actuator_result_);
+}
+inline ::motionlab::protocol::CreateActuatorResult* PROTOBUF_NONNULL Event::mutable_create_actuator_result()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::CreateActuatorResult* _msg = _internal_mutable_create_actuator_result();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.create_actuator_result)
+  return _msg;
+}
+
+// .motionlab.protocol.UpdateActuatorResult update_actuator_result = 28 [json_name = "updateActuatorResult"];
+inline bool Event::has_update_actuator_result() const {
+  return payload_case() == kUpdateActuatorResult;
+}
+inline bool Event::_internal_has_update_actuator_result() const {
+  return payload_case() == kUpdateActuatorResult;
+}
+inline void Event::set_has_update_actuator_result() {
+  _impl_._oneof_case_[0] = kUpdateActuatorResult;
+}
+inline void Event::clear_update_actuator_result() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kUpdateActuatorResult) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.update_actuator_result_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.update_actuator_result_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::UpdateActuatorResult* PROTOBUF_NULLABLE Event::release_update_actuator_result() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Event.update_actuator_result)
+  if (payload_case() == kUpdateActuatorResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::UpdateActuatorResult*>(_impl_.payload_.update_actuator_result_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.update_actuator_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::UpdateActuatorResult& Event::_internal_update_actuator_result() const {
+  return payload_case() == kUpdateActuatorResult ? static_cast<const ::motionlab::protocol::UpdateActuatorResult&>(*reinterpret_cast<::motionlab::protocol::UpdateActuatorResult*>(_impl_.payload_.update_actuator_result_))
+                     : reinterpret_cast<const ::motionlab::protocol::UpdateActuatorResult&>(::motionlab::protocol::_UpdateActuatorResult_default_instance_);
+}
+inline const ::motionlab::protocol::UpdateActuatorResult& Event::update_actuator_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Event.update_actuator_result)
+  return _internal_update_actuator_result();
+}
+inline ::motionlab::protocol::UpdateActuatorResult* PROTOBUF_NULLABLE Event::unsafe_arena_release_update_actuator_result() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Event.update_actuator_result)
+  if (payload_case() == kUpdateActuatorResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::UpdateActuatorResult*>(_impl_.payload_.update_actuator_result_);
+    _impl_.payload_.update_actuator_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Event::unsafe_arena_set_allocated_update_actuator_result(
+    ::motionlab::protocol::UpdateActuatorResult* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_update_actuator_result();
+    _impl_.payload_.update_actuator_result_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Event.update_actuator_result)
+}
+inline ::motionlab::protocol::UpdateActuatorResult* PROTOBUF_NONNULL Event::_internal_mutable_update_actuator_result() {
+  if (payload_case() != kUpdateActuatorResult) {
+    clear_payload();
+    set_has_update_actuator_result();
+    _impl_.payload_.update_actuator_result_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::UpdateActuatorResult>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::UpdateActuatorResult*>(_impl_.payload_.update_actuator_result_);
+}
+inline ::motionlab::protocol::UpdateActuatorResult* PROTOBUF_NONNULL Event::mutable_update_actuator_result()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::UpdateActuatorResult* _msg = _internal_mutable_update_actuator_result();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.update_actuator_result)
+  return _msg;
+}
+
+// .motionlab.protocol.DeleteActuatorResult delete_actuator_result = 29 [json_name = "deleteActuatorResult"];
+inline bool Event::has_delete_actuator_result() const {
+  return payload_case() == kDeleteActuatorResult;
+}
+inline bool Event::_internal_has_delete_actuator_result() const {
+  return payload_case() == kDeleteActuatorResult;
+}
+inline void Event::set_has_delete_actuator_result() {
+  _impl_._oneof_case_[0] = kDeleteActuatorResult;
+}
+inline void Event::clear_delete_actuator_result() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kDeleteActuatorResult) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.delete_actuator_result_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.delete_actuator_result_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::DeleteActuatorResult* PROTOBUF_NULLABLE Event::release_delete_actuator_result() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Event.delete_actuator_result)
+  if (payload_case() == kDeleteActuatorResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DeleteActuatorResult*>(_impl_.payload_.delete_actuator_result_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.delete_actuator_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::DeleteActuatorResult& Event::_internal_delete_actuator_result() const {
+  return payload_case() == kDeleteActuatorResult ? static_cast<const ::motionlab::protocol::DeleteActuatorResult&>(*reinterpret_cast<::motionlab::protocol::DeleteActuatorResult*>(_impl_.payload_.delete_actuator_result_))
+                     : reinterpret_cast<const ::motionlab::protocol::DeleteActuatorResult&>(::motionlab::protocol::_DeleteActuatorResult_default_instance_);
+}
+inline const ::motionlab::protocol::DeleteActuatorResult& Event::delete_actuator_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Event.delete_actuator_result)
+  return _internal_delete_actuator_result();
+}
+inline ::motionlab::protocol::DeleteActuatorResult* PROTOBUF_NULLABLE Event::unsafe_arena_release_delete_actuator_result() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Event.delete_actuator_result)
+  if (payload_case() == kDeleteActuatorResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DeleteActuatorResult*>(_impl_.payload_.delete_actuator_result_);
+    _impl_.payload_.delete_actuator_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Event::unsafe_arena_set_allocated_delete_actuator_result(
+    ::motionlab::protocol::DeleteActuatorResult* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_delete_actuator_result();
+    _impl_.payload_.delete_actuator_result_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Event.delete_actuator_result)
+}
+inline ::motionlab::protocol::DeleteActuatorResult* PROTOBUF_NONNULL Event::_internal_mutable_delete_actuator_result() {
+  if (payload_case() != kDeleteActuatorResult) {
+    clear_payload();
+    set_has_delete_actuator_result();
+    _impl_.payload_.delete_actuator_result_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::DeleteActuatorResult>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::DeleteActuatorResult*>(_impl_.payload_.delete_actuator_result_);
+}
+inline ::motionlab::protocol::DeleteActuatorResult* PROTOBUF_NONNULL Event::mutable_delete_actuator_result()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::DeleteActuatorResult* _msg = _internal_mutable_delete_actuator_result();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.delete_actuator_result)
+  return _msg;
+}
+
+// .motionlab.protocol.CreateBodyResult create_body_result = 50 [json_name = "createBodyResult"];
+inline bool Event::has_create_body_result() const {
+  return payload_case() == kCreateBodyResult;
+}
+inline bool Event::_internal_has_create_body_result() const {
+  return payload_case() == kCreateBodyResult;
+}
+inline void Event::set_has_create_body_result() {
+  _impl_._oneof_case_[0] = kCreateBodyResult;
+}
+inline void Event::clear_create_body_result() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kCreateBodyResult) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.create_body_result_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.create_body_result_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::CreateBodyResult* PROTOBUF_NULLABLE Event::release_create_body_result() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Event.create_body_result)
+  if (payload_case() == kCreateBodyResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::CreateBodyResult*>(_impl_.payload_.create_body_result_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.create_body_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::CreateBodyResult& Event::_internal_create_body_result() const {
+  return payload_case() == kCreateBodyResult ? static_cast<const ::motionlab::protocol::CreateBodyResult&>(*reinterpret_cast<::motionlab::protocol::CreateBodyResult*>(_impl_.payload_.create_body_result_))
+                     : reinterpret_cast<const ::motionlab::protocol::CreateBodyResult&>(::motionlab::protocol::_CreateBodyResult_default_instance_);
+}
+inline const ::motionlab::protocol::CreateBodyResult& Event::create_body_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Event.create_body_result)
+  return _internal_create_body_result();
+}
+inline ::motionlab::protocol::CreateBodyResult* PROTOBUF_NULLABLE Event::unsafe_arena_release_create_body_result() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Event.create_body_result)
+  if (payload_case() == kCreateBodyResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::CreateBodyResult*>(_impl_.payload_.create_body_result_);
+    _impl_.payload_.create_body_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Event::unsafe_arena_set_allocated_create_body_result(
+    ::motionlab::protocol::CreateBodyResult* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_create_body_result();
+    _impl_.payload_.create_body_result_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Event.create_body_result)
+}
+inline ::motionlab::protocol::CreateBodyResult* PROTOBUF_NONNULL Event::_internal_mutable_create_body_result() {
+  if (payload_case() != kCreateBodyResult) {
+    clear_payload();
+    set_has_create_body_result();
+    _impl_.payload_.create_body_result_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::CreateBodyResult>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::CreateBodyResult*>(_impl_.payload_.create_body_result_);
+}
+inline ::motionlab::protocol::CreateBodyResult* PROTOBUF_NONNULL Event::mutable_create_body_result()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::CreateBodyResult* _msg = _internal_mutable_create_body_result();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.create_body_result)
+  return _msg;
+}
+
+// .motionlab.protocol.DeleteBodyResult delete_body_result = 51 [json_name = "deleteBodyResult"];
+inline bool Event::has_delete_body_result() const {
+  return payload_case() == kDeleteBodyResult;
+}
+inline bool Event::_internal_has_delete_body_result() const {
+  return payload_case() == kDeleteBodyResult;
+}
+inline void Event::set_has_delete_body_result() {
+  _impl_._oneof_case_[0] = kDeleteBodyResult;
+}
+inline void Event::clear_delete_body_result() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kDeleteBodyResult) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.delete_body_result_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.delete_body_result_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::DeleteBodyResult* PROTOBUF_NULLABLE Event::release_delete_body_result() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Event.delete_body_result)
+  if (payload_case() == kDeleteBodyResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DeleteBodyResult*>(_impl_.payload_.delete_body_result_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.delete_body_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::DeleteBodyResult& Event::_internal_delete_body_result() const {
+  return payload_case() == kDeleteBodyResult ? static_cast<const ::motionlab::protocol::DeleteBodyResult&>(*reinterpret_cast<::motionlab::protocol::DeleteBodyResult*>(_impl_.payload_.delete_body_result_))
+                     : reinterpret_cast<const ::motionlab::protocol::DeleteBodyResult&>(::motionlab::protocol::_DeleteBodyResult_default_instance_);
+}
+inline const ::motionlab::protocol::DeleteBodyResult& Event::delete_body_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Event.delete_body_result)
+  return _internal_delete_body_result();
+}
+inline ::motionlab::protocol::DeleteBodyResult* PROTOBUF_NULLABLE Event::unsafe_arena_release_delete_body_result() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Event.delete_body_result)
+  if (payload_case() == kDeleteBodyResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DeleteBodyResult*>(_impl_.payload_.delete_body_result_);
+    _impl_.payload_.delete_body_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Event::unsafe_arena_set_allocated_delete_body_result(
+    ::motionlab::protocol::DeleteBodyResult* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_delete_body_result();
+    _impl_.payload_.delete_body_result_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Event.delete_body_result)
+}
+inline ::motionlab::protocol::DeleteBodyResult* PROTOBUF_NONNULL Event::_internal_mutable_delete_body_result() {
+  if (payload_case() != kDeleteBodyResult) {
+    clear_payload();
+    set_has_delete_body_result();
+    _impl_.payload_.delete_body_result_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::DeleteBodyResult>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::DeleteBodyResult*>(_impl_.payload_.delete_body_result_);
+}
+inline ::motionlab::protocol::DeleteBodyResult* PROTOBUF_NONNULL Event::mutable_delete_body_result()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::DeleteBodyResult* _msg = _internal_mutable_delete_body_result();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.delete_body_result)
+  return _msg;
+}
+
+// .motionlab.protocol.AttachGeometryResult attach_geometry_result = 52 [json_name = "attachGeometryResult"];
+inline bool Event::has_attach_geometry_result() const {
+  return payload_case() == kAttachGeometryResult;
+}
+inline bool Event::_internal_has_attach_geometry_result() const {
+  return payload_case() == kAttachGeometryResult;
+}
+inline void Event::set_has_attach_geometry_result() {
+  _impl_._oneof_case_[0] = kAttachGeometryResult;
+}
+inline void Event::clear_attach_geometry_result() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kAttachGeometryResult) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.attach_geometry_result_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.attach_geometry_result_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::AttachGeometryResult* PROTOBUF_NULLABLE Event::release_attach_geometry_result() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Event.attach_geometry_result)
+  if (payload_case() == kAttachGeometryResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::AttachGeometryResult*>(_impl_.payload_.attach_geometry_result_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.attach_geometry_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::AttachGeometryResult& Event::_internal_attach_geometry_result() const {
+  return payload_case() == kAttachGeometryResult ? static_cast<const ::motionlab::protocol::AttachGeometryResult&>(*reinterpret_cast<::motionlab::protocol::AttachGeometryResult*>(_impl_.payload_.attach_geometry_result_))
+                     : reinterpret_cast<const ::motionlab::protocol::AttachGeometryResult&>(::motionlab::protocol::_AttachGeometryResult_default_instance_);
+}
+inline const ::motionlab::protocol::AttachGeometryResult& Event::attach_geometry_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Event.attach_geometry_result)
+  return _internal_attach_geometry_result();
+}
+inline ::motionlab::protocol::AttachGeometryResult* PROTOBUF_NULLABLE Event::unsafe_arena_release_attach_geometry_result() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Event.attach_geometry_result)
+  if (payload_case() == kAttachGeometryResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::AttachGeometryResult*>(_impl_.payload_.attach_geometry_result_);
+    _impl_.payload_.attach_geometry_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Event::unsafe_arena_set_allocated_attach_geometry_result(
+    ::motionlab::protocol::AttachGeometryResult* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_attach_geometry_result();
+    _impl_.payload_.attach_geometry_result_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Event.attach_geometry_result)
+}
+inline ::motionlab::protocol::AttachGeometryResult* PROTOBUF_NONNULL Event::_internal_mutable_attach_geometry_result() {
+  if (payload_case() != kAttachGeometryResult) {
+    clear_payload();
+    set_has_attach_geometry_result();
+    _impl_.payload_.attach_geometry_result_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::AttachGeometryResult>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::AttachGeometryResult*>(_impl_.payload_.attach_geometry_result_);
+}
+inline ::motionlab::protocol::AttachGeometryResult* PROTOBUF_NONNULL Event::mutable_attach_geometry_result()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::AttachGeometryResult* _msg = _internal_mutable_attach_geometry_result();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.attach_geometry_result)
+  return _msg;
+}
+
+// .motionlab.protocol.DetachGeometryResult detach_geometry_result = 53 [json_name = "detachGeometryResult"];
+inline bool Event::has_detach_geometry_result() const {
+  return payload_case() == kDetachGeometryResult;
+}
+inline bool Event::_internal_has_detach_geometry_result() const {
+  return payload_case() == kDetachGeometryResult;
+}
+inline void Event::set_has_detach_geometry_result() {
+  _impl_._oneof_case_[0] = kDetachGeometryResult;
+}
+inline void Event::clear_detach_geometry_result() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kDetachGeometryResult) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.detach_geometry_result_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.detach_geometry_result_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::DetachGeometryResult* PROTOBUF_NULLABLE Event::release_detach_geometry_result() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Event.detach_geometry_result)
+  if (payload_case() == kDetachGeometryResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DetachGeometryResult*>(_impl_.payload_.detach_geometry_result_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.detach_geometry_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::DetachGeometryResult& Event::_internal_detach_geometry_result() const {
+  return payload_case() == kDetachGeometryResult ? static_cast<const ::motionlab::protocol::DetachGeometryResult&>(*reinterpret_cast<::motionlab::protocol::DetachGeometryResult*>(_impl_.payload_.detach_geometry_result_))
+                     : reinterpret_cast<const ::motionlab::protocol::DetachGeometryResult&>(::motionlab::protocol::_DetachGeometryResult_default_instance_);
+}
+inline const ::motionlab::protocol::DetachGeometryResult& Event::detach_geometry_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Event.detach_geometry_result)
+  return _internal_detach_geometry_result();
+}
+inline ::motionlab::protocol::DetachGeometryResult* PROTOBUF_NULLABLE Event::unsafe_arena_release_detach_geometry_result() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Event.detach_geometry_result)
+  if (payload_case() == kDetachGeometryResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::DetachGeometryResult*>(_impl_.payload_.detach_geometry_result_);
+    _impl_.payload_.detach_geometry_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Event::unsafe_arena_set_allocated_detach_geometry_result(
+    ::motionlab::protocol::DetachGeometryResult* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_detach_geometry_result();
+    _impl_.payload_.detach_geometry_result_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Event.detach_geometry_result)
+}
+inline ::motionlab::protocol::DetachGeometryResult* PROTOBUF_NONNULL Event::_internal_mutable_detach_geometry_result() {
+  if (payload_case() != kDetachGeometryResult) {
+    clear_payload();
+    set_has_detach_geometry_result();
+    _impl_.payload_.detach_geometry_result_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::DetachGeometryResult>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::DetachGeometryResult*>(_impl_.payload_.detach_geometry_result_);
+}
+inline ::motionlab::protocol::DetachGeometryResult* PROTOBUF_NONNULL Event::mutable_detach_geometry_result()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::DetachGeometryResult* _msg = _internal_mutable_detach_geometry_result();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.detach_geometry_result)
+  return _msg;
+}
+
+// .motionlab.protocol.UpdateMassPropertiesResult update_mass_properties_result = 54 [json_name = "updateMassPropertiesResult"];
+inline bool Event::has_update_mass_properties_result() const {
+  return payload_case() == kUpdateMassPropertiesResult;
+}
+inline bool Event::_internal_has_update_mass_properties_result() const {
+  return payload_case() == kUpdateMassPropertiesResult;
+}
+inline void Event::set_has_update_mass_properties_result() {
+  _impl_._oneof_case_[0] = kUpdateMassPropertiesResult;
+}
+inline void Event::clear_update_mass_properties_result() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kUpdateMassPropertiesResult) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.update_mass_properties_result_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.update_mass_properties_result_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::UpdateMassPropertiesResult* PROTOBUF_NULLABLE Event::release_update_mass_properties_result() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Event.update_mass_properties_result)
+  if (payload_case() == kUpdateMassPropertiesResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::UpdateMassPropertiesResult*>(_impl_.payload_.update_mass_properties_result_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.update_mass_properties_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::UpdateMassPropertiesResult& Event::_internal_update_mass_properties_result() const {
+  return payload_case() == kUpdateMassPropertiesResult ? static_cast<const ::motionlab::protocol::UpdateMassPropertiesResult&>(*reinterpret_cast<::motionlab::protocol::UpdateMassPropertiesResult*>(_impl_.payload_.update_mass_properties_result_))
+                     : reinterpret_cast<const ::motionlab::protocol::UpdateMassPropertiesResult&>(::motionlab::protocol::_UpdateMassPropertiesResult_default_instance_);
+}
+inline const ::motionlab::protocol::UpdateMassPropertiesResult& Event::update_mass_properties_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Event.update_mass_properties_result)
+  return _internal_update_mass_properties_result();
+}
+inline ::motionlab::protocol::UpdateMassPropertiesResult* PROTOBUF_NULLABLE Event::unsafe_arena_release_update_mass_properties_result() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Event.update_mass_properties_result)
+  if (payload_case() == kUpdateMassPropertiesResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::UpdateMassPropertiesResult*>(_impl_.payload_.update_mass_properties_result_);
+    _impl_.payload_.update_mass_properties_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Event::unsafe_arena_set_allocated_update_mass_properties_result(
+    ::motionlab::protocol::UpdateMassPropertiesResult* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_update_mass_properties_result();
+    _impl_.payload_.update_mass_properties_result_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Event.update_mass_properties_result)
+}
+inline ::motionlab::protocol::UpdateMassPropertiesResult* PROTOBUF_NONNULL Event::_internal_mutable_update_mass_properties_result() {
+  if (payload_case() != kUpdateMassPropertiesResult) {
+    clear_payload();
+    set_has_update_mass_properties_result();
+    _impl_.payload_.update_mass_properties_result_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::UpdateMassPropertiesResult>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::UpdateMassPropertiesResult*>(_impl_.payload_.update_mass_properties_result_);
+}
+inline ::motionlab::protocol::UpdateMassPropertiesResult* PROTOBUF_NONNULL Event::mutable_update_mass_properties_result()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::UpdateMassPropertiesResult* _msg = _internal_mutable_update_mass_properties_result();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.update_mass_properties_result)
+  return _msg;
+}
+
 // .motionlab.protocol.CompilationResultEvent compilation_result = 30 [json_name = "compilationResult"];
 inline bool Event::has_compilation_result() const {
   return payload_case() == kCompilationResult;
@@ -16368,6 +25365,88 @@ inline ::motionlab::protocol::RelocateAssetResult* PROTOBUF_NONNULL Event::mutab
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::motionlab::protocol::RelocateAssetResult* _msg = _internal_mutable_relocate_asset_result();
   // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.relocate_asset_result)
+  return _msg;
+}
+
+// .motionlab.protocol.NewProjectResult new_project_result = 43 [json_name = "newProjectResult"];
+inline bool Event::has_new_project_result() const {
+  return payload_case() == kNewProjectResult;
+}
+inline bool Event::_internal_has_new_project_result() const {
+  return payload_case() == kNewProjectResult;
+}
+inline void Event::set_has_new_project_result() {
+  _impl_._oneof_case_[0] = kNewProjectResult;
+}
+inline void Event::clear_new_project_result() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kNewProjectResult) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.new_project_result_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.new_project_result_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::NewProjectResult* PROTOBUF_NULLABLE Event::release_new_project_result() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Event.new_project_result)
+  if (payload_case() == kNewProjectResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::NewProjectResult*>(_impl_.payload_.new_project_result_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.new_project_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::NewProjectResult& Event::_internal_new_project_result() const {
+  return payload_case() == kNewProjectResult ? static_cast<const ::motionlab::protocol::NewProjectResult&>(*reinterpret_cast<::motionlab::protocol::NewProjectResult*>(_impl_.payload_.new_project_result_))
+                     : reinterpret_cast<const ::motionlab::protocol::NewProjectResult&>(::motionlab::protocol::_NewProjectResult_default_instance_);
+}
+inline const ::motionlab::protocol::NewProjectResult& Event::new_project_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Event.new_project_result)
+  return _internal_new_project_result();
+}
+inline ::motionlab::protocol::NewProjectResult* PROTOBUF_NULLABLE Event::unsafe_arena_release_new_project_result() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Event.new_project_result)
+  if (payload_case() == kNewProjectResult) {
+    clear_has_payload();
+    auto* temp = reinterpret_cast<::motionlab::protocol::NewProjectResult*>(_impl_.payload_.new_project_result_);
+    _impl_.payload_.new_project_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Event::unsafe_arena_set_allocated_new_project_result(
+    ::motionlab::protocol::NewProjectResult* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_new_project_result();
+    _impl_.payload_.new_project_result_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Event.new_project_result)
+}
+inline ::motionlab::protocol::NewProjectResult* PROTOBUF_NONNULL Event::_internal_mutable_new_project_result() {
+  if (payload_case() != kNewProjectResult) {
+    clear_payload();
+    set_has_new_project_result();
+    _impl_.payload_.new_project_result_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::NewProjectResult>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::protocol::NewProjectResult*>(_impl_.payload_.new_project_result_);
+}
+inline ::motionlab::protocol::NewProjectResult* PROTOBUF_NONNULL Event::mutable_new_project_result()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::NewProjectResult* _msg = _internal_mutable_new_project_result();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.new_project_result)
   return _msg;
 }
 
@@ -17738,6 +26817,627 @@ BodyImportResult::_internal_mutable_part_index() {
 
 // -------------------------------------------------------------------
 
+// GeometryImportResult
+
+// string geometry_id = 1 [json_name = "geometryId"];
+inline void GeometryImportResult::clear_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.geometry_id_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline const ::std::string& GeometryImportResult::geometry_id() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.GeometryImportResult.geometry_id)
+  return _internal_geometry_id();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void GeometryImportResult::set_geometry_id(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  _impl_.geometry_id_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.GeometryImportResult.geometry_id)
+}
+inline ::std::string* PROTOBUF_NONNULL GeometryImportResult::mutable_geometry_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::std::string* _s = _internal_mutable_geometry_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.GeometryImportResult.geometry_id)
+  return _s;
+}
+inline const ::std::string& GeometryImportResult::_internal_geometry_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.geometry_id_.Get();
+}
+inline void GeometryImportResult::_internal_set_geometry_id(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.geometry_id_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL GeometryImportResult::_internal_mutable_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.geometry_id_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE GeometryImportResult::release_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.GeometryImportResult.geometry_id)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000002U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  auto* released = _impl_.geometry_id_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.geometry_id_.Set("", GetArena());
+  }
+  return released;
+}
+inline void GeometryImportResult::set_allocated_geometry_id(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+  _impl_.geometry_id_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.geometry_id_.IsDefault()) {
+    _impl_.geometry_id_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.GeometryImportResult.geometry_id)
+}
+
+// string body_id = 2 [json_name = "bodyId"];
+inline void GeometryImportResult::clear_body_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.body_id_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline const ::std::string& GeometryImportResult::body_id() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.GeometryImportResult.body_id)
+  return _internal_body_id();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void GeometryImportResult::set_body_id(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  _impl_.body_id_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.GeometryImportResult.body_id)
+}
+inline ::std::string* PROTOBUF_NONNULL GeometryImportResult::mutable_body_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::std::string* _s = _internal_mutable_body_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.GeometryImportResult.body_id)
+  return _s;
+}
+inline const ::std::string& GeometryImportResult::_internal_body_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.body_id_.Get();
+}
+inline void GeometryImportResult::_internal_set_body_id(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.body_id_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL GeometryImportResult::_internal_mutable_body_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.body_id_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE GeometryImportResult::release_body_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.GeometryImportResult.body_id)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000004U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  auto* released = _impl_.body_id_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.body_id_.Set("", GetArena());
+  }
+  return released;
+}
+inline void GeometryImportResult::set_allocated_body_id(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  }
+  _impl_.body_id_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.body_id_.IsDefault()) {
+    _impl_.body_id_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.GeometryImportResult.body_id)
+}
+
+// string name = 3 [json_name = "name"];
+inline void GeometryImportResult::clear_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.name_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000008U);
+}
+inline const ::std::string& GeometryImportResult::name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.GeometryImportResult.name)
+  return _internal_name();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void GeometryImportResult::set_name(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  _impl_.name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.GeometryImportResult.name)
+}
+inline ::std::string* PROTOBUF_NONNULL GeometryImportResult::mutable_name()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  ::std::string* _s = _internal_mutable_name();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.GeometryImportResult.name)
+  return _s;
+}
+inline const ::std::string& GeometryImportResult::_internal_name() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.name_.Get();
+}
+inline void GeometryImportResult::_internal_set_name(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.name_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL GeometryImportResult::_internal_mutable_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.name_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE GeometryImportResult::release_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.GeometryImportResult.name)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000008U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  auto* released = _impl_.name_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.name_.Set("", GetArena());
+  }
+  return released;
+}
+inline void GeometryImportResult::set_allocated_name(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  }
+  _impl_.name_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.name_.IsDefault()) {
+    _impl_.name_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.GeometryImportResult.name)
+}
+
+// .motionlab.mechanism.DisplayMesh display_mesh = 4 [json_name = "displayMesh"];
+inline bool GeometryImportResult::has_display_mesh() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000010U);
+  PROTOBUF_ASSUME(!value || _impl_.display_mesh_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::DisplayMesh& GeometryImportResult::_internal_display_mesh() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::DisplayMesh* p = _impl_.display_mesh_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::DisplayMesh&>(::motionlab::mechanism::_DisplayMesh_default_instance_);
+}
+inline const ::motionlab::mechanism::DisplayMesh& GeometryImportResult::display_mesh() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.GeometryImportResult.display_mesh)
+  return _internal_display_mesh();
+}
+inline void GeometryImportResult::unsafe_arena_set_allocated_display_mesh(
+    ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.display_mesh_);
+  }
+  _impl_.display_mesh_ = reinterpret_cast<::motionlab::mechanism::DisplayMesh*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000010U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000010U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.GeometryImportResult.display_mesh)
+}
+inline ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE GeometryImportResult::release_display_mesh() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000010U);
+  ::motionlab::mechanism::DisplayMesh* released = _impl_.display_mesh_;
+  _impl_.display_mesh_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE GeometryImportResult::unsafe_arena_release_display_mesh() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.GeometryImportResult.display_mesh)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000010U);
+  ::motionlab::mechanism::DisplayMesh* temp = _impl_.display_mesh_;
+  _impl_.display_mesh_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::DisplayMesh* PROTOBUF_NONNULL GeometryImportResult::_internal_mutable_display_mesh() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.display_mesh_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::DisplayMesh>(GetArena());
+    _impl_.display_mesh_ = reinterpret_cast<::motionlab::mechanism::DisplayMesh*>(p);
+  }
+  return _impl_.display_mesh_;
+}
+inline ::motionlab::mechanism::DisplayMesh* PROTOBUF_NONNULL GeometryImportResult::mutable_display_mesh()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
+  ::motionlab::mechanism::DisplayMesh* _msg = _internal_mutable_display_mesh();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.GeometryImportResult.display_mesh)
+  return _msg;
+}
+inline void GeometryImportResult::set_allocated_display_mesh(::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.display_mesh_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000010U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000010U);
+  }
+
+  _impl_.display_mesh_ = reinterpret_cast<::motionlab::mechanism::DisplayMesh*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.GeometryImportResult.display_mesh)
+}
+
+// .motionlab.mechanism.MassProperties computed_mass_properties = 5 [json_name = "computedMassProperties"];
+inline bool GeometryImportResult::has_computed_mass_properties() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000020U);
+  PROTOBUF_ASSUME(!value || _impl_.computed_mass_properties_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::MassProperties& GeometryImportResult::_internal_computed_mass_properties() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::MassProperties* p = _impl_.computed_mass_properties_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::MassProperties&>(::motionlab::mechanism::_MassProperties_default_instance_);
+}
+inline const ::motionlab::mechanism::MassProperties& GeometryImportResult::computed_mass_properties() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.GeometryImportResult.computed_mass_properties)
+  return _internal_computed_mass_properties();
+}
+inline void GeometryImportResult::unsafe_arena_set_allocated_computed_mass_properties(
+    ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.computed_mass_properties_);
+  }
+  _impl_.computed_mass_properties_ = reinterpret_cast<::motionlab::mechanism::MassProperties*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000020U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000020U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.GeometryImportResult.computed_mass_properties)
+}
+inline ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE GeometryImportResult::release_computed_mass_properties() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000020U);
+  ::motionlab::mechanism::MassProperties* released = _impl_.computed_mass_properties_;
+  _impl_.computed_mass_properties_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE GeometryImportResult::unsafe_arena_release_computed_mass_properties() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.GeometryImportResult.computed_mass_properties)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000020U);
+  ::motionlab::mechanism::MassProperties* temp = _impl_.computed_mass_properties_;
+  _impl_.computed_mass_properties_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL GeometryImportResult::_internal_mutable_computed_mass_properties() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.computed_mass_properties_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::MassProperties>(GetArena());
+    _impl_.computed_mass_properties_ = reinterpret_cast<::motionlab::mechanism::MassProperties*>(p);
+  }
+  return _impl_.computed_mass_properties_;
+}
+inline ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL GeometryImportResult::mutable_computed_mass_properties()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000020U);
+  ::motionlab::mechanism::MassProperties* _msg = _internal_mutable_computed_mass_properties();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.GeometryImportResult.computed_mass_properties)
+  return _msg;
+}
+inline void GeometryImportResult::set_allocated_computed_mass_properties(::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.computed_mass_properties_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000020U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000020U);
+  }
+
+  _impl_.computed_mass_properties_ = reinterpret_cast<::motionlab::mechanism::MassProperties*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.GeometryImportResult.computed_mass_properties)
+}
+
+// .motionlab.mechanism.Pose pose = 6 [json_name = "pose"];
+inline bool GeometryImportResult::has_pose() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000040U);
+  PROTOBUF_ASSUME(!value || _impl_.pose_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Pose& GeometryImportResult::_internal_pose() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Pose* p = _impl_.pose_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Pose&>(::motionlab::mechanism::_Pose_default_instance_);
+}
+inline const ::motionlab::mechanism::Pose& GeometryImportResult::pose() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.GeometryImportResult.pose)
+  return _internal_pose();
+}
+inline void GeometryImportResult::unsafe_arena_set_allocated_pose(
+    ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.pose_);
+  }
+  _impl_.pose_ = reinterpret_cast<::motionlab::mechanism::Pose*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000040U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000040U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.GeometryImportResult.pose)
+}
+inline ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE GeometryImportResult::release_pose() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000040U);
+  ::motionlab::mechanism::Pose* released = _impl_.pose_;
+  _impl_.pose_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE GeometryImportResult::unsafe_arena_release_pose() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.GeometryImportResult.pose)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000040U);
+  ::motionlab::mechanism::Pose* temp = _impl_.pose_;
+  _impl_.pose_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Pose* PROTOBUF_NONNULL GeometryImportResult::_internal_mutable_pose() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.pose_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Pose>(GetArena());
+    _impl_.pose_ = reinterpret_cast<::motionlab::mechanism::Pose*>(p);
+  }
+  return _impl_.pose_;
+}
+inline ::motionlab::mechanism::Pose* PROTOBUF_NONNULL GeometryImportResult::mutable_pose()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000040U);
+  ::motionlab::mechanism::Pose* _msg = _internal_mutable_pose();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.GeometryImportResult.pose)
+  return _msg;
+}
+inline void GeometryImportResult::set_allocated_pose(::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.pose_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000040U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000040U);
+  }
+
+  _impl_.pose_ = reinterpret_cast<::motionlab::mechanism::Pose*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.GeometryImportResult.pose)
+}
+
+// .motionlab.mechanism.AssetReference source_asset_ref = 7 [json_name = "sourceAssetRef"];
+inline bool GeometryImportResult::has_source_asset_ref() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000080U);
+  PROTOBUF_ASSUME(!value || _impl_.source_asset_ref_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::AssetReference& GeometryImportResult::_internal_source_asset_ref() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::AssetReference* p = _impl_.source_asset_ref_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::AssetReference&>(::motionlab::mechanism::_AssetReference_default_instance_);
+}
+inline const ::motionlab::mechanism::AssetReference& GeometryImportResult::source_asset_ref() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.GeometryImportResult.source_asset_ref)
+  return _internal_source_asset_ref();
+}
+inline void GeometryImportResult::unsafe_arena_set_allocated_source_asset_ref(
+    ::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.source_asset_ref_);
+  }
+  _impl_.source_asset_ref_ = reinterpret_cast<::motionlab::mechanism::AssetReference*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000080U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000080U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.GeometryImportResult.source_asset_ref)
+}
+inline ::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE GeometryImportResult::release_source_asset_ref() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000080U);
+  ::motionlab::mechanism::AssetReference* released = _impl_.source_asset_ref_;
+  _impl_.source_asset_ref_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE GeometryImportResult::unsafe_arena_release_source_asset_ref() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.GeometryImportResult.source_asset_ref)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000080U);
+  ::motionlab::mechanism::AssetReference* temp = _impl_.source_asset_ref_;
+  _impl_.source_asset_ref_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::AssetReference* PROTOBUF_NONNULL GeometryImportResult::_internal_mutable_source_asset_ref() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.source_asset_ref_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::AssetReference>(GetArena());
+    _impl_.source_asset_ref_ = reinterpret_cast<::motionlab::mechanism::AssetReference*>(p);
+  }
+  return _impl_.source_asset_ref_;
+}
+inline ::motionlab::mechanism::AssetReference* PROTOBUF_NONNULL GeometryImportResult::mutable_source_asset_ref()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000080U);
+  ::motionlab::mechanism::AssetReference* _msg = _internal_mutable_source_asset_ref();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.GeometryImportResult.source_asset_ref)
+  return _msg;
+}
+inline void GeometryImportResult::set_allocated_source_asset_ref(::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.source_asset_ref_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000080U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000080U);
+  }
+
+  _impl_.source_asset_ref_ = reinterpret_cast<::motionlab::mechanism::AssetReference*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.GeometryImportResult.source_asset_ref)
+}
+
+// repeated uint32 part_index = 8 [json_name = "partIndex"];
+inline int GeometryImportResult::_internal_part_index_size() const {
+  return _internal_part_index().size();
+}
+inline int GeometryImportResult::part_index_size() const {
+  return _internal_part_index_size();
+}
+inline void GeometryImportResult::clear_part_index() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.part_index_.Clear();
+  ClearHasBitForRepeated(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline ::uint32_t GeometryImportResult::part_index(int index) const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.GeometryImportResult.part_index)
+  return _internal_part_index().Get(index);
+}
+inline void GeometryImportResult::set_part_index(int index, ::uint32_t value) {
+  _internal_mutable_part_index()->Set(index, value);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.GeometryImportResult.part_index)
+}
+inline void GeometryImportResult::add_part_index(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _internal_mutable_part_index()->Add(value);
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_add:motionlab.protocol.GeometryImportResult.part_index)
+}
+inline const ::google::protobuf::RepeatedField<::uint32_t>& GeometryImportResult::part_index() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:motionlab.protocol.GeometryImportResult.part_index)
+  return _internal_part_index();
+}
+inline ::google::protobuf::RepeatedField<::uint32_t>* PROTOBUF_NONNULL GeometryImportResult::mutable_part_index()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_mutable_list:motionlab.protocol.GeometryImportResult.part_index)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_part_index();
+}
+inline const ::google::protobuf::RepeatedField<::uint32_t>&
+GeometryImportResult::_internal_part_index() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.part_index_;
+}
+inline ::google::protobuf::RepeatedField<::uint32_t>* PROTOBUF_NONNULL
+GeometryImportResult::_internal_mutable_part_index() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.part_index_;
+}
+
+// -------------------------------------------------------------------
+
 // ImportAssetResult
 
 // bool success = 1 [json_name = "success"];
@@ -17745,7 +27445,7 @@ inline void ImportAssetResult::clear_success() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.success_ = false;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000008U);
+                  0x00000010U);
 }
 inline bool ImportAssetResult::success() const {
   // @@protoc_insertion_point(field_get:motionlab.protocol.ImportAssetResult.success)
@@ -17753,7 +27453,7 @@ inline bool ImportAssetResult::success() const {
 }
 inline void ImportAssetResult::set_success(bool value) {
   _internal_set_success(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
   // @@protoc_insertion_point(field_set:motionlab.protocol.ImportAssetResult.success)
 }
 inline bool ImportAssetResult::_internal_success() const {
@@ -17770,7 +27470,7 @@ inline void ImportAssetResult::clear_error_message() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.error_message_.ClearToEmpty();
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000004U);
+                  0x00000008U);
 }
 inline const ::std::string& ImportAssetResult::error_message() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
@@ -17780,13 +27480,13 @@ inline const ::std::string& ImportAssetResult::error_message() const
 template <typename Arg_, typename... Args_>
 PROTOBUF_ALWAYS_INLINE void ImportAssetResult::set_error_message(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   _impl_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
   // @@protoc_insertion_point(field_set:motionlab.protocol.ImportAssetResult.error_message)
 }
 inline ::std::string* PROTOBUF_NONNULL ImportAssetResult::mutable_error_message()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   ::std::string* _s = _internal_mutable_error_message();
   // @@protoc_insertion_point(field_mutable:motionlab.protocol.ImportAssetResult.error_message)
   return _s;
@@ -17806,10 +27506,10 @@ inline ::std::string* PROTOBUF_NONNULL ImportAssetResult::_internal_mutable_erro
 inline ::std::string* PROTOBUF_NULLABLE ImportAssetResult::release_error_message() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:motionlab.protocol.ImportAssetResult.error_message)
-  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000004U)) {
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000008U)) {
     return nullptr;
   }
-  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   auto* released = _impl_.error_message_.Release();
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
     _impl_.error_message_.Set("", GetArena());
@@ -17819,9 +27519,9 @@ inline ::std::string* PROTOBUF_NULLABLE ImportAssetResult::release_error_message
 inline void ImportAssetResult::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+    SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+    ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   }
   _impl_.error_message_.SetAllocated(value, GetArena());
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.error_message_.IsDefault()) {
@@ -17956,6 +27656,62 @@ inline ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL
 ImportAssetResult::_internal_mutable_diagnostics() {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return &_impl_.diagnostics_;
+}
+
+// repeated .motionlab.protocol.GeometryImportResult geometries = 5 [json_name = "geometries"];
+inline int ImportAssetResult::_internal_geometries_size() const {
+  return _internal_geometries().size();
+}
+inline int ImportAssetResult::geometries_size() const {
+  return _internal_geometries_size();
+}
+inline void ImportAssetResult::clear_geometries() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.geometries_.Clear();
+  ClearHasBitForRepeated(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline ::motionlab::protocol::GeometryImportResult* PROTOBUF_NONNULL ImportAssetResult::mutable_geometries(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.ImportAssetResult.geometries)
+  return _internal_mutable_geometries()->Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>* PROTOBUF_NONNULL ImportAssetResult::mutable_geometries()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_mutable_list:motionlab.protocol.ImportAssetResult.geometries)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_geometries();
+}
+inline const ::motionlab::protocol::GeometryImportResult& ImportAssetResult::geometries(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.ImportAssetResult.geometries)
+  return _internal_geometries().Get(index);
+}
+inline ::motionlab::protocol::GeometryImportResult* PROTOBUF_NONNULL ImportAssetResult::add_geometries()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::motionlab::protocol::GeometryImportResult* _add =
+      _internal_mutable_geometries()->InternalAddWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), GetArena());
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_add:motionlab.protocol.ImportAssetResult.geometries)
+  return _add;
+}
+inline const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>& ImportAssetResult::geometries() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:motionlab.protocol.ImportAssetResult.geometries)
+  return _internal_geometries();
+}
+inline const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>&
+ImportAssetResult::_internal_geometries() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.geometries_;
+}
+inline ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>* PROTOBUF_NONNULL
+ImportAssetResult::_internal_mutable_geometries() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.geometries_;
 }
 
 // -------------------------------------------------------------------
@@ -19925,7 +29681,7 @@ inline UpdateDatumPoseResult::ResultCase UpdateDatumPoseResult::result_case() co
 
 // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
 inline bool UpdateBodyCommand::has_body_id() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.body_id_ != nullptr);
   return value;
 }
@@ -19946,16 +29702,16 @@ inline void UpdateBodyCommand::unsafe_arena_set_allocated_body_id(
   }
   _impl_.body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
   if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
   } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   }
   // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.UpdateBodyCommand.body_id)
 }
 inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE UpdateBodyCommand::release_body_id() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
-  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   ::motionlab::mechanism::ElementId* released = _impl_.body_id_;
   _impl_.body_id_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
@@ -19975,7 +29731,7 @@ inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE UpdateBodyCommand::u
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateBodyCommand.body_id)
 
-  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   ::motionlab::mechanism::ElementId* temp = _impl_.body_id_;
   _impl_.body_id_ = nullptr;
   return temp;
@@ -19990,7 +29746,7 @@ inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL UpdateBodyCommand::_i
 }
 inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL UpdateBodyCommand::mutable_body_id()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
   ::motionlab::mechanism::ElementId* _msg = _internal_mutable_body_id();
   // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateBodyCommand.body_id)
   return _msg;
@@ -20007,9 +29763,9 @@ inline void UpdateBodyCommand::set_allocated_body_id(::motionlab::mechanism::Ele
     if (message_arena != submessage_arena) {
       value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
     }
-    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
   } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   }
 
   _impl_.body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
@@ -20018,14 +29774,14 @@ inline void UpdateBodyCommand::set_allocated_body_id(::motionlab::mechanism::Ele
 
 // optional bool is_fixed = 2 [json_name = "isFixed"];
 inline bool UpdateBodyCommand::has_is_fixed() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
   return value;
 }
 inline void UpdateBodyCommand::clear_is_fixed() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.is_fixed_ = false;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000002U);
+                  0x00000004U);
 }
 inline bool UpdateBodyCommand::is_fixed() const {
   // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateBodyCommand.is_fixed)
@@ -20033,7 +29789,7 @@ inline bool UpdateBodyCommand::is_fixed() const {
 }
 inline void UpdateBodyCommand::set_is_fixed(bool value) {
   _internal_set_is_fixed(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
   // @@protoc_insertion_point(field_set:motionlab.protocol.UpdateBodyCommand.is_fixed)
 }
 inline bool UpdateBodyCommand::_internal_is_fixed() const {
@@ -20043,6 +29799,75 @@ inline bool UpdateBodyCommand::_internal_is_fixed() const {
 inline void UpdateBodyCommand::_internal_set_is_fixed(bool value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.is_fixed_ = value;
+}
+
+// optional string name = 3 [json_name = "name"];
+inline bool UpdateBodyCommand::has_name() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  return value;
+}
+inline void UpdateBodyCommand::clear_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.name_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline const ::std::string& UpdateBodyCommand::name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateBodyCommand.name)
+  return _internal_name();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void UpdateBodyCommand::set_name(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  _impl_.name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.UpdateBodyCommand.name)
+}
+inline ::std::string* PROTOBUF_NONNULL UpdateBodyCommand::mutable_name()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::std::string* _s = _internal_mutable_name();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateBodyCommand.name)
+  return _s;
+}
+inline const ::std::string& UpdateBodyCommand::_internal_name() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.name_.Get();
+}
+inline void UpdateBodyCommand::_internal_set_name(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.name_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL UpdateBodyCommand::_internal_mutable_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.name_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE UpdateBodyCommand::release_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateBodyCommand.name)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000001U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  auto* released = _impl_.name_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.name_.Set("", GetArena());
+  }
+  return released;
+}
+inline void UpdateBodyCommand::set_allocated_name(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  _impl_.name_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.name_.IsDefault()) {
+    _impl_.name_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.UpdateBodyCommand.name)
 }
 
 // -------------------------------------------------------------------
@@ -20210,260 +30035,49 @@ inline UpdateBodyResult::ResultCase UpdateBodyResult::result_case() const {
 }
 // -------------------------------------------------------------------
 
-// CreateJointCommand
+// CreateBodyCommand
 
-// .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
-inline bool CreateJointCommand::has_parent_datum_id() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
-  PROTOBUF_ASSUME(!value || _impl_.parent_datum_id_ != nullptr);
-  return value;
-}
-inline const ::motionlab::mechanism::ElementId& CreateJointCommand::_internal_parent_datum_id() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::motionlab::mechanism::ElementId* p = _impl_.parent_datum_id_;
-  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
-}
-inline const ::motionlab::mechanism::ElementId& CreateJointCommand::parent_datum_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateJointCommand.parent_datum_id)
-  return _internal_parent_datum_id();
-}
-inline void CreateJointCommand::unsafe_arena_set_allocated_parent_datum_id(
-    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.parent_datum_id_);
-  }
-  _impl_.parent_datum_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
-  if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateJointCommand.parent_datum_id)
-}
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE CreateJointCommand::release_parent_datum_id() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::motionlab::mechanism::ElementId* released = _impl_.parent_datum_id_;
-  _impl_.parent_datum_id_ = nullptr;
-  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
-    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
-    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    if (GetArena() == nullptr) {
-      delete old;
-    }
-  } else {
-    if (GetArena() != nullptr) {
-      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    }
-  }
-  return released;
-}
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE CreateJointCommand::unsafe_arena_release_parent_datum_id() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateJointCommand.parent_datum_id)
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::motionlab::mechanism::ElementId* temp = _impl_.parent_datum_id_;
-  _impl_.parent_datum_id_ = nullptr;
-  return temp;
-}
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL CreateJointCommand::_internal_mutable_parent_datum_id() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.parent_datum_id_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
-    _impl_.parent_datum_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
-  }
-  return _impl_.parent_datum_id_;
-}
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL CreateJointCommand::mutable_parent_datum_id()
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_parent_datum_id();
-  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateJointCommand.parent_datum_id)
-  return _msg;
-}
-inline void CreateJointCommand::set_allocated_parent_datum_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (message_arena == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.parent_datum_id_);
-  }
-
-  if (value != nullptr) {
-    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
-    if (message_arena != submessage_arena) {
-      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
-    }
-    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  }
-
-  _impl_.parent_datum_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
-  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateJointCommand.parent_datum_id)
-}
-
-// .motionlab.mechanism.ElementId child_datum_id = 2 [json_name = "childDatumId"];
-inline bool CreateJointCommand::has_child_datum_id() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
-  PROTOBUF_ASSUME(!value || _impl_.child_datum_id_ != nullptr);
-  return value;
-}
-inline const ::motionlab::mechanism::ElementId& CreateJointCommand::_internal_child_datum_id() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::motionlab::mechanism::ElementId* p = _impl_.child_datum_id_;
-  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
-}
-inline const ::motionlab::mechanism::ElementId& CreateJointCommand::child_datum_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateJointCommand.child_datum_id)
-  return _internal_child_datum_id();
-}
-inline void CreateJointCommand::unsafe_arena_set_allocated_child_datum_id(
-    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.child_datum_id_);
-  }
-  _impl_.child_datum_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
-  if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateJointCommand.child_datum_id)
-}
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE CreateJointCommand::release_child_datum_id() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
-  ::motionlab::mechanism::ElementId* released = _impl_.child_datum_id_;
-  _impl_.child_datum_id_ = nullptr;
-  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
-    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
-    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    if (GetArena() == nullptr) {
-      delete old;
-    }
-  } else {
-    if (GetArena() != nullptr) {
-      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    }
-  }
-  return released;
-}
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE CreateJointCommand::unsafe_arena_release_child_datum_id() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateJointCommand.child_datum_id)
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
-  ::motionlab::mechanism::ElementId* temp = _impl_.child_datum_id_;
-  _impl_.child_datum_id_ = nullptr;
-  return temp;
-}
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL CreateJointCommand::_internal_mutable_child_datum_id() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.child_datum_id_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
-    _impl_.child_datum_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
-  }
-  return _impl_.child_datum_id_;
-}
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL CreateJointCommand::mutable_child_datum_id()
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_child_datum_id();
-  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateJointCommand.child_datum_id)
-  return _msg;
-}
-inline void CreateJointCommand::set_allocated_child_datum_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (message_arena == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.child_datum_id_);
-  }
-
-  if (value != nullptr) {
-    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
-    if (message_arena != submessage_arena) {
-      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
-    }
-    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
-  }
-
-  _impl_.child_datum_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
-  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateJointCommand.child_datum_id)
-}
-
-// .motionlab.mechanism.JointType type = 3 [json_name = "type"];
-inline void CreateJointCommand::clear_type() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.type_ = 0;
-  ClearHasBit(_impl_._has_bits_[0],
-                  0x00000020U);
-}
-inline ::motionlab::mechanism::JointType CreateJointCommand::type() const {
-  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateJointCommand.type)
-  return _internal_type();
-}
-inline void CreateJointCommand::set_type(::motionlab::mechanism::JointType value) {
-  _internal_set_type(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000020U);
-  // @@protoc_insertion_point(field_set:motionlab.protocol.CreateJointCommand.type)
-}
-inline ::motionlab::mechanism::JointType CreateJointCommand::_internal_type() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return static_cast<::motionlab::mechanism::JointType>(_impl_.type_);
-}
-inline void CreateJointCommand::_internal_set_type(::motionlab::mechanism::JointType value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.type_ = value;
-}
-
-// string name = 4 [json_name = "name"];
-inline void CreateJointCommand::clear_name() {
+// string name = 1 [json_name = "name"];
+inline void CreateBodyCommand::clear_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.name_.ClearToEmpty();
   ClearHasBit(_impl_._has_bits_[0],
                   0x00000001U);
 }
-inline const ::std::string& CreateJointCommand::name() const
+inline const ::std::string& CreateBodyCommand::name() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateJointCommand.name)
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateBodyCommand.name)
   return _internal_name();
 }
 template <typename Arg_, typename... Args_>
-PROTOBUF_ALWAYS_INLINE void CreateJointCommand::set_name(Arg_&& arg, Args_... args) {
+PROTOBUF_ALWAYS_INLINE void CreateBodyCommand::set_name(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
   _impl_.name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:motionlab.protocol.CreateJointCommand.name)
+  // @@protoc_insertion_point(field_set:motionlab.protocol.CreateBodyCommand.name)
 }
-inline ::std::string* PROTOBUF_NONNULL CreateJointCommand::mutable_name()
+inline ::std::string* PROTOBUF_NONNULL CreateBodyCommand::mutable_name()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
   ::std::string* _s = _internal_mutable_name();
-  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateJointCommand.name)
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateBodyCommand.name)
   return _s;
 }
-inline const ::std::string& CreateJointCommand::_internal_name() const {
+inline const ::std::string& CreateBodyCommand::_internal_name() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.name_.Get();
 }
-inline void CreateJointCommand::_internal_set_name(const ::std::string& value) {
+inline void CreateBodyCommand::_internal_set_name(const ::std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.name_.Set(value, GetArena());
 }
-inline ::std::string* PROTOBUF_NONNULL CreateJointCommand::_internal_mutable_name() {
+inline ::std::string* PROTOBUF_NONNULL CreateBodyCommand::_internal_mutable_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   return _impl_.name_.Mutable( GetArena());
 }
-inline ::std::string* PROTOBUF_NULLABLE CreateJointCommand::release_name() {
+inline ::std::string* PROTOBUF_NULLABLE CreateBodyCommand::release_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateJointCommand.name)
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateBodyCommand.name)
   if (!CheckHasBit(_impl_._has_bits_[0], 0x00000001U)) {
     return nullptr;
   }
@@ -20474,7 +30088,7 @@ inline ::std::string* PROTOBUF_NULLABLE CreateJointCommand::release_name() {
   }
   return released;
 }
-inline void CreateJointCommand::set_allocated_name(::std::string* PROTOBUF_NULLABLE value) {
+inline void CreateBodyCommand::set_allocated_name(::std::string* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (value != nullptr) {
     SetHasBit(_impl_._has_bits_[0], 0x00000001U);
@@ -20485,98 +30099,2235 @@ inline void CreateJointCommand::set_allocated_name(::std::string* PROTOBUF_NULLA
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.name_.IsDefault()) {
     _impl_.name_.Set("", GetArena());
   }
-  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateJointCommand.name)
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateBodyCommand.name)
 }
 
-// double lower_limit = 5 [json_name = "lowerLimit"];
-inline void CreateJointCommand::clear_lower_limit() {
+// .motionlab.mechanism.MassProperties mass_properties = 2 [json_name = "massProperties"];
+inline bool CreateBodyCommand::has_mass_properties() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
+  PROTOBUF_ASSUME(!value || _impl_.mass_properties_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::MassProperties& CreateBodyCommand::_internal_mass_properties() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::MassProperties* p = _impl_.mass_properties_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::MassProperties&>(::motionlab::mechanism::_MassProperties_default_instance_);
+}
+inline const ::motionlab::mechanism::MassProperties& CreateBodyCommand::mass_properties() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateBodyCommand.mass_properties)
+  return _internal_mass_properties();
+}
+inline void CreateBodyCommand::unsafe_arena_set_allocated_mass_properties(
+    ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.lower_limit_ = 0;
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.mass_properties_);
+  }
+  _impl_.mass_properties_ = reinterpret_cast<::motionlab::mechanism::MassProperties*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateBodyCommand.mass_properties)
+}
+inline ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE CreateBodyCommand::release_mass_properties() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::MassProperties* released = _impl_.mass_properties_;
+  _impl_.mass_properties_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE CreateBodyCommand::unsafe_arena_release_mass_properties() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateBodyCommand.mass_properties)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::MassProperties* temp = _impl_.mass_properties_;
+  _impl_.mass_properties_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL CreateBodyCommand::_internal_mutable_mass_properties() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.mass_properties_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::MassProperties>(GetArena());
+    _impl_.mass_properties_ = reinterpret_cast<::motionlab::mechanism::MassProperties*>(p);
+  }
+  return _impl_.mass_properties_;
+}
+inline ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL CreateBodyCommand::mutable_mass_properties()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::MassProperties* _msg = _internal_mutable_mass_properties();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateBodyCommand.mass_properties)
+  return _msg;
+}
+inline void CreateBodyCommand::set_allocated_mass_properties(::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.mass_properties_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+
+  _impl_.mass_properties_ = reinterpret_cast<::motionlab::mechanism::MassProperties*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateBodyCommand.mass_properties)
+}
+
+// .motionlab.mechanism.Pose pose = 3 [json_name = "pose"];
+inline bool CreateBodyCommand::has_pose() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
+  PROTOBUF_ASSUME(!value || _impl_.pose_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Pose& CreateBodyCommand::_internal_pose() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Pose* p = _impl_.pose_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Pose&>(::motionlab::mechanism::_Pose_default_instance_);
+}
+inline const ::motionlab::mechanism::Pose& CreateBodyCommand::pose() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateBodyCommand.pose)
+  return _internal_pose();
+}
+inline void CreateBodyCommand::unsafe_arena_set_allocated_pose(
+    ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.pose_);
+  }
+  _impl_.pose_ = reinterpret_cast<::motionlab::mechanism::Pose*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateBodyCommand.pose)
+}
+inline ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE CreateBodyCommand::release_pose() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::motionlab::mechanism::Pose* released = _impl_.pose_;
+  _impl_.pose_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE CreateBodyCommand::unsafe_arena_release_pose() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateBodyCommand.pose)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::motionlab::mechanism::Pose* temp = _impl_.pose_;
+  _impl_.pose_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Pose* PROTOBUF_NONNULL CreateBodyCommand::_internal_mutable_pose() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.pose_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Pose>(GetArena());
+    _impl_.pose_ = reinterpret_cast<::motionlab::mechanism::Pose*>(p);
+  }
+  return _impl_.pose_;
+}
+inline ::motionlab::mechanism::Pose* PROTOBUF_NONNULL CreateBodyCommand::mutable_pose()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::motionlab::mechanism::Pose* _msg = _internal_mutable_pose();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateBodyCommand.pose)
+  return _msg;
+}
+inline void CreateBodyCommand::set_allocated_pose(::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.pose_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  }
+
+  _impl_.pose_ = reinterpret_cast<::motionlab::mechanism::Pose*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateBodyCommand.pose)
+}
+
+// bool is_fixed = 4 [json_name = "isFixed"];
+inline void CreateBodyCommand::clear_is_fixed() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.is_fixed_ = false;
   ClearHasBit(_impl_._has_bits_[0],
                   0x00000008U);
 }
-inline double CreateJointCommand::lower_limit() const {
-  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateJointCommand.lower_limit)
-  return _internal_lower_limit();
+inline bool CreateBodyCommand::is_fixed() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateBodyCommand.is_fixed)
+  return _internal_is_fixed();
 }
-inline void CreateJointCommand::set_lower_limit(double value) {
-  _internal_set_lower_limit(value);
+inline void CreateBodyCommand::set_is_fixed(bool value) {
+  _internal_set_is_fixed(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000008U);
-  // @@protoc_insertion_point(field_set:motionlab.protocol.CreateJointCommand.lower_limit)
+  // @@protoc_insertion_point(field_set:motionlab.protocol.CreateBodyCommand.is_fixed)
 }
-inline double CreateJointCommand::_internal_lower_limit() const {
+inline bool CreateBodyCommand::_internal_is_fixed() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.lower_limit_;
+  return _impl_.is_fixed_;
 }
-inline void CreateJointCommand::_internal_set_lower_limit(double value) {
+inline void CreateBodyCommand::_internal_set_is_fixed(bool value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.lower_limit_ = value;
+  _impl_.is_fixed_ = value;
 }
 
-// double upper_limit = 6 [json_name = "upperLimit"];
-inline void CreateJointCommand::clear_upper_limit() {
+// -------------------------------------------------------------------
+
+// CreateBodyResult
+
+// .motionlab.mechanism.Body body = 1 [json_name = "body"];
+inline bool CreateBodyResult::has_body() const {
+  return result_case() == kBody;
+}
+inline bool CreateBodyResult::_internal_has_body() const {
+  return result_case() == kBody;
+}
+inline void CreateBodyResult::set_has_body() {
+  _impl_._oneof_case_[0] = kBody;
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NULLABLE CreateBodyResult::release_body() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateBodyResult.body)
+  if (result_case() == kBody) {
+    clear_has_result();
+    auto* temp = _impl_.result_.body_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.result_.body_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::Body& CreateBodyResult::_internal_body() const {
+  return result_case() == kBody ? static_cast<const ::motionlab::mechanism::Body&>(*_impl_.result_.body_)
+                     : reinterpret_cast<const ::motionlab::mechanism::Body&>(::motionlab::mechanism::_Body_default_instance_);
+}
+inline const ::motionlab::mechanism::Body& CreateBodyResult::body() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateBodyResult.body)
+  return _internal_body();
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NULLABLE CreateBodyResult::unsafe_arena_release_body() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.CreateBodyResult.body)
+  if (result_case() == kBody) {
+    clear_has_result();
+    auto* temp = _impl_.result_.body_;
+    _impl_.result_.body_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void CreateBodyResult::unsafe_arena_set_allocated_body(
+    ::motionlab::mechanism::Body* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_result();
+  if (value) {
+    set_has_body();
+    _impl_.result_.body_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateBodyResult.body)
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NONNULL CreateBodyResult::_internal_mutable_body() {
+  if (result_case() != kBody) {
+    clear_result();
+    set_has_body();
+    _impl_.result_.body_ = 
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Body>(GetArena());
+  }
+  return _impl_.result_.body_;
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NONNULL CreateBodyResult::mutable_body()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::Body* _msg = _internal_mutable_body();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateBodyResult.body)
+  return _msg;
+}
+
+// string error_message = 2 [json_name = "errorMessage"];
+inline bool CreateBodyResult::has_error_message() const {
+  return result_case() == kErrorMessage;
+}
+inline void CreateBodyResult::set_has_error_message() {
+  _impl_._oneof_case_[0] = kErrorMessage;
+}
+inline void CreateBodyResult::clear_error_message() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.upper_limit_ = 0;
-  ClearHasBit(_impl_._has_bits_[0],
-                  0x00000010U);
+  if (result_case() == kErrorMessage) {
+    _impl_.result_.error_message_.Destroy();
+    clear_has_result();
+  }
 }
-inline double CreateJointCommand::upper_limit() const {
-  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateJointCommand.upper_limit)
-  return _internal_upper_limit();
+inline const ::std::string& CreateBodyResult::error_message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateBodyResult.error_message)
+  return _internal_error_message();
 }
-inline void CreateJointCommand::set_upper_limit(double value) {
-  _internal_set_upper_limit(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
-  // @@protoc_insertion_point(field_set:motionlab.protocol.CreateJointCommand.upper_limit)
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void CreateBodyResult::set_error_message(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  _impl_.result_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.CreateBodyResult.error_message)
 }
-inline double CreateJointCommand::_internal_upper_limit() const {
+inline ::std::string* PROTOBUF_NONNULL CreateBodyResult::mutable_error_message()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  ::std::string* _s = _internal_mutable_error_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateBodyResult.error_message)
+  return _s;
+}
+inline const ::std::string& CreateBodyResult::_internal_error_message() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.upper_limit_;
+  if (result_case() != kErrorMessage) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.result_.error_message_.Get();
 }
-inline void CreateJointCommand::_internal_set_upper_limit(double value) {
+inline void CreateBodyResult::_internal_set_error_message(const ::std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.upper_limit_ = value;
+  _impl_.result_.error_message_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL CreateBodyResult::_internal_mutable_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.result_.error_message_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE CreateBodyResult::release_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateBodyResult.error_message)
+  if (result_case() != kErrorMessage) {
+    return nullptr;
+  }
+  clear_has_result();
+  return _impl_.result_.error_message_.Release();
+}
+inline void CreateBodyResult::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_result()) {
+    clear_result();
+  }
+  if (value != nullptr) {
+    set_has_error_message();
+    _impl_.result_.error_message_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateBodyResult.error_message)
+}
+
+inline bool CreateBodyResult::has_result() const {
+  return result_case() != RESULT_NOT_SET;
+}
+inline void CreateBodyResult::clear_has_result() {
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+inline CreateBodyResult::ResultCase CreateBodyResult::result_case() const {
+  return CreateBodyResult::ResultCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// DeleteBodyCommand
+
+// .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+inline bool DeleteBodyCommand::has_body_id() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.body_id_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::ElementId& DeleteBodyCommand::_internal_body_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::ElementId* p = _impl_.body_id_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& DeleteBodyCommand::body_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DeleteBodyCommand.body_id)
+  return _internal_body_id();
+}
+inline void DeleteBodyCommand::unsafe_arena_set_allocated_body_id(
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.body_id_);
+  }
+  _impl_.body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.DeleteBodyCommand.body_id)
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DeleteBodyCommand::release_body_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* released = _impl_.body_id_;
+  _impl_.body_id_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DeleteBodyCommand::unsafe_arena_release_body_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DeleteBodyCommand.body_id)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* temp = _impl_.body_id_;
+  _impl_.body_id_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DeleteBodyCommand::_internal_mutable_body_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.body_id_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+    _impl_.body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+  }
+  return _impl_.body_id_;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DeleteBodyCommand::mutable_body_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_body_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DeleteBodyCommand.body_id)
+  return _msg;
+}
+inline void DeleteBodyCommand::set_allocated_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.body_id_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.DeleteBodyCommand.body_id)
+}
+
+// -------------------------------------------------------------------
+
+// DeleteBodyResult
+
+// .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+inline bool DeleteBodyResult::has_deleted_id() const {
+  return result_case() == kDeletedId;
+}
+inline bool DeleteBodyResult::_internal_has_deleted_id() const {
+  return result_case() == kDeletedId;
+}
+inline void DeleteBodyResult::set_has_deleted_id() {
+  _impl_._oneof_case_[0] = kDeletedId;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DeleteBodyResult::release_deleted_id() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DeleteBodyResult.deleted_id)
+  if (result_case() == kDeletedId) {
+    clear_has_result();
+    auto* temp = _impl_.result_.deleted_id_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.result_.deleted_id_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::ElementId& DeleteBodyResult::_internal_deleted_id() const {
+  return result_case() == kDeletedId ? static_cast<const ::motionlab::mechanism::ElementId&>(*_impl_.result_.deleted_id_)
+                     : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& DeleteBodyResult::deleted_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DeleteBodyResult.deleted_id)
+  return _internal_deleted_id();
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DeleteBodyResult::unsafe_arena_release_deleted_id() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.DeleteBodyResult.deleted_id)
+  if (result_case() == kDeletedId) {
+    clear_has_result();
+    auto* temp = _impl_.result_.deleted_id_;
+    _impl_.result_.deleted_id_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DeleteBodyResult::unsafe_arena_set_allocated_deleted_id(
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_result();
+  if (value) {
+    set_has_deleted_id();
+    _impl_.result_.deleted_id_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.DeleteBodyResult.deleted_id)
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DeleteBodyResult::_internal_mutable_deleted_id() {
+  if (result_case() != kDeletedId) {
+    clear_result();
+    set_has_deleted_id();
+    _impl_.result_.deleted_id_ = 
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+  }
+  return _impl_.result_.deleted_id_;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DeleteBodyResult::mutable_deleted_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_deleted_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DeleteBodyResult.deleted_id)
+  return _msg;
+}
+
+// string error_message = 2 [json_name = "errorMessage"];
+inline bool DeleteBodyResult::has_error_message() const {
+  return result_case() == kErrorMessage;
+}
+inline void DeleteBodyResult::set_has_error_message() {
+  _impl_._oneof_case_[0] = kErrorMessage;
+}
+inline void DeleteBodyResult::clear_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kErrorMessage) {
+    _impl_.result_.error_message_.Destroy();
+    clear_has_result();
+  }
+}
+inline const ::std::string& DeleteBodyResult::error_message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DeleteBodyResult.error_message)
+  return _internal_error_message();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void DeleteBodyResult::set_error_message(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  _impl_.result_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.DeleteBodyResult.error_message)
+}
+inline ::std::string* PROTOBUF_NONNULL DeleteBodyResult::mutable_error_message()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  ::std::string* _s = _internal_mutable_error_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DeleteBodyResult.error_message)
+  return _s;
+}
+inline const ::std::string& DeleteBodyResult::_internal_error_message() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  if (result_case() != kErrorMessage) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.result_.error_message_.Get();
+}
+inline void DeleteBodyResult::_internal_set_error_message(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.result_.error_message_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL DeleteBodyResult::_internal_mutable_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.result_.error_message_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE DeleteBodyResult::release_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DeleteBodyResult.error_message)
+  if (result_case() != kErrorMessage) {
+    return nullptr;
+  }
+  clear_has_result();
+  return _impl_.result_.error_message_.Release();
+}
+inline void DeleteBodyResult::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_result()) {
+    clear_result();
+  }
+  if (value != nullptr) {
+    set_has_error_message();
+    _impl_.result_.error_message_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.DeleteBodyResult.error_message)
+}
+
+inline bool DeleteBodyResult::has_result() const {
+  return result_case() != RESULT_NOT_SET;
+}
+inline void DeleteBodyResult::clear_has_result() {
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+inline DeleteBodyResult::ResultCase DeleteBodyResult::result_case() const {
+  return DeleteBodyResult::ResultCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// AttachGeometryCommand
+
+// .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+inline bool AttachGeometryCommand::has_geometry_id() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.geometry_id_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::ElementId& AttachGeometryCommand::_internal_geometry_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::ElementId* p = _impl_.geometry_id_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& AttachGeometryCommand::geometry_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AttachGeometryCommand.geometry_id)
+  return _internal_geometry_id();
+}
+inline void AttachGeometryCommand::unsafe_arena_set_allocated_geometry_id(
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.geometry_id_);
+  }
+  _impl_.geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AttachGeometryCommand.geometry_id)
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE AttachGeometryCommand::release_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* released = _impl_.geometry_id_;
+  _impl_.geometry_id_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE AttachGeometryCommand::unsafe_arena_release_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AttachGeometryCommand.geometry_id)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* temp = _impl_.geometry_id_;
+  _impl_.geometry_id_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL AttachGeometryCommand::_internal_mutable_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.geometry_id_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+    _impl_.geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+  }
+  return _impl_.geometry_id_;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL AttachGeometryCommand::mutable_geometry_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_geometry_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AttachGeometryCommand.geometry_id)
+  return _msg;
+}
+inline void AttachGeometryCommand::set_allocated_geometry_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.geometry_id_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AttachGeometryCommand.geometry_id)
+}
+
+// .motionlab.mechanism.ElementId target_body_id = 2 [json_name = "targetBodyId"];
+inline bool AttachGeometryCommand::has_target_body_id() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
+  PROTOBUF_ASSUME(!value || _impl_.target_body_id_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::ElementId& AttachGeometryCommand::_internal_target_body_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::ElementId* p = _impl_.target_body_id_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& AttachGeometryCommand::target_body_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AttachGeometryCommand.target_body_id)
+  return _internal_target_body_id();
+}
+inline void AttachGeometryCommand::unsafe_arena_set_allocated_target_body_id(
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.target_body_id_);
+  }
+  _impl_.target_body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AttachGeometryCommand.target_body_id)
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE AttachGeometryCommand::release_target_body_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::ElementId* released = _impl_.target_body_id_;
+  _impl_.target_body_id_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE AttachGeometryCommand::unsafe_arena_release_target_body_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AttachGeometryCommand.target_body_id)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::ElementId* temp = _impl_.target_body_id_;
+  _impl_.target_body_id_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL AttachGeometryCommand::_internal_mutable_target_body_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.target_body_id_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+    _impl_.target_body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+  }
+  return _impl_.target_body_id_;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL AttachGeometryCommand::mutable_target_body_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_target_body_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AttachGeometryCommand.target_body_id)
+  return _msg;
+}
+inline void AttachGeometryCommand::set_allocated_target_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.target_body_id_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+
+  _impl_.target_body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AttachGeometryCommand.target_body_id)
+}
+
+// .motionlab.mechanism.Pose local_pose = 3 [json_name = "localPose"];
+inline bool AttachGeometryCommand::has_local_pose() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
+  PROTOBUF_ASSUME(!value || _impl_.local_pose_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Pose& AttachGeometryCommand::_internal_local_pose() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Pose* p = _impl_.local_pose_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Pose&>(::motionlab::mechanism::_Pose_default_instance_);
+}
+inline const ::motionlab::mechanism::Pose& AttachGeometryCommand::local_pose() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AttachGeometryCommand.local_pose)
+  return _internal_local_pose();
+}
+inline void AttachGeometryCommand::unsafe_arena_set_allocated_local_pose(
+    ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.local_pose_);
+  }
+  _impl_.local_pose_ = reinterpret_cast<::motionlab::mechanism::Pose*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AttachGeometryCommand.local_pose)
+}
+inline ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE AttachGeometryCommand::release_local_pose() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::motionlab::mechanism::Pose* released = _impl_.local_pose_;
+  _impl_.local_pose_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE AttachGeometryCommand::unsafe_arena_release_local_pose() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AttachGeometryCommand.local_pose)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::motionlab::mechanism::Pose* temp = _impl_.local_pose_;
+  _impl_.local_pose_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Pose* PROTOBUF_NONNULL AttachGeometryCommand::_internal_mutable_local_pose() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.local_pose_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Pose>(GetArena());
+    _impl_.local_pose_ = reinterpret_cast<::motionlab::mechanism::Pose*>(p);
+  }
+  return _impl_.local_pose_;
+}
+inline ::motionlab::mechanism::Pose* PROTOBUF_NONNULL AttachGeometryCommand::mutable_local_pose()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::motionlab::mechanism::Pose* _msg = _internal_mutable_local_pose();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AttachGeometryCommand.local_pose)
+  return _msg;
+}
+inline void AttachGeometryCommand::set_allocated_local_pose(::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.local_pose_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  }
+
+  _impl_.local_pose_ = reinterpret_cast<::motionlab::mechanism::Pose*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AttachGeometryCommand.local_pose)
+}
+
+// -------------------------------------------------------------------
+
+// AttachGeometryResult
+
+// .motionlab.mechanism.Geometry geometry = 1 [json_name = "geometry"];
+inline bool AttachGeometryResult::has_geometry() const {
+  return result_case() == kGeometry;
+}
+inline bool AttachGeometryResult::_internal_has_geometry() const {
+  return result_case() == kGeometry;
+}
+inline void AttachGeometryResult::set_has_geometry() {
+  _impl_._oneof_case_[0] = kGeometry;
+}
+inline ::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE AttachGeometryResult::release_geometry() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AttachGeometryResult.geometry)
+  if (result_case() == kGeometry) {
+    clear_has_result();
+    auto* temp = _impl_.result_.geometry_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.result_.geometry_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::Geometry& AttachGeometryResult::_internal_geometry() const {
+  return result_case() == kGeometry ? static_cast<const ::motionlab::mechanism::Geometry&>(*_impl_.result_.geometry_)
+                     : reinterpret_cast<const ::motionlab::mechanism::Geometry&>(::motionlab::mechanism::_Geometry_default_instance_);
+}
+inline const ::motionlab::mechanism::Geometry& AttachGeometryResult::geometry() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AttachGeometryResult.geometry)
+  return _internal_geometry();
+}
+inline ::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE AttachGeometryResult::unsafe_arena_release_geometry() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.AttachGeometryResult.geometry)
+  if (result_case() == kGeometry) {
+    clear_has_result();
+    auto* temp = _impl_.result_.geometry_;
+    _impl_.result_.geometry_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void AttachGeometryResult::unsafe_arena_set_allocated_geometry(
+    ::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_result();
+  if (value) {
+    set_has_geometry();
+    _impl_.result_.geometry_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AttachGeometryResult.geometry)
+}
+inline ::motionlab::mechanism::Geometry* PROTOBUF_NONNULL AttachGeometryResult::_internal_mutable_geometry() {
+  if (result_case() != kGeometry) {
+    clear_result();
+    set_has_geometry();
+    _impl_.result_.geometry_ = 
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Geometry>(GetArena());
+  }
+  return _impl_.result_.geometry_;
+}
+inline ::motionlab::mechanism::Geometry* PROTOBUF_NONNULL AttachGeometryResult::mutable_geometry()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::Geometry* _msg = _internal_mutable_geometry();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AttachGeometryResult.geometry)
+  return _msg;
+}
+
+// string error_message = 2 [json_name = "errorMessage"];
+inline bool AttachGeometryResult::has_error_message() const {
+  return result_case() == kErrorMessage;
+}
+inline void AttachGeometryResult::set_has_error_message() {
+  _impl_._oneof_case_[0] = kErrorMessage;
+}
+inline void AttachGeometryResult::clear_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kErrorMessage) {
+    _impl_.result_.error_message_.Destroy();
+    clear_has_result();
+  }
+}
+inline const ::std::string& AttachGeometryResult::error_message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AttachGeometryResult.error_message)
+  return _internal_error_message();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void AttachGeometryResult::set_error_message(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  _impl_.result_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.AttachGeometryResult.error_message)
+}
+inline ::std::string* PROTOBUF_NONNULL AttachGeometryResult::mutable_error_message()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  ::std::string* _s = _internal_mutable_error_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AttachGeometryResult.error_message)
+  return _s;
+}
+inline const ::std::string& AttachGeometryResult::_internal_error_message() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  if (result_case() != kErrorMessage) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.result_.error_message_.Get();
+}
+inline void AttachGeometryResult::_internal_set_error_message(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.result_.error_message_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL AttachGeometryResult::_internal_mutable_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.result_.error_message_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE AttachGeometryResult::release_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AttachGeometryResult.error_message)
+  if (result_case() != kErrorMessage) {
+    return nullptr;
+  }
+  clear_has_result();
+  return _impl_.result_.error_message_.Release();
+}
+inline void AttachGeometryResult::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_result()) {
+    clear_result();
+  }
+  if (value != nullptr) {
+    set_has_error_message();
+    _impl_.result_.error_message_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AttachGeometryResult.error_message)
+}
+
+// .motionlab.mechanism.Body old_parent_body = 3 [json_name = "oldParentBody"];
+inline bool AttachGeometryResult::has_old_parent_body() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.old_parent_body_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Body& AttachGeometryResult::_internal_old_parent_body() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Body* p = _impl_.old_parent_body_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Body&>(::motionlab::mechanism::_Body_default_instance_);
+}
+inline const ::motionlab::mechanism::Body& AttachGeometryResult::old_parent_body() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AttachGeometryResult.old_parent_body)
+  return _internal_old_parent_body();
+}
+inline void AttachGeometryResult::unsafe_arena_set_allocated_old_parent_body(
+    ::motionlab::mechanism::Body* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.old_parent_body_);
+  }
+  _impl_.old_parent_body_ = reinterpret_cast<::motionlab::mechanism::Body*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AttachGeometryResult.old_parent_body)
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NULLABLE AttachGeometryResult::release_old_parent_body() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Body* released = _impl_.old_parent_body_;
+  _impl_.old_parent_body_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NULLABLE AttachGeometryResult::unsafe_arena_release_old_parent_body() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AttachGeometryResult.old_parent_body)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Body* temp = _impl_.old_parent_body_;
+  _impl_.old_parent_body_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NONNULL AttachGeometryResult::_internal_mutable_old_parent_body() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.old_parent_body_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Body>(GetArena());
+    _impl_.old_parent_body_ = reinterpret_cast<::motionlab::mechanism::Body*>(p);
+  }
+  return _impl_.old_parent_body_;
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NONNULL AttachGeometryResult::mutable_old_parent_body()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Body* _msg = _internal_mutable_old_parent_body();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AttachGeometryResult.old_parent_body)
+  return _msg;
+}
+inline void AttachGeometryResult::set_allocated_old_parent_body(::motionlab::mechanism::Body* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.old_parent_body_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.old_parent_body_ = reinterpret_cast<::motionlab::mechanism::Body*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AttachGeometryResult.old_parent_body)
+}
+
+// .motionlab.mechanism.Body new_parent_body = 4 [json_name = "newParentBody"];
+inline bool AttachGeometryResult::has_new_parent_body() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
+  PROTOBUF_ASSUME(!value || _impl_.new_parent_body_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Body& AttachGeometryResult::_internal_new_parent_body() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Body* p = _impl_.new_parent_body_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Body&>(::motionlab::mechanism::_Body_default_instance_);
+}
+inline const ::motionlab::mechanism::Body& AttachGeometryResult::new_parent_body() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AttachGeometryResult.new_parent_body)
+  return _internal_new_parent_body();
+}
+inline void AttachGeometryResult::unsafe_arena_set_allocated_new_parent_body(
+    ::motionlab::mechanism::Body* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.new_parent_body_);
+  }
+  _impl_.new_parent_body_ = reinterpret_cast<::motionlab::mechanism::Body*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AttachGeometryResult.new_parent_body)
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NULLABLE AttachGeometryResult::release_new_parent_body() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::Body* released = _impl_.new_parent_body_;
+  _impl_.new_parent_body_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NULLABLE AttachGeometryResult::unsafe_arena_release_new_parent_body() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AttachGeometryResult.new_parent_body)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::Body* temp = _impl_.new_parent_body_;
+  _impl_.new_parent_body_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NONNULL AttachGeometryResult::_internal_mutable_new_parent_body() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.new_parent_body_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Body>(GetArena());
+    _impl_.new_parent_body_ = reinterpret_cast<::motionlab::mechanism::Body*>(p);
+  }
+  return _impl_.new_parent_body_;
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NONNULL AttachGeometryResult::mutable_new_parent_body()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::Body* _msg = _internal_mutable_new_parent_body();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AttachGeometryResult.new_parent_body)
+  return _msg;
+}
+inline void AttachGeometryResult::set_allocated_new_parent_body(::motionlab::mechanism::Body* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.new_parent_body_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+
+  _impl_.new_parent_body_ = reinterpret_cast<::motionlab::mechanism::Body*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AttachGeometryResult.new_parent_body)
+}
+
+inline bool AttachGeometryResult::has_result() const {
+  return result_case() != RESULT_NOT_SET;
+}
+inline void AttachGeometryResult::clear_has_result() {
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+inline AttachGeometryResult::ResultCase AttachGeometryResult::result_case() const {
+  return AttachGeometryResult::ResultCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// DetachGeometryCommand
+
+// .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+inline bool DetachGeometryCommand::has_geometry_id() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.geometry_id_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::ElementId& DetachGeometryCommand::_internal_geometry_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::ElementId* p = _impl_.geometry_id_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& DetachGeometryCommand::geometry_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DetachGeometryCommand.geometry_id)
+  return _internal_geometry_id();
+}
+inline void DetachGeometryCommand::unsafe_arena_set_allocated_geometry_id(
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.geometry_id_);
+  }
+  _impl_.geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.DetachGeometryCommand.geometry_id)
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DetachGeometryCommand::release_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* released = _impl_.geometry_id_;
+  _impl_.geometry_id_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DetachGeometryCommand::unsafe_arena_release_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DetachGeometryCommand.geometry_id)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* temp = _impl_.geometry_id_;
+  _impl_.geometry_id_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DetachGeometryCommand::_internal_mutable_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.geometry_id_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+    _impl_.geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+  }
+  return _impl_.geometry_id_;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DetachGeometryCommand::mutable_geometry_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_geometry_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DetachGeometryCommand.geometry_id)
+  return _msg;
+}
+inline void DetachGeometryCommand::set_allocated_geometry_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.geometry_id_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.DetachGeometryCommand.geometry_id)
+}
+
+// -------------------------------------------------------------------
+
+// DetachGeometryResult
+
+// .motionlab.mechanism.ElementId detached_id = 1 [json_name = "detachedId"];
+inline bool DetachGeometryResult::has_detached_id() const {
+  return result_case() == kDetachedId;
+}
+inline bool DetachGeometryResult::_internal_has_detached_id() const {
+  return result_case() == kDetachedId;
+}
+inline void DetachGeometryResult::set_has_detached_id() {
+  _impl_._oneof_case_[0] = kDetachedId;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DetachGeometryResult::release_detached_id() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DetachGeometryResult.detached_id)
+  if (result_case() == kDetachedId) {
+    clear_has_result();
+    auto* temp = _impl_.result_.detached_id_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.result_.detached_id_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::ElementId& DetachGeometryResult::_internal_detached_id() const {
+  return result_case() == kDetachedId ? static_cast<const ::motionlab::mechanism::ElementId&>(*_impl_.result_.detached_id_)
+                     : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& DetachGeometryResult::detached_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DetachGeometryResult.detached_id)
+  return _internal_detached_id();
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DetachGeometryResult::unsafe_arena_release_detached_id() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.DetachGeometryResult.detached_id)
+  if (result_case() == kDetachedId) {
+    clear_has_result();
+    auto* temp = _impl_.result_.detached_id_;
+    _impl_.result_.detached_id_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DetachGeometryResult::unsafe_arena_set_allocated_detached_id(
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_result();
+  if (value) {
+    set_has_detached_id();
+    _impl_.result_.detached_id_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.DetachGeometryResult.detached_id)
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DetachGeometryResult::_internal_mutable_detached_id() {
+  if (result_case() != kDetachedId) {
+    clear_result();
+    set_has_detached_id();
+    _impl_.result_.detached_id_ = 
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+  }
+  return _impl_.result_.detached_id_;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DetachGeometryResult::mutable_detached_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_detached_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DetachGeometryResult.detached_id)
+  return _msg;
+}
+
+// string error_message = 2 [json_name = "errorMessage"];
+inline bool DetachGeometryResult::has_error_message() const {
+  return result_case() == kErrorMessage;
+}
+inline void DetachGeometryResult::set_has_error_message() {
+  _impl_._oneof_case_[0] = kErrorMessage;
+}
+inline void DetachGeometryResult::clear_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kErrorMessage) {
+    _impl_.result_.error_message_.Destroy();
+    clear_has_result();
+  }
+}
+inline const ::std::string& DetachGeometryResult::error_message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DetachGeometryResult.error_message)
+  return _internal_error_message();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void DetachGeometryResult::set_error_message(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  _impl_.result_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.DetachGeometryResult.error_message)
+}
+inline ::std::string* PROTOBUF_NONNULL DetachGeometryResult::mutable_error_message()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  ::std::string* _s = _internal_mutable_error_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DetachGeometryResult.error_message)
+  return _s;
+}
+inline const ::std::string& DetachGeometryResult::_internal_error_message() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  if (result_case() != kErrorMessage) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.result_.error_message_.Get();
+}
+inline void DetachGeometryResult::_internal_set_error_message(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.result_.error_message_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL DetachGeometryResult::_internal_mutable_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.result_.error_message_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE DetachGeometryResult::release_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DetachGeometryResult.error_message)
+  if (result_case() != kErrorMessage) {
+    return nullptr;
+  }
+  clear_has_result();
+  return _impl_.result_.error_message_.Release();
+}
+inline void DetachGeometryResult::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_result()) {
+    clear_result();
+  }
+  if (value != nullptr) {
+    set_has_error_message();
+    _impl_.result_.error_message_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.DetachGeometryResult.error_message)
+}
+
+// .motionlab.mechanism.Geometry geometry = 3 [json_name = "geometry"];
+inline bool DetachGeometryResult::has_geometry() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.geometry_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Geometry& DetachGeometryResult::_internal_geometry() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Geometry* p = _impl_.geometry_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Geometry&>(::motionlab::mechanism::_Geometry_default_instance_);
+}
+inline const ::motionlab::mechanism::Geometry& DetachGeometryResult::geometry() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DetachGeometryResult.geometry)
+  return _internal_geometry();
+}
+inline void DetachGeometryResult::unsafe_arena_set_allocated_geometry(
+    ::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.geometry_);
+  }
+  _impl_.geometry_ = reinterpret_cast<::motionlab::mechanism::Geometry*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.DetachGeometryResult.geometry)
+}
+inline ::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE DetachGeometryResult::release_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Geometry* released = _impl_.geometry_;
+  _impl_.geometry_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE DetachGeometryResult::unsafe_arena_release_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DetachGeometryResult.geometry)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Geometry* temp = _impl_.geometry_;
+  _impl_.geometry_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Geometry* PROTOBUF_NONNULL DetachGeometryResult::_internal_mutable_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.geometry_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Geometry>(GetArena());
+    _impl_.geometry_ = reinterpret_cast<::motionlab::mechanism::Geometry*>(p);
+  }
+  return _impl_.geometry_;
+}
+inline ::motionlab::mechanism::Geometry* PROTOBUF_NONNULL DetachGeometryResult::mutable_geometry()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Geometry* _msg = _internal_mutable_geometry();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DetachGeometryResult.geometry)
+  return _msg;
+}
+inline void DetachGeometryResult::set_allocated_geometry(::motionlab::mechanism::Geometry* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.geometry_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.geometry_ = reinterpret_cast<::motionlab::mechanism::Geometry*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.DetachGeometryResult.geometry)
+}
+
+// .motionlab.mechanism.Body former_parent_body = 4 [json_name = "formerParentBody"];
+inline bool DetachGeometryResult::has_former_parent_body() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
+  PROTOBUF_ASSUME(!value || _impl_.former_parent_body_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Body& DetachGeometryResult::_internal_former_parent_body() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Body* p = _impl_.former_parent_body_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Body&>(::motionlab::mechanism::_Body_default_instance_);
+}
+inline const ::motionlab::mechanism::Body& DetachGeometryResult::former_parent_body() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DetachGeometryResult.former_parent_body)
+  return _internal_former_parent_body();
+}
+inline void DetachGeometryResult::unsafe_arena_set_allocated_former_parent_body(
+    ::motionlab::mechanism::Body* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.former_parent_body_);
+  }
+  _impl_.former_parent_body_ = reinterpret_cast<::motionlab::mechanism::Body*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.DetachGeometryResult.former_parent_body)
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NULLABLE DetachGeometryResult::release_former_parent_body() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::Body* released = _impl_.former_parent_body_;
+  _impl_.former_parent_body_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NULLABLE DetachGeometryResult::unsafe_arena_release_former_parent_body() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DetachGeometryResult.former_parent_body)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::Body* temp = _impl_.former_parent_body_;
+  _impl_.former_parent_body_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NONNULL DetachGeometryResult::_internal_mutable_former_parent_body() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.former_parent_body_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Body>(GetArena());
+    _impl_.former_parent_body_ = reinterpret_cast<::motionlab::mechanism::Body*>(p);
+  }
+  return _impl_.former_parent_body_;
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NONNULL DetachGeometryResult::mutable_former_parent_body()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::Body* _msg = _internal_mutable_former_parent_body();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DetachGeometryResult.former_parent_body)
+  return _msg;
+}
+inline void DetachGeometryResult::set_allocated_former_parent_body(::motionlab::mechanism::Body* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.former_parent_body_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+
+  _impl_.former_parent_body_ = reinterpret_cast<::motionlab::mechanism::Body*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.DetachGeometryResult.former_parent_body)
+}
+
+inline bool DetachGeometryResult::has_result() const {
+  return result_case() != RESULT_NOT_SET;
+}
+inline void DetachGeometryResult::clear_has_result() {
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+inline DetachGeometryResult::ResultCase DetachGeometryResult::result_case() const {
+  return DetachGeometryResult::ResultCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// UpdateMassPropertiesCommand
+
+// .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+inline bool UpdateMassPropertiesCommand::has_body_id() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.body_id_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::ElementId& UpdateMassPropertiesCommand::_internal_body_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::ElementId* p = _impl_.body_id_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& UpdateMassPropertiesCommand::body_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateMassPropertiesCommand.body_id)
+  return _internal_body_id();
+}
+inline void UpdateMassPropertiesCommand::unsafe_arena_set_allocated_body_id(
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.body_id_);
+  }
+  _impl_.body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.UpdateMassPropertiesCommand.body_id)
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE UpdateMassPropertiesCommand::release_body_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* released = _impl_.body_id_;
+  _impl_.body_id_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE UpdateMassPropertiesCommand::unsafe_arena_release_body_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateMassPropertiesCommand.body_id)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* temp = _impl_.body_id_;
+  _impl_.body_id_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL UpdateMassPropertiesCommand::_internal_mutable_body_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.body_id_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+    _impl_.body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+  }
+  return _impl_.body_id_;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL UpdateMassPropertiesCommand::mutable_body_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_body_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateMassPropertiesCommand.body_id)
+  return _msg;
+}
+inline void UpdateMassPropertiesCommand::set_allocated_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.body_id_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.UpdateMassPropertiesCommand.body_id)
+}
+
+// bool mass_override = 2 [json_name = "massOverride"];
+inline void UpdateMassPropertiesCommand::clear_mass_override() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.mass_override_ = false;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline bool UpdateMassPropertiesCommand::mass_override() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateMassPropertiesCommand.mass_override)
+  return _internal_mass_override();
+}
+inline void UpdateMassPropertiesCommand::set_mass_override(bool value) {
+  _internal_set_mass_override(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.UpdateMassPropertiesCommand.mass_override)
+}
+inline bool UpdateMassPropertiesCommand::_internal_mass_override() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.mass_override_;
+}
+inline void UpdateMassPropertiesCommand::_internal_set_mass_override(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.mass_override_ = value;
+}
+
+// .motionlab.mechanism.MassProperties mass_properties = 3 [json_name = "massProperties"];
+inline bool UpdateMassPropertiesCommand::has_mass_properties() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
+  PROTOBUF_ASSUME(!value || _impl_.mass_properties_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::MassProperties& UpdateMassPropertiesCommand::_internal_mass_properties() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::MassProperties* p = _impl_.mass_properties_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::MassProperties&>(::motionlab::mechanism::_MassProperties_default_instance_);
+}
+inline const ::motionlab::mechanism::MassProperties& UpdateMassPropertiesCommand::mass_properties() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateMassPropertiesCommand.mass_properties)
+  return _internal_mass_properties();
+}
+inline void UpdateMassPropertiesCommand::unsafe_arena_set_allocated_mass_properties(
+    ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.mass_properties_);
+  }
+  _impl_.mass_properties_ = reinterpret_cast<::motionlab::mechanism::MassProperties*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.UpdateMassPropertiesCommand.mass_properties)
+}
+inline ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE UpdateMassPropertiesCommand::release_mass_properties() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::MassProperties* released = _impl_.mass_properties_;
+  _impl_.mass_properties_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE UpdateMassPropertiesCommand::unsafe_arena_release_mass_properties() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateMassPropertiesCommand.mass_properties)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::MassProperties* temp = _impl_.mass_properties_;
+  _impl_.mass_properties_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL UpdateMassPropertiesCommand::_internal_mutable_mass_properties() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.mass_properties_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::MassProperties>(GetArena());
+    _impl_.mass_properties_ = reinterpret_cast<::motionlab::mechanism::MassProperties*>(p);
+  }
+  return _impl_.mass_properties_;
+}
+inline ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL UpdateMassPropertiesCommand::mutable_mass_properties()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::MassProperties* _msg = _internal_mutable_mass_properties();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateMassPropertiesCommand.mass_properties)
+  return _msg;
+}
+inline void UpdateMassPropertiesCommand::set_allocated_mass_properties(::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.mass_properties_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+
+  _impl_.mass_properties_ = reinterpret_cast<::motionlab::mechanism::MassProperties*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.UpdateMassPropertiesCommand.mass_properties)
+}
+
+// -------------------------------------------------------------------
+
+// UpdateMassPropertiesResult
+
+// .motionlab.mechanism.Body body = 1 [json_name = "body"];
+inline bool UpdateMassPropertiesResult::has_body() const {
+  return result_case() == kBody;
+}
+inline bool UpdateMassPropertiesResult::_internal_has_body() const {
+  return result_case() == kBody;
+}
+inline void UpdateMassPropertiesResult::set_has_body() {
+  _impl_._oneof_case_[0] = kBody;
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NULLABLE UpdateMassPropertiesResult::release_body() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateMassPropertiesResult.body)
+  if (result_case() == kBody) {
+    clear_has_result();
+    auto* temp = _impl_.result_.body_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.result_.body_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::Body& UpdateMassPropertiesResult::_internal_body() const {
+  return result_case() == kBody ? static_cast<const ::motionlab::mechanism::Body&>(*_impl_.result_.body_)
+                     : reinterpret_cast<const ::motionlab::mechanism::Body&>(::motionlab::mechanism::_Body_default_instance_);
+}
+inline const ::motionlab::mechanism::Body& UpdateMassPropertiesResult::body() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateMassPropertiesResult.body)
+  return _internal_body();
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NULLABLE UpdateMassPropertiesResult::unsafe_arena_release_body() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.UpdateMassPropertiesResult.body)
+  if (result_case() == kBody) {
+    clear_has_result();
+    auto* temp = _impl_.result_.body_;
+    _impl_.result_.body_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void UpdateMassPropertiesResult::unsafe_arena_set_allocated_body(
+    ::motionlab::mechanism::Body* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_result();
+  if (value) {
+    set_has_body();
+    _impl_.result_.body_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.UpdateMassPropertiesResult.body)
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NONNULL UpdateMassPropertiesResult::_internal_mutable_body() {
+  if (result_case() != kBody) {
+    clear_result();
+    set_has_body();
+    _impl_.result_.body_ = 
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Body>(GetArena());
+  }
+  return _impl_.result_.body_;
+}
+inline ::motionlab::mechanism::Body* PROTOBUF_NONNULL UpdateMassPropertiesResult::mutable_body()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::Body* _msg = _internal_mutable_body();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateMassPropertiesResult.body)
+  return _msg;
+}
+
+// string error_message = 2 [json_name = "errorMessage"];
+inline bool UpdateMassPropertiesResult::has_error_message() const {
+  return result_case() == kErrorMessage;
+}
+inline void UpdateMassPropertiesResult::set_has_error_message() {
+  _impl_._oneof_case_[0] = kErrorMessage;
+}
+inline void UpdateMassPropertiesResult::clear_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kErrorMessage) {
+    _impl_.result_.error_message_.Destroy();
+    clear_has_result();
+  }
+}
+inline const ::std::string& UpdateMassPropertiesResult::error_message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateMassPropertiesResult.error_message)
+  return _internal_error_message();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void UpdateMassPropertiesResult::set_error_message(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  _impl_.result_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.UpdateMassPropertiesResult.error_message)
+}
+inline ::std::string* PROTOBUF_NONNULL UpdateMassPropertiesResult::mutable_error_message()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  ::std::string* _s = _internal_mutable_error_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateMassPropertiesResult.error_message)
+  return _s;
+}
+inline const ::std::string& UpdateMassPropertiesResult::_internal_error_message() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  if (result_case() != kErrorMessage) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.result_.error_message_.Get();
+}
+inline void UpdateMassPropertiesResult::_internal_set_error_message(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.result_.error_message_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL UpdateMassPropertiesResult::_internal_mutable_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.result_.error_message_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE UpdateMassPropertiesResult::release_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateMassPropertiesResult.error_message)
+  if (result_case() != kErrorMessage) {
+    return nullptr;
+  }
+  clear_has_result();
+  return _impl_.result_.error_message_.Release();
+}
+inline void UpdateMassPropertiesResult::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_result()) {
+    clear_result();
+  }
+  if (value != nullptr) {
+    set_has_error_message();
+    _impl_.result_.error_message_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.UpdateMassPropertiesResult.error_message)
+}
+
+inline bool UpdateMassPropertiesResult::has_result() const {
+  return result_case() != RESULT_NOT_SET;
+}
+inline void UpdateMassPropertiesResult::clear_has_result() {
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+inline UpdateMassPropertiesResult::ResultCase UpdateMassPropertiesResult::result_case() const {
+  return UpdateMassPropertiesResult::ResultCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// CreateJointCommand
+
+// .motionlab.mechanism.Joint draft = 1 [json_name = "draft"];
+inline bool CreateJointCommand::has_draft() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.draft_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Joint& CreateJointCommand::_internal_draft() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Joint* p = _impl_.draft_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Joint&>(::motionlab::mechanism::_Joint_default_instance_);
+}
+inline const ::motionlab::mechanism::Joint& CreateJointCommand::draft() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateJointCommand.draft)
+  return _internal_draft();
+}
+inline void CreateJointCommand::unsafe_arena_set_allocated_draft(
+    ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.draft_);
+  }
+  _impl_.draft_ = reinterpret_cast<::motionlab::mechanism::Joint*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateJointCommand.draft)
+}
+inline ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE CreateJointCommand::release_draft() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Joint* released = _impl_.draft_;
+  _impl_.draft_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE CreateJointCommand::unsafe_arena_release_draft() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateJointCommand.draft)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Joint* temp = _impl_.draft_;
+  _impl_.draft_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Joint* PROTOBUF_NONNULL CreateJointCommand::_internal_mutable_draft() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.draft_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Joint>(GetArena());
+    _impl_.draft_ = reinterpret_cast<::motionlab::mechanism::Joint*>(p);
+  }
+  return _impl_.draft_;
+}
+inline ::motionlab::mechanism::Joint* PROTOBUF_NONNULL CreateJointCommand::mutable_draft()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Joint* _msg = _internal_mutable_draft();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateJointCommand.draft)
+  return _msg;
+}
+inline void CreateJointCommand::set_allocated_draft(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.draft_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.draft_ = reinterpret_cast<::motionlab::mechanism::Joint*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateJointCommand.draft)
 }
 
 // -------------------------------------------------------------------
 
 // UpdateJointCommand
 
-// .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
-inline bool UpdateJointCommand::has_joint_id() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
-  PROTOBUF_ASSUME(!value || _impl_.joint_id_ != nullptr);
+// .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+inline bool UpdateJointCommand::has_joint() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.joint_ != nullptr);
   return value;
 }
-inline const ::motionlab::mechanism::ElementId& UpdateJointCommand::_internal_joint_id() const {
+inline const ::motionlab::mechanism::Joint& UpdateJointCommand::_internal_joint() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::motionlab::mechanism::ElementId* p = _impl_.joint_id_;
-  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+  const ::motionlab::mechanism::Joint* p = _impl_.joint_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Joint&>(::motionlab::mechanism::_Joint_default_instance_);
 }
-inline const ::motionlab::mechanism::ElementId& UpdateJointCommand::joint_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateJointCommand.joint_id)
-  return _internal_joint_id();
+inline const ::motionlab::mechanism::Joint& UpdateJointCommand::joint() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateJointCommand.joint)
+  return _internal_joint();
 }
-inline void UpdateJointCommand::unsafe_arena_set_allocated_joint_id(
-    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+inline void UpdateJointCommand::unsafe_arena_set_allocated_joint(
+    ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.joint_id_);
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.joint_);
   }
-  _impl_.joint_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  _impl_.joint_ = reinterpret_cast<::motionlab::mechanism::Joint*>(value);
   if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
   } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.UpdateJointCommand.joint_id)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.UpdateJointCommand.joint)
 }
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE UpdateJointCommand::release_joint_id() {
+inline ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE UpdateJointCommand::release_joint() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
-  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::motionlab::mechanism::ElementId* released = _impl_.joint_id_;
-  _impl_.joint_id_ = nullptr;
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Joint* released = _impl_.joint_;
+  _impl_.joint_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
     released = ::google::protobuf::internal::DuplicateIfNonNull(released);
@@ -20590,35 +32341,35 @@ inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE UpdateJointCommand::
   }
   return released;
 }
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE UpdateJointCommand::unsafe_arena_release_joint_id() {
+inline ::motionlab::mechanism::Joint* PROTOBUF_NULLABLE UpdateJointCommand::unsafe_arena_release_joint() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateJointCommand.joint_id)
+  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateJointCommand.joint)
 
-  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::motionlab::mechanism::ElementId* temp = _impl_.joint_id_;
-  _impl_.joint_id_ = nullptr;
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Joint* temp = _impl_.joint_;
+  _impl_.joint_ = nullptr;
   return temp;
 }
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL UpdateJointCommand::_internal_mutable_joint_id() {
+inline ::motionlab::mechanism::Joint* PROTOBUF_NONNULL UpdateJointCommand::_internal_mutable_joint() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.joint_id_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
-    _impl_.joint_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+  if (_impl_.joint_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Joint>(GetArena());
+    _impl_.joint_ = reinterpret_cast<::motionlab::mechanism::Joint*>(p);
   }
-  return _impl_.joint_id_;
+  return _impl_.joint_;
 }
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL UpdateJointCommand::mutable_joint_id()
+inline ::motionlab::mechanism::Joint* PROTOBUF_NONNULL UpdateJointCommand::mutable_joint()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_joint_id();
-  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateJointCommand.joint_id)
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Joint* _msg = _internal_mutable_joint();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateJointCommand.joint)
   return _msg;
 }
-inline void UpdateJointCommand::set_allocated_joint_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+inline void UpdateJointCommand::set_allocated_joint(::motionlab::mechanism::Joint* PROTOBUF_NULLABLE value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.joint_id_);
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.joint_);
   }
 
   if (value != nullptr) {
@@ -20626,169 +32377,13 @@ inline void UpdateJointCommand::set_allocated_joint_id(::motionlab::mechanism::E
     if (message_arena != submessage_arena) {
       value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
     }
-    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  }
-
-  _impl_.joint_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
-  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.UpdateJointCommand.joint_id)
-}
-
-// optional string name = 2 [json_name = "name"];
-inline bool UpdateJointCommand::has_name() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
-  return value;
-}
-inline void UpdateJointCommand::clear_name() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.name_.ClearToEmpty();
-  ClearHasBit(_impl_._has_bits_[0],
-                  0x00000001U);
-}
-inline const ::std::string& UpdateJointCommand::name() const
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateJointCommand.name)
-  return _internal_name();
-}
-template <typename Arg_, typename... Args_>
-PROTOBUF_ALWAYS_INLINE void UpdateJointCommand::set_name(Arg_&& arg, Args_... args) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  _impl_.name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:motionlab.protocol.UpdateJointCommand.name)
-}
-inline ::std::string* PROTOBUF_NONNULL UpdateJointCommand::mutable_name()
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::std::string* _s = _internal_mutable_name();
-  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateJointCommand.name)
-  return _s;
-}
-inline const ::std::string& UpdateJointCommand::_internal_name() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.name_.Get();
-}
-inline void UpdateJointCommand::_internal_set_name(const ::std::string& value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.name_.Set(value, GetArena());
-}
-inline ::std::string* PROTOBUF_NONNULL UpdateJointCommand::_internal_mutable_name() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  return _impl_.name_.Mutable( GetArena());
-}
-inline ::std::string* PROTOBUF_NULLABLE UpdateJointCommand::release_name() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateJointCommand.name)
-  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000001U)) {
-    return nullptr;
-  }
-  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  auto* released = _impl_.name_.Release();
-  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
-    _impl_.name_.Set("", GetArena());
-  }
-  return released;
-}
-inline void UpdateJointCommand::set_allocated_name(::std::string* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value != nullptr) {
     SetHasBit(_impl_._has_bits_[0], 0x00000001U);
   } else {
     ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
   }
-  _impl_.name_.SetAllocated(value, GetArena());
-  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.name_.IsDefault()) {
-    _impl_.name_.Set("", GetArena());
-  }
-  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.UpdateJointCommand.name)
-}
 
-// optional .motionlab.mechanism.JointType type = 3 [json_name = "type"];
-inline bool UpdateJointCommand::has_type() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000010U);
-  return value;
-}
-inline void UpdateJointCommand::clear_type() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.type_ = 0;
-  ClearHasBit(_impl_._has_bits_[0],
-                  0x00000010U);
-}
-inline ::motionlab::mechanism::JointType UpdateJointCommand::type() const {
-  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateJointCommand.type)
-  return _internal_type();
-}
-inline void UpdateJointCommand::set_type(::motionlab::mechanism::JointType value) {
-  _internal_set_type(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
-  // @@protoc_insertion_point(field_set:motionlab.protocol.UpdateJointCommand.type)
-}
-inline ::motionlab::mechanism::JointType UpdateJointCommand::_internal_type() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return static_cast<::motionlab::mechanism::JointType>(_impl_.type_);
-}
-inline void UpdateJointCommand::_internal_set_type(::motionlab::mechanism::JointType value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.type_ = value;
-}
-
-// optional double lower_limit = 4 [json_name = "lowerLimit"];
-inline bool UpdateJointCommand::has_lower_limit() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
-  return value;
-}
-inline void UpdateJointCommand::clear_lower_limit() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.lower_limit_ = 0;
-  ClearHasBit(_impl_._has_bits_[0],
-                  0x00000004U);
-}
-inline double UpdateJointCommand::lower_limit() const {
-  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateJointCommand.lower_limit)
-  return _internal_lower_limit();
-}
-inline void UpdateJointCommand::set_lower_limit(double value) {
-  _internal_set_lower_limit(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  // @@protoc_insertion_point(field_set:motionlab.protocol.UpdateJointCommand.lower_limit)
-}
-inline double UpdateJointCommand::_internal_lower_limit() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.lower_limit_;
-}
-inline void UpdateJointCommand::_internal_set_lower_limit(double value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.lower_limit_ = value;
-}
-
-// optional double upper_limit = 5 [json_name = "upperLimit"];
-inline bool UpdateJointCommand::has_upper_limit() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
-  return value;
-}
-inline void UpdateJointCommand::clear_upper_limit() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.upper_limit_ = 0;
-  ClearHasBit(_impl_._has_bits_[0],
-                  0x00000008U);
-}
-inline double UpdateJointCommand::upper_limit() const {
-  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateJointCommand.upper_limit)
-  return _internal_upper_limit();
-}
-inline void UpdateJointCommand::set_upper_limit(double value) {
-  _internal_set_upper_limit(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
-  // @@protoc_insertion_point(field_set:motionlab.protocol.UpdateJointCommand.upper_limit)
-}
-inline double UpdateJointCommand::_internal_upper_limit() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.upper_limit_;
-}
-inline void UpdateJointCommand::_internal_set_upper_limit(double value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.upper_limit_ = value;
+  _impl_.joint_ = reinterpret_cast<::motionlab::mechanism::Joint*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.UpdateJointCommand.joint)
 }
 
 // -------------------------------------------------------------------
@@ -21379,6 +32974,2095 @@ inline DeleteJointResult::ResultCase DeleteJointResult::result_case() const {
 }
 // -------------------------------------------------------------------
 
+// CreateLoadCommand
+
+// .motionlab.mechanism.Load draft = 1 [json_name = "draft"];
+inline bool CreateLoadCommand::has_draft() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.draft_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Load& CreateLoadCommand::_internal_draft() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Load* p = _impl_.draft_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Load&>(::motionlab::mechanism::_Load_default_instance_);
+}
+inline const ::motionlab::mechanism::Load& CreateLoadCommand::draft() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateLoadCommand.draft)
+  return _internal_draft();
+}
+inline void CreateLoadCommand::unsafe_arena_set_allocated_draft(
+    ::motionlab::mechanism::Load* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.draft_);
+  }
+  _impl_.draft_ = reinterpret_cast<::motionlab::mechanism::Load*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateLoadCommand.draft)
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NULLABLE CreateLoadCommand::release_draft() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Load* released = _impl_.draft_;
+  _impl_.draft_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NULLABLE CreateLoadCommand::unsafe_arena_release_draft() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateLoadCommand.draft)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Load* temp = _impl_.draft_;
+  _impl_.draft_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NONNULL CreateLoadCommand::_internal_mutable_draft() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.draft_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Load>(GetArena());
+    _impl_.draft_ = reinterpret_cast<::motionlab::mechanism::Load*>(p);
+  }
+  return _impl_.draft_;
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NONNULL CreateLoadCommand::mutable_draft()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Load* _msg = _internal_mutable_draft();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateLoadCommand.draft)
+  return _msg;
+}
+inline void CreateLoadCommand::set_allocated_draft(::motionlab::mechanism::Load* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.draft_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.draft_ = reinterpret_cast<::motionlab::mechanism::Load*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateLoadCommand.draft)
+}
+
+// -------------------------------------------------------------------
+
+// UpdateLoadCommand
+
+// .motionlab.mechanism.Load load = 1 [json_name = "load"];
+inline bool UpdateLoadCommand::has_load() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.load_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Load& UpdateLoadCommand::_internal_load() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Load* p = _impl_.load_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Load&>(::motionlab::mechanism::_Load_default_instance_);
+}
+inline const ::motionlab::mechanism::Load& UpdateLoadCommand::load() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateLoadCommand.load)
+  return _internal_load();
+}
+inline void UpdateLoadCommand::unsafe_arena_set_allocated_load(
+    ::motionlab::mechanism::Load* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.load_);
+  }
+  _impl_.load_ = reinterpret_cast<::motionlab::mechanism::Load*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.UpdateLoadCommand.load)
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NULLABLE UpdateLoadCommand::release_load() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Load* released = _impl_.load_;
+  _impl_.load_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NULLABLE UpdateLoadCommand::unsafe_arena_release_load() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateLoadCommand.load)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Load* temp = _impl_.load_;
+  _impl_.load_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NONNULL UpdateLoadCommand::_internal_mutable_load() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.load_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Load>(GetArena());
+    _impl_.load_ = reinterpret_cast<::motionlab::mechanism::Load*>(p);
+  }
+  return _impl_.load_;
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NONNULL UpdateLoadCommand::mutable_load()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Load* _msg = _internal_mutable_load();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateLoadCommand.load)
+  return _msg;
+}
+inline void UpdateLoadCommand::set_allocated_load(::motionlab::mechanism::Load* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.load_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.load_ = reinterpret_cast<::motionlab::mechanism::Load*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.UpdateLoadCommand.load)
+}
+
+// -------------------------------------------------------------------
+
+// DeleteLoadCommand
+
+// .motionlab.mechanism.ElementId load_id = 1 [json_name = "loadId"];
+inline bool DeleteLoadCommand::has_load_id() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.load_id_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::ElementId& DeleteLoadCommand::_internal_load_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::ElementId* p = _impl_.load_id_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& DeleteLoadCommand::load_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DeleteLoadCommand.load_id)
+  return _internal_load_id();
+}
+inline void DeleteLoadCommand::unsafe_arena_set_allocated_load_id(
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.load_id_);
+  }
+  _impl_.load_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.DeleteLoadCommand.load_id)
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DeleteLoadCommand::release_load_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* released = _impl_.load_id_;
+  _impl_.load_id_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DeleteLoadCommand::unsafe_arena_release_load_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DeleteLoadCommand.load_id)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* temp = _impl_.load_id_;
+  _impl_.load_id_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DeleteLoadCommand::_internal_mutable_load_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.load_id_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+    _impl_.load_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+  }
+  return _impl_.load_id_;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DeleteLoadCommand::mutable_load_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_load_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DeleteLoadCommand.load_id)
+  return _msg;
+}
+inline void DeleteLoadCommand::set_allocated_load_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.load_id_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.load_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.DeleteLoadCommand.load_id)
+}
+
+// -------------------------------------------------------------------
+
+// CreateLoadResult
+
+// .motionlab.mechanism.Load load = 1 [json_name = "load"];
+inline bool CreateLoadResult::has_load() const {
+  return result_case() == kLoad;
+}
+inline bool CreateLoadResult::_internal_has_load() const {
+  return result_case() == kLoad;
+}
+inline void CreateLoadResult::set_has_load() {
+  _impl_._oneof_case_[0] = kLoad;
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NULLABLE CreateLoadResult::release_load() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateLoadResult.load)
+  if (result_case() == kLoad) {
+    clear_has_result();
+    auto* temp = _impl_.result_.load_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.result_.load_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::Load& CreateLoadResult::_internal_load() const {
+  return result_case() == kLoad ? static_cast<const ::motionlab::mechanism::Load&>(*_impl_.result_.load_)
+                     : reinterpret_cast<const ::motionlab::mechanism::Load&>(::motionlab::mechanism::_Load_default_instance_);
+}
+inline const ::motionlab::mechanism::Load& CreateLoadResult::load() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateLoadResult.load)
+  return _internal_load();
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NULLABLE CreateLoadResult::unsafe_arena_release_load() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.CreateLoadResult.load)
+  if (result_case() == kLoad) {
+    clear_has_result();
+    auto* temp = _impl_.result_.load_;
+    _impl_.result_.load_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void CreateLoadResult::unsafe_arena_set_allocated_load(
+    ::motionlab::mechanism::Load* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_result();
+  if (value) {
+    set_has_load();
+    _impl_.result_.load_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateLoadResult.load)
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NONNULL CreateLoadResult::_internal_mutable_load() {
+  if (result_case() != kLoad) {
+    clear_result();
+    set_has_load();
+    _impl_.result_.load_ = 
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Load>(GetArena());
+  }
+  return _impl_.result_.load_;
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NONNULL CreateLoadResult::mutable_load()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::Load* _msg = _internal_mutable_load();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateLoadResult.load)
+  return _msg;
+}
+
+// string error_message = 2 [json_name = "errorMessage"];
+inline bool CreateLoadResult::has_error_message() const {
+  return result_case() == kErrorMessage;
+}
+inline void CreateLoadResult::set_has_error_message() {
+  _impl_._oneof_case_[0] = kErrorMessage;
+}
+inline void CreateLoadResult::clear_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kErrorMessage) {
+    _impl_.result_.error_message_.Destroy();
+    clear_has_result();
+  }
+}
+inline const ::std::string& CreateLoadResult::error_message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateLoadResult.error_message)
+  return _internal_error_message();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void CreateLoadResult::set_error_message(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  _impl_.result_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.CreateLoadResult.error_message)
+}
+inline ::std::string* PROTOBUF_NONNULL CreateLoadResult::mutable_error_message()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  ::std::string* _s = _internal_mutable_error_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateLoadResult.error_message)
+  return _s;
+}
+inline const ::std::string& CreateLoadResult::_internal_error_message() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  if (result_case() != kErrorMessage) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.result_.error_message_.Get();
+}
+inline void CreateLoadResult::_internal_set_error_message(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.result_.error_message_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL CreateLoadResult::_internal_mutable_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.result_.error_message_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE CreateLoadResult::release_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateLoadResult.error_message)
+  if (result_case() != kErrorMessage) {
+    return nullptr;
+  }
+  clear_has_result();
+  return _impl_.result_.error_message_.Release();
+}
+inline void CreateLoadResult::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_result()) {
+    clear_result();
+  }
+  if (value != nullptr) {
+    set_has_error_message();
+    _impl_.result_.error_message_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateLoadResult.error_message)
+}
+
+inline bool CreateLoadResult::has_result() const {
+  return result_case() != RESULT_NOT_SET;
+}
+inline void CreateLoadResult::clear_has_result() {
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+inline CreateLoadResult::ResultCase CreateLoadResult::result_case() const {
+  return CreateLoadResult::ResultCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// UpdateLoadResult
+
+// .motionlab.mechanism.Load load = 1 [json_name = "load"];
+inline bool UpdateLoadResult::has_load() const {
+  return result_case() == kLoad;
+}
+inline bool UpdateLoadResult::_internal_has_load() const {
+  return result_case() == kLoad;
+}
+inline void UpdateLoadResult::set_has_load() {
+  _impl_._oneof_case_[0] = kLoad;
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NULLABLE UpdateLoadResult::release_load() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateLoadResult.load)
+  if (result_case() == kLoad) {
+    clear_has_result();
+    auto* temp = _impl_.result_.load_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.result_.load_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::Load& UpdateLoadResult::_internal_load() const {
+  return result_case() == kLoad ? static_cast<const ::motionlab::mechanism::Load&>(*_impl_.result_.load_)
+                     : reinterpret_cast<const ::motionlab::mechanism::Load&>(::motionlab::mechanism::_Load_default_instance_);
+}
+inline const ::motionlab::mechanism::Load& UpdateLoadResult::load() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateLoadResult.load)
+  return _internal_load();
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NULLABLE UpdateLoadResult::unsafe_arena_release_load() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.UpdateLoadResult.load)
+  if (result_case() == kLoad) {
+    clear_has_result();
+    auto* temp = _impl_.result_.load_;
+    _impl_.result_.load_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void UpdateLoadResult::unsafe_arena_set_allocated_load(
+    ::motionlab::mechanism::Load* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_result();
+  if (value) {
+    set_has_load();
+    _impl_.result_.load_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.UpdateLoadResult.load)
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NONNULL UpdateLoadResult::_internal_mutable_load() {
+  if (result_case() != kLoad) {
+    clear_result();
+    set_has_load();
+    _impl_.result_.load_ = 
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Load>(GetArena());
+  }
+  return _impl_.result_.load_;
+}
+inline ::motionlab::mechanism::Load* PROTOBUF_NONNULL UpdateLoadResult::mutable_load()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::Load* _msg = _internal_mutable_load();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateLoadResult.load)
+  return _msg;
+}
+
+// string error_message = 2 [json_name = "errorMessage"];
+inline bool UpdateLoadResult::has_error_message() const {
+  return result_case() == kErrorMessage;
+}
+inline void UpdateLoadResult::set_has_error_message() {
+  _impl_._oneof_case_[0] = kErrorMessage;
+}
+inline void UpdateLoadResult::clear_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kErrorMessage) {
+    _impl_.result_.error_message_.Destroy();
+    clear_has_result();
+  }
+}
+inline const ::std::string& UpdateLoadResult::error_message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateLoadResult.error_message)
+  return _internal_error_message();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void UpdateLoadResult::set_error_message(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  _impl_.result_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.UpdateLoadResult.error_message)
+}
+inline ::std::string* PROTOBUF_NONNULL UpdateLoadResult::mutable_error_message()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  ::std::string* _s = _internal_mutable_error_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateLoadResult.error_message)
+  return _s;
+}
+inline const ::std::string& UpdateLoadResult::_internal_error_message() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  if (result_case() != kErrorMessage) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.result_.error_message_.Get();
+}
+inline void UpdateLoadResult::_internal_set_error_message(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.result_.error_message_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL UpdateLoadResult::_internal_mutable_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.result_.error_message_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE UpdateLoadResult::release_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateLoadResult.error_message)
+  if (result_case() != kErrorMessage) {
+    return nullptr;
+  }
+  clear_has_result();
+  return _impl_.result_.error_message_.Release();
+}
+inline void UpdateLoadResult::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_result()) {
+    clear_result();
+  }
+  if (value != nullptr) {
+    set_has_error_message();
+    _impl_.result_.error_message_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.UpdateLoadResult.error_message)
+}
+
+inline bool UpdateLoadResult::has_result() const {
+  return result_case() != RESULT_NOT_SET;
+}
+inline void UpdateLoadResult::clear_has_result() {
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+inline UpdateLoadResult::ResultCase UpdateLoadResult::result_case() const {
+  return UpdateLoadResult::ResultCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// DeleteLoadResult
+
+// .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+inline bool DeleteLoadResult::has_deleted_id() const {
+  return result_case() == kDeletedId;
+}
+inline bool DeleteLoadResult::_internal_has_deleted_id() const {
+  return result_case() == kDeletedId;
+}
+inline void DeleteLoadResult::set_has_deleted_id() {
+  _impl_._oneof_case_[0] = kDeletedId;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DeleteLoadResult::release_deleted_id() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DeleteLoadResult.deleted_id)
+  if (result_case() == kDeletedId) {
+    clear_has_result();
+    auto* temp = _impl_.result_.deleted_id_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.result_.deleted_id_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::ElementId& DeleteLoadResult::_internal_deleted_id() const {
+  return result_case() == kDeletedId ? static_cast<const ::motionlab::mechanism::ElementId&>(*_impl_.result_.deleted_id_)
+                     : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& DeleteLoadResult::deleted_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DeleteLoadResult.deleted_id)
+  return _internal_deleted_id();
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DeleteLoadResult::unsafe_arena_release_deleted_id() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.DeleteLoadResult.deleted_id)
+  if (result_case() == kDeletedId) {
+    clear_has_result();
+    auto* temp = _impl_.result_.deleted_id_;
+    _impl_.result_.deleted_id_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DeleteLoadResult::unsafe_arena_set_allocated_deleted_id(
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_result();
+  if (value) {
+    set_has_deleted_id();
+    _impl_.result_.deleted_id_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.DeleteLoadResult.deleted_id)
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DeleteLoadResult::_internal_mutable_deleted_id() {
+  if (result_case() != kDeletedId) {
+    clear_result();
+    set_has_deleted_id();
+    _impl_.result_.deleted_id_ = 
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+  }
+  return _impl_.result_.deleted_id_;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DeleteLoadResult::mutable_deleted_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_deleted_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DeleteLoadResult.deleted_id)
+  return _msg;
+}
+
+// string error_message = 2 [json_name = "errorMessage"];
+inline bool DeleteLoadResult::has_error_message() const {
+  return result_case() == kErrorMessage;
+}
+inline void DeleteLoadResult::set_has_error_message() {
+  _impl_._oneof_case_[0] = kErrorMessage;
+}
+inline void DeleteLoadResult::clear_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kErrorMessage) {
+    _impl_.result_.error_message_.Destroy();
+    clear_has_result();
+  }
+}
+inline const ::std::string& DeleteLoadResult::error_message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DeleteLoadResult.error_message)
+  return _internal_error_message();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void DeleteLoadResult::set_error_message(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  _impl_.result_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.DeleteLoadResult.error_message)
+}
+inline ::std::string* PROTOBUF_NONNULL DeleteLoadResult::mutable_error_message()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  ::std::string* _s = _internal_mutable_error_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DeleteLoadResult.error_message)
+  return _s;
+}
+inline const ::std::string& DeleteLoadResult::_internal_error_message() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  if (result_case() != kErrorMessage) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.result_.error_message_.Get();
+}
+inline void DeleteLoadResult::_internal_set_error_message(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.result_.error_message_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL DeleteLoadResult::_internal_mutable_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.result_.error_message_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE DeleteLoadResult::release_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DeleteLoadResult.error_message)
+  if (result_case() != kErrorMessage) {
+    return nullptr;
+  }
+  clear_has_result();
+  return _impl_.result_.error_message_.Release();
+}
+inline void DeleteLoadResult::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_result()) {
+    clear_result();
+  }
+  if (value != nullptr) {
+    set_has_error_message();
+    _impl_.result_.error_message_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.DeleteLoadResult.error_message)
+}
+
+inline bool DeleteLoadResult::has_result() const {
+  return result_case() != RESULT_NOT_SET;
+}
+inline void DeleteLoadResult::clear_has_result() {
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+inline DeleteLoadResult::ResultCase DeleteLoadResult::result_case() const {
+  return DeleteLoadResult::ResultCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// CreateActuatorCommand
+
+// .motionlab.mechanism.Actuator draft = 1 [json_name = "draft"];
+inline bool CreateActuatorCommand::has_draft() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.draft_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Actuator& CreateActuatorCommand::_internal_draft() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Actuator* p = _impl_.draft_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Actuator&>(::motionlab::mechanism::_Actuator_default_instance_);
+}
+inline const ::motionlab::mechanism::Actuator& CreateActuatorCommand::draft() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateActuatorCommand.draft)
+  return _internal_draft();
+}
+inline void CreateActuatorCommand::unsafe_arena_set_allocated_draft(
+    ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.draft_);
+  }
+  _impl_.draft_ = reinterpret_cast<::motionlab::mechanism::Actuator*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateActuatorCommand.draft)
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE CreateActuatorCommand::release_draft() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Actuator* released = _impl_.draft_;
+  _impl_.draft_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE CreateActuatorCommand::unsafe_arena_release_draft() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateActuatorCommand.draft)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Actuator* temp = _impl_.draft_;
+  _impl_.draft_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL CreateActuatorCommand::_internal_mutable_draft() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.draft_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Actuator>(GetArena());
+    _impl_.draft_ = reinterpret_cast<::motionlab::mechanism::Actuator*>(p);
+  }
+  return _impl_.draft_;
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL CreateActuatorCommand::mutable_draft()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Actuator* _msg = _internal_mutable_draft();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateActuatorCommand.draft)
+  return _msg;
+}
+inline void CreateActuatorCommand::set_allocated_draft(::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.draft_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.draft_ = reinterpret_cast<::motionlab::mechanism::Actuator*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateActuatorCommand.draft)
+}
+
+// -------------------------------------------------------------------
+
+// UpdateActuatorCommand
+
+// .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+inline bool UpdateActuatorCommand::has_actuator() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.actuator_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Actuator& UpdateActuatorCommand::_internal_actuator() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Actuator* p = _impl_.actuator_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Actuator&>(::motionlab::mechanism::_Actuator_default_instance_);
+}
+inline const ::motionlab::mechanism::Actuator& UpdateActuatorCommand::actuator() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateActuatorCommand.actuator)
+  return _internal_actuator();
+}
+inline void UpdateActuatorCommand::unsafe_arena_set_allocated_actuator(
+    ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.actuator_);
+  }
+  _impl_.actuator_ = reinterpret_cast<::motionlab::mechanism::Actuator*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.UpdateActuatorCommand.actuator)
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE UpdateActuatorCommand::release_actuator() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Actuator* released = _impl_.actuator_;
+  _impl_.actuator_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE UpdateActuatorCommand::unsafe_arena_release_actuator() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateActuatorCommand.actuator)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Actuator* temp = _impl_.actuator_;
+  _impl_.actuator_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL UpdateActuatorCommand::_internal_mutable_actuator() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.actuator_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Actuator>(GetArena());
+    _impl_.actuator_ = reinterpret_cast<::motionlab::mechanism::Actuator*>(p);
+  }
+  return _impl_.actuator_;
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL UpdateActuatorCommand::mutable_actuator()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::Actuator* _msg = _internal_mutable_actuator();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateActuatorCommand.actuator)
+  return _msg;
+}
+inline void UpdateActuatorCommand::set_allocated_actuator(::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.actuator_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.actuator_ = reinterpret_cast<::motionlab::mechanism::Actuator*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.UpdateActuatorCommand.actuator)
+}
+
+// -------------------------------------------------------------------
+
+// DeleteActuatorCommand
+
+// .motionlab.mechanism.ElementId actuator_id = 1 [json_name = "actuatorId"];
+inline bool DeleteActuatorCommand::has_actuator_id() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.actuator_id_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::ElementId& DeleteActuatorCommand::_internal_actuator_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::ElementId* p = _impl_.actuator_id_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& DeleteActuatorCommand::actuator_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DeleteActuatorCommand.actuator_id)
+  return _internal_actuator_id();
+}
+inline void DeleteActuatorCommand::unsafe_arena_set_allocated_actuator_id(
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.actuator_id_);
+  }
+  _impl_.actuator_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.DeleteActuatorCommand.actuator_id)
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DeleteActuatorCommand::release_actuator_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* released = _impl_.actuator_id_;
+  _impl_.actuator_id_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DeleteActuatorCommand::unsafe_arena_release_actuator_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DeleteActuatorCommand.actuator_id)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* temp = _impl_.actuator_id_;
+  _impl_.actuator_id_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DeleteActuatorCommand::_internal_mutable_actuator_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.actuator_id_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+    _impl_.actuator_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+  }
+  return _impl_.actuator_id_;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DeleteActuatorCommand::mutable_actuator_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_actuator_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DeleteActuatorCommand.actuator_id)
+  return _msg;
+}
+inline void DeleteActuatorCommand::set_allocated_actuator_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.actuator_id_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.actuator_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.DeleteActuatorCommand.actuator_id)
+}
+
+// -------------------------------------------------------------------
+
+// CreateActuatorResult
+
+// .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+inline bool CreateActuatorResult::has_actuator() const {
+  return result_case() == kActuator;
+}
+inline bool CreateActuatorResult::_internal_has_actuator() const {
+  return result_case() == kActuator;
+}
+inline void CreateActuatorResult::set_has_actuator() {
+  _impl_._oneof_case_[0] = kActuator;
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE CreateActuatorResult::release_actuator() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateActuatorResult.actuator)
+  if (result_case() == kActuator) {
+    clear_has_result();
+    auto* temp = _impl_.result_.actuator_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.result_.actuator_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::Actuator& CreateActuatorResult::_internal_actuator() const {
+  return result_case() == kActuator ? static_cast<const ::motionlab::mechanism::Actuator&>(*_impl_.result_.actuator_)
+                     : reinterpret_cast<const ::motionlab::mechanism::Actuator&>(::motionlab::mechanism::_Actuator_default_instance_);
+}
+inline const ::motionlab::mechanism::Actuator& CreateActuatorResult::actuator() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateActuatorResult.actuator)
+  return _internal_actuator();
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE CreateActuatorResult::unsafe_arena_release_actuator() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.CreateActuatorResult.actuator)
+  if (result_case() == kActuator) {
+    clear_has_result();
+    auto* temp = _impl_.result_.actuator_;
+    _impl_.result_.actuator_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void CreateActuatorResult::unsafe_arena_set_allocated_actuator(
+    ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_result();
+  if (value) {
+    set_has_actuator();
+    _impl_.result_.actuator_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateActuatorResult.actuator)
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL CreateActuatorResult::_internal_mutable_actuator() {
+  if (result_case() != kActuator) {
+    clear_result();
+    set_has_actuator();
+    _impl_.result_.actuator_ = 
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Actuator>(GetArena());
+  }
+  return _impl_.result_.actuator_;
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL CreateActuatorResult::mutable_actuator()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::Actuator* _msg = _internal_mutable_actuator();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateActuatorResult.actuator)
+  return _msg;
+}
+
+// string error_message = 2 [json_name = "errorMessage"];
+inline bool CreateActuatorResult::has_error_message() const {
+  return result_case() == kErrorMessage;
+}
+inline void CreateActuatorResult::set_has_error_message() {
+  _impl_._oneof_case_[0] = kErrorMessage;
+}
+inline void CreateActuatorResult::clear_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kErrorMessage) {
+    _impl_.result_.error_message_.Destroy();
+    clear_has_result();
+  }
+}
+inline const ::std::string& CreateActuatorResult::error_message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateActuatorResult.error_message)
+  return _internal_error_message();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void CreateActuatorResult::set_error_message(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  _impl_.result_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.CreateActuatorResult.error_message)
+}
+inline ::std::string* PROTOBUF_NONNULL CreateActuatorResult::mutable_error_message()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  ::std::string* _s = _internal_mutable_error_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateActuatorResult.error_message)
+  return _s;
+}
+inline const ::std::string& CreateActuatorResult::_internal_error_message() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  if (result_case() != kErrorMessage) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.result_.error_message_.Get();
+}
+inline void CreateActuatorResult::_internal_set_error_message(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.result_.error_message_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL CreateActuatorResult::_internal_mutable_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.result_.error_message_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE CreateActuatorResult::release_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateActuatorResult.error_message)
+  if (result_case() != kErrorMessage) {
+    return nullptr;
+  }
+  clear_has_result();
+  return _impl_.result_.error_message_.Release();
+}
+inline void CreateActuatorResult::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_result()) {
+    clear_result();
+  }
+  if (value != nullptr) {
+    set_has_error_message();
+    _impl_.result_.error_message_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateActuatorResult.error_message)
+}
+
+inline bool CreateActuatorResult::has_result() const {
+  return result_case() != RESULT_NOT_SET;
+}
+inline void CreateActuatorResult::clear_has_result() {
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+inline CreateActuatorResult::ResultCase CreateActuatorResult::result_case() const {
+  return CreateActuatorResult::ResultCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// UpdateActuatorResult
+
+// .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+inline bool UpdateActuatorResult::has_actuator() const {
+  return result_case() == kActuator;
+}
+inline bool UpdateActuatorResult::_internal_has_actuator() const {
+  return result_case() == kActuator;
+}
+inline void UpdateActuatorResult::set_has_actuator() {
+  _impl_._oneof_case_[0] = kActuator;
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE UpdateActuatorResult::release_actuator() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateActuatorResult.actuator)
+  if (result_case() == kActuator) {
+    clear_has_result();
+    auto* temp = _impl_.result_.actuator_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.result_.actuator_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::Actuator& UpdateActuatorResult::_internal_actuator() const {
+  return result_case() == kActuator ? static_cast<const ::motionlab::mechanism::Actuator&>(*_impl_.result_.actuator_)
+                     : reinterpret_cast<const ::motionlab::mechanism::Actuator&>(::motionlab::mechanism::_Actuator_default_instance_);
+}
+inline const ::motionlab::mechanism::Actuator& UpdateActuatorResult::actuator() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateActuatorResult.actuator)
+  return _internal_actuator();
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE UpdateActuatorResult::unsafe_arena_release_actuator() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.UpdateActuatorResult.actuator)
+  if (result_case() == kActuator) {
+    clear_has_result();
+    auto* temp = _impl_.result_.actuator_;
+    _impl_.result_.actuator_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void UpdateActuatorResult::unsafe_arena_set_allocated_actuator(
+    ::motionlab::mechanism::Actuator* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_result();
+  if (value) {
+    set_has_actuator();
+    _impl_.result_.actuator_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.UpdateActuatorResult.actuator)
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL UpdateActuatorResult::_internal_mutable_actuator() {
+  if (result_case() != kActuator) {
+    clear_result();
+    set_has_actuator();
+    _impl_.result_.actuator_ = 
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Actuator>(GetArena());
+  }
+  return _impl_.result_.actuator_;
+}
+inline ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL UpdateActuatorResult::mutable_actuator()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::Actuator* _msg = _internal_mutable_actuator();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateActuatorResult.actuator)
+  return _msg;
+}
+
+// string error_message = 2 [json_name = "errorMessage"];
+inline bool UpdateActuatorResult::has_error_message() const {
+  return result_case() == kErrorMessage;
+}
+inline void UpdateActuatorResult::set_has_error_message() {
+  _impl_._oneof_case_[0] = kErrorMessage;
+}
+inline void UpdateActuatorResult::clear_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kErrorMessage) {
+    _impl_.result_.error_message_.Destroy();
+    clear_has_result();
+  }
+}
+inline const ::std::string& UpdateActuatorResult::error_message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.UpdateActuatorResult.error_message)
+  return _internal_error_message();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void UpdateActuatorResult::set_error_message(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  _impl_.result_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.UpdateActuatorResult.error_message)
+}
+inline ::std::string* PROTOBUF_NONNULL UpdateActuatorResult::mutable_error_message()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  ::std::string* _s = _internal_mutable_error_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.UpdateActuatorResult.error_message)
+  return _s;
+}
+inline const ::std::string& UpdateActuatorResult::_internal_error_message() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  if (result_case() != kErrorMessage) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.result_.error_message_.Get();
+}
+inline void UpdateActuatorResult::_internal_set_error_message(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.result_.error_message_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL UpdateActuatorResult::_internal_mutable_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.result_.error_message_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE UpdateActuatorResult::release_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.UpdateActuatorResult.error_message)
+  if (result_case() != kErrorMessage) {
+    return nullptr;
+  }
+  clear_has_result();
+  return _impl_.result_.error_message_.Release();
+}
+inline void UpdateActuatorResult::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_result()) {
+    clear_result();
+  }
+  if (value != nullptr) {
+    set_has_error_message();
+    _impl_.result_.error_message_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.UpdateActuatorResult.error_message)
+}
+
+inline bool UpdateActuatorResult::has_result() const {
+  return result_case() != RESULT_NOT_SET;
+}
+inline void UpdateActuatorResult::clear_has_result() {
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+inline UpdateActuatorResult::ResultCase UpdateActuatorResult::result_case() const {
+  return UpdateActuatorResult::ResultCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// DeleteActuatorResult
+
+// .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+inline bool DeleteActuatorResult::has_deleted_id() const {
+  return result_case() == kDeletedId;
+}
+inline bool DeleteActuatorResult::_internal_has_deleted_id() const {
+  return result_case() == kDeletedId;
+}
+inline void DeleteActuatorResult::set_has_deleted_id() {
+  _impl_._oneof_case_[0] = kDeletedId;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DeleteActuatorResult::release_deleted_id() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DeleteActuatorResult.deleted_id)
+  if (result_case() == kDeletedId) {
+    clear_has_result();
+    auto* temp = _impl_.result_.deleted_id_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.result_.deleted_id_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::ElementId& DeleteActuatorResult::_internal_deleted_id() const {
+  return result_case() == kDeletedId ? static_cast<const ::motionlab::mechanism::ElementId&>(*_impl_.result_.deleted_id_)
+                     : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& DeleteActuatorResult::deleted_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DeleteActuatorResult.deleted_id)
+  return _internal_deleted_id();
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE DeleteActuatorResult::unsafe_arena_release_deleted_id() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.DeleteActuatorResult.deleted_id)
+  if (result_case() == kDeletedId) {
+    clear_has_result();
+    auto* temp = _impl_.result_.deleted_id_;
+    _impl_.result_.deleted_id_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DeleteActuatorResult::unsafe_arena_set_allocated_deleted_id(
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_result();
+  if (value) {
+    set_has_deleted_id();
+    _impl_.result_.deleted_id_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.DeleteActuatorResult.deleted_id)
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DeleteActuatorResult::_internal_mutable_deleted_id() {
+  if (result_case() != kDeletedId) {
+    clear_result();
+    set_has_deleted_id();
+    _impl_.result_.deleted_id_ = 
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+  }
+  return _impl_.result_.deleted_id_;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL DeleteActuatorResult::mutable_deleted_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_deleted_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DeleteActuatorResult.deleted_id)
+  return _msg;
+}
+
+// string error_message = 2 [json_name = "errorMessage"];
+inline bool DeleteActuatorResult::has_error_message() const {
+  return result_case() == kErrorMessage;
+}
+inline void DeleteActuatorResult::set_has_error_message() {
+  _impl_._oneof_case_[0] = kErrorMessage;
+}
+inline void DeleteActuatorResult::clear_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kErrorMessage) {
+    _impl_.result_.error_message_.Destroy();
+    clear_has_result();
+  }
+}
+inline const ::std::string& DeleteActuatorResult::error_message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.DeleteActuatorResult.error_message)
+  return _internal_error_message();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void DeleteActuatorResult::set_error_message(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  _impl_.result_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.DeleteActuatorResult.error_message)
+}
+inline ::std::string* PROTOBUF_NONNULL DeleteActuatorResult::mutable_error_message()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  ::std::string* _s = _internal_mutable_error_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.DeleteActuatorResult.error_message)
+  return _s;
+}
+inline const ::std::string& DeleteActuatorResult::_internal_error_message() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  if (result_case() != kErrorMessage) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.result_.error_message_.Get();
+}
+inline void DeleteActuatorResult::_internal_set_error_message(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.result_.error_message_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL DeleteActuatorResult::_internal_mutable_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.result_.error_message_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE DeleteActuatorResult::release_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.DeleteActuatorResult.error_message)
+  if (result_case() != kErrorMessage) {
+    return nullptr;
+  }
+  clear_has_result();
+  return _impl_.result_.error_message_.Release();
+}
+inline void DeleteActuatorResult::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_result()) {
+    clear_result();
+  }
+  if (value != nullptr) {
+    set_has_error_message();
+    _impl_.result_.error_message_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.DeleteActuatorResult.error_message)
+}
+
+inline bool DeleteActuatorResult::has_result() const {
+  return result_case() != RESULT_NOT_SET;
+}
+inline void DeleteActuatorResult::clear_has_result() {
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+inline DeleteActuatorResult::ResultCase DeleteActuatorResult::result_case() const {
+  return DeleteActuatorResult::ResultCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// SolverSettings
+
+// .motionlab.protocol.SolverType type = 1 [json_name = "type"];
+inline void SolverSettings::clear_type() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.type_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline ::motionlab::protocol::SolverType SolverSettings::type() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.SolverSettings.type)
+  return _internal_type();
+}
+inline void SolverSettings::set_type(::motionlab::protocol::SolverType value) {
+  _internal_set_type(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.SolverSettings.type)
+}
+inline ::motionlab::protocol::SolverType SolverSettings::_internal_type() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::motionlab::protocol::SolverType>(_impl_.type_);
+}
+inline void SolverSettings::_internal_set_type(::motionlab::protocol::SolverType value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.type_ = value;
+}
+
+// int32 max_iterations = 2 [json_name = "maxIterations"];
+inline void SolverSettings::clear_max_iterations() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.max_iterations_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline ::int32_t SolverSettings::max_iterations() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.SolverSettings.max_iterations)
+  return _internal_max_iterations();
+}
+inline void SolverSettings::set_max_iterations(::int32_t value) {
+  _internal_set_max_iterations(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.SolverSettings.max_iterations)
+}
+inline ::int32_t SolverSettings::_internal_max_iterations() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.max_iterations_;
+}
+inline void SolverSettings::_internal_set_max_iterations(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.max_iterations_ = value;
+}
+
+// double tolerance = 3 [json_name = "tolerance"];
+inline void SolverSettings::clear_tolerance() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.tolerance_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline double SolverSettings::tolerance() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.SolverSettings.tolerance)
+  return _internal_tolerance();
+}
+inline void SolverSettings::set_tolerance(double value) {
+  _internal_set_tolerance(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.SolverSettings.tolerance)
+}
+inline double SolverSettings::_internal_tolerance() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.tolerance_;
+}
+inline void SolverSettings::_internal_set_tolerance(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.tolerance_ = value;
+}
+
+// .motionlab.protocol.IntegratorType integrator = 4 [json_name = "integrator"];
+inline void SolverSettings::clear_integrator() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.integrator_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000008U);
+}
+inline ::motionlab::protocol::IntegratorType SolverSettings::integrator() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.SolverSettings.integrator)
+  return _internal_integrator();
+}
+inline void SolverSettings::set_integrator(::motionlab::protocol::IntegratorType value) {
+  _internal_set_integrator(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.SolverSettings.integrator)
+}
+inline ::motionlab::protocol::IntegratorType SolverSettings::_internal_integrator() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::motionlab::protocol::IntegratorType>(_impl_.integrator_);
+}
+inline void SolverSettings::_internal_set_integrator(::motionlab::protocol::IntegratorType value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.integrator_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// ContactSettings
+
+// double friction = 1 [json_name = "friction"];
+inline void ContactSettings::clear_friction() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.friction_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline double ContactSettings::friction() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.ContactSettings.friction)
+  return _internal_friction();
+}
+inline void ContactSettings::set_friction(double value) {
+  _internal_set_friction(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.ContactSettings.friction)
+}
+inline double ContactSettings::_internal_friction() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.friction_;
+}
+inline void ContactSettings::_internal_set_friction(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.friction_ = value;
+}
+
+// double restitution = 2 [json_name = "restitution"];
+inline void ContactSettings::clear_restitution() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.restitution_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline double ContactSettings::restitution() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.ContactSettings.restitution)
+  return _internal_restitution();
+}
+inline void ContactSettings::set_restitution(double value) {
+  _internal_set_restitution(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.ContactSettings.restitution)
+}
+inline double ContactSettings::_internal_restitution() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.restitution_;
+}
+inline void ContactSettings::_internal_set_restitution(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.restitution_ = value;
+}
+
+// double compliance = 3 [json_name = "compliance"];
+inline void ContactSettings::clear_compliance() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.compliance_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline double ContactSettings::compliance() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.ContactSettings.compliance)
+  return _internal_compliance();
+}
+inline void ContactSettings::set_compliance(double value) {
+  _internal_set_compliance(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.ContactSettings.compliance)
+}
+inline double ContactSettings::_internal_compliance() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.compliance_;
+}
+inline void ContactSettings::_internal_set_compliance(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.compliance_ = value;
+}
+
+// double damping = 4 [json_name = "damping"];
+inline void ContactSettings::clear_damping() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.damping_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000008U);
+}
+inline double ContactSettings::damping() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.ContactSettings.damping)
+  return _internal_damping();
+}
+inline void ContactSettings::set_damping(double value) {
+  _internal_set_damping(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.ContactSettings.damping)
+}
+inline double ContactSettings::_internal_damping() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.damping_;
+}
+inline void ContactSettings::_internal_set_damping(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.damping_ = value;
+}
+
+// bool enable_contact = 5 [json_name = "enableContact"];
+inline void ContactSettings::clear_enable_contact() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.enable_contact_ = false;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000010U);
+}
+inline bool ContactSettings::enable_contact() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.ContactSettings.enable_contact)
+  return _internal_enable_contact();
+}
+inline void ContactSettings::set_enable_contact(bool value) {
+  _internal_set_enable_contact(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.ContactSettings.enable_contact)
+}
+inline bool ContactSettings::_internal_enable_contact() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.enable_contact_;
+}
+inline void ContactSettings::_internal_set_enable_contact(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.enable_contact_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// CompilationDiagnostic
+
+// .motionlab.protocol.DiagnosticSeverity severity = 1 [json_name = "severity"];
+inline void CompilationDiagnostic::clear_severity() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.severity_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000010U);
+}
+inline ::motionlab::protocol::DiagnosticSeverity CompilationDiagnostic::severity() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CompilationDiagnostic.severity)
+  return _internal_severity();
+}
+inline void CompilationDiagnostic::set_severity(::motionlab::protocol::DiagnosticSeverity value) {
+  _internal_set_severity(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.CompilationDiagnostic.severity)
+}
+inline ::motionlab::protocol::DiagnosticSeverity CompilationDiagnostic::_internal_severity() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::motionlab::protocol::DiagnosticSeverity>(_impl_.severity_);
+}
+inline void CompilationDiagnostic::_internal_set_severity(::motionlab::protocol::DiagnosticSeverity value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.severity_ = value;
+}
+
+// string message = 2 [json_name = "message"];
+inline void CompilationDiagnostic::clear_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.message_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline const ::std::string& CompilationDiagnostic::message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CompilationDiagnostic.message)
+  return _internal_message();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void CompilationDiagnostic::set_message(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  _impl_.message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.CompilationDiagnostic.message)
+}
+inline ::std::string* PROTOBUF_NONNULL CompilationDiagnostic::mutable_message()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::std::string* _s = _internal_mutable_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CompilationDiagnostic.message)
+  return _s;
+}
+inline const ::std::string& CompilationDiagnostic::_internal_message() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.message_.Get();
+}
+inline void CompilationDiagnostic::_internal_set_message(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.message_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL CompilationDiagnostic::_internal_mutable_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.message_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE CompilationDiagnostic::release_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CompilationDiagnostic.message)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000002U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  auto* released = _impl_.message_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.message_.Set("", GetArena());
+  }
+  return released;
+}
+inline void CompilationDiagnostic::set_allocated_message(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+  _impl_.message_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.message_.IsDefault()) {
+    _impl_.message_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CompilationDiagnostic.message)
+}
+
+// repeated string affected_entity_ids = 3 [json_name = "affectedEntityIds"];
+inline int CompilationDiagnostic::_internal_affected_entity_ids_size() const {
+  return _internal_affected_entity_ids().size();
+}
+inline int CompilationDiagnostic::affected_entity_ids_size() const {
+  return _internal_affected_entity_ids_size();
+}
+inline void CompilationDiagnostic::clear_affected_entity_ids() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.affected_entity_ids_.Clear();
+  ClearHasBitForRepeated(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline ::std::string* PROTOBUF_NONNULL CompilationDiagnostic::add_affected_entity_ids()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::std::string* _s =
+      _internal_mutable_affected_entity_ids()->InternalAddWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), GetArena());
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_add_mutable:motionlab.protocol.CompilationDiagnostic.affected_entity_ids)
+  return _s;
+}
+inline const ::std::string& CompilationDiagnostic::affected_entity_ids(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CompilationDiagnostic.affected_entity_ids)
+  return _internal_affected_entity_ids().Get(index);
+}
+inline ::std::string* PROTOBUF_NONNULL CompilationDiagnostic::mutable_affected_entity_ids(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CompilationDiagnostic.affected_entity_ids)
+  return _internal_mutable_affected_entity_ids()->Mutable(index);
+}
+template <typename Arg_, typename... Args_>
+inline void CompilationDiagnostic::set_affected_entity_ids(int index, Arg_&& value, Args_... args) {
+  ::google::protobuf::internal::AssignToString(*_internal_mutable_affected_entity_ids()->Mutable(index), ::std::forward<Arg_>(value),
+                        args... );
+  // @@protoc_insertion_point(field_set:motionlab.protocol.CompilationDiagnostic.affected_entity_ids)
+}
+template <typename Arg_, typename... Args_>
+inline void CompilationDiagnostic::add_affected_entity_ids(Arg_&& value, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::google::protobuf::internal::AddToRepeatedPtrField(
+      ::google::protobuf::MessageLite::internal_visibility(), GetArena(),
+      *_internal_mutable_affected_entity_ids(), ::std::forward<Arg_>(value),
+      args... );
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_add:motionlab.protocol.CompilationDiagnostic.affected_entity_ids)
+}
+inline const ::google::protobuf::RepeatedPtrField<::std::string>& CompilationDiagnostic::affected_entity_ids()
+    const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:motionlab.protocol.CompilationDiagnostic.affected_entity_ids)
+  return _internal_affected_entity_ids();
+}
+inline ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL
+CompilationDiagnostic::mutable_affected_entity_ids() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_mutable_list:motionlab.protocol.CompilationDiagnostic.affected_entity_ids)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_affected_entity_ids();
+}
+inline const ::google::protobuf::RepeatedPtrField<::std::string>&
+CompilationDiagnostic::_internal_affected_entity_ids() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.affected_entity_ids_;
+}
+inline ::google::protobuf::RepeatedPtrField<::std::string>* PROTOBUF_NONNULL
+CompilationDiagnostic::_internal_mutable_affected_entity_ids() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.affected_entity_ids_;
+}
+
+// string suggestion = 4 [json_name = "suggestion"];
+inline void CompilationDiagnostic::clear_suggestion() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.suggestion_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline const ::std::string& CompilationDiagnostic::suggestion() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CompilationDiagnostic.suggestion)
+  return _internal_suggestion();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void CompilationDiagnostic::set_suggestion(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  _impl_.suggestion_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.CompilationDiagnostic.suggestion)
+}
+inline ::std::string* PROTOBUF_NONNULL CompilationDiagnostic::mutable_suggestion()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::std::string* _s = _internal_mutable_suggestion();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CompilationDiagnostic.suggestion)
+  return _s;
+}
+inline const ::std::string& CompilationDiagnostic::_internal_suggestion() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.suggestion_.Get();
+}
+inline void CompilationDiagnostic::_internal_set_suggestion(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.suggestion_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL CompilationDiagnostic::_internal_mutable_suggestion() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.suggestion_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE CompilationDiagnostic::release_suggestion() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CompilationDiagnostic.suggestion)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000004U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  auto* released = _impl_.suggestion_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.suggestion_.Set("", GetArena());
+  }
+  return released;
+}
+inline void CompilationDiagnostic::set_allocated_suggestion(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  }
+  _impl_.suggestion_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.suggestion_.IsDefault()) {
+    _impl_.suggestion_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CompilationDiagnostic.suggestion)
+}
+
+// string code = 5 [json_name = "code"];
+inline void CompilationDiagnostic::clear_code() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.code_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000008U);
+}
+inline const ::std::string& CompilationDiagnostic::code() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CompilationDiagnostic.code)
+  return _internal_code();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void CompilationDiagnostic::set_code(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  _impl_.code_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.CompilationDiagnostic.code)
+}
+inline ::std::string* PROTOBUF_NONNULL CompilationDiagnostic::mutable_code()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  ::std::string* _s = _internal_mutable_code();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CompilationDiagnostic.code)
+  return _s;
+}
+inline const ::std::string& CompilationDiagnostic::_internal_code() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.code_.Get();
+}
+inline void CompilationDiagnostic::_internal_set_code(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.code_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL CompilationDiagnostic::_internal_mutable_code() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.code_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE CompilationDiagnostic::release_code() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CompilationDiagnostic.code)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000008U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  auto* released = _impl_.code_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.code_.Set("", GetArena());
+  }
+  return released;
+}
+inline void CompilationDiagnostic::set_allocated_code(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  }
+  _impl_.code_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.code_.IsDefault()) {
+    _impl_.code_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CompilationDiagnostic.code)
+}
+
+// -------------------------------------------------------------------
+
 // SimulationSettings
 
 // double timestep = 1 [json_name = "timestep"];
@@ -21386,7 +35070,7 @@ inline void SimulationSettings::clear_timestep() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.timestep_ = 0;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000002U);
+                  0x00000008U);
 }
 inline double SimulationSettings::timestep() const {
   // @@protoc_insertion_point(field_get:motionlab.protocol.SimulationSettings.timestep)
@@ -21394,7 +35078,7 @@ inline double SimulationSettings::timestep() const {
 }
 inline void SimulationSettings::set_timestep(double value) {
   _internal_set_timestep(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   // @@protoc_insertion_point(field_set:motionlab.protocol.SimulationSettings.timestep)
 }
 inline double SimulationSettings::_internal_timestep() const {
@@ -21497,6 +35181,229 @@ inline void SimulationSettings::set_allocated_gravity(::motionlab::mechanism::Ve
 
   _impl_.gravity_ = reinterpret_cast<::motionlab::mechanism::Vec3*>(value);
   // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.SimulationSettings.gravity)
+}
+
+// .motionlab.protocol.SolverSettings solver = 3 [json_name = "solver"];
+inline bool SimulationSettings::has_solver() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
+  PROTOBUF_ASSUME(!value || _impl_.solver_ != nullptr);
+  return value;
+}
+inline void SimulationSettings::clear_solver() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.solver_ != nullptr) _impl_.solver_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline const ::motionlab::protocol::SolverSettings& SimulationSettings::_internal_solver() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::protocol::SolverSettings* p = _impl_.solver_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::protocol::SolverSettings&>(::motionlab::protocol::_SolverSettings_default_instance_);
+}
+inline const ::motionlab::protocol::SolverSettings& SimulationSettings::solver() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.SimulationSettings.solver)
+  return _internal_solver();
+}
+inline void SimulationSettings::unsafe_arena_set_allocated_solver(
+    ::motionlab::protocol::SolverSettings* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.solver_);
+  }
+  _impl_.solver_ = reinterpret_cast<::motionlab::protocol::SolverSettings*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.SimulationSettings.solver)
+}
+inline ::motionlab::protocol::SolverSettings* PROTOBUF_NULLABLE SimulationSettings::release_solver() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::protocol::SolverSettings* released = _impl_.solver_;
+  _impl_.solver_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::protocol::SolverSettings* PROTOBUF_NULLABLE SimulationSettings::unsafe_arena_release_solver() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.SimulationSettings.solver)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::protocol::SolverSettings* temp = _impl_.solver_;
+  _impl_.solver_ = nullptr;
+  return temp;
+}
+inline ::motionlab::protocol::SolverSettings* PROTOBUF_NONNULL SimulationSettings::_internal_mutable_solver() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.solver_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::SolverSettings>(GetArena());
+    _impl_.solver_ = reinterpret_cast<::motionlab::protocol::SolverSettings*>(p);
+  }
+  return _impl_.solver_;
+}
+inline ::motionlab::protocol::SolverSettings* PROTOBUF_NONNULL SimulationSettings::mutable_solver()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::protocol::SolverSettings* _msg = _internal_mutable_solver();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.SimulationSettings.solver)
+  return _msg;
+}
+inline void SimulationSettings::set_allocated_solver(::motionlab::protocol::SolverSettings* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.solver_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = value->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+
+  _impl_.solver_ = reinterpret_cast<::motionlab::protocol::SolverSettings*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.SimulationSettings.solver)
+}
+
+// .motionlab.protocol.ContactSettings contact = 4 [json_name = "contact"];
+inline bool SimulationSettings::has_contact() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
+  PROTOBUF_ASSUME(!value || _impl_.contact_ != nullptr);
+  return value;
+}
+inline void SimulationSettings::clear_contact() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.contact_ != nullptr) _impl_.contact_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline const ::motionlab::protocol::ContactSettings& SimulationSettings::_internal_contact() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::protocol::ContactSettings* p = _impl_.contact_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::protocol::ContactSettings&>(::motionlab::protocol::_ContactSettings_default_instance_);
+}
+inline const ::motionlab::protocol::ContactSettings& SimulationSettings::contact() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.SimulationSettings.contact)
+  return _internal_contact();
+}
+inline void SimulationSettings::unsafe_arena_set_allocated_contact(
+    ::motionlab::protocol::ContactSettings* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.contact_);
+  }
+  _impl_.contact_ = reinterpret_cast<::motionlab::protocol::ContactSettings*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.SimulationSettings.contact)
+}
+inline ::motionlab::protocol::ContactSettings* PROTOBUF_NULLABLE SimulationSettings::release_contact() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::motionlab::protocol::ContactSettings* released = _impl_.contact_;
+  _impl_.contact_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::protocol::ContactSettings* PROTOBUF_NULLABLE SimulationSettings::unsafe_arena_release_contact() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.SimulationSettings.contact)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::motionlab::protocol::ContactSettings* temp = _impl_.contact_;
+  _impl_.contact_ = nullptr;
+  return temp;
+}
+inline ::motionlab::protocol::ContactSettings* PROTOBUF_NONNULL SimulationSettings::_internal_mutable_contact() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.contact_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::ContactSettings>(GetArena());
+    _impl_.contact_ = reinterpret_cast<::motionlab::protocol::ContactSettings*>(p);
+  }
+  return _impl_.contact_;
+}
+inline ::motionlab::protocol::ContactSettings* PROTOBUF_NONNULL SimulationSettings::mutable_contact()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::motionlab::protocol::ContactSettings* _msg = _internal_mutable_contact();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.SimulationSettings.contact)
+  return _msg;
+}
+inline void SimulationSettings::set_allocated_contact(::motionlab::protocol::ContactSettings* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.contact_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = value->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  }
+
+  _impl_.contact_ = reinterpret_cast<::motionlab::protocol::ContactSettings*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.SimulationSettings.contact)
+}
+
+// double duration = 5 [json_name = "duration"];
+inline void SimulationSettings::clear_duration() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.duration_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000010U);
+}
+inline double SimulationSettings::duration() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.SimulationSettings.duration)
+  return _internal_duration();
+}
+inline void SimulationSettings::set_duration(double value) {
+  _internal_set_duration(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.SimulationSettings.duration)
+}
+inline double SimulationSettings::_internal_duration() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.duration_;
+}
+inline void SimulationSettings::_internal_set_duration(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.duration_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -21640,7 +35547,7 @@ inline void CompilationResultEvent::clear_success() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.success_ = false;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000008U);
+                  0x00000010U);
 }
 inline bool CompilationResultEvent::success() const {
   // @@protoc_insertion_point(field_get:motionlab.protocol.CompilationResultEvent.success)
@@ -21648,7 +35555,7 @@ inline bool CompilationResultEvent::success() const {
 }
 inline void CompilationResultEvent::set_success(bool value) {
   _internal_set_success(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
   // @@protoc_insertion_point(field_set:motionlab.protocol.CompilationResultEvent.success)
 }
 inline bool CompilationResultEvent::_internal_success() const {
@@ -21665,7 +35572,7 @@ inline void CompilationResultEvent::clear_error_message() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.error_message_.ClearToEmpty();
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000004U);
+                  0x00000008U);
 }
 inline const ::std::string& CompilationResultEvent::error_message() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
@@ -21675,13 +35582,13 @@ inline const ::std::string& CompilationResultEvent::error_message() const
 template <typename Arg_, typename... Args_>
 PROTOBUF_ALWAYS_INLINE void CompilationResultEvent::set_error_message(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   _impl_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
   // @@protoc_insertion_point(field_set:motionlab.protocol.CompilationResultEvent.error_message)
 }
 inline ::std::string* PROTOBUF_NONNULL CompilationResultEvent::mutable_error_message()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   ::std::string* _s = _internal_mutable_error_message();
   // @@protoc_insertion_point(field_mutable:motionlab.protocol.CompilationResultEvent.error_message)
   return _s;
@@ -21701,10 +35608,10 @@ inline ::std::string* PROTOBUF_NONNULL CompilationResultEvent::_internal_mutable
 inline ::std::string* PROTOBUF_NULLABLE CompilationResultEvent::release_error_message() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:motionlab.protocol.CompilationResultEvent.error_message)
-  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000004U)) {
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000008U)) {
     return nullptr;
   }
-  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   auto* released = _impl_.error_message_.Release();
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
     _impl_.error_message_.Set("", GetArena());
@@ -21714,9 +35621,9 @@ inline ::std::string* PROTOBUF_NULLABLE CompilationResultEvent::release_error_me
 inline void CompilationResultEvent::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+    SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+    ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   }
   _impl_.error_message_.SetAllocated(value, GetArena());
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.error_message_.IsDefault()) {
@@ -21725,7 +35632,7 @@ inline void CompilationResultEvent::set_allocated_error_message(::std::string* P
   // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CompilationResultEvent.error_message)
 }
 
-// repeated string diagnostics = 3 [json_name = "diagnostics"];
+// repeated string diagnostics = 3 [json_name = "diagnostics", deprecated = true];
 inline int CompilationResultEvent::_internal_diagnostics_size() const {
   return _internal_diagnostics().size();
 }
@@ -21851,6 +35758,62 @@ inline ::google::protobuf::RepeatedPtrField<::motionlab::protocol::OutputChannel
 CompilationResultEvent::_internal_mutable_channels() {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return &_impl_.channels_;
+}
+
+// repeated .motionlab.protocol.CompilationDiagnostic structured_diagnostics = 5 [json_name = "structuredDiagnostics"];
+inline int CompilationResultEvent::_internal_structured_diagnostics_size() const {
+  return _internal_structured_diagnostics().size();
+}
+inline int CompilationResultEvent::structured_diagnostics_size() const {
+  return _internal_structured_diagnostics_size();
+}
+inline void CompilationResultEvent::clear_structured_diagnostics() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.structured_diagnostics_.Clear();
+  ClearHasBitForRepeated(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline ::motionlab::protocol::CompilationDiagnostic* PROTOBUF_NONNULL CompilationResultEvent::mutable_structured_diagnostics(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CompilationResultEvent.structured_diagnostics)
+  return _internal_mutable_structured_diagnostics()->Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField<::motionlab::protocol::CompilationDiagnostic>* PROTOBUF_NONNULL CompilationResultEvent::mutable_structured_diagnostics()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_mutable_list:motionlab.protocol.CompilationResultEvent.structured_diagnostics)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_structured_diagnostics();
+}
+inline const ::motionlab::protocol::CompilationDiagnostic& CompilationResultEvent::structured_diagnostics(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CompilationResultEvent.structured_diagnostics)
+  return _internal_structured_diagnostics().Get(index);
+}
+inline ::motionlab::protocol::CompilationDiagnostic* PROTOBUF_NONNULL CompilationResultEvent::add_structured_diagnostics()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::motionlab::protocol::CompilationDiagnostic* _add =
+      _internal_mutable_structured_diagnostics()->InternalAddWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), GetArena());
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_add:motionlab.protocol.CompilationResultEvent.structured_diagnostics)
+  return _add;
+}
+inline const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::CompilationDiagnostic>& CompilationResultEvent::structured_diagnostics() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:motionlab.protocol.CompilationResultEvent.structured_diagnostics)
+  return _internal_structured_diagnostics();
+}
+inline const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::CompilationDiagnostic>&
+CompilationResultEvent::_internal_structured_diagnostics() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.structured_diagnostics_;
+}
+inline ::google::protobuf::RepeatedPtrField<::motionlab::protocol::CompilationDiagnostic>* PROTOBUF_NONNULL
+CompilationResultEvent::_internal_mutable_structured_diagnostics() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.structured_diagnostics_;
 }
 
 // -------------------------------------------------------------------
@@ -22602,7 +36565,7 @@ SimulationFrame::_internal_mutable_body_poses() {
   return &_impl_.body_poses_;
 }
 
-// repeated .motionlab.protocol.JointStateData joint_states = 4 [json_name = "jointStates"];
+// repeated .motionlab.protocol.JointStateData joint_states = 4 [json_name = "jointStates", deprecated = true];
 inline int SimulationFrame::_internal_joint_states_size() const {
   return _internal_joint_states().size();
 }
@@ -23667,7 +37630,7 @@ inline LoadProjectResult::ResultCase LoadProjectResult::result_case() const {
 
 // .motionlab.mechanism.Mechanism mechanism = 1 [json_name = "mechanism"];
 inline bool LoadProjectSuccess::has_mechanism() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
   PROTOBUF_ASSUME(!value || _impl_.mechanism_ != nullptr);
   return value;
 }
@@ -23688,16 +37651,16 @@ inline void LoadProjectSuccess::unsafe_arena_set_allocated_mechanism(
   }
   _impl_.mechanism_ = reinterpret_cast<::motionlab::mechanism::Mechanism*>(value);
   if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+    SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+    ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   }
   // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.LoadProjectSuccess.mechanism)
 }
 inline ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE LoadProjectSuccess::release_mechanism() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
-  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   ::motionlab::mechanism::Mechanism* released = _impl_.mechanism_;
   _impl_.mechanism_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
@@ -23717,7 +37680,7 @@ inline ::motionlab::mechanism::Mechanism* PROTOBUF_NULLABLE LoadProjectSuccess::
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:motionlab.protocol.LoadProjectSuccess.mechanism)
 
-  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   ::motionlab::mechanism::Mechanism* temp = _impl_.mechanism_;
   _impl_.mechanism_ = nullptr;
   return temp;
@@ -23732,7 +37695,7 @@ inline ::motionlab::mechanism::Mechanism* PROTOBUF_NONNULL LoadProjectSuccess::_
 }
 inline ::motionlab::mechanism::Mechanism* PROTOBUF_NONNULL LoadProjectSuccess::mutable_mechanism()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   ::motionlab::mechanism::Mechanism* _msg = _internal_mutable_mechanism();
   // @@protoc_insertion_point(field_mutable:motionlab.protocol.LoadProjectSuccess.mechanism)
   return _msg;
@@ -23749,9 +37712,9 @@ inline void LoadProjectSuccess::set_allocated_mechanism(::motionlab::mechanism::
     if (message_arena != submessage_arena) {
       value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
     }
-    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+    SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+    ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   }
 
   _impl_.mechanism_ = reinterpret_cast<::motionlab::mechanism::Mechanism*>(value);
@@ -23816,7 +37779,7 @@ LoadProjectSuccess::_internal_mutable_bodies() {
 
 // .motionlab.mechanism.ProjectMetadata metadata = 3 [json_name = "metadata"];
 inline bool LoadProjectSuccess::has_metadata() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000010U);
   PROTOBUF_ASSUME(!value || _impl_.metadata_ != nullptr);
   return value;
 }
@@ -23837,16 +37800,16 @@ inline void LoadProjectSuccess::unsafe_arena_set_allocated_metadata(
   }
   _impl_.metadata_ = reinterpret_cast<::motionlab::mechanism::ProjectMetadata*>(value);
   if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+    SetHasBit(_impl_._has_bits_[0], 0x00000010U);
   } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+    ClearHasBit(_impl_._has_bits_[0], 0x00000010U);
   }
   // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.LoadProjectSuccess.metadata)
 }
 inline ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NULLABLE LoadProjectSuccess::release_metadata() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
-  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000010U);
   ::motionlab::mechanism::ProjectMetadata* released = _impl_.metadata_;
   _impl_.metadata_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
@@ -23866,7 +37829,7 @@ inline ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NULLABLE LoadProjectSuc
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:motionlab.protocol.LoadProjectSuccess.metadata)
 
-  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000010U);
   ::motionlab::mechanism::ProjectMetadata* temp = _impl_.metadata_;
   _impl_.metadata_ = nullptr;
   return temp;
@@ -23881,7 +37844,7 @@ inline ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NONNULL LoadProjectSucc
 }
 inline ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NONNULL LoadProjectSuccess::mutable_metadata()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
   ::motionlab::mechanism::ProjectMetadata* _msg = _internal_mutable_metadata();
   // @@protoc_insertion_point(field_mutable:motionlab.protocol.LoadProjectSuccess.metadata)
   return _msg;
@@ -23898,9 +37861,9 @@ inline void LoadProjectSuccess::set_allocated_metadata(::motionlab::mechanism::P
     if (message_arena != submessage_arena) {
       value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
     }
-    SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+    SetHasBit(_impl_._has_bits_[0], 0x00000010U);
   } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+    ClearHasBit(_impl_._has_bits_[0], 0x00000010U);
   }
 
   _impl_.metadata_ = reinterpret_cast<::motionlab::mechanism::ProjectMetadata*>(value);
@@ -23961,6 +37924,62 @@ inline ::google::protobuf::RepeatedPtrField<::motionlab::protocol::MissingAssetI
 LoadProjectSuccess::_internal_mutable_missing_assets() {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return &_impl_.missing_assets_;
+}
+
+// repeated .motionlab.protocol.GeometryImportResult geometries = 5 [json_name = "geometries"];
+inline int LoadProjectSuccess::_internal_geometries_size() const {
+  return _internal_geometries().size();
+}
+inline int LoadProjectSuccess::geometries_size() const {
+  return _internal_geometries_size();
+}
+inline void LoadProjectSuccess::clear_geometries() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.geometries_.Clear();
+  ClearHasBitForRepeated(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline ::motionlab::protocol::GeometryImportResult* PROTOBUF_NONNULL LoadProjectSuccess::mutable_geometries(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.LoadProjectSuccess.geometries)
+  return _internal_mutable_geometries()->Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>* PROTOBUF_NONNULL LoadProjectSuccess::mutable_geometries()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_mutable_list:motionlab.protocol.LoadProjectSuccess.geometries)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_geometries();
+}
+inline const ::motionlab::protocol::GeometryImportResult& LoadProjectSuccess::geometries(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.LoadProjectSuccess.geometries)
+  return _internal_geometries().Get(index);
+}
+inline ::motionlab::protocol::GeometryImportResult* PROTOBUF_NONNULL LoadProjectSuccess::add_geometries()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::motionlab::protocol::GeometryImportResult* _add =
+      _internal_mutable_geometries()->InternalAddWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), GetArena());
+  SetHasBitForRepeated(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_add:motionlab.protocol.LoadProjectSuccess.geometries)
+  return _add;
+}
+inline const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>& LoadProjectSuccess::geometries() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:motionlab.protocol.LoadProjectSuccess.geometries)
+  return _internal_geometries();
+}
+inline const ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>&
+LoadProjectSuccess::_internal_geometries() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.geometries_;
+}
+inline ::google::protobuf::RepeatedPtrField<::motionlab::protocol::GeometryImportResult>* PROTOBUF_NONNULL
+LoadProjectSuccess::_internal_mutable_geometries() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.geometries_;
 }
 
 // -------------------------------------------------------------------
@@ -24662,6 +38681,169 @@ inline void RelocateAssetResult::clear_has_result() {
 inline RelocateAssetResult::ResultCase RelocateAssetResult::result_case() const {
   return RelocateAssetResult::ResultCase(_impl_._oneof_case_[0]);
 }
+// -------------------------------------------------------------------
+
+// NewProjectCommand
+
+// string project_name = 1 [json_name = "projectName"];
+inline void NewProjectCommand::clear_project_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.project_name_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline const ::std::string& NewProjectCommand::project_name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.NewProjectCommand.project_name)
+  return _internal_project_name();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void NewProjectCommand::set_project_name(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  _impl_.project_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.NewProjectCommand.project_name)
+}
+inline ::std::string* PROTOBUF_NONNULL NewProjectCommand::mutable_project_name()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::std::string* _s = _internal_mutable_project_name();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.NewProjectCommand.project_name)
+  return _s;
+}
+inline const ::std::string& NewProjectCommand::_internal_project_name() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.project_name_.Get();
+}
+inline void NewProjectCommand::_internal_set_project_name(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.project_name_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL NewProjectCommand::_internal_mutable_project_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.project_name_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE NewProjectCommand::release_project_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.NewProjectCommand.project_name)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000001U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  auto* released = _impl_.project_name_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.project_name_.Set("", GetArena());
+  }
+  return released;
+}
+inline void NewProjectCommand::set_allocated_project_name(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  _impl_.project_name_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.project_name_.IsDefault()) {
+    _impl_.project_name_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.NewProjectCommand.project_name)
+}
+
+// -------------------------------------------------------------------
+
+// NewProjectResult
+
+// bool success = 1 [json_name = "success"];
+inline void NewProjectResult::clear_success() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.success_ = false;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline bool NewProjectResult::success() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.NewProjectResult.success)
+  return _internal_success();
+}
+inline void NewProjectResult::set_success(bool value) {
+  _internal_set_success(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.NewProjectResult.success)
+}
+inline bool NewProjectResult::_internal_success() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.success_;
+}
+inline void NewProjectResult::_internal_set_success(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.success_ = value;
+}
+
+// string error_message = 2 [json_name = "errorMessage"];
+inline void NewProjectResult::clear_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.error_message_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline const ::std::string& NewProjectResult::error_message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.NewProjectResult.error_message)
+  return _internal_error_message();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void NewProjectResult::set_error_message(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  _impl_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.NewProjectResult.error_message)
+}
+inline ::std::string* PROTOBUF_NONNULL NewProjectResult::mutable_error_message()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::std::string* _s = _internal_mutable_error_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.NewProjectResult.error_message)
+  return _s;
+}
+inline const ::std::string& NewProjectResult::_internal_error_message() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.error_message_.Get();
+}
+inline void NewProjectResult::_internal_set_error_message(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.error_message_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL NewProjectResult::_internal_mutable_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.error_message_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE NewProjectResult::release_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.NewProjectResult.error_message)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000001U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  auto* released = _impl_.error_message_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.error_message_.Set("", GetArena());
+  }
+  return released;
+}
+inline void NewProjectResult::set_allocated_error_message(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  _impl_.error_message_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.error_message_.IsDefault()) {
+    _impl_.error_message_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.NewProjectResult.error_message)
+}
+
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif  // __GNUC__
@@ -24685,6 +38867,24 @@ struct is_proto_enum<::motionlab::protocol::FaceSurfaceClass> : std::true_type {
 template <>
 inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::motionlab::protocol::FaceSurfaceClass>() {
   return ::motionlab::protocol::FaceSurfaceClass_descriptor();
+}
+template <>
+struct is_proto_enum<::motionlab::protocol::SolverType> : std::true_type {};
+template <>
+inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::motionlab::protocol::SolverType>() {
+  return ::motionlab::protocol::SolverType_descriptor();
+}
+template <>
+struct is_proto_enum<::motionlab::protocol::IntegratorType> : std::true_type {};
+template <>
+inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::motionlab::protocol::IntegratorType>() {
+  return ::motionlab::protocol::IntegratorType_descriptor();
+}
+template <>
+struct is_proto_enum<::motionlab::protocol::DiagnosticSeverity> : std::true_type {};
+template <>
+inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::motionlab::protocol::DiagnosticSeverity>() {
+  return ::motionlab::protocol::DiagnosticSeverity_descriptor();
 }
 template <>
 struct is_proto_enum<::motionlab::protocol::SimulationAction> : std::true_type {};

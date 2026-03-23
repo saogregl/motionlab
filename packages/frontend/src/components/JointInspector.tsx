@@ -10,8 +10,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  formatEngValue,
 } from '@motionlab/ui';
-import { Link2 } from 'lucide-react';
+import { Activity, Fingerprint, Link2, Ruler } from 'lucide-react';
 import { useCallback, useState } from 'react';
 
 import { sendUpdateJoint } from '../engine/connection.js';
@@ -80,7 +81,7 @@ export function JointInspector({ jointId }: { jointId: string }) {
       entityType="Joint"
       entityIcon={<Link2 className="size-5" />}
     >
-      <InspectorSection title="Identity">
+      <InspectorSection title="Identity" icon={<Fingerprint className="size-3.5" />}>
         <PropertyRow label="Name">
           <InlineEditableName
             value={joint.name}
@@ -113,7 +114,7 @@ export function JointInspector({ jointId }: { jointId: string }) {
         </PropertyRow>
       </InspectorSection>
 
-      <InspectorSection title="Connection">
+      <InspectorSection title="Connection" icon={<Link2 className="size-3.5" />}>
         <PropertyRow label="Parent Datum">
           <span className="text-2xs truncate">{parentDatum?.name ?? '\u2014'}</span>
         </PropertyRow>
@@ -123,7 +124,7 @@ export function JointInspector({ jointId }: { jointId: string }) {
       </InspectorSection>
 
       {(joint.type === 'revolute' || joint.type === 'prismatic' || joint.type === 'cylindrical') && (
-        <InspectorSection title="Limits">
+        <InspectorSection title="Limits" icon={<Ruler className="size-3.5" />}>
           <PropertyRow label="Lower" numeric>
             <NumericInput
               value={joint.lowerLimit}
@@ -157,15 +158,19 @@ export function JointInspector({ jointId }: { jointId: string }) {
           const velVal = velSamples ? nearestSample(velSamples, simTime) : undefined;
 
           return (
-            <InspectorSection title="Simulation Values">
+            <InspectorSection title="Simulation Values" icon={<Activity className="size-3.5" />}>
               {posVal !== undefined && (
                 <PropertyRow label="Position" unit={posChannel?.unit ?? ''} numeric>
-                  <span>{posVal.value.toFixed(4)}</span>
+                  <span className="font-[family-name:var(--font-mono)] tabular-nums">
+                    {formatEngValue(posVal.value)}
+                  </span>
                 </PropertyRow>
               )}
               {velVal !== undefined && (
                 <PropertyRow label="Velocity" unit={velChannel?.unit ?? ''} numeric>
-                  <span>{velVal.value.toFixed(4)}</span>
+                  <span className="font-[family-name:var(--font-mono)] tabular-nums">
+                    {formatEngValue(velVal.value)}
+                  </span>
                 </PropertyRow>
               )}
               {posVal === undefined && velVal === undefined && (

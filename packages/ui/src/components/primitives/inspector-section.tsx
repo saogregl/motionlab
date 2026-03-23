@@ -7,6 +7,10 @@ import { cn } from '../../lib/utils';
 interface InspectorSectionProps {
   /** Section title */
   title: string;
+  /** Optional icon next to the section title */
+  icon?: ReactNode;
+  /** Optional count badge shown after title */
+  count?: number;
   /** Controlled open state */
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -18,6 +22,8 @@ interface InspectorSectionProps {
 
 function InspectorSection({
   title,
+  icon,
+  count,
   open,
   onOpenChange,
   defaultOpen = true,
@@ -34,10 +40,18 @@ function InspectorSection({
     >
       <Collapsible.Trigger
         data-slot="inspector-section-trigger"
-        className="flex h-7 w-full items-center gap-1 bg-[var(--layer-recessed)] px-1.5 text-[length:var(--text-2xs)] font-semibold uppercase tracking-[0.05em] text-[var(--text-secondary)] hover:bg-[var(--layer-recessed-hover)]"
+        className="flex h-6 w-full items-center gap-1 border-b border-[var(--border-subtle)] bg-[var(--layer-recessed)] px-1.5 text-[length:var(--text-xs)] font-semibold text-[var(--text-secondary)] hover:bg-[var(--layer-recessed-hover)]"
       >
         <ChevronRight className="size-2.5 shrink-0 transition-transform duration-[var(--duration-normal)] [[data-open]>&]:rotate-90" />
+        {icon && (
+          <span className="flex size-3.5 shrink-0 items-center justify-center text-[var(--text-tertiary)]">
+            {icon}
+          </span>
+        )}
         {title}
+        {count != null && (
+          <span className="text-[var(--text-tertiary)] font-normal">({count})</span>
+        )}
       </Collapsible.Trigger>
       <Collapsible.Panel
         data-slot="inspector-section-panel"

@@ -7,7 +7,7 @@ import {
   QuatDisplay,
   Vec3Display,
 } from '@motionlab/ui';
-import { Crosshair } from 'lucide-react';
+import { Crosshair, Fingerprint, Move3D, RotateCcw } from 'lucide-react';
 import { useCallback, useState } from 'react';
 
 import { sendRenameDatum } from '../engine/connection.js';
@@ -50,7 +50,7 @@ export function DatumInspector({ datumId }: { datumId: string }) {
       entityType="Datum"
       entityIcon={<Crosshair className="size-5" />}
     >
-      <InspectorSection title="Identity">
+      <InspectorSection title="Identity" icon={<Fingerprint className="size-3.5" />}>
         <PropertyRow label="Name">
           <InlineEditableName
             value={datum.name}
@@ -61,24 +61,23 @@ export function DatumInspector({ datumId }: { datumId: string }) {
           />
         </PropertyRow>
         <PropertyRow label="Parent Body">
-          <span className="text-2xs truncate">{parentBody?.name ?? '—'}</span>
+          <span className="text-2xs truncate">{parentBody?.name ?? '\u2014'}</span>
         </PropertyRow>
         <PropertyRow label="Datum ID">
           <CopyableId value={datumId} />
         </PropertyRow>
       </InspectorSection>
 
-      <InspectorSection title="Local Pose">
+      <InspectorSection title="Local Pose" icon={<Move3D className="size-3.5" />}>
         <Vec3Display
           label="Position"
           value={localPose.position}
           unit="m"
-          precision={6}
         />
       </InspectorSection>
 
-      <InspectorSection title="Orientation">
-        <QuatDisplay value={localPose.rotation} precision={6} />
+      <InspectorSection title="Orientation" icon={<RotateCcw className="size-3.5" />}>
+        <QuatDisplay value={localPose.rotation} />
       </InspectorSection>
     </InspectorPanel>
   );

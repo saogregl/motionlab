@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import {
   type BodyState,
   type DatumState,
+  type GeometryState,
   type JointState,
   useMechanismStore,
 } from '../stores/mechanism.js';
@@ -15,11 +16,6 @@ function makeBody(id: string): BodyState {
   return {
     id,
     name: `Body ${id}`,
-    meshData: {
-      vertices: new Float32Array([0, 0, 0, 1, 0, 0, 0, 1, 0]),
-      indices: new Uint32Array([0, 1, 2]),
-      normals: new Float32Array([0, 0, 1, 0, 0, 1, 0, 0, 1]),
-    },
     massProperties: {
       mass: 1,
       centerOfMass: { x: 0, y: 0, z: 0 },
@@ -33,6 +29,33 @@ function makeBody(id: string): BodyState {
     pose: {
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0, w: 1 },
+    },
+  };
+}
+
+function makeGeometry(id: string, parentBodyId: string): GeometryState {
+  return {
+    id,
+    name: `Geometry ${id}`,
+    parentBodyId,
+    localPose: {
+      position: { x: 0, y: 0, z: 0 },
+      rotation: { x: 0, y: 0, z: 0, w: 1 },
+    },
+    meshData: {
+      vertices: new Float32Array([0, 0, 0, 1, 0, 0, 0, 1, 0]),
+      indices: new Uint32Array([0, 1, 2]),
+      normals: new Float32Array([0, 0, 1, 0, 0, 1, 0, 0, 1]),
+    },
+    computedMassProperties: {
+      mass: 1,
+      centerOfMass: { x: 0, y: 0, z: 0 },
+      ixx: 1,
+      iyy: 1,
+      izz: 1,
+      ixy: 0,
+      ixz: 0,
+      iyz: 0,
     },
     sourceAssetRef: { contentHash: 'abc', originalFilename: 'test.step' },
   };
@@ -70,6 +93,7 @@ describe('Mechanism store', () => {
   beforeEach(() => {
     useMechanismStore.setState({
       bodies: new Map(),
+      geometries: new Map(),
       datums: new Map(),
       joints: new Map(),
       importing: false,
@@ -112,6 +136,54 @@ describe('Mechanism store', () => {
     expect(useMechanismStore.getState().bodies.size).toBe(1);
   });
 
+  // --- Geometries ---
+
+  it('addGeometries adds to map', () => {
+    useMechanismStore.getState().addGeometries([makeGeometry('g1', 'b1'), makeGeometry('g2', 'b1')]);
+    const { geometries } = useMechanismStore.getState();
+    expect(geometries.size).toBe(2);
+    expect(geometries.has('g1')).toBe(true);
+    expect(geometries.has('g2')).toBe(true);
+  });
+
+  it('removeGeometry deletes from map', () => {
+    useMechanismStore.getState().addGeometries([makeGeometry('g1', 'b1')]);
+    useMechanismStore.getState().removeGeometry('g1');
+    expect(useMechanismStore.getState().geometries.size).toBe(0);
+  });
+
+  it('updateGeometryParent changes parentBodyId', () => {
+    useMechanismStore.getState().addGeometries([makeGeometry('g1', 'b1')]);
+    useMechanismStore.getState().updateGeometryParent('g1', 'b2');
+    expect(useMechanismStore.getState().geometries.get('g1')?.parentBodyId).toBe('b2');
+  });
+
+  it('updateGeometryParent to null (detach)', () => {
+    useMechanismStore.getState().addGeometries([makeGeometry('g1', 'b1')]);
+    useMechanismStore.getState().updateGeometryParent('g1', null);
+    expect(useMechanismStore.getState().geometries.get('g1')?.parentBodyId).toBeNull();
+  });
+
+  it('updateBodyMass updates mass and override flag', () => {
+    useMechanismStore.getState().addBodies([makeBody('b1')]);
+    const newMass = { mass: 5, centerOfMass: { x: 1, y: 0, z: 0 }, ixx: 2, iyy: 2, izz: 2, ixy: 0, ixz: 0, iyz: 0 };
+    useMechanismStore.getState().updateBodyMass('b1', newMass, true);
+    const body = useMechanismStore.getState().bodies.get('b1');
+    expect(body?.massProperties.mass).toBe(5);
+    expect(body?.massOverride).toBe(true);
+  });
+
+  it('addBodiesWithGeometries adds both atomically', () => {
+    useMechanismStore.getState().addBodiesWithGeometries(
+      [makeBody('b1')],
+      [makeGeometry('g1', 'b1')],
+    );
+    const { bodies, geometries } = useMechanismStore.getState();
+    expect(bodies.size).toBe(1);
+    expect(geometries.size).toBe(1);
+    expect(geometries.get('g1')?.parentBodyId).toBe('b1');
+  });
+
   // --- Datums ---
 
   it('addDatum adds to map', () => {
@@ -137,10 +209,23 @@ describe('Mechanism store', () => {
 
   it('renameDatum unknown is no-op', () => {
     useMechanismStore.getState().addDatum(makeDatum('d1', 'b1'));
-    const _before = useMechanismStore.getState().datums;
     useMechanismStore.getState().renameDatum('nonexistent', 'X');
-    // Map reference may differ but content should be the same
     expect(useMechanismStore.getState().datums.get('d1')?.name).toBe('Datum d1');
+  });
+
+  it('stores surfaceClass on datum', () => {
+    useMechanismStore.getState().addDatum({
+      id: 'datum-1',
+      name: 'Datum 1',
+      parentBodyId: 'body-1',
+      localPose: {
+        position: { x: 0, y: 0, z: 0 },
+        rotation: { x: 0, y: 0, z: 0, w: 1 },
+      },
+      surfaceClass: 'cylindrical',
+    });
+    const datum = useMechanismStore.getState().datums.get('datum-1');
+    expect(datum?.surfaceClass).toBe('cylindrical');
   });
 
   // --- Joints ---
@@ -151,7 +236,6 @@ describe('Mechanism store', () => {
   });
 
   it('addJoint stores without validating datum refs', () => {
-    // Store is a dumb projection — engine validates datum references
     const joint = makeJoint('j1', 'nonexistent-parent', 'nonexistent-child');
     useMechanismStore.getState().addJoint(joint);
     const stored = useMechanismStore.getState().joints.get('j1');
@@ -184,6 +268,7 @@ describe('Mechanism store', () => {
 
   it('clear resets all maps and importError', () => {
     useMechanismStore.getState().addBodies([makeBody('b1')]);
+    useMechanismStore.getState().addGeometries([makeGeometry('g1', 'b1')]);
     useMechanismStore.getState().addDatum(makeDatum('d1', 'b1'));
     useMechanismStore.getState().addJoint(makeJoint('j1', 'd1', 'd2'));
     useMechanismStore.getState().setImportError('oops');
@@ -192,8 +277,15 @@ describe('Mechanism store', () => {
 
     const s = useMechanismStore.getState();
     expect(s.bodies.size).toBe(0);
+    expect(s.geometries.size).toBe(0);
     expect(s.datums.size).toBe(0);
     expect(s.joints.size).toBe(0);
     expect(s.importError).toBeNull();
+  });
+
+  it('resetProject clears geometries too', () => {
+    useMechanismStore.getState().addGeometries([makeGeometry('g1', 'b1')]);
+    useMechanismStore.getState().resetProject();
+    expect(useMechanismStore.getState().geometries.size).toBe(0);
   });
 });

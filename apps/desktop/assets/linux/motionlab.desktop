@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=MotionLab
+Comment=Mechanism Authoring and Simulation Workbench
+Exec=motionlab %f
+Icon=motionlab
+Type=Application
+Categories=Science;Engineering;
+MimeType=application/x-motionlab-project;

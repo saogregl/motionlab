@@ -53,7 +53,7 @@ function InspectorPanel({
       {/* Header */}
       <div
         data-slot="inspector-panel-header"
-        className="flex h-8 shrink-0 items-center gap-2 border-b border-[var(--border-subtle)] bg-[var(--layer-recessed)] px-1.5 py-1"
+        className="flex h-8 shrink-0 items-center gap-2 border-b border-[var(--border-subtle)] border-l-2 border-l-[var(--accent-primary)] bg-[var(--layer-recessed)] px-1.5 py-1"
       >
         {entityIcon && (
           <span className="flex size-5 shrink-0 items-center justify-center text-[var(--text-secondary)]">
@@ -61,9 +61,9 @@ function InspectorPanel({
           </span>
         )}
         <div className="min-w-0 flex-1 truncate">
-          <span className="inline-flex items-baseline gap-3 text-[length:var(--text-sm)] font-bold text-[var(--text-primary)]">
+          <span className="inline-flex items-baseline gap-3 text-[length:var(--text-base)] font-semibold text-[var(--text-primary)]">
             {entityType && (
-              <span className="text-[10px] font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
+              <span className="inline-flex items-center rounded-sm bg-[var(--accent-soft)] ps-1 pe-1.5 py-px text-[10px] font-medium uppercase tracking-wider text-[var(--accent-text)]">
                 {entityType}
               </span>
             )}

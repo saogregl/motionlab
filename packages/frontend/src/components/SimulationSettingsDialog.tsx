@@ -62,15 +62,15 @@ export function SimulationSettingsDialog({ open, onClose }: SimulationSettingsDi
             <div className="grid grid-cols-3 gap-1">
               <div className="flex flex-col gap-0.5">
                 <span className="text-2xs text-muted-foreground">X</span>
-                <NumericInput value={gravity.x} onChange={(v) => setGravity({ ...gravity, x: v })} step={0.1} precision={2} />
+                <NumericInput variant="field" value={gravity.x} onChange={(v) => setGravity({ ...gravity, x: v })} step={0.1} precision={2} />
               </div>
               <div className="flex flex-col gap-0.5">
                 <span className="text-2xs text-muted-foreground">Y</span>
-                <NumericInput value={gravity.y} onChange={(v) => setGravity({ ...gravity, y: v })} step={0.1} precision={2} />
+                <NumericInput variant="field" value={gravity.y} onChange={(v) => setGravity({ ...gravity, y: v })} step={0.1} precision={2} />
               </div>
               <div className="flex flex-col gap-0.5">
                 <span className="text-2xs text-muted-foreground">Z</span>
-                <NumericInput value={gravity.z} onChange={(v) => setGravity({ ...gravity, z: v })} step={0.1} precision={2} />
+                <NumericInput variant="field" value={gravity.z} onChange={(v) => setGravity({ ...gravity, z: v })} step={0.1} precision={2} />
               </div>
             </div>
           </div>

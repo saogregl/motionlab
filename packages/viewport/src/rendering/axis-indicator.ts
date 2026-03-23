@@ -13,17 +13,18 @@ import {
   Viewport,
 } from '@babylonjs/core';
 
+import { AXIS_INDICATOR_X, AXIS_INDICATOR_Y, AXIS_INDICATOR_Z } from './colors.js';
 import type { SceneGraphManager } from '../scene-graph.js';
 
 // ---------------------------------------------------------------------------
-// Constants — drei-inspired vibrant palette
+// Constants — drei-inspired vibrant palette (from colors.ts)
 // ---------------------------------------------------------------------------
 
 const AXES = [
   {
     name: 'X',
     color: '#ff2060',
-    rgb: new Color3(1.0, 0.125, 0.375),
+    rgb: AXIS_INDICATOR_X,
     rotation: [0, 0, 0] as [number, number, number], // default: extends along +X
     headPos: new Vector3(1, 0, 0),
     negHeadPos: new Vector3(-1, 0, 0),
@@ -35,7 +36,7 @@ const AXES = [
   {
     name: 'Y',
     color: '#20df80',
-    rgb: new Color3(0.125, 0.875, 0.5),
+    rgb: AXIS_INDICATOR_Y,
     rotation: [0, 0, Math.PI / 2] as [number, number, number], // rotated to +Y
     headPos: new Vector3(0, 1, 0),
     negHeadPos: new Vector3(0, -1, 0),
@@ -47,7 +48,7 @@ const AXES = [
   {
     name: 'Z',
     color: '#2080ff',
-    rgb: new Color3(0.125, 0.5, 1.0),
+    rgb: AXIS_INDICATOR_Z,
     rotation: [0, -Math.PI / 2, 0] as [number, number, number], // rotated to +Z
     headPos: new Vector3(0, 0, 1),
     negHeadPos: new Vector3(0, 0, -1),

@@ -34,12 +34,24 @@ message Command {
     CreateJointCommand create_joint = 20;
     UpdateJointCommand update_joint = 21;
     DeleteJointCommand delete_joint = 22;
+    CreateLoadCommand create_load = 23;
+    UpdateLoadCommand update_load = 24;
+    DeleteLoadCommand delete_load = 25;
+    CreateActuatorCommand create_actuator = 26;
+    UpdateActuatorCommand update_actuator = 27;
+    DeleteActuatorCommand delete_actuator = 28;
+    CreateBodyCommand create_body = 50;
+    DeleteBodyCommand delete_body = 51;
+    AttachGeometryCommand attach_geometry = 52;
+    DetachGeometryCommand detach_geometry = 53;
+    UpdateMassPropertiesCommand update_mass_properties = 54;
     CompileMechanismCommand compile_mechanism = 30;
     SimulationControlCommand simulation_control = 31;
     ScrubCommand scrub = 32;
     SaveProjectCommand save_project = 40;
     LoadProjectCommand load_project = 41;
     RelocateAssetCommand relocate_asset = 42;
+    NewProjectCommand new_project = 43;
   }
 }
 
@@ -61,6 +73,17 @@ message Event {
     UpdateJointResult update_joint_result = 21;
     DeleteJointResult delete_joint_result = 22;
     UpdateDatumPoseResult update_datum_pose_result = 23;
+    CreateLoadResult create_load_result = 24;
+    UpdateLoadResult update_load_result = 25;
+    DeleteLoadResult delete_load_result = 26;
+    CreateActuatorResult create_actuator_result = 27;
+    UpdateActuatorResult update_actuator_result = 28;
+    DeleteActuatorResult delete_actuator_result = 29;
+    CreateBodyResult create_body_result = 50;
+    DeleteBodyResult delete_body_result = 51;
+    AttachGeometryResult attach_geometry_result = 52;
+    DetachGeometryResult detach_geometry_result = 53;
+    UpdateMassPropertiesResult update_mass_properties_result = 54;
     CompilationResultEvent compilation_result = 30;
     SimulationStateEvent simulation_state = 31;
     SimulationFrame simulation_frame = 32;
@@ -68,6 +91,7 @@ message Event {
     SaveProjectResult save_project_result = 40;
     LoadProjectResult load_project_result = 41;
     RelocateAssetResult relocate_asset_result = 42;
+    NewProjectResult new_project_result = 43;
   }
 }
 
@@ -125,11 +149,23 @@ message BodyImportResult {
   repeated uint32 part_index = 7;
 }
 
+message GeometryImportResult {
+  string geometry_id = 1;                                   // UUIDv7
+  string body_id = 2;                                       // auto-created parent body
+  string name = 3;
+  motionlab.mechanism.DisplayMesh display_mesh = 4;
+  motionlab.mechanism.MassProperties computed_mass_properties = 5;
+  motionlab.mechanism.Pose pose = 6;
+  motionlab.mechanism.AssetReference source_asset_ref = 7;
+  repeated uint32 part_index = 8;
+}
+
 message ImportAssetResult {
   bool success = 1;
   string error_message = 2;
-  repeated BodyImportResult bodies = 3;
+  repeated BodyImportResult bodies = 3;            // DEPRECATED — kept for backward compat
   repeated string diagnostics = 4;
+  repeated GeometryImportResult geometries = 5;    // v4 clients use this
 }
 
 // Serialized mechanism snapshot for persistence and transport
@@ -161,6 +197,7 @@ enum FaceSurfaceClass {
   FACE_SURFACE_CLASS_CONICAL = 3;
   FACE_SURFACE_CLASS_SPHERICAL = 4;
   FACE_SURFACE_CLASS_OTHER = 5;
+  FACE_SURFACE_CLASS_TOROIDAL = 6;
 }
 
 message CreateDatumFromFaceCommand {
@@ -215,11 +252,12 @@ message UpdateDatumPoseResult {
   }
 }
 
-// Body update — toggle fixed/ground status
+// Body update — toggle fixed/ground status, rename
 
 message UpdateBodyCommand {
   motionlab.mechanism.ElementId body_id = 1;
   optional bool is_fixed = 2;
+  optional string name = 3;
 }
 
 message UpdateBodyResult {
@@ -229,23 +267,89 @@ message UpdateBodyResult {
   }
 }
 
+// ──────────────────────────────────────────────
+// Body & Geometry CRUD (Epic 13)
+// ──────────────────────────────────────────────
+
+// Create an empty body with optional initial mass properties
+message CreateBodyCommand {
+  string name = 1;
+  motionlab.mechanism.MassProperties mass_properties = 2;  // optional
+  motionlab.mechanism.Pose pose = 3;                        // optional
+  bool is_fixed = 4;
+}
+
+message CreateBodyResult {
+  oneof result {
+    motionlab.mechanism.Body body = 1;
+    string error_message = 2;
+  }
+}
+
+// Delete a body and all attached geometries, datums, and dependent joints
+message DeleteBodyCommand {
+  motionlab.mechanism.ElementId body_id = 1;
+}
+
+message DeleteBodyResult {
+  oneof result {
+    motionlab.mechanism.ElementId deleted_id = 1;
+    string error_message = 2;
+  }
+}
+
+// Attach a geometry to a body (or reassign from another body)
+message AttachGeometryCommand {
+  motionlab.mechanism.ElementId geometry_id = 1;
+  motionlab.mechanism.ElementId target_body_id = 2;
+  motionlab.mechanism.Pose local_pose = 3;  // optional offset
+}
+
+message AttachGeometryResult {
+  oneof result {
+    motionlab.mechanism.Geometry geometry = 1;
+    string error_message = 2;
+  }
+  motionlab.mechanism.Body old_parent_body = 3;
+  motionlab.mechanism.Body new_parent_body = 4;
+}
+
+// Detach geometry from its parent body (geometry becomes unparented)
+message DetachGeometryCommand {
+  motionlab.mechanism.ElementId geometry_id = 1;
+}
+
+message DetachGeometryResult {
+  oneof result {
+    motionlab.mechanism.ElementId detached_id = 1;
+    string error_message = 2;
+  }
+  motionlab.mechanism.Geometry geometry = 3;
+  motionlab.mechanism.Body former_parent_body = 4;
+}
+
+// Update body mass properties (set override or revert to computed)
+message UpdateMassPropertiesCommand {
+  motionlab.mechanism.ElementId body_id = 1;
+  bool mass_override = 2;                         // true = use provided values, false = recompute from geometries
+  motionlab.mechanism.MassProperties mass_properties = 3;  // only used if mass_override = true
+}
+
+message UpdateMassPropertiesResult {
+  oneof result {
+    motionlab.mechanism.Body body = 1;    // returns body with effective mass properties
+    string error_message = 2;
+  }
+}
+
 // Joint CRUD — Command→Result pattern with oneof success/error
 
 message CreateJointCommand {
-  motionlab.mechanism.ElementId parent_datum_id = 1;
-  motionlab.mechanism.ElementId child_datum_id = 2;
-  motionlab.mechanism.JointType type = 3;
-  string name = 4;
-  double lower_limit = 5;
-  double upper_limit = 6;
+  motionlab.mechanism.Joint draft = 1;
 }
 
 message UpdateJointCommand {
-  motionlab.mechanism.ElementId joint_id = 1;
-  optional string name = 2;
-  optional motionlab.mechanism.JointType type = 3;
-  optional double lower_limit = 4;
-  optional double upper_limit = 5;
+  motionlab.mechanism.Joint joint = 1;
 }
 
 message DeleteJointCommand {
@@ -273,14 +377,131 @@ message DeleteJointResult {
   }
 }
 
+message CreateLoadCommand {
+  motionlab.mechanism.Load draft = 1;
+}
+
+message UpdateLoadCommand {
+  motionlab.mechanism.Load load = 1;
+}
+
+message DeleteLoadCommand {
+  motionlab.mechanism.ElementId load_id = 1;
+}
+
+message CreateLoadResult {
+  oneof result {
+    motionlab.mechanism.Load load = 1;
+    string error_message = 2;
+  }
+}
+
+message UpdateLoadResult {
+  oneof result {
+    motionlab.mechanism.Load load = 1;
+    string error_message = 2;
+  }
+}
+
+message DeleteLoadResult {
+  oneof result {
+    motionlab.mechanism.ElementId deleted_id = 1;
+    string error_message = 2;
+  }
+}
+
+message CreateActuatorCommand {
+  motionlab.mechanism.Actuator draft = 1;
+}
+
+message UpdateActuatorCommand {
+  motionlab.mechanism.Actuator actuator = 1;
+}
+
+message DeleteActuatorCommand {
+  motionlab.mechanism.ElementId actuator_id = 1;
+}
+
+message CreateActuatorResult {
+  oneof result {
+    motionlab.mechanism.Actuator actuator = 1;
+    string error_message = 2;
+  }
+}
+
+message UpdateActuatorResult {
+  oneof result {
+    motionlab.mechanism.Actuator actuator = 1;
+    string error_message = 2;
+  }
+}
+
+message DeleteActuatorResult {
+  oneof result {
+    motionlab.mechanism.ElementId deleted_id = 1;
+    string error_message = 2;
+  }
+}
+
 // ──────────────────────────────────────────────
 // Simulation lifecycle (Epic 7.2)
 // ──────────────────────────────────────────────
+
+// Solver type for the constraint solver (NSC systems)
+enum SolverType {
+  SOLVER_PSOR = 0;                       // Projected SOR (fast, good for most cases)
+  SOLVER_BARZILAI_BORWEIN = 1;           // BB (good convergence for ill-conditioned)
+  SOLVER_APGD = 2;                       // Accelerated PGD (robust for large systems)
+  SOLVER_MINRES = 3;                     // Minimal residual (most precise, slowest)
+}
+
+// Time integrator type
+enum IntegratorType {
+  INTEGRATOR_EULER_IMPLICIT_LINEARIZED = 0;  // Fast, stable, first-order (default)
+  INTEGRATOR_HHT = 1;                         // Hilber-Hughes-Taylor (second-order)
+  INTEGRATOR_NEWMARK = 2;                      // Newmark-beta (structural dynamics)
+}
+
+// Solver and integrator configuration
+message SolverSettings {
+  SolverType type = 1;                   // default: SOLVER_PSOR
+  int32 max_iterations = 2;              // default: 100
+  double tolerance = 3;                  // default: 1e-8
+  IntegratorType integrator = 4;         // default: INTEGRATOR_EULER_IMPLICIT_LINEARIZED
+}
+
+// Global contact material defaults (NSC)
+message ContactSettings {
+  double friction = 1;                   // Coulomb friction coefficient, default 0.3
+  double restitution = 2;               // Coefficient of restitution, default 0.0
+  double compliance = 3;                // Contact compliance, default 0.0 (rigid)
+  double damping = 4;                   // Contact damping, default 0.0
+  bool enable_contact = 5;              // Enable contact detection, default true (proto3 default is false; absence of ContactSettings means enabled)
+}
+
+// Compilation diagnostic severity
+enum DiagnosticSeverity {
+  DIAGNOSTIC_INFO = 0;
+  DIAGNOSTIC_WARNING = 1;
+  DIAGNOSTIC_ERROR = 2;
+}
+
+// Structured compilation diagnostic with entity linking
+message CompilationDiagnostic {
+  DiagnosticSeverity severity = 1;
+  string message = 2;
+  repeated string affected_entity_ids = 3;  // body/joint/datum IDs involved
+  string suggestion = 4;                     // e.g. "Add a Fixed joint to anchor this body"
+  string code = 5;                           // machine-readable code, e.g. "FLOATING_BODY"
+}
 
 // Simulation configuration passed at compile time
 message SimulationSettings {
   double timestep = 1;                    // seconds, default 0.001
   motionlab.mechanism.Vec3 gravity = 2;   // m/s^2, default (0, -9.81, 0)
+  SolverSettings solver = 3;             // optional, defaults apply if absent
+  ContactSettings contact = 4;           // optional, defaults apply if absent
+  double duration = 5;                    // seconds, default 10.0 (informational for frontend)
 }
 
 // Compile the current mechanism state into a simulation system
@@ -303,8 +524,9 @@ message SimulationControlCommand {
 message CompilationResultEvent {
   bool success = 1;
   string error_message = 2;
-  repeated string diagnostics = 3;
+  repeated string diagnostics = 3 [deprecated = true];  // use structured_diagnostics
   repeated OutputChannelDescriptor channels = 4;
+  repeated CompilationDiagnostic structured_diagnostics = 5;
 }
 
 enum SimStateEnum {
@@ -321,6 +543,10 @@ message SimulationStateEvent {
   uint64 step_count = 3;
 }
 
+// CRUD command/result payloads use motionlab.mechanism.ElementId wrappers for
+// entity references. Frame-rate streaming messages (BodyPoseData, JointStateData)
+// and persistence messages (MissingAssetInfo, RelocateAssetCommand) use plain
+// string IDs to avoid wrapper allocations on the hot path.
 message BodyPoseData {
   string body_id = 1;
   motionlab.mechanism.Vec3 position = 2;
@@ -339,7 +565,7 @@ message SimulationFrame {
   double sim_time = 1;
   uint64 step_count = 2;
   repeated BodyPoseData body_poses = 3;
-  repeated JointStateData joint_states = 4;
+  repeated JointStateData joint_states = 4 [deprecated = true];
 }
 
 // ──────────────────────────────────────────────
@@ -353,7 +579,7 @@ enum ChannelDataType {
 }
 
 message OutputChannelDescriptor {
-  string channel_id = 1;    // e.g., "joint/abc-123/position"
+  string channel_id = 1;    // e.g., "joint/abc-123/coord/rot_z"
   string name = 2;          // human-readable: "Revolute1 Position"
   string unit = 3;          // e.g., "rad", "m", "N", "Nm"
   ChannelDataType data_type = 4;
@@ -407,6 +633,7 @@ message LoadProjectSuccess {
   repeated BodyImportResult bodies = 2;
   motionlab.mechanism.ProjectMetadata metadata = 3;
   repeated MissingAssetInfo missing_assets = 4;
+  repeated GeometryImportResult geometries = 5;
 }
 
 // Information about an asset that could not be found or validated on project load
@@ -432,4 +659,17 @@ message RelocateAssetResult {
     BodyImportResult body = 1;
     string error_message = 2;
   }
+}
+
+// ──────────────────────────────────────────────
+// New project (Epic 20.1)
+// ──────────────────────────────────────────────
+
+message NewProjectCommand {
+  string project_name = 1;
+}
+
+message NewProjectResult {
+  bool success = 1;
+  string error_message = 2;
 }

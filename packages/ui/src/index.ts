@@ -11,27 +11,38 @@ export type { SelectionChipProps } from './components/engineering/selection-chip
 export { SelectionChip } from './components/engineering/selection-chip';
 export type { CopyableIdProps } from './components/engineering/copyable-id';
 export { CopyableId } from './components/engineering/copyable-id';
+export type { EditableInertiaMatrixProps } from './components/engineering/editable-inertia-matrix';
+export { EditableInertiaMatrix } from './components/engineering/editable-inertia-matrix';
 export type { InertiaMatrixDisplayProps } from './components/engineering/inertia-matrix-display';
 export { InertiaMatrixDisplay } from './components/engineering/inertia-matrix-display';
 export type { QuatDisplayProps, OrientationMode } from './components/engineering/quat-display';
 export { QuatDisplay } from './components/engineering/quat-display';
 export type { Vec3DisplayProps } from './components/engineering/vec3-display';
 export { Vec3Display } from './components/engineering/vec3-display';
+export { formatEngValue } from './lib/format';
 export { quatToEulerDeg } from './lib/quat-math';
 export type { Axis, AxisColorLabelProps } from './components/primitives/axis-color-label';
 export { AxisColorLabel } from './components/primitives/axis-color-label';
 export type {
   BodyContextMenuProps,
   DatumContextMenuProps,
+  GeometryContextMenuProps,
   JointContextMenuProps,
 } from './components/primitives/context-menus';
 export {
   BodyContextMenu,
+  BodyContextMenuItems,
   DatumContextMenu,
+  DatumContextMenuItems,
+  GeometryContextMenu,
+  GeometryContextMenuItems,
   JointContextMenu,
+  JointContextMenuItems,
 } from './components/primitives/context-menus';
 export type { DensityToggleProps } from './components/primitives/density-toggle';
 export { DensityToggle } from './components/primitives/density-toggle';
+export type { ConnectionBannerProps } from './components/primitives/connection-banner';
+export { ConnectionBanner } from './components/primitives/connection-banner';
 export type { EmptyStateProps } from './components/primitives/empty-state';
 export { EmptyState } from './components/primitives/empty-state';
 export type { FloatingToolCardProps } from './components/primitives/floating-tool-card';
@@ -39,12 +50,16 @@ export { FloatingToolCard } from './components/primitives/floating-tool-card';
 export type { InlineEditableNameProps } from './components/primitives/inline-editable-name';
 export { InlineEditableName } from './components/primitives/inline-editable-name';
 export { InspectorPanel } from './components/primitives/inspector-panel';
+export type { SkeletonRowProps } from './components/primitives/loading-skeleton';
+export { LoadingSkeleton } from './components/primitives/loading-skeleton';
 export { InspectorSection } from './components/primitives/inspector-section';
 export type { NumericInputProps } from './components/primitives/numeric-input';
 export { NumericInput } from './components/primitives/numeric-input';
 export { PropertyRow } from './components/primitives/property-row';
 export type { StatusBadgeProps, StatusType } from './components/primitives/status-badge';
 export { StatusBadge } from './components/primitives/status-badge';
+export type { StatusBarProps } from './components/primitives/status-bar';
+export { StatusBar } from './components/primitives/status-bar';
 export type { ThemeToggleProps } from './components/primitives/theme-toggle';
 export { ThemeToggle } from './components/primitives/theme-toggle';
 export type { TimelineScrubberProps } from './components/primitives/timeline-scrubber';
@@ -82,6 +97,8 @@ export type { WorkspaceTab, WorkspaceTabBarProps } from './components/shell/work
 export { WorkspaceTabBar } from './components/shell/workspace-tab-bar';
 // Components
 export { Badge, badgeVariants } from './components/ui/badge';
+// Sonner toast
+export { Toaster } from './components/ui/sonner';
 export { Button, buttonVariants } from './components/ui/button';
 export {
   Command,

@@ -1,25 +1,25 @@
-import { SimulationAction } from '@motionlab/protocol';
-import { SelectionChip, ViewportHUD } from '@motionlab/ui';
-import type { SceneGraphManager } from '@motionlab/viewport';
+import { ConnectionBanner, SelectionChip, ViewportHUD } from '@motionlab/ui';
+import type { DatumPreviewType, SceneGraphManager } from '@motionlab/viewport';
 import { Viewport } from '@motionlab/viewport';
-import { Box, Crosshair, Link2 } from 'lucide-react';
+import { Box, Crosshair, Link2, Zap } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { sendDeleteDatum, sendDeleteJoint, sendSimulationControl } from '../engine/connection.js';
 import { useViewportBridge } from '../hooks/useViewportBridge.js';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
+import { useEngineConnection } from '../stores/engine-connection.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
+import { useLoadCreationStore } from '../stores/load-creation.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
-import { useSimulationStore } from '../stores/simulation.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
-import { JointConfigDialog } from './JointConfigDialog.js';
-import { ViewportCameraToolbar } from './ViewportCameraToolbar.js';
+import { JointTypeSelectorPanel } from './JointTypeSelectorPanel.js';
+import { LoadCreationCard } from './LoadCreationCard.js';
+import { ModeIndicator } from './ModeIndicator.js';
 import { ViewportContextMenu } from './ViewportContextMenu.js';
 import { FaceTooltip } from './FaceTooltip.js';
-import { ViewportToolModeToolbar } from './ViewportToolModeToolbar.js';
+import { WorldSpaceOverlay } from './WorldSpaceOverlay.js';
 
-function SelectionIcon({ entityType }: { entityType: 'body' | 'datum' | 'joint' }) {
+function SelectionIcon({ entityType }: { entityType: 'body' | 'datum' | 'joint' | 'load' }) {
   switch (entityType) {
     case 'body':
       return <Box className="size-3.5" />;
@@ -27,27 +27,40 @@ function SelectionIcon({ entityType }: { entityType: 'body' | 'datum' | 'joint' 
       return <Crosshair className="size-3.5" />;
     case 'joint':
       return <Link2 className="size-3.5" />;
+    case 'load':
+      return <Zap className="size-3.5" />;
   }
 }
 
 function JointCreationStatus() {
   const step = useJointCreationStore((s) => s.step);
+  const creatingDatum = useJointCreationStore((s) => s.creatingDatum);
   const parentDatumId = useJointCreationStore((s) => s.parentDatumId);
   const parentDatum = useMechanismStore((s) =>
     parentDatumId ? s.datums.get(parentDatumId) : undefined,
   );
+  const message = useAuthoringStatusStore((s) => s.message);
 
+  const statusClass = 'rounded-md bg-background/80 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur-sm';
+
+  if (creatingDatum) {
+    return <div className={statusClass}>Creating datum...</div>;
+  }
   if (step === 'pick-parent') {
     return (
-      <div className="rounded-md bg-background/80 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur-sm">
-        Click a datum to set as parent
+      <div className="flex flex-col gap-1">
+        <div className={statusClass}>Click a datum or face to set as parent</div>
+        {message ? <div className={statusClass}>{message}</div> : null}
       </div>
     );
   }
   if (step === 'pick-child') {
     return (
-      <div className="rounded-md bg-background/80 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur-sm">
-        Parent: {parentDatum?.name ?? '?'}. Click a datum on another body
+      <div className="flex flex-col gap-1">
+        <div className={statusClass}>
+          Parent: {parentDatum?.name ?? '?'}. Click a datum or face on another body
+        </div>
+        {message ? <div className={statusClass}>{message}</div> : null}
       </div>
     );
   }
@@ -71,23 +84,82 @@ function DatumCreationStatus() {
   );
 }
 
+function LoadCreationStatus() {
+  const step = useLoadCreationStore((s) => s.step);
+  const datumId = useLoadCreationStore((s) => s.datumId);
+  const datum = useMechanismStore((s) => (datumId ? s.datums.get(datumId) : undefined));
+
+  const statusClass =
+    'rounded-md bg-background/80 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur-sm';
+
+  if (step === 'pick-datum') {
+    return <div className={statusClass}>Click a datum to apply the load</div>;
+  }
+  if (step === 'pick-second-datum') {
+    return (
+      <div className={statusClass}>
+        First datum: {datum?.name ?? '?'}. Click a second datum for the spring-damper
+      </div>
+    );
+  }
+  return null;
+}
+
 function useSelectedEntity() {
   const selectedIds = useSelectionStore((s) => s.selectedIds);
   const bodies = useMechanismStore((s) => s.bodies);
   const datums = useMechanismStore((s) => s.datums);
   const joints = useMechanismStore((s) => s.joints);
+  const loads = useMechanismStore((s) => s.loads);
 
   return useMemo(() => {
-    if (selectedIds.size !== 1) return null;
-    const id = selectedIds.values().next().value as string;
-    const body = bodies.get(id);
-    if (body) return { id, name: body.name, entityType: 'body' as const };
-    const datum = datums.get(id);
-    if (datum) return { id, name: datum.name, entityType: 'datum' as const };
-    const joint = joints.get(id);
-    if (joint) return { id, name: joint.name, entityType: 'joint' as const };
-    return null;
-  }, [selectedIds, bodies, datums, joints]);
+    if (selectedIds.size === 0) return null;
+    if (selectedIds.size === 1) {
+      const id = selectedIds.values().next().value as string;
+      const body = bodies.get(id);
+      if (body) return { id, name: body.name, entityType: 'body' as const };
+      const datum = datums.get(id);
+      if (datum) return { id, name: datum.name, entityType: 'datum' as const };
+      const joint = joints.get(id);
+      if (joint) return { id, name: joint.name, entityType: 'joint' as const };
+      const load = loads.get(id);
+      if (load) return { id, name: load.name, entityType: 'load' as const };
+      return null;
+    }
+    return { id: '', name: `${selectedIds.size} entities`, entityType: null };
+  }, [selectedIds, bodies, datums, joints, loads]);
+}
+
+function JointCreationDatumLabel({ sceneGraph }: { sceneGraph: SceneGraphManager | null }) {
+  const step = useJointCreationStore((s) => s.step);
+  const parentDatumId = useJointCreationStore((s) => s.parentDatumId);
+  const parentDatum = useMechanismStore((s) =>
+    parentDatumId ? s.datums.get(parentDatumId) : undefined,
+  );
+  const parentBody = useMechanismStore((s) =>
+    parentDatum ? s.bodies.get(parentDatum.parentBodyId) : undefined,
+  );
+
+  const showLabel = (step === 'pick-child' || step === 'select-type') && parentDatumId && sceneGraph;
+  if (!showLabel) return null;
+
+  // Get the world position of the parent datum from the scene graph entity
+  const entity = sceneGraph.getEntity(parentDatumId);
+  if (!entity) return null;
+  const absPos = entity.rootNode.getAbsolutePosition();
+  const worldPosition = { x: absPos.x, y: absPos.y, z: absPos.z };
+
+  return (
+    <WorldSpaceOverlay
+      worldPosition={worldPosition}
+      sceneGraph={sceneGraph}
+      offset={{ x: 0, y: -8 }}
+    >
+      <div className="rounded bg-background/90 px-2 py-0.5 text-[10px] text-muted-foreground backdrop-blur-sm whitespace-nowrap border border-emerald-500/40">
+        Parent: {parentDatum?.name ?? '?'} (on {parentBody?.name ?? '?'})
+      </div>
+    </WorldSpaceOverlay>
+  );
 }
 
 export function ViewportOverlay() {
@@ -95,8 +167,12 @@ export function ViewportOverlay() {
   const [sceneGraph, setSceneGraph] = useState<SceneGraphManager | null>(null);
   const activeMode = useToolModeStore((s) => s.activeMode);
   const selectedEntity = useSelectedEntity();
-  const [hoveredFace, setHoveredFace] = useState<{ bodyId: string; faceIndex: number } | null>(null);
+  const [hoveredFace, setHoveredFace] = useState<{ bodyId: string; faceIndex: number; previewType?: DatumPreviewType } | null>(null);
   const viewportContainerRef = useRef<HTMLDivElement>(null);
+  const connStatus = useEngineConnection((s) => s.status);
+  const connError = useEngineConnection((s) => s.errorMessage);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+  const showBanner = !bannerDismissed && connStatus !== 'ready' && connStatus !== 'discovering';
 
   const onReady = useCallback(
     (sg: SceneGraphManager) => {
@@ -106,122 +182,53 @@ export function ViewportOverlay() {
     [handleSceneReady],
   );
 
-  // Visual feedback: highlight parent datum during pick-child step
+  // Visual feedback: highlight datums, dim same-body datums, show connector line
   useEffect(() => {
     const sg = sceneGraphRef.current;
     if (!sg) return;
 
     const unsub = useJointCreationStore.subscribe((state, prev) => {
-      if (state.step === 'pick-child' && state.parentDatumId) {
-        // Show parent datum as selected
-        const currentSelected = useSelectionStore.getState().selectedIds;
-        const combined = new Set(currentSelected);
-        combined.add(state.parentDatumId);
-        sg.applySelection(combined);
-      } else if (prev.step === 'pick-child' && state.step !== 'pick-child') {
-        // Restore normal selection
-        sg.applySelection(useSelectionStore.getState().selectedIds);
+      const isJointStep = state.step === 'pick-child' || state.step === 'select-type';
+      const wasJointStep = prev.step === 'pick-child' || prev.step === 'select-type';
+
+      // Entering a highlighting step
+      if (isJointStep && state.parentDatumId) {
+        // Dim same-body datums when parent is selected
+        if (state.step === 'pick-child' && prev.step !== 'pick-child' && prev.step !== 'select-type') {
+          const parentDatum = useMechanismStore.getState().datums.get(state.parentDatumId);
+          if (parentDatum) {
+            sg.dimDatumsByBody(parentDatum.parentBodyId);
+          }
+        }
+
+        // Apply parent/child highlights
+        sg.applyJointCreationHighlights(state.parentDatumId, state.childDatumId);
+
+        // Show connector preview line when both datums selected
+        if (state.step === 'select-type' && state.childDatumId) {
+          sg.showJointPreviewLine(state.parentDatumId, state.childDatumId);
+        } else {
+          sg.clearJointPreviewLine();
+        }
+      }
+
+      // Leaving a highlighting step
+      if (wasJointStep && !isJointStep) {
+        sg.restoreDimmedDatums();
+        sg.clearJointCreationHighlights();
+        sg.clearJointPreviewLine();
+      }
+
+      // Re-dim when going back from select-type to pick-child (ESC undo)
+      if (state.step === 'pick-child' && prev.step === 'select-type' && state.parentDatumId) {
+        sg.clearJointPreviewLine();
+        // Re-apply highlights without child
+        sg.applyJointCreationHighlights(state.parentDatumId, null);
       }
     });
 
     return unsub;
   }, [sceneGraphRef]);
-
-  // Keyboard shortcuts for tool modes
-  useEffect(() => {
-    const clearMessage = useAuthoringStatusStore.getState().clearMessage;
-    const setMode = useToolModeStore.getState().setMode;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable) {
-        return;
-      }
-      switch (e.key) {
-        case 'Escape': {
-          const mode = useToolModeStore.getState().activeMode;
-          if (mode === 'create-joint') {
-            const { step } = useJointCreationStore.getState();
-            if (step !== 'idle' && step !== 'pick-parent') {
-              // Cancel back to pick-parent but stay in create-joint mode
-              useJointCreationStore.getState().cancel();
-              return;
-            }
-          }
-          // Fall through: go to select mode
-          setMode('select');
-          useJointCreationStore.getState().reset();
-          clearMessage();
-          break;
-        }
-        case 'v':
-        case 'V':
-          setMode('select');
-          useJointCreationStore.getState().reset();
-          clearMessage();
-          break;
-        case 'd':
-        case 'D':
-          setMode('create-datum');
-          break;
-        case 'j':
-        case 'J':
-          setMode('create-joint');
-          useJointCreationStore.getState().startCreation();
-          break;
-        case 'w':
-        case 'W':
-          useToolModeStore.getState().setGizmoMode('translate');
-          break;
-        case 'e':
-        case 'E':
-          useToolModeStore.getState().setGizmoMode('rotate');
-          break;
-        case 'q':
-        case 'Q':
-          useToolModeStore.getState().setGizmoMode('off');
-          break;
-        case 'Delete': {
-          const simDel = useSimulationStore.getState().state;
-          if (simDel === 'running' || simDel === 'paused') break;
-          const { selectedIds } = useSelectionStore.getState();
-          const { datums, joints } = useMechanismStore.getState();
-          for (const id of selectedIds) {
-            if (joints.has(id)) {
-              sendDeleteJoint(id);
-            } else if (datums.has(id)) {
-              sendDeleteDatum(id);
-            }
-          }
-          if (selectedIds.size > 0) {
-            useSelectionStore.getState().clearSelection();
-          }
-          break;
-        }
-        case ' ': {
-          e.preventDefault();
-          const sim = useSimulationStore.getState().state;
-          if (sim === 'running') sendSimulationControl(SimulationAction.PAUSE);
-          else if (sim === 'paused') sendSimulationControl(SimulationAction.PLAY);
-          break;
-        }
-        case '.': {
-          const sim = useSimulationStore.getState().state;
-          if (sim === 'paused') sendSimulationControl(SimulationAction.STEP);
-          break;
-        }
-        case 'r':
-        case 'R': {
-          const sim = useSimulationStore.getState().state;
-          if (sim !== 'idle' && sim !== 'compiling') {
-            sendSimulationControl(SimulationAction.RESET);
-          }
-          break;
-        }
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   useEffect(() => {
     if (activeMode !== 'create-datum') {
@@ -231,7 +238,7 @@ export function ViewportOverlay() {
     useSelectionStore.getState().setHovered(null);
   }, [activeMode]);
 
-  const cursorMode = activeMode === 'create-datum' || activeMode === 'create-joint';
+  const cursorMode = activeMode === 'create-datum' || activeMode === 'create-joint' || activeMode === 'create-load';
 
   return (
     <ViewportContextMenu sceneGraph={sceneGraph}>
@@ -251,29 +258,41 @@ export function ViewportOverlay() {
           <FaceTooltip containerRef={viewportContainerRef} hoveredFace={hoveredFace} />
         )}
         <ViewportHUD
-          topLeft={
-            <div className="flex flex-col gap-2">
-              <ViewportToolModeToolbar />
-              <ViewportCameraToolbar sceneGraph={sceneGraph} />
-            </div>
+          topCenter={
+            showBanner ? (
+              <ConnectionBanner
+                status={connStatus === 'error' ? 'error' : connStatus === 'disconnected' ? 'disconnected' : 'connecting'}
+                errorMessage={connError ?? undefined}
+                onDismiss={() => setBannerDismissed(true)}
+              />
+            ) : undefined
           }
           bottomLeft={
             activeMode === 'create-joint' ? (
               <JointCreationStatus />
             ) : activeMode === 'create-datum' ? (
               <DatumCreationStatus />
+            ) : activeMode === 'create-load' ? (
+              <LoadCreationStatus />
             ) : undefined
           }
           bottomCenter={
             selectedEntity ? (
               <SelectionChip
-                icon={<SelectionIcon entityType={selectedEntity.entityType} />}
+                icon={
+                  selectedEntity.entityType ? (
+                    <SelectionIcon entityType={selectedEntity.entityType} />
+                  ) : undefined
+                }
                 name={selectedEntity.name}
               />
             ) : undefined
           }
         />
-        <JointConfigDialog />
+        <ModeIndicator />
+        <JointTypeSelectorPanel />
+        <LoadCreationCard />
+        <JointCreationDatumLabel sceneGraph={sceneGraph} />
       </div>
     </ViewportContextMenu>
   );

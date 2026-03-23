@@ -8,6 +8,8 @@ interface PropertyRowProps {
   label: ReactNode;
   /** Optional className for the label (e.g. axis colors) */
   labelClassName?: string;
+  /** Explicit tooltip for the label (falls back to label text for strings) */
+  labelTooltip?: string;
   /** Unit suffix (e.g. "mm", "deg") */
   unit?: string;
   /** Show reset button */
@@ -25,6 +27,7 @@ interface PropertyRowProps {
 function PropertyRow({
   label,
   labelClassName,
+  labelTooltip,
   unit,
   showReset,
   onReset,
@@ -37,8 +40,8 @@ function PropertyRow({
     <div
       data-slot="property-row"
       className={cn(
-        'group/property-row grid h-[var(--inspector-row-h)] items-center gap-0.5 px-1.5 hover:bg-[var(--layer-raised-hover)]',
-        'grid-cols-[var(--inspector-label-w)_1fr_auto]',
+        'group/property-row grid h-[var(--inspector-row-h)] items-center gap-0.5 ps-2 pe-1 hover:bg-[var(--layer-raised-hover)]',
+        'grid-cols-[2fr_3fr_auto]',
         numeric && 'tabular-nums',
         className,
       )}
@@ -47,20 +50,22 @@ function PropertyRow({
       <span
         data-slot="property-row-label"
         className={cn(
-          'flex items-center gap-1 truncate text-[length:var(--text-xs)] text-[var(--text-secondary)]',
+          'flex items-center gap-1 truncate text-[length:var(--text-xs)] text-[var(--text-tertiary)]',
           labelClassName,
         )}
+        style={{ minWidth: 'var(--inspector-label-w)' }}
+        title={labelTooltip ?? (typeof label === 'string' ? label : undefined)}
       >
         {label}
       </span>
 
       {/* Value slot */}
-      <div data-slot="property-row-value" className="min-w-0 font-medium">
+      <div data-slot="property-row-value" className="min-w-0 text-[length:var(--text-xs)] text-[var(--text-primary)]">
         {children}
       </div>
 
       {/* Trailing cell: unit + reset + warning */}
-      <div className="flex items-center gap-0.5">
+      <div className="flex items-center gap-px">
         {unit && (
           <span
             data-slot="property-row-unit"

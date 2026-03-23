@@ -6,10 +6,12 @@ interface EmptyStateProps {
   icon?: ReactNode;
   message: string;
   hint?: string;
+  /** Optional action slot (e.g. a button) rendered below the hint */
+  action?: ReactNode;
   className?: string;
 }
 
-function EmptyState({ icon, message, hint, className }: EmptyStateProps) {
+function EmptyState({ icon, message, hint, action, className }: EmptyStateProps) {
   return (
     <div
       data-slot="empty-state"
@@ -24,6 +26,7 @@ function EmptyState({ icon, message, hint, className }: EmptyStateProps) {
       {hint && (
         <span className="text-[length:var(--text-2xs)] text-[var(--text-disabled)]">{hint}</span>
       )}
+      {action && <div className="mt-1">{action}</div>}
     </div>
   );
 }

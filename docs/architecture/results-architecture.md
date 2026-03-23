@@ -23,7 +23,7 @@ Results are owned by a channel-based runtime layer that supports both live and r
 The following capabilities are required for MVP (Epics 7-8):
 
 - Pose streams (body transforms during simulation playback)
-- Scalar and vector traces (joint state, reaction forces/torques)
+- Scalar and vector traces (joint coordinates, reactions, authored load outputs, actuator outputs)
 - Bounded live buffers for the current simulation session
 - Basic replay from buffered run data (scrub/seek within a completed run)
 - Immutable run identity (each run gets a stable ID and cannot be mutated after completion)
@@ -43,7 +43,7 @@ Scrubbing allows the user to navigate to arbitrary simulation times:
 
 1. **TimelineScrubber** fires `onSeek` on mousemove during drag.
 2. **TimelinePanel** throttles these to ≤30/s and auto-pauses a running simulation before sending `sendScrub(time)`.
-3. The engine processes the scrub command from the bounded live ring buffer, emits a historical `SimulationFrame`, emits `SimulationTrace` windows for active channels, and publishes a paused `SimulationState` event.
+3. The engine processes the scrub command from the bounded live ring buffer, emits a historical `SimulationFrame` for body poses, emits `SimulationTrace` windows for active scalar/vector channels, and publishes a paused `SimulationState` event.
 4. The frontend updates `simTime` in the simulation store.
 5. **ChartPanel** draws a dashed vertical scrub marker at `simTime` via a uPlot `draw` hook plugin. The marker redraws on `simTime` changes even when no new trace data arrives.
 
@@ -62,5 +62,5 @@ Scrubbing allows the user to navigate to arbitrary simulation times:
 
 ## Current Native Buffering
 
-- The native ring buffer stores body poses, joint states, and a per-frame joint lookup table keyed by authored joint ID.
-- Trace streaming and scrub reuse that lookup table so channel extraction remains bounded even as the number of channels grows.
+- The native ring buffer stores body poses, per-frame channel values, and a per-frame channel lookup table keyed by channel ID.
+- Trace streaming and scrub reuse that lookup table so channel extraction remains bounded even as joint, load, and actuator coverage expands.

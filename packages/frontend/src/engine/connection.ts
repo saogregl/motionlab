@@ -6,17 +6,26 @@ import {
   createCreateJointCommand,
   createDeleteDatumCommand,
   createDeleteJointCommand,
+  createCreateLoadCommand,
+  createUpdateLoadCommand,
+  createDeleteLoadCommand,
   createHandshakeCommand,
   createImportAssetCommand,
   createLoadProjectCommand,
+  createNewProjectCommand,
   createRelocateAssetCommand,
   createRenameDatumCommand,
   createUpdateDatumPoseCommand,
   createSaveProjectCommand,
   createScrubCommand,
   createSimulationControlCommand,
+  createAttachGeometryCommand,
+  createCreateBodyCommand,
+  createDeleteBodyCommand,
+  createDetachGeometryCommand,
   createUpdateBodyCommand,
   createUpdateJointCommand,
+  createUpdateMassPropertiesCommand,
   engineStateToString,
   eventToDebugJson,
   FaceSurfaceClass,
@@ -26,17 +35,274 @@ import {
   SimulationAction,
   toProtoJointType,
   PROTOCOL_VERSION,
+  ReferenceFrame,
+  type Load,
+  type PointForceLoad,
+  type PointTorqueLoad,
+  type LinearSpringDamperLoad,
 } from '@motionlab/protocol';
-import type { MissingAssetInfo } from '@motionlab/protocol';
+import type { ElementId, Joint, MissingAssetInfo } from '@motionlab/protocol';
 import type { SceneGraphManager } from '@motionlab/viewport';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { clearBodyPoses, setBodyPose } from '../stores/body-poses.js';
 import type { EngineConnectionState } from '../stores/engine-connection.js';
-import type { BodyState } from '../stores/mechanism.js';
+import { useJointCreationStore } from '../stores/joint-creation.js';
+import type { BodyMassProperties, BodyPose, BodyState, DatumState, GeometryState, JointTypeId, LoadState, LoadTypeId, ReferenceFrameId, MeshData } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
+import { useSelectionStore } from '../stores/selection.js';
 import { type ChannelDescriptor, useSimulationStore } from '../stores/simulation.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
+import { useToastStore } from '../stores/toast.js';
 import { type StoreSample, useTraceStore } from '../stores/traces.js';
+import { analyzeDatumAlignment, computeDatumWorldPose } from '../utils/datum-alignment.js';
+import { mergeGeometryMeshes } from '../utils/merge-geometry-meshes.js';
+
+// ---------------------------------------------------------------------------
+// Proto extraction helpers — reduce duplication across import/load/relocate
+// ---------------------------------------------------------------------------
+
+function extractMassProperties(
+  mp: { mass?: number; centerOfMass?: { x?: number; y?: number; z?: number }; ixx?: number; iyy?: number; izz?: number; ixy?: number; ixz?: number; iyz?: number } | undefined,
+): BodyMassProperties {
+  return {
+    mass: mp?.mass ?? 0,
+    centerOfMass: {
+      x: mp?.centerOfMass?.x ?? 0,
+      y: mp?.centerOfMass?.y ?? 0,
+      z: mp?.centerOfMass?.z ?? 0,
+    },
+    ixx: mp?.ixx ?? 0,
+    iyy: mp?.iyy ?? 0,
+    izz: mp?.izz ?? 0,
+    ixy: mp?.ixy ?? 0,
+    ixz: mp?.ixz ?? 0,
+    iyz: mp?.iyz ?? 0,
+  };
+}
+
+function extractPose(
+  pose: { position?: { x?: number; y?: number; z?: number }; orientation?: { x?: number; y?: number; z?: number; w?: number } } | undefined,
+): BodyPose {
+  return {
+    position: {
+      x: pose?.position?.x ?? 0,
+      y: pose?.position?.y ?? 0,
+      z: pose?.position?.z ?? 0,
+    },
+    rotation: {
+      x: pose?.orientation?.x ?? 0,
+      y: pose?.orientation?.y ?? 0,
+      z: pose?.orientation?.z ?? 0,
+      w: pose?.orientation?.w ?? 1,
+    },
+  };
+}
+
+function extractMeshData(
+  dm: { vertices?: number[]; indices?: number[]; normals?: number[] } | undefined,
+): MeshData {
+  return {
+    vertices: new Float32Array(dm?.vertices ?? []),
+    indices: new Uint32Array(dm?.indices ?? []),
+    normals: new Float32Array(dm?.normals ?? []),
+  };
+}
+
+function extractAssetRef(
+  ref: { contentHash?: string; originalFilename?: string } | undefined,
+): { contentHash: string; originalFilename: string } {
+  return {
+    contentHash: ref?.contentHash ?? '',
+    originalFilename: ref?.originalFilename ?? '',
+  };
+}
+
+function mapReferenceFrame(rf: ReferenceFrame): ReferenceFrameId {
+  switch (rf) {
+    case ReferenceFrame.DATUM_LOCAL:
+      return 'datum-local';
+    case ReferenceFrame.WORLD:
+      return 'world';
+    default:
+      return 'world';
+  }
+}
+
+function toProtoReferenceFrame(rf: ReferenceFrameId | undefined): ReferenceFrame {
+  switch (rf) {
+    case 'datum-local':
+      return ReferenceFrame.DATUM_LOCAL;
+    case 'world':
+      return ReferenceFrame.WORLD;
+    default:
+      return ReferenceFrame.WORLD;
+  }
+}
+
+function extractLoadState(load: Load): LoadState {
+  const base = {
+    id: load.id?.id ?? '',
+    name: load.name,
+  };
+  switch (load.config.case) {
+    case 'pointForce':
+      return {
+        ...base,
+        type: 'point-force' as LoadTypeId,
+        datumId: load.config.value.datumId?.id ?? '',
+        vector: {
+          x: load.config.value.vector?.x ?? 0,
+          y: load.config.value.vector?.y ?? 0,
+          z: load.config.value.vector?.z ?? 0,
+        },
+        referenceFrame: mapReferenceFrame(load.config.value.referenceFrame),
+      };
+    case 'pointTorque':
+      return {
+        ...base,
+        type: 'point-torque' as LoadTypeId,
+        datumId: load.config.value.datumId?.id ?? '',
+        vector: {
+          x: load.config.value.vector?.x ?? 0,
+          y: load.config.value.vector?.y ?? 0,
+          z: load.config.value.vector?.z ?? 0,
+        },
+        referenceFrame: mapReferenceFrame(load.config.value.referenceFrame),
+      };
+    case 'linearSpringDamper':
+      return {
+        ...base,
+        type: 'spring-damper' as LoadTypeId,
+        parentDatumId: load.config.value.parentDatumId?.id ?? '',
+        childDatumId: load.config.value.childDatumId?.id ?? '',
+        restLength: load.config.value.restLength,
+        stiffness: load.config.value.stiffness,
+        damping: load.config.value.damping,
+      };
+    default:
+      return { ...base, type: 'point-force' as LoadTypeId };
+  }
+}
+
+function loadStateToProto(s: LoadState): Load {
+  const id = s.id
+    ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.id } as ElementId)
+    : undefined;
+  switch (s.type) {
+    case 'point-force':
+      return {
+        $typeName: 'motionlab.mechanism.Load',
+        id,
+        name: s.name,
+        config: {
+          case: 'pointForce',
+          value: {
+            $typeName: 'motionlab.mechanism.PointForceLoad',
+            datumId: s.datumId
+              ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.datumId } as ElementId)
+              : undefined,
+            vector: { $typeName: 'motionlab.mechanism.Vec3', x: s.vector?.x ?? 0, y: s.vector?.y ?? 0, z: s.vector?.z ?? 0 },
+            referenceFrame: toProtoReferenceFrame(s.referenceFrame),
+          } as PointForceLoad,
+        },
+      } as Load;
+    case 'point-torque':
+      return {
+        $typeName: 'motionlab.mechanism.Load',
+        id,
+        name: s.name,
+        config: {
+          case: 'pointTorque',
+          value: {
+            $typeName: 'motionlab.mechanism.PointTorqueLoad',
+            datumId: s.datumId
+              ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.datumId } as ElementId)
+              : undefined,
+            vector: { $typeName: 'motionlab.mechanism.Vec3', x: s.vector?.x ?? 0, y: s.vector?.y ?? 0, z: s.vector?.z ?? 0 },
+            referenceFrame: toProtoReferenceFrame(s.referenceFrame),
+          } as PointTorqueLoad,
+        },
+      } as Load;
+    case 'spring-damper':
+      return {
+        $typeName: 'motionlab.mechanism.Load',
+        id,
+        name: s.name,
+        config: {
+          case: 'linearSpringDamper',
+          value: {
+            $typeName: 'motionlab.mechanism.LinearSpringDamperLoad',
+            parentDatumId: s.parentDatumId
+              ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.parentDatumId } as ElementId)
+              : undefined,
+            childDatumId: s.childDatumId
+              ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.childDatumId } as ElementId)
+              : undefined,
+            restLength: s.restLength ?? 0,
+            stiffness: s.stiffness ?? 0,
+            damping: s.damping ?? 0,
+          } as LinearSpringDamperLoad,
+        },
+      } as Load;
+  }
+}
+
+function extractBodyState(
+  body: {
+    id?: { id?: string };
+    name?: string;
+    massProperties?: {
+      mass?: number;
+      centerOfMass?: { x?: number; y?: number; z?: number };
+      ixx?: number;
+      iyy?: number;
+      izz?: number;
+      ixy?: number;
+      ixz?: number;
+      iyz?: number;
+    };
+    pose?: {
+      position?: { x?: number; y?: number; z?: number };
+      orientation?: { x?: number; y?: number; z?: number; w?: number };
+    };
+    isFixed?: boolean;
+    massOverride?: boolean;
+  },
+): BodyState {
+  return {
+    id: body.id?.id ?? '',
+    name: body.name ?? '',
+    massProperties: extractMassProperties(body.massProperties),
+    pose: extractPose(body.pose),
+    isFixed: body.isFixed ?? false,
+    massOverride: body.massOverride ?? false,
+  };
+}
+
+const IDENTITY_POSE: BodyPose = {
+  position: { x: 0, y: 0, z: 0 },
+  rotation: { x: 0, y: 0, z: 0, w: 1 },
+};
+
+/** Add a body's merged geometry meshes to the scene graph. */
+function addBodyToSceneGraph(
+  sg: SceneGraphManager,
+  body: BodyState,
+  geometries: GeometryState[],
+): void {
+  if (geometries.length === 0) return;
+  const merged = mergeGeometryMeshes(geometries);
+  sg.addBody(
+    body.id,
+    body.name,
+    merged.meshData,
+    {
+      position: [body.pose.position.x, body.pose.position.y, body.pose.position.z],
+      rotation: [body.pose.rotation.x, body.pose.rotation.y, body.pose.rotation.z, body.pose.rotation.w],
+    },
+    merged.partIndex,
+  );
+}
 
 type SetState = (
   updater:
@@ -59,6 +325,10 @@ export function registerSceneGraph(sg: SceneGraphManager | null): void {
   sceneGraphManager = sg;
 }
 
+export function getSceneGraph(): SceneGraphManager | null {
+  return sceneGraphManager;
+}
+
 // ---------------------------------------------------------------------------
 // Missing assets callback — notifies App when a loaded project has missing assets
 // ---------------------------------------------------------------------------
@@ -74,6 +344,12 @@ export function onMissingAssets(cb: ((assets: MissingAssetInfo[]) => void) | nul
 // ---------------------------------------------------------------------------
 
 let relocateAssetCallback: ((bodyId: string, success: boolean, errorMessage?: string) => void) | null = null;
+
+/** When true, the next save will force a "Save As" dialog instead of silent save. */
+let forceSaveAsNextSave = false;
+
+/** When true, the next save result is routed to auto-save (no dialog, no markClean). */
+let isAutoSaving = false;
 
 export function onRelocateAssetResult(
   cb: ((bodyId: string, success: boolean, errorMessage?: string) => void) | null,
@@ -203,50 +479,82 @@ export function connect(set: SetState, _get: GetState) {
             const result = evt.payload.value;
             const mechStore = useMechanismStore.getState();
             if (result.success) {
-              const mapped: BodyState[] = result.bodies.map((b) => ({
-                id: b.bodyId,
-                name: b.name,
-                meshData: {
-                  vertices: new Float32Array(b.displayMesh?.vertices ?? []),
-                  indices: new Uint32Array(b.displayMesh?.indices ?? []),
-                  normals: new Float32Array(b.displayMesh?.normals ?? []),
-                },
-                partIndex: b.partIndex.length > 0 ? new Uint32Array(b.partIndex) : undefined,
-                massProperties: {
-                  mass: b.massProperties?.mass ?? 0,
-                  centerOfMass: {
-                    x: b.massProperties?.centerOfMass?.x ?? 0,
-                    y: b.massProperties?.centerOfMass?.y ?? 0,
-                    z: b.massProperties?.centerOfMass?.z ?? 0,
-                  },
-                  ixx: b.massProperties?.ixx ?? 0,
-                  iyy: b.massProperties?.iyy ?? 0,
-                  izz: b.massProperties?.izz ?? 0,
-                  ixy: b.massProperties?.ixy ?? 0,
-                  ixz: b.massProperties?.ixz ?? 0,
-                  iyz: b.massProperties?.iyz ?? 0,
-                },
-                pose: {
-                  position: {
-                    x: b.pose?.position?.x ?? 0,
-                    y: b.pose?.position?.y ?? 0,
-                    z: b.pose?.position?.z ?? 0,
-                  },
-                  rotation: {
-                    x: b.pose?.orientation?.x ?? 0,
-                    y: b.pose?.orientation?.y ?? 0,
-                    z: b.pose?.orientation?.z ?? 0,
-                    w: b.pose?.orientation?.w ?? 1,
-                  },
-                },
-                sourceAssetRef: {
-                  contentHash: b.sourceAssetRef?.contentHash ?? '',
-                  originalFilename: b.sourceAssetRef?.originalFilename ?? '',
-                },
-              }));
-              mechStore.addBodies(mapped);
+              const bodies: BodyState[] = [];
+              const geometries: GeometryState[] = [];
+
+              if (result.geometries.length > 0) {
+                // V4 path: geometry-based import
+                const seenBodies = new Set<string>();
+                for (const g of result.geometries) {
+                  if (!seenBodies.has(g.bodyId)) {
+                    seenBodies.add(g.bodyId);
+                    bodies.push({
+                      id: g.bodyId,
+                      name: g.name,
+                      massProperties: extractMassProperties(g.computedMassProperties),
+                      pose: extractPose(g.pose),
+                      isFixed: false,
+                      massOverride: false,
+                    });
+                  }
+                  geometries.push({
+                    id: g.geometryId,
+                    name: g.name,
+                    parentBodyId: g.bodyId,
+                    localPose: IDENTITY_POSE,
+                    meshData: extractMeshData(g.displayMesh),
+                    partIndex: g.partIndex.length > 0 ? new Uint32Array(g.partIndex) : undefined,
+                    computedMassProperties: extractMassProperties(g.computedMassProperties),
+                    sourceAssetRef: extractAssetRef(g.sourceAssetRef),
+                  });
+                }
+              } else if (result.bodies.length > 0) {
+                // V3 fallback: create synthetic geometries from deprecated bodies field
+                for (const b of result.bodies) {
+                  bodies.push({
+                    id: b.bodyId,
+                    name: b.name,
+                    massProperties: extractMassProperties(b.massProperties),
+                    pose: extractPose(b.pose),
+                    isFixed: false,
+                    massOverride: false,
+                  });
+                  geometries.push({
+                    id: `${b.bodyId}_geom`,
+                    name: b.name,
+                    parentBodyId: b.bodyId,
+                    localPose: IDENTITY_POSE,
+                    meshData: extractMeshData(b.displayMesh),
+                    partIndex: b.partIndex.length > 0 ? new Uint32Array(b.partIndex) : undefined,
+                    computedMassProperties: extractMassProperties(b.massProperties),
+                    sourceAssetRef: extractAssetRef(b.sourceAssetRef),
+                  });
+                }
+              }
+
+              mechStore.addBodiesWithGeometries(bodies, geometries);
+
+              // Add to scene graph
+              if (sceneGraphManager) {
+                for (const body of bodies) {
+                  const bodyGeoms = geometries.filter((g) => g.parentBodyId === body.id);
+                  addBodyToSceneGraph(sceneGraphManager, body, bodyGeoms);
+                }
+              }
+
+              useToastStore.getState().addToast({
+                variant: 'success',
+                title: 'Import complete',
+                description: `${bodies.length} ${bodies.length === 1 ? 'body' : 'bodies'} imported`,
+                duration: 3000,
+              });
             } else {
               mechStore.setImportError(result.errorMessage);
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Import failed',
+                description: result.errorMessage,
+              });
             }
             mechStore.setImporting(false);
             break;
@@ -304,13 +612,47 @@ export function connect(set: SetState, _get: GetState) {
                     w: d.localPose?.orientation?.w ?? 1,
                   },
                 },
+                surfaceClass: mapSurfaceClass(success.surfaceClass),
               });
               statusStore.setMessage(
                 `Created datum from ${surfaceClassToLabel(success.surfaceClass)} face`,
               );
+
+              // If joint creation is waiting for this datum, advance the state machine
+              const jcs = useJointCreationStore.getState();
+              if (jcs.creatingDatum) {
+                const newDatumId = d.id?.id ?? '';
+                if (jcs.step === 'pick-parent') {
+                  jcs.setParentDatum(newDatumId);
+                } else if (jcs.step === 'pick-child') {
+                  const parentDatum = jcs.parentDatumId
+                    ? mechStore.datums.get(jcs.parentDatumId)
+                    : undefined;
+                  const childDatum = mechStore.datums.get(newDatumId);
+                  if (parentDatum && childDatum) {
+                    const parentBody = mechStore.bodies.get(parentDatum.parentBodyId);
+                    const childBody = mechStore.bodies.get(childDatum.parentBodyId);
+                    if (parentBody && childBody) {
+                      const alignment = analyzeDatumAlignment(
+                        computeDatumWorldPose(parentBody.pose, parentDatum.localPose),
+                        computeDatumWorldPose(childBody.pose, childDatum.localPose),
+                      );
+                      jcs.setChildDatum(newDatumId, alignment);
+                    } else {
+                      jcs.setChildDatum(newDatumId);
+                    }
+                  }
+                }
+                jcs.setCreatingDatum(false);
+              }
             } else if (result.result.case === 'errorMessage') {
               statusStore.setMessage(result.result.value);
               console.error('[datum] create-from-face failed:', result.result.value);
+              // Clear the creating flag if face-to-datum failed during joint creation
+              const jcs = useJointCreationStore.getState();
+              if (jcs.creatingDatum) {
+                jcs.setCreatingDatum(false);
+              }
             }
             break;
           }
@@ -363,11 +705,7 @@ export function connect(set: SetState, _get: GetState) {
             const mechStore = useMechanismStore.getState();
             if (result.result.case === 'body') {
               const b = result.result.value;
-              // Update the body's isFixed state in the store
-              const existing = mechStore.bodies.get(b.id?.id ?? '');
-              if (existing) {
-                mechStore.addBodies([{ ...existing, isFixed: b.isFixed }]);
-              }
+              mechStore.addBodies([extractBodyState(b)]);
             } else if (result.result.case === 'errorMessage') {
               console.error('[body] update failed:', result.result.value);
             }
@@ -420,6 +758,41 @@ export function connect(set: SetState, _get: GetState) {
             }
             break;
           }
+          case 'createLoadResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'load') {
+              const loadState = extractLoadState(result.result.value);
+              mechStore.addLoad(loadState);
+              sceneGraphManager?.addLoadVisual(loadState.id, loadState);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[load] create failed:', result.result.value);
+            }
+            break;
+          }
+          case 'updateLoadResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'load') {
+              const loadState = extractLoadState(result.result.value);
+              mechStore.updateLoad(loadState.id, loadState);
+              sceneGraphManager?.updateLoadVisual(loadState.id, loadState);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[load] update failed:', result.result.value);
+            }
+            break;
+          }
+          case 'deleteLoadResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'deletedId') {
+              mechStore.removeLoad(result.result.value.id);
+              sceneGraphManager?.removeLoadVisual(result.result.value.id);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[load] delete failed:', result.result.value);
+            }
+            break;
+          }
           case 'compilationResult': {
             const result = evt.payload.value;
             const channels: ChannelDescriptor[] = (result.channels ?? []).map((ch) => ({
@@ -440,10 +813,20 @@ export function connect(set: SetState, _get: GetState) {
             useTraceStore.getState().setChannels(channels);
             if (result.success) {
               useToolModeStore.getState().setMode('select');
+              useToastStore.getState().addToast({
+                variant: 'success',
+                title: 'Compilation successful',
+                duration: 2000,
+              });
             } else {
               useAuthoringStatusStore
                 .getState()
                 .setMessage(result.errorMessage || 'Compilation failed');
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Compilation failed',
+                description: result.errorMessage || 'Unknown error',
+              });
             }
             break;
           }
@@ -476,6 +859,7 @@ export function connect(set: SetState, _get: GetState) {
               useTraceStore.getState().clear();
               clearBodyPoses();
               if (sceneGraphManager) {
+                sceneGraphManager.clearForceArrows();
                 const { bodies } = useMechanismStore.getState();
                 for (const body of bodies.values()) {
                   sceneGraphManager.updateBodyTransform(body.id, {
@@ -538,6 +922,23 @@ export function connect(set: SetState, _get: GetState) {
               });
               setBodyPose(bp.bodyId, pos, rot);
             }
+            // Reposition joint visuals to follow moved bodies/datums
+            sceneGraphManager.refreshJointPositions();
+            // Update force/torque arrows from joint state data
+            for (const js of frame.jointStates) {
+              sceneGraphManager.updateJointForces(js.jointId, {
+                force: {
+                  x: js.reactionForce?.x ?? 0,
+                  y: js.reactionForce?.y ?? 0,
+                  z: js.reactionForce?.z ?? 0,
+                },
+                torque: {
+                  x: js.reactionTorque?.x ?? 0,
+                  y: js.reactionTorque?.y ?? 0,
+                  z: js.reactionTorque?.z ?? 0,
+                },
+              });
+            }
             // Update simulation time from frame data so timeline tracks progress
             useSimulationStore
               .getState()
@@ -565,15 +966,35 @@ export function connect(set: SetState, _get: GetState) {
           case 'saveProjectResult': {
             const result = evt.payload.value;
             if (result.result.case === 'projectData') {
-              const bytes = result.result.value;
+              const bytes = new Uint8Array(result.result.value);
               const mechStore = useMechanismStore.getState();
+
+              // Auto-save: write to .autosave file silently, don't touch UI state
+              if (isAutoSaving) {
+                isAutoSaving = false;
+                const projectPath = mechStore.projectFilePath;
+                window.motionlab?.autoSaveWrite?.(bytes, projectPath)
+                  .catch((err: unknown) => console.error('[autosave] write failed:', err));
+                break;
+              }
+
+              // Manual save flow
               const projectName = mechStore.projectName;
-              window.motionlab
-                ?.saveProjectFile(new Uint8Array(bytes), projectName)
-                .then((saveResult) => {
+              const existingPath = forceSaveAsNextSave ? null : mechStore.projectFilePath;
+              forceSaveAsNextSave = false;
+
+              const savePromise = existingPath && window.motionlab?.saveProjectToPath
+                ? window.motionlab.saveProjectToPath(bytes, existingPath)
+                : window.motionlab?.saveProjectFile(bytes, projectName);
+
+              savePromise
+                ?.then((saveResult) => {
                   if (saveResult.saved && saveResult.filePath) {
                     mechStore.setProjectMeta(projectName, saveResult.filePath);
                     mechStore.markClean();
+                    window.motionlab?.addRecentProject?.({ name: projectName, filePath: saveResult.filePath });
+                    // Clean up autosave file after successful manual save
+                    window.motionlab?.autoSaveCleanup?.(saveResult.filePath);
                   }
                 })
                 .catch((err: unknown) => {
@@ -595,79 +1016,97 @@ export function connect(set: SetState, _get: GetState) {
               useSimulationStore.getState().reset();
               if (sceneGraphManager) sceneGraphManager.clear();
 
-              // Build lookup for isFixed from mechanism bodies
+              const mechanism = success.mechanism;
+
+              // Build lookup for mechanism body protos
               const mechanismBodies = new Map(
-                (success.mechanism?.bodies ?? []).map((b) => [b.id?.id ?? '', b]),
+                (mechanism?.bodies ?? []).map((b) => [b.id?.id ?? '', b]),
               );
 
-              // Rebuild bodies
-              const mapped: BodyState[] = success.bodies.map((b) => ({
-                id: b.bodyId,
-                name: b.name,
-                meshData: {
-                  vertices: new Float32Array(b.displayMesh?.vertices ?? []),
-                  indices: new Uint32Array(b.displayMesh?.indices ?? []),
-                  normals: new Float32Array(b.displayMesh?.normals ?? []),
-                },
-                partIndex: b.partIndex.length > 0 ? new Uint32Array(b.partIndex) : undefined,
-                massProperties: {
-                  mass: b.massProperties?.mass ?? 0,
-                  centerOfMass: {
-                    x: b.massProperties?.centerOfMass?.x ?? 0,
-                    y: b.massProperties?.centerOfMass?.y ?? 0,
-                    z: b.massProperties?.centerOfMass?.z ?? 0,
-                  },
-                  ixx: b.massProperties?.ixx ?? 0,
-                  iyy: b.massProperties?.iyy ?? 0,
-                  izz: b.massProperties?.izz ?? 0,
-                  ixy: b.massProperties?.ixy ?? 0,
-                  ixz: b.massProperties?.ixz ?? 0,
-                  iyz: b.massProperties?.iyz ?? 0,
-                },
-                pose: {
-                  position: {
-                    x: b.pose?.position?.x ?? 0,
-                    y: b.pose?.position?.y ?? 0,
-                    z: b.pose?.position?.z ?? 0,
-                  },
-                  rotation: {
-                    x: b.pose?.orientation?.x ?? 0,
-                    y: b.pose?.orientation?.y ?? 0,
-                    z: b.pose?.orientation?.z ?? 0,
-                    w: b.pose?.orientation?.w ?? 1,
-                  },
-                },
-                sourceAssetRef: {
-                  contentHash: b.sourceAssetRef?.contentHash ?? '',
-                  originalFilename: b.sourceAssetRef?.originalFilename ?? '',
-                },
-                isFixed: mechanismBodies.get(b.bodyId)?.isFixed ?? false,
-              }));
-              mechStore.addBodies(mapped);
+              // Build body states from mechanism protos
+              const bodyStates: BodyState[] = (mechanism?.bodies ?? []).map(extractBodyState);
+
+              // Build geometry states
+              const geometryStates: GeometryState[] = [];
+
+              if (mechanism && mechanism.geometries.length > 0) {
+                // V4 path: use geometry-first display data keyed by geometry id
+                const geometryImportLookup = new Map(
+                  success.geometries.map((g) => [g.geometryId, g]),
+                );
+                const bodyImportLookup = new Map(
+                  success.bodies.map((b) => [b.bodyId, b]),
+                );
+
+                for (const g of mechanism.geometries) {
+                  const geomId = g.id?.id ?? '';
+                  const parentBodyId = g.parentBodyId?.id ?? null;
+                  const geometryImport = geometryImportLookup.get(geomId);
+                  const bodyImport = parentBodyId ? bodyImportLookup.get(parentBodyId) : undefined;
+
+                  let meshData: MeshData;
+                  let partIndex: Uint32Array | undefined;
+
+                  if (geometryImport) {
+                    meshData = extractMeshData(geometryImport.displayMesh);
+                    partIndex = geometryImport.partIndex.length > 0
+                      ? new Uint32Array(geometryImport.partIndex)
+                      : undefined;
+                  } else if (g.displayMesh && (g.displayMesh.vertices?.length ?? 0) > 0) {
+                    meshData = extractMeshData(g.displayMesh);
+                    partIndex = bodyImport && bodyImport.partIndex.length > 0
+                      ? new Uint32Array(bodyImport.partIndex)
+                      : undefined;
+                  } else {
+                    meshData = extractMeshData(bodyImport?.displayMesh);
+                    partIndex = bodyImport && bodyImport.partIndex.length > 0
+                      ? new Uint32Array(bodyImport.partIndex)
+                      : undefined;
+                  }
+
+                  geometryStates.push({
+                    id: geomId,
+                    name: g.name,
+                    parentBodyId,
+                    localPose: extractPose(g.localPose),
+                    meshData,
+                    partIndex,
+                    computedMassProperties: extractMassProperties(
+                      geometryImport?.computedMassProperties ?? g.computedMassProperties,
+                    ),
+                    sourceAssetRef: extractAssetRef(
+                      geometryImport?.sourceAssetRef ?? g.sourceAssetRef,
+                    ),
+                  });
+                }
+              } else if (success.bodies.length > 0) {
+                // V3 fallback: create synthetic geometries from body import results
+                for (const b of success.bodies) {
+                  const mechBody = mechanismBodies.get(b.bodyId);
+                  geometryStates.push({
+                    id: `${b.bodyId}_geom`,
+                    name: b.name,
+                    parentBodyId: b.bodyId,
+                    localPose: IDENTITY_POSE,
+                    meshData: extractMeshData(b.displayMesh),
+                    partIndex: b.partIndex.length > 0 ? new Uint32Array(b.partIndex) : undefined,
+                    computedMassProperties: extractMassProperties(b.massProperties),
+                    sourceAssetRef: extractAssetRef(mechBody?.sourceAssetRef ?? b.sourceAssetRef),
+                  });
+                }
+              }
+
+              mechStore.addBodiesWithGeometries(bodyStates, geometryStates);
 
               // Add bodies to scene graph
               if (sceneGraphManager) {
-                for (const body of mapped) {
-                  sceneGraphManager.addBody(
-                    body.id,
-                    body.name,
-                    body.meshData,
-                    {
-                      position: [body.pose.position.x, body.pose.position.y, body.pose.position.z],
-                      rotation: [
-                        body.pose.rotation.x,
-                        body.pose.rotation.y,
-                        body.pose.rotation.z,
-                        body.pose.rotation.w,
-                      ],
-                    },
-                    body.partIndex,
-                  );
+                for (const body of bodyStates) {
+                  const bodyGeoms = geometryStates.filter((g) => g.parentBodyId === body.id);
+                  addBodyToSceneGraph(sceneGraphManager, body, bodyGeoms);
                 }
               }
 
               // Rebuild datums
-              const mechanism = success.mechanism;
               if (mechanism) {
                 for (const d of mechanism.datums) {
                   const datumState = {
@@ -727,6 +1166,13 @@ export function connect(set: SetState, _get: GetState) {
                     );
                   }
                 }
+
+                // Rebuild loads
+                for (const l of mechanism.loads) {
+                  const loadState = extractLoadState(l);
+                  mechStore.addLoad(loadState);
+                  sceneGraphManager?.addLoadVisual(loadState.id, loadState);
+                }
               }
 
               // Set project metadata
@@ -751,67 +1197,35 @@ export function connect(set: SetState, _get: GetState) {
               const b = result.result.value;
               const mechStore = useMechanismStore.getState();
 
-              // Rebuild the body with new mesh/asset data (same as importAssetResult mapping)
-              const updated: BodyState = {
-                id: b.bodyId,
-                name: b.name,
-                meshData: {
-                  vertices: new Float32Array(b.displayMesh?.vertices ?? []),
-                  indices: new Uint32Array(b.displayMesh?.indices ?? []),
-                  normals: new Float32Array(b.displayMesh?.normals ?? []),
-                },
-                partIndex: b.partIndex.length > 0 ? new Uint32Array(b.partIndex) : undefined,
-                massProperties: {
-                  mass: b.massProperties?.mass ?? 0,
-                  centerOfMass: {
-                    x: b.massProperties?.centerOfMass?.x ?? 0,
-                    y: b.massProperties?.centerOfMass?.y ?? 0,
-                    z: b.massProperties?.centerOfMass?.z ?? 0,
-                  },
-                  ixx: b.massProperties?.ixx ?? 0,
-                  iyy: b.massProperties?.iyy ?? 0,
-                  izz: b.massProperties?.izz ?? 0,
-                  ixy: b.massProperties?.ixy ?? 0,
-                  ixz: b.massProperties?.ixz ?? 0,
-                  iyz: b.massProperties?.iyz ?? 0,
-                },
-                pose: {
-                  position: {
-                    x: b.pose?.position?.x ?? 0,
-                    y: b.pose?.position?.y ?? 0,
-                    z: b.pose?.position?.z ?? 0,
-                  },
-                  rotation: {
-                    x: b.pose?.orientation?.x ?? 0,
-                    y: b.pose?.orientation?.y ?? 0,
-                    z: b.pose?.orientation?.z ?? 0,
-                    w: b.pose?.orientation?.w ?? 1,
-                  },
-                },
-                sourceAssetRef: {
-                  contentHash: b.sourceAssetRef?.contentHash ?? '',
-                  originalFilename: b.sourceAssetRef?.originalFilename ?? '',
-                },
-              };
-              mechStore.addBodies([updated]);
+              // Find the geometry attached to this body and update it
+              const geomEntry = [...mechStore.geometries.values()].find(
+                (g) => g.parentBodyId === b.bodyId,
+              );
+              if (geomEntry) {
+                mechStore.updateGeometry(geomEntry.id, {
+                  meshData: extractMeshData(b.displayMesh),
+                  partIndex: b.partIndex.length > 0 ? new Uint32Array(b.partIndex) : undefined,
+                  computedMassProperties: extractMassProperties(b.massProperties),
+                  sourceAssetRef: extractAssetRef(b.sourceAssetRef),
+                });
+              }
 
-              // Update scene graph
+              // Update body mass if not overridden
+              const existingBody = mechStore.bodies.get(b.bodyId);
+              if (existingBody && !existingBody.massOverride) {
+                mechStore.updateBodyMass(b.bodyId, extractMassProperties(b.massProperties), false);
+              }
+
+              // Rebuild scene graph for this body
               if (sceneGraphManager) {
-                sceneGraphManager.addBody(
-                  updated.id,
-                  updated.name,
-                  updated.meshData,
-                  {
-                    position: [updated.pose.position.x, updated.pose.position.y, updated.pose.position.z],
-                    rotation: [
-                      updated.pose.rotation.x,
-                      updated.pose.rotation.y,
-                      updated.pose.rotation.z,
-                      updated.pose.rotation.w,
-                    ],
-                  },
-                  updated.partIndex,
+                sceneGraphManager.removeBody(b.bodyId);
+                const updatedBody = useMechanismStore.getState().bodies.get(b.bodyId);
+                const bodyGeoms = [...useMechanismStore.getState().geometries.values()].filter(
+                  (g) => g.parentBodyId === b.bodyId,
                 );
+                if (updatedBody && bodyGeoms.length > 0) {
+                  addBodyToSceneGraph(sceneGraphManager, updatedBody, bodyGeoms);
+                }
               }
 
               console.log('[project] asset relocated successfully:', b.bodyId);
@@ -819,6 +1233,187 @@ export function connect(set: SetState, _get: GetState) {
             } else if (result.result.case === 'errorMessage') {
               console.error('[project] asset relocation failed:', result.result.value);
               if (relocateAssetCallback) relocateAssetCallback('', false, result.result.value);
+            }
+            break;
+          }
+          case 'createBodyResult': {
+            const result = evt.payload.value;
+            if (result.result.case === 'body') {
+              const b = result.result.value;
+              const mechStore = useMechanismStore.getState();
+              mechStore.addBodies([extractBodyState(b)]);
+              useToastStore.getState().addToast({
+                variant: 'success',
+                title: 'Body created',
+                description: b.name,
+                duration: 3000,
+              });
+            } else if (result.result.case === 'errorMessage') {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Create body failed',
+                description: result.result.value,
+              });
+            }
+            break;
+          }
+          case 'deleteBodyResult': {
+            const result = evt.payload.value;
+            if (result.result.case === 'deletedId') {
+              const bodyId = result.result.value.id;
+              const mechStore = useMechanismStore.getState();
+
+              // Cascade: remove child geometries, datums, and dependent joints
+              const childGeomIds = [...mechStore.geometries.values()]
+                .filter((g) => g.parentBodyId === bodyId)
+                .map((g) => g.id);
+              const childDatumIds = [...mechStore.datums.values()]
+                .filter((d) => d.parentBodyId === bodyId)
+                .map((d) => d.id);
+              const dependentJointIds = [...mechStore.joints.values()]
+                .filter((j) => childDatumIds.includes(j.parentDatumId) || childDatumIds.includes(j.childDatumId))
+                .map((j) => j.id);
+
+              for (const jId of dependentJointIds) mechStore.removeJoint(jId);
+              for (const dId of childDatumIds) mechStore.removeDatum(dId);
+              for (const gId of childGeomIds) mechStore.removeGeometry(gId);
+              mechStore.removeBody(bodyId);
+
+              if (sceneGraphManager) {
+                for (const jId of dependentJointIds) sceneGraphManager.removeJoint(jId);
+                for (const dId of childDatumIds) sceneGraphManager.removeDatum(dId);
+                sceneGraphManager.removeBody(bodyId);
+              }
+
+              // Clear selection if deleted body was selected
+              const sel = useSelectionStore.getState();
+              if (sel.selectedIds.has(bodyId)) {
+                sel.clearSelection();
+              }
+            } else if (result.result.case === 'errorMessage') {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Delete body failed',
+                description: result.result.value,
+              });
+            }
+            break;
+          }
+          case 'attachGeometryResult': {
+            const result = evt.payload.value;
+            if (result.result.case === 'geometry') {
+              const g = result.result.value;
+              const geomId = g.id?.id ?? '';
+              const newParentId = g.parentBodyId?.id ?? null;
+              const mechStore = useMechanismStore.getState();
+
+              // Track old parent for scene graph rebuild
+              const oldGeom = mechStore.geometries.get(geomId);
+              const oldParentId = oldGeom?.parentBodyId ?? null;
+
+              mechStore.updateGeometry(geomId, {
+                parentBodyId: newParentId,
+                localPose: extractPose(g.localPose),
+              });
+              if (result.oldParentBody?.id?.id) {
+                mechStore.addBodies([extractBodyState(result.oldParentBody)]);
+              }
+              if (result.newParentBody?.id?.id) {
+                mechStore.addBodies([extractBodyState(result.newParentBody)]);
+              }
+
+              // Rebuild scene graph for affected bodies
+              if (sceneGraphManager) {
+                const updatedStore = useMechanismStore.getState();
+                if (oldParentId) {
+                  sceneGraphManager.removeBody(oldParentId);
+                  const oldBody = updatedStore.bodies.get(oldParentId);
+                  if (oldBody) {
+                    const oldBodyGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === oldParentId);
+                    addBodyToSceneGraph(sceneGraphManager, oldBody, oldBodyGeoms);
+                  }
+                }
+                if (newParentId && newParentId !== oldParentId) {
+                  sceneGraphManager.removeBody(newParentId);
+                  const newBody = updatedStore.bodies.get(newParentId);
+                  if (newBody) {
+                    const newBodyGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === newParentId);
+                    addBodyToSceneGraph(sceneGraphManager, newBody, newBodyGeoms);
+                  }
+                }
+              }
+            } else if (result.result.case === 'errorMessage') {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Attach geometry failed',
+                description: result.result.value,
+              });
+            }
+            break;
+          }
+          case 'detachGeometryResult': {
+            const result = evt.payload.value;
+            if (result.result.case === 'detachedId') {
+              const geomId = result.result.value.id;
+              const mechStore = useMechanismStore.getState();
+              const oldGeom = mechStore.geometries.get(geomId);
+              const oldParentId = oldGeom?.parentBodyId ?? null;
+
+              mechStore.updateGeometry(geomId, {
+                parentBodyId: null,
+                localPose: extractPose(result.geometry?.localPose),
+              });
+              if (result.formerParentBody?.id?.id) {
+                mechStore.addBodies([extractBodyState(result.formerParentBody)]);
+              }
+
+              // Rebuild former parent's scene graph mesh
+              if (sceneGraphManager && oldParentId) {
+                sceneGraphManager.removeBody(oldParentId);
+                const updatedStore = useMechanismStore.getState();
+                const oldBody = updatedStore.bodies.get(oldParentId);
+                if (oldBody) {
+                  const bodyGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === oldParentId);
+                  addBodyToSceneGraph(sceneGraphManager, oldBody, bodyGeoms);
+                }
+              }
+            } else if (result.result.case === 'errorMessage') {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Detach geometry failed',
+                description: result.result.value,
+              });
+            }
+            break;
+          }
+          case 'updateMassPropertiesResult': {
+            const result = evt.payload.value;
+            if (result.result.case === 'body') {
+              const b = result.result.value;
+              const bodyId = b.id?.id ?? '';
+              useMechanismStore.getState().updateBodyMass(
+                bodyId,
+                extractMassProperties(b.massProperties),
+                b.massOverride ?? false,
+              );
+            } else if (result.result.case === 'errorMessage') {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Update mass properties failed',
+                description: result.result.value,
+              });
+            }
+            break;
+          }
+          case 'newProjectResult': {
+            const result = evt.payload.value;
+            if (result.success) {
+              const mechStore = useMechanismStore.getState();
+              mechStore.resetProject();
+              useSimulationStore.getState().reset();
+              if (sceneGraphManager) sceneGraphManager.clear();
+            } else {
+              console.error('[project] new project failed:', result.errorMessage);
             }
             break;
           }
@@ -840,6 +1435,10 @@ export function connect(set: SetState, _get: GetState) {
       socket.onerror = () => {
         if (ws !== socket) return;
         set({ status: 'error', errorMessage: 'WebSocket error' });
+        useToastStore.getState().addToast({
+          variant: 'error',
+          title: 'Engine connection error',
+        });
       };
     })
     .catch((err: unknown) => {
@@ -906,21 +1505,21 @@ export function sendUpdateDatumPose(
 export function sendCreateJoint(
   parentDatumId: string,
   childDatumId: string,
-  type: 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar',
+  type: JointTypeId,
   name: string,
   lowerLimit: number,
   upperLimit: number,
 ): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(
-    createCreateJointCommand(
-      parentDatumId,
-      childDatumId,
-      toProtoJointType(type),
+    createCreateJointCommand({
+      parentDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: parentDatumId } as ElementId,
+      childDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: childDatumId } as ElementId,
+      type: toProtoJointType(type),
       name,
       lowerLimit,
       upperLimit,
-    ),
+    } as Joint),
   );
 }
 
@@ -928,30 +1527,85 @@ export function sendUpdateJoint(
   jointId: string,
   updates: {
     name?: string;
-    type?: 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar';
+    type?: JointTypeId;
     lowerLimit?: number;
     upperLimit?: number;
   },
 ): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  const existing = useMechanismStore.getState().joints.get(jointId);
+  if (!existing) return;
   ws.send(
-    createUpdateJointCommand(jointId, {
-      name: updates.name,
-      type: updates.type !== undefined ? toProtoJointType(updates.type) : undefined,
-      lowerLimit: updates.lowerLimit,
-      upperLimit: updates.upperLimit,
-    }),
+    createUpdateJointCommand({
+      id: { $typeName: 'motionlab.mechanism.ElementId', id: jointId } as ElementId,
+      parentDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: existing.parentDatumId } as ElementId,
+      childDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: existing.childDatumId } as ElementId,
+      type: updates.type !== undefined ? toProtoJointType(updates.type) : toProtoJointType(existing.type),
+      name: updates.name ?? existing.name,
+      lowerLimit: updates.lowerLimit ?? existing.lowerLimit,
+      upperLimit: updates.upperLimit ?? existing.upperLimit,
+    } as Joint),
   );
 }
 
-export function sendUpdateBody(bodyId: string, updates: { isFixed?: boolean }): void {
+export function sendUpdateBody(bodyId: string, updates: { isFixed?: boolean; name?: string }): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(createUpdateBodyCommand(bodyId, updates));
+}
+
+export function sendCreateBody(
+  name: string,
+  options?: {
+    massProperties?: { mass: number; centerOfMass: { x: number; y: number; z: number }; ixx: number; iyy: number; izz: number; ixy: number; ixz: number; iyz: number };
+    isFixed?: boolean;
+  },
+): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createCreateBodyCommand(name, options));
+}
+
+export function sendDeleteBody(bodyId: string): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createDeleteBodyCommand(bodyId));
+}
+
+export function sendAttachGeometry(geometryId: string, targetBodyId: string): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createAttachGeometryCommand(geometryId, targetBodyId));
+}
+
+export function sendDetachGeometry(geometryId: string): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createDetachGeometryCommand(geometryId));
+}
+
+export function sendUpdateMassProperties(
+  bodyId: string,
+  massOverride: boolean,
+  massProperties?: { mass: number; centerOfMass: { x: number; y: number; z: number }; ixx: number; iyy: number; izz: number; ixy: number; ixz: number; iyz: number },
+): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createUpdateMassPropertiesCommand(bodyId, massOverride, massProperties));
 }
 
 export function sendDeleteJoint(jointId: string): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(createDeleteJointCommand(jointId));
+}
+
+export function sendCreateLoad(loadState: LoadState): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createCreateLoadCommand(loadStateToProto(loadState)));
+}
+
+export function sendUpdateLoad(loadState: LoadState): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createUpdateLoadCommand(loadStateToProto(loadState)));
+}
+
+export function sendDeleteLoad(loadId: string): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createDeleteLoadCommand(loadId));
 }
 
 export function sendCompileMechanism(
@@ -973,6 +1627,13 @@ export function sendScrub(time: number): void {
 
 export function sendSaveProject(projectName: string): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  isAutoSaving = false; // Manual save takes precedence over any pending auto-save
+  ws.send(createSaveProjectCommand(projectName));
+}
+
+export function sendAutoSave(projectName: string): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  isAutoSaving = true;
   ws.send(createSaveProjectCommand(projectName));
 }
 
@@ -986,6 +1647,27 @@ export function sendRelocateAsset(bodyId: string, newFilePath: string): void {
   ws.send(createRelocateAssetCommand(bodyId, newFilePath));
 }
 
+export function sendNewProject(projectName: string): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createNewProjectCommand(projectName));
+}
+
+export function sendSaveProjectAs(projectName: string): void {
+  forceSaveAsNextSave = true;
+  sendSaveProject(projectName);
+}
+
+function mapSurfaceClass(sc: FaceSurfaceClass): DatumState['surfaceClass'] {
+  switch (sc) {
+    case FaceSurfaceClass.PLANAR: return 'planar';
+    case FaceSurfaceClass.CYLINDRICAL: return 'cylindrical';
+    case FaceSurfaceClass.CONICAL: return 'conical';
+    case FaceSurfaceClass.SPHERICAL: return 'spherical';
+    case FaceSurfaceClass.TOROIDAL: return 'toroidal';
+    default: return 'other';
+  }
+}
+
 function surfaceClassToLabel(surfaceClass: FaceSurfaceClass): string {
   switch (surfaceClass) {
     case FaceSurfaceClass.PLANAR:
@@ -996,6 +1678,8 @@ function surfaceClassToLabel(surfaceClass: FaceSurfaceClass): string {
       return 'conical';
     case FaceSurfaceClass.SPHERICAL:
       return 'spherical';
+    case FaceSurfaceClass.TOROIDAL:
+      return 'toroidal';
     default:
       return 'surface';
   }

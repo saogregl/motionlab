@@ -7,6 +7,11 @@ import {
   type Scene,
 } from '@babylonjs/core';
 
+import {
+  estimateAxisDirection,
+  estimateSurfaceType,
+  type DatumPreviewType,
+} from './rendering/surface-type-estimator.js';
 import type { SceneGraphManager } from './scene-graph.js';
 
 // ---------------------------------------------------------------------------
@@ -26,7 +31,7 @@ export interface SpatialPickData {
   faceIndex?: number;
 }
 
-export type InteractionMode = 'select' | 'create-datum' | 'create-joint';
+export type InteractionMode = 'select' | 'create-datum' | 'create-joint' | 'create-load';
 
 export type PickCallback = (
   entityId: string | null,
@@ -36,7 +41,9 @@ export type PickCallback = (
 
 export type HoverCallback = (entityId: string | null) => void;
 
-export type FaceHoverCallback = (face: { bodyId: string; faceIndex: number } | null) => void;
+export type FaceHoverCallback = (
+  face: { bodyId: string; faceIndex: number; previewType?: DatumPreviewType } | null,
+) => void;
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -67,7 +74,7 @@ export class PickingManager {
   private lastHoveredId: string | null = null;
   private hoverPending = false;
   private interactionMode: InteractionMode = 'select';
-  private hoveredFace: { bodyId: string; faceIndex: number } | null = null;
+  private hoveredFace: { bodyId: string; faceIndex: number; previewType?: DatumPreviewType } | null = null;
 
   private gpuPicker: GPUPicker | null = null;
   private fallbackToCpu = false;
@@ -123,6 +130,7 @@ export class PickingManager {
     this.hoveredFace = null;
     this.lastHoveredId = null;
     this.sceneGraph.clearAllFaceHighlights();
+    this.sceneGraph.clearDatumPreview();
   }
 
   getHoveredFace(): { bodyId: string; faceIndex: number } | null {
@@ -262,6 +270,7 @@ export class PickingManager {
   private updateHoveredFace(result: PickResult): boolean {
     if (!result.mesh || !result.entityId) {
       this.sceneGraph.clearAllFaceHighlights();
+      this.sceneGraph.clearDatumPreview();
       if (this.hoveredFace) {
         this.hoveredFace = null;
         this.onFaceHoverChange?.(null);
@@ -272,6 +281,7 @@ export class PickingManager {
     const spatial = this.pickSpatialData(result.mesh, result.entityId);
     if (spatial?.faceIndex === undefined) {
       this.sceneGraph.clearAllFaceHighlights();
+      this.sceneGraph.clearDatumPreview();
       if (this.hoveredFace) {
         this.hoveredFace = null;
         this.onFaceHoverChange?.(null);
@@ -280,7 +290,37 @@ export class PickingManager {
     }
 
     this.sceneGraph.highlightFace(result.entityId, spatial.faceIndex);
-    const newFace = { bodyId: result.entityId, faceIndex: spatial.faceIndex };
+
+    // Compute preview type from face normals and drive the preview overlay
+    let previewType: DatumPreviewType | undefined;
+    const geometryIndex = this.sceneGraph.getBodyGeometryIndex(result.entityId);
+    if (geometryIndex) {
+      const faceRange = geometryIndex.faceRanges[spatial.faceIndex];
+      if (faceRange) {
+        const normals = this.sceneGraph.getBodyMeshNormals(result.entityId);
+        const indices = this.sceneGraph.getBodyMeshIndices(result.entityId);
+        if (normals && indices) {
+          previewType = estimateSurfaceType(normals, indices, faceRange);
+          let direction: [number, number, number] = [
+            spatial.worldNormal.x,
+            spatial.worldNormal.y,
+            spatial.worldNormal.z,
+          ];
+          if (previewType === 'axis') {
+            const axisDir = estimateAxisDirection(normals, indices, faceRange);
+            if (axisDir) direction = axisDir;
+          }
+          this.sceneGraph.showDatumPreview({
+            type: previewType,
+            position: [spatial.worldPoint.x, spatial.worldPoint.y, spatial.worldPoint.z],
+            direction,
+            bodyId: result.entityId,
+          });
+        }
+      }
+    }
+
+    const newFace = { bodyId: result.entityId, faceIndex: spatial.faceIndex, previewType };
     if (!this.hoveredFace || this.hoveredFace.bodyId !== newFace.bodyId || this.hoveredFace.faceIndex !== newFace.faceIndex) {
       this.hoveredFace = newFace;
       this.onFaceHoverChange?.(newFace);

@@ -5,6 +5,8 @@ import { cn } from '../../lib/utils';
 interface ViewportHUDProps {
   /** Top-left slot — typically FloatingToolCard */
   topLeft?: ReactNode;
+  /** Top-center slot — typically ConnectionBanner */
+  topCenter?: ReactNode;
   /** Top-right slot — typically ViewCube + shading controls */
   topRight?: ReactNode;
   /** Bottom-left slot — typically AxisIndicator */
@@ -18,6 +20,7 @@ interface ViewportHUDProps {
 
 function ViewportHUD({
   topLeft,
+  topCenter,
   topRight,
   bottomLeft,
   bottomCenter,
@@ -33,6 +36,16 @@ function ViewportHUD({
           className="absolute top-3 left-3 pointer-events-auto"
         >
           {topLeft}
+        </div>
+      )}
+
+      {/* Top-center: ConnectionBanner */}
+      {topCenter && (
+        <div
+          data-slot="viewport-hud-top-center"
+          className="absolute top-3 left-1/2 -translate-x-1/2 pointer-events-auto"
+        >
+          {topCenter}
         </div>
       )}
 

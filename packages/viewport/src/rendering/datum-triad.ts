@@ -10,6 +10,8 @@ import {
   Vector3,
 } from '@babylonjs/core';
 
+import { AXIS_X, AXIS_Y, AXIS_Z } from './colors.js';
+
 /** Default arrow dimensions (meters, before view-distance scaling). */
 const DEFAULT_SHAFT_RADIUS = 0.008;
 const DEFAULT_SHAFT_HEIGHT = 0.12;
@@ -35,17 +37,17 @@ interface AxisDef {
 const AXES: AxisDef[] = [
   {
     name: 'x',
-    color: new Color3(1, 0.2, 0.2), // red
+    color: AXIS_X,
     rotation: Quaternion.FromEulerAngles(0, 0, -Math.PI / 2), // default Y→ aim along X
   },
   {
     name: 'y',
-    color: new Color3(0.2, 0.85, 0.2), // green
+    color: AXIS_Y,
     rotation: Quaternion.Identity(), // default up (Y)
   },
   {
     name: 'z',
-    color: new Color3(0.3, 0.5, 1), // blue
+    color: AXIS_Z,
     rotation: Quaternion.FromEulerAngles(Math.PI / 2, 0, 0), // Y→ aim along Z
   },
 ];

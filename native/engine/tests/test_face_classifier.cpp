@@ -95,8 +95,17 @@ int main() {
         TopoDS_Shape torus = BRepPrimAPI_MakeTorus(20.0, 4.0).Shape();
         auto pose = classify_face_for_datum(torus, find_face_index(torus, GeomAbs_Torus));
         assert(pose.has_value());
-        assert(pose->surface_class == FaceDatumSurfaceClass::Other);
+        assert(pose->surface_class == FaceDatumSurfaceClass::Toroidal);
+        assert(std::abs(pose->position[0]) < 1e-6);
+        assert(std::abs(pose->position[1]) < 1e-6);
+        assert(std::abs(pose->position[2]) < 1e-6);
         assert_unit_quaternion(pose->orientation);
+    }
+
+    {
+        TopoDS_Shape box = BRepPrimAPI_MakeBox(10.0, 20.0, 30.0).Shape();
+        auto pose = classify_face_for_datum(box, 999);
+        assert(!pose.has_value());
     }
 
     std::cout << "Face classifier tests passed." << std::endl;

@@ -88,8 +88,8 @@ function TopBar({ projectName = 'Untitled Project', isDirty, status, actions, cl
       <div className="flex min-w-0 items-center gap-2">
         {/* Logo placeholder */}
         <div className="size-3.5 shrink-0 rounded-[1px] bg-[var(--accent-soft)] border border-[var(--accent-primary)]/20" />
-        <span className="max-w-[200px] truncate text-[length:var(--text-base)] font-semibold text-text-primary">
-          {projectName}{isDirty ? ' *' : ''}
+        <span className="max-w-[280px] truncate text-[length:var(--text-base)] font-semibold text-text-primary">
+          {projectName}{isDirty ? '*' : ''}<span className="font-normal text-text-tertiary"> — MotionLab</span>
         </span>
         <ChevronDown className="size-3 shrink-0 text-text-tertiary" />
       </div>

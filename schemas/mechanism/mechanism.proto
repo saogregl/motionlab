@@ -52,6 +52,11 @@ message Pose {
   Quat orientation = 2;
 }
 
+message Range {
+  double lower = 1;
+  double upper = 2;
+}
+
 // Mass properties derived from geometry
 message MassProperties {
   double mass = 1;
@@ -78,9 +83,24 @@ message Body {
   ElementId id = 1;
   string name = 2;
   Pose pose = 3;
-  MassProperties mass_properties = 4;
-  AssetReference source_asset_ref = 5;
+  MassProperties mass_properties = 4;  // effective mass used by solver
+  AssetReference source_asset_ref = 5 [deprecated = true];  // Moved to Geometry in v4; kept for v2 migration
   bool is_fixed = 6;  // If true, body is treated as ground (fixed in space)
+  bool mass_override = 7;  // If true, mass_properties are user-set, not aggregated from geometries
+}
+
+// Visual geometry attached to a body — imported from CAD.
+// A body may have zero, one, or many geometries.
+// Geometry optionally contributes computed mass properties.
+message Geometry {
+  ElementId id = 1;
+  string name = 2;
+  ElementId parent_body_id = 3;     // body this geometry is attached to
+  Pose local_pose = 4;              // offset relative to body origin
+  AssetReference source_asset_ref = 5;
+  DisplayMesh display_mesh = 6;     // tessellated mesh for viewport
+  MassProperties computed_mass_properties = 7;  // from CAD via BRepGProp
+  uint32 face_count = 8;            // number of B-Rep faces (for face-aware picking)
 }
 
 // Datum frame anchored to a body
@@ -100,7 +120,47 @@ enum JointType {
   JOINT_TYPE_SPHERICAL = 4;    // 3 DOF rotation (ball joint)
   JOINT_TYPE_CYLINDRICAL = 5;  // 1 DOF rotation + 1 DOF translation
   JOINT_TYPE_PLANAR = 6;       // 2 DOF translation + 1 DOF rotation
+  JOINT_TYPE_UNIVERSAL = 7;
+  JOINT_TYPE_DISTANCE = 8;
+  JOINT_TYPE_POINT_LINE = 9;
+  JOINT_TYPE_POINT_PLANE = 10;
 }
+
+message RevoluteJointConfig {
+  Range angle_limit = 1;
+}
+
+message PrismaticJointConfig {
+  Range translation_limit = 1;
+}
+
+message FixedJointConfig {}
+
+message SphericalJointConfig {}
+
+message CylindricalJointConfig {
+  Range translation_limit = 1;
+  Range rotation_limit = 2;
+}
+
+message PlanarJointConfig {
+  Range translation_x_limit = 1;
+  Range translation_y_limit = 2;
+  Range rotation_limit = 3;
+}
+
+message UniversalJointConfig {
+  Range rotation_x_limit = 1;
+  Range rotation_y_limit = 2;
+}
+
+message DistanceJointConfig {
+  Range distance_limit = 1;
+}
+
+message PointLineJointConfig {}
+
+message PointPlaneJointConfig {}
 
 // Joint connecting two datums
 message Joint {
@@ -109,9 +169,86 @@ message Joint {
   JointType type = 3;
   ElementId parent_datum_id = 4;
   ElementId child_datum_id = 5;
-  // Optional limits — expanded in later epics
-  double lower_limit = 6;
-  double upper_limit = 7;
+  double lower_limit = 6 [deprecated = true];
+  double upper_limit = 7 [deprecated = true];
+  oneof config {
+    RevoluteJointConfig revolute = 8;
+    PrismaticJointConfig prismatic = 9;
+    FixedJointConfig fixed = 10;
+    SphericalJointConfig spherical = 11;
+    CylindricalJointConfig cylindrical = 12;
+    PlanarJointConfig planar = 13;
+    UniversalJointConfig universal = 14;
+    DistanceJointConfig distance = 15;
+    PointLineJointConfig point_line = 16;
+    PointPlaneJointConfig point_plane = 17;
+  }
+}
+
+enum ReferenceFrame {
+  REFERENCE_FRAME_UNSPECIFIED = 0;
+  REFERENCE_FRAME_DATUM_LOCAL = 1;
+  REFERENCE_FRAME_WORLD = 2;
+}
+
+message PointForceLoad {
+  ElementId datum_id = 1;
+  Vec3 vector = 2;
+  ReferenceFrame reference_frame = 3;
+}
+
+message PointTorqueLoad {
+  ElementId datum_id = 1;
+  Vec3 vector = 2;
+  ReferenceFrame reference_frame = 3;
+}
+
+message LinearSpringDamperLoad {
+  ElementId parent_datum_id = 1;
+  ElementId child_datum_id = 2;
+  double rest_length = 3;
+  double stiffness = 4;
+  double damping = 5;
+}
+
+message Load {
+  ElementId id = 1;
+  string name = 2;
+  oneof config {
+    PointForceLoad point_force = 3;
+    PointTorqueLoad point_torque = 4;
+    LinearSpringDamperLoad linear_spring_damper = 5;
+  }
+}
+
+enum ActuatorControlMode {
+  ACTUATOR_CONTROL_MODE_UNSPECIFIED = 0;
+  ACTUATOR_CONTROL_MODE_POSITION = 1;
+  ACTUATOR_CONTROL_MODE_SPEED = 2;
+  ACTUATOR_CONTROL_MODE_EFFORT = 3;
+}
+
+message RevoluteMotorActuator {
+  ElementId joint_id = 1;
+  ActuatorControlMode control_mode = 2;
+  double command_value = 3;
+  optional double effort_limit = 4;
+}
+
+message PrismaticMotorActuator {
+  ElementId joint_id = 1;
+  ActuatorControlMode control_mode = 2;
+  double command_value = 3;
+  optional double effort_limit = 4;
+}
+
+message Actuator {
+  ElementId id = 1;
+  string name = 2;
+  oneof config {
+    RevoluteMotorActuator revolute_motor = 3;
+    PrismaticMotorActuator prismatic_motor = 4;
+  }
 }
 
 // Complete mechanism definition
@@ -121,6 +258,9 @@ message Mechanism {
   repeated Body bodies = 3;
   repeated Datum datums = 4;
   repeated Joint joints = 5;
+  repeated Load loads = 6;
+  repeated Actuator actuators = 7;
+  repeated Geometry geometries = 8;
 }
 
 // Display data for a body, stored in project files for self-contained persistence
@@ -134,10 +274,22 @@ message BodyDisplayData {
   string unit_system = 6;
 }
 
+// Display data for a geometry, stored in project files for self-contained persistence
+message GeometryDisplayData {
+  string geometry_id = 1;
+  DisplayMesh display_mesh = 2;
+  repeated uint32 part_index = 3;
+  // Import parameters — enables cache key reconstruction on load
+  double density = 4;
+  double tessellation_quality = 5;
+  string unit_system = 6;
+}
+
 // Self-contained project file (binary protobuf with version field)
 message ProjectFile {
   uint32 version = 1;
   ProjectMetadata metadata = 2;
   Mechanism mechanism = 3;
-  repeated BodyDisplayData body_display_data = 4;
+  repeated BodyDisplayData body_display_data = 4;  // kept for v2 backward compat
+  repeated GeometryDisplayData geometry_display_data = 5;
 }

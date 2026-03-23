@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { type KeyboardEvent, useCallback, useRef, useState } from 'react';
+import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 import { cn } from '../../lib/utils';
 
@@ -14,7 +14,28 @@ interface NumericInputProps {
   disabled?: boolean;
   className?: string;
   id?: string;
+  /** 'inline' (default) for inspector/panel use; 'field' for dialog/form use */
+  variant?: 'inline' | 'field';
+  /** Accent color for left border indicator (e.g. axis color) */
+  accentColor?: string;
+  /** Error message — shows red border and error text below (field variant only) */
+  error?: string;
+  /** Flash background when value changes from external source (not user edit) */
+  flashOnChange?: boolean;
 }
+
+const variantStyles = {
+  inline: [
+    'h-5 border-transparent bg-transparent',
+    'hover:bg-[var(--field-elevated)] hover:border-[var(--border-field-hover)]',
+    'focus-within:bg-[var(--field-elevated)] focus-within:border-[var(--border-field-focus)]',
+  ],
+  field: [
+    'h-8 border-input bg-[var(--field-elevated)]',
+    'hover:border-[var(--border-field-hover)]',
+    'focus-within:border-[var(--border-field-focus)]',
+  ],
+};
 
 function NumericInput({
   value,
@@ -27,10 +48,25 @@ function NumericInput({
   disabled,
   className,
   id,
+  variant = 'inline',
+  accentColor,
+  error,
+  flashOnChange,
 }: NumericInputProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const prevValueRef = useRef(value);
+  const [isFlashing, setIsFlashing] = useState(false);
+
+  useEffect(() => {
+    if (flashOnChange && !isEditing && value !== prevValueRef.current) {
+      setIsFlashing(true);
+      const timer = setTimeout(() => setIsFlashing(false), 200);
+      return () => clearTimeout(timer);
+    }
+    prevValueRef.current = value;
+  }, [value, flashOnChange, isEditing]);
 
   const clamp = useCallback(
     (v: number) => {
@@ -85,16 +121,20 @@ function NumericInput({
   }, [editValue, clamp, precision, onChange]);
 
   return (
+    <>
     <div
       data-slot="numeric-input"
       className={cn(
-        'group/numeric-input relative flex h-6 items-center',
-        'rounded-[var(--radius-sm)] border border-transparent bg-transparent',
-        'hover:bg-[var(--field-base)] hover:border-[var(--border-field-hover)]',
-        'focus-within:bg-[var(--field-base)] focus-within:border-[var(--border-field-focus)]',
+        'group/numeric-input relative flex items-center',
+        'rounded-[var(--radius-md)] border',
+        ...variantStyles[variant],
+        error && 'border-[var(--danger)]',
+        error && variant === 'inline' && 'bg-[var(--danger-soft)]',
+        isFlashing && 'animate-value-flash',
         disabled && 'pointer-events-none opacity-50',
         className,
       )}
+      style={accentColor ? { borderLeftWidth: '2px', borderLeftColor: accentColor } : undefined}
     >
       <input
         ref={inputRef}
@@ -107,7 +147,7 @@ function NumericInput({
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         disabled={disabled}
-        className="h-full w-full min-w-0 bg-transparent px-1.5 text-right font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tabular-nums text-[var(--text-primary)] outline-none"
+        className="h-full w-full min-w-0 cursor-ew-resize bg-transparent ps-1 pe-0.5 text-right font-[family-name:var(--font-mono)] text-[11px] tabular-nums text-[var(--text-primary)] outline-none"
       />
       {unit && (
         <span className="shrink-0 pr-1 text-[10px] text-[var(--text-tertiary)]">{unit}</span>
@@ -117,7 +157,7 @@ function NumericInput({
         <button
           type="button"
           tabIndex={-1}
-          className="flex h-1/2 w-3 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+          className="flex h-1/2 w-2.5 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
           onMouseDown={(e) => {
             e.preventDefault();
             increment(1);
@@ -128,7 +168,7 @@ function NumericInput({
         <button
           type="button"
           tabIndex={-1}
-          className="flex h-1/2 w-3 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+          className="flex h-1/2 w-2.5 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
           onMouseDown={(e) => {
             e.preventDefault();
             increment(-1);
@@ -138,6 +178,10 @@ function NumericInput({
         </button>
       </div>
     </div>
+    {error && variant === 'field' && (
+      <span className="mt-0.5 text-[length:var(--text-3xs)] text-[var(--danger)]">{error}</span>
+    )}
+    </>
   );
 }
 

@@ -50,6 +50,43 @@ void RuntimeSession::handle_compile_mechanism(ix::WebSocket& ws,
             config.gravity[1] = settings.gravity().y();
             config.gravity[2] = settings.gravity().z();
         }
+
+        if (settings.duration() > 0) config.duration = settings.duration();
+
+        if (settings.has_solver()) {
+            const auto& solver = settings.solver();
+            switch (solver.type()) {
+                case protocol::SOLVER_PSOR:
+                    config.solver.type = engine::SolverType::PSOR; break;
+                case protocol::SOLVER_BARZILAI_BORWEIN:
+                    config.solver.type = engine::SolverType::BARZILAI_BORWEIN; break;
+                case protocol::SOLVER_APGD:
+                    config.solver.type = engine::SolverType::APGD; break;
+                case protocol::SOLVER_MINRES:
+                    config.solver.type = engine::SolverType::MINRES; break;
+                default: break;
+            }
+            if (solver.max_iterations() > 0) config.solver.max_iterations = solver.max_iterations();
+            if (solver.tolerance() > 0) config.solver.tolerance = solver.tolerance();
+            switch (solver.integrator()) {
+                case protocol::INTEGRATOR_EULER_IMPLICIT_LINEARIZED:
+                    config.solver.integrator = engine::IntegratorType::EULER_IMPLICIT_LINEARIZED; break;
+                case protocol::INTEGRATOR_HHT:
+                    config.solver.integrator = engine::IntegratorType::HHT; break;
+                case protocol::INTEGRATOR_NEWMARK:
+                    config.solver.integrator = engine::IntegratorType::NEWMARK; break;
+                default: break;
+            }
+        }
+
+        if (settings.has_contact()) {
+            const auto& contact = settings.contact();
+            config.contact.friction = contact.friction() > 0 ? contact.friction() : 0.3;
+            config.contact.restitution = contact.restitution();
+            config.contact.compliance = contact.compliance();
+            config.contact.damping = contact.damping();
+            config.contact.enable_contact = contact.enable_contact();
+        }
     }
 
     spdlog::info("Compiling mechanism...");
@@ -60,7 +97,6 @@ void RuntimeSession::handle_compile_mechanism(ix::WebSocket& ws,
     trace_batch_step_ = 0;
     trace_channel_index_ = 0;
     channel_descriptors_.clear();
-    channel_mappings_.clear();
 
     protocol::Event event;
     event.set_sequence_id(sequence_id);
@@ -69,6 +105,16 @@ void RuntimeSession::handle_compile_mechanism(ix::WebSocket& ws,
     cr->set_error_message(result.error_message);
     for (const auto& diag : result.diagnostics) {
         cr->add_diagnostics(diag);
+    }
+    for (const auto& sd : result.structured_diagnostics) {
+        auto* proto_diag = cr->add_structured_diagnostics();
+        proto_diag->set_severity(static_cast<protocol::DiagnosticSeverity>(sd.severity));
+        proto_diag->set_message(sd.message);
+        for (const auto& id : sd.affected_entity_ids) {
+            proto_diag->add_affected_entity_ids(id);
+        }
+        proto_diag->set_suggestion(sd.suggestion);
+        proto_diag->set_code(sd.code);
     }
 
     if (result.success) {
@@ -79,7 +125,6 @@ void RuntimeSession::handle_compile_mechanism(ix::WebSocket& ws,
             ch->set_name(desc.name);
             ch->set_unit(desc.unit);
             ch->set_data_type(static_cast<protocol::ChannelDataType>(desc.data_type));
-            channel_mappings_.push_back(build_channel_mapping(desc.channel_id));
         }
     }
 
@@ -137,36 +182,18 @@ void RuntimeSession::handle_scrub(const protocol::ScrubCommand& cmd) {
     const double target = cmd.time();
     const auto* frame = ring_buffer_.find_nearest(target);
     if (frame) {
-        send_sim_frame_data(frame->body_poses, frame->joint_states,
-                            frame->sim_time, frame->step_count);
+        send_sim_frame_data(frame->body_poses, frame->sim_time, frame->step_count);
 
         auto window_frames = ring_buffer_.find_window(target, 1.0);
         if (!window_frames.empty()) {
             for (size_t i = 0; i < channel_descriptors_.size(); ++i) {
-                send_trace_window(channel_descriptors_[i], channel_mappings_[i], window_frames);
+                send_trace_window(channel_descriptors_[i], window_frames);
             }
         }
     }
 
     published_sim_state_.store(engine::SimState::PAUSED);
     send_sim_state_event();
-}
-
-RuntimeSession::ChannelMapping RuntimeSession::build_channel_mapping(const std::string& channel_id) {
-    ChannelMapping mapping;
-    auto first_slash = channel_id.find('/');
-    auto last_slash = channel_id.rfind('/');
-    if (first_slash != std::string::npos &&
-        last_slash != std::string::npos &&
-        first_slash != last_slash) {
-        mapping.joint_id = channel_id.substr(first_slash + 1, last_slash - first_slash - 1);
-        std::string meas = channel_id.substr(last_slash + 1);
-        if (meas == "position") mapping.measurement = 0;
-        else if (meas == "velocity") mapping.measurement = 1;
-        else if (meas == "reaction_force") mapping.measurement = 2;
-        else if (meas == "reaction_torque") mapping.measurement = 3;
-    }
-    return mapping;
 }
 
 void RuntimeSession::stop_thread() {
@@ -252,22 +279,20 @@ void RuntimeSession::simulation_loop() {
             }
 
             auto poses = simulation_runtime_.getBodyPoses();
-            auto joint_states = simulation_runtime_.getJointStates();
+            auto channel_values = simulation_runtime_.getChannelValues();
 
             engine::BufferedFrame bf;
             bf.sim_time = simulation_runtime_.getCurrentTime();
             bf.step_count = simulation_runtime_.getStepCount();
             bf.body_poses = poses;
-            bf.joint_states = joint_states;
-            bf.joint_index_by_id.reserve(joint_states.size());
-            for (size_t i = 0; i < joint_states.size(); ++i) {
-                bf.joint_index_by_id.emplace(joint_states[i].joint_id, i);
+            bf.channel_values = channel_values;
+            bf.channel_index_by_id.reserve(channel_values.size());
+            for (size_t i = 0; i < channel_values.size(); ++i) {
+                bf.channel_index_by_id.emplace(channel_values[i].channel_id, i);
             }
             ring_buffer_.push(bf);
 
-            send_sim_frame_data(poses, joint_states,
-                                simulation_runtime_.getCurrentTime(),
-                                simulation_runtime_.getStepCount());
+            send_sim_frame_data(poses, simulation_runtime_.getCurrentTime(), simulation_runtime_.getStepCount());
 
             spdlog::debug("sim_loop: frame t={:.4f} steps={}",
                           simulation_runtime_.getCurrentTime(),
@@ -294,13 +319,13 @@ void RuntimeSession::simulation_loop() {
     }
 }
 
-const engine::JointState* RuntimeSession::find_joint_state(const engine::BufferedFrame& frame,
-                                                           const ChannelMapping& mapping) const {
-    auto it = frame.joint_index_by_id.find(mapping.joint_id);
-    if (it == frame.joint_index_by_id.end() || it->second >= frame.joint_states.size()) {
+const engine::ChannelValue* RuntimeSession::find_channel_value(const engine::BufferedFrame& frame,
+                                                               const std::string& channel_id) const {
+    auto it = frame.channel_index_by_id.find(channel_id);
+    if (it == frame.channel_index_by_id.end() || it->second >= frame.channel_values.size()) {
         return nullptr;
     }
-    return &frame.joint_states[it->second];
+    return &frame.channel_values[it->second];
 }
 
 void RuntimeSession::send_event(ix::WebSocket& ws, const protocol::Event& event) {
@@ -349,14 +374,10 @@ void RuntimeSession::send_sim_frame() {
     }
     if (!ws) return;
     auto poses = simulation_runtime_.getBodyPoses();
-    auto joint_states = simulation_runtime_.getJointStates();
-    send_sim_frame_data(poses, joint_states,
-                        simulation_runtime_.getCurrentTime(),
-                        simulation_runtime_.getStepCount());
+    send_sim_frame_data(poses, simulation_runtime_.getCurrentTime(), simulation_runtime_.getStepCount());
 }
 
 void RuntimeSession::send_sim_frame_data(const std::vector<engine::BodyPose>& poses,
-                                         const std::vector<engine::JointState>& joint_states,
                                          double sim_time,
                                          uint64_t step_count) {
     ix::WebSocket* ws;
@@ -387,21 +408,6 @@ void RuntimeSession::send_sim_frame_data(const std::vector<engine::BodyPose>& po
         rot->set_z(bp.orientation[3]);
     }
 
-    for (const auto& js : joint_states) {
-        auto* pj = frame.add_joint_states();
-        pj->set_joint_id(js.joint_id);
-        pj->set_position(js.position);
-        pj->set_velocity(js.velocity);
-        auto* rf = pj->mutable_reaction_force();
-        rf->set_x(js.reaction_force[0]);
-        rf->set_y(js.reaction_force[1]);
-        rf->set_z(js.reaction_force[2]);
-        auto* rt = pj->mutable_reaction_torque();
-        rt->set_x(js.reaction_torque[0]);
-        rt->set_y(js.reaction_torque[1]);
-        rt->set_z(js.reaction_torque[2]);
-    }
-
     protocol::Event event;
     *event.mutable_simulation_frame() = std::move(frame);
     send_event(*ws, event);
@@ -422,11 +428,10 @@ void RuntimeSession::send_trace_batch() {
     auto frames = ring_buffer_.find_window(newest - 0.25, 0.25);
     if (frames.empty()) return;
 
-    send_trace_window(channel_descriptors_[idx], channel_mappings_[idx], frames);
+    send_trace_window(channel_descriptors_[idx], frames);
 }
 
 void RuntimeSession::send_trace_window(const engine::ChannelDescriptor& desc,
-                                       const ChannelMapping& mapping,
                                        const std::vector<const engine::BufferedFrame*>& frames) {
     ix::WebSocket* ws;
     {
@@ -439,34 +444,18 @@ void RuntimeSession::send_trace_window(const engine::ChannelDescriptor& desc,
     trace.set_channel_id(desc.channel_id);
 
     for (const auto* frame : frames) {
-        const engine::JointState* js = find_joint_state(*frame, mapping);
-        if (!js) continue;
+        const engine::ChannelValue* value = find_channel_value(*frame, desc.channel_id);
+        if (!value) continue;
 
         auto* sample = trace.add_samples();
         sample->set_time(frame->sim_time);
-        switch (mapping.measurement) {
-            case 0:
-                sample->set_scalar(js->position);
-                break;
-            case 1:
-                sample->set_scalar(js->velocity);
-                break;
-            case 2: {
-                auto* v = sample->mutable_vector();
-                v->set_x(js->reaction_force[0]);
-                v->set_y(js->reaction_force[1]);
-                v->set_z(js->reaction_force[2]);
-                break;
-            }
-            case 3: {
-                auto* v = sample->mutable_vector();
-                v->set_x(js->reaction_torque[0]);
-                v->set_y(js->reaction_torque[1]);
-                v->set_z(js->reaction_torque[2]);
-                break;
-            }
-            default:
-                break;
+        if (value->data_type == static_cast<int>(protocol::CHANNEL_DATA_TYPE_VEC3)) {
+            auto* v = sample->mutable_vector();
+            v->set_x(value->vector[0]);
+            v->set_y(value->vector[1]);
+            v->set_z(value->vector[2]);
+        } else {
+            sample->set_scalar(value->scalar);
         }
     }
 

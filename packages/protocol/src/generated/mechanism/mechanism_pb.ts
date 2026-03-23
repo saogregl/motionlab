@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file mechanism/mechanism.proto.
  */
 export const file_mechanism_mechanism: GenFile = /*@__PURE__*/
-  fileDesc("ChltZWNoYW5pc20vbWVjaGFuaXNtLnByb3RvEhNtb3Rpb25sYWIubWVjaGFuaXNtIhcKCUVsZW1lbnRJZBIKCgJpZBgBIAEoCSJICg9Qcm9qZWN0TWV0YWRhdGESDAoEbmFtZRgBIAEoCRISCgpjcmVhdGVkX2F0GAIgASgJEhMKC21vZGlmaWVkX2F0GAMgASgJIlgKDkFzc2V0UmVmZXJlbmNlEhQKDGNvbnRlbnRfaGFzaBgBIAEoCRIVCg1yZWxhdGl2ZV9wYXRoGAIgASgJEhkKEW9yaWdpbmFsX2ZpbGVuYW1lGAMgASgJIicKBFZlYzMSCQoBeBgBIAEoARIJCgF5GAIgASgBEgkKAXoYAyABKAEiMgoEUXVhdBIJCgF3GAEgASgBEgkKAXgYAiABKAESCQoBeRgDIAEoARIJCgF6GAQgASgBImMKBFBvc2USKwoIcG9zaXRpb24YASABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSLgoLb3JpZW50YXRpb24YAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlF1YXQinwEKDk1hc3NQcm9wZXJ0aWVzEgwKBG1hc3MYASABKAESMQoOY2VudGVyX29mX21hc3MYAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSCwoDaXh4GAMgASgBEgsKA2l5eRgEIAEoARILCgNpenoYBSABKAESCwoDaXh5GAYgASgBEgsKA2l4ehgHIAEoARILCgNpeXoYCCABKAEiQQoLRGlzcGxheU1lc2gSEAoIdmVydGljZXMYASADKAISDwoHaW5kaWNlcxgCIAMoDRIPCgdub3JtYWxzGAMgAygCIvgBCgRCb2R5EioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRInCgRwb3NlGAMgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5Qb3NlEjwKD21hc3NfcHJvcGVydGllcxgEIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uTWFzc1Byb3BlcnRpZXMSPQoQc291cmNlX2Fzc2V0X3JlZhgFIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uQXNzZXRSZWZlcmVuY2USEAoIaXNfZml4ZWQYBiABKAgiqAEKBURhdHVtEioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRI2Cg5wYXJlbnRfYm9keV9pZBgDIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEi0KCmxvY2FsX3Bvc2UYBCABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlBvc2UiigIKBUpvaW50EioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRIsCgR0eXBlGAMgASgOMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5Kb2ludFR5cGUSNwoPcGFyZW50X2RhdHVtX2lkGAQgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSNgoOY2hpbGRfZGF0dW1faWQYBSABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBITCgtsb3dlcl9saW1pdBgGIAEoARITCgt1cHBlcl9saW1pdBgHIAEoASLIAQoJTWVjaGFuaXNtEioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRIpCgZib2RpZXMYAyADKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLkJvZHkSKgoGZGF0dW1zGAQgAygLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5EYXR1bRIqCgZqb2ludHMYBSADKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLkpvaW50IrIBCg9Cb2R5RGlzcGxheURhdGESDwoHYm9keV9pZBgBIAEoCRI2CgxkaXNwbGF5X21lc2gYAiABKAsyIC5tb3Rpb25sYWIubWVjaGFuaXNtLkRpc3BsYXlNZXNoEhIKCnBhcnRfaW5kZXgYAyADKA0SDwoHZGVuc2l0eRgEIAEoARIcChR0ZXNzZWxsYXRpb25fcXVhbGl0eRgFIAEoARITCgt1bml0X3N5c3RlbRgGIAEoCSLKAQoLUHJvamVjdEZpbGUSDwoHdmVyc2lvbhgBIAEoDRI2CghtZXRhZGF0YRgCIAEoCzIkLm1vdGlvbmxhYi5tZWNoYW5pc20uUHJvamVjdE1ldGFkYXRhEjEKCW1lY2hhbmlzbRgDIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uTWVjaGFuaXNtEj8KEWJvZHlfZGlzcGxheV9kYXRhGAQgAygLMiQubW90aW9ubGFiLm1lY2hhbmlzbS5Cb2R5RGlzcGxheURhdGEqvQEKCUpvaW50VHlwZRIaChZKT0lOVF9UWVBFX1VOU1BFQ0lGSUVEEAASFwoTSk9JTlRfVFlQRV9SRVZPTFVURRABEhgKFEpPSU5UX1RZUEVfUFJJU01BVElDEAISFAoQSk9JTlRfVFlQRV9GSVhFRBADEhgKFEpPSU5UX1RZUEVfU1BIRVJJQ0FMEAQSGgoWSk9JTlRfVFlQRV9DWUxJTkRSSUNBTBAFEhUKEUpPSU5UX1RZUEVfUExBTkFSEAZiBnByb3RvMw");
+  fileDesc("ChltZWNoYW5pc20vbWVjaGFuaXNtLnByb3RvEhNtb3Rpb25sYWIubWVjaGFuaXNtIhcKCUVsZW1lbnRJZBIKCgJpZBgBIAEoCSJICg9Qcm9qZWN0TWV0YWRhdGESDAoEbmFtZRgBIAEoCRISCgpjcmVhdGVkX2F0GAIgASgJEhMKC21vZGlmaWVkX2F0GAMgASgJIlgKDkFzc2V0UmVmZXJlbmNlEhQKDGNvbnRlbnRfaGFzaBgBIAEoCRIVCg1yZWxhdGl2ZV9wYXRoGAIgASgJEhkKEW9yaWdpbmFsX2ZpbGVuYW1lGAMgASgJIicKBFZlYzMSCQoBeBgBIAEoARIJCgF5GAIgASgBEgkKAXoYAyABKAEiMgoEUXVhdBIJCgF3GAEgASgBEgkKAXgYAiABKAESCQoBeRgDIAEoARIJCgF6GAQgASgBImMKBFBvc2USKwoIcG9zaXRpb24YASABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSLgoLb3JpZW50YXRpb24YAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlF1YXQiJQoFUmFuZ2USDQoFbG93ZXIYASABKAESDQoFdXBwZXIYAiABKAEinwEKDk1hc3NQcm9wZXJ0aWVzEgwKBG1hc3MYASABKAESMQoOY2VudGVyX29mX21hc3MYAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSCwoDaXh4GAMgASgBEgsKA2l5eRgEIAEoARILCgNpenoYBSABKAESCwoDaXh5GAYgASgBEgsKA2l4ehgHIAEoARILCgNpeXoYCCABKAEiQQoLRGlzcGxheU1lc2gSEAoIdmVydGljZXMYASADKAISDwoHaW5kaWNlcxgCIAMoDRIPCgdub3JtYWxzGAMgAygCIpMCCgRCb2R5EioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRInCgRwb3NlGAMgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5Qb3NlEjwKD21hc3NfcHJvcGVydGllcxgEIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uTWFzc1Byb3BlcnRpZXMSQQoQc291cmNlX2Fzc2V0X3JlZhgFIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uQXNzZXRSZWZlcmVuY2VCAhgBEhAKCGlzX2ZpeGVkGAYgASgIEhUKDW1hc3Nfb3ZlcnJpZGUYByABKAgi/QIKCEdlb21ldHJ5EioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRI2Cg5wYXJlbnRfYm9keV9pZBgDIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEi0KCmxvY2FsX3Bvc2UYBCABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlBvc2USPQoQc291cmNlX2Fzc2V0X3JlZhgFIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uQXNzZXRSZWZlcmVuY2USNgoMZGlzcGxheV9tZXNoGAYgASgLMiAubW90aW9ubGFiLm1lY2hhbmlzbS5EaXNwbGF5TWVzaBJFChhjb21wdXRlZF9tYXNzX3Byb3BlcnRpZXMYByABKAsyIy5tb3Rpb25sYWIubWVjaGFuaXNtLk1hc3NQcm9wZXJ0aWVzEhIKCmZhY2VfY291bnQYCCABKA0iqAEKBURhdHVtEioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRI2Cg5wYXJlbnRfYm9keV9pZBgDIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEi0KCmxvY2FsX3Bvc2UYBCABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlBvc2UiRgoTUmV2b2x1dGVKb2ludENvbmZpZxIvCgthbmdsZV9saW1pdBgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uUmFuZ2UiTQoUUHJpc21hdGljSm9pbnRDb25maWcSNQoRdHJhbnNsYXRpb25fbGltaXQYASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLlJhbmdlIhIKEEZpeGVkSm9pbnRDb25maWciFgoUU3BoZXJpY2FsSm9pbnRDb25maWcigwEKFkN5bGluZHJpY2FsSm9pbnRDb25maWcSNQoRdHJhbnNsYXRpb25fbGltaXQYASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLlJhbmdlEjIKDnJvdGF0aW9uX2xpbWl0GAIgASgLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5SYW5nZSK5AQoRUGxhbmFySm9pbnRDb25maWcSNwoTdHJhbnNsYXRpb25feF9saW1pdBgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uUmFuZ2USNwoTdHJhbnNsYXRpb25feV9saW1pdBgCIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uUmFuZ2USMgoOcm90YXRpb25fbGltaXQYAyABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLlJhbmdlIoIBChRVbml2ZXJzYWxKb2ludENvbmZpZxI0ChByb3RhdGlvbl94X2xpbWl0GAEgASgLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5SYW5nZRI0ChByb3RhdGlvbl95X2xpbWl0GAIgASgLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5SYW5nZSJJChNEaXN0YW5jZUpvaW50Q29uZmlnEjIKDmRpc3RhbmNlX2xpbWl0GAEgASgLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5SYW5nZSIWChRQb2ludExpbmVKb2ludENvbmZpZyIXChVQb2ludFBsYW5lSm9pbnRDb25maWcikgcKBUpvaW50EioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRIsCgR0eXBlGAMgASgOMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5Kb2ludFR5cGUSNwoPcGFyZW50X2RhdHVtX2lkGAQgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSNgoOY2hpbGRfZGF0dW1faWQYBSABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIXCgtsb3dlcl9saW1pdBgGIAEoAUICGAESFwoLdXBwZXJfbGltaXQYByABKAFCAhgBEjwKCHJldm9sdXRlGAggASgLMigubW90aW9ubGFiLm1lY2hhbmlzbS5SZXZvbHV0ZUpvaW50Q29uZmlnSAASPgoJcHJpc21hdGljGAkgASgLMikubW90aW9ubGFiLm1lY2hhbmlzbS5QcmlzbWF0aWNKb2ludENvbmZpZ0gAEjYKBWZpeGVkGAogASgLMiUubW90aW9ubGFiLm1lY2hhbmlzbS5GaXhlZEpvaW50Q29uZmlnSAASPgoJc3BoZXJpY2FsGAsgASgLMikubW90aW9ubGFiLm1lY2hhbmlzbS5TcGhlcmljYWxKb2ludENvbmZpZ0gAEkIKC2N5bGluZHJpY2FsGAwgASgLMisubW90aW9ubGFiLm1lY2hhbmlzbS5DeWxpbmRyaWNhbEpvaW50Q29uZmlnSAASOAoGcGxhbmFyGA0gASgLMiYubW90aW9ubGFiLm1lY2hhbmlzbS5QbGFuYXJKb2ludENvbmZpZ0gAEj4KCXVuaXZlcnNhbBgOIAEoCzIpLm1vdGlvbmxhYi5tZWNoYW5pc20uVW5pdmVyc2FsSm9pbnRDb25maWdIABI8CghkaXN0YW5jZRgPIAEoCzIoLm1vdGlvbmxhYi5tZWNoYW5pc20uRGlzdGFuY2VKb2ludENvbmZpZ0gAEj8KCnBvaW50X2xpbmUYECABKAsyKS5tb3Rpb25sYWIubWVjaGFuaXNtLlBvaW50TGluZUpvaW50Q29uZmlnSAASQQoLcG9pbnRfcGxhbmUYESABKAsyKi5tb3Rpb25sYWIubWVjaGFuaXNtLlBvaW50UGxhbmVKb2ludENvbmZpZ0gAQggKBmNvbmZpZyKrAQoOUG9pbnRGb3JjZUxvYWQSMAoIZGF0dW1faWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIpCgZ2ZWN0b3IYAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSPAoPcmVmZXJlbmNlX2ZyYW1lGAMgASgOMiMubW90aW9ubGFiLm1lY2hhbmlzbS5SZWZlcmVuY2VGcmFtZSKsAQoPUG9pbnRUb3JxdWVMb2FkEjAKCGRhdHVtX2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSKQoGdmVjdG9yGAIgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5WZWMzEjwKD3JlZmVyZW5jZV9mcmFtZRgDIAEoDjIjLm1vdGlvbmxhYi5tZWNoYW5pc20uUmVmZXJlbmNlRnJhbWUiwgEKFkxpbmVhclNwcmluZ0RhbXBlckxvYWQSNwoPcGFyZW50X2RhdHVtX2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSNgoOY2hpbGRfZGF0dW1faWQYAiABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBITCgtyZXN0X2xlbmd0aBgDIAEoARIRCglzdGlmZm5lc3MYBCABKAESDwoHZGFtcGluZxgFIAEoASKRAgoETG9hZBIqCgJpZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEgwKBG5hbWUYAiABKAkSOgoLcG9pbnRfZm9yY2UYAyABKAsyIy5tb3Rpb25sYWIubWVjaGFuaXNtLlBvaW50Rm9yY2VMb2FkSAASPAoMcG9pbnRfdG9ycXVlGAQgASgLMiQubW90aW9ubGFiLm1lY2hhbmlzbS5Qb2ludFRvcnF1ZUxvYWRIABJLChRsaW5lYXJfc3ByaW5nX2RhbXBlchgFIAEoCzIrLm1vdGlvbmxhYi5tZWNoYW5pc20uTGluZWFyU3ByaW5nRGFtcGVyTG9hZEgAQggKBmNvbmZpZyLMAQoVUmV2b2x1dGVNb3RvckFjdHVhdG9yEjAKCGpvaW50X2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSPgoMY29udHJvbF9tb2RlGAIgASgOMigubW90aW9ubGFiLm1lY2hhbmlzbS5BY3R1YXRvckNvbnRyb2xNb2RlEhUKDWNvbW1hbmRfdmFsdWUYAyABKAESGQoMZWZmb3J0X2xpbWl0GAQgASgBSACIAQFCDwoNX2VmZm9ydF9saW1pdCLNAQoWUHJpc21hdGljTW90b3JBY3R1YXRvchIwCghqb2ludF9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEj4KDGNvbnRyb2xfbW9kZRgCIAEoDjIoLm1vdGlvbmxhYi5tZWNoYW5pc20uQWN0dWF0b3JDb250cm9sTW9kZRIVCg1jb21tYW5kX3ZhbHVlGAMgASgBEhkKDGVmZm9ydF9saW1pdBgEIAEoAUgAiAEBQg8KDV9lZmZvcnRfbGltaXQi3AEKCEFjdHVhdG9yEioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRJECg5yZXZvbHV0ZV9tb3RvchgDIAEoCzIqLm1vdGlvbmxhYi5tZWNoYW5pc20uUmV2b2x1dGVNb3RvckFjdHVhdG9ySAASRgoPcHJpc21hdGljX21vdG9yGAQgASgLMisubW90aW9ubGFiLm1lY2hhbmlzbS5QcmlzbWF0aWNNb3RvckFjdHVhdG9ySABCCAoGY29uZmlnItcCCglNZWNoYW5pc20SKgoCaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIMCgRuYW1lGAIgASgJEikKBmJvZGllcxgDIAMoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uQm9keRIqCgZkYXR1bXMYBCADKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLkRhdHVtEioKBmpvaW50cxgFIAMoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uSm9pbnQSKAoFbG9hZHMYBiADKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLkxvYWQSMAoJYWN0dWF0b3JzGAcgAygLMh0ubW90aW9ubGFiLm1lY2hhbmlzbS5BY3R1YXRvchIxCgpnZW9tZXRyaWVzGAggAygLMh0ubW90aW9ubGFiLm1lY2hhbmlzbS5HZW9tZXRyeSKyAQoPQm9keURpc3BsYXlEYXRhEg8KB2JvZHlfaWQYASABKAkSNgoMZGlzcGxheV9tZXNoGAIgASgLMiAubW90aW9ubGFiLm1lY2hhbmlzbS5EaXNwbGF5TWVzaBISCgpwYXJ0X2luZGV4GAMgAygNEg8KB2RlbnNpdHkYBCABKAESHAoUdGVzc2VsbGF0aW9uX3F1YWxpdHkYBSABKAESEwoLdW5pdF9zeXN0ZW0YBiABKAkiugEKE0dlb21ldHJ5RGlzcGxheURhdGESEwoLZ2VvbWV0cnlfaWQYASABKAkSNgoMZGlzcGxheV9tZXNoGAIgASgLMiAubW90aW9ubGFiLm1lY2hhbmlzbS5EaXNwbGF5TWVzaBISCgpwYXJ0X2luZGV4GAMgAygNEg8KB2RlbnNpdHkYBCABKAESHAoUdGVzc2VsbGF0aW9uX3F1YWxpdHkYBSABKAESEwoLdW5pdF9zeXN0ZW0YBiABKAkikwIKC1Byb2plY3RGaWxlEg8KB3ZlcnNpb24YASABKA0SNgoIbWV0YWRhdGEYAiABKAsyJC5tb3Rpb25sYWIubWVjaGFuaXNtLlByb2plY3RNZXRhZGF0YRIxCgltZWNoYW5pc20YAyABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLk1lY2hhbmlzbRI/ChFib2R5X2Rpc3BsYXlfZGF0YRgEIAMoCzIkLm1vdGlvbmxhYi5tZWNoYW5pc20uQm9keURpc3BsYXlEYXRhEkcKFWdlb21ldHJ5X2Rpc3BsYXlfZGF0YRgFIAMoCzIoLm1vdGlvbmxhYi5tZWNoYW5pc20uR2VvbWV0cnlEaXNwbGF5RGF0YSqnAgoJSm9pbnRUeXBlEhoKFkpPSU5UX1RZUEVfVU5TUEVDSUZJRUQQABIXChNKT0lOVF9UWVBFX1JFVk9MVVRFEAESGAoUSk9JTlRfVFlQRV9QUklTTUFUSUMQAhIUChBKT0lOVF9UWVBFX0ZJWEVEEAMSGAoUSk9JTlRfVFlQRV9TUEhFUklDQUwQBBIaChZKT0lOVF9UWVBFX0NZTElORFJJQ0FMEAUSFQoRSk9JTlRfVFlQRV9QTEFOQVIQBhIYChRKT0lOVF9UWVBFX1VOSVZFUlNBTBAHEhcKE0pPSU5UX1RZUEVfRElTVEFOQ0UQCBIZChVKT0lOVF9UWVBFX1BPSU5UX0xJTkUQCRIaChZKT0lOVF9UWVBFX1BPSU5UX1BMQU5FEAoqbQoOUmVmZXJlbmNlRnJhbWUSHwobUkVGRVJFTkNFX0ZSQU1FX1VOU1BFQ0lGSUVEEAASHwobUkVGRVJFTkNFX0ZSQU1FX0RBVFVNX0xPQ0FMEAESGQoVUkVGRVJFTkNFX0ZSQU1FX1dPUkxEEAIqowEKE0FjdHVhdG9yQ29udHJvbE1vZGUSJQohQUNUVUFUT1JfQ09OVFJPTF9NT0RFX1VOU1BFQ0lGSUVEEAASIgoeQUNUVUFUT1JfQ09OVFJPTF9NT0RFX1BPU0lUSU9OEAESHwobQUNUVUFUT1JfQ09OVFJPTF9NT0RFX1NQRUVEEAISIAocQUNUVUFUT1JfQ09OVFJPTF9NT0RFX0VGRk9SVBADYgZwcm90bzM");
 
 /**
  * Unique identifier for any mechanism element
@@ -189,6 +189,28 @@ export const PoseSchema: GenMessage<Pose> = /*@__PURE__*/
   messageDesc(file_mechanism_mechanism, 5);
 
 /**
+ * @generated from message motionlab.mechanism.Range
+ */
+export type Range = Message<"motionlab.mechanism.Range"> & {
+  /**
+   * @generated from field: double lower = 1;
+   */
+  lower: number;
+
+  /**
+   * @generated from field: double upper = 2;
+   */
+  upper: number;
+};
+
+/**
+ * Describes the message motionlab.mechanism.Range.
+ * Use `create(RangeSchema)` to create a new message.
+ */
+export const RangeSchema: GenMessage<Range> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 6);
+
+/**
  * Mass properties derived from geometry
  *
  * @generated from message motionlab.mechanism.MassProperties
@@ -242,7 +264,7 @@ export type MassProperties = Message<"motionlab.mechanism.MassProperties"> & {
  * Use `create(MassPropertiesSchema)` to create a new message.
  */
 export const MassPropertiesSchema: GenMessage<MassProperties> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 6);
+  messageDesc(file_mechanism_mechanism, 7);
 
 /**
  * Tessellated mesh for viewport display — NOT the source B-Rep.
@@ -278,7 +300,7 @@ export type DisplayMesh = Message<"motionlab.mechanism.DisplayMesh"> & {
  * Use `create(DisplayMeshSchema)` to create a new message.
  */
 export const DisplayMeshSchema: GenMessage<DisplayMesh> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 7);
+  messageDesc(file_mechanism_mechanism, 8);
 
 /**
  * Rigid body in the mechanism
@@ -302,12 +324,17 @@ export type Body = Message<"motionlab.mechanism.Body"> & {
   pose?: Pose;
 
   /**
+   * effective mass used by solver
+   *
    * @generated from field: motionlab.mechanism.MassProperties mass_properties = 4;
    */
   massProperties?: MassProperties;
 
   /**
-   * @generated from field: motionlab.mechanism.AssetReference source_asset_ref = 5;
+   * Moved to Geometry in v4; kept for v2 migration
+   *
+   * @generated from field: motionlab.mechanism.AssetReference source_asset_ref = 5 [deprecated = true];
+   * @deprecated
    */
   sourceAssetRef?: AssetReference;
 
@@ -317,6 +344,13 @@ export type Body = Message<"motionlab.mechanism.Body"> & {
    * @generated from field: bool is_fixed = 6;
    */
   isFixed: boolean;
+
+  /**
+   * If true, mass_properties are user-set, not aggregated from geometries
+   *
+   * @generated from field: bool mass_override = 7;
+   */
+  massOverride: boolean;
 };
 
 /**
@@ -324,7 +358,73 @@ export type Body = Message<"motionlab.mechanism.Body"> & {
  * Use `create(BodySchema)` to create a new message.
  */
 export const BodySchema: GenMessage<Body> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 8);
+  messageDesc(file_mechanism_mechanism, 9);
+
+/**
+ * Visual geometry attached to a body — imported from CAD.
+ * A body may have zero, one, or many geometries.
+ * Geometry optionally contributes computed mass properties.
+ *
+ * @generated from message motionlab.mechanism.Geometry
+ */
+export type Geometry = Message<"motionlab.mechanism.Geometry"> & {
+  /**
+   * @generated from field: motionlab.mechanism.ElementId id = 1;
+   */
+  id?: ElementId;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * body this geometry is attached to
+   *
+   * @generated from field: motionlab.mechanism.ElementId parent_body_id = 3;
+   */
+  parentBodyId?: ElementId;
+
+  /**
+   * offset relative to body origin
+   *
+   * @generated from field: motionlab.mechanism.Pose local_pose = 4;
+   */
+  localPose?: Pose;
+
+  /**
+   * @generated from field: motionlab.mechanism.AssetReference source_asset_ref = 5;
+   */
+  sourceAssetRef?: AssetReference;
+
+  /**
+   * tessellated mesh for viewport
+   *
+   * @generated from field: motionlab.mechanism.DisplayMesh display_mesh = 6;
+   */
+  displayMesh?: DisplayMesh;
+
+  /**
+   * from CAD via BRepGProp
+   *
+   * @generated from field: motionlab.mechanism.MassProperties computed_mass_properties = 7;
+   */
+  computedMassProperties?: MassProperties;
+
+  /**
+   * number of B-Rep faces (for face-aware picking)
+   *
+   * @generated from field: uint32 face_count = 8;
+   */
+  faceCount: number;
+};
+
+/**
+ * Describes the message motionlab.mechanism.Geometry.
+ * Use `create(GeometrySchema)` to create a new message.
+ */
+export const GeometrySchema: GenMessage<Geometry> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 10);
 
 /**
  * Datum frame anchored to a body
@@ -358,7 +458,181 @@ export type Datum = Message<"motionlab.mechanism.Datum"> & {
  * Use `create(DatumSchema)` to create a new message.
  */
 export const DatumSchema: GenMessage<Datum> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 9);
+  messageDesc(file_mechanism_mechanism, 11);
+
+/**
+ * @generated from message motionlab.mechanism.RevoluteJointConfig
+ */
+export type RevoluteJointConfig = Message<"motionlab.mechanism.RevoluteJointConfig"> & {
+  /**
+   * @generated from field: motionlab.mechanism.Range angle_limit = 1;
+   */
+  angleLimit?: Range;
+};
+
+/**
+ * Describes the message motionlab.mechanism.RevoluteJointConfig.
+ * Use `create(RevoluteJointConfigSchema)` to create a new message.
+ */
+export const RevoluteJointConfigSchema: GenMessage<RevoluteJointConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 12);
+
+/**
+ * @generated from message motionlab.mechanism.PrismaticJointConfig
+ */
+export type PrismaticJointConfig = Message<"motionlab.mechanism.PrismaticJointConfig"> & {
+  /**
+   * @generated from field: motionlab.mechanism.Range translation_limit = 1;
+   */
+  translationLimit?: Range;
+};
+
+/**
+ * Describes the message motionlab.mechanism.PrismaticJointConfig.
+ * Use `create(PrismaticJointConfigSchema)` to create a new message.
+ */
+export const PrismaticJointConfigSchema: GenMessage<PrismaticJointConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 13);
+
+/**
+ * @generated from message motionlab.mechanism.FixedJointConfig
+ */
+export type FixedJointConfig = Message<"motionlab.mechanism.FixedJointConfig"> & {
+};
+
+/**
+ * Describes the message motionlab.mechanism.FixedJointConfig.
+ * Use `create(FixedJointConfigSchema)` to create a new message.
+ */
+export const FixedJointConfigSchema: GenMessage<FixedJointConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 14);
+
+/**
+ * @generated from message motionlab.mechanism.SphericalJointConfig
+ */
+export type SphericalJointConfig = Message<"motionlab.mechanism.SphericalJointConfig"> & {
+};
+
+/**
+ * Describes the message motionlab.mechanism.SphericalJointConfig.
+ * Use `create(SphericalJointConfigSchema)` to create a new message.
+ */
+export const SphericalJointConfigSchema: GenMessage<SphericalJointConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 15);
+
+/**
+ * @generated from message motionlab.mechanism.CylindricalJointConfig
+ */
+export type CylindricalJointConfig = Message<"motionlab.mechanism.CylindricalJointConfig"> & {
+  /**
+   * @generated from field: motionlab.mechanism.Range translation_limit = 1;
+   */
+  translationLimit?: Range;
+
+  /**
+   * @generated from field: motionlab.mechanism.Range rotation_limit = 2;
+   */
+  rotationLimit?: Range;
+};
+
+/**
+ * Describes the message motionlab.mechanism.CylindricalJointConfig.
+ * Use `create(CylindricalJointConfigSchema)` to create a new message.
+ */
+export const CylindricalJointConfigSchema: GenMessage<CylindricalJointConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 16);
+
+/**
+ * @generated from message motionlab.mechanism.PlanarJointConfig
+ */
+export type PlanarJointConfig = Message<"motionlab.mechanism.PlanarJointConfig"> & {
+  /**
+   * @generated from field: motionlab.mechanism.Range translation_x_limit = 1;
+   */
+  translationXLimit?: Range;
+
+  /**
+   * @generated from field: motionlab.mechanism.Range translation_y_limit = 2;
+   */
+  translationYLimit?: Range;
+
+  /**
+   * @generated from field: motionlab.mechanism.Range rotation_limit = 3;
+   */
+  rotationLimit?: Range;
+};
+
+/**
+ * Describes the message motionlab.mechanism.PlanarJointConfig.
+ * Use `create(PlanarJointConfigSchema)` to create a new message.
+ */
+export const PlanarJointConfigSchema: GenMessage<PlanarJointConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 17);
+
+/**
+ * @generated from message motionlab.mechanism.UniversalJointConfig
+ */
+export type UniversalJointConfig = Message<"motionlab.mechanism.UniversalJointConfig"> & {
+  /**
+   * @generated from field: motionlab.mechanism.Range rotation_x_limit = 1;
+   */
+  rotationXLimit?: Range;
+
+  /**
+   * @generated from field: motionlab.mechanism.Range rotation_y_limit = 2;
+   */
+  rotationYLimit?: Range;
+};
+
+/**
+ * Describes the message motionlab.mechanism.UniversalJointConfig.
+ * Use `create(UniversalJointConfigSchema)` to create a new message.
+ */
+export const UniversalJointConfigSchema: GenMessage<UniversalJointConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 18);
+
+/**
+ * @generated from message motionlab.mechanism.DistanceJointConfig
+ */
+export type DistanceJointConfig = Message<"motionlab.mechanism.DistanceJointConfig"> & {
+  /**
+   * @generated from field: motionlab.mechanism.Range distance_limit = 1;
+   */
+  distanceLimit?: Range;
+};
+
+/**
+ * Describes the message motionlab.mechanism.DistanceJointConfig.
+ * Use `create(DistanceJointConfigSchema)` to create a new message.
+ */
+export const DistanceJointConfigSchema: GenMessage<DistanceJointConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 19);
+
+/**
+ * @generated from message motionlab.mechanism.PointLineJointConfig
+ */
+export type PointLineJointConfig = Message<"motionlab.mechanism.PointLineJointConfig"> & {
+};
+
+/**
+ * Describes the message motionlab.mechanism.PointLineJointConfig.
+ * Use `create(PointLineJointConfigSchema)` to create a new message.
+ */
+export const PointLineJointConfigSchema: GenMessage<PointLineJointConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 20);
+
+/**
+ * @generated from message motionlab.mechanism.PointPlaneJointConfig
+ */
+export type PointPlaneJointConfig = Message<"motionlab.mechanism.PointPlaneJointConfig"> & {
+};
+
+/**
+ * Describes the message motionlab.mechanism.PointPlaneJointConfig.
+ * Use `create(PointPlaneJointConfigSchema)` to create a new message.
+ */
+export const PointPlaneJointConfigSchema: GenMessage<PointPlaneJointConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 21);
 
 /**
  * Joint connecting two datums
@@ -392,16 +666,81 @@ export type Joint = Message<"motionlab.mechanism.Joint"> & {
   childDatumId?: ElementId;
 
   /**
-   * Optional limits — expanded in later epics
-   *
-   * @generated from field: double lower_limit = 6;
+   * @generated from field: double lower_limit = 6 [deprecated = true];
+   * @deprecated
    */
   lowerLimit: number;
 
   /**
-   * @generated from field: double upper_limit = 7;
+   * @generated from field: double upper_limit = 7 [deprecated = true];
+   * @deprecated
    */
   upperLimit: number;
+
+  /**
+   * @generated from oneof motionlab.mechanism.Joint.config
+   */
+  config: {
+    /**
+     * @generated from field: motionlab.mechanism.RevoluteJointConfig revolute = 8;
+     */
+    value: RevoluteJointConfig;
+    case: "revolute";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.PrismaticJointConfig prismatic = 9;
+     */
+    value: PrismaticJointConfig;
+    case: "prismatic";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.FixedJointConfig fixed = 10;
+     */
+    value: FixedJointConfig;
+    case: "fixed";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.SphericalJointConfig spherical = 11;
+     */
+    value: SphericalJointConfig;
+    case: "spherical";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.CylindricalJointConfig cylindrical = 12;
+     */
+    value: CylindricalJointConfig;
+    case: "cylindrical";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.PlanarJointConfig planar = 13;
+     */
+    value: PlanarJointConfig;
+    case: "planar";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.UniversalJointConfig universal = 14;
+     */
+    value: UniversalJointConfig;
+    case: "universal";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.DistanceJointConfig distance = 15;
+     */
+    value: DistanceJointConfig;
+    case: "distance";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.PointLineJointConfig point_line = 16;
+     */
+    value: PointLineJointConfig;
+    case: "pointLine";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.PointPlaneJointConfig point_plane = 17;
+     */
+    value: PointPlaneJointConfig;
+    case: "pointPlane";
+  } | { case: undefined; value?: undefined };
 };
 
 /**
@@ -409,7 +748,246 @@ export type Joint = Message<"motionlab.mechanism.Joint"> & {
  * Use `create(JointSchema)` to create a new message.
  */
 export const JointSchema: GenMessage<Joint> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 10);
+  messageDesc(file_mechanism_mechanism, 22);
+
+/**
+ * @generated from message motionlab.mechanism.PointForceLoad
+ */
+export type PointForceLoad = Message<"motionlab.mechanism.PointForceLoad"> & {
+  /**
+   * @generated from field: motionlab.mechanism.ElementId datum_id = 1;
+   */
+  datumId?: ElementId;
+
+  /**
+   * @generated from field: motionlab.mechanism.Vec3 vector = 2;
+   */
+  vector?: Vec3;
+
+  /**
+   * @generated from field: motionlab.mechanism.ReferenceFrame reference_frame = 3;
+   */
+  referenceFrame: ReferenceFrame;
+};
+
+/**
+ * Describes the message motionlab.mechanism.PointForceLoad.
+ * Use `create(PointForceLoadSchema)` to create a new message.
+ */
+export const PointForceLoadSchema: GenMessage<PointForceLoad> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 23);
+
+/**
+ * @generated from message motionlab.mechanism.PointTorqueLoad
+ */
+export type PointTorqueLoad = Message<"motionlab.mechanism.PointTorqueLoad"> & {
+  /**
+   * @generated from field: motionlab.mechanism.ElementId datum_id = 1;
+   */
+  datumId?: ElementId;
+
+  /**
+   * @generated from field: motionlab.mechanism.Vec3 vector = 2;
+   */
+  vector?: Vec3;
+
+  /**
+   * @generated from field: motionlab.mechanism.ReferenceFrame reference_frame = 3;
+   */
+  referenceFrame: ReferenceFrame;
+};
+
+/**
+ * Describes the message motionlab.mechanism.PointTorqueLoad.
+ * Use `create(PointTorqueLoadSchema)` to create a new message.
+ */
+export const PointTorqueLoadSchema: GenMessage<PointTorqueLoad> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 24);
+
+/**
+ * @generated from message motionlab.mechanism.LinearSpringDamperLoad
+ */
+export type LinearSpringDamperLoad = Message<"motionlab.mechanism.LinearSpringDamperLoad"> & {
+  /**
+   * @generated from field: motionlab.mechanism.ElementId parent_datum_id = 1;
+   */
+  parentDatumId?: ElementId;
+
+  /**
+   * @generated from field: motionlab.mechanism.ElementId child_datum_id = 2;
+   */
+  childDatumId?: ElementId;
+
+  /**
+   * @generated from field: double rest_length = 3;
+   */
+  restLength: number;
+
+  /**
+   * @generated from field: double stiffness = 4;
+   */
+  stiffness: number;
+
+  /**
+   * @generated from field: double damping = 5;
+   */
+  damping: number;
+};
+
+/**
+ * Describes the message motionlab.mechanism.LinearSpringDamperLoad.
+ * Use `create(LinearSpringDamperLoadSchema)` to create a new message.
+ */
+export const LinearSpringDamperLoadSchema: GenMessage<LinearSpringDamperLoad> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 25);
+
+/**
+ * @generated from message motionlab.mechanism.Load
+ */
+export type Load = Message<"motionlab.mechanism.Load"> & {
+  /**
+   * @generated from field: motionlab.mechanism.ElementId id = 1;
+   */
+  id?: ElementId;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * @generated from oneof motionlab.mechanism.Load.config
+   */
+  config: {
+    /**
+     * @generated from field: motionlab.mechanism.PointForceLoad point_force = 3;
+     */
+    value: PointForceLoad;
+    case: "pointForce";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.PointTorqueLoad point_torque = 4;
+     */
+    value: PointTorqueLoad;
+    case: "pointTorque";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.LinearSpringDamperLoad linear_spring_damper = 5;
+     */
+    value: LinearSpringDamperLoad;
+    case: "linearSpringDamper";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message motionlab.mechanism.Load.
+ * Use `create(LoadSchema)` to create a new message.
+ */
+export const LoadSchema: GenMessage<Load> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 26);
+
+/**
+ * @generated from message motionlab.mechanism.RevoluteMotorActuator
+ */
+export type RevoluteMotorActuator = Message<"motionlab.mechanism.RevoluteMotorActuator"> & {
+  /**
+   * @generated from field: motionlab.mechanism.ElementId joint_id = 1;
+   */
+  jointId?: ElementId;
+
+  /**
+   * @generated from field: motionlab.mechanism.ActuatorControlMode control_mode = 2;
+   */
+  controlMode: ActuatorControlMode;
+
+  /**
+   * @generated from field: double command_value = 3;
+   */
+  commandValue: number;
+
+  /**
+   * @generated from field: optional double effort_limit = 4;
+   */
+  effortLimit?: number;
+};
+
+/**
+ * Describes the message motionlab.mechanism.RevoluteMotorActuator.
+ * Use `create(RevoluteMotorActuatorSchema)` to create a new message.
+ */
+export const RevoluteMotorActuatorSchema: GenMessage<RevoluteMotorActuator> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 27);
+
+/**
+ * @generated from message motionlab.mechanism.PrismaticMotorActuator
+ */
+export type PrismaticMotorActuator = Message<"motionlab.mechanism.PrismaticMotorActuator"> & {
+  /**
+   * @generated from field: motionlab.mechanism.ElementId joint_id = 1;
+   */
+  jointId?: ElementId;
+
+  /**
+   * @generated from field: motionlab.mechanism.ActuatorControlMode control_mode = 2;
+   */
+  controlMode: ActuatorControlMode;
+
+  /**
+   * @generated from field: double command_value = 3;
+   */
+  commandValue: number;
+
+  /**
+   * @generated from field: optional double effort_limit = 4;
+   */
+  effortLimit?: number;
+};
+
+/**
+ * Describes the message motionlab.mechanism.PrismaticMotorActuator.
+ * Use `create(PrismaticMotorActuatorSchema)` to create a new message.
+ */
+export const PrismaticMotorActuatorSchema: GenMessage<PrismaticMotorActuator> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 28);
+
+/**
+ * @generated from message motionlab.mechanism.Actuator
+ */
+export type Actuator = Message<"motionlab.mechanism.Actuator"> & {
+  /**
+   * @generated from field: motionlab.mechanism.ElementId id = 1;
+   */
+  id?: ElementId;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * @generated from oneof motionlab.mechanism.Actuator.config
+   */
+  config: {
+    /**
+     * @generated from field: motionlab.mechanism.RevoluteMotorActuator revolute_motor = 3;
+     */
+    value: RevoluteMotorActuator;
+    case: "revoluteMotor";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.PrismaticMotorActuator prismatic_motor = 4;
+     */
+    value: PrismaticMotorActuator;
+    case: "prismaticMotor";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message motionlab.mechanism.Actuator.
+ * Use `create(ActuatorSchema)` to create a new message.
+ */
+export const ActuatorSchema: GenMessage<Actuator> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 29);
 
 /**
  * Complete mechanism definition
@@ -441,6 +1019,21 @@ export type Mechanism = Message<"motionlab.mechanism.Mechanism"> & {
    * @generated from field: repeated motionlab.mechanism.Joint joints = 5;
    */
   joints: Joint[];
+
+  /**
+   * @generated from field: repeated motionlab.mechanism.Load loads = 6;
+   */
+  loads: Load[];
+
+  /**
+   * @generated from field: repeated motionlab.mechanism.Actuator actuators = 7;
+   */
+  actuators: Actuator[];
+
+  /**
+   * @generated from field: repeated motionlab.mechanism.Geometry geometries = 8;
+   */
+  geometries: Geometry[];
 };
 
 /**
@@ -448,7 +1041,7 @@ export type Mechanism = Message<"motionlab.mechanism.Mechanism"> & {
  * Use `create(MechanismSchema)` to create a new message.
  */
 export const MechanismSchema: GenMessage<Mechanism> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 11);
+  messageDesc(file_mechanism_mechanism, 30);
 
 /**
  * Display data for a body, stored in project files for self-contained persistence
@@ -494,7 +1087,53 @@ export type BodyDisplayData = Message<"motionlab.mechanism.BodyDisplayData"> & {
  * Use `create(BodyDisplayDataSchema)` to create a new message.
  */
 export const BodyDisplayDataSchema: GenMessage<BodyDisplayData> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 12);
+  messageDesc(file_mechanism_mechanism, 31);
+
+/**
+ * Display data for a geometry, stored in project files for self-contained persistence
+ *
+ * @generated from message motionlab.mechanism.GeometryDisplayData
+ */
+export type GeometryDisplayData = Message<"motionlab.mechanism.GeometryDisplayData"> & {
+  /**
+   * @generated from field: string geometry_id = 1;
+   */
+  geometryId: string;
+
+  /**
+   * @generated from field: motionlab.mechanism.DisplayMesh display_mesh = 2;
+   */
+  displayMesh?: DisplayMesh;
+
+  /**
+   * @generated from field: repeated uint32 part_index = 3;
+   */
+  partIndex: number[];
+
+  /**
+   * Import parameters — enables cache key reconstruction on load
+   *
+   * @generated from field: double density = 4;
+   */
+  density: number;
+
+  /**
+   * @generated from field: double tessellation_quality = 5;
+   */
+  tessellationQuality: number;
+
+  /**
+   * @generated from field: string unit_system = 6;
+   */
+  unitSystem: string;
+};
+
+/**
+ * Describes the message motionlab.mechanism.GeometryDisplayData.
+ * Use `create(GeometryDisplayDataSchema)` to create a new message.
+ */
+export const GeometryDisplayDataSchema: GenMessage<GeometryDisplayData> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 32);
 
 /**
  * Self-contained project file (binary protobuf with version field)
@@ -518,9 +1157,16 @@ export type ProjectFile = Message<"motionlab.mechanism.ProjectFile"> & {
   mechanism?: Mechanism;
 
   /**
+   * kept for v2 backward compat
+   *
    * @generated from field: repeated motionlab.mechanism.BodyDisplayData body_display_data = 4;
    */
   bodyDisplayData: BodyDisplayData[];
+
+  /**
+   * @generated from field: repeated motionlab.mechanism.GeometryDisplayData geometry_display_data = 5;
+   */
+  geometryDisplayData: GeometryDisplayData[];
 };
 
 /**
@@ -528,7 +1174,7 @@ export type ProjectFile = Message<"motionlab.mechanism.ProjectFile"> & {
  * Use `create(ProjectFileSchema)` to create a new message.
  */
 export const ProjectFileSchema: GenMessage<ProjectFile> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 13);
+  messageDesc(file_mechanism_mechanism, 33);
 
 /**
  * Joint types
@@ -576,6 +1222,26 @@ export enum JointType {
    * @generated from enum value: JOINT_TYPE_PLANAR = 6;
    */
   PLANAR = 6,
+
+  /**
+   * @generated from enum value: JOINT_TYPE_UNIVERSAL = 7;
+   */
+  UNIVERSAL = 7,
+
+  /**
+   * @generated from enum value: JOINT_TYPE_DISTANCE = 8;
+   */
+  DISTANCE = 8,
+
+  /**
+   * @generated from enum value: JOINT_TYPE_POINT_LINE = 9;
+   */
+  POINT_LINE = 9,
+
+  /**
+   * @generated from enum value: JOINT_TYPE_POINT_PLANE = 10;
+   */
+  POINT_PLANE = 10,
 }
 
 /**
@@ -583,4 +1249,61 @@ export enum JointType {
  */
 export const JointTypeSchema: GenEnum<JointType> = /*@__PURE__*/
   enumDesc(file_mechanism_mechanism, 0);
+
+/**
+ * @generated from enum motionlab.mechanism.ReferenceFrame
+ */
+export enum ReferenceFrame {
+  /**
+   * @generated from enum value: REFERENCE_FRAME_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: REFERENCE_FRAME_DATUM_LOCAL = 1;
+   */
+  DATUM_LOCAL = 1,
+
+  /**
+   * @generated from enum value: REFERENCE_FRAME_WORLD = 2;
+   */
+  WORLD = 2,
+}
+
+/**
+ * Describes the enum motionlab.mechanism.ReferenceFrame.
+ */
+export const ReferenceFrameSchema: GenEnum<ReferenceFrame> = /*@__PURE__*/
+  enumDesc(file_mechanism_mechanism, 1);
+
+/**
+ * @generated from enum motionlab.mechanism.ActuatorControlMode
+ */
+export enum ActuatorControlMode {
+  /**
+   * @generated from enum value: ACTUATOR_CONTROL_MODE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: ACTUATOR_CONTROL_MODE_POSITION = 1;
+   */
+  POSITION = 1,
+
+  /**
+   * @generated from enum value: ACTUATOR_CONTROL_MODE_SPEED = 2;
+   */
+  SPEED = 2,
+
+  /**
+   * @generated from enum value: ACTUATOR_CONTROL_MODE_EFFORT = 3;
+   */
+  EFFORT = 3,
+}
+
+/**
+ * Describes the enum motionlab.mechanism.ActuatorControlMode.
+ */
+export const ActuatorControlModeSchema: GenEnum<ActuatorControlMode> = /*@__PURE__*/
+  enumDesc(file_mechanism_mechanism, 2);
 

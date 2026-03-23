@@ -55,9 +55,19 @@ public:
                                const protocol::RelocateAssetCommand& cmd,
                                const SendEventFn& send_event);
 
+    void clear();
+
+    // Shape loading resolves body_id -> geometry_ids for face-picking
     bool ensure_body_shape_loaded(const std::string& body_id);
 
     double body_length_scale(const std::string& body_id) const;
+
+    // Cleanup helpers for delete operations
+    void remove_body_data(const std::string& body_id);
+    void remove_geometry_data(const std::string& geometry_id);
+    void reparent_geometry_data(const std::string& geometry_id,
+                                const std::string& old_body_id,
+                                const std::string& new_body_id);
 
 private:
     struct AssetTopologyContext {
@@ -70,6 +80,7 @@ private:
 
     static std::string normalize_unit_system(std::string unit_system);
     static double unit_scale_to_meters(const std::string& unit_system);
+    const protocol::GeometryImportResult* get_geometry_import_result(const std::string& geometry_id) const;
 
     void remember_topology_context(const std::string& cache_key,
                                    const std::string& file_path,
@@ -81,10 +92,22 @@ private:
     engine::AssetCache asset_cache_;
     engine::MechanismState& mechanism_state_;
     engine::ShapeRegistry& shape_registry_;
+
+    // Body tracking (kept for backward compat and load project flow)
     std::unordered_map<std::string, protocol::BodyImportResult> body_import_results_;
     std::unordered_map<std::string, double> body_length_scales_;
+
+    // Geometry tracking
+    std::unordered_map<std::string, protocol::GeometryImportResult> geometry_import_results_;
+    std::unordered_map<std::string, double> geometry_length_scales_;
+
+    // body_id -> list of geometry_ids for shape resolution
+    std::unordered_map<std::string, std::vector<std::string>> body_geometry_map_;
+
+    // Topology context for lazy shape loading
     std::unordered_map<std::string, AssetTopologyContext> asset_topology_contexts_;
     std::unordered_map<std::string, std::string> body_topology_keys_;
+    std::unordered_map<std::string, std::string> geometry_topology_keys_;
 };
 
 } // namespace motionlab::transport_detail

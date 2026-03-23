@@ -48,7 +48,7 @@ export function ImportSettingsDialog({
         <div className="flex flex-col gap-3 py-2">
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">Density (kg/m³)</label>
-            <NumericInput value={density} onChange={setDensity} step={100} precision={0} />
+            <NumericInput variant="field" value={density} onChange={setDensity} step={100} precision={0} />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">Tessellation Quality</label>

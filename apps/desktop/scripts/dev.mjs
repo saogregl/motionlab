@@ -13,7 +13,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import { build, createServer } from 'vite';
+import { build, createServer, version as viteVersion } from 'vite';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
@@ -53,11 +53,9 @@ async function main() {
         '@/': `${uiSrc}/`,
       },
     },
-    css: { transformer: 'postcss' },
     build: {
       outDir: '../.vite/renderer/main_window',
       emptyOutDir: true,
-      cssMinify: 'esbuild',
     },
   });
   await server.listen();
@@ -116,10 +114,10 @@ async function main() {
   });
 
   // 4. Launch Electron
-  console.log('[dev] Launching Electron...');
+  console.log(`[dev] Launching Electron... (Vite ${viteVersion})`);
   // On Windows, .cmd shims require shell:true to execute
   const mainJs = path.join(root, '.vite/build/main.js');
-  const child = spawn('npx', ['electron', mainJs], {
+  const child = spawn('npx', ['electron', '--remote-debugging-port=9222', mainJs], {
     stdio: 'inherit',
     cwd: root,
     env: {

@@ -38,15 +38,52 @@ struct ChannelDescriptor {
     int data_type; // 1 = SCALAR, 2 = VEC3
 };
 
+struct ChannelValue {
+    std::string channel_id;
+    int data_type = 0;
+    double scalar = 0.0;
+    double vector[3] = {0.0, 0.0, 0.0};
+};
+
+enum class SolverType { PSOR, BARZILAI_BORWEIN, APGD, MINRES };
+enum class IntegratorType { EULER_IMPLICIT_LINEARIZED, HHT, NEWMARK };
+
+struct SolverConfig {
+    SolverType type = SolverType::PSOR;
+    int max_iterations = 100;
+    double tolerance = 1e-8;
+    IntegratorType integrator = IntegratorType::EULER_IMPLICIT_LINEARIZED;
+};
+
+struct ContactConfig {
+    double friction = 0.3;
+    double restitution = 0.0;
+    double compliance = 0.0;
+    double damping = 0.0;
+    bool enable_contact = true;
+};
+
 struct SimulationConfig {
     double timestep = 0.001;
     double gravity[3] = {0, -9.81, 0};
+    double duration = 10.0;
+    SolverConfig solver;
+    ContactConfig contact;
+};
+
+struct CompilationDiagnostic {
+    int severity = 0; // 0=info, 1=warning, 2=error
+    std::string message;
+    std::vector<std::string> affected_entity_ids;
+    std::string suggestion;
+    std::string code;
 };
 
 struct CompilationResult {
     bool success = false;
     std::string error_message;
-    std::vector<std::string> diagnostics;
+    std::vector<std::string> diagnostics; // keep for backward compat
+    std::vector<CompilationDiagnostic> structured_diagnostics;
 };
 
 // ---------------------------------------------------------------------------
@@ -83,6 +120,7 @@ public:
     std::vector<BodyPose> getBodyPoses() const;
     std::vector<JointState> getJointStates() const;
     std::vector<ChannelDescriptor> getChannelDescriptors() const;
+    std::vector<ChannelValue> getChannelValues() const;
     double getCurrentTime() const;
     uint64_t getStepCount() const;
 
