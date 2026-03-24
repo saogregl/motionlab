@@ -16,28 +16,32 @@ import {
   TreeView,
   Button,
 } from '@motionlab/ui';
-import { Activity, Box, Crosshair, Hexagon, Import, Link2, Plus, RotateCcw, Zap } from 'lucide-react';
+import { Activity, Box, Cog, Crosshair, Hexagon, Import, Link2, Plus, RotateCcw, Zap } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { executeCommand } from '../commands/registry.js';
 import {
   getSceneGraph,
-  sendCreateJoint,
   sendDeleteBody,
   sendDeleteDatum,
   sendDeleteJoint,
+  sendDeleteActuator,
   sendDeleteLoad,
   sendDetachGeometry,
   sendRenameDatum,
+  sendUpdateActuator,
   sendUpdateBody,
   sendUpdateJoint,
+  sendUpdateLoad,
 } from '../engine/connection.js';
 import { AttachGeometryDialog } from './AttachGeometryDialog.js';
 import { CreateBodyDialog } from './CreateBodyDialog.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
+import { useLoadCreationStore } from '../stores/load-creation.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
+import { useToastStore } from '../stores/toast.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
 import { useVisibilityStore } from '../stores/visibility.js';
 import {
@@ -59,7 +63,7 @@ function isStructuralId(id: string) {
 
 // ── Node type discriminator ──
 
-type NodeType = 'root' | 'group' | 'body' | 'geometry' | 'datum' | 'joint' | 'load';
+type NodeType = 'root' | 'group' | 'body' | 'geometry' | 'datum' | 'joint' | 'load' | 'actuator';
 
 // ── Icons ──
 
@@ -75,6 +79,7 @@ const ICONS: Record<string, React.ReactNode> = {
   datum: <Crosshair className="size-3.5" />,
   joint: <Link2 className="size-3.5" />,
   load: <Zap className="size-3.5" />,
+  actuator: <Cog className="size-3.5" />,
 };
 
 // ── Component ──
@@ -85,6 +90,7 @@ export function ProjectTree() {
   const datums = useMechanismStore((s) => s.datums);
   const joints = useMechanismStore((s) => s.joints);
   const loads = useMechanismStore((s) => s.loads);
+  const actuators = useMechanismStore((s) => s.actuators);
   const selectedIds = useSelectionStore((s) => s.selectedIds);
   const setSelection = useSelectionStore((s) => s.setSelection);
   const lastSelectedId = useSelectionStore((s) => s.lastSelectedId);
@@ -220,15 +226,27 @@ export function ProjectTree() {
         _count: joints.size,
       });
       for (const joint of joints.values()) {
+        const jointActuators = [...actuators.values()].filter((a) => a.jointId === joint.id);
         result.push({
           id: joint.id,
           parentId: JOINTS_GROUP_ID,
           level: 2,
           name: joint.name,
-          hasChildren: false,
+          hasChildren: jointActuators.length > 0,
           _type: 'joint' as NodeType,
           _jointType: joint.type,
         });
+        for (const act of jointActuators) {
+          result.push({
+            id: act.id,
+            parentId: joint.id,
+            level: 3,
+            name: act.name,
+            hasChildren: false,
+            _type: 'actuator' as NodeType,
+            _actuatorType: act.type,
+          });
+        }
       }
     }
 
@@ -257,7 +275,7 @@ export function ProjectTree() {
     }
 
     return result;
-  }, [bodies, geometries, datums, joints, loads]);
+  }, [bodies, geometries, datums, joints, loads, actuators]);
 
   // ── Auto-expand parents of selected entities ──
 
@@ -316,7 +334,7 @@ export function ProjectTree() {
   const handleDelete = useCallback(
     (ids: Set<string>) => {
       if (isSimulating) return;
-      const { bodies: bm, datums: dm, joints: jm, loads: lm } = useMechanismStore.getState();
+      const { bodies: bm, datums: dm, joints: jm, loads: lm, actuators: am } = useMechanismStore.getState();
       for (const id of ids) {
         if (bm.has(id)) {
           sendDeleteBody(id);
@@ -326,6 +344,8 @@ export function ProjectTree() {
           sendDeleteJoint(id);
         } else if (lm.has(id)) {
           sendDeleteLoad(id);
+        } else if (am.has(id)) {
+          sendDeleteActuator(id);
         }
       }
     },
@@ -335,13 +355,19 @@ export function ProjectTree() {
   // ── Rename commit ──
 
   const handleRenameCommit = useCallback((id: string, newName: string) => {
-    const { bodies: bm, datums: dm, joints: jm } = useMechanismStore.getState();
+    const { bodies: bm, datums: dm, joints: jm, loads: lm, actuators: am } = useMechanismStore.getState();
     if (bm.has(id)) {
       sendUpdateBody(id, { name: newName });
     } else if (dm.has(id)) {
       sendRenameDatum(id, newName);
     } else if (jm.has(id)) {
       sendUpdateJoint(id, { name: newName });
+    } else if (lm.has(id)) {
+      const existing = lm.get(id)!;
+      sendUpdateLoad({ ...existing, name: newName });
+    } else if (am.has(id)) {
+      const existing = am.get(id)!;
+      sendUpdateActuator({ ...existing, name: newName });
     }
     setEditingId(null);
   }, []);
@@ -380,7 +406,9 @@ export function ProjectTree() {
       // Entity rows
       const icon = nodeType === 'load'
         ? (LOAD_TYPE_ICONS[node._loadType as string] ?? ICONS.load)
-        : ICONS[nodeType];
+        : nodeType === 'actuator'
+          ? ICONS.actuator
+          : ICONS[nodeType];
       let secondary: string | undefined;
       if (nodeType === 'joint') {
         const jBodies = connectionIndex.jointBodies.get(node.id);
@@ -391,6 +419,11 @@ export function ProjectTree() {
         const jCount = connectionIndex.bodyJointCount.get(node.id);
         if (jCount && jCount > 0) {
           secondary = `(${jCount} ${jCount === 1 ? 'joint' : 'joints'})`;
+        }
+      } else if (nodeType === 'actuator') {
+        const act = actuators.get(node.id);
+        if (act) {
+          secondary = act.controlMode;
         }
       }
       const isEditing = editingId === node.id;
@@ -472,8 +505,10 @@ export function ProjectTree() {
                     );
                     if (bodyDatums.length > 0) {
                       useToolModeStore.getState().setMode('create-joint');
-                      useJointCreationStore.getState().startCreation();
-                      useJointCreationStore.getState().setParentDatum(bodyDatums[0].id);
+                      const store = useJointCreationStore.getState();
+                      store.setPreselectedJointType(null);
+                      store.startCreation();
+                      store.setParentDatum(bodyDatums[0].id);
                     }
                   }
             }
@@ -561,13 +596,26 @@ export function ProjectTree() {
                 ? undefined
                 : () => {
                     useToolModeStore.getState().setMode('create-joint');
-                    useJointCreationStore.getState().startCreation();
-                    useJointCreationStore.getState().setParentDatum(node.id);
+                    const store = useJointCreationStore.getState();
+                    store.setPreselectedJointType(null);
+                    store.startCreation();
+                    store.setParentDatum(node.id);
                   }
             }
+            createJointDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
+            onCreateLoad={
+              isSimulating
+                ? undefined
+                : () => {
+                    useToolModeStore.getState().setMode('create-load');
+                    const store = useLoadCreationStore.getState();
+                    store.startCreation();
+                    store.setDatum(node.id);
+                  }
+            }
+            createLoadDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
             onRename={isSimulating ? undefined : () => setEditingId(node.id)}
             renameDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
-            createJointDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
             onProperties={() => {
               useSelectionStore.getState().select(node.id);
             }}
@@ -589,7 +637,13 @@ export function ProjectTree() {
               getSceneGraph()?.focusOnEntity(node.id);
             }}
             onEditJoint={() => {
+              const joint = joints.get(node.id);
+              if (!joint) return;
               useSelectionStore.getState().select(node.id);
+              useToolModeStore.getState().setMode('create-joint');
+              useJointCreationStore
+                .getState()
+                .editExisting(node.id, joint.parentDatumId, joint.childDatumId, joint.type);
             }}
             onChangeType={
               isSimulating
@@ -611,40 +665,66 @@ export function ProjectTree() {
                     }
                   }
             }
+            onAddMotor={
+              (() => {
+                if (isSimulating) return undefined;
+                const joint = joints.get(node.id);
+                if (!joint) return undefined;
+                // Only revolute and prismatic joints support motors
+                if (joint.type !== 'revolute' && joint.type !== 'prismatic') return undefined;
+                // Check if this joint already has an actuator
+                for (const a of actuators.values()) {
+                  if (a.jointId === node.id) return undefined;
+                }
+                // Select joint → opens JointInspector with "Add Motor" button
+                return () => useSelectionStore.getState().select(node.id);
+              })()
+            }
+            addMotorDisabledReason={
+              isSimulating
+                ? 'Not available during simulation'
+                : (() => {
+                    const joint = joints.get(node.id);
+                    if (!joint) return undefined;
+                    if (joint.type !== 'revolute' && joint.type !== 'prismatic') return 'Only revolute and prismatic joints support motors';
+                    for (const a of actuators.values()) {
+                      if (a.jointId === node.id) return 'Joint already has a motor';
+                    }
+                    return undefined;
+                  })()
+            }
             onSwapBodies={
               isSimulating
                 ? undefined
                 : () => {
                     const joint = joints.get(node.id);
                     if (!joint) return;
-                    // Delete and recreate with swapped datums
-                    sendDeleteJoint(node.id);
-                    sendCreateJoint(
-                      joint.childDatumId,
-                      joint.parentDatumId,
-                      joint.type as 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar',
-                      joint.name,
-                      joint.lowerLimit,
-                      joint.upperLimit,
-                    );
+                    sendUpdateJoint(node.id, {
+                      parentDatumId: joint.childDatumId,
+                      childDatumId: joint.parentDatumId,
+                    });
+                    useToastStore.getState().addToast({
+                      variant: 'info',
+                      title: 'Parent/child swapped',
+                      description: 'Joint axis may have changed direction.',
+                    });
                   }
             }
             onReverseDirection={
               isSimulating
                 ? undefined
                 : () => {
-                    // Reverse direction is equivalent to swapping parent/child datums
                     const joint = joints.get(node.id);
                     if (!joint) return;
-                    sendDeleteJoint(node.id);
-                    sendCreateJoint(
-                      joint.childDatumId,
-                      joint.parentDatumId,
-                      joint.type as 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar',
-                      joint.name,
-                      joint.lowerLimit,
-                      joint.upperLimit,
-                    );
+                    sendUpdateJoint(node.id, {
+                      parentDatumId: joint.childDatumId,
+                      childDatumId: joint.parentDatumId,
+                    });
+                    useToastStore.getState().addToast({
+                      variant: 'info',
+                      title: 'Joint direction reversed',
+                      description: 'Joint axis may have changed direction.',
+                    });
                   }
             }
             onRename={isSimulating ? undefined : () => setEditingId(node.id)}
@@ -671,6 +751,17 @@ export function ProjectTree() {
               <ContextMenuItem onSelect={() => setSelection([node.id])}>
                 Select in Viewport
               </ContextMenuItem>
+              <ContextMenuItem onSelect={() => getSceneGraph()?.focusOnEntity(node.id)}>
+                Focus Viewport on Load
+              </ContextMenuItem>
+              {!isSimulating && (
+                <ContextMenuItem onSelect={() => setEditingId(node.id)}>
+                  Rename
+                </ContextMenuItem>
+              )}
+              <ContextMenuItem onSelect={() => useSelectionStore.getState().select(node.id)}>
+                Properties
+              </ContextMenuItem>
               {!isSimulating && (
                 <ContextMenuItem
                   onSelect={() => sendDeleteLoad(node.id)}
@@ -684,9 +775,38 @@ export function ProjectTree() {
         );
       }
 
+      if (nodeType === 'actuator') {
+        return (
+          <ContextMenu>
+            <ContextMenuTrigger>{row}</ContextMenuTrigger>
+            <ContextMenuContent>
+              <ContextMenuItem onSelect={() => setSelection([node.id])}>
+                Select
+              </ContextMenuItem>
+              {!isSimulating && (
+                <ContextMenuItem onSelect={() => setEditingId(node.id)}>
+                  Rename
+                </ContextMenuItem>
+              )}
+              <ContextMenuItem onSelect={() => useSelectionStore.getState().select(node.id)}>
+                Properties
+              </ContextMenuItem>
+              {!isSimulating && (
+                <ContextMenuItem
+                  onSelect={() => sendDeleteActuator(node.id)}
+                  className="text-destructive"
+                >
+                  Delete
+                </ContextMenuItem>
+              )}
+            </ContextMenuContent>
+          </ContextMenu>
+        );
+      }
+
       return row;
     },
-    [editingId, isSimulating, handleRenameCommit, hiddenIds, bodies, geometries, datums, joints, loads, setSelection, connectionIndex],
+    [editingId, isSimulating, handleRenameCommit, hiddenIds, bodies, geometries, datums, joints, loads, actuators, setSelection, connectionIndex],
   );
 
   // ── Empty state ──

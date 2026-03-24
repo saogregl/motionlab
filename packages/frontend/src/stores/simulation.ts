@@ -9,6 +9,14 @@ export interface ChannelDescriptor {
   dataType: 'scalar' | 'vec3';
 }
 
+export interface StructuredDiagnostic {
+  severity: 'info' | 'warning' | 'error';
+  message: string;
+  affectedEntityIds: string[];
+  suggestion: string;
+  code: string;
+}
+
 interface SimulationState {
   state: SimState;
   simTime: number;
@@ -17,12 +25,14 @@ interface SimulationState {
   loopEnabled: boolean;
   errorMessage: string | null;
   compilationDiagnostics: string[];
+  structuredDiagnostics: StructuredDiagnostic[];
   channelDescriptors: ChannelDescriptor[];
   setCompilationResult(
     success: boolean,
     error?: string,
     diagnostics?: string[],
     channels?: ChannelDescriptor[],
+    structuredDiagnostics?: StructuredDiagnostic[],
   ): void;
   setSimState(state: SimState, time: number, stepCount: number): void;
   setLoopEnabled(enabled: boolean): void;
@@ -38,12 +48,14 @@ export const useSimulationStore = create<SimulationState>()((set) => ({
   loopEnabled: false,
   errorMessage: null,
   compilationDiagnostics: [],
+  structuredDiagnostics: [],
   channelDescriptors: [],
-  setCompilationResult: (success, error, diagnostics, channels) =>
+  setCompilationResult: (success, error, diagnostics, channels, structuredDiagnostics) =>
     set({
       state: success ? 'paused' : 'error',
       errorMessage: success ? null : (error ?? 'Compilation failed'),
       compilationDiagnostics: diagnostics ?? [],
+      structuredDiagnostics: structuredDiagnostics ?? [],
       channelDescriptors: channels ?? [],
     }),
   setSimState: (state, time, stepCount) =>
@@ -63,6 +75,7 @@ export const useSimulationStore = create<SimulationState>()((set) => ({
       maxSimTime: 0,
       errorMessage: null,
       compilationDiagnostics: [],
+      structuredDiagnostics: [],
       channelDescriptors: [],
     }),
 }));

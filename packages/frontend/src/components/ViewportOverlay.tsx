@@ -1,7 +1,7 @@
 import { ConnectionBanner, SelectionChip, ViewportHUD } from '@motionlab/ui';
 import type { DatumPreviewType, SceneGraphManager } from '@motionlab/viewport';
 import { Viewport } from '@motionlab/viewport';
-import { Box, Crosshair, Link2, Zap } from 'lucide-react';
+import { Box, Cog, Crosshair, Link2, Zap } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useViewportBridge } from '../hooks/useViewportBridge.js';
@@ -11,7 +11,12 @@ import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useLoadCreationStore } from '../stores/load-creation.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
+import { useSimulationStore } from '../stores/simulation.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
+import { useTraceStore } from '../stores/traces.js';
+import { nearestSample } from '../utils/nearest-sample.js';
+import { getJointCoordinateChannelIds } from '../utils/runtime-channel-ids.js';
+import { JointHoverBadge } from './JointHoverBadge.js';
 import { JointTypeSelectorPanel } from './JointTypeSelectorPanel.js';
 import { LoadCreationCard } from './LoadCreationCard.js';
 import { ModeIndicator } from './ModeIndicator.js';
@@ -19,7 +24,7 @@ import { ViewportContextMenu } from './ViewportContextMenu.js';
 import { FaceTooltip } from './FaceTooltip.js';
 import { WorldSpaceOverlay } from './WorldSpaceOverlay.js';
 
-function SelectionIcon({ entityType }: { entityType: 'body' | 'datum' | 'joint' | 'load' }) {
+function SelectionIcon({ entityType }: { entityType: 'body' | 'datum' | 'joint' | 'load' | 'actuator' }) {
   switch (entityType) {
     case 'body':
       return <Box className="size-3.5" />;
@@ -29,6 +34,8 @@ function SelectionIcon({ entityType }: { entityType: 'body' | 'datum' | 'joint' 
       return <Link2 className="size-3.5" />;
     case 'load':
       return <Zap className="size-3.5" />;
+    case 'actuator':
+      return <Cog className="size-3.5" />;
   }
 }
 
@@ -87,18 +94,31 @@ function DatumCreationStatus() {
 function LoadCreationStatus() {
   const step = useLoadCreationStore((s) => s.step);
   const datumId = useLoadCreationStore((s) => s.datumId);
+  const creatingDatum = useLoadCreationStore((s) => s.creatingDatum);
   const datum = useMechanismStore((s) => (datumId ? s.datums.get(datumId) : undefined));
+  const message = useAuthoringStatusStore((s) => s.message);
 
   const statusClass =
     'rounded-md bg-background/80 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur-sm';
 
+  if (creatingDatum) {
+    return <div className={statusClass}>Creating datum...</div>;
+  }
   if (step === 'pick-datum') {
-    return <div className={statusClass}>Click a datum to apply the load</div>;
+    return (
+      <div className="flex flex-col gap-1">
+        <div className={statusClass}>Click a datum or face to apply the load</div>
+        {message ? <div className={statusClass}>{message}</div> : null}
+      </div>
+    );
   }
   if (step === 'pick-second-datum') {
     return (
-      <div className={statusClass}>
-        First datum: {datum?.name ?? '?'}. Click a second datum for the spring-damper
+      <div className="flex flex-col gap-1">
+        <div className={statusClass}>
+          Anchor: {datum?.name ?? '?'}. Click a second datum or face for the spring-damper
+        </div>
+        {message ? <div className={statusClass}>{message}</div> : null}
       </div>
     );
   }
@@ -111,6 +131,7 @@ function useSelectedEntity() {
   const datums = useMechanismStore((s) => s.datums);
   const joints = useMechanismStore((s) => s.joints);
   const loads = useMechanismStore((s) => s.loads);
+  const actuators = useMechanismStore((s) => s.actuators);
 
   return useMemo(() => {
     if (selectedIds.size === 0) return null;
@@ -124,10 +145,12 @@ function useSelectedEntity() {
       if (joint) return { id, name: joint.name, entityType: 'joint' as const };
       const load = loads.get(id);
       if (load) return { id, name: load.name, entityType: 'load' as const };
+      const actuator = actuators.get(id);
+      if (actuator) return { id, name: actuator.name, entityType: 'actuator' as const };
       return null;
     }
     return { id: '', name: `${selectedIds.size} entities`, entityType: null };
-  }, [selectedIds, bodies, datums, joints, loads]);
+  }, [selectedIds, bodies, datums, joints, loads, actuators]);
 }
 
 function JointCreationDatumLabel({ sceneGraph }: { sceneGraph: SceneGraphManager | null }) {
@@ -153,7 +176,7 @@ function JointCreationDatumLabel({ sceneGraph }: { sceneGraph: SceneGraphManager
       sceneGraph={sceneGraph}
       offset={{ x: 0, y: -8 }}
     >
-      <div className="rounded bg-background/90 px-2 py-0.5 text-[10px] text-muted-foreground backdrop-blur-sm whitespace-nowrap border border-emerald-500/40">
+      <div className="rounded bg-background/90 px-2 py-0.5 text-[10px] text-muted-foreground backdrop-blur-sm whitespace-nowrap border border-[var(--success)]/40">
         Parent: {parentDatum?.name ?? '?'} (on {parentBody?.name ?? '?'})
       </div>
     </WorldSpaceOverlay>
@@ -204,9 +227,57 @@ export function ViewportOverlay() {
 
         // Show connector preview line when both datums selected
         if (state.step === 'select-type' && state.childDatumId) {
-          sg.showJointPreviewLine(state.parentDatumId, state.childDatumId);
+          sg.showJointPreviewLine(state.parentDatumId, state.childDatumId, state.alignment);
+
+          // Show DOF indicator for auto-selected type on step entry
+          if (prev.step !== 'select-type' && state.selectedJointType) {
+            sg.showJointTypePreview(
+              state.selectedJointType,
+              state.parentDatumId,
+              state.childDatumId,
+              state.alignment?.axis ?? null,
+            );
+          }
         } else {
           sg.clearJointPreviewLine();
+        }
+
+        // DOF preview: react to previewJointType hover changes
+        if (state.step === 'select-type' && state.parentDatumId && state.childDatumId) {
+          if (state.previewJointType !== prev.previewJointType) {
+            if (state.previewJointType) {
+              sg.showJointTypePreview(
+                state.previewJointType,
+                state.parentDatumId,
+                state.childDatumId,
+                state.alignment?.axis ?? null,
+              );
+            } else {
+              sg.clearJointTypePreview();
+              // When mouse leaves selector, show selected type's indicator
+              if (state.selectedJointType) {
+                sg.showJointTypePreview(
+                  state.selectedJointType,
+                  state.parentDatumId,
+                  state.childDatumId,
+                  state.alignment?.axis ?? null,
+                );
+              }
+            }
+          }
+          // React to selectedJointType changes (clicking a type)
+          if (state.selectedJointType !== prev.selectedJointType && !state.previewJointType) {
+            if (state.selectedJointType) {
+              sg.showJointTypePreview(
+                state.selectedJointType,
+                state.parentDatumId,
+                state.childDatumId,
+                state.alignment?.axis ?? null,
+              );
+            } else {
+              sg.clearJointTypePreview();
+            }
+          }
         }
       }
 
@@ -215,18 +286,69 @@ export function ViewportOverlay() {
         sg.restoreDimmedDatums();
         sg.clearJointCreationHighlights();
         sg.clearJointPreviewLine();
+        sg.clearJointTypePreview();
       }
 
       // Re-dim when going back from select-type to pick-child (ESC undo)
       if (state.step === 'pick-child' && prev.step === 'select-type' && state.parentDatumId) {
         sg.clearJointPreviewLine();
+        sg.clearJointTypePreview();
         // Re-apply highlights without child
         sg.applyJointCreationHighlights(state.parentDatumId, null);
       }
     });
 
     return unsub;
-  }, [sceneGraphRef]);
+  }, [sceneGraph, sceneGraphRef]);
+
+  useEffect(() => {
+    const sg = sceneGraphRef.current;
+    if (!sg) return;
+
+    const syncSelectedJointLimits = () => {
+      const simState = useSimulationStore.getState().state;
+      const simTime = useSimulationStore.getState().simTime;
+      const { traces } = useTraceStore.getState();
+      const { joints } = useMechanismStore.getState();
+      const { selectedIds } = useSelectionStore.getState();
+      const isSimulating = simState === 'running' || simState === 'paused';
+
+      for (const id of selectedIds) {
+        if (!joints.has(id)) continue;
+        if (!isSimulating) {
+          sg.updateJointLimitValue(id, null);
+          continue;
+        }
+
+        const joint = joints.get(id);
+        const channelId = joint ? getJointCoordinateChannelIds(id, joint.type)?.position : null;
+        const samples = channelId ? traces.get(channelId) : undefined;
+        const value = samples ? nearestSample(samples, simTime)?.value ?? null : null;
+        sg.updateJointLimitValue(id, value);
+      }
+    };
+
+    syncSelectedJointLimits();
+
+    const unsubSim = useSimulationStore.subscribe((state, prev) => {
+      if (state.simTime === prev.simTime && state.state === prev.state) return;
+      syncSelectedJointLimits();
+    });
+    const unsubTrace = useTraceStore.subscribe((state, prev) => {
+      if (state.traces === prev.traces) return;
+      syncSelectedJointLimits();
+    });
+    const unsubSelection = useSelectionStore.subscribe((state, prev) => {
+      if (state.selectedIds === prev.selectedIds) return;
+      syncSelectedJointLimits();
+    });
+
+    return () => {
+      unsubSim();
+      unsubTrace();
+      unsubSelection();
+    };
+  }, [sceneGraph, sceneGraphRef]);
 
   useEffect(() => {
     if (activeMode !== 'create-datum') {
@@ -235,6 +357,11 @@ export function ViewportOverlay() {
     }
     useSelectionStore.getState().setHovered(null);
   }, [activeMode]);
+
+  useEffect(() => {
+    if (activeMode === 'create-load') return;
+    sceneGraphRef.current?.clearLoadPreview();
+  }, [activeMode, sceneGraphRef]);
 
   const cursorMode = activeMode === 'create-datum' || activeMode === 'create-joint' || activeMode === 'create-load';
 
@@ -289,8 +416,9 @@ export function ViewportOverlay() {
         />
         <ModeIndicator />
         <JointTypeSelectorPanel />
-        <LoadCreationCard />
+        <LoadCreationCard sceneGraph={sceneGraph} />
         <JointCreationDatumLabel sceneGraph={sceneGraph} />
+        <JointHoverBadge sceneGraph={sceneGraph} />
       </div>
     </ViewportContextMenu>
   );

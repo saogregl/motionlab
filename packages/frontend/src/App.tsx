@@ -41,6 +41,7 @@ import { useEngineConnection } from './stores/engine-connection.js';
 import { useImportFlowStore } from './stores/import-flow.js';
 import { useMechanismStore } from './stores/mechanism.js';
 import { useSimulationStore } from './stores/simulation.js';
+import { useMechanismDof } from './hooks/useMechanismDof.js';
 import type { RecoverableProject } from './types/motionlab.js';
 
 type StatusBarConnectionState = 'connected' | 'connecting' | 'disconnected' | 'error';
@@ -170,6 +171,16 @@ function StatusBarContainer() {
   const maxSimTime = useSimulationStore((s) => s.maxSimTime);
   const bodies = useMechanismStore((s) => s.bodies);
   const joints = useMechanismStore((s) => s.joints);
+  const mechanismDof = useMechanismDof();
+  const structuredDiagnostics = useSimulationStore((s) => s.structuredDiagnostics);
+
+  const diagnosticSummary =
+    structuredDiagnostics.length > 0
+      ? {
+          errors: structuredDiagnostics.filter((d) => d.severity === 'error').length,
+          warnings: structuredDiagnostics.filter((d) => d.severity === 'warning').length,
+        }
+      : undefined;
 
   return (
     <StatusBar
@@ -181,6 +192,8 @@ function StatusBarContainer() {
         bodies: bodies.size,
         joints: joints.size,
       }}
+      dof={bodies.size > 0 ? { value: mechanismDof.dof, overConstrained: mechanismDof.overConstrained } : undefined}
+      diagnosticSummary={diagnosticSummary}
     />
   );
 }

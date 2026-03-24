@@ -1,10 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import {
+  type ActuatorState,
   type BodyState,
   type DatumState,
   type GeometryState,
   type JointState,
+  type LoadState,
   useMechanismStore,
 } from '../stores/mechanism.js';
 
@@ -85,6 +87,28 @@ function makeJoint(id: string, parentDatumId: string, childDatumId: string): Joi
   };
 }
 
+function makeLoad(id: string, datumId: string): LoadState {
+  return {
+    id,
+    name: `Load ${id}`,
+    type: 'point-force',
+    datumId,
+    vector: { x: 0, y: -9.81, z: 0 },
+    referenceFrame: 'world',
+  };
+}
+
+function makeActuator(id: string, jointId: string): ActuatorState {
+  return {
+    id,
+    name: `Actuator ${id}`,
+    type: 'revolute-motor',
+    jointId,
+    controlMode: 'speed',
+    commandValue: 1,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -96,6 +120,8 @@ describe('Mechanism store', () => {
       geometries: new Map(),
       datums: new Map(),
       joints: new Map(),
+      loads: new Map(),
+      actuators: new Map(),
       importing: false,
       importError: null,
     });
@@ -264,6 +290,58 @@ describe('Mechanism store', () => {
     expect(useMechanismStore.getState().joints.size).toBe(0);
   });
 
+  // --- Loads ---
+
+  it('addLoad adds to map', () => {
+    useMechanismStore.getState().addLoad(makeLoad('l1', 'd1'));
+    expect(useMechanismStore.getState().loads.has('l1')).toBe(true);
+  });
+
+  it('updateLoad merges fields', () => {
+    useMechanismStore.getState().addLoad(makeLoad('l1', 'd1'));
+    useMechanismStore.getState().updateLoad('l1', {
+      vector: { x: 1, y: 2, z: 3 },
+      referenceFrame: 'datum-local',
+    });
+    expect(useMechanismStore.getState().loads.get('l1')).toMatchObject({
+      vector: { x: 1, y: 2, z: 3 },
+      referenceFrame: 'datum-local',
+    });
+  });
+
+  it('removeLoad deletes', () => {
+    useMechanismStore.getState().addLoad(makeLoad('l1', 'd1'));
+    useMechanismStore.getState().removeLoad('l1');
+    expect(useMechanismStore.getState().loads.size).toBe(0);
+  });
+
+  // --- Actuators ---
+
+  it('addActuator adds to map', () => {
+    useMechanismStore.getState().addActuator(makeActuator('a1', 'j1'));
+    expect(useMechanismStore.getState().actuators.has('a1')).toBe(true);
+  });
+
+  it('updateActuator merges fields', () => {
+    useMechanismStore.getState().addActuator(makeActuator('a1', 'j1'));
+    useMechanismStore.getState().updateActuator('a1', {
+      controlMode: 'effort',
+      commandValue: 5,
+      effortLimit: 10,
+    });
+    expect(useMechanismStore.getState().actuators.get('a1')).toMatchObject({
+      controlMode: 'effort',
+      commandValue: 5,
+      effortLimit: 10,
+    });
+  });
+
+  it('removeActuator deletes', () => {
+    useMechanismStore.getState().addActuator(makeActuator('a1', 'j1'));
+    useMechanismStore.getState().removeActuator('a1');
+    expect(useMechanismStore.getState().actuators.size).toBe(0);
+  });
+
   // --- Clear ---
 
   it('clear resets all maps and importError', () => {
@@ -271,6 +349,8 @@ describe('Mechanism store', () => {
     useMechanismStore.getState().addGeometries([makeGeometry('g1', 'b1')]);
     useMechanismStore.getState().addDatum(makeDatum('d1', 'b1'));
     useMechanismStore.getState().addJoint(makeJoint('j1', 'd1', 'd2'));
+    useMechanismStore.getState().addLoad(makeLoad('l1', 'd1'));
+    useMechanismStore.getState().addActuator(makeActuator('a1', 'j1'));
     useMechanismStore.getState().setImportError('oops');
 
     useMechanismStore.getState().clear();
@@ -280,6 +360,8 @@ describe('Mechanism store', () => {
     expect(s.geometries.size).toBe(0);
     expect(s.datums.size).toBe(0);
     expect(s.joints.size).toBe(0);
+    expect(s.loads.size).toBe(0);
+    expect(s.actuators.size).toBe(0);
     expect(s.importError).toBeNull();
   });
 

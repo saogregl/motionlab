@@ -16,6 +16,10 @@ Each wave is a set of prompts that can execute simultaneously. A wave starts onl
 > 13.1 is done
 > 13.2 is done
 > 13.3 is done
+> 11.3 is done
+> 20.1 is done
+> 20.2 is done
+> 20.3 is done
 
 
 ---

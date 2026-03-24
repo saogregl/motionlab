@@ -44,8 +44,8 @@ export function createBoxMeshData(sx = 1, sy = 1, sz = 1) {
 
   // prettier-ignore
   const indices = [
-    0, 2, 1, 0, 3, 2, 4, 6, 5, 4, 7, 6, 8, 10, 9, 8, 11, 10, 12, 14, 13, 12, 15, 14, 16, 18, 17, 16,
-    19, 18, 20, 22, 21, 20, 23, 22,
+    0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 13, 14, 12, 14, 15, 16, 17, 18, 16,
+    18, 19, 20, 21, 22, 20, 22, 23,
   ];
 
   return {
@@ -83,8 +83,8 @@ export function createSphereMeshData(radius = 1, segments = 48, rings = 32) {
     for (let seg = 0; seg < segments; seg++) {
       const a = ring * (segments + 1) + seg;
       const b = a + segments + 1;
-      indices.push(a, b, b + 1);
-      indices.push(a, b + 1, a + 1);
+      indices.push(a, b + 1, b);
+      indices.push(a, a + 1, b + 1);
     }
   }
 
@@ -123,8 +123,8 @@ export function createCylinderMeshData(radiusTop = 0.5, radiusBottom = 0.5, heig
   for (let s = 0; s < segments; s++) {
     const a = s;
     const b = s + segments + 1;
-    indices.push(a, b + 1, b);
-    indices.push(a, a + 1, b + 1);
+    indices.push(a, b, b + 1);
+    indices.push(a, b + 1, a + 1);
   }
 
   // Top cap
@@ -137,7 +137,7 @@ export function createCylinderMeshData(radiusTop = 0.5, radiusBottom = 0.5, heig
     normals.push(0, 1, 0);
   }
   for (let s = 0; s < segments; s++) {
-    indices.push(topCenter, topCenter + 1 + s, topCenter + 1 + s + 1);
+    indices.push(topCenter, topCenter + 1 + s + 1, topCenter + 1 + s);
   }
 
   // Bottom cap
@@ -150,7 +150,7 @@ export function createCylinderMeshData(radiusTop = 0.5, radiusBottom = 0.5, heig
     normals.push(0, -1, 0);
   }
   for (let s = 0; s < segments; s++) {
-    indices.push(botCenter, botCenter + 1 + s + 1, botCenter + 1 + s);
+    indices.push(botCenter, botCenter + 1 + s, botCenter + 1 + s + 1);
   }
 
   return {
@@ -200,8 +200,8 @@ export function createTorusMeshData(
     for (let j = 0; j < minorSegments; j++) {
       const a = i * (minorSegments + 1) + j;
       const b = a + minorSegments + 1;
-      indices.push(a, b, b + 1);
-      indices.push(a, b + 1, a + 1);
+      indices.push(a, b + 1, b);
+      indices.push(a, a + 1, b + 1);
     }
   }
 

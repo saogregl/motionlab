@@ -82,12 +82,26 @@ export interface LoadState {
   damping?: number;
 }
 
+export type ActuatorTypeId = 'revolute-motor' | 'prismatic-motor';
+export type ControlModeId = 'position' | 'speed' | 'effort';
+
+export interface ActuatorState {
+  id: string;
+  name: string;
+  type: ActuatorTypeId;
+  jointId: string;
+  controlMode: ControlModeId;
+  commandValue: number;
+  effortLimit?: number;
+}
+
 export interface MechanismState {
   bodies: Map<string, BodyState>;
   geometries: Map<string, GeometryState>;
   datums: Map<string, DatumState>;
   joints: Map<string, JointState>;
   loads: Map<string, LoadState>;
+  actuators: Map<string, ActuatorState>;
   importing: boolean;
   importError: string | null;
   projectName: string;
@@ -111,6 +125,9 @@ export interface MechanismState {
   addLoad: (load: LoadState) => void;
   updateLoad: (id: string, updates: Partial<Omit<LoadState, 'id'>>) => void;
   removeLoad: (id: string) => void;
+  addActuator: (actuator: ActuatorState) => void;
+  updateActuator: (id: string, updates: Partial<Omit<ActuatorState, 'id'>>) => void;
+  removeActuator: (id: string) => void;
   clear: () => void;
   resetProject: () => void;
   setImporting: (v: boolean) => void;
@@ -126,6 +143,7 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
   datums: new Map<string, DatumState>(),
   joints: new Map<string, JointState>(),
   loads: new Map<string, LoadState>(),
+  actuators: new Map<string, ActuatorState>(),
   importing: false,
   importError: null,
   projectName: 'Untitled',
@@ -282,6 +300,29 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       return { loads: next, isDirty: true };
     }),
 
+  addActuator: (actuator) =>
+    set((state) => {
+      const next = new Map(state.actuators);
+      next.set(actuator.id, actuator);
+      return { actuators: next, isDirty: true };
+    }),
+
+  updateActuator: (id, updates) =>
+    set((state) => {
+      const existing = state.actuators.get(id);
+      if (!existing) return {};
+      const next = new Map(state.actuators);
+      next.set(id, { ...existing, ...updates });
+      return { actuators: next, isDirty: true };
+    }),
+
+  removeActuator: (id) =>
+    set((state) => {
+      const next = new Map(state.actuators);
+      next.delete(id);
+      return { actuators: next, isDirty: true };
+    }),
+
   clear: () =>
     set({
       bodies: new Map<string, BodyState>(),
@@ -289,6 +330,7 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       datums: new Map<string, DatumState>(),
       joints: new Map<string, JointState>(),
       loads: new Map<string, LoadState>(),
+      actuators: new Map<string, ActuatorState>(),
       importError: null,
     }),
 
@@ -299,6 +341,7 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       datums: new Map<string, DatumState>(),
       joints: new Map<string, JointState>(),
       loads: new Map<string, LoadState>(),
+      actuators: new Map<string, ActuatorState>(),
       importError: null,
       projectName: 'Untitled',
       projectFilePath: null,

@@ -29,7 +29,7 @@ export const HOVER_HIGHLIGHT = new Color(0.06, 0.38, 0.996);
 export const FORCE_ARROW = new Color(0.9, 0.15, 0.15); // crimson
 export const TORQUE_ARROW = new Color(0.15, 0.35, 0.9); // blue
 
-// ── Entity type selection colors (Epic 11 — future use) ──
+// ── Entity type selection colors (Epic 11, ADR-0014) ──
 export const ENTITY_BODY = new Color(0.29, 0.565, 0.851); // steel blue
 export const ENTITY_DATUM = new Color(0.314, 0.784, 0.471); // emerald green
 export const ENTITY_JOINT = new Color(1.0, 0.549, 0.0); // dark orange
@@ -37,7 +37,24 @@ export const ENTITY_LOAD = new Color(0.863, 0.078, 0.235); // crimson
 export const ENTITY_ACTUATOR = new Color(0.576, 0.439, 0.859); // medium purple
 export const ENTITY_GROUND = new Color(0.5, 0.5, 0.5); // gray
 
-// ── DOF semantic colors (Epic 15 — future use) ──
+/** Entity-type → selection/hover color lookup (Epic 11, ADR-0014). */
+export const ENTITY_COLORS: Record<string, Color> = {
+  body: ENTITY_BODY,
+  datum: ENTITY_DATUM,
+  joint: ENTITY_JOINT,
+  load: ENTITY_LOAD,
+  actuator: ENTITY_ACTUATOR,
+  ground: ENTITY_GROUND,
+};
+
+// ── Additional joint type colors ──
+export const JOINT_CYLINDRICAL = new Color(0, 0.81, 0.82); // cyan (same as prismatic)
+export const JOINT_UNIVERSAL = new Color(0.6, 0.3, 0.8); // purple variant
+
+// ── Joint anchor (unified steel blue for all types) ──
+export const JOINT_STEEL_BLUE = new Color(0.44, 0.59, 0.78); // #708fb7
+
+// ── DOF semantic colors ──
 export const DOF_FREE = new Color(0.2, 0.85, 0.3); // green
 export const DOF_LOCKED = new Color(0.85, 0.2, 0.2); // red
 

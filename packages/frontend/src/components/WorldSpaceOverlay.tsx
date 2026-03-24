@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 import type { SceneGraphManager } from '@motionlab/viewport';
 
@@ -9,6 +9,8 @@ interface WorldSpaceOverlayProps {
   sceneGraph: SceneGraphManager;
   /** Pixel offset from projected position. */
   offset?: { x: number; y: number };
+  /** Allow pointer interaction within the overlay. */
+  interactive?: boolean;
   children: React.ReactNode;
 }
 
@@ -16,32 +18,37 @@ interface WorldSpaceOverlayProps {
  * Positions children at screen coordinates projected from a 3D world position.
  *
  * Used during joint creation to show floating labels anchored to datum positions
- * in the 3D viewport. Updates every frame via requestAnimationFrame so the
- * overlay tracks camera movement smoothly.
+ * in the 3D viewport. Updates every frame via requestAnimationFrame using direct
+ * DOM manipulation to avoid React re-renders on the hot path.
  */
 export function WorldSpaceOverlay({
   worldPosition,
   sceneGraph,
   offset,
+  interactive = false,
   children,
 }: WorldSpaceOverlayProps) {
   const divRef = useRef<HTMLDivElement>(null);
-  const [screenPos, setScreenPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [visible, setVisible] = useState(false);
   const rafRef = useRef(0);
 
   useEffect(() => {
+    const el = divRef.current;
+    if (!el) return;
+
     const tick = () => {
       const projected = sceneGraph.projectToScreen(worldPosition);
 
       // Hide when behind camera (z > 1)
       const inBounds = projected.z <= 1 && projected.x >= 0 && projected.y >= 0;
 
-      setVisible(inBounds);
       if (inBounds) {
         const ox = offset?.x ?? 0;
         const oy = offset?.y ?? 0;
-        setScreenPos({ x: projected.x + ox, y: projected.y + oy });
+        el.style.left = `${projected.x + ox}px`;
+        el.style.top = `${projected.y + oy}px`;
+        el.style.display = '';
+      } else {
+        el.style.display = 'none';
       }
 
       rafRef.current = requestAnimationFrame(tick);
@@ -54,15 +61,12 @@ export function WorldSpaceOverlay({
     };
   }, [sceneGraph, worldPosition.x, worldPosition.y, worldPosition.z, offset?.x, offset?.y]);
 
-  if (!visible) return null;
-
   return (
     <div
       ref={divRef}
-      className="pointer-events-none absolute z-10"
+      className={`${interactive ? 'pointer-events-auto' : 'pointer-events-none'} absolute z-10`}
       style={{
-        left: screenPos.x,
-        top: screenPos.y,
+        display: 'none',
         transform: 'translate(-50%, -100%)',
       }}
     >

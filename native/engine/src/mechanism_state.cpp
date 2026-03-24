@@ -408,13 +408,17 @@ void MechanismState::update_body_aggregate_mass(const std::string& body_id) {
     auto it = bodies_.find(body_id);
     if (it == bodies_.end()) return;
     if (it->second.mass_override()) return;
+    if (get_body_geometries(body_id).empty()) return;  // preserve existing mass
     *it->second.mutable_mass_properties() = compute_aggregate_mass(body_id);
 }
 
 void MechanismState::refresh_aggregate_masses() {
     for (auto& [id, body] : bodies_) {
         if (!body.mass_override()) {
-            *body.mutable_mass_properties() = compute_aggregate_mass(id);
+            auto agg = compute_aggregate_mass(id);
+            if (agg.mass() > 0.0) {
+                *body.mutable_mass_properties() = agg;
+            }
         }
     }
 }

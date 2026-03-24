@@ -1,6 +1,7 @@
 import { ToolbarButton } from '@motionlab/ui';
 import { Crosshair, Link2, MousePointer2 } from 'lucide-react';
 
+import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
@@ -16,7 +17,11 @@ export function ViewportToolModeToolbar() {
       <ToolbarButton
         tooltip="Select (V)"
         active={activeMode === 'select'}
-        onClick={() => setMode('select')}
+        onClick={() => {
+          setMode('select');
+          useJointCreationStore.getState().exitMode();
+          useAuthoringStatusStore.getState().clearMessage();
+        }}
       >
         <MousePointer2 className="size-4" />
       </ToolbarButton>
@@ -34,7 +39,9 @@ export function ViewportToolModeToolbar() {
         disabled={isSimulating}
         onClick={() => {
           setMode('create-joint');
-          useJointCreationStore.getState().startCreation();
+          const store = useJointCreationStore.getState();
+          store.setPreselectedJointType(null);
+          store.startCreation();
         }}
       >
         <Link2 className="size-4" />

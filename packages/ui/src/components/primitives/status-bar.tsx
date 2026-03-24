@@ -18,6 +18,16 @@ interface StatusBarProps {
     joints: number;
     loads?: number;
   };
+  /** Mechanism DOF (Gruebler). Amber warning if negative. */
+  dof?: {
+    value: number;
+    overConstrained: boolean;
+  };
+  /** Post-compilation diagnostic summary */
+  diagnosticSummary?: {
+    errors: number;
+    warnings: number;
+  };
   className?: string;
 }
 
@@ -69,6 +79,8 @@ function StatusBar({
   currentTime,
   duration,
   entityCounts,
+  dof,
+  diagnosticSummary,
   className,
 }: StatusBarProps) {
   const showTime = duration != null && duration > 0;
@@ -115,6 +127,47 @@ function StatusBar({
             <>
               <Separator />
               <span>{entityCounts.loads} loads</span>
+            </>
+          )}
+          {dof != null && (
+            <>
+              <Separator />
+              <span
+                className={cn(
+                  dof.overConstrained
+                    ? 'text-[var(--warning)]'
+                    : dof.value === 0
+                      ? 'text-[var(--success)]'
+                      : 'text-[var(--text-tertiary)]',
+                )}
+                title={
+                  dof.overConstrained
+                    ? "Gruebler's equation yields negative DOF. Some mechanisms with intentionally redundant constraints are physically valid."
+                    : dof.value === 0
+                      ? 'Mechanism is fully determined'
+                      : `${dof.value} degrees of freedom remaining`
+                }
+              >
+                DOF {dof.value}
+                {dof.overConstrained && ' (redundant)'}
+                {dof.value === 0 && !dof.overConstrained && ' (determined)'}
+              </span>
+            </>
+          )}
+          {diagnosticSummary != null && (diagnosticSummary.errors > 0 || diagnosticSummary.warnings > 0) && (
+            <>
+              <Separator />
+              <span
+                className={cn(
+                  diagnosticSummary.errors > 0
+                    ? 'text-[var(--danger)]'
+                    : 'text-[var(--warning)]',
+                )}
+              >
+                {diagnosticSummary.errors > 0
+                  ? `${diagnosticSummary.errors} error${diagnosticSummary.errors > 1 ? 's' : ''}`
+                  : `${diagnosticSummary.warnings} warning${diagnosticSummary.warnings > 1 ? 's' : ''}`}
+              </span>
             </>
           )}
         </div>

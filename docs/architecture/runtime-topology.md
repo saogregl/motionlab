@@ -23,9 +23,19 @@
 
 ## Rendering Backend
 
-The viewport uses Babylon.js 7.x, which supports both WebGL2 and WebGPU backends. **Prefer WebGPU** — it is more future-proof for large assemblies, dense sensor visualization, and GPU-driven overlays. Babylon abstracts the backend, so the switch is a one-line engine init change.
+The viewport uses **Three.js** (r175) with **React Three Fiber** (R3F) for declarative scene orchestration and **@react-three/drei** for camera controls, environment lighting, grid, and gizmos. Rendering uses WebGL2 via Three.js's `WebGLRenderer`.
 
-Validate WebGPU in the Epic 1 spike (Electron 35 + current GPU drivers). Fall back to WebGL2 only if platform-specific issues surface. Either way, avoid WebGL-only API calls in viewport code — use Babylon's backend-agnostic abstractions.
+The `SceneGraphManager` class owns the imperative Three.js scene graph (bodies, datums, joints, loads) while the R3F `<Canvas>` manages the camera, controls, environment, and frame invalidation boundary. Materials use `MeshStandardMaterial` with PBR presets and an IBL studio environment for reflections.
+
+Viewport rendering now uses **demand-driven invalidation** instead of an always-on render loop. Imperative scene mutations schedule renders through a coalesced `requestRender` callback, which keeps idle cost low while preserving the imperative simulation update path.
+
+The canvas also uses **adaptive DPR within the existing 1.0-1.5 range** during sustained regressions. This is a renderer-local performance valve only; it does not change authored geometry, picking semantics, or the runtime transport contract.
+
+Viewport-managed scene entities render on a dedicated Three.js layer that is also used by the custom imperative picking system. The R3F event raycaster remains on the default layer for declarative controls and gizmos, which prevents duplicate raycasts against heavy authored meshes during pointer interaction.
+
+Hover picking is suspended while orbit or transform controls are actively dragging. Click picking still uses the viewport's custom picker, but drag interaction no longer continuously re-runs hover/face analysis against dense CAD meshes.
+
+Body meshes now use **BVH-accelerated Three.js raycasting** for exact picking. Large static meshes may build their BVH asynchronously; while that acceleration is still building, select-mode hover is intentionally rate-limited so dense mesh hover does not monopolize the main thread. Face-aware modes still use exact triangle hits and preserve current picking semantics.
 
 ## Frame Streaming Path (Epic 8)
 
@@ -33,10 +43,21 @@ The engine sends `SimulationFrame` events containing body poses at the simulatio
 
 1. Measures FPS (module-level counter, exposed via `getMeasuredFps()`).
 2. Applies frame skipping for sub-1x playback speeds (e.g., 0.5x skips every other frame).
-3. Updates `SceneGraphManager` body transforms (viewport hot path).
+3. Applies batched `SceneGraphManager` body transform updates (viewport hot path).
 4. Caches body poses in the module-level `body-poses.ts` map for inspector readout.
 
 The body-poses module is intentionally not a Zustand store to avoid React re-renders on every simulation frame. Inspectors read from it imperatively, using `simTime` subscription as a low-frequency refresh trigger.
+
+## Pre-Simulation Validation (Epic 17)
+
+Validation runs engine-side inside `compile()`, before Chrono system creation:
+
+1. `validate_mechanism()` inspects the authored Mechanism proto and accumulates `CompilationDiagnostic` entries (severity: ERROR, WARNING, INFO).
+2. ERROR-level diagnostics block compilation. WARNING and INFO are non-blocking.
+3. Structured diagnostics flow through proto `CompilationResultEvent.structured_diagnostics` to the frontend `structuredDiagnostics` store, and are rendered in the `DiagnosticsPanel`.
+4. Clicking a diagnostic with `affectedEntityIds` selects the entity in the tree and viewport.
+
+Checks implemented: NO_BODIES, NO_GROUND, ZERO_MASS, SELF_JOINT, DUPLICATE_ACTUATOR (errors); FLOATING_BODY, UNDER_CONSTRAINED, OVER_CONSTRAINED (warnings); DISCONNECTED_SUBGROUPS (info).
 
 ## Native Runtime Notes
 

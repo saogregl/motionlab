@@ -32,7 +32,8 @@ import {
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
-import { sendDeleteDatum, sendDeleteJoint, sendDeleteLoad, sendDetachGeometry } from '../engine/connection.js';
+import { sendDeleteActuator, sendDeleteDatum, sendDeleteJoint, sendDeleteLoad, sendDetachGeometry } from '../engine/connection.js';
+import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
@@ -51,17 +52,18 @@ interface ViewportContextMenuProps {
 
 type EntityTarget = {
   id: string;
-  type: 'body' | 'geometry' | 'datum' | 'joint' | 'load';
+  type: 'body' | 'geometry' | 'datum' | 'joint' | 'load' | 'actuator';
 } | null;
 
 function resolveEntityTarget(hoveredId: string | null): EntityTarget {
   if (!hoveredId) return null;
-  const { bodies, geometries, datums, joints, loads } = useMechanismStore.getState();
+  const { bodies, geometries, datums, joints, loads, actuators } = useMechanismStore.getState();
   if (bodies.has(hoveredId)) return { id: hoveredId, type: 'body' };
   if (geometries.has(hoveredId)) return { id: hoveredId, type: 'geometry' };
   if (datums.has(hoveredId)) return { id: hoveredId, type: 'datum' };
   if (joints.has(hoveredId)) return { id: hoveredId, type: 'joint' };
   if (loads.has(hoveredId)) return { id: hoveredId, type: 'load' };
+  if (actuators.has(hoveredId)) return { id: hoveredId, type: 'actuator' };
   return null;
 }
 
@@ -107,7 +109,12 @@ function BodyMenuContent({
       </ContextMenuItem>
       <ContextMenuItem
         className={itemCls}
-        onSelect={() => useToolModeStore.getState().setMode('create-joint')}
+        onSelect={() => {
+          useToolModeStore.getState().setMode('create-joint');
+          const store = useJointCreationStore.getState();
+          store.setPreselectedJointType(null);
+          store.startCreation();
+        }}
       >
         <Link2 className={iconCls} /> Create Joint
       </ContextMenuItem>
@@ -141,7 +148,13 @@ function DatumMenuContent({
       <ContextMenuSeparator />
       <ContextMenuItem
         className={itemCls}
-        onSelect={() => useToolModeStore.getState().setMode('create-joint')}
+        onSelect={() => {
+          useToolModeStore.getState().setMode('create-joint');
+          const store = useJointCreationStore.getState();
+          store.setPreselectedJointType(null);
+          store.startCreation();
+          store.setParentDatum(entityId);
+        }}
       >
         <Link2 className={iconCls} /> Create Joint
       </ContextMenuItem>
@@ -280,6 +293,28 @@ function LoadMenuContent({ entityId }: { entityId: string }) {
   );
 }
 
+function ActuatorMenuContent({ entityId }: { entityId: string }) {
+  return (
+    <>
+      <ContextMenuItem
+        className={itemCls}
+        onSelect={() => useSelectionStore.getState().select(entityId)}
+      >
+        <MousePointerClick className={iconCls} />
+        Select
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem
+        className={itemCls}
+        onSelect={() => sendDeleteActuator(entityId)}
+      >
+        <Trash2 className={`${iconCls} text-destructive`} />
+        Delete
+      </ContextMenuItem>
+    </>
+  );
+}
+
 function BackgroundMenuContent({ sceneGraph }: { sceneGraph: SceneGraphManager | null }) {
   return (
     <>
@@ -382,6 +417,9 @@ export function ViewportContextMenu({ sceneGraph, children }: ViewportContextMen
         )}
         {target?.type === 'load' && (
           <LoadMenuContent entityId={target.id} />
+        )}
+        {target?.type === 'actuator' && (
+          <ActuatorMenuContent entityId={target.id} />
         )}
         {!target && <BackgroundMenuContent sceneGraph={sceneGraph} />}
       </ContextMenuContent>

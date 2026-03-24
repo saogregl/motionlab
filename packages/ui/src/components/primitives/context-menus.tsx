@@ -16,6 +16,7 @@ import {
   Trash2,
   Unlink,
   Wrench,
+  Zap,
 } from 'lucide-react';
 
 import {
@@ -140,6 +141,8 @@ interface JointContextMenuProps {
   onEditJoint?: () => void;
   onChangeType?: (type: string) => void;
   changeTypeDisabledReason?: string;
+  onAddMotor?: () => void;
+  addMotorDisabledReason?: string;
   onSwapBodies?: () => void;
   swapBodiesDisabledReason?: string;
   onReverseDirection?: () => void;
@@ -157,6 +160,8 @@ function JointContextMenuItems({
   onEditJoint,
   onChangeType,
   changeTypeDisabledReason,
+  onAddMotor,
+  addMotorDisabledReason,
   onSwapBodies,
   swapBodiesDisabledReason,
   onReverseDirection,
@@ -195,6 +200,10 @@ function JointContextMenuItems({
           ))}
         </ContextMenuSubContent>
       </ContextMenuSub>
+      <ContextMenuItem className={itemCls} onSelect={onAddMotor} disabled={!onAddMotor} title={!onAddMotor ? addMotorDisabledReason : undefined}>
+        <Zap className={iconCls} />
+        Add Motor
+      </ContextMenuItem>
       <ContextMenuSeparator />
       <ContextMenuItem className={itemCls} onSelect={onSwapBodies} disabled={!onSwapBodies} title={!onSwapBodies ? swapBodiesDisabledReason : undefined}>
         <ArrowLeftRight className={iconCls} />
@@ -242,6 +251,8 @@ interface DatumContextMenuProps {
   onFocusViewport?: () => void;
   onCreateJoint?: () => void;
   createJointDisabledReason?: string;
+  onCreateLoad?: () => void;
+  createLoadDisabledReason?: string;
   onRename?: () => void;
   renameDisabledReason?: string;
   onProperties?: () => void;
@@ -254,6 +265,8 @@ function DatumContextMenuItems({
   onFocusViewport,
   onCreateJoint,
   createJointDisabledReason,
+  onCreateLoad,
+  createLoadDisabledReason,
   onRename,
   renameDisabledReason,
   onProperties,
@@ -274,6 +287,10 @@ function DatumContextMenuItems({
       <ContextMenuItem className={itemCls} onSelect={onCreateJoint} disabled={!onCreateJoint} title={!onCreateJoint ? createJointDisabledReason : undefined}>
         <Link2 className={iconCls} />
         Create Joint from Datum
+      </ContextMenuItem>
+      <ContextMenuItem className={itemCls} onSelect={onCreateLoad} disabled={!onCreateLoad} title={!onCreateLoad ? createLoadDisabledReason : undefined}>
+        <Zap className={iconCls} />
+        Create Load on Datum
       </ContextMenuItem>
       <ContextMenuSeparator />
       <ContextMenuItem className={itemCls} onSelect={onRename} disabled={!onRename} title={!onRename ? renameDisabledReason : undefined}>

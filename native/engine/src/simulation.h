@@ -71,8 +71,10 @@ struct SimulationConfig {
     ContactConfig contact;
 };
 
+enum class DiagnosticSeverity { INFO = 0, WARNING = 1, ERROR = 2 };
+
 struct CompilationDiagnostic {
-    int severity = 0; // 0=info, 1=warning, 2=error
+    DiagnosticSeverity severity = DiagnosticSeverity::INFO;
     std::string message;
     std::vector<std::string> affected_entity_ids;
     std::string suggestion;
@@ -123,6 +125,10 @@ public:
     std::vector<ChannelValue> getChannelValues() const;
     double getCurrentTime() const;
     uint64_t getStepCount() const;
+
+    // Test introspection — returns applied config after compile()
+    SolverConfig getAppliedSolverConfig() const;
+    ContactConfig getAppliedContactConfig() const;
 
 private:
     struct Impl;

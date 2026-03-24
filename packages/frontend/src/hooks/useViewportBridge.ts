@@ -9,7 +9,7 @@ import {
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useLoadCreationStore } from '../stores/load-creation.js';
-import type { BodyPose } from '../stores/mechanism.js';
+import type { ActuatorState, BodyPose, GeometryState, LoadState } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
@@ -49,6 +49,48 @@ function poseSignature(pose: BodyPose): string {
   ].join('|');
 }
 
+function loadSignature(load: LoadState): string {
+  return [
+    load.type,
+    load.datumId ?? '',
+    load.parentDatumId ?? '',
+    load.childDatumId ?? '',
+    load.vector?.x ?? '',
+    load.vector?.y ?? '',
+    load.vector?.z ?? '',
+    load.referenceFrame ?? '',
+    load.restLength ?? '',
+    load.stiffness ?? '',
+    load.damping ?? '',
+  ].join('|');
+}
+
+function actuatorSignature(actuator: ActuatorState): string {
+  return [
+    actuator.type,
+    actuator.jointId,
+    actuator.controlMode,
+    actuator.commandValue,
+    actuator.effortLimit ?? '',
+  ].join('|');
+}
+
+function groupGeometriesByBody(
+  geometries: Map<string, GeometryState>,
+): Map<string, GeometryState[]> {
+  const grouped = new Map<string, GeometryState[]>();
+  for (const geometry of geometries.values()) {
+    if (!geometry.parentBodyId) continue;
+    const bucket = grouped.get(geometry.parentBodyId);
+    if (bucket) {
+      bucket.push(geometry);
+    } else {
+      grouped.set(geometry.parentBodyId, [geometry]);
+    }
+  }
+  return grouped;
+}
+
 export function useViewportBridge() {
   const sceneGraphRef = useRef<SceneGraphManager | null>(null);
 
@@ -58,8 +100,9 @@ export function useViewportBridge() {
 
     // Initial sync: add any bodies already in the store
     const { bodies, geometries, datums, joints } = useMechanismStore.getState();
+    const geometriesByBody = groupGeometriesByBody(geometries);
     for (const body of bodies.values()) {
-      const bodyGeoms = [...geometries.values()].filter((g) => g.parentBodyId === body.id);
+      const bodyGeoms = geometriesByBody.get(body.id) ?? [];
       if (bodyGeoms.length === 0) continue;
       const merged = mergeGeometryMeshes(bodyGeoms);
       sceneGraph.addBody(
@@ -79,6 +122,17 @@ export function useViewportBridge() {
     // Initial sync: add any joints already in the store (after datums)
     for (const joint of joints.values()) {
       sceneGraph.addJoint(joint.id, joint.parentDatumId, joint.childDatumId, joint.type);
+    }
+
+    // Initial sync: add any loads already in the store (after datums)
+    const { loads, actuators } = useMechanismStore.getState();
+    for (const load of loads.values()) {
+      sceneGraph.addLoadVisual(load.id, load);
+    }
+
+    // Initial sync: add any actuators already in the store (after joints)
+    for (const actuator of actuators.values()) {
+      sceneGraph.addMotorVisual(actuator.id, actuator.jointId, actuator.type);
     }
 
     if (bodies.size > 0) {
@@ -106,33 +160,42 @@ export function useViewportBridge() {
     if (!sg) return;
 
     const trackedBodyIds = new Set<string>(useMechanismStore.getState().bodies.keys());
-    const trackedGeometryIds = new Set<string>(useMechanismStore.getState().geometries.keys());
+    const trackedGeometries = new Map(useMechanismStore.getState().geometries);
     const trackedDatumIds = new Set<string>(useMechanismStore.getState().datums.keys());
     const trackedDatumSignatures = new Map<string, string>();
     const trackedJointIds = new Set<string>(useMechanismStore.getState().joints.keys());
+    const trackedJointSignatures = new Map<string, string>();
     const trackedLoadIds = new Set<string>(useMechanismStore.getState().loads.keys());
+    const trackedLoadSignatures = new Map<string, string>();
+    const trackedActuatorIds = new Set<string>(useMechanismStore.getState().actuators.keys());
+    const trackedActuatorSignatures = new Map<string, string>();
 
     const unsubMechanism = useMechanismStore.subscribe((state) => {
-      // --- Geometry diff — identify bodies that need mesh rebuild ---
-      const currentGeometryIds = new Set<string>(state.geometries.keys());
       const bodiesNeedingRebuild = new Set<string>();
+      const geometriesByBody = groupGeometriesByBody(state.geometries);
 
-      for (const id of currentGeometryIds) {
-        if (!trackedGeometryIds.has(id)) {
-          const geom = state.geometries.get(id);
-          if (geom?.parentBodyId) bodiesNeedingRebuild.add(geom.parentBodyId);
+      for (const [id, geometry] of state.geometries) {
+        const previous = trackedGeometries.get(id);
+        if (!previous) {
+          if (geometry.parentBodyId) bodiesNeedingRebuild.add(geometry.parentBodyId);
+          continue;
+        }
+        if (previous !== geometry) {
+          if (previous.parentBodyId) bodiesNeedingRebuild.add(previous.parentBodyId);
+          if (geometry.parentBodyId) bodiesNeedingRebuild.add(geometry.parentBodyId);
         }
       }
-      for (const id of trackedGeometryIds) {
-        if (!currentGeometryIds.has(id)) {
-          // Geometry was removed — find its former parent from tracked bodies
-          // We can't look it up since it's gone, but the body diff below will handle removal
-          // For attach/detach, the store action triggers a geometry update which we catch here
+
+      for (const [id, geometry] of trackedGeometries) {
+        if (!state.geometries.has(id) && geometry.parentBodyId) {
+          bodiesNeedingRebuild.add(geometry.parentBodyId);
         }
       }
 
-      trackedGeometryIds.clear();
-      for (const id of currentGeometryIds) trackedGeometryIds.add(id);
+      trackedGeometries.clear();
+      for (const [id, geometry] of state.geometries) {
+        trackedGeometries.set(id, geometry);
+      }
 
       // --- Body diff ---
       const currentBodyIds = new Set<string>(state.bodies.keys());
@@ -142,7 +205,7 @@ export function useViewportBridge() {
           // New body — add with merged geometry meshes
           const body = state.bodies.get(id);
           if (!body) continue;
-          const bodyGeoms = [...state.geometries.values()].filter((g) => g.parentBodyId === body.id);
+          const bodyGeoms = geometriesByBody.get(body.id) ?? [];
           if (bodyGeoms.length === 0) continue;
           const merged = mergeGeometryMeshes(bodyGeoms);
           sg.addBody(
@@ -157,7 +220,7 @@ export function useViewportBridge() {
           const body = state.bodies.get(id);
           if (!body) continue;
           sg.removeBody(id);
-          const bodyGeoms = [...state.geometries.values()].filter((g) => g.parentBodyId === body.id);
+          const bodyGeoms = geometriesByBody.get(body.id) ?? [];
           if (bodyGeoms.length > 0) {
             const merged = mergeGeometryMeshes(bodyGeoms);
             sg.addBody(
@@ -229,6 +292,7 @@ export function useViewportBridge() {
           const joint = state.joints.get(id);
           if (!joint) continue;
           sg.addJoint(joint.id, joint.parentDatumId, joint.childDatumId, joint.type);
+          sg.updateJointLimits(joint.id, joint.lowerLimit, joint.upperLimit);
         }
       }
 
@@ -238,24 +302,32 @@ export function useViewportBridge() {
         }
       }
 
-      // Check for joint type updates on existing joints
+      // Check for joint type/datum updates on existing joints
       for (const id of currentJointIds) {
         if (trackedJointIds.has(id)) {
           const joint = state.joints.get(id);
           if (!joint) continue;
-          const entity = sg.getEntity(id);
-          if (entity) {
-            // We track type changes by comparing with stored userData
-            const meta = entity.rootNode.userData as { jointType?: string } | undefined;
-            if (meta?.jointType !== undefined && meta.jointType !== joint.type) {
-              sg.updateJoint(id, joint.type);
-            }
+          const sig = `${joint.type}:${joint.parentDatumId}:${joint.childDatumId}`;
+          const prevSig = trackedJointSignatures.get(id);
+          if (prevSig !== undefined && prevSig !== sig) {
+            // Type or datum IDs changed — rebuild the joint visual
+            sg.removeJoint(id);
+            sg.addJoint(joint.id, joint.parentDatumId, joint.childDatumId, joint.type);
+            sg.updateJointLimits(joint.id, joint.lowerLimit, joint.upperLimit);
+          } else {
+            // Limits may have changed without type/datum change
+            sg.updateJointLimits(joint.id, joint.lowerLimit, joint.upperLimit);
           }
         }
       }
 
       trackedJointIds.clear();
-      for (const id of currentJointIds) trackedJointIds.add(id);
+      trackedJointSignatures.clear();
+      for (const id of currentJointIds) {
+        trackedJointIds.add(id);
+        const joint = state.joints.get(id);
+        if (joint) trackedJointSignatures.set(id, `${joint.type}:${joint.parentDatumId}:${joint.childDatumId}`);
+      }
 
       // --- Load diff ---
       const currentLoadIds = new Set<string>(state.loads.keys());
@@ -265,20 +337,75 @@ export function useViewportBridge() {
           const load = state.loads.get(id);
           if (!load) continue;
           sg.addLoadVisual(load.id, load);
+          trackedLoadSignatures.set(id, loadSignature(load));
+          continue;
+        }
+
+        const load = state.loads.get(id);
+        if (!load) continue;
+        const nextSignature = loadSignature(load);
+        if (trackedLoadSignatures.get(id) !== nextSignature) {
+          sg.updateLoadVisual(load.id, load);
+          trackedLoadSignatures.set(id, nextSignature);
         }
       }
 
       for (const id of trackedLoadIds) {
         if (!currentLoadIds.has(id)) {
           sg.removeLoadVisual(id);
+          trackedLoadSignatures.delete(id);
         }
       }
 
       trackedLoadIds.clear();
-      for (const id of currentLoadIds) trackedLoadIds.add(id);
+      trackedLoadSignatures.clear();
+      for (const id of currentLoadIds) {
+        trackedLoadIds.add(id);
+        const load = state.loads.get(id);
+        if (load) trackedLoadSignatures.set(id, loadSignature(load));
+      }
+
+      // --- Actuator diff ---
+      const currentActuatorIds = new Set<string>(state.actuators.keys());
+
+      for (const id of currentActuatorIds) {
+        if (!trackedActuatorIds.has(id)) {
+          const actuator = state.actuators.get(id);
+          if (!actuator) continue;
+          sg.addMotorVisual(actuator.id, actuator.jointId, actuator.type);
+          trackedActuatorSignatures.set(id, actuatorSignature(actuator));
+          continue;
+        }
+
+        const actuator = state.actuators.get(id);
+        if (!actuator) continue;
+        const nextSignature = actuatorSignature(actuator);
+        if (trackedActuatorSignatures.get(id) !== nextSignature) {
+          sg.updateMotorVisual(actuator.id, actuator.jointId, actuator.type);
+          trackedActuatorSignatures.set(id, nextSignature);
+        }
+      }
+
+      for (const id of trackedActuatorIds) {
+        if (!currentActuatorIds.has(id)) {
+          sg.removeMotorVisual(id);
+          trackedActuatorSignatures.delete(id);
+        }
+      }
+
+      trackedActuatorIds.clear();
+      trackedActuatorSignatures.clear();
+      for (const id of currentActuatorIds) {
+        trackedActuatorIds.add(id);
+        const actuator = state.actuators.get(id);
+        if (actuator) trackedActuatorSignatures.set(id, actuatorSignature(actuator));
+      }
     });
 
+    let prevSelectedIds = useSelectionStore.getState().selectedIds;
     const unsubSelection = useSelectionStore.subscribe((state) => {
+      if (state.selectedIds === prevSelectedIds) return;
+      prevSelectedIds = state.selectedIds;
       const { bodies, geometries } = useMechanismStore.getState();
       sg.applySelection(resolveViewportEntityIds(state.selectedIds, bodies, geometries));
 
@@ -297,7 +424,10 @@ export function useViewportBridge() {
       }
     });
 
+    let prevHoveredId = useSelectionStore.getState().hoveredId;
     const unsubHover = useSelectionStore.subscribe((state) => {
+      if (state.hoveredId === prevHoveredId) return;
+      prevHoveredId = state.hoveredId;
       const { bodies, geometries } = useMechanismStore.getState();
       sg.applyHover(resolveViewportEntityId(state.hoveredId, bodies, geometries));
     });
@@ -450,22 +580,43 @@ export function useViewportBridge() {
       }
 
       if (mode === 'create-load') {
-        if (!entityId) return;
-        const { datums } = useMechanismStore.getState();
-        if (!datums.has(entityId)) return; // Only accept datum picks
-
         const creationState = useLoadCreationStore.getState();
+        if (creationState.creatingDatum) return;
+        if (!entityId) return;
 
-        if (creationState.step === 'pick-datum') {
-          creationState.setDatum(entityId);
+        const { bodies, datums } = useMechanismStore.getState();
+
+        if (datums.has(entityId)) {
+          if (creationState.step === 'pick-datum') {
+            creationState.setDatum(entityId);
+            return;
+          }
+
+          if (creationState.step === 'pick-second-datum') {
+            if (creationState.datumId === entityId) {
+              useAuthoringStatusStore.getState().setMessage(
+                'Choose a different datum for the spring-damper target',
+              );
+              return;
+            }
+            creationState.setSecondDatum(entityId);
+            return;
+          }
+
           return;
         }
 
-        if (creationState.step === 'pick-second-datum') {
-          creationState.setSecondDatum(entityId);
+        const resolution = resolveDatumFacePick(entityId, bodies, spatial);
+        if (resolution.kind === 'ignore') return;
+        if (resolution.kind === 'error') {
+          useAuthoringStatusStore.getState().setMessage(resolution.message);
           return;
         }
 
+        creationState.setCreatingDatum(true);
+        useAuthoringStatusStore.getState().setMessage('Creating datum...');
+        const name = nextDatumName(datums);
+        sendCreateDatumFromFace(resolution.bodyId, resolution.faceIndex, name);
         return;
       }
 
@@ -478,7 +629,7 @@ export function useViewportBridge() {
       // Check selection filter
       const filter = useSelectionStore.getState().selectionFilter;
       if (filter) {
-        const { bodies, geometries, datums, joints, loads } = useMechanismStore.getState();
+        const { bodies, geometries, datums, joints, loads, actuators } = useMechanismStore.getState();
         const entityType = bodies.has(entityId)
           ? 'body'
           : geometries.has(entityId)
@@ -489,15 +640,17 @@ export function useViewportBridge() {
                 ? 'joint'
                 : loads.has(entityId)
                   ? 'load'
-                  : null;
-        if (entityType && !filter.has(entityType as 'body' | 'datum' | 'joint' | 'geometry' | 'load')) return;
+                  : actuators.has(entityId)
+                    ? 'actuator'
+                    : null;
+        if (entityType && !(filter as Set<string>).has(entityType)) return;
       }
 
       if (modifiers.ctrl) {
         useSelectionStore.getState().toggleSelect(entityId);
       } else if (modifiers.shift) {
-        const { bodies, geometries, datums, joints, loads } = useMechanismStore.getState();
-        const orderedIds = [...bodies.keys(), ...geometries.keys(), ...datums.keys(), ...joints.keys(), ...loads.keys()];
+        const { bodies, geometries, datums, joints, loads, actuators } = useMechanismStore.getState();
+        const orderedIds = [...bodies.keys(), ...geometries.keys(), ...datums.keys(), ...joints.keys(), ...loads.keys(), ...actuators.keys()];
         useSelectionStore.getState().selectRange(entityId, orderedIds);
       } else {
         useSelectionStore.getState().select(entityId);

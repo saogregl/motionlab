@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "chrono/functions/ChFunctionConst.h"
 #include "chrono/physics/ChBody.h"
@@ -20,6 +21,7 @@
 #include "chrono/physics/ChLinkMotorRotationTorque.h"
 #include "chrono/physics/ChLinkTSDA.h"
 #include "chrono/physics/ChLinkUniversal.h"
+#include "chrono/physics/ChContactMaterialNSC.h"
 #include "chrono/physics/ChSystemNSC.h"
 #include "chrono/solver/ChSolverPSOR.h"
 #include "chrono/solver/ChSolverBB.h"
@@ -126,6 +128,289 @@ static const char* integrator_type_name(IntegratorType type) {
     return "UNKNOWN";
 }
 
+// ---------------------------------------------------------------------------
+// Constraints removed per joint type (matching frontend dof-counter.ts):
+//   constraints_removed = 6 - DOF_per_joint
+// ---------------------------------------------------------------------------
+int constraints_removed_for_joint(mech::JointType type) {
+    switch (type) {
+        case mech::JOINT_TYPE_FIXED:       return 6;
+        case mech::JOINT_TYPE_REVOLUTE:    return 5;
+        case mech::JOINT_TYPE_PRISMATIC:   return 5;
+        case mech::JOINT_TYPE_SPHERICAL:   return 3;
+        case mech::JOINT_TYPE_CYLINDRICAL: return 4;
+        case mech::JOINT_TYPE_PLANAR:      return 3;
+        case mech::JOINT_TYPE_UNIVERSAL:   return 4;
+        case mech::JOINT_TYPE_DISTANCE:    return 1;
+        case mech::JOINT_TYPE_POINT_LINE:  return 2;
+        case mech::JOINT_TYPE_POINT_PLANE: return 3;
+        default: return 0;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Union-Find for connected components
+// ---------------------------------------------------------------------------
+struct UnionFind {
+    std::unordered_map<std::string, std::string> parent;
+    std::unordered_map<std::string, int> rank;
+
+    void make_set(const std::string& id) {
+        if (parent.find(id) == parent.end()) {
+            parent[id] = id;
+            rank[id] = 0;
+        }
+    }
+
+    std::string find(const std::string& id) {
+        if (parent[id] != id)
+            parent[id] = find(parent[id]);
+        return parent[id];
+    }
+
+    void unite(const std::string& a, const std::string& b) {
+        auto ra = find(a);
+        auto rb = find(b);
+        if (ra == rb) return;
+        if (rank[ra] < rank[rb]) std::swap(ra, rb);
+        parent[rb] = ra;
+        if (rank[ra] == rank[rb]) rank[ra]++;
+    }
+};
+
+// ---------------------------------------------------------------------------
+// validate_mechanism — accumulates structured diagnostics
+// ---------------------------------------------------------------------------
+static void validate_mechanism(
+    const mech::Mechanism& mechanism,
+    const std::unordered_map<std::string, const mech::Body*>& body_lookup,
+    const std::unordered_map<std::string, const mech::Datum*>& datum_lookup,
+    CompilationResult& result)
+{
+    auto emit = [&](DiagnosticSeverity sev, const std::string& code,
+                    const std::string& msg, const std::string& suggestion,
+                    std::vector<std::string> ids = {}) {
+        CompilationDiagnostic d;
+        d.severity = sev;
+        d.code = code;
+        d.message = msg;
+        d.suggestion = suggestion;
+        d.affected_entity_ids = std::move(ids);
+        result.structured_diagnostics.push_back(std::move(d));
+    };
+
+    // E1: No bodies
+    if (mechanism.bodies_size() == 0) {
+        emit(DiagnosticSeverity::ERROR, "NO_BODIES",
+             "Mechanism has no bodies",
+             "Import at least one CAD file to create bodies");
+        return; // nothing else to check
+    }
+
+    // E2: No ground
+    bool has_ground = false;
+    for (const auto& body : mechanism.bodies()) {
+        if (body.is_fixed()) { has_ground = true; break; }
+    }
+    if (!has_ground) {
+        emit(DiagnosticSeverity::ERROR, "NO_GROUND",
+             "No fixed body in mechanism — at least one body must be fixed to define ground",
+             "Select a body and toggle 'Fixed' in the Body Inspector, or add a Fixed joint to the ground");
+    }
+
+    // E3: Zero-mass non-fixed bodies
+    for (const auto& body : mechanism.bodies()) {
+        if (body.is_fixed()) continue;
+        if (body.has_mass_properties() && body.mass_properties().mass() <= 0.0) {
+            emit(DiagnosticSeverity::ERROR, "ZERO_MASS",
+                 "Body '" + body.name() + "' has zero or negative mass but is not fixed",
+                 "Set a positive mass in body properties, or mark the body as fixed",
+                 {body.id().id()});
+        }
+    }
+
+    // E4: Self-joint (both datums on same body)
+    for (const auto& joint : mechanism.joints()) {
+        auto pit = datum_lookup.find(joint.parent_datum_id().id());
+        auto cit = datum_lookup.find(joint.child_datum_id().id());
+        if (pit != datum_lookup.end() && cit != datum_lookup.end()) {
+            const auto& parent_body_id = pit->second->parent_body_id().id();
+            const auto& child_body_id = cit->second->parent_body_id().id();
+            if (parent_body_id == child_body_id) {
+                std::string body_name;
+                auto bit = body_lookup.find(parent_body_id);
+                if (bit != body_lookup.end()) body_name = bit->second->name();
+                emit(DiagnosticSeverity::ERROR, "SELF_JOINT",
+                     "Joint '" + joint.name() + "' connects two datums on the same body '" + body_name + "'",
+                     "A joint must connect datums on different bodies — reassign one of the datums",
+                     {joint.id().id(), parent_body_id});
+            }
+        }
+    }
+
+    // E5: Duplicate actuators on same joint
+    {
+        std::unordered_map<std::string, std::string> seen; // joint_id -> first actuator id
+        for (const auto& actuator : mechanism.actuators()) {
+            std::string joint_id;
+            switch (actuator.config_case()) {
+                case mech::Actuator::kRevoluteMotor:
+                    joint_id = actuator.revolute_motor().joint_id().id();
+                    break;
+                case mech::Actuator::kPrismaticMotor:
+                    joint_id = actuator.prismatic_motor().joint_id().id();
+                    break;
+                default: continue;
+            }
+            if (joint_id.empty()) continue;
+            auto it = seen.find(joint_id);
+            if (it != seen.end()) {
+                emit(DiagnosticSeverity::ERROR, "DUPLICATE_ACTUATOR",
+                     "Multiple actuators target the same joint — only one actuator per joint is supported",
+                     "Remove one of the conflicting actuators",
+                     {it->second, actuator.id().id(), joint_id});
+            } else {
+                seen[joint_id] = actuator.id().id();
+            }
+        }
+    }
+
+    // --- Warnings ---
+
+    // Build set of bodies referenced by joints or loads (via datums)
+    std::unordered_set<std::string> connected_bodies;
+    for (const auto& joint : mechanism.joints()) {
+        auto pit = datum_lookup.find(joint.parent_datum_id().id());
+        auto cit = datum_lookup.find(joint.child_datum_id().id());
+        if (pit != datum_lookup.end())
+            connected_bodies.insert(pit->second->parent_body_id().id());
+        if (cit != datum_lookup.end())
+            connected_bodies.insert(cit->second->parent_body_id().id());
+    }
+    for (const auto& load : mechanism.loads()) {
+        switch (load.config_case()) {
+            case mech::Load::kPointForce: {
+                auto dit = datum_lookup.find(load.point_force().datum_id().id());
+                if (dit != datum_lookup.end())
+                    connected_bodies.insert(dit->second->parent_body_id().id());
+                break;
+            }
+            case mech::Load::kPointTorque: {
+                auto dit = datum_lookup.find(load.point_torque().datum_id().id());
+                if (dit != datum_lookup.end())
+                    connected_bodies.insert(dit->second->parent_body_id().id());
+                break;
+            }
+            case mech::Load::kLinearSpringDamper: {
+                auto p = datum_lookup.find(load.linear_spring_damper().parent_datum_id().id());
+                auto c = datum_lookup.find(load.linear_spring_damper().child_datum_id().id());
+                if (p != datum_lookup.end())
+                    connected_bodies.insert(p->second->parent_body_id().id());
+                if (c != datum_lookup.end())
+                    connected_bodies.insert(c->second->parent_body_id().id());
+                break;
+            }
+            default: break;
+        }
+    }
+
+    // W1: Floating bodies
+    for (const auto& body : mechanism.bodies()) {
+        if (body.is_fixed()) continue;
+        if (connected_bodies.find(body.id().id()) == connected_bodies.end()) {
+            emit(DiagnosticSeverity::WARNING, "FLOATING_BODY",
+                 "Body '" + body.name() + "' has no joints or loads connecting it to the mechanism",
+                 "Add a joint to connect this body, or remove it if it's not part of the mechanism",
+                 {body.id().id()});
+        }
+    }
+
+    // W2/W3: DOF analysis (Gruebler's equation)
+    {
+        int moving_bodies = 0;
+        for (const auto& body : mechanism.bodies()) {
+            if (!body.is_fixed()) moving_bodies++;
+        }
+        int total_constraints = 0;
+        for (const auto& joint : mechanism.joints()) {
+            total_constraints += constraints_removed_for_joint(joint.type());
+        }
+        int dof = 6 * moving_bodies - total_constraints;
+
+        // Compare DOF against number of actuated joints. A mechanism with
+        // DOF == num_actuators is correctly driven. Only warn when DOF exceeds
+        // actuated DOFs, indicating uncovered free motion.
+        int num_actuators = mechanism.actuators_size();
+        if (mechanism.joints_size() > 0 && num_actuators > 0 && dof > num_actuators) {
+            emit(DiagnosticSeverity::WARNING, "UNDER_CONSTRAINED",
+                 "Mechanism has " + std::to_string(dof) +
+                     " degrees of freedom but only " + std::to_string(num_actuators) +
+                     " actuator(s)",
+                 "Add more joints or constraints, or add actuators for the free DOFs");
+        }
+        if (dof < 0) {
+            emit(DiagnosticSeverity::WARNING, "OVER_CONSTRAINED",
+                 "Mechanism may be over-constrained — joints remove " +
+                     std::to_string(total_constraints) + " DOF from " +
+                     std::to_string(6 * moving_bodies) + " available",
+                 "Check for redundant constraints. Consider using spherical or distance joints instead of fixed joints where possible");
+        }
+    }
+
+    // I1: Disconnected subgroups
+    if (mechanism.joints_size() > 0) {
+        UnionFind uf;
+        for (const auto& body : mechanism.bodies()) {
+            uf.make_set(body.id().id());
+        }
+        for (const auto& joint : mechanism.joints()) {
+            auto pit = datum_lookup.find(joint.parent_datum_id().id());
+            auto cit = datum_lookup.find(joint.child_datum_id().id());
+            if (pit != datum_lookup.end() && cit != datum_lookup.end()) {
+                uf.unite(pit->second->parent_body_id().id(),
+                         cit->second->parent_body_id().id());
+            }
+        }
+        // Also unite bodies connected by spring/damper loads
+        for (const auto& load : mechanism.loads()) {
+            if (load.config_case() == mech::Load::kLinearSpringDamper) {
+                auto p = datum_lookup.find(load.linear_spring_damper().parent_datum_id().id());
+                auto c = datum_lookup.find(load.linear_spring_damper().child_datum_id().id());
+                if (p != datum_lookup.end() && c != datum_lookup.end()) {
+                    uf.unite(p->second->parent_body_id().id(),
+                             c->second->parent_body_id().id());
+                }
+            }
+        }
+
+        std::unordered_map<std::string, std::vector<std::string>> components;
+        for (const auto& body : mechanism.bodies()) {
+            components[uf.find(body.id().id())].push_back(body.id().id());
+        }
+        if (components.size() > 1) {
+            // Find the largest component (assume it's the "main" chain)
+            size_t max_size = 0;
+            std::string main_root;
+            for (const auto& [root, members] : components) {
+                if (members.size() > max_size) {
+                    max_size = members.size();
+                    main_root = root;
+                }
+            }
+            std::vector<std::string> smaller_ids;
+            for (const auto& [root, members] : components) {
+                if (root != main_root) {
+                    for (const auto& id : members) smaller_ids.push_back(id);
+                }
+            }
+            emit(DiagnosticSeverity::INFO, "DISCONNECTED_SUBGROUPS",
+                 "Mechanism has " + std::to_string(components.size()) + " separate kinematic chains",
+                 "This is usually intentional, but verify all bodies are connected as expected",
+                 std::move(smaller_ids));
+        }
+    }
+}
+
 } // namespace
 
 struct SimulationRuntime::Impl {
@@ -173,6 +458,12 @@ struct SimulationRuntime::Impl {
     std::unordered_map<std::string, ActuatorRuntime> actuators;
 
     std::unordered_map<std::string, BodyPose> initial_poses;
+
+    std::shared_ptr<ChContactMaterialNSC> contact_material;
+
+    // Applied config — for test introspection
+    SolverConfig applied_solver;
+    ContactConfig applied_contact;
 };
 
 SimulationRuntime::SimulationRuntime() : impl_(std::make_unique<Impl>()) {}
@@ -184,13 +475,7 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
     impl_->state = SimState::COMPILING;
     result.success = false;
 
-    if (mechanism.bodies_size() == 0) {
-        result.error_message = "Mechanism has no bodies";
-        result.diagnostics.push_back("At least one body is required to compile a simulation.");
-        impl_->state = SimState::ERROR;
-        return result;
-    }
-
+    // --- Build lookup tables ---
     std::unordered_map<std::string, const mech::Body*> body_lookup;
     for (const auto& body : mechanism.bodies()) {
         if (body.has_id()) {
@@ -205,6 +490,25 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
         }
     }
 
+    // --- Phase 1: Validation (all checks, accumulate diagnostics) ---
+    validate_mechanism(mechanism, body_lookup, datum_lookup, result);
+
+    bool has_errors = std::any_of(
+        result.structured_diagnostics.begin(),
+        result.structured_diagnostics.end(),
+        [](const auto& d) { return d.severity == DiagnosticSeverity::ERROR; });
+
+    if (has_errors) {
+        result.error_message = "Compilation failed — see diagnostics";
+        // Populate deprecated string diagnostics for backward compat
+        for (const auto& sd : result.structured_diagnostics) {
+            result.diagnostics.push_back(sd.message);
+        }
+        impl_->state = SimState::ERROR;
+        return result;
+    }
+
+    // --- Phase 2: Build actuator lookup (needed for Chrono creation) ---
     std::unordered_map<std::string, const mech::Actuator*> actuator_by_joint;
     for (const auto& actuator : mechanism.actuators()) {
         std::string joint_id;
@@ -216,31 +520,14 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
                 joint_id = actuator.prismatic_motor().joint_id().id();
                 break;
             case mech::Actuator::CONFIG_NOT_SET:
-                result.error_message = "Actuator config is required";
-                impl_->state = SimState::ERROR;
-                return result;
+                continue;
         }
-        if (joint_id.empty()) {
-            result.error_message = "Actuator is missing a target joint";
-            impl_->state = SimState::ERROR;
-            return result;
-        }
-        if (actuator_by_joint.contains(joint_id)) {
-            result.error_message = "Only one actuator may target a joint in this pass";
-            impl_->state = SimState::ERROR;
-            return result;
-        }
-        actuator_by_joint[joint_id] = &actuator;
-    }
-
-    for (const auto& body : mechanism.bodies()) {
-        if (body.has_mass_properties() && body.mass_properties().mass() <= 0.0) {
-            result.error_message = "Body '" + body.name() + "' has zero or negative mass";
-            impl_->state = SimState::ERROR;
-            return result;
+        if (!joint_id.empty()) {
+            actuator_by_joint[joint_id] = &actuator;
         }
     }
 
+    // --- Phase 3: Create Chrono system ---
     impl_->system = std::make_unique<ChSystemNSC>();
     impl_->system->SetGravitationalAcceleration(
         ChVector3d(config.gravity[0], config.gravity[1], config.gravity[2]));
@@ -297,6 +584,22 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
                  config.solver.tolerance,
                  integrator_type_name(config.solver.integrator));
 
+    // --- Contact material (no collision shapes yet; material stored for future epic) ---
+    auto mat = chrono_types::make_shared<ChContactMaterialNSC>();
+    mat->SetFriction(static_cast<float>(config.contact.friction));
+    mat->SetRestitution(static_cast<float>(config.contact.restitution));
+    mat->SetCompliance(static_cast<float>(config.contact.compliance));
+    mat->SetDampingF(static_cast<float>(config.contact.damping));
+    impl_->contact_material = mat;
+
+    spdlog::info("Contact: friction={:.3f}, restitution={:.3f}, compliance={:.2e}, damping={:.2e}, enabled={}",
+                 config.contact.friction, config.contact.restitution,
+                 config.contact.compliance, config.contact.damping,
+                 config.contact.enable_contact);
+
+    impl_->applied_solver = config.solver;
+    impl_->applied_contact = config.contact;
+
     impl_->body_map.clear();
     impl_->joint_map.clear();
     impl_->point_loads.clear();
@@ -306,15 +609,6 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
     impl_->current_time = 0.0;
     impl_->step_count = 0;
 
-    bool any_fixed = false;
-    for (const auto& body : mechanism.bodies()) {
-        if (body.is_fixed()) {
-            any_fixed = true;
-            break;
-        }
-    }
-
-    bool first_body = true;
     for (const auto& body : mechanism.bodies()) {
         const std::string id = body.id().id();
         auto ch_body = chrono_types::make_shared<ChBody>();
@@ -331,12 +625,7 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
         ch_body->SetPos(pos);
         ch_body->SetRot(rot);
 
-        const bool fixed = body.is_fixed() || (!any_fixed && first_body);
-        ch_body->SetFixed(fixed);
-        if (fixed) {
-            result.diagnostics.push_back("Body '" + body.name() + "' treated as ground (fixed).");
-        }
-        first_body = false;
+        ch_body->SetFixed(body.is_fixed());
 
         impl_->system->AddBody(ch_body);
         impl_->body_map[id] = ch_body;
@@ -351,6 +640,13 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
         initial.orientation[2] = rot.e2();
         initial.orientation[3] = rot.e3();
         impl_->initial_poses[id] = initial;
+    }
+
+    if (!config.contact.enable_contact) {
+        for (auto& [id, body] : impl_->body_map) {
+            body->EnableCollision(false);
+        }
+        spdlog::info("Contact disabled: collision turned off on all bodies");
     }
 
     for (const auto& joint : mechanism.joints()) {
@@ -631,11 +927,9 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
         }
     }
 
-    // Bridge string diagnostics into structured format
-    for (const auto& diag : result.diagnostics) {
-        CompilationDiagnostic sd;
-        sd.message = diag;
-        result.structured_diagnostics.push_back(std::move(sd));
+    // Populate deprecated string diagnostics from structured diagnostics
+    for (const auto& sd : result.structured_diagnostics) {
+        result.diagnostics.push_back(sd.message);
     }
 
     result.success = true;
@@ -709,6 +1003,22 @@ double SimulationRuntime::getCurrentTime() const {
 
 uint64_t SimulationRuntime::getStepCount() const {
     return impl_->step_count;
+}
+
+SolverConfig SimulationRuntime::getAppliedSolverConfig() const {
+    return impl_->applied_solver;
+}
+
+ContactConfig SimulationRuntime::getAppliedContactConfig() const {
+    // Read back from the actual Chrono material for verification
+    ContactConfig c = impl_->applied_contact;
+    if (impl_->contact_material) {
+        c.friction = impl_->contact_material->GetSlidingFriction();
+        c.restitution = impl_->contact_material->GetRestitution();
+        c.compliance = impl_->contact_material->GetCompliance();
+        c.damping = impl_->contact_material->GetDampingF();
+    }
+    return c;
 }
 
 std::vector<BodyPose> SimulationRuntime::getBodyPoses() const {

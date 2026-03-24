@@ -15,6 +15,7 @@ import {
 import { getSceneGraph } from '../../engine/connection.js';
 import { useAuthoringStatusStore } from '../../stores/authoring-status.js';
 import { useJointCreationStore } from '../../stores/joint-creation.js';
+import { useLoadCreationStore } from '../../stores/load-creation.js';
 import { useSelectionStore } from '../../stores/selection.js';
 import { useToolModeStore } from '../../stores/tool-mode.js';
 import { useUILayoutStore } from '../../stores/ui-layout.js';
@@ -31,7 +32,8 @@ export function createViewCommands(): CommandDef[] {
       shortcut: 'V',
       execute: () => {
         useToolModeStore.getState().setMode('select');
-        useJointCreationStore.getState().reset();
+        useJointCreationStore.getState().exitMode();
+        useLoadCreationStore.getState().exitMode();
         useAuthoringStatusStore.getState().clearMessage();
       },
     },

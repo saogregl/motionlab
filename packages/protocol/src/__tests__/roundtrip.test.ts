@@ -34,8 +34,10 @@ import {
   BodyPoseDataSchema,
   ChannelDataType,
   CommandSchema,
+  CompilationDiagnosticSchema,
   CompilationResultEventSchema,
   CompileMechanismCommandSchema,
+  ContactSettingsSchema,
   CreateActuatorCommandSchema,
   CreateActuatorResultSchema,
   CreateDatumCommandSchema,
@@ -55,6 +57,7 @@ import {
   DeleteJointResultSchema,
   DeleteLoadCommandSchema,
   DeleteLoadResultSchema,
+  DiagnosticSeverity,
   EngineStatus_State,
   EngineStatusSchema,
   EventSchema,
@@ -64,6 +67,7 @@ import {
   ImportAssetCommandSchema,
   ImportAssetResultSchema,
   ImportOptionsSchema,
+  IntegratorType,
   JointStateDataSchema,
   LoadProjectCommandSchema,
   LoadProjectResultSchema,
@@ -82,8 +86,11 @@ import {
   SimulationAction,
   SimulationControlCommandSchema,
   SimulationFrameSchema,
+  SimulationSettingsSchema,
   SimulationStateEventSchema,
   SimulationTraceSchema,
+  SolverSettingsSchema,
+  SolverType,
   TimeSampleSchema,
   UpdateActuatorCommandSchema,
   UpdateActuatorResultSchema,
@@ -1350,6 +1357,147 @@ describe('Simulation lifecycle round-trip', () => {
 
     expect(restored.sequenceId).toBe(100n);
     expect(restored.payload.case).toBe('compileMechanism');
+  });
+
+  it('should round-trip CompileMechanismCommand with full SimulationSettings', () => {
+    const cmd = create(CommandSchema, {
+      sequenceId: 110n,
+      payload: {
+        case: 'compileMechanism',
+        value: create(CompileMechanismCommandSchema, {
+          settings: create(SimulationSettingsSchema, {
+            timestep: 0.0005,
+            gravity: create(Vec3Schema, { x: 0, y: -1.62, z: 0 }),
+            duration: 5.0,
+            solver: create(SolverSettingsSchema, {
+              type: SolverType.SOLVER_APGD,
+              maxIterations: 200,
+              tolerance: 1e-10,
+              integrator: IntegratorType.INTEGRATOR_HHT,
+            }),
+            contact: create(ContactSettingsSchema, {
+              friction: 0.5,
+              restitution: 0.3,
+              compliance: 1e-5,
+              damping: 0.01,
+              enableContact: true,
+            }),
+          }),
+        }),
+      },
+    });
+
+    const bytes = toBinary(CommandSchema, cmd);
+    const restored = fromBinary(CommandSchema, bytes);
+
+    expect(restored.sequenceId).toBe(110n);
+    expect(restored.payload.case).toBe('compileMechanism');
+    if (restored.payload.case === 'compileMechanism') {
+      const settings = restored.payload.value.settings!;
+      expect(settings.timestep).toBeCloseTo(0.0005);
+      expect(settings.gravity!.y).toBeCloseTo(-1.62);
+      expect(settings.duration).toBeCloseTo(5.0);
+
+      const solver = settings.solver!;
+      expect(solver.type).toBe(SolverType.SOLVER_APGD);
+      expect(solver.maxIterations).toBe(200);
+      expect(solver.tolerance).toBeCloseTo(1e-10);
+      expect(solver.integrator).toBe(IntegratorType.INTEGRATOR_HHT);
+
+      const contact = settings.contact!;
+      expect(contact.friction).toBeCloseTo(0.5);
+      expect(contact.restitution).toBeCloseTo(0.3);
+      expect(contact.compliance).toBeCloseTo(1e-5);
+      expect(contact.damping).toBeCloseTo(0.01);
+      expect(contact.enableContact).toBe(true);
+    }
+  });
+
+  it('should round-trip CompileMechanismCommand with empty settings (proto3 defaults)', () => {
+    const cmd = create(CommandSchema, {
+      sequenceId: 111n,
+      payload: {
+        case: 'compileMechanism',
+        value: create(CompileMechanismCommandSchema, {
+          settings: create(SimulationSettingsSchema, {}),
+        }),
+      },
+    });
+
+    const bytes = toBinary(CommandSchema, cmd);
+    const restored = fromBinary(CommandSchema, bytes);
+
+    expect(restored.payload.case).toBe('compileMechanism');
+    if (restored.payload.case === 'compileMechanism') {
+      const settings = restored.payload.value.settings;
+      expect(settings).toBeDefined();
+      // Proto3 defaults: 0 for numbers, enum zero-value for enums
+      expect(settings!.timestep).toBe(0);
+      expect(settings!.duration).toBe(0);
+    }
+  });
+
+  it('should round-trip CompilationResultEvent with structured diagnostics', () => {
+    const event = create(EventSchema, {
+      sequenceId: 112n,
+      payload: {
+        case: 'compilationResult',
+        value: create(CompilationResultEventSchema, {
+          success: true,
+          structuredDiagnostics: [
+            create(CompilationDiagnosticSchema, {
+              severity: DiagnosticSeverity.DIAGNOSTIC_WARNING,
+              message: 'Body "Arm" has no ground connection',
+              affectedEntityIds: ['body-001', 'body-002'],
+              suggestion: 'Add a Fixed joint to anchor this body',
+              code: 'FLOATING_BODY',
+            }),
+            create(CompilationDiagnosticSchema, {
+              severity: DiagnosticSeverity.DIAGNOSTIC_INFO,
+              message: '2 bodies compiled successfully',
+              affectedEntityIds: [],
+              suggestion: '',
+              code: 'COMPILE_OK',
+            }),
+          ],
+        }),
+      },
+    });
+
+    const bytes = toBinary(EventSchema, event);
+    const restored = fromBinary(EventSchema, bytes);
+
+    expect(restored.payload.case).toBe('compilationResult');
+    if (restored.payload.case === 'compilationResult') {
+      const diags = restored.payload.value.structuredDiagnostics;
+      expect(diags).toHaveLength(2);
+
+      expect(diags[0].severity).toBe(DiagnosticSeverity.DIAGNOSTIC_WARNING);
+      expect(diags[0].message).toBe('Body "Arm" has no ground connection');
+      expect(diags[0].affectedEntityIds).toEqual(['body-001', 'body-002']);
+      expect(diags[0].suggestion).toBe('Add a Fixed joint to anchor this body');
+      expect(diags[0].code).toBe('FLOATING_BODY');
+
+      expect(diags[1].severity).toBe(DiagnosticSeverity.DIAGNOSTIC_INFO);
+      expect(diags[1].code).toBe('COMPILE_OK');
+    }
+  });
+
+  it('should round-trip SolverSettings field integrity', () => {
+    const settings = create(SolverSettingsSchema, {
+      type: SolverType.SOLVER_MINRES,
+      maxIterations: 500,
+      tolerance: 1e-12,
+      integrator: IntegratorType.INTEGRATOR_NEWMARK,
+    });
+
+    const bytes = toBinary(SolverSettingsSchema, settings);
+    const restored = fromBinary(SolverSettingsSchema, bytes);
+
+    expect(restored.type).toBe(SolverType.SOLVER_MINRES);
+    expect(restored.maxIterations).toBe(500);
+    expect(restored.tolerance).toBeCloseTo(1e-12);
+    expect(restored.integrator).toBe(IntegratorType.INTEGRATOR_NEWMARK);
   });
 
   it('should round-trip SimulationControlCommand with each action', () => {

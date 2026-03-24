@@ -1,8 +1,9 @@
 import { BoxSelect, Redo2, Trash2, Undo2, X } from 'lucide-react';
 
-import { sendDeleteDatum, sendDeleteJoint } from '../../engine/connection.js';
+import { sendDeleteActuator, sendDeleteDatum, sendDeleteJoint, sendDeleteLoad } from '../../engine/connection.js';
 import { useAuthoringStatusStore } from '../../stores/authoring-status.js';
 import { useJointCreationStore } from '../../stores/joint-creation.js';
+import { useLoadCreationStore } from '../../stores/load-creation.js';
 import { useMechanismStore } from '../../stores/mechanism.js';
 import { useSelectionStore } from '../../stores/selection.js';
 import { useSimulationStore } from '../../stores/simulation.js';
@@ -55,10 +56,18 @@ export function createEditCommands(): CommandDef[] {
           }
           // pick-parent or idle: fall through to exit mode entirely
         }
+        if (mode === 'create-load') {
+          const { step } = useLoadCreationStore.getState();
+          if (step === 'configure' || step === 'pick-second-datum') {
+            useLoadCreationStore.getState().cancel();
+            return;
+          }
+        }
         // Fall through: go to select mode and clear selection
         useSelectionStore.getState().clearSelection();
         useToolModeStore.getState().setMode('select');
         useJointCreationStore.getState().exitMode();
+        useLoadCreationStore.getState().exitMode();
         useAuthoringStatusStore.getState().clearMessage();
       },
     },
@@ -69,8 +78,8 @@ export function createEditCommands(): CommandDef[] {
       category: 'edit',
       shortcut: 'Ctrl+A',
       execute: () => {
-        const { bodies, datums, joints } = useMechanismStore.getState();
-        const allIds = [...bodies.keys(), ...datums.keys(), ...joints.keys()];
+        const { bodies, datums, joints, loads, actuators } = useMechanismStore.getState();
+        const allIds = [...bodies.keys(), ...datums.keys(), ...joints.keys(), ...loads.keys(), ...actuators.keys()];
         useSelectionStore.getState().selectAll(allIds);
       },
     },
@@ -83,12 +92,16 @@ export function createEditCommands(): CommandDef[] {
       enabled: () => notSimulating() && useSelectionStore.getState().selectedIds.size > 0,
       execute: () => {
         const { selectedIds } = useSelectionStore.getState();
-        const { datums, joints } = useMechanismStore.getState();
+        const { datums, joints, loads, actuators } = useMechanismStore.getState();
         for (const id of selectedIds) {
           if (joints.has(id)) {
             sendDeleteJoint(id);
           } else if (datums.has(id)) {
             sendDeleteDatum(id);
+          } else if (loads.has(id)) {
+            sendDeleteLoad(id);
+          } else if (actuators.has(id)) {
+            sendDeleteActuator(id);
           }
         }
         if (selectedIds.size > 0) {

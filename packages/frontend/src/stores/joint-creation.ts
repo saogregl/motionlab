@@ -1,15 +1,7 @@
 import { create } from 'zustand';
 
 import type { JointTypeId } from './mechanism.js';
-
-export type AlignmentKind = 'coaxial' | 'coplanar' | 'coincident' | 'general';
-
-export interface DatumAlignment {
-  kind: AlignmentKind;
-  recommendedTypes: JointTypeId[];
-  axis?: { x: number; y: number; z: number };
-  distance: number;
-}
+import type { AlignmentKind, DatumAlignment } from '../utils/datum-alignment.js';
 
 export type JointCreationStep = 'idle' | 'pick-parent' | 'pick-child' | 'select-type' | 'configure';
 
@@ -27,8 +19,12 @@ export interface JointCreationState {
   recommendedTypes: JointTypeId[];
   /** Detected geometric alignment between parent and child datums. */
   alignmentKind: AlignmentKind | null;
+  /** Full alignment analysis for semantic preview rendering. */
+  alignment: DatumAlignment | null;
   /** True while waiting for async face-to-datum creation result. */
   creatingDatum: boolean;
+  /** Non-null when editing an existing joint (vs creating a new one). */
+  editingJointId: string | null;
 
   startCreation: () => void;
   setParentDatum: (id: string) => void;
@@ -43,6 +39,8 @@ export interface JointCreationState {
   reset: () => void;
   /** Full exit: reset everything to idle. */
   exitMode: () => void;
+  /** Enter edit mode for an existing joint — skips to select-type with pre-populated data. */
+  editExisting: (jointId: string, parentDatumId: string, childDatumId: string, currentType: JointTypeId) => void;
 }
 
 const initialState = {
@@ -54,7 +52,9 @@ const initialState = {
   selectedJointType: null as JointTypeId | null,
   recommendedTypes: [] as JointTypeId[],
   alignmentKind: null as AlignmentKind | null,
+  alignment: null as DatumAlignment | null,
   creatingDatum: false,
+  editingJointId: null as string | null,
 };
 
 export const useJointCreationStore = create<JointCreationState>()((set, get) => ({
@@ -69,7 +69,9 @@ export const useJointCreationStore = create<JointCreationState>()((set, get) => 
       selectedJointType: null,
       recommendedTypes: [],
       alignmentKind: null,
+      alignment: null,
       creatingDatum: false,
+      editingJointId: null,
     }),
 
   setParentDatum: (id) => set({ step: 'pick-child', parentDatumId: id }),
@@ -86,6 +88,7 @@ export const useJointCreationStore = create<JointCreationState>()((set, get) => 
       childDatumId: id,
       recommendedTypes,
       alignmentKind,
+      alignment: alignment ?? null,
       selectedJointType,
       previewJointType: null,
     });
@@ -109,6 +112,7 @@ export const useJointCreationStore = create<JointCreationState>()((set, get) => 
           childDatumId: null,
           recommendedTypes: [],
           alignmentKind: null,
+          alignment: null,
           selectedJointType: null,
           previewJointType: null,
         });
@@ -132,9 +136,26 @@ export const useJointCreationStore = create<JointCreationState>()((set, get) => 
       selectedJointType: null,
       recommendedTypes: [],
       alignmentKind: null,
+      alignment: null,
       preselectedJointType: null,
       creatingDatum: false,
+      editingJointId: null,
     }),
 
   exitMode: () => set({ ...initialState }),
+
+  editExisting: (jointId, parentDatumId, childDatumId, currentType) =>
+    set({
+      step: 'select-type',
+      editingJointId: jointId,
+      parentDatumId,
+      childDatumId,
+      selectedJointType: currentType,
+      previewJointType: null,
+      recommendedTypes: [],
+      alignmentKind: null,
+      alignment: null,
+      creatingDatum: false,
+      preselectedJointType: null,
+    }),
 }));

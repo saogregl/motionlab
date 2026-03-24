@@ -22,8 +22,25 @@ export function createSimulateCommands(): CommandDef[] {
         return isEngineReady() && (s === 'idle' || s === 'error');
       },
       execute: () => {
-        const { timestep, gravity } = useSimulationSettingsStore.getState();
-        sendCompileMechanism({ timestep, gravity });
+        const s = useSimulationSettingsStore.getState();
+        sendCompileMechanism({
+          timestep: s.timestep,
+          gravity: s.gravity,
+          duration: s.duration,
+          solver: {
+            type: s.solverType,
+            maxIterations: s.maxIterations,
+            tolerance: s.tolerance,
+            integrator: s.integratorType,
+          },
+          contact: {
+            friction: s.friction,
+            restitution: s.restitution,
+            compliance: s.compliance,
+            damping: s.contactDamping,
+            enableContact: s.enableContact,
+          },
+        });
       },
     },
     {

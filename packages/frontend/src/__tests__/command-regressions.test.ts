@@ -10,6 +10,7 @@ import { useDialogStore } from '../stores/dialogs.js';
 import { useEngineConnection } from '../stores/engine-connection.js';
 import { useImportFlowStore } from '../stores/import-flow.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
+import { useLoadCreationStore } from '../stores/load-creation.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
@@ -57,6 +58,7 @@ describe('Epic 12 command regressions', () => {
       childDatumId: null,
       preselectedJointType: null,
     });
+    useLoadCreationStore.getState().exitMode();
     useToolModeStore.setState({ activeMode: 'select', gizmoMode: 'off' });
     useImportFlowStore.getState().closeImportDialog();
     useCommandPaletteStore.getState().closePalette();
@@ -115,6 +117,16 @@ describe('Epic 12 command regressions', () => {
     store.setChildDatum('d2', { kind: 'coaxial', recommendedTypes: ['revolute', 'cylindrical'], distance: 1 });
     // Without preselection, first recommendation is used
     expect(useJointCreationStore.getState().selectedJointType).toBe('revolute');
+  });
+
+  it('preselects the requested load subtype when entering load creation', () => {
+    const command = findCommand(createCreateCommands(), 'create.force.spring-damper');
+
+    command.execute();
+
+    expect(useToolModeStore.getState().activeMode).toBe('create-load');
+    expect(useLoadCreationStore.getState().step).toBe('pick-datum');
+    expect(useLoadCreationStore.getState().preselectedLoadType).toBe('spring-damper');
   });
 
   it('guards dirty state before opening a project', async () => {

@@ -1,15 +1,18 @@
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import {
+  Bounds,
+  useBounds,
   Environment,
   GizmoHelper,
   GizmoViewport,
   Grid,
   OrbitControls,
+  PerformanceMonitor,
   TransformControls,
 } from '@react-three/drei';
 
-import { useEffect, useRef, useState } from 'react';
-import { ACESFilmicToneMapping, Color, Object3D, OrthographicCamera } from 'three';
+import { startTransition, useEffect, useRef, useState } from 'react';
+import { ACESFilmicToneMapping, Object3D, OrthographicCamera } from 'three';
 
 import {
   PickingManager,
@@ -20,7 +23,10 @@ import {
   type SpatialPickData,
 } from './picking-three.js';
 import { createMaterialFactory } from './rendering/materials-three.js';
+import { VIEWPORT_THEMES } from './rendering/viewport-theme.js';
 import { SceneGraphManager } from './scene-graph-three.js';
+
+const DEFAULT_R3F_EVENT_LAYER = 0;
 
 export type {
   FaceHoverCallback,
@@ -40,25 +46,25 @@ export interface ViewportProps {
   onFaceHover?: FaceHoverCallback;
   interactionMode?: InteractionMode;
   gridVisible?: boolean;
-  ssaoEnabled?: boolean;
-  preset?: 'cadNeutralStudio';
   /** Controls viewport background. Defaults to 'dark'. */
   theme?: ViewportTheme;
 }
 
-interface SceneSetupProps extends Omit<ViewportProps, 'className'> {}
+type SceneSetupProps = Omit<ViewportProps, 'className'>;
 
-const THEME_BACKGROUNDS: Record<ViewportTheme, string> = {
-  light: '#ffffff',
-  dark: '#161616', // g100
-};
+// Theme colors are defined in rendering/viewport-theme.ts
+// and kept in sync with CSS tokens in globals.css.
 
 function GizmoBridge({
   sceneGraph,
   revision,
+  onDragStart,
+  onDragEnd,
 }: {
   sceneGraph: SceneGraphManager | null;
   revision: number;
+  onDragStart?: () => void;
+  onDragEnd?: () => void;
 }) {
   const [target, setTarget] = useState<Object3D | null>(null);
   const [mode, setMode] = useState<'translate' | 'rotate'>('translate');
@@ -82,10 +88,14 @@ function GizmoBridge({
     <TransformControls
       object={target}
       mode={mode}
+      onMouseDown={() => {
+        onDragStart?.();
+      }}
       onObjectChange={() => {
         sceneGraph.notifyGizmoObjectChanged();
       }}
       onMouseUp={() => {
+        onDragEnd?.();
         sceneGraph.notifyGizmoDragEnd();
       }}
     />
@@ -99,16 +109,16 @@ function SceneSetup({
   onFaceHover,
   interactionMode,
   gridVisible = false,
-  ssaoEnabled = false,
   theme = 'dark',
 }: SceneSetupProps) {
-  const { scene, camera, gl, size } = useThree();
+  const { scene, camera, gl, size, invalidate, raycaster } = useThree();
 
   const sceneGraphRef = useRef<SceneGraphManager | null>(null);
   const pickingRef = useRef<PickingManager | null>(null);
   const [sceneGraphState, setSceneGraphState] = useState<SceneGraphManager | null>(null);
   const [gizmoRevision, setGizmoRevision] = useState(0);
   const [showGrid, setShowGrid] = useState(gridVisible);
+  const renderQueuedRef = useRef(false);
 
   const onSceneReadyRef = useRef(onSceneReady);
   const onPickRef = useRef(onPick);
@@ -119,14 +129,25 @@ function SceneSetup({
   onHoverRef.current = onHover;
   onFaceHoverRef.current = onFaceHover;
 
+  const requestRender = () => {
+    if (renderQueuedRef.current) return;
+    renderQueuedRef.current = true;
+    requestAnimationFrame(() => {
+      renderQueuedRef.current = false;
+      invalidate();
+    });
+  };
+
   useEffect(() => {
     gl.toneMapping = ACESFilmicToneMapping;
     gl.toneMappingExposure = 1.1;
-    scene.background = new Color(THEME_BACKGROUNDS[theme]);
+    scene.background = VIEWPORT_THEMES[theme].background.clone();
+    raycaster.layers.set(DEFAULT_R3F_EVENT_LAYER);
 
-    const materialFactory = createMaterialFactory(scene);
+    const materialFactory = createMaterialFactory();
     const sceneGraph = new SceneGraphManager(scene, camera as OrthographicCamera, {
       materialFactory,
+      requestRender,
     });
     sceneGraph.setCanvasSize(size.width, size.height);
     sceneGraph.onGizmoStateChanged = () => {
@@ -134,9 +155,7 @@ function SceneSetup({
     };
 
     // Bridge grid toggle from imperative SceneGraphManager to React state
-    const originalToggleGrid = sceneGraph.toggleGrid.bind(sceneGraph);
-    sceneGraph.toggleGrid = () => {
-      originalToggleGrid();
+    sceneGraph.onGridVisibilityChanged = () => {
       setShowGrid(sceneGraph.gridVisible);
     };
 
@@ -171,14 +190,16 @@ function SceneSetup({
       sceneGraphRef.current = null;
       setSceneGraphState(null);
     };
-  }, [camera, gl, scene]);
+  }, [camera, gl, raycaster, scene]);
 
   useEffect(() => {
     sceneGraphRef.current?.setCanvasSize(size.width, size.height);
+    requestRender();
   }, [size.height, size.width]);
 
   useEffect(() => {
-    scene.background = new Color(THEME_BACKGROUNDS[theme]);
+    scene.background = VIEWPORT_THEMES[theme].background.clone();
+    requestRender();
   }, [scene, theme]);
 
   useEffect(() => {
@@ -196,13 +217,13 @@ function SceneSetup({
 
   return (
     <>
-      {/* 3-point lighting rig */}
-      <ambientLight intensity={0.35} />
-      <directionalLight position={[200, 300, 400]} intensity={0.8} />
-      <directionalLight position={[-150, 80, 200]} intensity={0.4} />
+      {/* IBL environment map — drives PBR reflections & indirect light */}
+      <Environment files="/textures/studio_small_03_1k.hdr" environmentIntensity={0.6} />
 
-      {/* IBL environment for PBR reflections — no visible background */}
-      <Environment preset="studio" background={false} />
+      {/* Direct lighting rig: key + fill + soft ambient */}
+      <ambientLight intensity={0.4} />
+      <directionalLight position={[200, 300, 400]} intensity={1.0} />
+      <directionalLight position={[-150, 80, 200]} intensity={0.5} />
 
       {/* Infinite anti-aliased grid with fade */}
       {showGrid && (
@@ -210,8 +231,8 @@ function SceneSetup({
           infiniteGrid
           cellSize={0.5}
           sectionSize={2.5}
-          cellColor="#303038"
-          sectionColor="#454555"
+          cellColor={VIEWPORT_THEMES[theme].gridCellColor}
+          sectionColor={VIEWPORT_THEMES[theme].gridSectionColor}
           fadeDistance={25}
           fadeStrength={1.2}
           cellThickness={0.6}
@@ -223,15 +244,59 @@ function SceneSetup({
       {/* Orientation gizmo — click to snap camera */}
       <GizmoHelper alignment="bottom-right" margin={[72, 72]}>
         <GizmoViewport
-          axisColors={['#ff4060', '#40df80', '#4080ff']}
+          axisColors={VIEWPORT_THEMES[theme].axisColors}
           labelColor="white"
         />
       </GizmoHelper>
 
-      <OrbitControls makeDefault enableDamping dampingFactor={0.08} />
-      <GizmoBridge sceneGraph={sceneGraphState} revision={gizmoRevision} />
+      <OrbitControls
+        makeDefault
+        enableDamping
+        dampingFactor={0.08}
+        onStart={() => {
+          pickingRef.current?.setOrbitDragging(true);
+        }}
+        onEnd={() => {
+          pickingRef.current?.setOrbitDragging(false);
+        }}
+      />
+      {/* drei Bounds — provides camera-fitting API to SceneGraphManager */}
+      <Bounds observe margin={1.6} maxDuration={0}>
+        <BoundsBridge sceneGraph={sceneGraphState} />
+      </Bounds>
+      <GizmoBridge
+        sceneGraph={sceneGraphState}
+        revision={gizmoRevision}
+        onDragStart={() => {
+          pickingRef.current?.setTransformDragging(true);
+        }}
+        onDragEnd={() => {
+          pickingRef.current?.setTransformDragging(false);
+        }}
+      />
+      <DofAnimator sceneGraph={sceneGraphState} />
     </>
   );
+}
+
+/** Bridges drei Bounds API into the imperative SceneGraphManager. */
+function BoundsBridge({ sceneGraph }: { sceneGraph: SceneGraphManager | null }) {
+  const bounds = useBounds();
+  useEffect(() => {
+    sceneGraph?.setBoundsApi(bounds);
+    return () => { sceneGraph?.setBoundsApi(null); };
+  }, [sceneGraph, bounds]);
+  return null;
+}
+
+/** Drives DOF indicator oscillation animation. Only invalidates when indicators are active. */
+function DofAnimator({ sceneGraph }: { sceneGraph: SceneGraphManager | null }) {
+  useFrame(({ clock, invalidate: inv }) => {
+    if (!sceneGraph || !sceneGraph.hasDofAnimations()) return;
+    sceneGraph.updateDofAnimations(clock.elapsedTime);
+    inv();
+  });
+  return null;
 }
 
 export function Viewport({
@@ -242,18 +307,28 @@ export function Viewport({
   onFaceHover,
   interactionMode,
   gridVisible,
-  ssaoEnabled,
-  preset,
   theme = 'dark',
 }: ViewportProps) {
+  const [dpr, setDpr] = useState(1.5);
+
   return (
     <div className={className} style={{ width: '100%', height: '100%' }}>
       <Canvas
         orthographic
         camera={{ position: [5, 5, 5], zoom: 50, near: -1000, far: 1000 }}
-        dpr={[1, 1.5]}
+        dpr={dpr}
+        frameloop="demand"
         shadows={false}
       >
+        <PerformanceMonitor
+          flipflops={3}
+          onChange={({ factor }) => {
+            const nextDpr = Math.max(1, Math.min(1.5, 1 + factor * 0.5));
+            startTransition(() => {
+              setDpr((current) => (Math.abs(current - nextDpr) < 0.01 ? current : nextDpr));
+            });
+          }}
+        />
         <SceneSetup
           onSceneReady={onSceneReady}
           onPick={onPick}
@@ -261,8 +336,6 @@ export function Viewport({
           onFaceHover={onFaceHover}
           interactionMode={interactionMode}
           gridVisible={gridVisible}
-          ssaoEnabled={ssaoEnabled}
-          preset={preset}
           theme={theme}
         />
       </Canvas>

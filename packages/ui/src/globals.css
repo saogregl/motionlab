@@ -214,6 +214,17 @@
   --status-failed: #da1e28;
   --status-warning: #ff832b;
 
+  /* ── Chart series colors (data visualization) ── */
+  --chart-series-1: #2563eb;
+  --chart-series-2: #dc2626;
+  --chart-series-3: #16a34a;
+  --chart-series-4: #d97706;
+  --chart-series-5: #7c3aed;
+  --chart-series-6: #db2777;
+  --chart-series-7: #0891b2;
+  --chart-series-8: #ea580c;
+  --chart-scrub: rgba(0, 0, 0, 0.5);
+
   /* ── Interactive ── */
   --hover-overlay: rgba(141, 141, 141, 0.08);
   --pressed-overlay: rgba(141, 141, 141, 0.5);
@@ -255,44 +266,55 @@
   --sidebar-ring: var(--accent-primary);
 }
 
-/* ── Dark theme — Carbon g100 ── */
-.dark {
-  --bg-app: #161616;
-  --bg-viewport: #161616;
+/* ============================================================
+   Dark Theme Tonal Hierarchy
 
-  --layer-base: #262626;
+   Band 1 (deepest):  --bg-app         #121212  App chrome, window frame, viewport
+   Band 2 (recessed): --layer-recessed #181818  Status bar, tab wells, section headers
+   Band 4 (panels):   --layer-base     #1e1e1e  Side panels, tree, inspector body
+   Band 5 (raised):   --layer-raised   #2a2a2a  Toolbars, cards, dropdowns
+   Band 6 (floating): --layer-elevated #333333  Floating cards, tooltips, popovers
+
+   Borders: subtle #333333 | default #3d3d3d | strong #525252
+   Each layer should be visually distinct at a glance.
+   ============================================================ */
+.dark {
+  --bg-app: #121212;
+  --bg-viewport: #121212;
+
+  --layer-base: #1e1e1e;
   --layer-base-hover: rgba(141, 141, 141, 0.16);
   --layer-base-active: rgba(141, 141, 141, 0.4);
-  --layer-recessed: #161616;
+  --layer-recessed: #181818;
   --layer-recessed-hover: rgba(141, 141, 141, 0.16);
   --layer-recessed-active: rgba(141, 141, 141, 0.4);
-  --layer-raised: #393939;
+  --layer-raised: #2a2a2a;
   --layer-raised-hover: rgba(141, 141, 141, 0.16);
   --layer-raised-active: rgba(141, 141, 141, 0.4);
-  --layer-elevated: #525252;
+  --layer-elevated: #333333;
 
-  --bg-muted: #393939;
-  --bg-muted-hover: #474747;
+  --bg-muted: #2a2a2a;
+  --bg-muted-hover: #333333;
 
-  --field-base: #262626;
-  --field-base-hover: #333333;
-  --field-recessed: #393939;
-  --field-recessed-hover: #474747;
+  --field-base: #1e1e1e;
+  --field-base-hover: #262626;
+  --field-recessed: #2a2a2a;
+  --field-recessed-hover: #333333;
 
   /* Elevated field — dark override */
-  --field-elevated: #333333;
-  --field-elevated-hover: #3d3d3d;
+  --field-elevated: #2a2a2a;
+  --field-elevated-hover: #333333;
 
   /* Inertia matrix — dark override */
   --inertia-diagonal: rgba(69, 137, 255, 0.25);
   --inertia-diagonal-text: #a5c8ff;
-  --inspector-grid-border: #393939;
+  --inspector-grid-border: #2a2a2a;
 
-  --border-default: #525252;
-  --border-strong: #6f6f6f;
-  --border-subtle: #393939;
-  --border-field: #525252;
-  --border-field-hover: #6f6f6f;
+  --border-default: #3d3d3d;
+  --border-strong: #525252;
+  --border-subtle: #333333;
+  --border-field: #3d3d3d;
+  --border-field-hover: #525252;
   --border-field-focus: var(--accent-primary);
 
   --text-primary: #f4f4f4;
@@ -311,7 +333,7 @@
   --selection-fill: rgba(141, 141, 141, 0.24);
   --selection-fill-strong: rgba(141, 141, 141, 0.32);
   --selection-outline: #4589ff;
-  --selection-row: rgba(91, 141, 239, 0.12);
+  --selection-row: rgba(91, 141, 239, 0.15);
   --selection-row-hover: rgba(91, 141, 239, 0.18);
   --selection-row-inactive: rgba(91, 141, 239, 0.06);
   --selection-drag-bg: var(--accent-soft);
@@ -334,18 +356,29 @@
   --status-failed: #fa4d56;
   --status-warning: #ff832b;
 
-  --tree-guide-color: rgba(255, 255, 255, 0.06);
+  /* ── Chart series colors (dark overrides — brighter for dark bg) ── */
+  --chart-series-1: #3b82f6;
+  --chart-series-2: #ef4444;
+  --chart-series-3: #22c55e;
+  --chart-series-4: #f59e0b;
+  --chart-series-5: #8b5cf6;
+  --chart-series-6: #ec4899;
+  --chart-series-7: #06b6d4;
+  --chart-series-8: #f97316;
+  --chart-scrub: rgba(255, 255, 255, 0.6);
+
+  --tree-guide-color: rgba(255, 255, 255, 0.08);
   --tab-contained-bg: var(--layer-recessed);
   --tab-contained-active: var(--layer-base);
 
   --hover-overlay: rgba(141, 141, 141, 0.1);
   --pressed-overlay: rgba(141, 141, 141, 0.4);
-  --focus-ring: 0 0 0 2px var(--layer-base), 0 0 0 4px var(--accent-primary);
-  --focus-ring-inset: 0 0 0 2px var(--layer-recessed), 0 0 0 4px var(--accent-primary);
+  --focus-ring: 0 0 0 2px var(--bg-app), 0 0 0 4px var(--accent-primary);
+  --focus-ring-inset: 0 0 0 2px var(--bg-app), 0 0 0 4px var(--accent-primary);
 
-  --shadow-low: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
-  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15);
-  --shadow-overlay: 0 8px 24px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-low: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-overlay: 0 8px 24px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 /* ── Compact density ── */

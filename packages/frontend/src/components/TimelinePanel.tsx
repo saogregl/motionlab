@@ -1,11 +1,12 @@
 import { SimulationAction } from '@motionlab/protocol';
 import { BottomDock, EmptyState, TimelineScrubber, TimelineTransport } from '@motionlab/ui';
-import { Activity, BarChart3 } from 'lucide-react';
+import { BarChart3 } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
 
 import { sendScrub, sendSimulationControl, setPlaybackSpeed } from '../engine/connection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { useUILayoutStore } from '../stores/ui-layout.js';
+import { ChannelBrowser } from './ChannelBrowser.js';
 import { ChartPanel } from './ChartPanel.js';
 import { DiagnosticsPanel } from './DiagnosticsPanel.js';
 
@@ -112,7 +113,14 @@ export function TimelinePanel() {
       )}
       {activeTab === 'charts' &&
         (channelDescriptors.length > 0 ? (
-          <ChartPanel />
+          <div className="flex h-full">
+            <div className="w-56 shrink-0 overflow-hidden border-e border-[var(--border-subtle)]">
+              <ChannelBrowser />
+            </div>
+            <div className="min-w-0 flex-1">
+              <ChartPanel />
+            </div>
+          </div>
         ) : (
           <EmptyState
             icon={<BarChart3 className="size-10" />}

@@ -1,6 +1,6 @@
 # Epic 20 — Project Management & Workflow Polish
 
-> **Status:** Not started
+> **Status:** Complete (all 3 prompts implemented)
 > **Dependencies:** Epic 9 (project save/load with SaveProjectCommand/LoadProjectCommand, missing asset relocation) — complete.
 >
 > **Governance note:** This epic adds protocol messages (NewProjectCommand) and Electron IPC channels. Pre-MVP lighter governance applies — tests required at integration seams (IPC round-trip, protocol handshake after reset), doc updates batched at epic completion.

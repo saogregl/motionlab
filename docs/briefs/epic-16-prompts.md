@@ -685,8 +685,8 @@ Sections:
 - Effort Limit input (optional, Nm or N) — editable
 
 **Simulation Values section (visible when simulating):**
-- Actual Position (from joint output channel: `joint/{jointId}/position`)
-- Actual Velocity (from joint output channel: `joint/{jointId}/velocity`)
+- Actual Position (from the joint's primary coordinate channel, for example `joint/{jointId}/coord/rot_z` or `joint/{jointId}/coord/trans_z`)
+- Actual Velocity (from the matching rate channel, for example `joint/{jointId}/coord_rate/rot_z` or `joint/{jointId}/coord_rate/trans_z`)
 - Applied Effort (from actuator output channel if available, or from joint reaction data)
 
 Use the same `nearestSample` binary search pattern from JointInspector to look up trace values at the current sim time.
@@ -726,10 +726,11 @@ This is the most natural entry point: right-click a datum → "Add Force Here" �
 ### 6. Output channel integration
 
 During simulation, the engine emits output channels. Load and actuator channels follow patterns like:
-- `load/{loadId}/force` — applied force vector for point force loads
-- `load/{loadId}/torque` — applied torque vector for point torque loads
-- `load/{loadId}/spring/length` — current spring length
-- `load/{loadId}/spring/force` — spring force magnitude
+- `load/{loadId}/applied_force` — applied force vector for point force loads
+- `load/{loadId}/applied_torque` — applied torque vector for point torque loads
+- `load/{loadId}/length` — current spring length
+- `load/{loadId}/length_rate` — current spring length rate
+- `load/{loadId}/force` — spring force magnitude
 - `actuator/{actuatorId}/command` — commanded value
 - `actuator/{actuatorId}/effort` — applied effort
 

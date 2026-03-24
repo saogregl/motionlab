@@ -169,7 +169,7 @@ describe('Selection store', () => {
     });
 
     it('setSelectionFilter stores the filter', () => {
-      const filter = new Set(['body', 'datum'] as const);
+      const filter = new Set(['body', 'datum', 'actuator'] as const);
       useSelectionStore.getState().setSelectionFilter(filter);
       expect(useSelectionStore.getState().selectionFilter).toBe(filter);
     });

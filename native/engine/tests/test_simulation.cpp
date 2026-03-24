@@ -16,6 +16,7 @@
 #include <iostream>
 #include <string>
 
+#include "../src/mechanism_state.h"
 #include "../src/simulation.h"
 #include "mechanism/mechanism.pb.h"
 
@@ -41,11 +42,12 @@ static mech::Mechanism build_pendulum_mechanism() {
     m.mutable_id()->set_id("mech-001");
     m.set_name("Two-body pendulum");
 
-    // Body A — ground (first body = fixed by convention)
+    // Body A — ground (explicitly fixed)
     {
         auto* body = m.add_bodies();
         body->mutable_id()->set_id("body-a");
         body->set_name("Ground");
+        body->set_is_fixed(true);
 
         auto* pose = body->mutable_pose();
         auto* pos = pose->mutable_position();
@@ -220,10 +222,11 @@ static int test_missing_datum_reference() {
     mech::Mechanism m;
     m.mutable_id()->set_id("bad-datum");
 
-    // Add one body
+    // Add one fixed body so validation passes NO_GROUND check
     auto* body = m.add_bodies();
     body->mutable_id()->set_id("body-1");
     body->set_name("Body 1");
+    body->set_is_fixed(true);
     auto* mp = body->mutable_mass_properties();
     mp->set_mass(1.0);
     mp->set_ixx(0.1); mp->set_iyy(0.1); mp->set_izz(0.1);
@@ -256,6 +259,16 @@ static int test_zero_mass() {
     mech::Mechanism m;
     m.mutable_id()->set_id("zero-mass");
 
+    // Fixed ground so we pass NO_GROUND check
+    auto* ground = m.add_bodies();
+    ground->mutable_id()->set_id("body-ground");
+    ground->set_name("Ground");
+    ground->set_is_fixed(true);
+    auto* gmp = ground->mutable_mass_properties();
+    gmp->set_mass(1.0);
+    gmp->set_ixx(0.1); gmp->set_iyy(0.1); gmp->set_izz(0.1);
+
+    // Non-fixed body with zero mass
     auto* body = m.add_bodies();
     body->mutable_id()->set_id("body-z");
     body->set_name("Massless Body");
@@ -264,11 +277,14 @@ static int test_zero_mass() {
 
     auto result = runtime.compile(m);
     assert(!result.success);
-    assert(result.error_message.find("Massless Body") != std::string::npos ||
-           result.error_message.find("zero") != std::string::npos ||
-           result.error_message.find("negative") != std::string::npos);
+    // Check structured diagnostics for ZERO_MASS
+    bool found_zero_mass = false;
+    for (const auto& d : result.structured_diagnostics) {
+        if (d.code == "ZERO_MASS") { found_zero_mass = true; break; }
+    }
+    assert(found_zero_mass && "Expected ZERO_MASS diagnostic");
 
-    std::cout << "PASS (error: " << result.error_message << ")\n";
+    std::cout << "PASS\n";
     return 0;
 }
 
@@ -283,6 +299,16 @@ static int test_negative_mass() {
     mech::Mechanism m;
     m.mutable_id()->set_id("neg-mass");
 
+    // Fixed ground
+    auto* ground = m.add_bodies();
+    ground->mutable_id()->set_id("body-ground");
+    ground->set_name("Ground");
+    ground->set_is_fixed(true);
+    auto* gmp = ground->mutable_mass_properties();
+    gmp->set_mass(1.0);
+    gmp->set_ixx(0.1); gmp->set_iyy(0.1); gmp->set_izz(0.1);
+
+    // Non-fixed body with negative mass
     auto* body = m.add_bodies();
     body->mutable_id()->set_id("body-neg");
     body->set_name("Negative Body");
@@ -291,9 +317,13 @@ static int test_negative_mass() {
 
     auto result = runtime.compile(m);
     assert(!result.success);
-    assert(result.error_message.find("Negative Body") != std::string::npos);
+    bool found_zero_mass = false;
+    for (const auto& d : result.structured_diagnostics) {
+        if (d.code == "ZERO_MASS") { found_zero_mass = true; break; }
+    }
+    assert(found_zero_mass && "Expected ZERO_MASS diagnostic for negative mass");
 
-    std::cout << "PASS (error: " << result.error_message << ")\n";
+    std::cout << "PASS\n";
     return 0;
 }
 
@@ -353,7 +383,7 @@ static int test_reset() {
 // Test 7: Exact pendulum example — matches generate-pendulum-example.mts
 //
 // Differences from test 1:
-//   - Ground has is_fixed=true (test 1 relies on first-body convention)
+//   - Ground has is_fixed=true (all tests require explicit ground)
 //   - Arm at (0.7,0,0) with pivot at (0.2,0,0) (test 1: arm at 1.0, pivot at 0.5)
 //   - Realistic box inertia (test 1: isotropic 0.1)
 //   - Joint limits set to ±6.28 (test 1: no limits)
@@ -502,6 +532,720 @@ static int test_example_pendulum() {
 }
 
 // ---------------------------------------------------------------------------
+// Solver Configuration Tests (Epic 17)
+// ---------------------------------------------------------------------------
+
+// Helper: compile pendulum with custom config and return result + runtime
+static eng::CompilationResult compile_pendulum_with_config(
+    eng::SimulationRuntime& runtime,
+    const eng::SimulationConfig& config) {
+    auto mechanism = build_pendulum_mechanism();
+    return runtime.compile(mechanism, config);
+}
+
+// Test 8: Default solver config — PSOR/100/1e-8/Euler
+static int test_default_solver_config() {
+    std::cout << "  [test_default_solver_config] ";
+
+    eng::SimulationRuntime runtime;
+    eng::SimulationConfig config; // all defaults
+
+    auto result = compile_pendulum_with_config(runtime, config);
+    assert(result.success && "Default config should compile");
+
+    auto sc = runtime.getAppliedSolverConfig();
+    assert(sc.type == eng::SolverType::PSOR);
+    assert(sc.max_iterations == 100);
+    assert(std::abs(sc.tolerance - 1e-8) < 1e-15);
+    assert(sc.integrator == eng::IntegratorType::EULER_IMPLICIT_LINEARIZED);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test 9: PSOR with custom iterations and tolerance
+static int test_psor_custom_params() {
+    std::cout << "  [test_psor_custom_params] ";
+
+    eng::SimulationRuntime runtime;
+    eng::SimulationConfig config;
+    config.solver.type = eng::SolverType::PSOR;
+    config.solver.max_iterations = 200;
+    config.solver.tolerance = 1e-10;
+
+    auto result = compile_pendulum_with_config(runtime, config);
+    assert(result.success);
+
+    auto sc = runtime.getAppliedSolverConfig();
+    assert(sc.type == eng::SolverType::PSOR);
+    assert(sc.max_iterations == 200);
+    assert(std::abs(sc.tolerance - 1e-10) < 1e-18);
+
+    // Verify it still simulates correctly
+    runtime.step(0.01);
+    assert(runtime.getStepCount() == 1);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test 10: Barzilai-Borwein solver
+static int test_bb_solver() {
+    std::cout << "  [test_bb_solver] ";
+
+    eng::SimulationRuntime runtime;
+    eng::SimulationConfig config;
+    config.solver.type = eng::SolverType::BARZILAI_BORWEIN;
+    config.solver.max_iterations = 150;
+    config.solver.tolerance = 1e-9;
+
+    auto result = compile_pendulum_with_config(runtime, config);
+    assert(result.success);
+
+    auto sc = runtime.getAppliedSolverConfig();
+    assert(sc.type == eng::SolverType::BARZILAI_BORWEIN);
+    assert(sc.max_iterations == 150);
+
+    // Verify simulation runs
+    for (int i = 0; i < 10; i++) runtime.step(0.001);
+    assert(runtime.getStepCount() == 10);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test 11: APGD solver
+static int test_apgd_solver() {
+    std::cout << "  [test_apgd_solver] ";
+
+    eng::SimulationRuntime runtime;
+    eng::SimulationConfig config;
+    config.solver.type = eng::SolverType::APGD;
+
+    auto result = compile_pendulum_with_config(runtime, config);
+    assert(result.success);
+
+    auto sc = runtime.getAppliedSolverConfig();
+    assert(sc.type == eng::SolverType::APGD);
+
+    runtime.step(0.001);
+    assert(runtime.getStepCount() == 1);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test 12: MINRES solver
+static int test_minres_solver() {
+    std::cout << "  [test_minres_solver] ";
+
+    eng::SimulationRuntime runtime;
+    eng::SimulationConfig config;
+    config.solver.type = eng::SolverType::MINRES;
+
+    auto result = compile_pendulum_with_config(runtime, config);
+    assert(result.success);
+
+    auto sc = runtime.getAppliedSolverConfig();
+    assert(sc.type == eng::SolverType::MINRES);
+
+    runtime.step(0.001);
+    assert(runtime.getStepCount() == 1);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test 13: HHT integrator
+static int test_hht_integrator() {
+    std::cout << "  [test_hht_integrator] ";
+
+    eng::SimulationRuntime runtime;
+    eng::SimulationConfig config;
+    config.solver.integrator = eng::IntegratorType::HHT;
+    config.solver.max_iterations = 200; // HHT needs more iterations for convergence
+
+    auto result = compile_pendulum_with_config(runtime, config);
+    assert(result.success);
+
+    auto sc = runtime.getAppliedSolverConfig();
+    assert(sc.integrator == eng::IntegratorType::HHT);
+    assert(sc.max_iterations == 200);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test 14: Newmark integrator
+static int test_newmark_integrator() {
+    std::cout << "  [test_newmark_integrator] ";
+
+    eng::SimulationRuntime runtime;
+    eng::SimulationConfig config;
+    config.solver.integrator = eng::IntegratorType::NEWMARK;
+    config.solver.max_iterations = 200; // implicit integrators may need more iterations
+
+    auto result = compile_pendulum_with_config(runtime, config);
+    assert(result.success);
+
+    auto sc = runtime.getAppliedSolverConfig();
+    assert(sc.integrator == eng::IntegratorType::NEWMARK);
+    assert(sc.max_iterations == 200);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test 15: Contact configuration
+static int test_contact_config() {
+    std::cout << "  [test_contact_config] ";
+
+    eng::SimulationRuntime runtime;
+    eng::SimulationConfig config;
+    config.contact.friction = 0.5;
+    config.contact.restitution = 0.3;
+    config.contact.compliance = 1e-5;
+    config.contact.damping = 0.01;
+    config.contact.enable_contact = true;
+
+    auto result = compile_pendulum_with_config(runtime, config);
+    assert(result.success);
+
+    auto cc = runtime.getAppliedContactConfig();
+    // float precision: Chrono stores friction/restitution as float
+    assert(std::abs(cc.friction - 0.5) < 1e-6);
+    assert(std::abs(cc.restitution - 0.3) < 1e-6);
+    assert(std::abs(cc.compliance - 1e-5) < 1e-10);
+    assert(std::abs(cc.damping - 0.01) < 1e-6);
+    assert(cc.enable_contact == true);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test 16: Backward compatibility — default config matches pre-Epic-17 behavior
+static int test_backward_compat() {
+    std::cout << "  [test_backward_compat] ";
+
+    // Compile with explicit defaults (should match implicit defaults)
+    eng::SimulationRuntime runtime_default;
+    eng::SimulationConfig config_default;
+    auto result_default = compile_pendulum_with_config(runtime_default, config_default);
+    assert(result_default.success);
+
+    // Compile with no-arg default (same as SimulationConfig{})
+    eng::SimulationRuntime runtime_implicit;
+    auto mechanism = build_pendulum_mechanism();
+    auto result_implicit = runtime_implicit.compile(mechanism);
+    assert(result_implicit.success);
+
+    // Both should use PSOR/100/1e-8/Euler
+    auto sc1 = runtime_default.getAppliedSolverConfig();
+    auto sc2 = runtime_implicit.getAppliedSolverConfig();
+    assert(sc1.type == sc2.type);
+    assert(sc1.max_iterations == sc2.max_iterations);
+    assert(std::abs(sc1.tolerance - sc2.tolerance) < 1e-15);
+    assert(sc1.integrator == sc2.integrator);
+
+    // Both should produce the same simulation result
+    for (int i = 0; i < 50; i++) {
+        runtime_default.step(0.001);
+        runtime_implicit.step(0.001);
+    }
+    auto poses1 = runtime_default.getBodyPoses();
+    auto poses2 = runtime_implicit.getBodyPoses();
+    for (size_t i = 0; i < poses1.size(); i++) {
+        assert(std::abs(poses1[i].position[0] - poses2[i].position[0]) < 1e-12);
+        assert(std::abs(poses1[i].position[1] - poses2[i].position[1]) < 1e-12);
+        assert(std::abs(poses1[i].position[2] - poses2[i].position[2]) < 1e-12);
+    }
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// ---------------------------------------------------------------------------
+// Test: refresh_aggregate_masses preserves mass when no geometries exist
+// ---------------------------------------------------------------------------
+
+static int test_no_geometry_mass_preserved() {
+    std::cout << "  [test_no_geometry_mass_preserved] ";
+
+    // Build a mechanism with mass_override=false and no geometries,
+    // mimicking legacy project files (e.g. pendulum.motionlab)
+    mech::Mechanism m;
+    m.mutable_id()->set_id("no-geom-test");
+
+    auto* body = m.add_bodies();
+    body->mutable_id()->set_id("body-a");
+    body->set_name("Test Body");
+    body->set_is_fixed(true);
+    // mass_override defaults to false
+    auto* mp = body->mutable_mass_properties();
+    mp->set_mass(5.0);
+    mp->set_ixx(0.1);
+    mp->set_iyy(0.1);
+    mp->set_izz(0.1);
+
+    // Load into MechanismState (same path as project file loading)
+    eng::MechanismState state;
+    state.load_from_proto(m);
+
+    // Verify mass is set and mass_override is false
+    auto loaded = state.build_body_proto("body-a");
+    assert(loaded.has_value());
+    assert(!loaded->mass_override());
+    assert(std::abs(loaded->mass_properties().mass() - 5.0) < 1e-12);
+
+    // refresh_aggregate_masses should NOT wipe the mass
+    state.refresh_aggregate_masses();
+
+    loaded = state.build_body_proto("body-a");
+    assert(loaded.has_value());
+    assert(std::abs(loaded->mass_properties().mass() - 5.0) < 1e-12 &&
+           "Mass should be preserved when body has no geometries");
+
+    // Verify the body still compiles after refresh
+    eng::SimulationRuntime runtime;
+    auto mech_proto = state.build_mechanism_proto();
+    auto result = runtime.compile(mech_proto);
+    assert(result.success && "Body with preserved mass should compile");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// ===========================================================================
+// Pre-Simulation Validation Tests (Epic 17, Prompt 3)
+// ===========================================================================
+
+// Helper: find a diagnostic by code in structured_diagnostics
+static const eng::CompilationDiagnostic* find_diagnostic(
+    const eng::CompilationResult& result, const std::string& code) {
+    for (const auto& d : result.structured_diagnostics) {
+        if (d.code == code) return &d;
+    }
+    return nullptr;
+}
+
+// Helper: count diagnostics by severity
+static int count_by_severity(const eng::CompilationResult& result,
+                             eng::DiagnosticSeverity sev) {
+    int count = 0;
+    for (const auto& d : result.structured_diagnostics) {
+        if (d.severity == sev) count++;
+    }
+    return count;
+}
+
+static int test_no_ground_error() {
+    std::cout << "  [test_no_ground_error] ";
+
+    eng::SimulationRuntime runtime;
+    mech::Mechanism m;
+    m.mutable_id()->set_id("no-ground");
+
+    // One body, NOT fixed
+    auto* body = m.add_bodies();
+    body->mutable_id()->set_id("body-1");
+    body->set_name("Floating");
+    auto* mp = body->mutable_mass_properties();
+    mp->set_mass(1.0);
+    mp->set_ixx(0.1); mp->set_iyy(0.1); mp->set_izz(0.1);
+
+    auto result = runtime.compile(m);
+    assert(!result.success);
+    auto* diag = find_diagnostic(result, "NO_GROUND");
+    assert(diag && "Expected NO_GROUND diagnostic");
+    assert(diag->severity == eng::DiagnosticSeverity::ERROR);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+static int test_self_joint_error() {
+    std::cout << "  [test_self_joint_error] ";
+
+    eng::SimulationRuntime runtime;
+    mech::Mechanism m;
+    m.mutable_id()->set_id("self-joint");
+
+    auto* body = m.add_bodies();
+    body->mutable_id()->set_id("body-1");
+    body->set_name("Only Body");
+    body->set_is_fixed(true);
+    auto* mp = body->mutable_mass_properties();
+    mp->set_mass(1.0);
+    mp->set_ixx(0.1); mp->set_iyy(0.1); mp->set_izz(0.1);
+
+    // Two datums on the same body
+    auto* d1 = m.add_datums();
+    d1->mutable_id()->set_id("datum-1");
+    d1->mutable_parent_body_id()->set_id("body-1");
+    auto* lp1 = d1->mutable_local_pose();
+    lp1->mutable_position()->set_x(0.1);
+    lp1->mutable_orientation()->set_w(1);
+
+    auto* d2 = m.add_datums();
+    d2->mutable_id()->set_id("datum-2");
+    d2->mutable_parent_body_id()->set_id("body-1");
+    auto* lp2 = d2->mutable_local_pose();
+    lp2->mutable_position()->set_x(-0.1);
+    lp2->mutable_orientation()->set_w(1);
+
+    auto* joint = m.add_joints();
+    joint->mutable_id()->set_id("joint-self");
+    joint->set_name("Self Joint");
+    joint->set_type(mech::JOINT_TYPE_REVOLUTE);
+    joint->mutable_parent_datum_id()->set_id("datum-1");
+    joint->mutable_child_datum_id()->set_id("datum-2");
+
+    auto result = runtime.compile(m);
+    assert(!result.success);
+    auto* diag = find_diagnostic(result, "SELF_JOINT");
+    assert(diag && "Expected SELF_JOINT diagnostic");
+    assert(diag->severity == eng::DiagnosticSeverity::ERROR);
+    assert(!diag->affected_entity_ids.empty());
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+static int test_duplicate_actuator_error() {
+    std::cout << "  [test_duplicate_actuator_error] ";
+
+    eng::SimulationRuntime runtime;
+    auto m = build_pendulum_mechanism();
+
+    // Add two actuators targeting the same joint
+    auto* act1 = m.add_actuators();
+    act1->mutable_id()->set_id("act-1");
+    act1->set_name("Motor 1");
+    auto* rm1 = act1->mutable_revolute_motor();
+    rm1->mutable_joint_id()->set_id("joint-rev");
+    rm1->set_control_mode(mech::ACTUATOR_CONTROL_MODE_SPEED);
+    rm1->set_command_value(1.0);
+
+    auto* act2 = m.add_actuators();
+    act2->mutable_id()->set_id("act-2");
+    act2->set_name("Motor 2");
+    auto* rm2 = act2->mutable_revolute_motor();
+    rm2->mutable_joint_id()->set_id("joint-rev");
+    rm2->set_control_mode(mech::ACTUATOR_CONTROL_MODE_SPEED);
+    rm2->set_command_value(2.0);
+
+    auto result = runtime.compile(m);
+    assert(!result.success);
+    auto* diag = find_diagnostic(result, "DUPLICATE_ACTUATOR");
+    assert(diag && "Expected DUPLICATE_ACTUATOR diagnostic");
+    assert(diag->severity == eng::DiagnosticSeverity::ERROR);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+static int test_floating_body_warning() {
+    std::cout << "  [test_floating_body_warning] ";
+
+    eng::SimulationRuntime runtime;
+    auto m = build_pendulum_mechanism();
+
+    // Add a third unconnected body
+    auto* body = m.add_bodies();
+    body->mutable_id()->set_id("body-floating");
+    body->set_name("Floater");
+    auto* mp = body->mutable_mass_properties();
+    mp->set_mass(1.0);
+    mp->set_ixx(0.1); mp->set_iyy(0.1); mp->set_izz(0.1);
+    auto* pose = body->mutable_pose();
+    pose->mutable_position()->set_x(5);
+    pose->mutable_orientation()->set_w(1);
+
+    auto result = runtime.compile(m);
+    assert(result.success && "Should succeed with warnings");
+    auto* diag = find_diagnostic(result, "FLOATING_BODY");
+    assert(diag && "Expected FLOATING_BODY warning");
+    assert(diag->severity == eng::DiagnosticSeverity::WARNING);
+    assert(diag->affected_entity_ids.size() == 1);
+    assert(diag->affected_entity_ids[0] == "body-floating");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+static int test_under_constrained_warning() {
+    std::cout << "  [test_under_constrained_warning] ";
+
+    eng::SimulationRuntime runtime;
+    mech::Mechanism m;
+    m.mutable_id()->set_id("under-constrained");
+
+    // Ground
+    auto* ground = m.add_bodies();
+    ground->mutable_id()->set_id("body-g");
+    ground->set_name("Ground");
+    ground->set_is_fixed(true);
+    auto* gmp = ground->mutable_mass_properties();
+    gmp->set_mass(1.0);
+    gmp->set_ixx(0.1); gmp->set_iyy(0.1); gmp->set_izz(0.1);
+    ground->mutable_pose()->mutable_orientation()->set_w(1);
+
+    // Three moving bodies, only 1 revolute joint connecting first to ground
+    // DOF = 6*3 - 5 = 13 > 0 → UNDER_CONSTRAINED
+    for (int i = 0; i < 3; i++) {
+        auto* body = m.add_bodies();
+        body->mutable_id()->set_id("body-" + std::to_string(i));
+        body->set_name("Body " + std::to_string(i));
+        auto* mp = body->mutable_mass_properties();
+        mp->set_mass(1.0);
+        mp->set_ixx(0.1); mp->set_iyy(0.1); mp->set_izz(0.1);
+        auto* pose = body->mutable_pose();
+        pose->mutable_position()->set_x(static_cast<double>(i + 1));
+        pose->mutable_orientation()->set_w(1);
+    }
+
+    // Datums + 1 revolute joint from ground to body-0
+    auto* d1 = m.add_datums();
+    d1->mutable_id()->set_id("d-g");
+    d1->mutable_parent_body_id()->set_id("body-g");
+    d1->mutable_local_pose()->mutable_orientation()->set_w(1);
+
+    auto* d2 = m.add_datums();
+    d2->mutable_id()->set_id("d-0");
+    d2->mutable_parent_body_id()->set_id("body-0");
+    d2->mutable_local_pose()->mutable_orientation()->set_w(1);
+
+    auto* joint = m.add_joints();
+    joint->mutable_id()->set_id("j-0");
+    joint->set_name("J0");
+    joint->set_type(mech::JOINT_TYPE_REVOLUTE);
+    joint->mutable_parent_datum_id()->set_id("d-g");
+    joint->mutable_child_datum_id()->set_id("d-0");
+
+    // Add an actuator so the UNDER_CONSTRAINED check fires (DOF > num_actuators)
+    auto* act = m.add_actuators();
+    act->mutable_id()->set_id("act-uc");
+    act->set_name("Motor");
+    auto* rm = act->mutable_revolute_motor();
+    rm->mutable_joint_id()->set_id("j-0");
+    rm->set_control_mode(mech::ACTUATOR_CONTROL_MODE_SPEED);
+    rm->set_command_value(1.0);
+
+    auto result = runtime.compile(m);
+    // DOF = 6*3 - 5 = 13, actuators = 1, so 13 > 1 → UNDER_CONSTRAINED
+    auto* diag = find_diagnostic(result, "UNDER_CONSTRAINED");
+    assert(diag && "Expected UNDER_CONSTRAINED warning");
+    assert(diag->severity == eng::DiagnosticSeverity::WARNING);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+static int test_over_constrained_warning() {
+    std::cout << "  [test_over_constrained_warning] ";
+
+    eng::SimulationRuntime runtime;
+    mech::Mechanism m;
+    m.mutable_id()->set_id("over-constrained");
+
+    // Ground
+    auto* ground = m.add_bodies();
+    ground->mutable_id()->set_id("body-g");
+    ground->set_name("Ground");
+    ground->set_is_fixed(true);
+    auto* gmp = ground->mutable_mass_properties();
+    gmp->set_mass(1.0);
+    gmp->set_ixx(0.1); gmp->set_iyy(0.1); gmp->set_izz(0.1);
+    ground->mutable_pose()->mutable_orientation()->set_w(1);
+
+    // One moving body with TWO fixed joints to ground → removes 12 DOF from 6 available
+    auto* body = m.add_bodies();
+    body->mutable_id()->set_id("body-1");
+    body->set_name("Over Body");
+    auto* mp = body->mutable_mass_properties();
+    mp->set_mass(1.0);
+    mp->set_ixx(0.1); mp->set_iyy(0.1); mp->set_izz(0.1);
+    body->mutable_pose()->mutable_orientation()->set_w(1);
+
+    // 4 datums, 2 fixed joints
+    for (int i = 0; i < 2; i++) {
+        auto* dg = m.add_datums();
+        dg->mutable_id()->set_id("dg-" + std::to_string(i));
+        dg->mutable_parent_body_id()->set_id("body-g");
+        dg->mutable_local_pose()->mutable_orientation()->set_w(1);
+
+        auto* db = m.add_datums();
+        db->mutable_id()->set_id("db-" + std::to_string(i));
+        db->mutable_parent_body_id()->set_id("body-1");
+        db->mutable_local_pose()->mutable_orientation()->set_w(1);
+
+        auto* jnt = m.add_joints();
+        jnt->mutable_id()->set_id("jf-" + std::to_string(i));
+        jnt->set_name("Fixed " + std::to_string(i));
+        jnt->set_type(mech::JOINT_TYPE_FIXED);
+        jnt->mutable_parent_datum_id()->set_id("dg-" + std::to_string(i));
+        jnt->mutable_child_datum_id()->set_id("db-" + std::to_string(i));
+    }
+
+    auto result = runtime.compile(m);
+    assert(result.success && "Over-constrained is a warning, not an error");
+    auto* diag = find_diagnostic(result, "OVER_CONSTRAINED");
+    assert(diag && "Expected OVER_CONSTRAINED warning");
+    assert(diag->severity == eng::DiagnosticSeverity::WARNING);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+static int test_disconnected_subgroups_info() {
+    std::cout << "  [test_disconnected_subgroups_info] ";
+
+    eng::SimulationRuntime runtime;
+    auto m = build_pendulum_mechanism();
+
+    // Add a second independent chain: body-c fixed, body-d connected to it
+    auto* body_c = m.add_bodies();
+    body_c->mutable_id()->set_id("body-c");
+    body_c->set_name("Ground 2");
+    body_c->set_is_fixed(true);
+    auto* cmp = body_c->mutable_mass_properties();
+    cmp->set_mass(1.0);
+    cmp->set_ixx(0.1); cmp->set_iyy(0.1); cmp->set_izz(0.1);
+    body_c->mutable_pose()->mutable_position()->set_x(10);
+    body_c->mutable_pose()->mutable_orientation()->set_w(1);
+
+    auto* body_d = m.add_bodies();
+    body_d->mutable_id()->set_id("body-d");
+    body_d->set_name("Arm 2");
+    auto* dmp = body_d->mutable_mass_properties();
+    dmp->set_mass(1.0);
+    dmp->set_ixx(0.1); dmp->set_iyy(0.1); dmp->set_izz(0.1);
+    body_d->mutable_pose()->mutable_position()->set_x(11);
+    body_d->mutable_pose()->mutable_orientation()->set_w(1);
+
+    auto* dc = m.add_datums();
+    dc->mutable_id()->set_id("datum-c");
+    dc->mutable_parent_body_id()->set_id("body-c");
+    dc->mutable_local_pose()->mutable_position()->set_x(0.5);
+    dc->mutable_local_pose()->mutable_orientation()->set_w(1);
+
+    auto* dd = m.add_datums();
+    dd->mutable_id()->set_id("datum-d");
+    dd->mutable_parent_body_id()->set_id("body-d");
+    dd->mutable_local_pose()->mutable_position()->set_x(-0.5);
+    dd->mutable_local_pose()->mutable_orientation()->set_w(1);
+
+    auto* joint2 = m.add_joints();
+    joint2->mutable_id()->set_id("joint-rev-2");
+    joint2->set_name("Pivot 2");
+    joint2->set_type(mech::JOINT_TYPE_REVOLUTE);
+    joint2->mutable_parent_datum_id()->set_id("datum-c");
+    joint2->mutable_child_datum_id()->set_id("datum-d");
+
+    auto result = runtime.compile(m);
+    assert(result.success);
+    auto* diag = find_diagnostic(result, "DISCONNECTED_SUBGROUPS");
+    assert(diag && "Expected DISCONNECTED_SUBGROUPS info");
+    assert(diag->severity == eng::DiagnosticSeverity::INFO);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+static int test_valid_mechanism_clean() {
+    std::cout << "  [test_valid_mechanism_clean] ";
+
+    eng::SimulationRuntime runtime;
+    auto m = build_pendulum_mechanism();
+    auto result = runtime.compile(m);
+    assert(result.success);
+
+    // Should have no error or warning diagnostics
+    int errors = count_by_severity(result, eng::DiagnosticSeverity::ERROR);
+    int warnings = count_by_severity(result, eng::DiagnosticSeverity::WARNING);
+    assert(errors == 0 && "Valid mechanism should have no errors");
+    assert(warnings == 0 && "Valid mechanism should have no warnings");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+static int test_multiple_errors_accumulated() {
+    std::cout << "  [test_multiple_errors_accumulated] ";
+
+    eng::SimulationRuntime runtime;
+    mech::Mechanism m;
+    m.mutable_id()->set_id("multi-error");
+
+    // Body with zero mass and NOT fixed → triggers both NO_GROUND and ZERO_MASS
+    auto* body = m.add_bodies();
+    body->mutable_id()->set_id("body-bad");
+    body->set_name("Bad Body");
+    auto* mp = body->mutable_mass_properties();
+    mp->set_mass(0.0);
+
+    auto result = runtime.compile(m);
+    assert(!result.success);
+    assert(find_diagnostic(result, "NO_GROUND") && "Expected NO_GROUND");
+    assert(find_diagnostic(result, "ZERO_MASS") && "Expected ZERO_MASS");
+    assert(count_by_severity(result, eng::DiagnosticSeverity::ERROR) >= 2);
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+static int test_zero_mass_fixed_body_ok() {
+    std::cout << "  [test_zero_mass_fixed_body_ok] ";
+
+    eng::SimulationRuntime runtime;
+    mech::Mechanism m;
+    m.mutable_id()->set_id("fixed-zero-mass");
+
+    // Fixed body with mass=0 → should NOT trigger ZERO_MASS
+    auto* body = m.add_bodies();
+    body->mutable_id()->set_id("body-1");
+    body->set_name("Ground");
+    body->set_is_fixed(true);
+    auto* mp = body->mutable_mass_properties();
+    mp->set_mass(0.0);
+    mp->set_ixx(0.1); mp->set_iyy(0.1); mp->set_izz(0.1);
+
+    auto result = runtime.compile(m);
+    assert(result.success && "Fixed body with zero mass should compile");
+    assert(!find_diagnostic(result, "ZERO_MASS") && "Should not trigger ZERO_MASS for fixed body");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+static int test_backward_compat_string_diagnostics() {
+    std::cout << "  [test_backward_compat_string_diagnostics] ";
+
+    eng::SimulationRuntime runtime;
+    auto m = build_pendulum_mechanism();
+
+    // Add a floating body to trigger a warning
+    auto* body = m.add_bodies();
+    body->mutable_id()->set_id("body-floating");
+    body->set_name("Floater");
+    auto* mp = body->mutable_mass_properties();
+    mp->set_mass(1.0);
+    mp->set_ixx(0.1); mp->set_iyy(0.1); mp->set_izz(0.1);
+    body->mutable_pose()->mutable_position()->set_x(5);
+    body->mutable_pose()->mutable_orientation()->set_w(1);
+
+    auto result = runtime.compile(m);
+    assert(result.success);
+    // Deprecated string diagnostics should be populated from structured
+    assert(!result.structured_diagnostics.empty());
+    assert(result.diagnostics.size() == result.structured_diagnostics.size() &&
+           "Deprecated diagnostics should match structured count");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
@@ -517,6 +1261,31 @@ int main() {
     failures += test_negative_mass();
     failures += test_reset();
     failures += test_example_pendulum();
+
+    std::cout << "\n=== Solver Configuration Tests (Epic 17) ===\n";
+    failures += test_default_solver_config();
+    failures += test_psor_custom_params();
+    failures += test_bb_solver();
+    failures += test_apgd_solver();
+    failures += test_minres_solver();
+    failures += test_hht_integrator();
+    failures += test_newmark_integrator();
+    failures += test_contact_config();
+    failures += test_backward_compat();
+    failures += test_no_geometry_mass_preserved();
+
+    std::cout << "\n=== Pre-Simulation Validation Tests (Epic 17 Prompt 3) ===\n";
+    failures += test_no_ground_error();
+    failures += test_self_joint_error();
+    failures += test_duplicate_actuator_error();
+    failures += test_floating_body_warning();
+    failures += test_under_constrained_warning();
+    failures += test_over_constrained_warning();
+    failures += test_disconnected_subgroups_info();
+    failures += test_valid_mechanism_clean();
+    failures += test_multiple_errors_accumulated();
+    failures += test_zero_mass_fixed_body_ok();
+    failures += test_backward_compat_string_diagnostics();
 
     if (failures == 0) {
         std::cout << "\nAll simulation tests passed.\n";

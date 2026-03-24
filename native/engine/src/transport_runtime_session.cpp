@@ -108,7 +108,8 @@ void RuntimeSession::handle_compile_mechanism(ix::WebSocket& ws,
     }
     for (const auto& sd : result.structured_diagnostics) {
         auto* proto_diag = cr->add_structured_diagnostics();
-        proto_diag->set_severity(static_cast<protocol::DiagnosticSeverity>(sd.severity));
+        proto_diag->set_severity(static_cast<protocol::DiagnosticSeverity>(
+            static_cast<int>(sd.severity)));
         proto_diag->set_message(sd.message);
         for (const auto& id : sd.affected_entity_ids) {
             proto_diag->add_affected_entity_ids(id);

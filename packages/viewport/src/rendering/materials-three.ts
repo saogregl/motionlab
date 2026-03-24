@@ -1,4 +1,4 @@
-import { Color, Mesh, MeshStandardMaterial, type Scene } from 'three';
+import { Color, Mesh, MeshStandardMaterial } from 'three';
 
 import { ACCENT } from './colors-three.js';
 
@@ -69,7 +69,7 @@ export interface MaterialFactory {
 /**
  * MeshStandardMaterial factory with CAD-quality presets and selection tinting.
  */
-export function createMaterialFactory(_scene?: Scene): MaterialFactory {
+export function createMaterialFactory(): MaterialFactory {
   const cache = new Map<MaterialPreset, MeshStandardMaterial>();
 
   function getMaterial(preset: MaterialPreset): MeshStandardMaterial {

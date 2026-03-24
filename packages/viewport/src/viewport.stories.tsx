@@ -199,12 +199,72 @@ export const JointTypeGallery: Story = {
   name: 'Joint Type Gallery',
   render: (_args, { globals }) => {
     const theme = (globals.theme ?? 'dark') as ViewportTheme;
+    const [activeId, setActiveId] = useState<string | null>(null);
+    const [activeMode, setActiveMode] = useState<'hover' | 'select' | null>(null);
+    const sgRef = useRef<SceneGraphManager | null>(null);
+
+    const applyState = useCallback((id: string | null, mode: 'hover' | 'select' | null) => {
+      const sg = sgRef.current;
+      if (!sg) return;
+      sg.applySelection(new Set(mode === 'select' && id ? [id] : []));
+      sg.applyHover(mode === 'hover' ? id : null);
+    }, []);
+
+    const extra = (
+      <>
+        <span style={{ ...BUTTON_STYLE, cursor: 'default', opacity: 0.6 }}>|</span>
+        {JOINT_TYPES.map((jt) => (
+          <span key={jt} style={{ display: 'inline-flex', gap: 2 }}>
+            <button
+              type="button"
+              style={activeId === `j-${jt}` && activeMode === 'hover' ? ACTIVE_BUTTON_STYLE : BUTTON_STYLE}
+              onClick={() => {
+                const id = `j-${jt}`;
+                const mode = 'hover';
+                setActiveId(id);
+                setActiveMode(mode);
+                applyState(id, mode);
+              }}
+            >
+              {jt} hover
+            </button>
+            <button
+              type="button"
+              style={activeId === `j-${jt}` && activeMode === 'select' ? ACTIVE_BUTTON_STYLE : BUTTON_STYLE}
+              onClick={() => {
+                const id = `j-${jt}`;
+                const mode = 'select';
+                setActiveId(id);
+                setActiveMode(mode);
+                applyState(id, mode);
+              }}
+            >
+              sel
+            </button>
+          </span>
+        ))}
+        <button
+          type="button"
+          style={activeId === null ? ACTIVE_BUTTON_STYLE : BUTTON_STYLE}
+          onClick={() => {
+            setActiveId(null);
+            setActiveMode(null);
+            applyState(null, null);
+          }}
+        >
+          clear
+        </button>
+      </>
+    );
+
     return (
       <SceneShell
-        title="All 6 joint types side-by-side"
+        title="All 6 joint types — hover/select to see states"
         gridVisible
         theme={theme}
+        extra={extra}
         onSceneReady={(sg) => {
+          sgRef.current = sg;
           const spacing = 2.2;
           const startX = -((JOINT_TYPES.length - 1) * spacing) / 2;
 
@@ -232,13 +292,13 @@ export const JointTypeGallery: Story = {
 
             // Parent datum on top face of box
             sg.addDatum(`dp-${jt}`, `parent-${jt}`, {
-              position: [0, 0.25, 0],
+              position: [x, 0.5, 0],
               rotation: [0, 0, 0, 1],
             });
 
             // Child datum on bottom of cylinder
             sg.addDatum(`dc-${jt}`, `child-${jt}`, {
-              position: [0, -0.4, 0],
+              position: [x, 0.9, 0],
               rotation: [0, 0, 0, 1],
             });
 
@@ -249,6 +309,125 @@ export const JointTypeGallery: Story = {
           sg.fitAll();
         }}
       />
+    );
+  },
+};
+
+// ---------------------------------------------------------------------------
+// Story: Joint States (revolute with limits)
+// ---------------------------------------------------------------------------
+
+export const JointStates: Story = {
+  name: 'Joint States',
+  render: (_args, { globals }) => {
+    const theme = (globals.theme ?? 'dark') as ViewportTheme;
+    const [mode, setMode] = useState<'idle' | 'hover' | 'selected'>('idle');
+    const sgRef = useRef<SceneGraphManager | null>(null);
+
+    const applyMode = useCallback((sg: SceneGraphManager, m: typeof mode) => {
+      switch (m) {
+        case 'hover':
+          sg.applySelection(new Set());
+          sg.applyHover('j-rev');
+          break;
+        case 'selected':
+          sg.applySelection(new Set(['j-rev']));
+          sg.applyHover(null);
+          break;
+        default:
+          sg.applySelection(new Set());
+          sg.applyHover(null);
+      }
+    }, []);
+
+    const handlePick = useCallback((entityId: string | null) => {
+      if (!sgRef.current) return;
+      if (entityId) {
+        sgRef.current.applySelection(new Set([entityId]));
+        sgRef.current.applyHover(null);
+        setMode('selected');
+      } else {
+        sgRef.current.applySelection(new Set());
+        setMode('idle');
+      }
+    }, []);
+
+    const handleHover = useCallback((entityId: string | null) => {
+      sgRef.current?.applyHover(entityId);
+    }, []);
+
+    const extra = (
+      <>
+        <span style={{ ...BUTTON_STYLE, cursor: 'default', opacity: 0.6 }}>|</span>
+        {(['idle', 'hover', 'selected'] as const).map((m) => (
+          <button
+            type="button"
+            key={m}
+            style={mode === m ? ACTIVE_BUTTON_STYLE : BUTTON_STYLE}
+            onClick={() => {
+              setMode(m);
+              if (sgRef.current) applyMode(sgRef.current, m);
+            }}
+          >
+            {m}
+          </button>
+        ))}
+      </>
+    );
+
+    return (
+      <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
+        <div style={TOOLBAR_STYLE}>
+          <span style={STATUS_STYLE}>Revolute joint — idle / hover / selected with ±70° limits</span>
+          <span style={{ ...BUTTON_STYLE, cursor: 'default', opacity: 0.6 }}>|</span>
+          {CAMERA_PRESETS.map((preset) => (
+            <button
+              type="button"
+              key={preset}
+              style={BUTTON_STYLE}
+              onClick={() => sgRef.current?.setCameraPreset(preset)}
+            >
+              {preset}
+            </button>
+          ))}
+          <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.fitAll()}>
+            fit-all
+          </button>
+          <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.toggleGrid()}>
+            grid
+          </button>
+          {extra}
+        </div>
+        <Viewport
+          onSceneReady={(sg) => {
+            sgRef.current = sg;
+
+            sg.addBody('base', 'Base', createBoxMeshData(2, 0.4, 2), {
+              position: [0, 0.2, 0],
+              rotation: [0, 0, 0, 1],
+            }, FACE_COUNT_6);
+
+            sg.addBody('arm', 'Arm', createCylinderMeshData(0.25, 0.25, 1.6, 20), {
+              position: [0, 1.2, 0],
+              rotation: [0, 0, 0, 1],
+            }, FACE_COUNT_6);
+
+            sg.addDatum('d-base', 'base', { position: [0, 0.4, 0], rotation: [0, 0, 0, 1] });
+            sg.addDatum('d-arm', 'arm', { position: [0, 0.4, 0], rotation: [0, 0, 0, 1] });
+
+            sg.addJoint('j-rev', 'd-base', 'd-arm', 'revolute');
+            // Set ±70° limits so the limit arc renders when selected
+            sg.updateJointLimits('j-rev', -1.2, 1.2);
+
+            applyMode(sg, mode);
+            sg.fitAll();
+          }}
+          onPick={handlePick}
+          onHover={handleHover}
+          gridVisible
+          theme={theme}
+        />
+      </div>
     );
   },
 };

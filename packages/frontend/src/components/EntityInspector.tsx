@@ -1,11 +1,12 @@
-import { InspectorPanel } from '@motionlab/ui';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
+import { ActuatorInspector } from './ActuatorInspector.js';
 import { BodyInspector } from './BodyInspector.js';
 import { DatumInspector } from './DatumInspector.js';
 import { GeometryInspector } from './GeometryInspector.js';
 import { JointInspector } from './JointInspector.js';
+import { LoadInspector } from './LoadInspector.js';
 import { MechanismInspector } from './MechanismInspector.js';
 import { SimulationMetadataSection } from './SimulationMetadataSection.js';
 
@@ -20,6 +21,7 @@ export function EntityInspector() {
   const datums = useMechanismStore((s) => s.datums);
   const joints = useMechanismStore((s) => s.joints);
   const loads = useMechanismStore((s) => s.loads);
+  const actuators = useMechanismStore((s) => s.actuators);
   const simState = useSimulationStore((s) => s.state);
 
   const showSimMeta = simState !== 'idle';
@@ -67,18 +69,26 @@ export function EntityInspector() {
     );
   }
   if (loads.has(firstId)) {
-    const load = loads.get(firstId);
     return (
       <>
-        <InspectorPanel>
-          <div className="ps-3 pe-3 py-2 text-[length:var(--text-xs)] text-[var(--text-tertiary)]">
-            {load?.name ?? 'Load'} ({load?.type ?? 'unknown'}) — full inspector coming in Prompt 3.
-          </div>
-        </InspectorPanel>
+        <LoadInspector loadId={firstId} />
+        {showSimMeta && <SimulationMetadataSection />}
+      </>
+    );
+  }
+  if (actuators.has(firstId)) {
+    return (
+      <>
+        <ActuatorInspector actuatorId={firstId} />
         {showSimMeta && <SimulationMetadataSection />}
       </>
     );
   }
 
-  return <InspectorPanel>{showSimMeta && <SimulationMetadataSection />}</InspectorPanel>;
+  return (
+    <>
+      <MechanismInspector />
+      {showSimMeta && <SimulationMetadataSection />}
+    </>
+  );
 }

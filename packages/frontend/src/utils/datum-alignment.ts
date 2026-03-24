@@ -1,4 +1,5 @@
 import type { BodyPose, JointTypeId } from '../stores/mechanism.js';
+import { composeWorldPose } from './pose-composition.js';
 
 export type AlignmentKind = 'coaxial' | 'coplanar' | 'coincident' | 'general';
 
@@ -27,17 +28,6 @@ export interface DatumAlignment {
 export interface DatumWorldPose {
   position: Vec3;
   zAxis: Vec3;
-}
-
-// --- Quaternion math helpers ---
-
-function quaternionMultiply(a: Quat, b: Quat): Quat {
-  return {
-    x: a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
-    y: a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,
-    z: a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w,
-    w: a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z,
-  };
 }
 
 function rotateVector(v: Vec3, q: Quat): Vec3 {
@@ -99,6 +89,9 @@ const PARALLEL_THRESHOLD = 0.999;
 /** Origins are considered coincident if distance < this (1mm). */
 const COINCIDENT_THRESHOLD = 0.001;
 
+/** Parallel axes are considered coaxial if their shortest separation is < this (1mm). */
+const COAXIAL_THRESHOLD = 0.001;
+
 /** Origins are considered coplanar if offset projection onto Z < this. */
 const COPLANAR_THRESHOLD = 0.001;
 
@@ -111,22 +104,10 @@ const COPLANAR_THRESHOLD = 0.001;
  * World Z-axis = rotate([0,0,1], body.rotation * datum.localRotation)
  */
 export function computeDatumWorldPose(bodyPose: BodyPose, datumLocalPose: BodyPose): DatumWorldPose {
-  const bodyQ = bodyPose.rotation;
-  const datumQ = datumLocalPose.rotation;
+  const worldPose = composeWorldPose(bodyPose, datumLocalPose);
+  const zAxis = rotateVector({ x: 0, y: 0, z: 1 }, worldPose.rotation);
 
-  // World position
-  const rotatedLocal = rotateVector(datumLocalPose.position, bodyQ);
-  const position: Vec3 = {
-    x: bodyPose.position.x + rotatedLocal.x,
-    y: bodyPose.position.y + rotatedLocal.y,
-    z: bodyPose.position.z + rotatedLocal.z,
-  };
-
-  // World Z-axis = rotate([0,0,1], composed quaternion)
-  const composedQ = quaternionMultiply(bodyQ, datumQ);
-  const zAxis = rotateVector({ x: 0, y: 0, z: 1 }, composedQ);
-
-  return { position, zAxis };
+  return { position: worldPose.position, zAxis };
 }
 
 /**
@@ -159,24 +140,32 @@ export function analyzeDatumAlignment(
   }
 
   if (isParallel) {
-    // Check if origins lie in a plane perpendicular to the shared Z-axis
-    const projectionOntoZ = Math.abs(dot(offset, parentWorldPose.zAxis));
+    const axis = averageAxis(parentWorldPose.zAxis, childWorldPose.zAxis);
+    const projectionOntoZ = Math.abs(dot(offset, axis));
+    const radialOffset = {
+      x: offset.x - axis.x * dot(offset, axis),
+      y: offset.y - axis.y * dot(offset, axis),
+      z: offset.z - axis.z * dot(offset, axis),
+    };
+    const radialDistance = magnitude(radialOffset);
+
+    if (radialDistance < COAXIAL_THRESHOLD) {
+      return {
+        kind: 'coaxial',
+        recommendedTypes: ['revolute', 'cylindrical', 'prismatic'],
+        axis,
+        distance,
+      };
+    }
 
     if (projectionOntoZ < COPLANAR_THRESHOLD) {
       return {
         kind: 'coplanar',
         recommendedTypes: ['planar', 'fixed'],
-        axis: averageAxis(parentWorldPose.zAxis, childWorldPose.zAxis),
+        axis,
         distance,
       };
     }
-
-    return {
-      kind: 'coaxial',
-      recommendedTypes: ['revolute', 'cylindrical', 'prismatic'],
-      axis: averageAxis(parentWorldPose.zAxis, childWorldPose.zAxis),
-      distance,
-    };
   }
 
   return {

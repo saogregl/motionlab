@@ -1,7 +1,7 @@
 # ADR-0015: Simulation Settings Transport Contract
 
-- Status: Proposed
-- Date: 2026-03-22
+- Status: Accepted
+- Date: 2026-03-23
 - Decision makers: TBD
 
 ## Context

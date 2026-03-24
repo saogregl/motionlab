@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type SelectionFilter = Set<'body' | 'datum' | 'joint' | 'geometry' | 'load'> | null;
+export type SelectionFilter = Set<'body' | 'datum' | 'joint' | 'geometry' | 'load' | 'actuator'> | null;
 
 export interface SelectionState {
   selectedIds: Set<string>;

@@ -142,6 +142,13 @@ describe('analyzeDatumAlignment', () => {
       expect(result.recommendedTypes).toContain('planar');
       expect(result.distance).toBeCloseTo(5);
     });
+
+    it('parallel but laterally offset axes are not misclassified as coaxial', () => {
+      const parent = worldPose({ x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 1 });
+      const child = worldPose({ x: 2, y: 0, z: 5 }, { x: 0, y: 0, z: 1 });
+      const result = analyzeDatumAlignment(parent, child);
+      expect(result.kind).toBe('general');
+    });
   });
 
   describe('anti-parallel Z-axes', () => {
@@ -157,7 +164,7 @@ describe('analyzeDatumAlignment', () => {
   });
 
   describe('near threshold', () => {
-    it('Z-axes at ~2° (within threshold) → detected as parallel', () => {
+    it('small angular deviations do not override the stricter coaxial distance check', () => {
       // 2 degrees ≈ 0.0349 radians, cos(2°) ≈ 0.99939 > 0.999 threshold
       const angleDeg = 2;
       const angleRad = (angleDeg * Math.PI) / 180;
@@ -166,7 +173,7 @@ describe('analyzeDatumAlignment', () => {
       const parent = worldPose({ x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 1 });
       const child = worldPose({ x: 0, y: 0, z: 5 }, tiltedZ);
       const result = analyzeDatumAlignment(parent, child);
-      expect(result.kind).toBe('coaxial');
+      expect(result.kind).toBe('general');
     });
 
     it('Z-axes at ~3° (outside threshold) → general', () => {

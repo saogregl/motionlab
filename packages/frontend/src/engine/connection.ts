@@ -6,6 +6,9 @@ import {
   createCreateJointCommand,
   createDeleteDatumCommand,
   createDeleteJointCommand,
+  createCreateActuatorCommand,
+  createUpdateActuatorCommand,
+  createDeleteActuatorCommand,
   createCreateLoadCommand,
   createUpdateLoadCommand,
   createDeleteLoadCommand,
@@ -26,6 +29,7 @@ import {
   createUpdateBodyCommand,
   createUpdateJointCommand,
   createUpdateMassPropertiesCommand,
+  type SimulationSettingsInput,
   engineStateToString,
   eventToDebugJson,
   FaceSurfaceClass,
@@ -36,10 +40,15 @@ import {
   toProtoJointType,
   PROTOCOL_VERSION,
   ReferenceFrame,
+  ActuatorControlMode,
   type Load,
   type PointForceLoad,
   type PointTorqueLoad,
   type LinearSpringDamperLoad,
+  type Actuator,
+  type RevoluteMotorActuator,
+  type PrismaticMotorActuator,
+  DiagnosticSeverity,
 } from '@motionlab/protocol';
 import type { ElementId, Joint, MissingAssetInfo } from '@motionlab/protocol';
 import type { SceneGraphManager } from '@motionlab/viewport';
@@ -47,10 +56,12 @@ import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { clearBodyPoses, setBodyPose } from '../stores/body-poses.js';
 import type { EngineConnectionState } from '../stores/engine-connection.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
-import type { BodyMassProperties, BodyPose, BodyState, DatumState, GeometryState, JointTypeId, LoadState, LoadTypeId, ReferenceFrameId, MeshData } from '../stores/mechanism.js';
+import { useLoadCreationStore } from '../stores/load-creation.js';
+import type { ActuatorState, ActuatorTypeId, ControlModeId, BodyMassProperties, BodyPose, BodyState, DatumState, GeometryState, JointTypeId, LoadState, LoadTypeId, ReferenceFrameId, MeshData } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
-import { type ChannelDescriptor, useSimulationStore } from '../stores/simulation.js';
+import { type ChannelDescriptor, type StructuredDiagnostic, useSimulationStore } from '../stores/simulation.js';
+import { useUILayoutStore } from '../stores/ui-layout.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
 import { useToastStore } from '../stores/toast.js';
 import { type StoreSample, useTraceStore } from '../stores/traces.js';
@@ -244,6 +255,107 @@ function loadStateToProto(s: LoadState): Load {
           } as LinearSpringDamperLoad,
         },
       } as Load;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Actuator proto ↔ store helpers
+// ---------------------------------------------------------------------------
+
+function mapControlMode(mode: ActuatorControlMode): ControlModeId {
+  switch (mode) {
+    case ActuatorControlMode.POSITION:
+      return 'position';
+    case ActuatorControlMode.SPEED:
+      return 'speed';
+    case ActuatorControlMode.EFFORT:
+      return 'effort';
+    default:
+      return 'position';
+  }
+}
+
+function toProtoControlMode(mode: ControlModeId): ActuatorControlMode {
+  switch (mode) {
+    case 'position':
+      return ActuatorControlMode.POSITION;
+    case 'speed':
+      return ActuatorControlMode.SPEED;
+    case 'effort':
+      return ActuatorControlMode.EFFORT;
+  }
+}
+
+function extractActuatorState(actuator: Actuator): ActuatorState {
+  const base = {
+    id: actuator.id?.id ?? '',
+    name: actuator.name,
+  };
+  switch (actuator.config.case) {
+    case 'revoluteMotor':
+      return {
+        ...base,
+        type: 'revolute-motor' as ActuatorTypeId,
+        jointId: actuator.config.value.jointId?.id ?? '',
+        controlMode: mapControlMode(actuator.config.value.controlMode),
+        commandValue: actuator.config.value.commandValue,
+        effortLimit: actuator.config.value.effortLimit,
+      };
+    case 'prismaticMotor':
+      return {
+        ...base,
+        type: 'prismatic-motor' as ActuatorTypeId,
+        jointId: actuator.config.value.jointId?.id ?? '',
+        controlMode: mapControlMode(actuator.config.value.controlMode),
+        commandValue: actuator.config.value.commandValue,
+        effortLimit: actuator.config.value.effortLimit,
+      };
+    default:
+      return { ...base, type: 'revolute-motor' as ActuatorTypeId, jointId: '', controlMode: 'position', commandValue: 0 };
+  }
+}
+
+function actuatorStateToProto(s: ActuatorState): Actuator {
+  const id = s.id
+    ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.id } as ElementId)
+    : undefined;
+  const jointId = s.jointId
+    ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.jointId } as ElementId)
+    : undefined;
+  const controlMode = toProtoControlMode(s.controlMode);
+  const motorFields = {
+    jointId,
+    controlMode,
+    commandValue: s.commandValue,
+    effortLimit: s.effortLimit,
+  };
+  switch (s.type) {
+    case 'revolute-motor':
+      return {
+        $typeName: 'motionlab.mechanism.Actuator',
+        id,
+        name: s.name,
+        config: {
+          case: 'revoluteMotor',
+          value: {
+            $typeName: 'motionlab.mechanism.RevoluteMotorActuator',
+            ...motorFields,
+          } as RevoluteMotorActuator,
+        },
+      } as Actuator;
+    case 'prismatic-motor':
+      return {
+        $typeName: 'motionlab.mechanism.Actuator',
+        id,
+        name: s.name,
+        config: {
+          case: 'prismaticMotor',
+          value: {
+            $typeName: 'motionlab.mechanism.PrismaticMotorActuator',
+            ...motorFields,
+          } as PrismaticMotorActuator,
+        },
+      } as Actuator;
   }
 }
 
@@ -645,6 +757,23 @@ export function connect(set: SetState, _get: GetState) {
                 }
                 jcs.setCreatingDatum(false);
               }
+
+              const lcs = useLoadCreationStore.getState();
+              if (lcs.creatingDatum) {
+                const newDatumId = d.id?.id ?? '';
+                if (lcs.step === 'pick-datum') {
+                  lcs.setDatum(newDatumId);
+                } else if (lcs.step === 'pick-second-datum') {
+                  if (lcs.datumId === newDatumId) {
+                    useAuthoringStatusStore
+                      .getState()
+                      .setMessage('Choose a different datum for the spring-damper target');
+                  } else {
+                    lcs.setSecondDatum(newDatumId);
+                  }
+                }
+                lcs.setCreatingDatum(false);
+              }
             } else if (result.result.case === 'errorMessage') {
               statusStore.setMessage(result.result.value);
               console.error('[datum] create-from-face failed:', result.result.value);
@@ -652,6 +781,10 @@ export function connect(set: SetState, _get: GetState) {
               const jcs = useJointCreationStore.getState();
               if (jcs.creatingDatum) {
                 jcs.setCreatingDatum(false);
+              }
+              const lcs = useLoadCreationStore.getState();
+              if (lcs.creatingDatum) {
+                lcs.setCreatingDatum(false);
               }
             }
             break;
@@ -764,7 +897,6 @@ export function connect(set: SetState, _get: GetState) {
             if (result.result.case === 'load') {
               const loadState = extractLoadState(result.result.value);
               mechStore.addLoad(loadState);
-              sceneGraphManager?.addLoadVisual(loadState.id, loadState);
             } else if (result.result.case === 'errorMessage') {
               console.error('[load] create failed:', result.result.value);
             }
@@ -776,7 +908,6 @@ export function connect(set: SetState, _get: GetState) {
             if (result.result.case === 'load') {
               const loadState = extractLoadState(result.result.value);
               mechStore.updateLoad(loadState.id, loadState);
-              sceneGraphManager?.updateLoadVisual(loadState.id, loadState);
             } else if (result.result.case === 'errorMessage') {
               console.error('[load] update failed:', result.result.value);
             }
@@ -787,9 +918,40 @@ export function connect(set: SetState, _get: GetState) {
             const mechStore = useMechanismStore.getState();
             if (result.result.case === 'deletedId') {
               mechStore.removeLoad(result.result.value.id);
-              sceneGraphManager?.removeLoadVisual(result.result.value.id);
             } else if (result.result.case === 'errorMessage') {
               console.error('[load] delete failed:', result.result.value);
+            }
+            break;
+          }
+          case 'createActuatorResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'actuator') {
+              const actuatorState = extractActuatorState(result.result.value);
+              mechStore.addActuator(actuatorState);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[actuator] create failed:', result.result.value);
+            }
+            break;
+          }
+          case 'updateActuatorResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'actuator') {
+              const actuatorState = extractActuatorState(result.result.value);
+              mechStore.updateActuator(actuatorState.id, actuatorState);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[actuator] update failed:', result.result.value);
+            }
+            break;
+          }
+          case 'deleteActuatorResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'deletedId') {
+              mechStore.removeActuator(result.result.value.id);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[actuator] delete failed:', result.result.value);
             }
             break;
           }
@@ -802,6 +964,20 @@ export function connect(set: SetState, _get: GetState) {
               dataType:
                 ch.dataType === ChannelDataType.VEC3 ? ('vec3' as const) : ('scalar' as const),
             }));
+            const severityMap: Record<number, StructuredDiagnostic['severity']> = {
+              [DiagnosticSeverity.DIAGNOSTIC_INFO]: 'info',
+              [DiagnosticSeverity.DIAGNOSTIC_WARNING]: 'warning',
+              [DiagnosticSeverity.DIAGNOSTIC_ERROR]: 'error',
+            };
+            const structuredDiags: StructuredDiagnostic[] = (
+              result.structuredDiagnostics ?? []
+            ).map((d) => ({
+              severity: severityMap[d.severity] ?? 'info',
+              message: d.message,
+              affectedEntityIds: [...(d.affectedEntityIds ?? [])],
+              suggestion: d.suggestion,
+              code: d.code,
+            }));
             useSimulationStore
               .getState()
               .setCompilationResult(
@@ -809,8 +985,13 @@ export function connect(set: SetState, _get: GetState) {
                 result.errorMessage,
                 result.diagnostics,
                 channels,
+                structuredDiags,
               );
             useTraceStore.getState().setChannels(channels);
+            // Auto-switch to diagnostics tab if there are issues
+            if (structuredDiags.length > 0) {
+              useUILayoutStore.getState().setBottomDockActiveTab('diagnostics');
+            }
             if (result.success) {
               useToolModeStore.getState().setMode('select');
               useToastStore.getState().addToast({
@@ -861,17 +1042,20 @@ export function connect(set: SetState, _get: GetState) {
               if (sceneGraphManager) {
                 sceneGraphManager.clearForceArrows();
                 const { bodies } = useMechanismStore.getState();
-                for (const body of bodies.values()) {
-                  sceneGraphManager.updateBodyTransform(body.id, {
-                    position: [body.pose.position.x, body.pose.position.y, body.pose.position.z],
-                    rotation: [
-                      body.pose.rotation.x,
-                      body.pose.rotation.y,
-                      body.pose.rotation.z,
-                      body.pose.rotation.w,
-                    ],
-                  });
-                }
+                sceneGraphManager.applyBodyTransforms(
+                  Array.from(bodies.values(), (body) => ({
+                    id: body.id,
+                    pose: {
+                      position: [body.pose.position.x, body.pose.position.y, body.pose.position.z],
+                      rotation: [
+                        body.pose.rotation.x,
+                        body.pose.rotation.y,
+                        body.pose.rotation.z,
+                        body.pose.rotation.w,
+                      ],
+                    },
+                  })),
+                );
               }
             }
             break;
@@ -901,32 +1085,32 @@ export function connect(set: SetState, _get: GetState) {
             if (frame.bodyPoses.length === 0) {
               console.warn('[sim] frame has no body poses');
             }
-            for (const bp of frame.bodyPoses) {
-              const pos = {
-                x: bp.position?.x ?? 0,
-                y: bp.position?.y ?? 0,
-                z: bp.position?.z ?? 0,
-              };
-              const rot = {
-                x: bp.orientation?.x ?? 0,
-                y: bp.orientation?.y ?? 0,
-                z: bp.orientation?.z ?? 0,
-                w: bp.orientation?.w ?? 1,
-              };
-              if (frameCount <= 3) {
-                console.log(`[sim] frame ${frameCount}: ${bp.bodyId} pos=(${pos.x.toFixed(4)}, ${pos.y.toFixed(4)}, ${pos.z.toFixed(4)})`);
-              }
-              sceneGraphManager.updateBodyTransform(bp.bodyId, {
-                position: [pos.x, pos.y, pos.z],
-                rotation: [rot.x, rot.y, rot.z, rot.w],
-              });
-              setBodyPose(bp.bodyId, pos, rot);
-            }
-            // Reposition joint visuals to follow moved bodies/datums
-            sceneGraphManager.refreshJointPositions();
-            // Update force/torque arrows from joint state data
-            for (const js of frame.jointStates) {
-              sceneGraphManager.updateJointForces(js.jointId, {
+            sceneGraphManager.applyBodyTransforms(
+              frame.bodyPoses.map((bp) => {
+                const pos = {
+                  x: bp.position?.x ?? 0,
+                  y: bp.position?.y ?? 0,
+                  z: bp.position?.z ?? 0,
+                };
+                const rot = {
+                  x: bp.orientation?.x ?? 0,
+                  y: bp.orientation?.y ?? 0,
+                  z: bp.orientation?.z ?? 0,
+                  w: bp.orientation?.w ?? 1,
+                };
+                setBodyPose(bp.bodyId, pos, rot);
+                return {
+                  id: bp.bodyId,
+                  pose: {
+                    position: [pos.x, pos.y, pos.z],
+                    rotation: [rot.x, rot.y, rot.z, rot.w],
+                  },
+                };
+              }),
+            );
+            sceneGraphManager.applyJointForceUpdates(
+              frame.jointStates.map((js) => ({
+                jointId: js.jointId,
                 force: {
                   x: js.reactionForce?.x ?? 0,
                   y: js.reactionForce?.y ?? 0,
@@ -937,9 +1121,12 @@ export function connect(set: SetState, _get: GetState) {
                   y: js.reactionTorque?.y ?? 0,
                   z: js.reactionTorque?.z ?? 0,
                 },
-              });
-            }
-            // Update simulation time from frame data so timeline tracks progress
+              })),
+            );
+            /*
+             * Update simulation time from frame data so timeline tracks progress.
+             * Keep this out of the viewport hot path.
+             */
             useSimulationStore
               .getState()
               .setSimState('running', frame.simTime, Number(frame.stepCount));
@@ -1171,7 +1358,12 @@ export function connect(set: SetState, _get: GetState) {
                 for (const l of mechanism.loads) {
                   const loadState = extractLoadState(l);
                   mechStore.addLoad(loadState);
-                  sceneGraphManager?.addLoadVisual(loadState.id, loadState);
+                }
+
+                // Rebuild actuators
+                for (const a of mechanism.actuators) {
+                  const actuatorState = extractActuatorState(a);
+                  mechStore.addActuator(actuatorState);
                 }
               }
 
@@ -1530,6 +1722,8 @@ export function sendUpdateJoint(
     type?: JointTypeId;
     lowerLimit?: number;
     upperLimit?: number;
+    parentDatumId?: string;
+    childDatumId?: string;
   },
 ): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
@@ -1538,8 +1732,8 @@ export function sendUpdateJoint(
   ws.send(
     createUpdateJointCommand({
       id: { $typeName: 'motionlab.mechanism.ElementId', id: jointId } as ElementId,
-      parentDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: existing.parentDatumId } as ElementId,
-      childDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: existing.childDatumId } as ElementId,
+      parentDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: updates.parentDatumId ?? existing.parentDatumId } as ElementId,
+      childDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: updates.childDatumId ?? existing.childDatumId } as ElementId,
       type: updates.type !== undefined ? toProtoJointType(updates.type) : toProtoJointType(existing.type),
       name: updates.name ?? existing.name,
       lowerLimit: updates.lowerLimit ?? existing.lowerLimit,
@@ -1608,8 +1802,23 @@ export function sendDeleteLoad(loadId: string): void {
   ws.send(createDeleteLoadCommand(loadId));
 }
 
+export function sendCreateActuator(actuatorState: ActuatorState): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createCreateActuatorCommand(actuatorStateToProto(actuatorState)));
+}
+
+export function sendUpdateActuator(actuatorState: ActuatorState): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createUpdateActuatorCommand(actuatorStateToProto(actuatorState)));
+}
+
+export function sendDeleteActuator(actuatorId: string): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createDeleteActuatorCommand(actuatorId));
+}
+
 export function sendCompileMechanism(
-  settings?: { timestep?: number; gravity?: { x: number; y: number; z: number } },
+  settings?: SimulationSettingsInput,
 ): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(createCompileMechanismCommand(settings));

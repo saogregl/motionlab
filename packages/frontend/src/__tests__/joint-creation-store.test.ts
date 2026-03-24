@@ -1,9 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import {
-  type DatumAlignment,
-  useJointCreationStore,
-} from '../stores/joint-creation.js';
+import { useJointCreationStore } from '../stores/joint-creation.js';
+import type { DatumAlignment } from '../utils/datum-alignment.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -39,6 +37,7 @@ describe('Joint creation store', () => {
     expect(s.selectedJointType).toBeNull();
     expect(s.recommendedTypes).toEqual([]);
     expect(s.alignmentKind).toBeNull();
+    expect(s.alignment).toBeNull();
     expect(s.creatingDatum).toBe(false);
   });
 
@@ -61,6 +60,7 @@ describe('Joint creation store', () => {
     expect(s.selectedJointType).toBeNull();
     expect(s.recommendedTypes).toEqual([]);
     expect(s.alignmentKind).toBeNull();
+    expect(s.alignment).toBeNull();
     expect(s.creatingDatum).toBe(false);
   });
 
@@ -86,6 +86,7 @@ describe('Joint creation store', () => {
     expect(s.selectedJointType).toBeNull();
     expect(s.recommendedTypes).toEqual([]);
     expect(s.alignmentKind).toBeNull();
+    expect(s.alignment).toBeNull();
   });
 
   // --- setChildDatum with alignment ---
@@ -103,6 +104,7 @@ describe('Joint creation store', () => {
     expect(s.childDatumId).toBe('c1');
     expect(s.recommendedTypes).toEqual(['planar', 'fixed']);
     expect(s.alignmentKind).toBe('coplanar');
+    expect(s.alignment).toEqual(alignment);
     expect(s.selectedJointType).toBe('planar');
     expect(s.previewJointType).toBeNull();
   });
@@ -136,6 +138,7 @@ describe('Joint creation store', () => {
     expect(s.childDatumId).toBeNull();
     expect(s.recommendedTypes).toEqual([]);
     expect(s.alignmentKind).toBeNull();
+    expect(s.alignment).toBeNull();
     expect(s.selectedJointType).toBeNull();
     expect(s.previewJointType).toBeNull();
   });
@@ -177,6 +180,7 @@ describe('Joint creation store', () => {
     expect(s.selectedJointType).toBeNull();
     expect(s.recommendedTypes).toEqual([]);
     expect(s.alignmentKind).toBeNull();
+    expect(s.alignment).toBeNull();
     expect(s.creatingDatum).toBe(false);
   });
 
@@ -199,7 +203,26 @@ describe('Joint creation store', () => {
     expect(s.selectedJointType).toBeNull();
     expect(s.recommendedTypes).toEqual([]);
     expect(s.alignmentKind).toBeNull();
+    expect(s.alignment).toBeNull();
     expect(s.creatingDatum).toBe(false);
+  });
+
+  it('editExisting enters edit mode with a preselected joint type and no stale alignment data', () => {
+    const store = useJointCreationStore.getState();
+    store.startCreation();
+    store.setParentDatum('p1');
+    store.setChildDatum('c1', makeAlignment());
+
+    store.editExisting('joint-1', 'datum-parent', 'datum-child', 'cylindrical');
+
+    const s = useJointCreationStore.getState();
+    expect(s.step).toBe('select-type');
+    expect(s.editingJointId).toBe('joint-1');
+    expect(s.parentDatumId).toBe('datum-parent');
+    expect(s.childDatumId).toBe('datum-child');
+    expect(s.selectedJointType).toBe('cylindrical');
+    expect(s.alignment).toBeNull();
+    expect(s.recommendedTypes).toEqual([]);
   });
 
   // --- setPreviewJointType ---
@@ -255,6 +278,7 @@ describe('Joint creation store', () => {
     expect(afterChild.step).toBe('select-type');
     expect(afterChild.childDatumId).toBe('datum-child');
     expect(afterChild.alignmentKind).toBe('coincident');
+    expect(afterChild.alignment).toEqual(alignment);
     expect(afterChild.recommendedTypes).toEqual(['fixed', 'revolute', 'spherical']);
     // Auto-selected first recommended type
     expect(afterChild.selectedJointType).toBe('fixed');
@@ -268,5 +292,6 @@ describe('Joint creation store', () => {
     expect(afterReset.selectedJointType).toBeNull();
     expect(afterReset.recommendedTypes).toEqual([]);
     expect(afterReset.alignmentKind).toBeNull();
+    expect(afterReset.alignment).toBeNull();
   });
 });

@@ -86,6 +86,8 @@ static void build_body_proto(mech::Body* pb,
     mp->set_ixy(mass.inertia[3]);
     mp->set_ixz(mass.inertia[4]);
     mp->set_iyz(mass.inertia[5]);
+
+    pb->set_mass_override(true);
 }
 
 static void build_display_data(mech::BodyDisplayData* bdd,

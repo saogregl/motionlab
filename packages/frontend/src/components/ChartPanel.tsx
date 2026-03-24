@@ -1,27 +1,54 @@
+import { SimulationAction } from '@motionlab/protocol';
+import { ToolbarButton, ToolbarGroup } from '@motionlab/ui';
+import { Maximize2, MousePointer2, ZoomOut } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import uPlot from 'uplot';
 import 'uplot/dist/uPlot.min.css';
+import { sendScrub, sendSimulationControl } from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { type StoreSample, useTraceStore } from '../stores/traces.js';
+import { computeAxisLayout } from '../utils/chart-axis-assignment.js';
 
-const COLORS = [
-  '#3b82f6', // blue
-  '#ef4444', // red
-  '#22c55e', // green
-  '#f59e0b', // amber
-  '#8b5cf6', // violet
-  '#ec4899', // pink
-  '#06b6d4', // cyan
-  '#f97316', // orange
-];
+// ---------------------------------------------------------------------------
+// Theme-aware chart colors (read from CSS custom properties)
+// ---------------------------------------------------------------------------
+
+const CHART_SERIES_TOKENS = [
+  '--chart-series-1',
+  '--chart-series-2',
+  '--chart-series-3',
+  '--chart-series-4',
+  '--chart-series-5',
+  '--chart-series-6',
+  '--chart-series-7',
+  '--chart-series-8',
+] as const;
+
+function readChartColors(): string[] {
+  const style = getComputedStyle(document.documentElement);
+  return CHART_SERIES_TOKENS.map((token) => style.getPropertyValue(token).trim() || '#888');
+}
+
+function readChartScrubColor(): string {
+  return (
+    getComputedStyle(document.documentElement).getPropertyValue('--chart-scrub').trim() ||
+    'rgba(255,255,255,0.6)'
+  );
+}
+
+/** Exported for ChannelBrowser color-swatch matching. */
+export { CHART_SERIES_TOKENS, readChartColors };
+
+// ---------------------------------------------------------------------------
+// uPlot data helpers
+// ---------------------------------------------------------------------------
 
 function buildAlignedData(
   activeIds: string[],
   traces: Map<string, StoreSample[]>,
 ): uPlot.AlignedData {
-  // Merge all timestamps
   const timeSet = new Set<number>();
   for (const id of activeIds) {
     const samples = traces.get(id);
@@ -41,7 +68,6 @@ function buildAlignedData(
   const series: (number | null)[][] = [];
   for (const id of activeIds) {
     const samples = traces.get(id) ?? [];
-    // Build a time→value lookup for this channel
     const lookup = new Map<number, number>();
     for (const s of samples) lookup.set(s.time, s.value);
 
@@ -55,7 +81,11 @@ function buildAlignedData(
   return [xArr, ...series] as unknown as uPlot.AlignedData;
 }
 
-function scrubMarkerPlugin(getTime: () => number): uPlot.Plugin {
+// ---------------------------------------------------------------------------
+// uPlot plugins
+// ---------------------------------------------------------------------------
+
+function scrubMarkerPlugin(getTime: () => number, scrubColor: string): uPlot.Plugin {
   return {
     hooks: {
       draw: [
@@ -64,7 +94,7 @@ function scrubMarkerPlugin(getTime: () => number): uPlot.Plugin {
           if (cx < u.bbox.left || cx > u.bbox.left + u.bbox.width) return;
           const ctx = u.ctx;
           ctx.save();
-          ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+          ctx.strokeStyle = scrubColor;
           ctx.lineWidth = 1;
           ctx.setLineDash([4, 4]);
           ctx.beginPath();
@@ -78,20 +108,32 @@ function scrubMarkerPlugin(getTime: () => number): uPlot.Plugin {
   };
 }
 
+// ---------------------------------------------------------------------------
+// buildOpts — now with multi-axis, zoom, click-to-scrub
+// ---------------------------------------------------------------------------
+
 function buildOpts(
   width: number,
   height: number,
   activeIds: string[],
   channelMap: Map<string, { name: string; unit: string }>,
+  colors: string[],
+  scrubColor: string,
+  zoomedRef: React.RefObject<boolean>,
 ): uPlot.Options {
+  const layout = computeAxisLayout(activeIds, channelMap);
+
   const seriesOpts: uPlot.Series[] = [
     { label: 'Time (s)' },
     ...activeIds.map((id, i) => {
       const ch = channelMap.get(id);
+      // In mixed-unit mode, include unit in series label for clarity
+      const unitSuffix = layout.mixedUnits && ch?.unit ? ` (${ch.unit})` : '';
       return {
-        label: ch?.name ?? id,
-        stroke: COLORS[i % COLORS.length],
+        label: (ch?.name ?? id) + unitSuffix,
+        stroke: colors[i % colors.length],
         width: 1.5,
+        scale: layout.seriesScaleMap.get(id) ?? 'y',
       } as uPlot.Series;
     }),
   ];
@@ -99,19 +141,68 @@ function buildOpts(
   return {
     width,
     height,
-    scales: { x: { time: false } },
-    axes: [{ label: 'Time (s)' }, { label: 'Value' }],
+    scales: layout.scales,
+    axes: layout.axes,
     series: seriesOpts,
-    cursor: { drag: { x: false, y: false } },
-    plugins: [scrubMarkerPlugin(() => useSimulationStore.getState().simTime)],
+    cursor: {
+      drag: {
+        x: true,
+        y: false,
+        dist: 5,
+        // Fires when mouseup < dist px from mousedown (click, not drag)
+        click: (_self: uPlot, e: MouseEvent) => {
+          const rect = _self.over.getBoundingClientRect();
+          const xPos = e.clientX - rect.left;
+          const time = _self.posToVal(xPos, 'x');
+          if (!Number.isFinite(time) || time < 0) return;
+
+          // Auto-pause if running
+          const { state } = useSimulationStore.getState();
+          if (state === 'running') {
+            sendSimulationControl(SimulationAction.PAUSE);
+          }
+          sendScrub(time);
+        },
+      },
+      // Double-click resets zoom
+      bind: {
+        dblclick: (self: uPlot) => {
+          return (_e: MouseEvent) => {
+            // Reset to auto-scale by re-setting data with resetScales
+            zoomedRef.current = false;
+            const data = self.data;
+            if (data[0].length > 0) {
+              self.setData(data, true);
+            }
+            return null;
+          };
+        },
+      },
+    },
+    hooks: {
+      setScale: [
+        (_u: uPlot, key: string) => {
+          if (key === 'x') {
+            zoomedRef.current = true;
+          }
+        },
+      ],
+    },
+    plugins: [scrubMarkerPlugin(() => useSimulationStore.getState().simTime, scrubColor)],
   };
 }
+
+// ---------------------------------------------------------------------------
+// ChartPanel component
+// ---------------------------------------------------------------------------
 
 export function ChartPanel() {
   const containerRef = useRef<HTMLDivElement>(null);
   const uplotRef = useRef<uPlot | null>(null);
   const rafRef = useRef<number>(0);
   const activeIdsRef = useRef<string[]>([]);
+  const chartColorsRef = useRef<string[]>(readChartColors());
+  const zoomedRef = useRef(false);
 
   const activeChannels = useTraceStore((s) => s.activeChannels);
   const channels = useTraceStore((s) => s.channels);
@@ -122,6 +213,9 @@ export function ChartPanel() {
 
   // Latest values for legend (low-frequency React state)
   const [latestValues, setLatestValues] = useState<Map<string, number>>(new Map());
+
+  // Toolbar state
+  const [showCursorValues, setShowCursorValues] = useState(false);
 
   // ----- Selection-linked channel activation -----
   const selectedIds = useSelectionStore((s) => s.selectedIds);
@@ -134,12 +228,12 @@ export function ChartPanel() {
     const newActive: string[] = [];
 
     for (const selId of selectedIds) {
-      // If it's a joint, activate its channels directly
+      // If it's a joint, activate all its channels
       if (mechState.joints.has(selId)) {
-        const posId = `joint/${selId}/position`;
-        const velId = `joint/${selId}/velocity`;
-        if (traceChannels.has(posId)) newActive.push(posId);
-        if (traceChannels.has(velId)) newActive.push(velId);
+        const prefix = `joint/${selId}/`;
+        for (const chId of traceChannels.keys()) {
+          if (chId.startsWith(prefix)) newActive.push(chId);
+        }
         continue;
       }
 
@@ -151,10 +245,10 @@ export function ChartPanel() {
         }
         for (const j of mechState.joints.values()) {
           if (bodyDatumIds.has(j.parentDatumId) || bodyDatumIds.has(j.childDatumId)) {
-            const posId = `joint/${j.id}/position`;
-            const velId = `joint/${j.id}/velocity`;
-            if (traceChannels.has(posId)) newActive.push(posId);
-            if (traceChannels.has(velId)) newActive.push(velId);
+            const prefix = `joint/${j.id}/`;
+            for (const chId of traceChannels.keys()) {
+              if (chId.startsWith(prefix)) newActive.push(chId);
+            }
           }
         }
       }
@@ -176,13 +270,19 @@ export function ChartPanel() {
       uplotRef.current = null;
     }
 
+    // Reset zoom state on recreation
+    zoomedRef.current = false;
+
     if (activeIds.length === 0) return;
 
     const rect = container.getBoundingClientRect();
     const width = Math.max(rect.width, 100);
     const height = Math.max(rect.height - 40, 60); // leave room for legend
 
-    const opts = buildOpts(width, height, activeIds, channels);
+    const colors = readChartColors();
+    chartColorsRef.current = colors;
+    const scrubColor = readChartScrubColor();
+    const opts = buildOpts(width, height, activeIds, channels, colors, scrubColor, zoomedRef);
     const data = buildAlignedData(activeIds, useTraceStore.getState().traces);
 
     const uplot = new uPlot(opts, data, container);
@@ -195,7 +295,8 @@ export function ChartPanel() {
         rafRef.current = 0;
         if (!uplotRef.current) return;
         const aligned = buildAlignedData(activeIdsRef.current, state.traces);
-        uplotRef.current.setData(aligned);
+        // When zoomed, preserve user's zoom range; otherwise auto-scale
+        uplotRef.current.setData(aligned, !zoomedRef.current);
 
         // Update latest values for legend (throttled by RAF)
         const vals = new Map<string, number>();
@@ -243,40 +344,94 @@ export function ChartPanel() {
     useTraceStore.getState().toggleChannel(id);
   }, []);
 
+  // ----- Toolbar handlers -----
+  const handleResetZoom = useCallback(() => {
+    zoomedRef.current = false;
+    const u = uplotRef.current;
+    if (u && u.data[0].length > 0) {
+      u.setData(u.data, true);
+    }
+  }, []);
+
+  const handleAutoScaleY = useCallback(() => {
+    const u = uplotRef.current;
+    if (!u) return;
+    // Force Y scales to re-fit by re-setting data
+    u.setData(u.data, true);
+  }, []);
+
+  const layout = computeAxisLayout(activeIds, channels);
+
   return (
     <div className="flex h-full flex-col">
-      <div ref={containerRef} className="min-h-0 flex-1" />
+      {/* Toolbar */}
       {activeIds.length > 0 && (
-        <div className="flex flex-wrap gap-2 border-t border-neutral-700 px-2 py-1">
+        <div className="flex h-7 shrink-0 items-center border-b border-[var(--border-subtle)] ps-1 pe-2">
+          <ToolbarGroup separator>
+            <ToolbarButton
+              tooltip="Reset Zoom"
+              shortcut="Dbl-click"
+              onClick={handleResetZoom}
+              disabled={!zoomedRef.current}
+            >
+              <ZoomOut className="size-3.5" />
+            </ToolbarButton>
+            <ToolbarButton tooltip="Auto-scale Y" onClick={handleAutoScaleY}>
+              <Maximize2 className="size-3.5" />
+            </ToolbarButton>
+            <ToolbarButton
+              tooltip="Cursor Values"
+              active={showCursorValues}
+              onClick={() => setShowCursorValues((v) => !v)}
+            >
+              <MousePointer2 className="size-3.5" />
+            </ToolbarButton>
+          </ToolbarGroup>
+          <span className="ms-auto text-[length:var(--text-xs)] text-[var(--text-tertiary)]">
+            {activeIds.length} channel{activeIds.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+      )}
+
+      {/* Chart area */}
+      <div ref={containerRef} className="min-h-0 flex-1" />
+
+      {/* Legend */}
+      {activeIds.length > 0 && (
+        <div className="flex flex-wrap gap-2 border-t border-[var(--border-subtle)] ps-2 pe-2 py-1">
           {activeIds.map((id, i) => {
             const ch = channels.get(id);
             const latest = latestValues.get(id);
+            const colors = chartColorsRef.current;
+            const unitSuffix = layout.mixedUnits && ch?.unit ? ` (${ch.unit})` : '';
             return (
               <button
                 key={id}
                 type="button"
-                className="flex items-center gap-1 rounded px-1.5 py-0.5 text-xs hover:bg-neutral-700"
+                className="flex items-center gap-1 rounded ps-1.5 pe-1.5 py-0.5 text-xs hover:bg-[var(--layer-raised)]"
                 onClick={() => handleToggle(id)}
               >
                 <span
                   className="inline-block size-2.5 rounded-full"
-                  style={{ backgroundColor: COLORS[i % COLORS.length] }}
+                  style={{ backgroundColor: colors[i % colors.length] }}
                 />
-                <span className="text-neutral-200">
+                <span className="text-[var(--text-primary)]">
                   {ch?.name ?? id}
-                  {ch?.unit ? ` (${ch.unit})` : ''}
+                  {unitSuffix}
                 </span>
-                {latest !== undefined && (
-                  <span className="text-neutral-400">{latest.toFixed(4)}</span>
+                {showCursorValues && latest !== undefined && (
+                  <span className="text-[var(--text-tertiary)]">{latest.toFixed(4)}</span>
                 )}
               </button>
             );
           })}
         </div>
       )}
+
+      {/* Empty state */}
       {activeIds.length === 0 && (
-        <div className="flex h-full items-center justify-center text-sm text-neutral-500">
-          Select a joint to see its output channels
+        <div className="flex h-full items-center justify-center text-sm text-[var(--text-disabled)]">
+          Select a joint or use the channel browser
         </div>
       )}
     </div>

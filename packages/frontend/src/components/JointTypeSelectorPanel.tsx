@@ -17,11 +17,39 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-import { sendCreateJoint } from '../engine/connection.js';
+import { sendCreateJoint, sendUpdateJoint } from '../engine/connection.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import type { JointTypeId } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
+import { useToolModeStore } from '../stores/tool-mode.js';
 import { nextJointName } from '../utils/joint-naming.js';
+
+function DofLabel({ dof }: { dof: string }) {
+  if (dof === '0') {
+    return <Lock className="size-2.5 text-[var(--text-muted)]" />;
+  }
+  const parts = dof.split('+');
+  return (
+    <span className="inline-flex items-center gap-0.5">
+      {parts.map((part, i) => {
+        const match = part.match(/^(\d+)([RT])$/);
+        if (!match) return null;
+        const count = parseInt(match[1], 10);
+        const type = match[2];
+        return (
+          <span key={i} className="inline-flex items-center gap-px text-[var(--success)]">
+            {count > 1 && <span className="text-[10px] leading-none">{count}</span>}
+            {type === 'R' ? (
+              <RotateCw className="size-2.5" />
+            ) : (
+              <ArrowLeftRight className="size-2.5" />
+            )}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
 
 interface JointTypeOption {
   type: JointTypeId;
@@ -50,27 +78,45 @@ export function JointTypeSelectorPanel() {
   const setPreviewJointType = useJointCreationStore((s) => s.setPreviewJointType);
   const cancel = useJointCreationStore((s) => s.cancel);
   const reset = useJointCreationStore((s) => s.reset);
+  const editingJointId = useJointCreationStore((s) => s.editingJointId);
+  const exitMode = useJointCreationStore((s) => s.exitMode);
 
+  const isEditing = editingJointId !== null;
+  const editingJoint = useMechanismStore((s) =>
+    editingJointId ? s.joints.get(editingJointId) : undefined,
+  );
   const parentDatum = useMechanismStore((s) =>
     parentDatumId ? s.datums.get(parentDatumId) : undefined,
   );
   const childDatum = useMechanismStore((s) =>
     childDatumId ? s.datums.get(childDatumId) : undefined,
   );
+  const parentBody = useMechanismStore((s) =>
+    parentDatum ? s.bodies.get(parentDatum.parentBodyId) : undefined,
+  );
+  const childBody = useMechanismStore((s) =>
+    childDatum ? s.bodies.get(childDatum.parentBodyId) : undefined,
+  );
 
   const [name, setName] = useState('');
   const [lowerLimit, setLowerLimit] = useState(0);
   const [upperLimit, setUpperLimit] = useState(0);
 
-  // Auto-generate name when panel opens
+  // Auto-generate name when panel opens (create mode) or pre-populate (edit mode)
   useEffect(() => {
     if (step === 'select-type') {
-      const joints = useMechanismStore.getState().joints;
-      setName(nextJointName(joints));
-      setLowerLimit(0);
-      setUpperLimit(0);
+      if (editingJoint) {
+        setName(editingJoint.name);
+        setLowerLimit(editingJoint.lowerLimit);
+        setUpperLimit(editingJoint.upperLimit);
+      } else {
+        const joints = useMechanismStore.getState().joints;
+        setName(nextJointName(joints));
+        setLowerLimit(0);
+        setUpperLimit(0);
+      }
     }
-  }, [step]);
+  }, [step, editingJoint]);
 
   if (step !== 'select-type') return null;
 
@@ -85,28 +131,44 @@ export function JointTypeSelectorPanel() {
     ...JOINT_TYPE_OPTIONS.filter((o) => !recommendedSet.has(o.type)),
   ];
 
-  const handleCreate = () => {
+  const handleCommit = () => {
     if (!parentDatumId || !childDatumId || !currentType) return;
     const trimmedName = name.trim() || 'Joint';
-    sendCreateJoint(
-      parentDatumId,
-      childDatumId,
-      currentType,
-      trimmedName,
-      showLimits ? lowerLimit : 0,
-      showLimits ? upperLimit : 0,
-    );
-    reset();
+    if (isEditing && editingJointId) {
+      sendUpdateJoint(editingJointId, {
+        type: currentType,
+        name: trimmedName,
+        lowerLimit: showLimits ? lowerLimit : 0,
+        upperLimit: showLimits ? upperLimit : 0,
+      });
+      exitMode();
+      useToolModeStore.getState().setMode('select');
+    } else {
+      sendCreateJoint(
+        parentDatumId,
+        childDatumId,
+        currentType,
+        trimmedName,
+        showLimits ? lowerLimit : 0,
+        showLimits ? upperLimit : 0,
+      );
+      reset();
+    }
   };
 
   const handleCancel = () => {
-    cancel();
+    if (isEditing) {
+      exitMode();
+      useToolModeStore.getState().setMode('select');
+    } else {
+      cancel();
+    }
   };
 
   return (
     <FloatingToolCard
       icon={<Link2 className="size-3.5" />}
-      title="Create Joint"
+      title={isEditing ? 'Edit Joint' : 'Create Joint'}
       onClose={handleCancel}
       defaultPosition={{ x: 12, y: 12 }}
       className="w-[260px]"
@@ -115,15 +177,23 @@ export function JointTypeSelectorPanel() {
           <Button variant="outline" size="sm" onClick={handleCancel}>
             Cancel
           </Button>
-          <Button size="sm" onClick={handleCreate} disabled={!currentType}>
-            Create
+          <Button size="sm" onClick={handleCommit} disabled={!currentType}>
+            {isEditing ? 'Update' : 'Create'}
           </Button>
         </>
       }
     >
       {/* Datum summary */}
       <div className="ps-2 pe-1.5 py-1.5 text-[length:var(--text-xs)] text-[var(--text-secondary)]">
-        {parentDatum?.name ?? '?'} → {childDatum?.name ?? '?'}
+        {isEditing ? (
+          <div className="flex flex-col gap-0.5">
+            <span className="text-green-400">Parent: {parentDatum?.name ?? '?'} ({parentBody?.name ?? '?'})</span>
+            <span className="text-orange-400">Child: {childDatum?.name ?? '?'} ({childBody?.name ?? '?'})</span>
+            <span className="text-[10px] text-[var(--text-muted)] italic">To change datums, delete this joint and create a new one.</span>
+          </div>
+        ) : (
+          <>{parentDatum?.name ?? '?'} → {childDatum?.name ?? '?'}</>
+        )}
       </div>
 
       {/* Joint type selector */}
@@ -152,7 +222,7 @@ export function JointTypeSelectorPanel() {
                   {option.icon}
                 </span>
                 <span className="flex-1 text-start">{option.label}</span>
-                <span className="text-[var(--text-muted)] tabular-nums">{option.dof}</span>
+                <DofLabel dof={option.dof} />
                 {isRecommended && (
                   <Badge variant="outline" className="ms-1 text-[10px] leading-none py-0 px-1">
                     Rec
@@ -171,7 +241,7 @@ export function JointTypeSelectorPanel() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') handleCreate();
+              if (e.key === 'Enter') handleCommit();
             }}
             className="h-5 text-xs"
           />

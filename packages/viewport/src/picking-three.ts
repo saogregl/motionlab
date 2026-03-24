@@ -22,13 +22,8 @@ import {
 } from 'three';
 import type { Camera, Intersection, Scene, WebGLRenderer } from 'three';
 
-import { BodyGeometryIndex } from './body-geometry-index.js';
 import type { DatumPreviewType } from './rendering/surface-type-estimator.js';
-import {
-  estimateAxisDirection,
-  estimateSurfaceType,
-} from './rendering/surface-type-estimator.js';
-import type { SceneGraphManager } from './scene-graph-three.js';
+import { VIEWPORT_PICK_LAYER, type SceneGraphManager } from './scene-graph-three.js';
 
 // ---------------------------------------------------------------------------
 // Re-exported types (canonical definitions live in R3FViewport.tsx)
@@ -71,6 +66,8 @@ export interface PickResult {
 /** Maximum pointer displacement (px) for a POINTERDOWN+POINTERUP pair to
  *  count as a click rather than a drag. */
 const DRAG_THRESHOLD_PX = 5;
+const SELECT_HOVER_INTERVAL_MS = 1000 / 30;
+const PENDING_BVH_SELECT_HOVER_INTERVAL_MS = 250;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -132,6 +129,15 @@ function faceNormalToWorld(
   return normal.clone().applyMatrix4(normalMatrix).normalize();
 }
 
+function distanceSquared(
+  a: { x: number; y: number },
+  b: { x: number; y: number },
+): number {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  return dx * dx + dy * dy;
+}
+
 // ---------------------------------------------------------------------------
 // PickingManager
 // ---------------------------------------------------------------------------
@@ -151,6 +157,7 @@ export class PickingManager {
   // Raycaster state
   private readonly raycaster = new Raycaster();
   private readonly ndcPointer = new Vector2();
+  private readonly intersections: Intersection[] = [];
 
   // Pointer tracking for click detection
   private pointerDownPos: { x: number; y: number } | null = null;
@@ -161,12 +168,18 @@ export class PickingManager {
 
   // RAF-gated hover
   private hoverRafPending = false;
+  private hoverRafId: number | null = null;
   private lastHoverEntityId: string | null = null;
   private lastHoverFace: { bodyId: string; faceIndex: number } | null = null;
+  private lastPointerPos: { x: number; y: number } | null = null;
+  private lastPreciseHoverAt = Number.NEGATIVE_INFINITY;
+  private pointerDragSuppressed = false;
+  private orbitDragSuppressed = false;
+  private transformDragSuppressed = false;
 
   // Cached pickable mesh list (invalidated via sceneGraph.onEntityListChanged)
   private pickableMeshesCache: Mesh[] | null = null;
-  private readonly boundInvalidateCache: () => void;
+  private unsubEntityList: (() => void) | null = null;
 
   // Bound event handlers (stored for removal in dispose)
   private readonly boundOnPointerDown: (e: PointerEvent) => void;
@@ -189,10 +202,13 @@ export class PickingManager {
     this.sceneGraph = sceneGraph;
     this.onPick = onPick;
     this.onHover = onHover;
+    this.raycaster.layers.set(VIEWPORT_PICK_LAYER);
+    this.raycaster.firstHitOnly = true;
 
     // Invalidate mesh cache when entities change
-    this.boundInvalidateCache = this.invalidateCache.bind(this);
-    this.sceneGraph.onEntityListChanged = this.boundInvalidateCache;
+    this.unsubEntityList = this.sceneGraph.onEntityListChanged(
+      this.invalidateCache.bind(this),
+    );
 
     // Bind handlers
     this.boundOnPointerDown = this.handlePointerDown.bind(this);
@@ -229,6 +245,18 @@ export class PickingManager {
     this.onFaceHoverChange = callback;
   }
 
+  setOrbitDragging(active: boolean): void {
+    if (this.orbitDragSuppressed === active) return;
+    this.orbitDragSuppressed = active;
+    this.syncHoverSuppression();
+  }
+
+  setTransformDragging(active: boolean): void {
+    if (this.transformDragSuppressed === active) return;
+    this.transformDragSuppressed = active;
+    this.syncHoverSuppression();
+  }
+
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
@@ -241,8 +269,12 @@ export class PickingManager {
     this.clearFaceHoverState();
 
     // Detach from scene graph
-    if (this.sceneGraph.onEntityListChanged === this.boundInvalidateCache) {
-      this.sceneGraph.onEntityListChanged = undefined;
+    this.unsubEntityList?.();
+    this.unsubEntityList = null;
+
+    if (this.hoverRafId !== null) {
+      cancelAnimationFrame(this.hoverRafId);
+      this.hoverRafId = null;
     }
   }
 
@@ -252,6 +284,8 @@ export class PickingManager {
 
   private handlePointerDown(event: PointerEvent): void {
     this.pointerDownPos = { x: event.clientX, y: event.clientY };
+    this.lastPointerPos = { x: event.clientX, y: event.clientY };
+    this.pointerDragSuppressed = false;
     this.pointerDownModifiers = {
       ctrl: event.ctrlKey || event.metaKey,
       shift: event.shiftKey,
@@ -261,14 +295,18 @@ export class PickingManager {
   private handlePointerUp(event: PointerEvent): void {
     if (!this.pointerDownPos) return;
 
-    const dx = event.clientX - this.pointerDownPos.x;
-    const dy = event.clientY - this.pointerDownPos.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
+    this.lastPointerPos = { x: event.clientX, y: event.clientY };
+    const distance = Math.sqrt(
+      distanceSquared(this.pointerDownPos, this.lastPointerPos),
+    );
+    const wasPointerDrag = this.pointerDragSuppressed;
 
     this.pointerDownPos = null;
+    this.pointerDragSuppressed = false;
+    this.syncHoverSuppression();
 
     // Only count as a click if the pointer barely moved
-    if (distance >= DRAG_THRESHOLD_PX) return;
+    if (distance >= DRAG_THRESHOLD_PX || wasPointerDrag) return;
 
     const modifiers = {
       ctrl: event.ctrlKey || event.metaKey || this.pointerDownModifiers.ctrl,
@@ -279,25 +317,22 @@ export class PickingManager {
   }
 
   private handlePointerMove(event: PointerEvent): void {
-    if (this.hoverRafPending) return;
-    this.hoverRafPending = true;
+    this.lastPointerPos = { x: event.clientX, y: event.clientY };
 
-    // Capture the event data we need before RAF fires
-    const clientX = event.clientX;
-    const clientY = event.clientY;
-    const domElement = this.renderer.domElement;
+    if (
+      this.pointerDownPos &&
+      distanceSquared(this.pointerDownPos, this.lastPointerPos) >=
+        DRAG_THRESHOLD_PX * DRAG_THRESHOLD_PX
+    ) {
+      this.pointerDragSuppressed = true;
+    }
 
-    requestAnimationFrame(() => {
-      this.hoverRafPending = false;
-      if (this.disposed) return;
+    if (this.isHoverSuppressed()) {
+      this.cancelPendingHover();
+      return;
+    }
 
-      // Build a synthetic-enough "event" for pointerToNDC
-      const rect = domElement.getBoundingClientRect();
-      this.ndcPointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
-      this.ndcPointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
-
-      this.performHover();
-    });
+    this.scheduleHover();
   }
 
   // -----------------------------------------------------------------------
@@ -325,8 +360,9 @@ export class PickingManager {
     const meshes = this.getPickableMeshes();
     if (meshes.length === 0) return null;
 
-    const hits = this.raycaster.intersectObjects(meshes, true);
-    return hits.length > 0 ? hits[0] : null;
+    this.intersections.length = 0;
+    this.raycaster.intersectObjects(meshes, false, this.intersections);
+    return this.intersections[0] ?? null;
   }
 
   /**
@@ -338,8 +374,9 @@ export class PickingManager {
     const meshes = this.getPickableMeshes();
     if (meshes.length === 0) return null;
 
-    const hits = this.raycaster.intersectObjects(meshes, true);
-    return hits.length > 0 ? hits[0] : null;
+    this.intersections.length = 0;
+    this.raycaster.intersectObjects(meshes, false, this.intersections);
+    return this.intersections[0] ?? null;
   }
 
   /**
@@ -422,7 +459,7 @@ export class PickingManager {
     const triangleIndex = hit.faceIndex;
     if (triangleIndex !== undefined && triangleIndex !== null) {
       const geoIndex = this.sceneGraph.getBodyGeometryIndex(entityId);
-      if (geoIndex instanceof BodyGeometryIndex) {
+      if (geoIndex) {
         const resolvedFaceIndex = geoIndex.getFaceFromTriangle(triangleIndex);
         faceIndex = resolvedFaceIndex >= 0 ? resolvedFaceIndex : undefined;
       } else {
@@ -444,6 +481,7 @@ export class PickingManager {
   // -----------------------------------------------------------------------
 
   private performHover(): void {
+    if (this.isHoverSuppressed()) return;
     const hit = this.raycastFromNDC();
 
     if (!hit) {
@@ -485,7 +523,7 @@ export class PickingManager {
     // Resolve face index via geometry index
     const geoIndex = this.sceneGraph.getBodyGeometryIndex(entityId);
     let faceIndex: number;
-    if (geoIndex instanceof BodyGeometryIndex) {
+    if (geoIndex) {
       faceIndex = geoIndex.getFaceFromTriangle(hit.faceIndex);
       if (faceIndex < 0) {
         this.updateFaceHover(null, null, null);
@@ -506,18 +544,12 @@ export class PickingManager {
     }
 
     // Estimate surface type for this face
-    let previewType: DatumPreviewType | undefined;
-    const normals = this.sceneGraph.getBodyMeshNormals(entityId);
-    const indices = this.sceneGraph.getBodyMeshIndices(entityId);
+    const facePreview = geoIndex
+      ? this.sceneGraph.getBodyFacePreview(entityId, faceIndex)
+      : null;
+    const previewType = facePreview?.previewType;
 
-    if (
-      normals &&
-      indices &&
-      geoIndex instanceof BodyGeometryIndex &&
-      faceIndex < geoIndex.faceRanges.length
-    ) {
-      const faceRange = geoIndex.faceRanges[faceIndex];
-      previewType = estimateSurfaceType(normals, indices, faceRange);
+    if (geoIndex && previewType) {
 
       // Update face highlight
       this.sceneGraph.clearAllFaceHighlights();
@@ -527,11 +559,8 @@ export class PickingManager {
       this.updateDatumPreview(
         hit,
         entityId,
-        faceIndex,
         previewType,
-        normals,
-        indices,
-        geoIndex,
+        facePreview.axisDirection,
       );
     }
 
@@ -544,14 +573,9 @@ export class PickingManager {
   private updateDatumPreview(
     hit: Intersection,
     bodyId: string,
-    faceIndex: number,
     previewType: DatumPreviewType,
-    normals: Float32Array,
-    indices: Uint32Array,
-    geoIndex: BodyGeometryIndex,
+    axisDirectionLocal: [number, number, number] | null,
   ): void {
-    const faceRange = geoIndex.faceRanges[faceIndex];
-
     // World-space position
     const position: [number, number, number] = [
       hit.point.x,
@@ -571,15 +595,16 @@ export class PickingManager {
 
     // Axis direction (for cylindrical surfaces)
     let axisDir: [number, number, number] | null = null;
-    if (previewType === 'axis') {
-      const localAxis = estimateAxisDirection(normals, indices, faceRange);
-      if (localAxis) {
+    if (previewType === 'axis' && axisDirectionLocal) {
         // Transform axis direction from object-local to world space
         const axisMat = new Matrix4().extractRotation(hit.object.matrixWorld);
-        const axisVec = new Vector3(localAxis[0], localAxis[1], localAxis[2]);
+        const axisVec = new Vector3(
+          axisDirectionLocal[0],
+          axisDirectionLocal[1],
+          axisDirectionLocal[2],
+        );
         axisVec.applyMatrix4(axisMat).normalize();
         axisDir = [axisVec.x, axisVec.y, axisVec.z];
-      }
     }
 
     this.sceneGraph.showDatumPreview({
@@ -638,5 +663,68 @@ export class PickingManager {
   private clearFaceHoverState(): void {
     this.lastHoverFace = null;
     this.lastHoverEntityId = null;
+  }
+
+  private isHoverSuppressed(): boolean {
+    return (
+      this.pointerDragSuppressed ||
+      this.orbitDragSuppressed ||
+      this.transformDragSuppressed
+    );
+  }
+
+  private syncHoverSuppression(): void {
+    if (this.isHoverSuppressed()) {
+      this.cancelPendingHover();
+      return;
+    }
+    this.scheduleHover();
+  }
+
+  private cancelPendingHover(): void {
+    this.hoverRafPending = false;
+    if (this.hoverRafId !== null) {
+      cancelAnimationFrame(this.hoverRafId);
+      this.hoverRafId = null;
+    }
+  }
+
+  private scheduleHover(): void {
+    if (this.hoverRafPending || !this.lastPointerPos) return;
+    this.hoverRafPending = true;
+
+    const { x: clientX, y: clientY } = this.lastPointerPos;
+    const domElement = this.renderer.domElement;
+
+    this.hoverRafId = requestAnimationFrame((timestampMs) => {
+      this.hoverRafPending = false;
+      this.hoverRafId = null;
+      if (this.disposed || this.isHoverSuppressed()) return;
+
+      const hoverInterval = this.getPreciseHoverIntervalMs();
+      if (
+        this.interactionMode === 'select' &&
+        timestampMs - this.lastPreciseHoverAt < hoverInterval
+      ) {
+        this.scheduleHover();
+        return;
+      }
+
+      const rect = domElement.getBoundingClientRect();
+      this.ndcPointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+      this.ndcPointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+
+      this.lastPreciseHoverAt = timestampMs;
+      this.performHover();
+    });
+  }
+
+  private getPreciseHoverIntervalMs(): number {
+    if (this.interactionMode !== 'select') {
+      return 0;
+    }
+    return this.sceneGraph.hasPendingBodyBvhs()
+      ? PENDING_BVH_SELECT_HOVER_INTERVAL_MS
+      : SELECT_HOVER_INTERVAL_MS;
   }
 }

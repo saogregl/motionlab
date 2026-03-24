@@ -5,10 +5,15 @@ export { estimateAxisDirection, estimateSurfaceType, type DatumPreviewType } fro
 
 // Scene graph (Three.js implementation)
 export {
+  type BodyTransformUpdate,
   type CameraPreset,
+  type DatumPreviewConfig,
   type GizmoDragEndCallback,
   type GizmoDragEndEvent,
   type GizmoMode,
+  type JointForceUpdate,
+  type JointPreviewAlignment,
+  type LoadStateInput,
   type MeshDataInput,
   type PoseInput,
   type SceneEntity,
@@ -34,3 +39,17 @@ export {
   type MaterialFactory,
   type MaterialPreset,
 } from './rendering/materials-three.js';
+
+// DOF indicators
+export {
+  createDofIndicator,
+  DOF_TABLE,
+  type DofIndicatorResult,
+  type DofSpec,
+} from './rendering/dof-indicators-three.js';
+
+// Joint anchor glyph
+export {
+  createJointAnchor,
+  type JointAnchorResult,
+} from './rendering/joint-anchor-three.js';

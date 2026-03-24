@@ -14,6 +14,7 @@ describe('Simulation store', () => {
     expect(s.stepCount).toBe(0);
     expect(s.errorMessage).toBeNull();
     expect(s.compilationDiagnostics).toEqual([]);
+    expect(s.structuredDiagnostics).toEqual([]);
   });
 
   it('setCompilationResult(true) transitions to paused', () => {
@@ -68,7 +69,33 @@ describe('Simulation store', () => {
     expect(s.stepCount).toBe(0);
     expect(s.errorMessage).toBeNull();
     expect(s.compilationDiagnostics).toEqual([]);
+    expect(s.structuredDiagnostics).toEqual([]);
     expect(s.channelDescriptors).toEqual([]);
+  });
+
+  it('setCompilationResult with structured diagnostics', () => {
+    const diags = [
+      {
+        severity: 'warning' as const,
+        message: 'Floating body',
+        affectedEntityIds: ['body-1'],
+        suggestion: 'Add a joint',
+        code: 'FLOATING_BODY',
+      },
+    ];
+    useSimulationStore
+      .getState()
+      .setCompilationResult(true, undefined, ['Floating body'], undefined, diags);
+    const s = useSimulationStore.getState();
+    expect(s.structuredDiagnostics).toHaveLength(1);
+    expect(s.structuredDiagnostics[0].code).toBe('FLOATING_BODY');
+    expect(s.structuredDiagnostics[0].severity).toBe('warning');
+    expect(s.structuredDiagnostics[0].affectedEntityIds).toEqual(['body-1']);
+  });
+
+  it('setCompilationResult without structured diagnostics defaults to empty', () => {
+    useSimulationStore.getState().setCompilationResult(true);
+    expect(useSimulationStore.getState().structuredDiagnostics).toEqual([]);
   });
 
   it('full lifecycle: idle → paused → running → paused → idle', () => {
