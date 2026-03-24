@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <chrono>
 #include <cmath>
 #include <memory>
 #include <string>
@@ -471,6 +472,9 @@ SimulationRuntime::~SimulationRuntime() = default;
 
 CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
                                              const SimulationConfig& config) {
+    using clock = std::chrono::steady_clock;
+    const auto t_start = clock::now();
+
     CompilationResult result;
     impl_->state = SimState::COMPILING;
     result.success = false;
@@ -931,6 +935,15 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
     for (const auto& sd : result.structured_diagnostics) {
         result.diagnostics.push_back(sd.message);
     }
+
+    const auto t_end = clock::now();
+    const auto total_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t_end - t_start).count();
+    spdlog::debug("compile: total={}ms bodies={} joints={} loads={} actuators={}",
+        total_ms,
+        mechanism.bodies_size(),
+        mechanism.joints_size(),
+        mechanism.loads_size(),
+        mechanism.actuators_size());
 
     result.success = true;
     impl_->state = SimState::IDLE;

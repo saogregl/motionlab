@@ -16,6 +16,7 @@
 #include <mutex>
 #include <string>
 #include <thread>
+#include <unordered_map>
 #include <vector>
 
 namespace motionlab::transport_detail {
@@ -75,9 +76,16 @@ private:
     std::atomic<engine::SimState> published_sim_state_{engine::SimState::IDLE};
     engine::SimulationRingBuffer ring_buffer_;
     uint64_t trace_batch_step_ = 0;
-    size_t trace_channel_index_ = 0;
     std::vector<engine::ChannelDescriptor> channel_descriptors_;
+    std::unordered_map<std::string, double> channel_last_sent_time_;
     double sim_dt_ = 0.001;
+
+    // Scrub / replay state
+    double scrub_cursor_time_  = 0.0;
+    uint64_t scrub_cursor_step_ = 0;
+    bool is_scrubbed_           = false;
+    bool is_replaying_          = false;
+    double replay_cursor_time_  = 0.0;
 };
 
 } // namespace motionlab::transport_detail

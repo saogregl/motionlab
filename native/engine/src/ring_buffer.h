@@ -24,6 +24,10 @@ public:
     void push(const BufferedFrame& frame);
     const BufferedFrame* find_nearest(double target_time) const;
     std::vector<const BufferedFrame*> find_window(double center, double half_width) const;
+    // Returns the first frame with sim_time strictly greater than after_time, or nullptr.
+    const BufferedFrame* find_next_after(double after_time) const;
+    // Returns all frames with sim_time strictly greater than after_time, in ascending order.
+    std::vector<const BufferedFrame*> find_frames_after(double after_time) const;
     void clear();
     bool empty() const;
     double oldest_time() const;

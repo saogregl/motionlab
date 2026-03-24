@@ -63,6 +63,33 @@ std::vector<const BufferedFrame*> SimulationRingBuffer::find_window(
     return result;
 }
 
+const BufferedFrame* SimulationRingBuffer::find_next_after(double after_time) const {
+    std::shared_lock lock(mutex_);
+    if (frames_.empty()) return nullptr;
+
+    auto it = std::upper_bound(
+        frames_.begin(), frames_.end(), after_time,
+        [](double t, const BufferedFrame& f) { return t < f.sim_time; });
+
+    if (it == frames_.end()) return nullptr;
+    return &(*it);
+}
+
+std::vector<const BufferedFrame*> SimulationRingBuffer::find_frames_after(double after_time) const {
+    std::shared_lock lock(mutex_);
+    std::vector<const BufferedFrame*> result;
+    if (frames_.empty()) return result;
+
+    auto it = std::upper_bound(
+        frames_.begin(), frames_.end(), after_time,
+        [](double t, const BufferedFrame& f) { return t < f.sim_time; });
+
+    for (; it != frames_.end(); ++it) {
+        result.push_back(&(*it));
+    }
+    return result;
+}
+
 void SimulationRingBuffer::clear() {
     std::unique_lock lock(mutex_);
     frames_.clear();

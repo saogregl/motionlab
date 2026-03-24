@@ -43,6 +43,14 @@ export const useTraceStore = create<TraceState>()((set) => ({
       const existing = state.traces.get(channelId) ?? [];
       let merged = existing.concat(samples);
 
+      // Deduplicate by time (last-write-wins) to guard against any overlap from
+      // the backend sending a repeated window, then re-sort.
+      if (samples.length > 0) {
+        const seen = new Map<number, StoreSample>();
+        for (const s of merged) seen.set(s.time, s);
+        merged = Array.from(seen.values()).sort((a, b) => a.time - b.time);
+      }
+
       if (merged.length > 0) {
         const maxTime = merged[merged.length - 1].time;
         const cutoff = maxTime - MAX_TRACE_SECONDS;

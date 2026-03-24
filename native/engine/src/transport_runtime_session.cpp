@@ -95,8 +95,10 @@ void RuntimeSession::handle_compile_mechanism(ix::WebSocket& ws,
 
     ring_buffer_.clear();
     trace_batch_step_ = 0;
-    trace_channel_index_ = 0;
     channel_descriptors_.clear();
+    channel_last_sent_time_.clear();
+    is_scrubbed_   = false;
+    is_replaying_  = false;
 
     protocol::Event event;
     event.set_sequence_id(sequence_id);
@@ -183,6 +185,12 @@ void RuntimeSession::handle_scrub(const protocol::ScrubCommand& cmd) {
     const double target = cmd.time();
     const auto* frame = ring_buffer_.find_nearest(target);
     if (frame) {
+        // Cache the scrubbed position so send_sim_state_event() reports the right time.
+        scrub_cursor_time_  = frame->sim_time;
+        scrub_cursor_step_  = frame->step_count;
+        is_scrubbed_        = true;
+        is_replaying_       = false;
+
         send_sim_frame_data(frame->body_poses, frame->sim_time, frame->step_count);
 
         auto window_frames = ring_buffer_.find_window(target, 1.0);
@@ -232,21 +240,33 @@ void RuntimeSession::simulation_loop() {
                 spdlog::info("sim_loop: SHUTDOWN");
                 return;
             case SimCommand::PLAY:
+                if (is_scrubbed_) {
+                    // Scrubbed to a past time: replay ring-buffer frames until we
+                    // catch up to the live position, then resume live stepping.
+                    is_replaying_       = true;
+                    replay_cursor_time_ = scrub_cursor_time_;
+                    is_scrubbed_        = false;
+                } else {
+                    is_replaying_ = false;
+                }
                 playing = true;
                 published_sim_state_.store(engine::SimState::RUNNING);
                 send_sim_state_event();
-                spdlog::info("sim_loop: PLAY, entering stepping (sim_dt={:.6f}, bodies={})",
-                             sim_dt_, simulation_runtime_.getBodyPoses().size());
+                spdlog::info("sim_loop: PLAY, replay={} (sim_dt={:.6f}, bodies={})",
+                             is_replaying_, sim_dt_, simulation_runtime_.getBodyPoses().size());
                 break;
             case SimCommand::PAUSE:
-                playing = false;
+                playing       = false;
+                is_replaying_ = false;
                 simulation_runtime_.pause();
                 published_sim_state_.store(engine::SimState::PAUSED);
                 send_sim_state_event();
                 spdlog::info("sim_loop: PAUSE");
                 break;
             case SimCommand::STEP_ONCE: {
-                playing = false;
+                playing       = false;
+                is_replaying_ = false;
+                is_scrubbed_  = false;
                 simulation_runtime_.step(sim_dt_);
                 simulation_runtime_.pause();
                 published_sim_state_.store(engine::SimState::PAUSED);
@@ -256,7 +276,10 @@ void RuntimeSession::simulation_loop() {
                 break;
             }
             case SimCommand::RESET:
-                playing = false;
+                playing       = false;
+                is_replaying_ = false;
+                is_scrubbed_  = false;
+                channel_last_sent_time_.clear();
                 simulation_runtime_.reset();
                 published_sim_state_.store(engine::SimState::IDLE);
                 send_sim_frame();
@@ -269,41 +292,62 @@ void RuntimeSession::simulation_loop() {
 
         if (playing) {
             auto frame_start = std::chrono::steady_clock::now();
-            double accumulated = 0.0;
-            while (accumulated < FRAME_INTERVAL) {
-                {
-                    std::lock_guard<std::mutex> lk(sim_mutex_);
-                    if (sim_command_ != SimCommand::NONE) break;
+
+            if (is_replaying_) {
+                // Walk ring-buffer frames at real-time speed until we reach the
+                // buffered head, then fall through to live stepping.
+                const double live_head = ring_buffer_.newest_time();
+                const auto* nf = ring_buffer_.find_next_after(replay_cursor_time_);
+                if (nf && nf->sim_time < live_head) {
+                    replay_cursor_time_ = nf->sim_time;
+                    send_sim_frame_data(nf->body_poses, nf->sim_time, nf->step_count);
+                    // Trace data for this time range is already in the frontend store
+                    // from the original live run; don't resend duplicates.
+                    spdlog::debug("sim_loop: replay frame t={:.4f}", nf->sim_time);
+                } else {
+                    // Caught up to the live position — resume physics stepping.
+                    is_replaying_ = false;
+                    spdlog::info("sim_loop: replay complete at t={:.4f}, resuming live", live_head);
                 }
-                simulation_runtime_.step(sim_dt_);
-                accumulated += sim_dt_;
-            }
+            } else {
+                // Live physics stepping (original behaviour).
+                double accumulated = 0.0;
+                while (accumulated < FRAME_INTERVAL) {
+                    {
+                        std::lock_guard<std::mutex> lk(sim_mutex_);
+                        if (sim_command_ != SimCommand::NONE) break;
+                    }
+                    simulation_runtime_.step(sim_dt_);
+                    accumulated += sim_dt_;
+                }
 
-            auto poses = simulation_runtime_.getBodyPoses();
-            auto channel_values = simulation_runtime_.getChannelValues();
+                auto poses = simulation_runtime_.getBodyPoses();
+                auto channel_values = simulation_runtime_.getChannelValues();
 
-            engine::BufferedFrame bf;
-            bf.sim_time = simulation_runtime_.getCurrentTime();
-            bf.step_count = simulation_runtime_.getStepCount();
-            bf.body_poses = poses;
-            bf.channel_values = channel_values;
-            bf.channel_index_by_id.reserve(channel_values.size());
-            for (size_t i = 0; i < channel_values.size(); ++i) {
-                bf.channel_index_by_id.emplace(channel_values[i].channel_id, i);
-            }
-            ring_buffer_.push(bf);
+                engine::BufferedFrame bf;
+                bf.sim_time = simulation_runtime_.getCurrentTime();
+                bf.step_count = simulation_runtime_.getStepCount();
+                bf.body_poses = poses;
+                bf.channel_values = channel_values;
+                bf.channel_index_by_id.reserve(channel_values.size());
+                for (size_t i = 0; i < channel_values.size(); ++i) {
+                    bf.channel_index_by_id.emplace(channel_values[i].channel_id, i);
+                }
+                ring_buffer_.push(bf);
 
-            send_sim_frame_data(poses, simulation_runtime_.getCurrentTime(), simulation_runtime_.getStepCount());
+                send_sim_frame_data(poses, simulation_runtime_.getCurrentTime(),
+                                    simulation_runtime_.getStepCount());
 
-            spdlog::debug("sim_loop: frame t={:.4f} steps={}",
-                          simulation_runtime_.getCurrentTime(),
-                          simulation_runtime_.getStepCount());
+                spdlog::debug("sim_loop: frame t={:.4f} steps={}",
+                              simulation_runtime_.getCurrentTime(),
+                              simulation_runtime_.getStepCount());
 
-            trace_batch_step_++;
-            if (!channel_descriptors_.empty() &&
-                trace_batch_step_ >= static_cast<uint64_t>(TRACE_BATCH_INTERVAL)) {
-                trace_batch_step_ = 0;
-                send_trace_batch();
+                trace_batch_step_++;
+                if (!channel_descriptors_.empty() &&
+                    trace_batch_step_ >= static_cast<uint64_t>(TRACE_BATCH_INTERVAL)) {
+                    trace_batch_step_ = 0;
+                    send_trace_batch();
+                }
             }
 
             auto frame_end = std::chrono::steady_clock::now();
@@ -362,8 +406,12 @@ void RuntimeSession::send_sim_state_event() {
     protocol::Event event;
     auto* se = event.mutable_simulation_state();
     se->set_state(proto_state);
-    se->set_sim_time(simulation_runtime_.getCurrentTime());
-    se->set_step_count(simulation_runtime_.getStepCount());
+    // Use the scrub cursor when paused after a seek, so the frontend
+    // timeline doesn't snap back to the actual engine time.
+    const double report_time  = is_scrubbed_ ? scrub_cursor_time_  : simulation_runtime_.getCurrentTime();
+    const uint64_t report_step = is_scrubbed_ ? scrub_cursor_step_ : simulation_runtime_.getStepCount();
+    se->set_sim_time(report_time);
+    se->set_step_count(report_step);
     send_event(*ws, event);
 }
 
@@ -422,14 +470,21 @@ void RuntimeSession::send_trace_batch() {
     }
     if (!ws || channel_descriptors_.empty()) return;
 
-    size_t idx = trace_channel_index_ % channel_descriptors_.size();
-    trace_channel_index_++;
-
     double newest = ring_buffer_.newest_time();
-    auto frames = ring_buffer_.find_window(newest - 0.25, 0.25);
-    if (frames.empty()) return;
 
-    send_trace_window(channel_descriptors_[idx], frames);
+    // Send every channel, but only the frames that haven't been sent yet.
+    // This replaces the old round-robin approach, which skipped frames when
+    // N channels > 3 (the batch window didn't cover the inter-batch gap).
+    for (const auto& desc : channel_descriptors_) {
+        auto it = channel_last_sent_time_.find(desc.channel_id);
+        double last_sent = (it != channel_last_sent_time_.end()) ? it->second : -1.0;
+
+        auto frames = ring_buffer_.find_frames_after(last_sent);
+        if (frames.empty()) continue;
+
+        send_trace_window(desc, frames);
+        channel_last_sent_time_[desc.channel_id] = newest;
+    }
 }
 
 void RuntimeSession::send_trace_window(const engine::ChannelDescriptor& desc,

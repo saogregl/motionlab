@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+import { useSimulationStore } from './simulation.js';
+
 export type SolverType = 'psor' | 'barzilai-borwein' | 'apgd' | 'minres';
 export type IntegratorType = 'euler-implicit-linearized' | 'hht' | 'newmark';
 export type SettingsPreset = 'quick-preview' | 'balanced' | 'high-accuracy' | 'contact-heavy';
@@ -71,7 +73,7 @@ const SETTINGS_PRESETS: Record<SettingsPreset, Partial<SimulationSettingsState>>
     tolerance: 1e-6,
     integratorType: 'euler-implicit-linearized',
   },
-  'balanced': {
+  balanced: {
     timestep: 0.001,
     solverType: 'psor',
     maxIterations: 100,
@@ -99,21 +101,68 @@ const SETTINGS_PRESETS: Record<SettingsPreset, Partial<SimulationSettingsState>>
   },
 };
 
+const markNeedsCompile = () => useSimulationStore.getState().setNeedsCompile(true);
+
 export const useSimulationSettingsStore = create<SimulationSettingsState>()((set) => ({
   ...DEFAULTS,
-  setDuration: (v) => set({ duration: v }),
-  setTimestep: (v) => set({ timestep: v }),
-  setGravity: (g) => set({ gravity: g }),
-  setSolverType: (v) => set({ solverType: v }),
-  setMaxIterations: (v) => set({ maxIterations: v }),
-  setTolerance: (v) => set({ tolerance: v }),
-  setIntegratorType: (v) => set({ integratorType: v }),
-  setFriction: (v) => set({ friction: v }),
-  setRestitution: (v) => set({ restitution: v }),
-  setCompliance: (v) => set({ compliance: v }),
-  setContactDamping: (v) => set({ contactDamping: v }),
-  setEnableContact: (v) => set({ enableContact: v }),
-  applyPreset: (preset) => set({ gravity: { ...GRAVITY_PRESETS[preset] } }),
-  applySettingsPreset: (preset) => set(SETTINGS_PRESETS[preset]),
-  resetToDefaults: () => set({ ...DEFAULTS }),
+  setDuration: (v) => {
+    set({ duration: v });
+    markNeedsCompile();
+  },
+  setTimestep: (v) => {
+    set({ timestep: v });
+    markNeedsCompile();
+  },
+  setGravity: (g) => {
+    set({ gravity: g });
+    markNeedsCompile();
+  },
+  setSolverType: (v) => {
+    set({ solverType: v });
+    markNeedsCompile();
+  },
+  setMaxIterations: (v) => {
+    set({ maxIterations: v });
+    markNeedsCompile();
+  },
+  setTolerance: (v) => {
+    set({ tolerance: v });
+    markNeedsCompile();
+  },
+  setIntegratorType: (v) => {
+    set({ integratorType: v });
+    markNeedsCompile();
+  },
+  setFriction: (v) => {
+    set({ friction: v });
+    markNeedsCompile();
+  },
+  setRestitution: (v) => {
+    set({ restitution: v });
+    markNeedsCompile();
+  },
+  setCompliance: (v) => {
+    set({ compliance: v });
+    markNeedsCompile();
+  },
+  setContactDamping: (v) => {
+    set({ contactDamping: v });
+    markNeedsCompile();
+  },
+  setEnableContact: (v) => {
+    set({ enableContact: v });
+    markNeedsCompile();
+  },
+  applyPreset: (preset) => {
+    set({ gravity: { ...GRAVITY_PRESETS[preset] } });
+    markNeedsCompile();
+  },
+  applySettingsPreset: (preset) => {
+    set(SETTINGS_PRESETS[preset]);
+    markNeedsCompile();
+  },
+  resetToDefaults: () => {
+    set({ ...DEFAULTS });
+    markNeedsCompile();
+  },
 }));

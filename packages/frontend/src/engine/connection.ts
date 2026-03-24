@@ -61,6 +61,7 @@ import type { ActuatorState, ActuatorTypeId, ControlModeId, BodyMassProperties, 
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { type ChannelDescriptor, type StructuredDiagnostic, useSimulationStore } from '../stores/simulation.js';
+import { useSimulationSettingsStore } from '../stores/simulation-settings.js';
 import { useUILayoutStore } from '../stores/ui-layout.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
 import { useToastStore } from '../stores/toast.js';
@@ -426,6 +427,8 @@ type GetState = () => EngineConnectionState;
 let ws: WebSocket | null = null;
 let handshakeTimer: ReturnType<typeof setTimeout> | null = null;
 let connectEpoch = 0;
+// Queued action to dispatch immediately after a successful auto-compile.
+let pendingActionAfterCompile: 'play' | 'step' | null = null;
 
 // ---------------------------------------------------------------------------
 // SceneGraphManager registry for hot-path frame updates
@@ -654,6 +657,7 @@ export function connect(set: SetState, _get: GetState) {
                 }
               }
 
+              useSimulationStore.getState().setNeedsCompile(true);
               useToastStore.getState().addToast({
                 variant: 'success',
                 title: 'Import complete',
@@ -694,6 +698,7 @@ export function connect(set: SetState, _get: GetState) {
                   },
                 },
               });
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[datum] create failed:', result.result.value);
             }
@@ -774,6 +779,7 @@ export function connect(set: SetState, _get: GetState) {
                 }
                 lcs.setCreatingDatum(false);
               }
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               statusStore.setMessage(result.result.value);
               console.error('[datum] create-from-face failed:', result.result.value);
@@ -794,6 +800,7 @@ export function connect(set: SetState, _get: GetState) {
             const mechStore = useMechanismStore.getState();
             if (result.result.case === 'deletedId') {
               mechStore.removeDatum(result.result.value.id);
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[datum] delete failed:', result.result.value);
             }
@@ -828,6 +835,7 @@ export function connect(set: SetState, _get: GetState) {
                   w: d.localPose?.orientation?.w ?? 1,
                 },
               });
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[datum] update pose failed:', result.result.value);
             }
@@ -839,6 +847,7 @@ export function connect(set: SetState, _get: GetState) {
             if (result.result.case === 'body') {
               const b = result.result.value;
               mechStore.addBodies([extractBodyState(b)]);
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[body] update failed:', result.result.value);
             }
@@ -858,6 +867,7 @@ export function connect(set: SetState, _get: GetState) {
                 lowerLimit: j.lowerLimit,
                 upperLimit: j.upperLimit,
               });
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[joint] create failed:', result.result.value);
             }
@@ -876,6 +886,7 @@ export function connect(set: SetState, _get: GetState) {
                 lowerLimit: j.lowerLimit,
                 upperLimit: j.upperLimit,
               });
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[joint] update failed:', result.result.value);
             }
@@ -886,6 +897,7 @@ export function connect(set: SetState, _get: GetState) {
             const mechStore = useMechanismStore.getState();
             if (result.result.case === 'deletedId') {
               mechStore.removeJoint(result.result.value.id);
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[joint] delete failed:', result.result.value);
             }
@@ -897,6 +909,7 @@ export function connect(set: SetState, _get: GetState) {
             if (result.result.case === 'load') {
               const loadState = extractLoadState(result.result.value);
               mechStore.addLoad(loadState);
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[load] create failed:', result.result.value);
             }
@@ -908,6 +921,7 @@ export function connect(set: SetState, _get: GetState) {
             if (result.result.case === 'load') {
               const loadState = extractLoadState(result.result.value);
               mechStore.updateLoad(loadState.id, loadState);
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[load] update failed:', result.result.value);
             }
@@ -918,6 +932,7 @@ export function connect(set: SetState, _get: GetState) {
             const mechStore = useMechanismStore.getState();
             if (result.result.case === 'deletedId') {
               mechStore.removeLoad(result.result.value.id);
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[load] delete failed:', result.result.value);
             }
@@ -929,6 +944,7 @@ export function connect(set: SetState, _get: GetState) {
             if (result.result.case === 'actuator') {
               const actuatorState = extractActuatorState(result.result.value);
               mechStore.addActuator(actuatorState);
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[actuator] create failed:', result.result.value);
             }
@@ -940,6 +956,7 @@ export function connect(set: SetState, _get: GetState) {
             if (result.result.case === 'actuator') {
               const actuatorState = extractActuatorState(result.result.value);
               mechStore.updateActuator(actuatorState.id, actuatorState);
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[actuator] update failed:', result.result.value);
             }
@@ -950,6 +967,7 @@ export function connect(set: SetState, _get: GetState) {
             const mechStore = useMechanismStore.getState();
             if (result.result.case === 'deletedId') {
               mechStore.removeActuator(result.result.value.id);
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[actuator] delete failed:', result.result.value);
             }
@@ -994,12 +1012,22 @@ export function connect(set: SetState, _get: GetState) {
             }
             if (result.success) {
               useToolModeStore.getState().setMode('select');
-              useToastStore.getState().addToast({
-                variant: 'success',
-                title: 'Compilation successful',
-                duration: 2000,
-              });
+              // Dispatch any queued play/step that triggered this auto-compile.
+              if (pendingActionAfterCompile) {
+                const action = pendingActionAfterCompile;
+                pendingActionAfterCompile = null;
+                sendSimulationControl(
+                  action === 'play' ? SimulationAction.PLAY : SimulationAction.STEP,
+                );
+              } else {
+                useToastStore.getState().addToast({
+                  variant: 'success',
+                  title: 'Compilation successful',
+                  duration: 2000,
+                });
+              }
             } else {
+              pendingActionAfterCompile = null;
               useAuthoringStatusStore
                 .getState()
                 .setMessage(result.errorMessage || 'Compilation failed');
@@ -1422,6 +1450,7 @@ export function connect(set: SetState, _get: GetState) {
 
               console.log('[project] asset relocated successfully:', b.bodyId);
               if (relocateAssetCallback) relocateAssetCallback(b.bodyId, true);
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[project] asset relocation failed:', result.result.value);
               if (relocateAssetCallback) relocateAssetCallback('', false, result.result.value);
@@ -1434,6 +1463,7 @@ export function connect(set: SetState, _get: GetState) {
               const b = result.result.value;
               const mechStore = useMechanismStore.getState();
               mechStore.addBodies([extractBodyState(b)]);
+              useSimulationStore.getState().setNeedsCompile(true);
               useToastStore.getState().addToast({
                 variant: 'success',
                 title: 'Body created',
@@ -1482,6 +1512,7 @@ export function connect(set: SetState, _get: GetState) {
               if (sel.selectedIds.has(bodyId)) {
                 sel.clearSelection();
               }
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               useToastStore.getState().addToast({
                 variant: 'error',
@@ -1534,6 +1565,7 @@ export function connect(set: SetState, _get: GetState) {
                   }
                 }
               }
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               useToastStore.getState().addToast({
                 variant: 'error',
@@ -1569,6 +1601,7 @@ export function connect(set: SetState, _get: GetState) {
                   addBodyToSceneGraph(sceneGraphManager, oldBody, bodyGeoms);
                 }
               }
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               useToastStore.getState().addToast({
                 variant: 'error',
@@ -1588,6 +1621,7 @@ export function connect(set: SetState, _get: GetState) {
                 extractMassProperties(b.massProperties),
                 b.massOverride ?? false,
               );
+              useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               useToastStore.getState().addToast({
                 variant: 'error',
@@ -1827,6 +1861,50 @@ export function sendCompileMechanism(
 export function sendSimulationControl(action: SimulationAction): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(createSimulationControlCommand(action));
+}
+
+function buildSettingsInput(): SimulationSettingsInput {
+  const s = useSimulationSettingsStore.getState();
+  return {
+    timestep: s.timestep,
+    gravity: s.gravity,
+    duration: s.duration,
+    solver: {
+      type: s.solverType,
+      maxIterations: s.maxIterations,
+      tolerance: s.tolerance,
+      integrator: s.integratorType,
+    },
+    contact: {
+      friction: s.friction,
+      restitution: s.restitution,
+      compliance: s.compliance,
+      damping: s.contactDamping,
+      enableContact: s.enableContact,
+    },
+  };
+}
+
+/** Play, auto-compiling first if the model is stale or not yet compiled. */
+export function sendCompileAndPlay(): void {
+  const { state, needsCompile } = useSimulationStore.getState();
+  if (state === 'paused' && !needsCompile) {
+    sendSimulationControl(SimulationAction.PLAY);
+    return;
+  }
+  pendingActionAfterCompile = 'play';
+  sendCompileMechanism(buildSettingsInput());
+}
+
+/** Step, auto-compiling first if the model is stale or not yet compiled. */
+export function sendCompileAndStep(): void {
+  const { state, needsCompile } = useSimulationStore.getState();
+  if (state === 'paused' && !needsCompile) {
+    sendSimulationControl(SimulationAction.STEP);
+    return;
+  }
+  pendingActionAfterCompile = 'step';
+  sendCompileMechanism(buildSettingsInput());
 }
 
 export function sendScrub(time: number): void {

@@ -27,6 +27,8 @@ interface SimulationState {
   compilationDiagnostics: string[];
   structuredDiagnostics: StructuredDiagnostic[];
   channelDescriptors: ChannelDescriptor[];
+  /** True when the model or settings have changed since the last successful compile. */
+  needsCompile: boolean;
   setCompilationResult(
     success: boolean,
     error?: string,
@@ -37,6 +39,7 @@ interface SimulationState {
   setSimState(state: SimState, time: number, stepCount: number): void;
   setLoopEnabled(enabled: boolean): void;
   setError(message: string): void;
+  setNeedsCompile(v: boolean): void;
   reset(): void;
 }
 
@@ -50,6 +53,7 @@ export const useSimulationStore = create<SimulationState>()((set) => ({
   compilationDiagnostics: [],
   structuredDiagnostics: [],
   channelDescriptors: [],
+  needsCompile: true,
   setCompilationResult: (success, error, diagnostics, channels, structuredDiagnostics) =>
     set({
       state: success ? 'paused' : 'error',
@@ -57,6 +61,7 @@ export const useSimulationStore = create<SimulationState>()((set) => ({
       compilationDiagnostics: diagnostics ?? [],
       structuredDiagnostics: structuredDiagnostics ?? [],
       channelDescriptors: channels ?? [],
+      needsCompile: !success,
     }),
   setSimState: (state, time, stepCount) =>
     set((prev) => ({
@@ -67,6 +72,7 @@ export const useSimulationStore = create<SimulationState>()((set) => ({
     })),
   setLoopEnabled: (enabled) => set({ loopEnabled: enabled }),
   setError: (message) => set({ state: 'error', errorMessage: message }),
+  setNeedsCompile: (v) => set({ needsCompile: v }),
   reset: () =>
     set({
       state: 'idle',
@@ -77,5 +83,6 @@ export const useSimulationStore = create<SimulationState>()((set) => ({
       compilationDiagnostics: [],
       structuredDiagnostics: [],
       channelDescriptors: [],
+      needsCompile: true,
     }),
 }));

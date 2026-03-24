@@ -1,21 +1,31 @@
 import { SimulationAction } from '@motionlab/protocol';
 import { SecondaryToolbar, ToolbarButton } from '@motionlab/ui';
-import { Cpu, Pause, Play, RotateCcw, StepForward } from 'lucide-react';
+import { Pause, Play, RotateCcw, StepForward } from 'lucide-react';
 
-import { sendCompileMechanism, sendSimulationControl } from '../engine/connection.js';
-import { useSimulationSettingsStore } from '../stores/simulation-settings.js';
+import {
+  sendCompileAndPlay,
+  sendCompileAndStep,
+  sendSimulationControl,
+} from '../engine/connection.js';
+import { useEngineConnection } from '../stores/engine-connection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 
 export function SimulationToolbar() {
   const simState = useSimulationStore((s) => s.state);
   const simTime = useSimulationStore((s) => s.simTime);
   const errorMessage = useSimulationStore((s) => s.errorMessage);
+  const needsCompile = useSimulationStore((s) => s.needsCompile);
+  const isEngineReady = useEngineConnection((s) => s.status === 'ready');
 
-  const canCompile = simState === 'idle' || simState === 'error';
-  const canPlay = simState === 'paused';
+  const canPlay =
+    isEngineReady && (simState === 'idle' || simState === 'paused' || simState === 'error');
   const canPause = simState === 'running';
-  const canStep = simState === 'paused';
+  const canStep =
+    isEngineReady && (simState === 'idle' || simState === 'paused' || simState === 'error');
   const canReset = simState === 'running' || simState === 'paused' || simState === 'error';
+
+  // Show a stale indicator when already compiled but model/settings changed since.
+  const isStale = simState === 'paused' && needsCompile;
 
   return (
     <SecondaryToolbar
@@ -26,37 +36,10 @@ export function SimulationToolbar() {
       }
     >
       <ToolbarButton
-        tooltip="Compile mechanism"
-        disabled={!canCompile}
-        onClick={() => {
-          const s = useSimulationSettingsStore.getState();
-          sendCompileMechanism({
-            timestep: s.timestep,
-            gravity: s.gravity,
-            duration: s.duration,
-            solver: {
-              type: s.solverType,
-              maxIterations: s.maxIterations,
-              tolerance: s.tolerance,
-              integrator: s.integratorType,
-            },
-            contact: {
-              friction: s.friction,
-              restitution: s.restitution,
-              compliance: s.compliance,
-              damping: s.contactDamping,
-              enableContact: s.enableContact,
-            },
-          });
-        }}
-      >
-        <Cpu className="size-4" />
-      </ToolbarButton>
-
-      <ToolbarButton
-        tooltip="Play (Space)"
+        tooltip={isStale ? 'Play (will recompile — settings changed)' : 'Play (Space)'}
         disabled={!canPlay}
-        onClick={() => sendSimulationControl(SimulationAction.PLAY)}
+        onClick={() => sendCompileAndPlay()}
+        data-stale={isStale || undefined}
       >
         <Play className="size-4" />
       </ToolbarButton>
@@ -70,9 +53,9 @@ export function SimulationToolbar() {
       </ToolbarButton>
 
       <ToolbarButton
-        tooltip="Step (.)"
+        tooltip={isStale ? 'Step (will recompile — settings changed)' : 'Step (.)'}
         disabled={!canStep}
-        onClick={() => sendSimulationControl(SimulationAction.STEP)}
+        onClick={() => sendCompileAndStep()}
       >
         <StepForward className="size-4" />
       </ToolbarButton>
@@ -86,7 +69,9 @@ export function SimulationToolbar() {
       </ToolbarButton>
 
       {simState === 'compiling' && (
-        <span className="ml-2 text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">Compiling…</span>
+        <span className="ml-2 text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
+          Compiling…
+        </span>
       )}
       {simState === 'error' && errorMessage && (
         <span

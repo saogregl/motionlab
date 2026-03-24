@@ -1,4 +1,5 @@
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -8,7 +9,6 @@ import {
   SecondaryToolbar,
   ToolbarButton,
   ToolbarGroup,
-  Button,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -17,10 +17,9 @@ import {
   Activity,
   ArrowUpDown,
   Box,
-  Cpu,
+  Circle,
   Crosshair,
   Cylinder,
-  Circle,
   Eye,
   Fullscreen,
   Gauge,
@@ -70,7 +69,6 @@ export function MainToolbar() {
   const errorMessage = useSimulationStore((s) => s.errorMessage);
 
   // Sim button disabled states
-  const compileDisabled = useCmdDisabled('sim.compile');
   const playDisabled = useCmdDisabled('sim.play');
   const pauseDisabled = useCmdDisabled('sim.pause');
   const stepDisabled = useCmdDisabled('sim.step');
@@ -88,14 +86,16 @@ export function MainToolbar() {
       {/* ── Group 1: Mode & Basic Creation ── */}
       <ToolbarGroup separator>
         <ToolbarButton
-          tooltip="Select" shortcut="V"
+          tooltip="Select"
+          shortcut="V"
           active={activeMode === 'select'}
           onClick={() => executeCommand('view.select-mode')}
         >
           <MousePointer2 className="size-4" />
         </ToolbarButton>
         <ToolbarButton
-          tooltip="Create Body" shortcut="B"
+          tooltip="Create Body"
+          shortcut="B"
           disabled={createBodyDisabled}
           onClick={() => executeCommand('create.body')}
         >
@@ -114,7 +114,8 @@ export function MainToolbar() {
       <ToolbarGroup separator>
         {/* Datum split button */}
         <ToolbarSplitButton
-          tooltip="Create Datum" shortcut="D"
+          tooltip="Create Datum"
+          shortcut="D"
           icon={Crosshair}
           active={activeMode === 'create-datum'}
           mainDisabled={datumDisabled}
@@ -143,7 +144,8 @@ export function MainToolbar() {
 
         {/* Joint split button */}
         <ToolbarSplitButton
-          tooltip="Create Joint" shortcut="J"
+          tooltip="Create Joint"
+          shortcut="J"
           icon={Link2}
           active={activeMode === 'create-joint'}
           mainDisabled={jointDisabled}
@@ -177,7 +179,8 @@ export function MainToolbar() {
       {/* ── Group 3: Force / Actuator Dropdowns ── */}
       <ToolbarGroup separator>
         <ToolbarSplitButton
-          tooltip="Create Force" shortcut="L"
+          tooltip="Create Force"
+          shortcut="L"
           icon={Zap}
           active={activeMode === 'create-load'}
           mainDisabled={forceDisabled}
@@ -218,17 +221,10 @@ export function MainToolbar() {
 
       {/* ── Group 4: Simulation Controls ── */}
       <ToolbarGroup separator>
-        <ToolbarButton
-          tooltip="Compile Mechanism"
-          disabled={compileDisabled}
-          onClick={() => executeCommand('sim.compile')}
-        >
-          <Cpu className="size-4" />
-        </ToolbarButton>
-
         {simState === 'running' ? (
           <ToolbarButton
-            tooltip="Pause" shortcut="Space"
+            tooltip="Pause"
+            shortcut="Space"
             disabled={pauseDisabled}
             onClick={() => executeCommand('sim.pause')}
           >
@@ -236,7 +232,8 @@ export function MainToolbar() {
           </ToolbarButton>
         ) : (
           <ToolbarButton
-            tooltip="Play" shortcut="Space"
+            tooltip="Play"
+            shortcut="Space"
             disabled={playDisabled}
             onClick={() => executeCommand('sim.play')}
           >
@@ -245,14 +242,16 @@ export function MainToolbar() {
         )}
 
         <ToolbarButton
-          tooltip="Step" shortcut="."
+          tooltip="Step"
+          shortcut="."
           disabled={stepDisabled}
           onClick={() => executeCommand('sim.step')}
         >
           <StepForward className="size-4" />
         </ToolbarButton>
         <ToolbarButton
-          tooltip="Reset" shortcut="R"
+          tooltip="Reset"
+          shortcut="R"
           disabled={resetDisabled}
           onClick={() => executeCommand('sim.reset')}
         >
@@ -307,13 +306,7 @@ function ViewDropdown() {
     <DropdownMenu>
       <Tooltip>
         <TooltipTrigger
-          render={
-            <DropdownMenuTrigger
-              render={
-                <Button variant="toolbar" size="icon" />
-              }
-            />
-          }
+          render={<DropdownMenuTrigger render={<Button variant="toolbar" size="icon" />} />}
         >
           <Eye className="size-4" />
         </TooltipTrigger>
