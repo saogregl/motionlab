@@ -173,7 +173,7 @@ export function createCreateDatumCommand(
  * Creates a binary-encoded Command envelope containing a CreateDatumFromFace payload.
  */
 export function createCreateDatumFromFaceCommand(
-  parentBodyId: string,
+  geometryId: string,
   faceIndex: number,
   name: string,
   sequenceId?: bigint,
@@ -183,7 +183,7 @@ export function createCreateDatumFromFaceCommand(
     payload: {
       case: 'createDatumFromFace',
       value: create(CreateDatumFromFaceCommandSchema, {
-        parentBodyId: create(ElementIdSchema, { id: parentBodyId }),
+        geometryId: create(ElementIdSchema, { id: geometryId }),
         faceIndex,
         name,
       }),

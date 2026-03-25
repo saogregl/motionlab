@@ -30,9 +30,9 @@ Key messages:
 - `Ping`/`Pong`: uint64 timestamp for latency measurement
 - `ImportOptions.unit_system`: declares source CAD length units. The engine validates `millimeter`, `meter`, or `inch` and normalizes imported geometry, mass-property lengths, and topology-derived datum poses into meters before publishing the result.
 - `motionlab.mechanism.Geometry.source_asset_ref`: structured `AssetReference` owned by geometry. `Body.source_asset_ref` remains deprecated only for migration/backward compatibility.
-- `ImportAssetResult.GeometryImportResult.part_index`: per-face triangle counts used by the viewport to map Babylon triangle hits back to B-Rep face indices
-- `CreateDatumFromFaceCommand`: requests geometry-aware datum creation from a picked body face
-- `CreateDatumFromFaceResult`: returns the created datum plus `face_index` and backend-agnostic `FaceSurfaceClass` (`PLANAR`, `CYLINDRICAL`, `CONICAL`, `SPHERICAL`, `TOROIDAL`, `OTHER`)
+- `ImportAssetResult.GeometryImportResult.part_index`: per-face triangle counts used by the viewport to map raycast triangle hits back to B-Rep face indices for one geometry
+- `CreateDatumFromFaceCommand`: requests datum creation from a picked `geometry_id + face_index`
+- `CreateDatumFromFaceResult`: returns the created datum plus `geometry_id`, `face_index`, and backend-agnostic `FaceSurfaceClass` (`PLANAR`, `CYLINDRICAL`, `CONICAL`, `SPHERICAL`, `TOROIDAL`, `OTHER`)
 - `CreateBodyCommand` / `DeleteBodyCommand`: create empty physical bodies and remove bodies with their dependent authored entities
 - `AttachGeometryCommand` / `DetachGeometryCommand`: reparent imported geometry without re-importing CAD
 - `UpdateMassPropertiesCommand`: toggles `mass_override` and updates user-authored body mass properties
@@ -42,7 +42,7 @@ Key messages:
 - `CreateLoadCommand` / `UpdateLoadCommand`: carry full `motionlab.mechanism.Load` payloads. Loads are first-class authored entities, not joint extensions.
 - `CreateActuatorCommand` / `UpdateActuatorCommand`: carry full `motionlab.mechanism.Actuator` payloads. Actuators target authored joints and remain product-level concepts rather than Chrono-native classes on the wire.
 
-Protocol constants: `PROTOCOL_NAME = "motionlab"`, `PROTOCOL_VERSION = 4` (defined in `packages/protocol/src/version.ts`).
+Protocol constants: `PROTOCOL_NAME = "motionlab"`, `PROTOCOL_VERSION = 5` (defined in `packages/protocol/src/version.ts`).
 
 Binary helpers in `packages/protocol/src/transport.ts`: `createHandshakeCommand`, `createPingCommand`, `createCompileMechanismCommand`, `createSimulationControlCommand`, `createScrubCommand`, `parseEvent`, `engineStateToString`.
 

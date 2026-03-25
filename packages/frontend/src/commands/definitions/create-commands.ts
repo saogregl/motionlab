@@ -24,17 +24,20 @@ import type { LoadTypeId } from '../../stores/mechanism.js';
 import { useMechanismStore } from '../../stores/mechanism.js';
 import { useSimulationStore } from '../../stores/simulation.js';
 import { useToolModeStore } from '../../stores/tool-mode.js';
+import { useUILayoutStore } from '../../stores/ui-layout.js';
 import type { CommandDef } from '../types.js';
 
 export function createCreateCommands(): CommandDef[] {
+  const isBuildWorkspace = () => useUILayoutStore.getState().activeWorkspace === 'build';
   const isEngineReady = () => useEngineConnection.getState().status === 'ready';
 
   const notSimulating = () => {
+    if (!isBuildWorkspace()) return false;
     const s = useSimulationStore.getState().state;
     return s !== 'running' && s !== 'paused';
   };
 
-  const canImport = () => isEngineReady() && !useMechanismStore.getState().importing;
+  const canImport = () => isBuildWorkspace() && isEngineReady() && !useMechanismStore.getState().importing;
 
   const enterJointMode = (preselectedType?: string) => {
     useToolModeStore.getState().setMode('create-joint');

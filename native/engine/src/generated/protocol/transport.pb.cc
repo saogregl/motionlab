@@ -1080,7 +1080,7 @@ inline constexpr CreateDatumFromFaceCommand::Impl_::Impl_(
         name_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
-        parent_body_id_{nullptr},
+        geometry_id_{nullptr},
         face_index_{0u} {}
 
 template <typename>
@@ -1932,6 +1932,7 @@ inline constexpr CreateDatumFromFaceSuccess::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
         datum_{nullptr},
+        geometry_id_{nullptr},
         face_index_{0u},
         surface_class_{static_cast< ::motionlab::protocol::FaceSurfaceClass >(0)} {}
 
@@ -2502,7 +2503,7 @@ const ::uint32_t
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumFromFaceCommand, _impl_._has_bits_),
         6, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumFromFaceCommand, _impl_.parent_body_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumFromFaceCommand, _impl_.geometry_id_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumFromFaceCommand, _impl_.face_index_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumFromFaceCommand, _impl_.name_),
         1,
@@ -2510,13 +2511,15 @@ const ::uint32_t
         0,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumFromFaceSuccess, _impl_._has_bits_),
-        6, // hasbit index offset
+        7, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumFromFaceSuccess, _impl_.datum_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumFromFaceSuccess, _impl_.face_index_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumFromFaceSuccess, _impl_.surface_class_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumFromFaceSuccess, _impl_.geometry_id_),
         0,
-        1,
         2,
+        3,
+        1,
         0x004, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumResult, _impl_._oneof_case_[0]),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateDatumResult, _impl_.result_),
@@ -2975,67 +2978,67 @@ static const ::_pbi::MigrationSchema
         {264, sizeof(::motionlab::protocol::RenameDatumCommand)},
         {271, sizeof(::motionlab::protocol::CreateDatumFromFaceCommand)},
         {280, sizeof(::motionlab::protocol::CreateDatumFromFaceSuccess)},
-        {289, sizeof(::motionlab::protocol::CreateDatumResult)},
-        {294, sizeof(::motionlab::protocol::CreateDatumFromFaceResult)},
-        {299, sizeof(::motionlab::protocol::DeleteDatumResult)},
-        {304, sizeof(::motionlab::protocol::RenameDatumResult)},
-        {309, sizeof(::motionlab::protocol::UpdateDatumPoseCommand)},
-        {316, sizeof(::motionlab::protocol::UpdateDatumPoseResult)},
-        {321, sizeof(::motionlab::protocol::UpdateBodyCommand)},
-        {330, sizeof(::motionlab::protocol::UpdateBodyResult)},
-        {335, sizeof(::motionlab::protocol::CreateBodyCommand)},
-        {346, sizeof(::motionlab::protocol::CreateBodyResult)},
-        {351, sizeof(::motionlab::protocol::DeleteBodyCommand)},
-        {356, sizeof(::motionlab::protocol::DeleteBodyResult)},
-        {361, sizeof(::motionlab::protocol::AttachGeometryCommand)},
-        {370, sizeof(::motionlab::protocol::AttachGeometryResult)},
-        {383, sizeof(::motionlab::protocol::DetachGeometryCommand)},
-        {388, sizeof(::motionlab::protocol::DetachGeometryResult)},
-        {401, sizeof(::motionlab::protocol::UpdateMassPropertiesCommand)},
-        {410, sizeof(::motionlab::protocol::UpdateMassPropertiesResult)},
-        {415, sizeof(::motionlab::protocol::CreateJointCommand)},
-        {420, sizeof(::motionlab::protocol::UpdateJointCommand)},
-        {425, sizeof(::motionlab::protocol::DeleteJointCommand)},
-        {430, sizeof(::motionlab::protocol::CreateJointResult)},
-        {435, sizeof(::motionlab::protocol::UpdateJointResult)},
-        {440, sizeof(::motionlab::protocol::DeleteJointResult)},
-        {445, sizeof(::motionlab::protocol::CreateLoadCommand)},
-        {450, sizeof(::motionlab::protocol::UpdateLoadCommand)},
-        {455, sizeof(::motionlab::protocol::DeleteLoadCommand)},
-        {460, sizeof(::motionlab::protocol::CreateLoadResult)},
-        {465, sizeof(::motionlab::protocol::UpdateLoadResult)},
-        {470, sizeof(::motionlab::protocol::DeleteLoadResult)},
-        {475, sizeof(::motionlab::protocol::CreateActuatorCommand)},
-        {480, sizeof(::motionlab::protocol::UpdateActuatorCommand)},
-        {485, sizeof(::motionlab::protocol::DeleteActuatorCommand)},
-        {490, sizeof(::motionlab::protocol::CreateActuatorResult)},
-        {495, sizeof(::motionlab::protocol::UpdateActuatorResult)},
-        {500, sizeof(::motionlab::protocol::DeleteActuatorResult)},
-        {505, sizeof(::motionlab::protocol::SolverSettings)},
-        {516, sizeof(::motionlab::protocol::ContactSettings)},
-        {529, sizeof(::motionlab::protocol::CompilationDiagnostic)},
-        {542, sizeof(::motionlab::protocol::SimulationSettings)},
-        {555, sizeof(::motionlab::protocol::CompileMechanismCommand)},
-        {560, sizeof(::motionlab::protocol::SimulationControlCommand)},
-        {565, sizeof(::motionlab::protocol::CompilationResultEvent)},
-        {578, sizeof(::motionlab::protocol::SimulationStateEvent)},
-        {587, sizeof(::motionlab::protocol::BodyPoseData)},
-        {596, sizeof(::motionlab::protocol::JointStateData)},
-        {609, sizeof(::motionlab::protocol::SimulationFrame)},
-        {620, sizeof(::motionlab::protocol::OutputChannelDescriptor)},
-        {631, sizeof(::motionlab::protocol::TimeSample)},
-        {642, sizeof(::motionlab::protocol::SimulationTrace)},
-        {649, sizeof(::motionlab::protocol::ScrubCommand)},
-        {654, sizeof(::motionlab::protocol::SaveProjectCommand)},
-        {659, sizeof(::motionlab::protocol::SaveProjectResult)},
-        {664, sizeof(::motionlab::protocol::LoadProjectCommand)},
-        {669, sizeof(::motionlab::protocol::LoadProjectResult)},
-        {674, sizeof(::motionlab::protocol::LoadProjectSuccess)},
-        {687, sizeof(::motionlab::protocol::MissingAssetInfo)},
-        {698, sizeof(::motionlab::protocol::RelocateAssetCommand)},
-        {707, sizeof(::motionlab::protocol::RelocateAssetResult)},
-        {712, sizeof(::motionlab::protocol::NewProjectCommand)},
-        {717, sizeof(::motionlab::protocol::NewProjectResult)},
+        {291, sizeof(::motionlab::protocol::CreateDatumResult)},
+        {296, sizeof(::motionlab::protocol::CreateDatumFromFaceResult)},
+        {301, sizeof(::motionlab::protocol::DeleteDatumResult)},
+        {306, sizeof(::motionlab::protocol::RenameDatumResult)},
+        {311, sizeof(::motionlab::protocol::UpdateDatumPoseCommand)},
+        {318, sizeof(::motionlab::protocol::UpdateDatumPoseResult)},
+        {323, sizeof(::motionlab::protocol::UpdateBodyCommand)},
+        {332, sizeof(::motionlab::protocol::UpdateBodyResult)},
+        {337, sizeof(::motionlab::protocol::CreateBodyCommand)},
+        {348, sizeof(::motionlab::protocol::CreateBodyResult)},
+        {353, sizeof(::motionlab::protocol::DeleteBodyCommand)},
+        {358, sizeof(::motionlab::protocol::DeleteBodyResult)},
+        {363, sizeof(::motionlab::protocol::AttachGeometryCommand)},
+        {372, sizeof(::motionlab::protocol::AttachGeometryResult)},
+        {385, sizeof(::motionlab::protocol::DetachGeometryCommand)},
+        {390, sizeof(::motionlab::protocol::DetachGeometryResult)},
+        {403, sizeof(::motionlab::protocol::UpdateMassPropertiesCommand)},
+        {412, sizeof(::motionlab::protocol::UpdateMassPropertiesResult)},
+        {417, sizeof(::motionlab::protocol::CreateJointCommand)},
+        {422, sizeof(::motionlab::protocol::UpdateJointCommand)},
+        {427, sizeof(::motionlab::protocol::DeleteJointCommand)},
+        {432, sizeof(::motionlab::protocol::CreateJointResult)},
+        {437, sizeof(::motionlab::protocol::UpdateJointResult)},
+        {442, sizeof(::motionlab::protocol::DeleteJointResult)},
+        {447, sizeof(::motionlab::protocol::CreateLoadCommand)},
+        {452, sizeof(::motionlab::protocol::UpdateLoadCommand)},
+        {457, sizeof(::motionlab::protocol::DeleteLoadCommand)},
+        {462, sizeof(::motionlab::protocol::CreateLoadResult)},
+        {467, sizeof(::motionlab::protocol::UpdateLoadResult)},
+        {472, sizeof(::motionlab::protocol::DeleteLoadResult)},
+        {477, sizeof(::motionlab::protocol::CreateActuatorCommand)},
+        {482, sizeof(::motionlab::protocol::UpdateActuatorCommand)},
+        {487, sizeof(::motionlab::protocol::DeleteActuatorCommand)},
+        {492, sizeof(::motionlab::protocol::CreateActuatorResult)},
+        {497, sizeof(::motionlab::protocol::UpdateActuatorResult)},
+        {502, sizeof(::motionlab::protocol::DeleteActuatorResult)},
+        {507, sizeof(::motionlab::protocol::SolverSettings)},
+        {518, sizeof(::motionlab::protocol::ContactSettings)},
+        {531, sizeof(::motionlab::protocol::CompilationDiagnostic)},
+        {544, sizeof(::motionlab::protocol::SimulationSettings)},
+        {557, sizeof(::motionlab::protocol::CompileMechanismCommand)},
+        {562, sizeof(::motionlab::protocol::SimulationControlCommand)},
+        {567, sizeof(::motionlab::protocol::CompilationResultEvent)},
+        {580, sizeof(::motionlab::protocol::SimulationStateEvent)},
+        {589, sizeof(::motionlab::protocol::BodyPoseData)},
+        {598, sizeof(::motionlab::protocol::JointStateData)},
+        {611, sizeof(::motionlab::protocol::SimulationFrame)},
+        {622, sizeof(::motionlab::protocol::OutputChannelDescriptor)},
+        {633, sizeof(::motionlab::protocol::TimeSample)},
+        {644, sizeof(::motionlab::protocol::SimulationTrace)},
+        {651, sizeof(::motionlab::protocol::ScrubCommand)},
+        {656, sizeof(::motionlab::protocol::SaveProjectCommand)},
+        {661, sizeof(::motionlab::protocol::SaveProjectResult)},
+        {666, sizeof(::motionlab::protocol::LoadProjectCommand)},
+        {671, sizeof(::motionlab::protocol::LoadProjectResult)},
+        {676, sizeof(::motionlab::protocol::LoadProjectSuccess)},
+        {689, sizeof(::motionlab::protocol::MissingAssetInfo)},
+        {700, sizeof(::motionlab::protocol::RelocateAssetCommand)},
+        {709, sizeof(::motionlab::protocol::RelocateAssetResult)},
+        {714, sizeof(::motionlab::protocol::NewProjectCommand)},
+        {719, sizeof(::motionlab::protocol::NewProjectResult)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::motionlab::protocol::_ProtocolVersion_default_instance_._instance,
@@ -3319,252 +3322,253 @@ const char descriptor_table_protodef_protocol_2ftransport_2eproto[] ABSL_ATTRIBU
     "ism.ElementIdR\007datumId\"c\n\022RenameDatumCom"
     "mand\0229\n\010datum_id\030\001 \001(\0132\036.motionlab.mecha"
     "nism.ElementIdR\007datumId\022\022\n\004name\030\002 \001(\tR\004n"
-    "ame\"\225\001\n\032CreateDatumFromFaceCommand\022D\n\016pa"
-    "rent_body_id\030\001 \001(\0132\036.motionlab.mechanism"
-    ".ElementIdR\014parentBodyId\022\035\n\nface_index\030\002"
-    " \001(\rR\tfaceIndex\022\022\n\004name\030\003 \001(\tR\004name\"\270\001\n\032"
-    "CreateDatumFromFaceSuccess\0220\n\005datum\030\001 \001("
-    "\0132\032.motionlab.mechanism.DatumR\005datum\022\035\n\n"
-    "face_index\030\002 \001(\rR\tfaceIndex\022I\n\rsurface_c"
-    "lass\030\003 \001(\0162$.motionlab.protocol.FaceSurf"
-    "aceClassR\014surfaceClass\"x\n\021CreateDatumRes"
-    "ult\0222\n\005datum\030\001 \001(\0132\032.motionlab.mechanism"
-    ".DatumH\000R\005datum\022%\n\rerror_message\030\002 \001(\tH\000"
-    "R\014errorMessageB\010\n\006result\"\230\001\n\031CreateDatum"
-    "FromFaceResult\022J\n\007success\030\001 \001(\0132..motion"
-    "lab.protocol.CreateDatumFromFaceSuccessH"
-    "\000R\007success\022%\n\rerror_message\030\002 \001(\tH\000R\014err"
-    "orMessageB\010\n\006result\"\205\001\n\021DeleteDatumResul"
-    "t\022\?\n\ndeleted_id\030\001 \001(\0132\036.motionlab.mechan"
-    "ism.ElementIdH\000R\tdeletedId\022%\n\rerror_mess"
-    "age\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\"x\n\021R"
-    "enameDatumResult\0222\n\005datum\030\001 \001(\0132\032.motion"
-    "lab.mechanism.DatumH\000R\005datum\022%\n\rerror_me"
-    "ssage\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\"\224\001"
-    "\n\026UpdateDatumPoseCommand\0229\n\010datum_id\030\001 \001"
-    "(\0132\036.motionlab.mechanism.ElementIdR\007datu"
-    "mId\022\?\n\016new_local_pose\030\002 \001(\0132\031.motionlab."
-    "mechanism.PoseR\014newLocalPose\"|\n\025UpdateDa"
-    "tumPoseResult\0222\n\005datum\030\001 \001(\0132\032.motionlab"
-    ".mechanism.DatumH\000R\005datum\022%\n\rerror_messa"
-    "ge\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\"\233\001\n\021U"
-    "pdateBodyCommand\0227\n\007body_id\030\001 \001(\0132\036.moti"
-    "onlab.mechanism.ElementIdR\006bodyId\022\036\n\010is_"
-    "fixed\030\002 \001(\010H\000R\007isFixed\210\001\001\022\027\n\004name\030\003 \001(\tH"
-    "\001R\004name\210\001\001B\013\n\t_is_fixedB\007\n\005_name\"t\n\020Upda"
-    "teBodyResult\022/\n\004body\030\001 \001(\0132\031.motionlab.m"
-    "echanism.BodyH\000R\004body\022%\n\rerror_message\030\002"
-    " \001(\tH\000R\014errorMessageB\010\n\006result\"\277\001\n\021Creat"
-    "eBodyCommand\022\022\n\004name\030\001 \001(\tR\004name\022L\n\017mass"
-    "_properties\030\002 \001(\0132#.motionlab.mechanism."
-    "MassPropertiesR\016massProperties\022-\n\004pose\030\003"
-    " \001(\0132\031.motionlab.mechanism.PoseR\004pose\022\031\n"
-    "\010is_fixed\030\004 \001(\010R\007isFixed\"t\n\020CreateBodyRe"
-    "sult\022/\n\004body\030\001 \001(\0132\031.motionlab.mechanism"
-    ".BodyH\000R\004body\022%\n\rerror_message\030\002 \001(\tH\000R\014"
-    "errorMessageB\010\n\006result\"L\n\021DeleteBodyComm"
-    "and\0227\n\007body_id\030\001 \001(\0132\036.motionlab.mechani"
-    "sm.ElementIdR\006bodyId\"\204\001\n\020DeleteBodyResul"
-    "t\022\?\n\ndeleted_id\030\001 \001(\0132\036.motionlab.mechan"
-    "ism.ElementIdH\000R\tdeletedId\022%\n\rerror_mess"
-    "age\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\"\330\001\n\025"
-    "AttachGeometryCommand\022\?\n\013geometry_id\030\001 \001"
-    "(\0132\036.motionlab.mechanism.ElementIdR\ngeom"
-    "etryId\022D\n\016target_body_id\030\002 \001(\0132\036.motionl"
-    "ab.mechanism.ElementIdR\014targetBodyId\0228\n\n"
-    "local_pose\030\003 \001(\0132\031.motionlab.mechanism.P"
-    "oseR\tlocalPose\"\212\002\n\024AttachGeometryResult\022"
-    ";\n\010geometry\030\001 \001(\0132\035.motionlab.mechanism."
-    "GeometryH\000R\010geometry\022%\n\rerror_message\030\002 "
-    "\001(\tH\000R\014errorMessage\022A\n\017old_parent_body\030\003"
-    " \001(\0132\031.motionlab.mechanism.BodyR\roldPare"
-    "ntBody\022A\n\017new_parent_body\030\004 \001(\0132\031.motion"
-    "lab.mechanism.BodyR\rnewParentBodyB\010\n\006res"
-    "ult\"X\n\025DetachGeometryCommand\022\?\n\013geometry"
-    "_id\030\001 \001(\0132\036.motionlab.mechanism.ElementI"
-    "dR\ngeometryId\"\216\002\n\024DetachGeometryResult\022A"
-    "\n\013detached_id\030\001 \001(\0132\036.motionlab.mechanis"
-    "m.ElementIdH\000R\ndetachedId\022%\n\rerror_messa"
-    "ge\030\002 \001(\tH\000R\014errorMessage\0229\n\010geometry\030\003 \001"
-    "(\0132\035.motionlab.mechanism.GeometryR\010geome"
-    "try\022G\n\022former_parent_body\030\004 \001(\0132\031.motion"
-    "lab.mechanism.BodyR\020formerParentBodyB\010\n\006"
-    "result\"\311\001\n\033UpdateMassPropertiesCommand\0227"
-    "\n\007body_id\030\001 \001(\0132\036.motionlab.mechanism.El"
-    "ementIdR\006bodyId\022#\n\rmass_override\030\002 \001(\010R\014"
-    "massOverride\022L\n\017mass_properties\030\003 \001(\0132#."
-    "motionlab.mechanism.MassPropertiesR\016mass"
-    "Properties\"~\n\032UpdateMassPropertiesResult"
-    "\022/\n\004body\030\001 \001(\0132\031.motionlab.mechanism.Bod"
-    "yH\000R\004body\022%\n\rerror_message\030\002 \001(\tH\000R\014erro"
-    "rMessageB\010\n\006result\"F\n\022CreateJointCommand"
-    "\0220\n\005draft\030\001 \001(\0132\032.motionlab.mechanism.Jo"
-    "intR\005draft\"F\n\022UpdateJointCommand\0220\n\005join"
-    "t\030\001 \001(\0132\032.motionlab.mechanism.JointR\005joi"
-    "nt\"O\n\022DeleteJointCommand\0229\n\010joint_id\030\001 \001"
-    "(\0132\036.motionlab.mechanism.ElementIdR\007join"
-    "tId\"x\n\021CreateJointResult\0222\n\005joint\030\001 \001(\0132"
-    "\032.motionlab.mechanism.JointH\000R\005joint\022%\n\r"
-    "error_message\030\002 \001(\tH\000R\014errorMessageB\010\n\006r"
-    "esult\"x\n\021UpdateJointResult\0222\n\005joint\030\001 \001("
-    "\0132\032.motionlab.mechanism.JointH\000R\005joint\022%"
-    "\n\rerror_message\030\002 \001(\tH\000R\014errorMessageB\010\n"
-    "\006result\"\205\001\n\021DeleteJointResult\022\?\n\ndeleted"
-    "_id\030\001 \001(\0132\036.motionlab.mechanism.ElementI"
-    "dH\000R\tdeletedId\022%\n\rerror_message\030\002 \001(\tH\000R"
-    "\014errorMessageB\010\n\006result\"D\n\021CreateLoadCom"
-    "mand\022/\n\005draft\030\001 \001(\0132\031.motionlab.mechanis"
-    "m.LoadR\005draft\"B\n\021UpdateLoadCommand\022-\n\004lo"
-    "ad\030\001 \001(\0132\031.motionlab.mechanism.LoadR\004loa"
-    "d\"L\n\021DeleteLoadCommand\0227\n\007load_id\030\001 \001(\0132"
-    "\036.motionlab.mechanism.ElementIdR\006loadId\""
-    "t\n\020CreateLoadResult\022/\n\004load\030\001 \001(\0132\031.moti"
-    "onlab.mechanism.LoadH\000R\004load\022%\n\rerror_me"
-    "ssage\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\"t\n"
-    "\020UpdateLoadResult\022/\n\004load\030\001 \001(\0132\031.motion"
-    "lab.mechanism.LoadH\000R\004load\022%\n\rerror_mess"
-    "age\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\"\204\001\n\020"
-    "DeleteLoadResult\022\?\n\ndeleted_id\030\001 \001(\0132\036.m"
-    "otionlab.mechanism.ElementIdH\000R\tdeletedI"
-    "d\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMessage"
-    "B\010\n\006result\"L\n\025CreateActuatorCommand\0223\n\005d"
-    "raft\030\001 \001(\0132\035.motionlab.mechanism.Actuato"
-    "rR\005draft\"R\n\025UpdateActuatorCommand\0229\n\010act"
-    "uator\030\001 \001(\0132\035.motionlab.mechanism.Actuat"
-    "orR\010actuator\"X\n\025DeleteActuatorCommand\022\?\n"
-    "\013actuator_id\030\001 \001(\0132\036.motionlab.mechanism"
-    ".ElementIdR\nactuatorId\"\204\001\n\024CreateActuato"
-    "rResult\022;\n\010actuator\030\001 \001(\0132\035.motionlab.me"
-    "chanism.ActuatorH\000R\010actuator\022%\n\rerror_me"
-    "ssage\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\"\204\001"
-    "\n\024UpdateActuatorResult\022;\n\010actuator\030\001 \001(\013"
-    "2\035.motionlab.mechanism.ActuatorH\000R\010actua"
-    "tor\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMessa"
-    "geB\010\n\006result\"\210\001\n\024DeleteActuatorResult\022\?\n"
-    "\ndeleted_id\030\001 \001(\0132\036.motionlab.mechanism."
-    "ElementIdH\000R\tdeletedId\022%\n\rerror_message\030"
-    "\002 \001(\tH\000R\014errorMessageB\010\n\006result\"\315\001\n\016Solv"
-    "erSettings\0222\n\004type\030\001 \001(\0162\036.motionlab.pro"
-    "tocol.SolverTypeR\004type\022%\n\016max_iterations"
-    "\030\002 \001(\005R\rmaxIterations\022\034\n\ttolerance\030\003 \001(\001"
-    "R\ttolerance\022B\n\nintegrator\030\004 \001(\0162\".motion"
-    "lab.protocol.IntegratorTypeR\nintegrator\""
-    "\260\001\n\017ContactSettings\022\032\n\010friction\030\001 \001(\001R\010f"
-    "riction\022 \n\013restitution\030\002 \001(\001R\013restitutio"
-    "n\022\036\n\ncompliance\030\003 \001(\001R\ncompliance\022\030\n\007dam"
-    "ping\030\004 \001(\001R\007damping\022%\n\016enable_contact\030\005 "
-    "\001(\010R\renableContact\"\331\001\n\025CompilationDiagno"
-    "stic\022B\n\010severity\030\001 \001(\0162&.motionlab.proto"
-    "col.DiagnosticSeverityR\010severity\022\030\n\007mess"
-    "age\030\002 \001(\tR\007message\022.\n\023affected_entity_id"
-    "s\030\003 \003(\tR\021affectedEntityIds\022\036\n\nsuggestion"
-    "\030\004 \001(\tR\nsuggestion\022\022\n\004code\030\005 \001(\tR\004code\"\374"
-    "\001\n\022SimulationSettings\022\032\n\010timestep\030\001 \001(\001R"
-    "\010timestep\0223\n\007gravity\030\002 \001(\0132\031.motionlab.m"
-    "echanism.Vec3R\007gravity\022:\n\006solver\030\003 \001(\0132\""
-    ".motionlab.protocol.SolverSettingsR\006solv"
-    "er\022=\n\007contact\030\004 \001(\0132#.motionlab.protocol"
-    ".ContactSettingsR\007contact\022\032\n\010duration\030\005 "
-    "\001(\001R\010duration\"]\n\027CompileMechanismCommand"
-    "\022B\n\010settings\030\001 \001(\0132&.motionlab.protocol."
-    "SimulationSettingsR\010settings\"X\n\030Simulati"
-    "onControlCommand\022<\n\006action\030\001 \001(\0162$.motio"
-    "nlab.protocol.SimulationActionR\006action\"\250"
-    "\002\n\026CompilationResultEvent\022\030\n\007success\030\001 \001"
-    "(\010R\007success\022#\n\rerror_message\030\002 \001(\tR\014erro"
-    "rMessage\022$\n\013diagnostics\030\003 \003(\tB\002\030\001R\013diagn"
-    "ostics\022G\n\010channels\030\004 \003(\0132+.motionlab.pro"
-    "tocol.OutputChannelDescriptorR\010channels\022"
-    "`\n\026structured_diagnostics\030\005 \003(\0132).motion"
-    "lab.protocol.CompilationDiagnosticR\025stru"
-    "cturedDiagnostics\"\210\001\n\024SimulationStateEve"
-    "nt\0226\n\005state\030\001 \001(\0162 .motionlab.protocol.S"
-    "imStateEnumR\005state\022\031\n\010sim_time\030\002 \001(\001R\007si"
-    "mTime\022\035\n\nstep_count\030\003 \001(\004R\tstepCount\"\233\001\n"
-    "\014BodyPoseData\022\027\n\007body_id\030\001 \001(\tR\006bodyId\0225"
-    "\n\010position\030\002 \001(\0132\031.motionlab.mechanism.V"
-    "ec3R\010position\022;\n\013orientation\030\003 \001(\0132\031.mot"
-    "ionlab.mechanism.QuatR\013orientation\"\351\001\n\016J"
-    "ointStateData\022\031\n\010joint_id\030\001 \001(\tR\007jointId"
-    "\022\032\n\010position\030\002 \001(\001R\010position\022\032\n\010velocity"
-    "\030\003 \001(\001R\010velocity\022@\n\016reaction_force\030\004 \001(\013"
-    "2\031.motionlab.mechanism.Vec3R\rreactionFor"
-    "ce\022B\n\017reaction_torque\030\005 \001(\0132\031.motionlab."
-    "mechanism.Vec3R\016reactionTorque\"\327\001\n\017Simul"
-    "ationFrame\022\031\n\010sim_time\030\001 \001(\001R\007simTime\022\035\n"
-    "\nstep_count\030\002 \001(\004R\tstepCount\022\?\n\nbody_pos"
-    "es\030\003 \003(\0132 .motionlab.protocol.BodyPoseDa"
-    "taR\tbodyPoses\022I\n\014joint_states\030\004 \003(\0132\".mo"
-    "tionlab.protocol.JointStateDataB\002\030\001R\013joi"
-    "ntStates\"\242\001\n\027OutputChannelDescriptor\022\035\n\n"
-    "channel_id\030\001 \001(\tR\tchannelId\022\022\n\004name\030\002 \001("
-    "\tR\004name\022\022\n\004unit\030\003 \001(\tR\004unit\022@\n\tdata_type"
-    "\030\004 \001(\0162#.motionlab.protocol.ChannelDataT"
-    "ypeR\010dataType\"x\n\nTimeSample\022\022\n\004time\030\001 \001("
-    "\001R\004time\022\030\n\006scalar\030\002 \001(\001H\000R\006scalar\0223\n\006vec"
-    "tor\030\003 \001(\0132\031.motionlab.mechanism.Vec3H\000R\006"
-    "vectorB\007\n\005value\"j\n\017SimulationTrace\022\035\n\nch"
-    "annel_id\030\001 \001(\tR\tchannelId\0228\n\007samples\030\002 \003"
-    "(\0132\036.motionlab.protocol.TimeSampleR\007samp"
-    "les\"\"\n\014ScrubCommand\022\022\n\004time\030\001 \001(\001R\004time\""
-    "7\n\022SaveProjectCommand\022!\n\014project_name\030\001 "
-    "\001(\tR\013projectName\"i\n\021SaveProjectResult\022#\n"
-    "\014project_data\030\001 \001(\014H\000R\013projectData\022%\n\rer"
-    "ror_message\030\002 \001(\tH\000R\014errorMessageB\010\n\006res"
-    "ult\"7\n\022LoadProjectCommand\022!\n\014project_dat"
-    "a\030\001 \001(\014R\013projectData\"\210\001\n\021LoadProjectResu"
-    "lt\022B\n\007success\030\001 \001(\0132&.motionlab.protocol"
-    ".LoadProjectSuccessH\000R\007success\022%\n\rerror_"
+    "ame\"\220\001\n\032CreateDatumFromFaceCommand\022\?\n\013ge"
+    "ometry_id\030\001 \001(\0132\036.motionlab.mechanism.El"
+    "ementIdR\ngeometryId\022\035\n\nface_index\030\002 \001(\rR"
+    "\tfaceIndex\022\022\n\004name\030\003 \001(\tR\004name\"\371\001\n\032Creat"
+    "eDatumFromFaceSuccess\0220\n\005datum\030\001 \001(\0132\032.m"
+    "otionlab.mechanism.DatumR\005datum\022\035\n\nface_"
+    "index\030\002 \001(\rR\tfaceIndex\022I\n\rsurface_class\030"
+    "\003 \001(\0162$.motionlab.protocol.FaceSurfaceCl"
+    "assR\014surfaceClass\022\?\n\013geometry_id\030\004 \001(\0132\036"
+    ".motionlab.mechanism.ElementIdR\ngeometry"
+    "Id\"x\n\021CreateDatumResult\0222\n\005datum\030\001 \001(\0132\032"
+    ".motionlab.mechanism.DatumH\000R\005datum\022%\n\re"
+    "rror_message\030\002 \001(\tH\000R\014errorMessageB\010\n\006re"
+    "sult\"\230\001\n\031CreateDatumFromFaceResult\022J\n\007su"
+    "ccess\030\001 \001(\0132..motionlab.protocol.CreateD"
+    "atumFromFaceSuccessH\000R\007success\022%\n\rerror_"
     "message\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\""
-    "\351\002\n\022LoadProjectSuccess\022<\n\tmechanism\030\001 \001("
-    "\0132\036.motionlab.mechanism.MechanismR\tmecha"
-    "nism\022<\n\006bodies\030\002 \003(\0132$.motionlab.protoco"
-    "l.BodyImportResultR\006bodies\022@\n\010metadata\030\003"
-    " \001(\0132$.motionlab.mechanism.ProjectMetada"
-    "taR\010metadata\022K\n\016missing_assets\030\004 \003(\0132$.m"
-    "otionlab.protocol.MissingAssetInfoR\rmiss"
-    "ingAssets\022H\n\ngeometries\030\005 \003(\0132(.motionla"
-    "b.protocol.GeometryImportResultR\ngeometr"
-    "ies\"\254\001\n\020MissingAssetInfo\022\027\n\007body_id\030\001 \001("
-    "\tR\006bodyId\022\033\n\tbody_name\030\002 \001(\tR\010bodyName\022J"
-    "\n\016expected_asset\030\003 \001(\0132#.motionlab.mecha"
-    "nism.AssetReferenceR\rexpectedAsset\022\026\n\006re"
-    "ason\030\004 \001(\tR\006reason\"\235\001\n\024RelocateAssetComm"
-    "and\022\027\n\007body_id\030\001 \001(\tR\006bodyId\022\"\n\rnew_file"
-    "_path\030\002 \001(\tR\013newFilePath\022H\n\016import_optio"
-    "ns\030\003 \001(\0132!.motionlab.protocol.ImportOpti"
-    "onsR\rimportOptions\"\202\001\n\023RelocateAssetResu"
-    "lt\022:\n\004body\030\001 \001(\0132$.motionlab.protocol.Bo"
-    "dyImportResultH\000R\004body\022%\n\rerror_message\030"
-    "\002 \001(\tH\000R\014errorMessageB\010\n\006result\"6\n\021NewPr"
-    "ojectCommand\022!\n\014project_name\030\001 \001(\tR\013proj"
-    "ectName\"Q\n\020NewProjectResult\022\030\n\007success\030\001"
-    " \001(\010R\007success\022#\n\rerror_message\030\002 \001(\tR\014er"
-    "rorMessage*\372\001\n\020FaceSurfaceClass\022\"\n\036FACE_"
-    "SURFACE_CLASS_UNSPECIFIED\020\000\022\035\n\031FACE_SURF"
-    "ACE_CLASS_PLANAR\020\001\022\"\n\036FACE_SURFACE_CLASS"
-    "_CYLINDRICAL\020\002\022\036\n\032FACE_SURFACE_CLASS_CON"
-    "ICAL\020\003\022 \n\034FACE_SURFACE_CLASS_SPHERICAL\020\004"
-    "\022\034\n\030FACE_SURFACE_CLASS_OTHER\020\005\022\037\n\033FACE_S"
-    "URFACE_CLASS_TOROIDAL\020\006*^\n\nSolverType\022\017\n"
-    "\013SOLVER_PSOR\020\000\022\033\n\027SOLVER_BARZILAI_BORWEI"
-    "N\020\001\022\017\n\013SOLVER_APGD\020\002\022\021\n\rSOLVER_MINRES\020\003*"
-    "f\n\016IntegratorType\022(\n$INTEGRATOR_EULER_IM"
-    "PLICIT_LINEARIZED\020\000\022\022\n\016INTEGRATOR_HHT\020\001\022"
-    "\026\n\022INTEGRATOR_NEWMARK\020\002*W\n\022DiagnosticSev"
-    "erity\022\023\n\017DIAGNOSTIC_INFO\020\000\022\026\n\022DIAGNOSTIC"
-    "_WARNING\020\001\022\024\n\020DIAGNOSTIC_ERROR\020\002*\247\001\n\020Sim"
-    "ulationAction\022!\n\035SIMULATION_ACTION_UNSPE"
-    "CIFIED\020\000\022\032\n\026SIMULATION_ACTION_PLAY\020\001\022\033\n\027"
-    "SIMULATION_ACTION_PAUSE\020\002\022\032\n\026SIMULATION_"
-    "ACTION_STEP\020\003\022\033\n\027SIMULATION_ACTION_RESET"
-    "\020\004*}\n\014SimStateEnum\022\022\n\016SIM_STATE_IDLE\020\000\022\027"
-    "\n\023SIM_STATE_COMPILING\020\001\022\025\n\021SIM_STATE_RUN"
-    "NING\020\002\022\024\n\020SIM_STATE_PAUSED\020\003\022\023\n\017SIM_STAT"
-    "E_ERROR\020\004*n\n\017ChannelDataType\022!\n\035CHANNEL_"
-    "DATA_TYPE_UNSPECIFIED\020\000\022\034\n\030CHANNEL_DATA_"
-    "TYPE_SCALAR\020\001\022\032\n\026CHANNEL_DATA_TYPE_VEC3\020"
-    "\002b\006proto3"
+    "\205\001\n\021DeleteDatumResult\022\?\n\ndeleted_id\030\001 \001("
+    "\0132\036.motionlab.mechanism.ElementIdH\000R\tdel"
+    "etedId\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMe"
+    "ssageB\010\n\006result\"x\n\021RenameDatumResult\0222\n\005"
+    "datum\030\001 \001(\0132\032.motionlab.mechanism.DatumH"
+    "\000R\005datum\022%\n\rerror_message\030\002 \001(\tH\000R\014error"
+    "MessageB\010\n\006result\"\224\001\n\026UpdateDatumPoseCom"
+    "mand\0229\n\010datum_id\030\001 \001(\0132\036.motionlab.mecha"
+    "nism.ElementIdR\007datumId\022\?\n\016new_local_pos"
+    "e\030\002 \001(\0132\031.motionlab.mechanism.PoseR\014newL"
+    "ocalPose\"|\n\025UpdateDatumPoseResult\0222\n\005dat"
+    "um\030\001 \001(\0132\032.motionlab.mechanism.DatumH\000R\005"
+    "datum\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMes"
+    "sageB\010\n\006result\"\233\001\n\021UpdateBodyCommand\0227\n\007"
+    "body_id\030\001 \001(\0132\036.motionlab.mechanism.Elem"
+    "entIdR\006bodyId\022\036\n\010is_fixed\030\002 \001(\010H\000R\007isFix"
+    "ed\210\001\001\022\027\n\004name\030\003 \001(\tH\001R\004name\210\001\001B\013\n\t_is_fi"
+    "xedB\007\n\005_name\"t\n\020UpdateBodyResult\022/\n\004body"
+    "\030\001 \001(\0132\031.motionlab.mechanism.BodyH\000R\004bod"
+    "y\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMessage"
+    "B\010\n\006result\"\277\001\n\021CreateBodyCommand\022\022\n\004name"
+    "\030\001 \001(\tR\004name\022L\n\017mass_properties\030\002 \001(\0132#."
+    "motionlab.mechanism.MassPropertiesR\016mass"
+    "Properties\022-\n\004pose\030\003 \001(\0132\031.motionlab.mec"
+    "hanism.PoseR\004pose\022\031\n\010is_fixed\030\004 \001(\010R\007isF"
+    "ixed\"t\n\020CreateBodyResult\022/\n\004body\030\001 \001(\0132\031"
+    ".motionlab.mechanism.BodyH\000R\004body\022%\n\rerr"
+    "or_message\030\002 \001(\tH\000R\014errorMessageB\010\n\006resu"
+    "lt\"L\n\021DeleteBodyCommand\0227\n\007body_id\030\001 \001(\013"
+    "2\036.motionlab.mechanism.ElementIdR\006bodyId"
+    "\"\204\001\n\020DeleteBodyResult\022\?\n\ndeleted_id\030\001 \001("
+    "\0132\036.motionlab.mechanism.ElementIdH\000R\tdel"
+    "etedId\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMe"
+    "ssageB\010\n\006result\"\330\001\n\025AttachGeometryComman"
+    "d\022\?\n\013geometry_id\030\001 \001(\0132\036.motionlab.mecha"
+    "nism.ElementIdR\ngeometryId\022D\n\016target_bod"
+    "y_id\030\002 \001(\0132\036.motionlab.mechanism.Element"
+    "IdR\014targetBodyId\0228\n\nlocal_pose\030\003 \001(\0132\031.m"
+    "otionlab.mechanism.PoseR\tlocalPose\"\212\002\n\024A"
+    "ttachGeometryResult\022;\n\010geometry\030\001 \001(\0132\035."
+    "motionlab.mechanism.GeometryH\000R\010geometry"
+    "\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMessage\022"
+    "A\n\017old_parent_body\030\003 \001(\0132\031.motionlab.mec"
+    "hanism.BodyR\roldParentBody\022A\n\017new_parent"
+    "_body\030\004 \001(\0132\031.motionlab.mechanism.BodyR\r"
+    "newParentBodyB\010\n\006result\"X\n\025DetachGeometr"
+    "yCommand\022\?\n\013geometry_id\030\001 \001(\0132\036.motionla"
+    "b.mechanism.ElementIdR\ngeometryId\"\216\002\n\024De"
+    "tachGeometryResult\022A\n\013detached_id\030\001 \001(\0132"
+    "\036.motionlab.mechanism.ElementIdH\000R\ndetac"
+    "hedId\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMes"
+    "sage\0229\n\010geometry\030\003 \001(\0132\035.motionlab.mecha"
+    "nism.GeometryR\010geometry\022G\n\022former_parent"
+    "_body\030\004 \001(\0132\031.motionlab.mechanism.BodyR\020"
+    "formerParentBodyB\010\n\006result\"\311\001\n\033UpdateMas"
+    "sPropertiesCommand\0227\n\007body_id\030\001 \001(\0132\036.mo"
+    "tionlab.mechanism.ElementIdR\006bodyId\022#\n\rm"
+    "ass_override\030\002 \001(\010R\014massOverride\022L\n\017mass"
+    "_properties\030\003 \001(\0132#.motionlab.mechanism."
+    "MassPropertiesR\016massProperties\"~\n\032Update"
+    "MassPropertiesResult\022/\n\004body\030\001 \001(\0132\031.mot"
+    "ionlab.mechanism.BodyH\000R\004body\022%\n\rerror_m"
+    "essage\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\"F"
+    "\n\022CreateJointCommand\0220\n\005draft\030\001 \001(\0132\032.mo"
+    "tionlab.mechanism.JointR\005draft\"F\n\022Update"
+    "JointCommand\0220\n\005joint\030\001 \001(\0132\032.motionlab."
+    "mechanism.JointR\005joint\"O\n\022DeleteJointCom"
+    "mand\0229\n\010joint_id\030\001 \001(\0132\036.motionlab.mecha"
+    "nism.ElementIdR\007jointId\"x\n\021CreateJointRe"
+    "sult\0222\n\005joint\030\001 \001(\0132\032.motionlab.mechanis"
+    "m.JointH\000R\005joint\022%\n\rerror_message\030\002 \001(\tH"
+    "\000R\014errorMessageB\010\n\006result\"x\n\021UpdateJoint"
+    "Result\0222\n\005joint\030\001 \001(\0132\032.motionlab.mechan"
+    "ism.JointH\000R\005joint\022%\n\rerror_message\030\002 \001("
+    "\tH\000R\014errorMessageB\010\n\006result\"\205\001\n\021DeleteJo"
+    "intResult\022\?\n\ndeleted_id\030\001 \001(\0132\036.motionla"
+    "b.mechanism.ElementIdH\000R\tdeletedId\022%\n\rer"
+    "ror_message\030\002 \001(\tH\000R\014errorMessageB\010\n\006res"
+    "ult\"D\n\021CreateLoadCommand\022/\n\005draft\030\001 \001(\0132"
+    "\031.motionlab.mechanism.LoadR\005draft\"B\n\021Upd"
+    "ateLoadCommand\022-\n\004load\030\001 \001(\0132\031.motionlab"
+    ".mechanism.LoadR\004load\"L\n\021DeleteLoadComma"
+    "nd\0227\n\007load_id\030\001 \001(\0132\036.motionlab.mechanis"
+    "m.ElementIdR\006loadId\"t\n\020CreateLoadResult\022"
+    "/\n\004load\030\001 \001(\0132\031.motionlab.mechanism.Load"
+    "H\000R\004load\022%\n\rerror_message\030\002 \001(\tH\000R\014error"
+    "MessageB\010\n\006result\"t\n\020UpdateLoadResult\022/\n"
+    "\004load\030\001 \001(\0132\031.motionlab.mechanism.LoadH\000"
+    "R\004load\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMe"
+    "ssageB\010\n\006result\"\204\001\n\020DeleteLoadResult\022\?\n\n"
+    "deleted_id\030\001 \001(\0132\036.motionlab.mechanism.E"
+    "lementIdH\000R\tdeletedId\022%\n\rerror_message\030\002"
+    " \001(\tH\000R\014errorMessageB\010\n\006result\"L\n\025Create"
+    "ActuatorCommand\0223\n\005draft\030\001 \001(\0132\035.motionl"
+    "ab.mechanism.ActuatorR\005draft\"R\n\025UpdateAc"
+    "tuatorCommand\0229\n\010actuator\030\001 \001(\0132\035.motion"
+    "lab.mechanism.ActuatorR\010actuator\"X\n\025Dele"
+    "teActuatorCommand\022\?\n\013actuator_id\030\001 \001(\0132\036"
+    ".motionlab.mechanism.ElementIdR\nactuator"
+    "Id\"\204\001\n\024CreateActuatorResult\022;\n\010actuator\030"
+    "\001 \001(\0132\035.motionlab.mechanism.ActuatorH\000R\010"
+    "actuator\022%\n\rerror_message\030\002 \001(\tH\000R\014error"
+    "MessageB\010\n\006result\"\204\001\n\024UpdateActuatorResu"
+    "lt\022;\n\010actuator\030\001 \001(\0132\035.motionlab.mechani"
+    "sm.ActuatorH\000R\010actuator\022%\n\rerror_message"
+    "\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\"\210\001\n\024Del"
+    "eteActuatorResult\022\?\n\ndeleted_id\030\001 \001(\0132\036."
+    "motionlab.mechanism.ElementIdH\000R\tdeleted"
+    "Id\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMessag"
+    "eB\010\n\006result\"\315\001\n\016SolverSettings\0222\n\004type\030\001"
+    " \001(\0162\036.motionlab.protocol.SolverTypeR\004ty"
+    "pe\022%\n\016max_iterations\030\002 \001(\005R\rmaxIteration"
+    "s\022\034\n\ttolerance\030\003 \001(\001R\ttolerance\022B\n\ninteg"
+    "rator\030\004 \001(\0162\".motionlab.protocol.Integra"
+    "torTypeR\nintegrator\"\260\001\n\017ContactSettings\022"
+    "\032\n\010friction\030\001 \001(\001R\010friction\022 \n\013restituti"
+    "on\030\002 \001(\001R\013restitution\022\036\n\ncompliance\030\003 \001("
+    "\001R\ncompliance\022\030\n\007damping\030\004 \001(\001R\007damping\022"
+    "%\n\016enable_contact\030\005 \001(\010R\renableContact\"\331"
+    "\001\n\025CompilationDiagnostic\022B\n\010severity\030\001 \001"
+    "(\0162&.motionlab.protocol.DiagnosticSeveri"
+    "tyR\010severity\022\030\n\007message\030\002 \001(\tR\007message\022."
+    "\n\023affected_entity_ids\030\003 \003(\tR\021affectedEnt"
+    "ityIds\022\036\n\nsuggestion\030\004 \001(\tR\nsuggestion\022\022"
+    "\n\004code\030\005 \001(\tR\004code\"\374\001\n\022SimulationSetting"
+    "s\022\032\n\010timestep\030\001 \001(\001R\010timestep\0223\n\007gravity"
+    "\030\002 \001(\0132\031.motionlab.mechanism.Vec3R\007gravi"
+    "ty\022:\n\006solver\030\003 \001(\0132\".motionlab.protocol."
+    "SolverSettingsR\006solver\022=\n\007contact\030\004 \001(\0132"
+    "#.motionlab.protocol.ContactSettingsR\007co"
+    "ntact\022\032\n\010duration\030\005 \001(\001R\010duration\"]\n\027Com"
+    "pileMechanismCommand\022B\n\010settings\030\001 \001(\0132&"
+    ".motionlab.protocol.SimulationSettingsR\010"
+    "settings\"X\n\030SimulationControlCommand\022<\n\006"
+    "action\030\001 \001(\0162$.motionlab.protocol.Simula"
+    "tionActionR\006action\"\250\002\n\026CompilationResult"
+    "Event\022\030\n\007success\030\001 \001(\010R\007success\022#\n\rerror"
+    "_message\030\002 \001(\tR\014errorMessage\022$\n\013diagnost"
+    "ics\030\003 \003(\tB\002\030\001R\013diagnostics\022G\n\010channels\030\004"
+    " \003(\0132+.motionlab.protocol.OutputChannelD"
+    "escriptorR\010channels\022`\n\026structured_diagno"
+    "stics\030\005 \003(\0132).motionlab.protocol.Compila"
+    "tionDiagnosticR\025structuredDiagnostics\"\210\001"
+    "\n\024SimulationStateEvent\0226\n\005state\030\001 \001(\0162 ."
+    "motionlab.protocol.SimStateEnumR\005state\022\031"
+    "\n\010sim_time\030\002 \001(\001R\007simTime\022\035\n\nstep_count\030"
+    "\003 \001(\004R\tstepCount\"\233\001\n\014BodyPoseData\022\027\n\007bod"
+    "y_id\030\001 \001(\tR\006bodyId\0225\n\010position\030\002 \001(\0132\031.m"
+    "otionlab.mechanism.Vec3R\010position\022;\n\013ori"
+    "entation\030\003 \001(\0132\031.motionlab.mechanism.Qua"
+    "tR\013orientation\"\351\001\n\016JointStateData\022\031\n\010joi"
+    "nt_id\030\001 \001(\tR\007jointId\022\032\n\010position\030\002 \001(\001R\010"
+    "position\022\032\n\010velocity\030\003 \001(\001R\010velocity\022@\n\016"
+    "reaction_force\030\004 \001(\0132\031.motionlab.mechani"
+    "sm.Vec3R\rreactionForce\022B\n\017reaction_torqu"
+    "e\030\005 \001(\0132\031.motionlab.mechanism.Vec3R\016reac"
+    "tionTorque\"\327\001\n\017SimulationFrame\022\031\n\010sim_ti"
+    "me\030\001 \001(\001R\007simTime\022\035\n\nstep_count\030\002 \001(\004R\ts"
+    "tepCount\022\?\n\nbody_poses\030\003 \003(\0132 .motionlab"
+    ".protocol.BodyPoseDataR\tbodyPoses\022I\n\014joi"
+    "nt_states\030\004 \003(\0132\".motionlab.protocol.Joi"
+    "ntStateDataB\002\030\001R\013jointStates\"\242\001\n\027OutputC"
+    "hannelDescriptor\022\035\n\nchannel_id\030\001 \001(\tR\tch"
+    "annelId\022\022\n\004name\030\002 \001(\tR\004name\022\022\n\004unit\030\003 \001("
+    "\tR\004unit\022@\n\tdata_type\030\004 \001(\0162#.motionlab.p"
+    "rotocol.ChannelDataTypeR\010dataType\"x\n\nTim"
+    "eSample\022\022\n\004time\030\001 \001(\001R\004time\022\030\n\006scalar\030\002 "
+    "\001(\001H\000R\006scalar\0223\n\006vector\030\003 \001(\0132\031.motionla"
+    "b.mechanism.Vec3H\000R\006vectorB\007\n\005value\"j\n\017S"
+    "imulationTrace\022\035\n\nchannel_id\030\001 \001(\tR\tchan"
+    "nelId\0228\n\007samples\030\002 \003(\0132\036.motionlab.proto"
+    "col.TimeSampleR\007samples\"\"\n\014ScrubCommand\022"
+    "\022\n\004time\030\001 \001(\001R\004time\"7\n\022SaveProjectComman"
+    "d\022!\n\014project_name\030\001 \001(\tR\013projectName\"i\n\021"
+    "SaveProjectResult\022#\n\014project_data\030\001 \001(\014H"
+    "\000R\013projectData\022%\n\rerror_message\030\002 \001(\tH\000R"
+    "\014errorMessageB\010\n\006result\"7\n\022LoadProjectCo"
+    "mmand\022!\n\014project_data\030\001 \001(\014R\013projectData"
+    "\"\210\001\n\021LoadProjectResult\022B\n\007success\030\001 \001(\0132"
+    "&.motionlab.protocol.LoadProjectSuccessH"
+    "\000R\007success\022%\n\rerror_message\030\002 \001(\tH\000R\014err"
+    "orMessageB\010\n\006result\"\351\002\n\022LoadProjectSucce"
+    "ss\022<\n\tmechanism\030\001 \001(\0132\036.motionlab.mechan"
+    "ism.MechanismR\tmechanism\022<\n\006bodies\030\002 \003(\013"
+    "2$.motionlab.protocol.BodyImportResultR\006"
+    "bodies\022@\n\010metadata\030\003 \001(\0132$.motionlab.mec"
+    "hanism.ProjectMetadataR\010metadata\022K\n\016miss"
+    "ing_assets\030\004 \003(\0132$.motionlab.protocol.Mi"
+    "ssingAssetInfoR\rmissingAssets\022H\n\ngeometr"
+    "ies\030\005 \003(\0132(.motionlab.protocol.GeometryI"
+    "mportResultR\ngeometries\"\254\001\n\020MissingAsset"
+    "Info\022\027\n\007body_id\030\001 \001(\tR\006bodyId\022\033\n\tbody_na"
+    "me\030\002 \001(\tR\010bodyName\022J\n\016expected_asset\030\003 \001"
+    "(\0132#.motionlab.mechanism.AssetReferenceR"
+    "\rexpectedAsset\022\026\n\006reason\030\004 \001(\tR\006reason\"\235"
+    "\001\n\024RelocateAssetCommand\022\027\n\007body_id\030\001 \001(\t"
+    "R\006bodyId\022\"\n\rnew_file_path\030\002 \001(\tR\013newFile"
+    "Path\022H\n\016import_options\030\003 \001(\0132!.motionlab"
+    ".protocol.ImportOptionsR\rimportOptions\"\202"
+    "\001\n\023RelocateAssetResult\022:\n\004body\030\001 \001(\0132$.m"
+    "otionlab.protocol.BodyImportResultH\000R\004bo"
+    "dy\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMessag"
+    "eB\010\n\006result\"6\n\021NewProjectCommand\022!\n\014proj"
+    "ect_name\030\001 \001(\tR\013projectName\"Q\n\020NewProjec"
+    "tResult\022\030\n\007success\030\001 \001(\010R\007success\022#\n\rerr"
+    "or_message\030\002 \001(\tR\014errorMessage*\372\001\n\020FaceS"
+    "urfaceClass\022\"\n\036FACE_SURFACE_CLASS_UNSPEC"
+    "IFIED\020\000\022\035\n\031FACE_SURFACE_CLASS_PLANAR\020\001\022\""
+    "\n\036FACE_SURFACE_CLASS_CYLINDRICAL\020\002\022\036\n\032FA"
+    "CE_SURFACE_CLASS_CONICAL\020\003\022 \n\034FACE_SURFA"
+    "CE_CLASS_SPHERICAL\020\004\022\034\n\030FACE_SURFACE_CLA"
+    "SS_OTHER\020\005\022\037\n\033FACE_SURFACE_CLASS_TOROIDA"
+    "L\020\006*^\n\nSolverType\022\017\n\013SOLVER_PSOR\020\000\022\033\n\027SO"
+    "LVER_BARZILAI_BORWEIN\020\001\022\017\n\013SOLVER_APGD\020\002"
+    "\022\021\n\rSOLVER_MINRES\020\003*f\n\016IntegratorType\022(\n"
+    "$INTEGRATOR_EULER_IMPLICIT_LINEARIZED\020\000\022"
+    "\022\n\016INTEGRATOR_HHT\020\001\022\026\n\022INTEGRATOR_NEWMAR"
+    "K\020\002*W\n\022DiagnosticSeverity\022\023\n\017DIAGNOSTIC_"
+    "INFO\020\000\022\026\n\022DIAGNOSTIC_WARNING\020\001\022\024\n\020DIAGNO"
+    "STIC_ERROR\020\002*\247\001\n\020SimulationAction\022!\n\035SIM"
+    "ULATION_ACTION_UNSPECIFIED\020\000\022\032\n\026SIMULATI"
+    "ON_ACTION_PLAY\020\001\022\033\n\027SIMULATION_ACTION_PA"
+    "USE\020\002\022\032\n\026SIMULATION_ACTION_STEP\020\003\022\033\n\027SIM"
+    "ULATION_ACTION_RESET\020\004*}\n\014SimStateEnum\022\022"
+    "\n\016SIM_STATE_IDLE\020\000\022\027\n\023SIM_STATE_COMPILIN"
+    "G\020\001\022\025\n\021SIM_STATE_RUNNING\020\002\022\024\n\020SIM_STATE_"
+    "PAUSED\020\003\022\023\n\017SIM_STATE_ERROR\020\004*n\n\017Channel"
+    "DataType\022!\n\035CHANNEL_DATA_TYPE_UNSPECIFIE"
+    "D\020\000\022\034\n\030CHANNEL_DATA_TYPE_SCALAR\020\001\022\032\n\026CHA"
+    "NNEL_DATA_TYPE_VEC3\020\002b\006proto3"
 };
 static const ::_pbi::DescriptorTable* PROTOBUF_NONNULL const
     descriptor_table_protocol_2ftransport_2eproto_deps[1] = {
@@ -3574,7 +3578,7 @@ static ::absl::once_flag descriptor_table_protocol_2ftransport_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_protocol_2ftransport_2eproto = {
     false,
     false,
-    17729,
+    17789,
     descriptor_table_protodef_protocol_2ftransport_2eproto,
     "protocol/transport.proto",
     &descriptor_table_protocol_2ftransport_2eproto_once,
@@ -12552,9 +12556,9 @@ class CreateDatumFromFaceCommand::_Internal {
       8 * PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_._has_bits_);
 };
 
-void CreateDatumFromFaceCommand::clear_parent_body_id() {
+void CreateDatumFromFaceCommand::clear_geometry_id() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.parent_body_id_ != nullptr) _impl_.parent_body_id_->Clear();
+  if (_impl_.geometry_id_ != nullptr) _impl_.geometry_id_->Clear();
   ClearHasBit(_impl_._has_bits_[0],
                   0x00000002U);
 }
@@ -12589,8 +12593,8 @@ CreateDatumFromFaceCommand::CreateDatumFromFaceCommand(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
   ::uint32_t cached_has_bits = _impl_._has_bits_[0];
-  _impl_.parent_body_id_ = (CheckHasBit(cached_has_bits, 0x00000002U))
-                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.parent_body_id_)
+  _impl_.geometry_id_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.geometry_id_)
                 : nullptr;
   _impl_.face_index_ = from._impl_.face_index_;
 
@@ -12605,10 +12609,10 @@ PROTOBUF_NDEBUG_INLINE CreateDatumFromFaceCommand::Impl_::Impl_(
 inline void CreateDatumFromFaceCommand::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
   ::memset(reinterpret_cast<char*>(&_impl_) +
-               offsetof(Impl_, parent_body_id_),
+               offsetof(Impl_, geometry_id_),
            0,
            offsetof(Impl_, face_index_) -
-               offsetof(Impl_, parent_body_id_) +
+               offsetof(Impl_, geometry_id_) +
                sizeof(Impl_::face_index_));
 }
 CreateDatumFromFaceCommand::~CreateDatumFromFaceCommand() {
@@ -12623,7 +12627,7 @@ inline void CreateDatumFromFaceCommand::SharedDtor(MessageLite& self) {
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
   this_._impl_.name_.Destroy();
-  delete this_._impl_.parent_body_id_;
+  delete this_._impl_.geometry_id_;
   this_._impl_.~Impl_();
 }
 
@@ -12690,10 +12694,10 @@ CreateDatumFromFaceCommand::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
+    // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
     {::_pbi::TcParser::FastMtS1,
      {10, 1, 0,
-      PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.parent_body_id_)}},
+      PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.geometry_id_)}},
     // uint32 face_index = 2 [json_name = "faceIndex"];
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateDatumFromFaceCommand, _impl_.face_index_), 2>(),
      {16, 2, 0,
@@ -12705,8 +12709,8 @@ CreateDatumFromFaceCommand::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
-    {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.parent_body_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+    {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.geometry_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // uint32 face_index = 2 [json_name = "faceIndex"];
     {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.face_index_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
     // string name = 3 [json_name = "name"];
@@ -12734,8 +12738,8 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceCommand::Clear() {
       _impl_.name_.ClearNonDefaultToEmpty();
     }
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
-      ABSL_DCHECK(_impl_.parent_body_id_ != nullptr);
-      _impl_.parent_body_id_->Clear();
+      ABSL_DCHECK(_impl_.geometry_id_ != nullptr);
+      _impl_.geometry_id_->Clear();
     }
   }
   _impl_.face_index_ = 0u;
@@ -12762,10 +12766,10 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
+  // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-        1, *this_._impl_.parent_body_id_, this_._impl_.parent_body_id_->GetCachedSize(), target,
+        1, *this_._impl_.geometry_id_, this_._impl_.geometry_id_->GetCachedSize(), target,
         stream);
   }
 
@@ -12821,10 +12825,10 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceCommand::Clear() {
                                         this_._internal_name());
       }
     }
-    // .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
+    // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
-                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.parent_body_id_);
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.geometry_id_);
     }
     // uint32 face_index = 2 [json_name = "faceIndex"];
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
@@ -12864,11 +12868,11 @@ void CreateDatumFromFaceCommand::MergeImpl(::google::protobuf::MessageLite& to_m
       }
     }
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
-      ABSL_DCHECK(from._impl_.parent_body_id_ != nullptr);
-      if (_this->_impl_.parent_body_id_ == nullptr) {
-        _this->_impl_.parent_body_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.parent_body_id_);
+      ABSL_DCHECK(from._impl_.geometry_id_ != nullptr);
+      if (_this->_impl_.geometry_id_ == nullptr) {
+        _this->_impl_.geometry_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.geometry_id_);
       } else {
-        _this->_impl_.parent_body_id_->MergeFrom(*from._impl_.parent_body_id_);
+        _this->_impl_.geometry_id_->MergeFrom(*from._impl_.geometry_id_);
       }
     }
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
@@ -12900,9 +12904,9 @@ void CreateDatumFromFaceCommand::InternalSwap(CreateDatumFromFaceCommand* PROTOB
   ::google::protobuf::internal::memswap<
       PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.face_index_)
       + sizeof(CreateDatumFromFaceCommand::_impl_.face_index_)
-      - PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.parent_body_id_)>(
-          reinterpret_cast<char*>(&_impl_.parent_body_id_),
-          reinterpret_cast<char*>(&other->_impl_.parent_body_id_));
+      - PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.geometry_id_)>(
+          reinterpret_cast<char*>(&_impl_.geometry_id_),
+          reinterpret_cast<char*>(&other->_impl_.geometry_id_));
 }
 
 ::google::protobuf::Metadata CreateDatumFromFaceCommand::GetMetadata() const {
@@ -12923,6 +12927,12 @@ void CreateDatumFromFaceSuccess::clear_datum() {
   if (_impl_.datum_ != nullptr) _impl_.datum_->Clear();
   ClearHasBit(_impl_._has_bits_[0],
                   0x00000001U);
+}
+void CreateDatumFromFaceSuccess::clear_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.geometry_id_ != nullptr) _impl_.geometry_id_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
 }
 CreateDatumFromFaceSuccess::CreateDatumFromFaceSuccess(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
@@ -12956,6 +12966,9 @@ CreateDatumFromFaceSuccess::CreateDatumFromFaceSuccess(
   ::uint32_t cached_has_bits = _impl_._has_bits_[0];
   _impl_.datum_ = (CheckHasBit(cached_has_bits, 0x00000001U))
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.datum_)
+                : nullptr;
+  _impl_.geometry_id_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.geometry_id_)
                 : nullptr;
   ::memcpy(reinterpret_cast<char*>(&_impl_) +
                offsetof(Impl_, face_index_),
@@ -12993,6 +13006,7 @@ inline void CreateDatumFromFaceSuccess::SharedDtor(MessageLite& self) {
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
   delete this_._impl_.datum_;
+  delete this_._impl_.geometry_id_;
   this_._impl_.~Impl_();
 }
 
@@ -13039,17 +13053,17 @@ CreateDatumFromFaceSuccess::GetClassData() const {
   return CreateDatumFromFaceSuccess_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 1, 0, 2>
+const ::_pbi::TcParseTable<2, 4, 2, 0, 2>
 CreateDatumFromFaceSuccess::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_._has_bits_),
     0, // no _extensions_
-    3, 24,  // max_field_number, fast_idx_mask
+    4, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967280,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
-    1,  // num_aux_entries
+    4,  // num_field_entries
+    2,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     CreateDatumFromFaceSuccess_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -13058,18 +13072,21 @@ CreateDatumFromFaceSuccess::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::CreateDatumFromFaceSuccess>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
+    // .motionlab.mechanism.ElementId geometry_id = 4 [json_name = "geometryId"];
+    {::_pbi::TcParser::FastMtS1,
+     {34, 1, 1,
+      PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.geometry_id_)}},
     // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.datum_)}},
     // uint32 face_index = 2 [json_name = "faceIndex"];
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateDatumFromFaceSuccess, _impl_.face_index_), 1>(),
-     {16, 1, 0,
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateDatumFromFaceSuccess, _impl_.face_index_), 2>(),
+     {16, 2, 0,
       PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.face_index_)}},
     // .motionlab.protocol.FaceSurfaceClass surface_class = 3 [json_name = "surfaceClass"];
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateDatumFromFaceSuccess, _impl_.surface_class_), 2>(),
-     {24, 2, 0,
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateDatumFromFaceSuccess, _impl_.surface_class_), 3>(),
+     {24, 3, 0,
       PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.surface_class_)}},
   }}, {{
     65535, 65535
@@ -13077,12 +13094,15 @@ CreateDatumFromFaceSuccess::_table_ = {
     // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
     {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.datum_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // uint32 face_index = 2 [json_name = "faceIndex"];
-    {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.face_index_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
+    {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.face_index_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
     // .motionlab.protocol.FaceSurfaceClass surface_class = 3 [json_name = "surfaceClass"];
-    {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.surface_class_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+    {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.surface_class_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+    // .motionlab.mechanism.ElementId geometry_id = 4 [json_name = "geometryId"];
+    {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.geometry_id_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::Datum>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
   }},
   {{
   }},
@@ -13095,11 +13115,17 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceSuccess::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-    ABSL_DCHECK(_impl_.datum_ != nullptr);
-    _impl_.datum_->Clear();
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(_impl_.datum_ != nullptr);
+      _impl_.datum_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.geometry_id_ != nullptr);
+      _impl_.geometry_id_->Clear();
+    }
   }
-  if (BatchCheckHasBit(cached_has_bits, 0x00000006U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000cU)) {
     ::memset(&_impl_.face_index_, 0, static_cast<::size_t>(
         reinterpret_cast<char*>(&_impl_.surface_class_) -
         reinterpret_cast<char*>(&_impl_.face_index_)) + sizeof(_impl_.surface_class_));
@@ -13135,7 +13161,7 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceSuccess::Clear() {
   }
 
   // uint32 face_index = 2 [json_name = "faceIndex"];
-  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (this_._internal_face_index() != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
@@ -13144,12 +13170,19 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceSuccess::Clear() {
   }
 
   // .motionlab.protocol.FaceSurfaceClass surface_class = 3 [json_name = "surfaceClass"];
-  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (this_._internal_surface_class() != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteEnumToArray(
           3, this_._internal_surface_class(), target);
     }
+  }
+
+  // .motionlab.mechanism.ElementId geometry_id = 4 [json_name = "geometryId"];
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        4, *this_._impl_.geometry_id_, this_._impl_.geometry_id_->GetCachedSize(), target,
+        stream);
   }
 
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
@@ -13177,21 +13210,26 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceSuccess::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
     // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.datum_);
     }
-    // uint32 face_index = 2 [json_name = "faceIndex"];
+    // .motionlab.mechanism.ElementId geometry_id = 4 [json_name = "geometryId"];
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.geometry_id_);
+    }
+    // uint32 face_index = 2 [json_name = "faceIndex"];
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (this_._internal_face_index() != 0) {
         total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
             this_._internal_face_index());
       }
     }
     // .motionlab.protocol.FaceSurfaceClass surface_class = 3 [json_name = "surfaceClass"];
-    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (this_._internal_surface_class() != 0) {
         total_size += 1 +
                       ::_pbi::WireFormatLite::EnumSize(this_._internal_surface_class());
@@ -13217,7 +13255,7 @@ void CreateDatumFromFaceSuccess::MergeImpl(::google::protobuf::MessageLite& to_m
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       ABSL_DCHECK(from._impl_.datum_ != nullptr);
       if (_this->_impl_.datum_ == nullptr) {
@@ -13227,11 +13265,19 @@ void CreateDatumFromFaceSuccess::MergeImpl(::google::protobuf::MessageLite& to_m
       }
     }
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.geometry_id_ != nullptr);
+      if (_this->_impl_.geometry_id_ == nullptr) {
+        _this->_impl_.geometry_id_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.geometry_id_);
+      } else {
+        _this->_impl_.geometry_id_->MergeFrom(*from._impl_.geometry_id_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (from._internal_face_index() != 0) {
         _this->_impl_.face_index_ = from._impl_.face_index_;
       }
     }
-    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (from._internal_surface_class() != 0) {
         _this->_impl_.surface_class_ = from._impl_.surface_class_;
       }

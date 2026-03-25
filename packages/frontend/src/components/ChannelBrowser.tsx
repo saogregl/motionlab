@@ -9,6 +9,7 @@ import {
   buildChannelGroups,
   collectEntityNames,
 } from '../utils/channel-grouping.js';
+import { useChartThemeKey } from '../hooks/useChartTheme.js';
 import { readChartColors } from './ChartPanel.js';
 
 interface ChannelBrowserProps {
@@ -48,17 +49,21 @@ export function ChannelBrowser({ className }: ChannelBrowserProps) {
     [channelDescriptors, entityNames, filter, expandedCategories, expandedEntities],
   );
 
-  // Stable sorted array of active channel IDs for color index lookup
-  const sortedActiveIds = useMemo(() => [...activeChannels].sort(), [activeChannels]);
+  // Stable color index for every channel (based on full descriptor list, not just active)
+  const allChannelIds = useMemo(
+    () => channelDescriptors.map((d) => d.channelId).sort(),
+    [channelDescriptors],
+  );
   const colorIndexMap = useMemo(() => {
     const map = new Map<string, number>();
-    for (let i = 0; i < sortedActiveIds.length; i++) {
-      map.set(sortedActiveIds[i], i);
+    for (let i = 0; i < allChannelIds.length; i++) {
+      map.set(allChannelIds[i], i);
     }
     return map;
-  }, [sortedActiveIds]);
+  }, [allChannelIds]);
 
-  const chartColors = useMemo(() => readChartColors(), []);
+  const themeKey = useChartThemeKey();
+  const chartColors = useMemo(() => readChartColors(), [themeKey]);
 
   const toggleCategory = useCallback((key: string) => {
     setExpandedCategories((prev) => {
@@ -261,7 +266,7 @@ function NodeRow({
       />
       <span
         className="inline-block size-2 shrink-0 rounded-full"
-        style={{ backgroundColor: isActive && color ? color : 'var(--text-disabled)' }}
+        style={{ backgroundColor: color ?? 'var(--text-disabled)', opacity: isActive ? 1 : 0.35 }}
       />
       <span className="flex-1 truncate text-[var(--text-primary)]">{node.label}</span>
       {node.unit && <span className="shrink-0 text-[var(--text-tertiary)]">{node.unit}</span>}

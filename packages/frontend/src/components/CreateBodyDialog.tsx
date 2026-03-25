@@ -73,7 +73,7 @@ export function CreateBodyDialog({ open, onOpenChange }: CreateBodyDialogProps) 
           <div className="flex items-center justify-between">
             <label className="text-xs text-muted-foreground">Manual Mass Override</label>
             <Switch
-              size="sm"
+
               checked={manualMassOverride}
               onCheckedChange={setManualMassOverride}
             />
@@ -93,7 +93,7 @@ export function CreateBodyDialog({ open, onOpenChange }: CreateBodyDialogProps) 
           <div className="flex items-center justify-between">
             <label className="text-xs text-muted-foreground">Fixed (Ground)</label>
             <Switch
-              size="sm"
+
               checked={isFixed}
               onCheckedChange={setIsFixed}
             />

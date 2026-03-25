@@ -485,7 +485,7 @@ describe('Datum CRUD round-trip', () => {
       payload: {
         case: 'createDatumFromFace',
         value: create(CreateDatumFromFaceCommandSchema, {
-          parentBodyId: create(ElementIdSchema, { id: 'body-001' }),
+          geometryId: create(ElementIdSchema, { id: 'geom-001' }),
           faceIndex: 7,
           name: 'Face Datum',
         }),
@@ -497,7 +497,7 @@ describe('Datum CRUD round-trip', () => {
 
     expect(restored.payload.case).toBe('createDatumFromFace');
     if (restored.payload.case === 'createDatumFromFace') {
-      expect(restored.payload.value.parentBodyId?.id).toBe('body-001');
+      expect(restored.payload.value.geometryId?.id).toBe('geom-001');
       expect(restored.payload.value.faceIndex).toBe(7);
       expect(restored.payload.value.name).toBe('Face Datum');
     }
@@ -523,6 +523,7 @@ describe('Datum CRUD round-trip', () => {
               }),
               faceIndex: 7,
               surfaceClass: FaceSurfaceClass.PLANAR,
+              geometryId: create(ElementIdSchema, { id: 'geom-001' }),
             }),
           },
         }),
@@ -538,6 +539,7 @@ describe('Datum CRUD round-trip', () => {
       if (restored.payload.value.result.case === 'success') {
         expect(restored.payload.value.result.value.faceIndex).toBe(7);
         expect(restored.payload.value.result.value.surfaceClass).toBe(FaceSurfaceClass.PLANAR);
+        expect(restored.payload.value.result.value.geometryId?.id).toBe('geom-001');
         expect(restored.payload.value.result.value.datum?.id?.id).toBe('datum-010');
       }
     }

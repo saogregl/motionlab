@@ -51,6 +51,8 @@
       "electron",
       "esbuild"
     ],
-    "overrides": {}
+    "overrides": {
+      "three-mesh-bvh": "^0.9.9"
+    }
   }
 }

@@ -1,13 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   Box,
-  BoxSelect,
-  Eye,
-  Grid3X3,
-  Maximize2,
-  Move,
-  Pointer,
-  RotateCcw,
   Settings,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -16,8 +9,6 @@ import { InspectorPanel } from '../primitives/inspector-panel';
 import { InspectorSection } from '../primitives/inspector-section';
 import { PropertyRow } from '../primitives/property-row';
 import { StatusBadge } from '../primitives/status-badge';
-import { ToolbarButton } from '../primitives/toolbar-button';
-import { ToolbarGroup } from '../primitives/toolbar-group';
 import { GroupHeaderRow, TreeRow } from '../primitives/tree-row';
 import { type TreeNode, TreeView } from '../primitives/tree-view';
 import { Button } from '../ui/button';
@@ -28,7 +19,6 @@ import { AppShell } from './app-shell';
 import { BottomDock } from './bottom-dock';
 import { LeftPanel } from './left-panel';
 import { RightPanel } from './right-panel';
-import { SecondaryToolbar } from './secondary-toolbar';
 import { TopBar } from './top-bar';
 import { WorkspaceTabBar } from './workspace-tab-bar';
 
@@ -221,6 +211,8 @@ function ComposedAppShell() {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(
     new Set(['g-bodies', 'g-datums', 'g-joints', 'g-drivers']),
   );
+  const [leftWidth, setLeftWidth] = useState(288);
+  const [rightWidth, setRightWidth] = useState(288);
 
   return (
     <TooltipProvider>
@@ -241,37 +233,12 @@ function ComposedAppShell() {
             }
           />
         }
-        toolbar={
-          <SecondaryToolbar>
-            <ToolbarGroup separator>
-              <ToolbarButton tooltip="Select" active>
-                <Pointer />
-              </ToolbarButton>
-              <ToolbarButton tooltip="Box Select">
-                <BoxSelect />
-              </ToolbarButton>
-            </ToolbarGroup>
-            <ToolbarGroup separator>
-              <ToolbarButton tooltip="Move">
-                <Move />
-              </ToolbarButton>
-              <ToolbarButton tooltip="Rotate">
-                <RotateCcw />
-              </ToolbarButton>
-              <ToolbarButton tooltip="Scale">
-                <Maximize2 />
-              </ToolbarButton>
-            </ToolbarGroup>
-            <ToolbarGroup>
-              <ToolbarButton tooltip="Grid">
-                <Grid3X3 />
-              </ToolbarButton>
-              <ToolbarButton tooltip="Visibility">
-                <Eye />
-              </ToolbarButton>
-            </ToolbarGroup>
-          </SecondaryToolbar>
-        }
+        leftPanelOpen
+        leftPanelWidth={leftWidth}
+        onLeftPanelWidthChange={setLeftWidth}
+        rightPanelOpen
+        rightPanelWidth={rightWidth}
+        onRightPanelWidthChange={setRightWidth}
         leftPanel={
           <LeftPanel>
             <TreeView
@@ -358,19 +325,19 @@ function ComposedAppShell() {
                 <PropertyRow label="Lower" unit="deg" numeric>
                   <Input
                     defaultValue="-180"
-                    className="h-6 rounded-[var(--radius-sm)] border-none bg-field-base text-[length:var(--text-sm)] tabular-nums"
+                    className="h-6 rounded-[var(--radius-sm)] border-none bg-layer-raised text-[length:var(--text-sm)] tabular-nums"
                   />
                 </PropertyRow>
                 <PropertyRow label="Upper" unit="deg" numeric>
                   <Input
                     defaultValue="180"
-                    className="h-6 rounded-[var(--radius-sm)] border-none bg-field-base text-[length:var(--text-sm)] tabular-nums"
+                    className="h-6 rounded-[var(--radius-sm)] border-none bg-layer-raised text-[length:var(--text-sm)] tabular-nums"
                   />
                 </PropertyRow>
                 <PropertyRow label="Stiffness" unit="N*m/rad" numeric>
                   <Input
                     defaultValue="0.0"
-                    className="h-6 rounded-[var(--radius-sm)] border-none bg-field-base text-[length:var(--text-sm)] tabular-nums"
+                    className="h-6 rounded-[var(--radius-sm)] border-none bg-layer-raised text-[length:var(--text-sm)] tabular-nums"
                   />
                 </PropertyRow>
               </InspectorSection>

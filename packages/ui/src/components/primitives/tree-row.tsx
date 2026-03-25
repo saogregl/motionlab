@@ -73,9 +73,8 @@ function TreeRow({
       className={cn(
         'group/tree-row h-[var(--tree-row-h)] cursor-pointer',
         'hover:bg-[var(--layer-base-hover)]',
-        'data-[selected]:bg-[var(--selection-row)] data-[selected]:animate-[selection-pulse_300ms_ease-out]',
-        'data-[selected]:data-[focused]:shadow-[inset_2px_0_0_var(--accent-primary)]',
-        'data-[selected]:not([data-focused]):bg-[var(--selection-row-inactive)]',
+        'data-[selected]:bg-tree-selection-bg data-[selected]:text-tree-selection-text',
+        'data-[selected]:not([data-focused]):opacity-80',
         'data-[disabled]:opacity-50 data-[disabled]:text-[var(--text-disabled)]',
         'data-[drag-target]:bg-[var(--selection-drag-bg)] data-[drag-target]:border-y-2 data-[drag-target]:border-y-[var(--selection-drag-border)]',
         className,
@@ -112,7 +111,7 @@ function TreeRow({
           <button
             data-slot="tree-row-chevron"
             type="button"
-            className="flex size-4 shrink-0 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+            className="flex size-4 shrink-0 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)] group-data-[selected]/tree-row:text-white/70"
             onClick={(e) => {
               e.stopPropagation();
               onToggleExpand?.();
@@ -135,7 +134,7 @@ function TreeRow({
         {icon && (
           <span
             data-slot="tree-row-icon"
-            className="mr-1 flex size-3.5 shrink-0 items-center justify-center"
+            className="mr-1 flex size-3.5 shrink-0 items-center justify-center group-data-[selected]/tree-row:text-white group-data-[selected]/tree-row:[&_svg]:!text-white"
           >
             {icon}
           </span>
@@ -144,7 +143,7 @@ function TreeRow({
         {/* Name */}
         <span
           data-slot="tree-row-name"
-          className="min-w-0 flex-1 truncate font-normal text-[length:var(--text-xs)] text-[var(--text-primary)] group-data-[selected]/tree-row:font-medium"
+          className="min-w-0 flex-1 truncate font-normal text-[length:var(--text-xs)] text-[var(--text-secondary)] group-data-[selected]/tree-row:font-medium group-data-[selected]/tree-row:text-[var(--tree-selection-text)]"
         >
           {name}
         </span>
@@ -153,7 +152,7 @@ function TreeRow({
         {secondary && (
           <span
             data-slot="tree-row-secondary"
-            className="ml-1.5 max-w-[60px] shrink-0 truncate text-[length:var(--text-2xs)] text-[var(--text-disabled)]"
+            className="ml-1.5 max-w-[60px] shrink-0 truncate text-[length:var(--text-2xs)] text-[var(--text-disabled)] group-data-[selected]/tree-row:text-white/50"
           >
             {secondary}
           </span>
@@ -177,8 +176,8 @@ function TreeRow({
             data-slot="tree-row-visibility"
             type="button"
             className={cn(
-              'ml-0.5 flex size-3.5 shrink-0 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)]',
-              !isHidden && 'opacity-0 group-hover/tree-row:opacity-100',
+              'ml-0.5 flex size-3.5 shrink-0 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)] group-data-[selected]/tree-row:text-white/70 group-data-[selected]/tree-row:hover:text-white',
+              !isHidden && 'opacity-0 group-hover/tree-row:opacity-100 group-data-[selected]/tree-row:opacity-100',
             )}
             onClick={(e) => {
               e.stopPropagation();
@@ -196,7 +195,7 @@ function TreeRow({
           <button
             data-slot="tree-row-context"
             type="button"
-            className="ml-0.5 flex size-3.5 shrink-0 items-center justify-center text-[var(--text-tertiary)] opacity-0 hover:text-[var(--text-primary)] group-hover/tree-row:opacity-100"
+            className="ml-0.5 flex size-3.5 shrink-0 items-center justify-center text-[var(--text-tertiary)] opacity-0 hover:text-[var(--text-primary)] group-hover/tree-row:opacity-100 group-data-[selected]/tree-row:text-white/60 group-data-[selected]/tree-row:hover:text-white"
             onClick={(e) => {
               e.stopPropagation();
               onContextMenu();
@@ -270,7 +269,7 @@ function GroupHeaderRow({
       {/* Label */}
       <span
         data-slot="group-header-label"
-        className="min-w-0 flex-1 truncate text-[length:var(--text-xs)] font-medium text-[var(--text-tertiary)]"
+        className="min-w-0 flex-1 truncate text-[length:var(--text-xs)] font-bold text-[var(--text-secondary)]"
       >
         {label}
         {count != null && (

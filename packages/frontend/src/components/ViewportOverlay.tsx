@@ -1,4 +1,4 @@
-import { ConnectionBanner, SelectionChip, ViewportHUD } from '@motionlab/ui';
+import { ConnectionBanner, SelectionChip, ViewportHUD, useTheme } from '@motionlab/ui';
 import type { DatumPreviewType, SceneGraphManager } from '@motionlab/viewport';
 import { Viewport } from '@motionlab/viewport';
 import { Box, Cog, Crosshair, Link2, Zap } from 'lucide-react';
@@ -13,6 +13,7 @@ import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
+import { useUILayoutStore } from '../stores/ui-layout.js';
 import { useTraceStore } from '../stores/traces.js';
 import { nearestSample } from '../utils/nearest-sample.js';
 import { getJointCoordinateChannelIds } from '../utils/runtime-channel-ids.js';
@@ -21,6 +22,7 @@ import { JointTypeSelectorPanel } from './JointTypeSelectorPanel.js';
 import { LoadCreationCard } from './LoadCreationCard.js';
 import { ModeIndicator } from './ModeIndicator.js';
 import { ViewportContextMenu } from './ViewportContextMenu.js';
+import { ViewportToolModeToolbar } from './ViewportToolModeToolbar.js';
 import { FaceTooltip } from './FaceTooltip.js';
 import { WorldSpaceOverlay } from './WorldSpaceOverlay.js';
 
@@ -183,11 +185,22 @@ function JointCreationDatumLabel({ sceneGraph }: { sceneGraph: SceneGraphManager
   );
 }
 
+const PANEL_FLOAT_INSET = 6;
+
 export function ViewportOverlay() {
   const { handleSceneReady, handlePick, handleHover, sceneGraphRef } = useViewportBridge();
+  const { theme } = useTheme();
   const [sceneGraph, setSceneGraph] = useState<SceneGraphManager | null>(null);
   const activeMode = useToolModeStore((s) => s.activeMode);
   const selectedEntity = useSelectedEntity();
+  const activeWorkspace = useUILayoutStore((s) => s.activeWorkspace);
+  const rightPanelOpen = useUILayoutStore((s) => s.rightPanelOpen);
+  const rightPanelWidth = useUILayoutStore((s) => s.rightPanelWidth);
+  const rightPanelInset = activeWorkspace === 'build' && rightPanelOpen ? rightPanelWidth + 2 * PANEL_FLOAT_INSET : 0;
+  const bottomDockExpanded = useUILayoutStore((s) => s.bottomDockExpanded);
+  const resultsBottomDockExpanded = useUILayoutStore((s) => s.resultsBottomDockExpanded);
+  const isBottomDockExpanded = activeWorkspace === 'build' ? bottomDockExpanded : resultsBottomDockExpanded;
+  const bottomDockInset = PANEL_FLOAT_INSET + (isBottomDockExpanded ? 240 : 32) + PANEL_FLOAT_INSET;
   const [hoveredFace, setHoveredFace] = useState<{ bodyId: string; faceIndex: number; previewType?: DatumPreviewType } | null>(null);
   const viewportContainerRef = useRef<HTMLDivElement>(null);
   const connStatus = useEngineConnection((s) => s.status);
@@ -378,6 +391,9 @@ export function ViewportOverlay() {
           onHover={handleHover}
           onFaceHover={setHoveredFace}
           interactionMode={activeMode}
+          rightPanelInset={rightPanelInset}
+          bottomDockInset={bottomDockInset}
+          theme={theme}
         />
         {activeMode === 'create-datum' && (
           <FaceTooltip containerRef={viewportContainerRef} hoveredFace={hoveredFace} />
@@ -414,6 +430,16 @@ export function ViewportOverlay() {
             ) : undefined
           }
         />
+        {/* Floating tool mode toolbar — left side, panel-aware */}
+        <div
+          className="pointer-events-auto absolute z-[var(--z-toolbar)] -translate-y-1/2"
+          style={{
+            insetInlineStart: 'calc(var(--vp-inset-left, 0px) + 12px)',
+            top: 'calc((100% - var(--vp-inset-bottom, 0px)) / 2)',
+          }}
+        >
+          <ViewportToolModeToolbar />
+        </div>
         <ModeIndicator />
         <JointTypeSelectorPanel />
         <LoadCreationCard sceneGraph={sceneGraph} />

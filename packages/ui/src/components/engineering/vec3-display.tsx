@@ -42,7 +42,7 @@ function Vec3Display({
     <div data-slot="vec3-display" className={cn(className)}>
       {/* Group header */}
       <div className="flex h-5 items-center px-1.5">
-        <span className="text-[length:var(--text-2xs)] font-semibold uppercase tracking-[0.05em] text-[var(--text-secondary)]">
+        <span className="text-[length:var(--text-2xs)] font-semibold text-[var(--text-secondary)]">
           {label}
         </span>
         {unit && (
@@ -50,11 +50,11 @@ function Vec3Display({
         )}
       </div>
       {/* 3-column axis values */}
-      <div className="grid grid-cols-3 gap-px px-1.5 pb-1">
+      <div className="grid grid-cols-3 gap-1 px-1.5 pb-1">
         {AXES.map((axis) => (
           <div
             key={axis}
-            className="flex items-center gap-1 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--field-elevated)] px-1 h-6"
+            className="flex items-center gap-1 rounded-[4px] bg-[var(--layer-raised)] ps-1 pe-1 h-6"
           >
             <AxisColorLabel axis={axis} className="shrink-0" />
             {editable ? (

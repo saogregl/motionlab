@@ -1,4 +1,4 @@
-import { MousePointerClick } from 'lucide-react';
+import { MoreVertical, MousePointerClick } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 import { cn } from '../../lib/utils';
@@ -9,7 +9,7 @@ import { ScrollArea } from '../ui/scroll-area';
 interface InspectorPanelProps {
   /** Entity name — when falsy, shows empty state */
   entityName?: string;
-  /** Entity type label (e.g. "Body", "Joint") */
+  /** Entity type label (e.g. "Body", "Joint") — retained for API compat */
   entityType?: string;
   /** Entity icon (20px) */
   entityIcon?: ReactNode;
@@ -17,6 +17,8 @@ interface InspectorPanelProps {
   statusLine?: string;
   /** Quick actions button content */
   quickActions?: ReactNode;
+  /** Sticky footer action area */
+  footer?: ReactNode;
   /** InspectorSection children */
   children?: ReactNode;
   className?: string;
@@ -30,6 +32,7 @@ function InspectorPanel({
   entityIcon,
   statusLine,
   quickActions,
+  footer,
   children,
   className,
 }: InspectorPanelProps) {
@@ -53,37 +56,46 @@ function InspectorPanel({
       {/* Header */}
       <div
         data-slot="inspector-panel-header"
-        className="flex h-8 shrink-0 items-center gap-2 border-b border-[var(--border-subtle)] border-l-2 border-l-[var(--accent-primary)] bg-[var(--layer-recessed)] px-1.5 py-1"
+        className="flex h-11 shrink-0 items-center gap-2 border-b border-[var(--border-default)] ps-2 pe-4"
       >
         {entityIcon && (
           <span className="flex size-5 shrink-0 items-center justify-center text-[var(--text-secondary)]">
             {entityIcon}
           </span>
         )}
-        <div className="min-w-0 flex-1 truncate">
-          <span className="inline-flex items-baseline gap-3 text-[length:var(--text-base)] font-semibold text-[var(--text-primary)]">
-            {entityType && (
-              <span className="inline-flex items-center rounded-sm bg-[var(--accent-soft)] ps-1 pe-1.5 py-px text-[10px] font-medium uppercase tracking-wider text-[var(--accent-text)]">
-                {entityType}
-              </span>
-            )}
+        <div className="min-w-0 flex-1">
+          <span className="block truncate text-[length:var(--text-sm)] font-bold text-[var(--text-primary)]">
             {entityName}
           </span>
           {statusLine && (
-            <span className="ml-1.5 text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
-              · {statusLine}
+            <span className="block truncate text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
+              {statusLine}
             </span>
           )}
         </div>
-        {quickActions && (
+        {quickActions ? (
           <div className="flex size-6 shrink-0 items-center justify-center">{quickActions}</div>
+        ) : (
+          <button
+            type="button"
+            className="flex size-6 shrink-0 items-center justify-center rounded-[var(--radius-sm)] text-[var(--text-tertiary)] hover:bg-[var(--layer-recessed-hover)] hover:text-[var(--text-primary)]"
+          >
+            <MoreVertical className="size-3.5" />
+          </button>
         )}
       </div>
 
       {/* Body */}
       <ScrollArea className="flex-1">
-        <div data-slot="inspector-panel-body" className="flex flex-col gap-[var(--inspector-section-gap)]">{children}</div>
+        <div data-slot="inspector-panel-body" className="flex flex-col gap-[var(--inspector-section-gap)] p-[5px]">{children}</div>
       </ScrollArea>
+
+      {/* Footer */}
+      {footer && (
+        <div data-slot="inspector-panel-footer" className="shrink-0 p-2">
+          {footer}
+        </div>
+      )}
     </div>
   );
 }

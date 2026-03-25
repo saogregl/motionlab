@@ -65,9 +65,8 @@ import { useSimulationSettingsStore } from '../stores/simulation-settings.js';
 import { useUILayoutStore } from '../stores/ui-layout.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
 import { useToastStore } from '../stores/toast.js';
-import { type StoreSample, useTraceStore } from '../stores/traces.js';
+import { type StoreSample, addSamplesBatched, useTraceStore } from '../stores/traces.js';
 import { analyzeDatumAlignment, computeDatumWorldPose } from '../utils/datum-alignment.js';
-import { mergeGeometryMeshes } from '../utils/merge-geometry-meshes.js';
 
 // ---------------------------------------------------------------------------
 // Proto extraction helpers — reduce duplication across import/load/relocate
@@ -403,18 +402,32 @@ function addBodyToSceneGraph(
   body: BodyState,
   geometries: GeometryState[],
 ): void {
-  if (geometries.length === 0) return;
-  const merged = mergeGeometryMeshes(geometries);
-  sg.addBody(
+  sg.upsertBody(
     body.id,
     body.name,
-    merged.meshData,
     {
       position: [body.pose.position.x, body.pose.position.y, body.pose.position.z],
       rotation: [body.pose.rotation.x, body.pose.rotation.y, body.pose.rotation.z, body.pose.rotation.w],
     },
-    merged.partIndex,
   );
+  for (const geometry of geometries) {
+    sg.addBodyGeometry(
+      body.id,
+      geometry.id,
+      geometry.name,
+      geometry.meshData,
+      {
+        position: [geometry.localPose.position.x, geometry.localPose.position.y, geometry.localPose.position.z],
+        rotation: [
+          geometry.localPose.rotation.x,
+          geometry.localPose.rotation.y,
+          geometry.localPose.rotation.z,
+          geometry.localPose.rotation.w,
+        ],
+      },
+      geometry.partIndex,
+    );
+  }
 }
 
 type SetState = (
@@ -1157,7 +1170,7 @@ export function connect(set: SetState, _get: GetState) {
              */
             useSimulationStore
               .getState()
-              .setSimState('running', frame.simTime, Number(frame.stepCount));
+              .updateSimTime(frame.simTime, Number(frame.stepCount));
             break;
           }
           case 'simulationTrace': {
@@ -1175,7 +1188,7 @@ export function connect(set: SetState, _get: GetState) {
                 samples.push({ time: s.time, value: s.value.value });
               }
             }
-            useTraceStore.getState().addSamples(trace.channelId, samples);
+            addSamplesBatched(trace.channelId, samples);
             break;
           }
           case 'saveProjectResult': {
@@ -1699,12 +1712,12 @@ export function sendCreateDatum(
 }
 
 export function sendCreateDatumFromFace(
-  parentBodyId: string,
+  geometryId: string,
   faceIndex: number,
   name: string,
 ): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createCreateDatumFromFaceCommand(parentBodyId, faceIndex, name));
+  ws.send(createCreateDatumFromFaceCommand(geometryId, faceIndex, name));
 }
 
 export function sendDeleteDatum(datumId: string): void {

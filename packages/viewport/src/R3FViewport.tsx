@@ -7,11 +7,10 @@ import {
   GizmoViewport,
   Grid,
   OrbitControls,
-  PerformanceMonitor,
   TransformControls,
 } from '@react-three/drei';
 
-import { startTransition, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ACESFilmicToneMapping, Object3D, OrthographicCamera } from 'three';
 
 import {
@@ -48,6 +47,10 @@ export interface ViewportProps {
   gridVisible?: boolean;
   /** Controls viewport background. Defaults to 'dark'. */
   theme?: ViewportTheme;
+  /** Pixel inset from right edge for panel-aware gizmo positioning */
+  rightPanelInset?: number;
+  /** Pixel inset from bottom edge for dock-aware gizmo positioning */
+  bottomDockInset?: number;
 }
 
 type SceneSetupProps = Omit<ViewportProps, 'className'>;
@@ -110,15 +113,21 @@ function SceneSetup({
   interactionMode,
   gridVisible = false,
   theme = 'dark',
+  rightPanelInset = 0,
+  bottomDockInset = 0,
 }: SceneSetupProps) {
-  const { scene, camera, gl, size, invalidate, raycaster } = useThree();
+  const scene = useThree((s) => s.scene);
+  const camera = useThree((s) => s.camera);
+  const gl = useThree((s) => s.gl);
+  const size = useThree((s) => s.size);
+  const invalidate = useThree((s) => s.invalidate);
+  const raycaster = useThree((s) => s.raycaster);
 
   const sceneGraphRef = useRef<SceneGraphManager | null>(null);
   const pickingRef = useRef<PickingManager | null>(null);
   const [sceneGraphState, setSceneGraphState] = useState<SceneGraphManager | null>(null);
   const [gizmoRevision, setGizmoRevision] = useState(0);
   const [showGrid, setShowGrid] = useState(gridVisible);
-  const renderQueuedRef = useRef(false);
 
   const onSceneReadyRef = useRef(onSceneReady);
   const onPickRef = useRef(onPick);
@@ -129,13 +138,11 @@ function SceneSetup({
   onHoverRef.current = onHover;
   onFaceHoverRef.current = onFaceHover;
 
+  // R3F v9's invalidate() handles its own RAF scheduling and deduplication.
+  // Calling it directly is safe and avoids the race condition that the old
+  // requestAnimationFrame wrapper introduced with v9's self-managing loop.
   const requestRender = () => {
-    if (renderQueuedRef.current) return;
-    renderQueuedRef.current = true;
-    requestAnimationFrame(() => {
-      renderQueuedRef.current = false;
-      invalidate();
-    });
+    invalidate();
   };
 
   useEffect(() => {
@@ -154,10 +161,12 @@ function SceneSetup({
       setGizmoRevision((value) => value + 1);
     };
 
-    // Bridge grid toggle from imperative SceneGraphManager to React state
+    // Bridge grid toggle from imperative SceneGraphManager to React state.
+    // Also sync the initial state so React starts consistent with the manager.
     sceneGraph.onGridVisibilityChanged = () => {
       setShowGrid(sceneGraph.gridVisible);
     };
+    setShowGrid(sceneGraph.gridVisible);
 
     sceneGraphRef.current = sceneGraph;
     setSceneGraphState(sceneGraph);
@@ -242,7 +251,7 @@ function SceneSetup({
       )}
 
       {/* Orientation gizmo — click to snap camera */}
-      <GizmoHelper alignment="bottom-right" margin={[72, 72]}>
+      <GizmoHelper alignment="bottom-right" margin={[72 + rightPanelInset, 72 + bottomDockInset]}>
         <GizmoViewport
           axisColors={VIEWPORT_THEMES[theme].axisColors}
           labelColor="white"
@@ -308,27 +317,18 @@ export function Viewport({
   interactionMode,
   gridVisible,
   theme = 'dark',
+  rightPanelInset,
+  bottomDockInset,
 }: ViewportProps) {
-  const [dpr, setDpr] = useState(1.5);
-
   return (
     <div className={className} style={{ width: '100%', height: '100%' }}>
       <Canvas
         orthographic
         camera={{ position: [5, 5, 5], zoom: 50, near: -1000, far: 1000 }}
-        dpr={dpr}
+        dpr={[1, 1.5]}
         frameloop="demand"
         shadows={false}
       >
-        <PerformanceMonitor
-          flipflops={3}
-          onChange={({ factor }) => {
-            const nextDpr = Math.max(1, Math.min(1.5, 1 + factor * 0.5));
-            startTransition(() => {
-              setDpr((current) => (Math.abs(current - nextDpr) < 0.01 ? current : nextDpr));
-            });
-          }}
-        />
         <SceneSetup
           onSceneReady={onSceneReady}
           onPick={onPick}
@@ -337,6 +337,8 @@ export function Viewport({
           interactionMode={interactionMode}
           gridVisible={gridVisible}
           theme={theme}
+          rightPanelInset={rightPanelInset}
+          bottomDockInset={bottomDockInset}
         />
       </Canvas>
     </div>

@@ -17,7 +17,7 @@ interface InertiaMatrixDisplayProps {
 
 function HeaderCell({ label }: { label: string }) {
   return (
-    <div className="flex h-5 items-center justify-center bg-[var(--layer-recessed)] text-[10px] font-semibold text-[var(--text-tertiary)]">
+    <div className="flex h-5 items-center justify-center text-[10px] text-[var(--text-tertiary)]">
       {label}
     </div>
   );
@@ -25,7 +25,7 @@ function HeaderCell({ label }: { label: string }) {
 
 function RowLabel({ label }: { label: string }) {
   return (
-    <div className="flex h-6 items-center justify-center bg-[var(--layer-recessed)] ps-1 pe-1 text-[10px] font-semibold text-[var(--text-tertiary)]">
+    <div className="flex h-5 items-center justify-end pe-1.5 text-[10px] text-[var(--text-tertiary)]">
       {label}
     </div>
   );
@@ -46,11 +46,10 @@ function Cell({
   return (
     <div
       className={cn(
-        'flex h-6 items-center justify-end rounded-none px-1.5 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tabular-nums text-right',
-        diagonal
-          ? 'bg-[var(--inertia-diagonal)] font-medium text-[var(--inertia-diagonal-text)]'
-          : 'bg-[var(--field-elevated)]',
+        'flex h-5 items-center justify-end px-1.5 font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tabular-nums',
+        diagonal && 'font-medium text-[var(--text-primary)]',
         mirror && 'text-[var(--text-tertiary)]',
+        !diagonal && !mirror && 'text-[var(--text-secondary)]',
         isNearZero && !diagonal && 'text-[var(--text-disabled)]',
       )}
     >
@@ -77,9 +76,9 @@ function InertiaMatrixDisplay({
         <span className="text-[10px] text-[var(--text-tertiary)]">{unit}</span>
       </div>
       {/* 4x4 grid: label col + 3 data cols, header row + 3 data rows */}
-      <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-px overflow-hidden rounded-[var(--radius-md)] border border-[var(--inspector-grid-border)] bg-[var(--inspector-grid-border)]">
+      <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-y-0">
         {/* Header row */}
-        <div className="bg-[var(--layer-recessed)]" />
+        <div />
         <HeaderCell label="xx" />
         <HeaderCell label="yy" />
         <HeaderCell label="zz" />

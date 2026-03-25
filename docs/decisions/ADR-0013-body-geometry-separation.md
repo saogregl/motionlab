@@ -33,7 +33,7 @@ Every serious multibody tool (Adams, ANSYS Motion, Simscape) separates body (phy
    Old project files are transparently upgraded. A deterministic UUIDv5 derives geometry IDs from body IDs for stable references.
 
 6. **ShapeRegistry is keyed by geometry_id, not body_id.**
-   B-Rep shapes belong to geometries. Face-picking resolves body_id → geometry_ids for shape lookup.
+   B-Rep shapes belong to geometries. Face-aware authoring commands resolve directly on `geometry_id`.
 
 7. **Wire compatibility: Body field 5 (source_asset_ref) is deprecated, not removed.**
    Old v2 Body messages with source_asset_ref at field 5 parse successfully. The field is accessible for migration code, then cleared. New bodies never set it.
@@ -56,5 +56,4 @@ Every serious multibody tool (Adams, ANSYS Motion, Simscape) separates body (phy
 
 - Breaking protocol change requires coordinated frontend update (Prompts 2 and 3).
 - Project file migration required for v2 files.
-- Face-picking with multi-geometry bodies uses first geometry only (MVP limitation).
 - Mass aggregation does not account for geometry local_pose rotation (deferred — import always uses identity orientation).

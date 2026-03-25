@@ -4,6 +4,8 @@
 - Date: 2026-03-19
 - Decision makers: MotionLab team
 
+Superseded in part by [ADR-0016](ADR-0016-geometry-local-face-picking.md), which moves face-aware pick identity from `body_id + face_index` to `geometry_id + face_index`.
+
 ## Context
 
 Epic 10 upgrades datum authoring from point-and-normal picking to topology-aware face picking. The engine must classify the picked face and compute the datum pose from authoritative B-Rep geometry, while the viewport must still provide interactive face hover and click feedback.

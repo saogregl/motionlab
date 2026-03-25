@@ -13,6 +13,8 @@ interface TopBarProps {
   status?: ReactNode;
   /** Right-side actions slot */
   actions?: ReactNode;
+  /** Transport controls (play/pause/step/reset) slot */
+  transportControls?: ReactNode;
   className?: string;
 }
 
@@ -75,21 +77,20 @@ function WindowControls() {
   );
 }
 
-function TopBar({ projectName = 'Untitled Project', isDirty, status, actions, className }: TopBarProps) {
+function TopBar({ projectName = 'Untitled Project', isDirty, status, actions, transportControls, className }: TopBarProps) {
   return (
     <div
       data-slot="top-bar"
       className={cn(
-        'flex h-[var(--topbar-h)] shrink-0 items-center border-b border-border-default bg-layer-base px-2 [-webkit-app-region:drag]',
+        'flex h-[var(--topbar-h)] shrink-0 items-center bg-layer-base ps-2 pe-2 [-webkit-app-region:drag]',
         className,
       )}
     >
       {/* Left cluster */}
       <div className="flex min-w-0 items-center gap-2">
-        {/* Logo placeholder */}
-        <div className="size-3.5 shrink-0 rounded-[1px] bg-[var(--accent-soft)] border border-[var(--accent-primary)]/20" />
-        <span className="max-w-[280px] truncate text-[length:var(--text-base)] font-semibold text-text-primary">
-          {projectName}{isDirty ? '*' : ''}<span className="font-normal text-text-tertiary"> — MotionLab</span>
+        <span className="max-w-[280px] truncate text-[length:var(--text-base)] text-text-primary">
+          <span className="font-semibold">MotionLab</span>
+          <span className="text-text-tertiary"> / {projectName}{isDirty ? '*' : ''}</span>
         </span>
         <ChevronDown className="size-3 shrink-0 text-text-tertiary" />
       </div>
@@ -110,6 +111,8 @@ function TopBar({ projectName = 'Untitled Project', isDirty, status, actions, cl
 
       {/* Right cluster */}
       <div className="flex shrink-0 items-center gap-3 [-webkit-app-region:no-drag]">
+        {transportControls}
+        {transportControls && <div className="h-4 w-px bg-[var(--border-default)]" />}
         {status}
         {actions}
       </div>

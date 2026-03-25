@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   BufferAttribute,
   BufferGeometry,
+  Group,
   Mesh,
   MeshBasicMaterial,
   OrthographicCamera,
@@ -55,7 +56,7 @@ class FakeDomElement {
   }
 }
 
-function makePickMesh(entityId: string): Mesh {
+function makePickMesh(entityId: string, geometryId?: string): Mesh {
   const geometry = new BufferGeometry();
   geometry.setAttribute(
     'position',
@@ -69,21 +70,33 @@ function makePickMesh(entityId: string): Mesh {
     ),
   );
   geometry.setIndex([0, 1, 2]);
-  return new Mesh(geometry, new MeshBasicMaterial({ color: 0xffffff }));
+  const mesh = new Mesh(geometry, new MeshBasicMaterial({ color: 0xffffff }));
+  mesh.userData = geometryId
+    ? { entityId, entityType: 'body', geometryId }
+    : { entityId, entityType: 'body' };
+  return mesh;
 }
 
-function makeSceneGraph(mesh: Mesh): SceneGraphManager {
-  mesh.userData = { entityId: 'body-1', entityType: 'body' };
+function makeSceneGraph(mesh: Mesh, rootNode?: Group): SceneGraphManager {
+  const bodyRoot = rootNode ?? new Group();
+  if (!mesh.parent) {
+    bodyRoot.add(mesh);
+  }
   return {
     onEntityListChanged: () => () => {},
     getAllPickableMeshes: () => [mesh],
     hasPendingBodyBvhs: () => false,
     getBodyGeometryIndex: () => undefined,
+    getGeometryIndex: () => undefined,
     clearAllFaceHighlights: () => {},
     clearDatumPreview: () => {},
     showDatumPreview: () => {},
     getBodyFacePreview: () => null,
+    getGeometryFacePreview: () => null,
+    getFaceCentroidWorld: () => null,
+    getBodyFaceCentroidWorld: () => null,
     highlightFace: () => {},
+    getEntity: () => ({ rootNode: bodyRoot }),
   } as unknown as SceneGraphManager;
 }
 
@@ -314,6 +327,54 @@ describe('PickingManager', () => {
     flushAnimationFramesAt(40);
     expect(intersectSpy).toHaveBeenCalledTimes(2);
     expect(onHover).toHaveBeenCalledWith('body-1');
+
+    picking.dispose();
+  });
+
+  it('reports the body root matrix instead of the picked geometry child matrix', () => {
+    const domElement = new FakeDomElement();
+    const bodyRoot = new Group();
+    bodyRoot.position.set(10, 0, 0);
+    const mesh = makePickMesh('body-1', 'geom-1');
+    mesh.position.set(2, 0, 0);
+    bodyRoot.add(mesh);
+    bodyRoot.updateMatrixWorld(true);
+
+    const sceneGraph = makeSceneGraph(mesh, bodyRoot);
+    const onPick = vi.fn();
+    const picking = new PickingManager(
+      { domElement } as unknown as WebGLRenderer,
+      new OrthographicCamera(-1, 1, 1, -1, -10, 10),
+      new Scene(),
+      sceneGraph,
+      onPick,
+      vi.fn(),
+    );
+    picking.setInteractionMode('create-datum');
+
+    const hit = {
+      object: mesh,
+      point: new Vector3(12, 0, 0),
+      face: { normal: new Vector3(0, 0, 1) },
+      faceIndex: 0,
+    } as unknown as Intersection;
+    const raycaster = (picking as unknown as {
+      raycaster: { intersectObjects: (...args: unknown[]) => unknown };
+    }).raycaster;
+    vi.spyOn(raycaster, 'intersectObjects').mockImplementation((...args: unknown[]) => {
+      const target = args[2] as Intersection[];
+      target.push(hit);
+      return target;
+    });
+
+    domElement.dispatch('pointerdown', { clientX: 10, clientY: 10 });
+    domElement.dispatch('pointerup', { clientX: 10, clientY: 10 });
+
+    const spatial = onPick.mock.calls[0]?.[2];
+    expect(spatial?.geometryId).toBe('geom-1');
+    expect(spatial?.bodyWorldMatrix[12]).toBeCloseTo(10);
+    expect(spatial?.bodyWorldMatrix[13]).toBeCloseTo(0);
+    expect(spatial?.bodyWorldMatrix[14]).toBeCloseTo(0);
 
     picking.dispose();
   });

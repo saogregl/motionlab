@@ -35,7 +35,9 @@ Viewport-managed scene entities render on a dedicated Three.js layer that is als
 
 Hover picking is suspended while orbit or transform controls are actively dragging. Click picking still uses the viewport's custom picker, but drag interaction no longer continuously re-runs hover/face analysis against dense CAD meshes.
 
-Body meshes now use **BVH-accelerated Three.js raycasting** for exact picking. Large static meshes may build their BVH asynchronously; while that acceleration is still building, select-mode hover is intentionally rate-limited so dense mesh hover does not monopolize the main thread. Face-aware modes still use exact triangle hits and preserve current picking semantics.
+Body rendering now uses a **body root + child geometry mesh** scene graph. Picking and face highlight run against geometry-local topology rather than merged body meshes, which keeps `geometry_id + face_index` stable for multi-geometry bodies and attached geometry local poses.
+
+Geometry meshes use **BVH-accelerated Three.js raycasting** for exact picking. Large static meshes may build their BVH asynchronously per geometry; while that acceleration is still building, select-mode hover is intentionally rate-limited so dense mesh hover does not monopolize the main thread. Face-aware modes still use exact triangle hits and preserve current picking semantics.
 
 ## Frame Streaming Path (Epic 8)
 

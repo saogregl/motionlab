@@ -260,7 +260,7 @@ function ContactSection() {
       <div className="flex flex-col gap-2 ps-2 pe-1 pb-1">
         <div className="flex items-center justify-between">
           <label className="text-xs text-muted-foreground">Enable Contact Detection</label>
-          <Switch size="sm" checked={enableContact} onCheckedChange={setEnableContact} />
+          <Switch checked={enableContact} onCheckedChange={setEnableContact} />
         </div>
 
         <div className="grid grid-cols-2 gap-2">

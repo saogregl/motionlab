@@ -7,7 +7,6 @@ import { DatumInspector } from './DatumInspector.js';
 import { GeometryInspector } from './GeometryInspector.js';
 import { JointInspector } from './JointInspector.js';
 import { LoadInspector } from './LoadInspector.js';
-import { MechanismInspector } from './MechanismInspector.js';
 import { SimulationMetadataSection } from './SimulationMetadataSection.js';
 
 /**
@@ -28,12 +27,7 @@ export function EntityInspector() {
   const firstId = selectedIds.values().next().value as string | undefined;
 
   if (!firstId) {
-    return (
-      <>
-        <MechanismInspector />
-        {showSimMeta && <SimulationMetadataSection />}
-      </>
-    );
+    return null;
   }
 
   if (bodies.has(firstId)) {
@@ -85,10 +79,5 @@ export function EntityInspector() {
     );
   }
 
-  return (
-    <>
-      <MechanismInspector />
-      {showSimMeta && <SimulationMetadataSection />}
-    </>
-  );
+  return null;
 }

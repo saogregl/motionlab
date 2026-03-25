@@ -3,7 +3,20 @@
 > **Created:** 2026-03-22
 > **Scope:** 31 prompts across 10 epics, organized into 5 waves
 > **Critical path:** 13.1 -> 13.2 -> 15.1 -> 15.2 -> 15.3 (body-geometry split -> joint creation)
+## Page Feedback: /
+**Viewport:** 1920×1080
 
+### 1. <App> <FloatingDelayGroup> <AppShell> <MainToolbar> pointer events
+**Location:** #root > .flex > .relative > .pointer-events-auto
+**Source:** @fs/home/saogregl/Dev/motionlab/packages/frontend/src/commands/use-commands.ts:31:2
+**React:** <App> <FloatingDelayGroup> <AppShell> <MainToolbar>
+**Feedback:** The same positioning logic should be applied to this toolbar, since it also depends on the left panel positioning.
+
+### 2. <EntityInspector> <JointInspector> <InspectorPanel> <ScrollArea> <ScrollAreaRoot> <ScrollAreaViewport> flex flex
+**Location:** .flex > .relative > .size-full > .flex
+**Source:** @fs/home/saogregl/Dev/motionlab/packages/frontend/src/components/JointInspector.tsx:30:16
+**React:** <EntityInspector> <JointInspector> <InspectorPanel> <ScrollArea> <ScrollAreaRoot> <ScrollAreaViewport>
+**Feedback:** This panel reaaally needs a review. It's very ugly, full of colors for no reason, the information architecture is non existent, icons are everywhere and they generate just noise... Give it a full review focused on making this surface simpler and calmer please.
 ## Overview
 
 Each wave is a set of prompts that can execute simultaneously. A wave starts only after all its listed dependencies from prior waves have landed. Prompts within a wave have **zero dependencies on each other**.
@@ -25,6 +38,14 @@ Each wave is a set of prompts that can execute simultaneously. A wave starts onl
 ---
 
 ## Wave 1 — Foundations
+## Page Feedback: /
+**Viewport:** 1920×1080
+
+### 1. <App> <FloatingDelayGroup> <AppShell> <MainToolbar> pointer events
+**Location:** #root > .flex > .relative > .pointer-events-auto
+**Source:** @fs/home/saogregl/Dev/motionlab/packages/frontend/src/commands/use-commands.ts:31:2
+**React:** <App> <FloatingDelayGroup> <AppShell> <MainToolbar>
+**Feedback:** Why does this takes the entire viewport? Shouldn't it be just a three icon panel?
 
 No inter-dependencies. All five can start immediately.
 

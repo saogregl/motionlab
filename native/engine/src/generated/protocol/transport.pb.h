@@ -9141,7 +9141,7 @@ class CreateDatumFromFaceCommand final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kNameFieldNumber = 3,
-    kParentBodyIdFieldNumber = 1,
+    kGeometryIdFieldNumber = 1,
     kFaceIndexFieldNumber = 2,
   };
   // string name = 3 [json_name = "name"];
@@ -9159,19 +9159,19 @@ class CreateDatumFromFaceCommand final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
 
   public:
-  // .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
-  bool has_parent_body_id() const;
-  void clear_parent_body_id() ;
-  const ::motionlab::mechanism::ElementId& parent_body_id() const;
-  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_parent_body_id();
-  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_parent_body_id();
-  void set_allocated_parent_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_parent_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_parent_body_id();
+  // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+  bool has_geometry_id() const;
+  void clear_geometry_id() ;
+  const ::motionlab::mechanism::ElementId& geometry_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_geometry_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_geometry_id();
+  void set_allocated_geometry_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_geometry_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_geometry_id();
 
   private:
-  const ::motionlab::mechanism::ElementId& _internal_parent_body_id() const;
-  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_parent_body_id();
+  const ::motionlab::mechanism::ElementId& _internal_geometry_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_geometry_id();
 
   public:
   // uint32 face_index = 2 [json_name = "faceIndex"];
@@ -9211,7 +9211,7 @@ class CreateDatumFromFaceCommand final : public ::google::protobuf::Message
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::internal::ArenaStringPtr name_;
-    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE parent_body_id_;
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE geometry_id_;
     ::uint32_t face_index_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -16329,6 +16329,7 @@ class CreateDatumFromFaceSuccess final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kDatumFieldNumber = 1,
+    kGeometryIdFieldNumber = 4,
     kFaceIndexFieldNumber = 2,
     kSurfaceClassFieldNumber = 3,
   };
@@ -16345,6 +16346,21 @@ class CreateDatumFromFaceSuccess final : public ::google::protobuf::Message
   private:
   const ::motionlab::mechanism::Datum& _internal_datum() const;
   ::motionlab::mechanism::Datum* PROTOBUF_NONNULL _internal_mutable_datum();
+
+  public:
+  // .motionlab.mechanism.ElementId geometry_id = 4 [json_name = "geometryId"];
+  bool has_geometry_id() const;
+  void clear_geometry_id() ;
+  const ::motionlab::mechanism::ElementId& geometry_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_geometry_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_geometry_id();
+  void set_allocated_geometry_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_geometry_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_geometry_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_geometry_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_geometry_id();
 
   public:
   // uint32 face_index = 2 [json_name = "faceIndex"];
@@ -16371,8 +16387,8 @@ class CreateDatumFromFaceSuccess final : public ::google::protobuf::Message
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<2, 3,
-                                   1, 0,
+  static const ::google::protobuf::internal::TcParseTable<2, 4,
+                                   2, 0,
                                    2>
       _table_;
 
@@ -16394,6 +16410,7 @@ class CreateDatumFromFaceSuccess final : public ::google::protobuf::Message
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::motionlab::mechanism::Datum* PROTOBUF_NULLABLE datum_;
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE geometry_id_;
     ::uint32_t face_index_;
     int surface_class_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -28329,41 +28346,41 @@ inline void RenameDatumCommand::set_allocated_name(::std::string* PROTOBUF_NULLA
 
 // CreateDatumFromFaceCommand
 
-// .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
-inline bool CreateDatumFromFaceCommand::has_parent_body_id() const {
+// .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+inline bool CreateDatumFromFaceCommand::has_geometry_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
-  PROTOBUF_ASSUME(!value || _impl_.parent_body_id_ != nullptr);
+  PROTOBUF_ASSUME(!value || _impl_.geometry_id_ != nullptr);
   return value;
 }
-inline const ::motionlab::mechanism::ElementId& CreateDatumFromFaceCommand::_internal_parent_body_id() const {
+inline const ::motionlab::mechanism::ElementId& CreateDatumFromFaceCommand::_internal_geometry_id() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::motionlab::mechanism::ElementId* p = _impl_.parent_body_id_;
+  const ::motionlab::mechanism::ElementId* p = _impl_.geometry_id_;
   return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
 }
-inline const ::motionlab::mechanism::ElementId& CreateDatumFromFaceCommand::parent_body_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateDatumFromFaceCommand.parent_body_id)
-  return _internal_parent_body_id();
+inline const ::motionlab::mechanism::ElementId& CreateDatumFromFaceCommand::geometry_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateDatumFromFaceCommand.geometry_id)
+  return _internal_geometry_id();
 }
-inline void CreateDatumFromFaceCommand::unsafe_arena_set_allocated_parent_body_id(
+inline void CreateDatumFromFaceCommand::unsafe_arena_set_allocated_geometry_id(
     ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.parent_body_id_);
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.geometry_id_);
   }
-  _impl_.parent_body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  _impl_.geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
   if (value != nullptr) {
     SetHasBit(_impl_._has_bits_[0], 0x00000002U);
   } else {
     ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateDatumFromFaceCommand.parent_body_id)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateDatumFromFaceCommand.geometry_id)
 }
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE CreateDatumFromFaceCommand::release_parent_body_id() {
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE CreateDatumFromFaceCommand::release_geometry_id() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::motionlab::mechanism::ElementId* released = _impl_.parent_body_id_;
-  _impl_.parent_body_id_ = nullptr;
+  ::motionlab::mechanism::ElementId* released = _impl_.geometry_id_;
+  _impl_.geometry_id_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
     released = ::google::protobuf::internal::DuplicateIfNonNull(released);
@@ -28377,35 +28394,35 @@ inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE CreateDatumFromFaceC
   }
   return released;
 }
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE CreateDatumFromFaceCommand::unsafe_arena_release_parent_body_id() {
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE CreateDatumFromFaceCommand::unsafe_arena_release_geometry_id() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateDatumFromFaceCommand.parent_body_id)
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateDatumFromFaceCommand.geometry_id)
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::motionlab::mechanism::ElementId* temp = _impl_.parent_body_id_;
-  _impl_.parent_body_id_ = nullptr;
+  ::motionlab::mechanism::ElementId* temp = _impl_.geometry_id_;
+  _impl_.geometry_id_ = nullptr;
   return temp;
 }
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL CreateDatumFromFaceCommand::_internal_mutable_parent_body_id() {
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL CreateDatumFromFaceCommand::_internal_mutable_geometry_id() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.parent_body_id_ == nullptr) {
+  if (_impl_.geometry_id_ == nullptr) {
     auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
-    _impl_.parent_body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+    _impl_.geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
   }
-  return _impl_.parent_body_id_;
+  return _impl_.geometry_id_;
 }
-inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL CreateDatumFromFaceCommand::mutable_parent_body_id()
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL CreateDatumFromFaceCommand::mutable_geometry_id()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_parent_body_id();
-  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateDatumFromFaceCommand.parent_body_id)
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_geometry_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateDatumFromFaceCommand.geometry_id)
   return _msg;
 }
-inline void CreateDatumFromFaceCommand::set_allocated_parent_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+inline void CreateDatumFromFaceCommand::set_allocated_geometry_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.parent_body_id_);
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.geometry_id_);
   }
 
   if (value != nullptr) {
@@ -28418,8 +28435,8 @@ inline void CreateDatumFromFaceCommand::set_allocated_parent_body_id(::motionlab
     ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   }
 
-  _impl_.parent_body_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
-  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateDatumFromFaceCommand.parent_body_id)
+  _impl_.geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateDatumFromFaceCommand.geometry_id)
 }
 
 // uint32 face_index = 2 [json_name = "faceIndex"];
@@ -28614,7 +28631,7 @@ inline void CreateDatumFromFaceSuccess::clear_face_index() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.face_index_ = 0u;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000002U);
+                  0x00000004U);
 }
 inline ::uint32_t CreateDatumFromFaceSuccess::face_index() const {
   // @@protoc_insertion_point(field_get:motionlab.protocol.CreateDatumFromFaceSuccess.face_index)
@@ -28622,7 +28639,7 @@ inline ::uint32_t CreateDatumFromFaceSuccess::face_index() const {
 }
 inline void CreateDatumFromFaceSuccess::set_face_index(::uint32_t value) {
   _internal_set_face_index(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
   // @@protoc_insertion_point(field_set:motionlab.protocol.CreateDatumFromFaceSuccess.face_index)
 }
 inline ::uint32_t CreateDatumFromFaceSuccess::_internal_face_index() const {
@@ -28639,7 +28656,7 @@ inline void CreateDatumFromFaceSuccess::clear_surface_class() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.surface_class_ = 0;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000004U);
+                  0x00000008U);
 }
 inline ::motionlab::protocol::FaceSurfaceClass CreateDatumFromFaceSuccess::surface_class() const {
   // @@protoc_insertion_point(field_get:motionlab.protocol.CreateDatumFromFaceSuccess.surface_class)
@@ -28647,7 +28664,7 @@ inline ::motionlab::protocol::FaceSurfaceClass CreateDatumFromFaceSuccess::surfa
 }
 inline void CreateDatumFromFaceSuccess::set_surface_class(::motionlab::protocol::FaceSurfaceClass value) {
   _internal_set_surface_class(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   // @@protoc_insertion_point(field_set:motionlab.protocol.CreateDatumFromFaceSuccess.surface_class)
 }
 inline ::motionlab::protocol::FaceSurfaceClass CreateDatumFromFaceSuccess::_internal_surface_class() const {
@@ -28657,6 +28674,99 @@ inline ::motionlab::protocol::FaceSurfaceClass CreateDatumFromFaceSuccess::_inte
 inline void CreateDatumFromFaceSuccess::_internal_set_surface_class(::motionlab::protocol::FaceSurfaceClass value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.surface_class_ = value;
+}
+
+// .motionlab.mechanism.ElementId geometry_id = 4 [json_name = "geometryId"];
+inline bool CreateDatumFromFaceSuccess::has_geometry_id() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
+  PROTOBUF_ASSUME(!value || _impl_.geometry_id_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::ElementId& CreateDatumFromFaceSuccess::_internal_geometry_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::ElementId* p = _impl_.geometry_id_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& CreateDatumFromFaceSuccess::geometry_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateDatumFromFaceSuccess.geometry_id)
+  return _internal_geometry_id();
+}
+inline void CreateDatumFromFaceSuccess::unsafe_arena_set_allocated_geometry_id(
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.geometry_id_);
+  }
+  _impl_.geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateDatumFromFaceSuccess.geometry_id)
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE CreateDatumFromFaceSuccess::release_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::ElementId* released = _impl_.geometry_id_;
+  _impl_.geometry_id_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE CreateDatumFromFaceSuccess::unsafe_arena_release_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateDatumFromFaceSuccess.geometry_id)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::ElementId* temp = _impl_.geometry_id_;
+  _impl_.geometry_id_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL CreateDatumFromFaceSuccess::_internal_mutable_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.geometry_id_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+    _impl_.geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+  }
+  return _impl_.geometry_id_;
+}
+inline ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL CreateDatumFromFaceSuccess::mutable_geometry_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_geometry_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateDatumFromFaceSuccess.geometry_id)
+  return _msg;
+}
+inline void CreateDatumFromFaceSuccess::set_allocated_geometry_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.geometry_id_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+
+  _impl_.geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateDatumFromFaceSuccess.geometry_id)
 }
 
 // -------------------------------------------------------------------

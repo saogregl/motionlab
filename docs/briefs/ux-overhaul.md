@@ -1,0 +1,464 @@
+
+Below is a firm, implementation-oriented handoff for agents with codebase access.
+
+The direction is now clear:
+
+* **Viewport is the core**
+* **Panels are fixed-position but visually floating**
+* **Right panel is hidden by default and only appears contextually**
+* **Top bar is de-tooled**
+* **Build and Results are separate workspaces/routes**
+* **UI stays rounded, simple, modern, and calm**
+* **No dense ribbon CAD look**
+* **No deep layer stack**
+* **No noisy status language**
+
+I would split the work into **3 epics**.
+
+---
+
+# Shared design brief for all agents
+
+Before the epics, these are the non-negotiable visual and interaction principles extracted from the reference images you attached.
+
+## Visual language to copy
+
+From the attached examples, the target language is:
+
+* **Dark neutral floating cards**, not edge-docked sidebars
+* **Rounded corners** throughout
+  Starting point: panels `10–14px`, buttons/inputs `8–10px`
+* **Low-depth UI**
+  One base viewport layer, one panel layer, one transient menu/popover layer
+* **Subtle borders, subtle shadows**
+  Panels should feel separated, but not stacked like dashboard widgets
+* **Medium density, not high density**
+* **Simple collapsible sections inside cards**
+* **Search, hierarchy, properties, and menus all share one visual system**
+* **Primary actions are clear, sparse, and local**
+* **Empty space is acceptable**
+* **Blue active/selected state**, otherwise restrained color use
+* **Small colorful semantic icons are okay** when they help scanning
+* **No cornerless / ultra-hard industrial aesthetic**
+* **No over-communicated “dirty / pending / edited” states**
+
+## Layout behavior to copy
+
+From the reference images, the shell should behave like this:
+
+* The **viewport occupies the screen first**
+* Left structure panel is a **floating anchored card**
+* Right inspector is a **floating anchored card**
+* Right inspector is **hidden until selection**
+* Viewport tools live in a **small pill toolbar**
+* Menus and add flows are **panel-local**, not global-ribbon driven
+* Small widgets like camera preview or track/timeline panels can exist as **purposeful floating utilities**
+* Panels are **anchored/fixed**, not freeform windows
+* Results gets a **different page/route**, not a bloated single-screen compromise
+
+## Approximate visual targets from the images
+
+Use these only as starting points:
+
+* Side floating panels: `320–380px` wide
+* Edge offset from viewport/window: `12–16px`
+* Section spacing inside panels: `8–12px`
+* Header row height: `36–44px`
+* List row height: `34–40px`
+* Floating viewport toolbar height: `40–48px`
+* Search fields and inline numeric fields should feel like **soft capsules**, not spreadsheet cells
+
+## Shared non-goals
+
+Do **not** introduce:
+
+* a ribbon
+* a dense tool matrix
+* lots of new status chips
+* 4–5 depth layers
+* hard square corners everywhere
+* a “retro CAD” look
+* a fully freeform window manager
+* a second Electron window for results in this phase
+
+## Shared delivery rules
+
+Every agent should:
+
+* investigate the current code path first
+* work behind a feature flag
+* keep current domain logic intact
+* produce before/after screenshots
+* document the component map they found
+* identify reusable primitives instead of patching one-off CSS
+
+---
+
+# Epic 1 — Floating Workspace Shell
+
+## Mission
+
+Replace the current docked app-shell feel with a **fixed floating-panel shell** for the main build workspace.
+
+This epic is about the **layout system and component primitives**, not entity behavior.
+
+## Product intent
+
+MotionLab should stop reading like a standard Electron app with sidebars and start reading like a **viewport-first engineering workspace**.
+
+The panels are still present, but they visually sit **on top of the viewport**, not as permanent edge-bound chrome.
+
+## Investigation tasks
+
+The agent should first map the current shell:
+
+* Find the components responsible for:
+
+  * titlebar / top bar
+  * left structure panel
+  * right inspector
+  * bottom timeline / diagnostics panel
+  * status bar
+  * viewport wrapper / canvas container
+* Document:
+
+  * where panel sizing and docking is controlled
+  * where panel open/closed state is stored
+  * whether the layout is CSS grid / flex / split panes / custom docking
+  * where overlays can be mounted above the viewport
+  * whether current panels are route-specific or global
+* Produce a screenshot baseline for:
+
+  * default build state
+  * body selected
+  * joint selected
+  * study visible
+  * timeline open
+
+## Implementation scope
+
+Build a **new floating shell system** for the build workspace:
+
+### Required primitives
+
+* `FloatingPanel`
+* `FloatingPanelHeader`
+* `FloatingSection`
+* `FloatingToolbar`
+* `FloatingMenu`
+* `ViewportWidget`
+* `SearchField`
+* `PanelFooterAction`
+
+### Required layout behavior
+
+* left structure panel becomes a **floating fixed card**
+* right inspector becomes a **floating fixed card**
+* top bar loses its heavy “global tools” role
+* viewport tool controls move into **small floating pill toolbars**
+* bottom timeline should no longer read as a permanently docked slab in build mode
+
+### Interaction rules
+
+* panels are **anchored**, not draggable
+* only one primary panel layer plus one transient popover layer
+* avoid shadow stacking and nested card-on-card-on-card UI
+* menus should look like the same family as panels, not OS-native popups
+
+## Image-derived implementation cues
+
+The attached images strongly suggest these UI details:
+
+* floating cards should have **soft rounded edges**
+* sections inside the inspector should be visually grouped, but lightly
+* the hierarchy/search panel should feel calm and mostly monochrome
+* toolbar pills should be compact and purpose-specific
+* a floating utility widget like “Camera Preview” is acceptable if it is small and clearly scoped
+* large empty dark areas inside panels are okay; do not fill every space
+
+## Acceptance criteria
+
+* Build workspace renders with **floating anchored panels**, not docked split panes
+* The viewport visually dominates the screen
+* Left and right panels feel like cards above the viewport
+* Top chrome is materially reduced
+* There are no more than **3 visual depth levels**
+* The result does **not** look denser than today
+* The result does **not** use a hard square-corner CAD aesthetic
+
+## Out of scope
+
+* results route
+* entity-specific inspector behavior
+* second Electron window
+* major domain logic changes
+
+---
+
+# Epic 2 — Contextual Right Panel + Tool Relocation
+
+## Mission
+
+Make the **right panel hidden by default** and only appear when selection requires it.
+At the same time, move the main build actions out of the top bar and into:
+
+* titlebar right side for transport controls
+* structure panel “add” flows
+* viewport toolbars
+
+## Product intent
+
+The user should no longer feel like the top bar is the command center.
+The command center is now:
+
+* the viewport
+* the structure panel
+* the contextual inspector when needed
+
+## Investigation tasks
+
+The agent should map:
+
+* the current selection model
+* how the right inspector is triggered today
+* which entity types already have contextual inspector variants
+* which commands currently live in the top toolbar
+* which of those commands belong in:
+
+  * titlebar transport
+  * structure panel add menu
+  * viewport toolbar
+* where current command handlers / actions / shortcuts are registered
+* whether a command palette already exists and how it is wired
+
+## Implementation scope
+
+### A. Right panel behavior
+
+Change the default behavior so that:
+
+* on app open in build mode, the right inspector is **closed**
+* on empty selection, it stays closed
+* on selecting a relevant object/entity, it opens contextually
+* on deselection, it closes or returns to collapsed state
+* the panel is clearly secondary, not permanent chrome
+
+### B. Inspector behavior
+
+Keep the inspector contextual, but restyle it to match the floating system:
+
+* floating card
+* rounded sections
+* summary-first top area
+* collapsible groups
+* calm spacing
+* no excessive metadata/status badges
+
+The inspector should feel close to the property panels in your attached images:
+
+* transform grouped first
+* component blocks beneath
+* optional actions in section headers
+* footer action like “Add Component” is acceptable
+
+### C. Tool relocation
+
+Move the main tools as follows:
+
+#### Titlebar right side
+
+Put transport/simulation controls here:
+
+* Play
+* Stop
+* Step / Advance
+
+These should become compact titlebar actions, not central toolbar furniture.
+
+#### Structure panel
+
+Creation flows move here:
+
+* Create Body
+* Create Joint
+* Create Motor
+* other model-creation flows
+
+Use an **Add** button and local menus, similar to the “Add Component” and category/menu patterns visible in the attached images.
+
+#### Viewport toolbar
+
+Viewport-local tools move here:
+
+* select / manipulate / focus / duplicate / delete or equivalent core scene tools
+* keep the toolbar minimal, pill-shaped, and anchored near the viewport edge
+
+## Image-derived implementation cues
+
+The attached images give a strong pattern to follow:
+
+* add/create flow should be a **floating searchable menu**, not a modal-heavy wizard
+* row selection state can be a full-width blue highlight
+* local action menus can be tall, quiet, and category-separated
+* inspector top row can include icon + name field + small state/action controls
+* the viewport toolbar should be a short rounded black/charcoal pill with evenly spaced icons
+
+## Acceptance criteria
+
+* Right panel is hidden by default in build mode
+* Selecting an entity opens the contextual inspector
+* Deselecting returns the UI to a calm viewport-first state
+* Core build commands are removed from the main top bar
+* Play/Stop/Advance are accessible in the titlebar right side
+* Create Body / Joint / Motor are accessible from the structure panel add flow and/or viewport toolbar
+* The UI still works well with keyboard shortcuts and command palette
+* No new status noise is introduced
+
+## Out of scope
+
+* results route
+* detached results window
+* deep redesign of study settings unless needed for selection logic
+
+---
+
+# Epic 3 — Dedicated Results Route / Workspace
+
+## Mission
+
+Create a dedicated **Results page/route** so build and results stop competing inside the same screen.
+
+This epic is about **separating authoring from post-processing**.
+
+## Product intent
+
+Trying to make build, simulation, playback, plots, legends, and diagnostics coexist in one shell will damage both experiences.
+
+Results should become a dedicated workspace with its own layout language, while still using the same floating-panel system.
+
+## Investigation tasks
+
+The agent should map:
+
+* how studies are run today
+* where results data enters the UI
+* which current components are tied to:
+
+  * timeline/playback
+  * charts
+  * diagnostics
+  * legends
+  * probes / inspectors
+* whether results UI is globally mounted or route-specific
+* how current navigation could switch from build → results
+* what state must survive route transition:
+
+  * active study
+  * camera
+  * selected entity / result item
+  * playback time/frame
+* whether current architecture supports lazy-loading a results workspace
+
+## Implementation scope
+
+### A. Create a dedicated route
+
+Introduce a dedicated results route/workspace:
+
+* separate from build route
+* entered when opening or running a study
+* easy to exit back to build
+
+Do not solve this with a second Electron window in this phase.
+
+### B. Results-specific shell
+
+The results route should use the same floating-card language, but not the build layout.
+
+Suggested shell:
+
+* viewport still central
+* results widgets as floating/pinned cards
+* playback/timeline is allowed to be more visible here
+* chart/legend/probe widgets live here, not in build
+* right build inspector should not come back as the default layout crutch
+
+### C. Results widgets
+
+Create the first results primitives:
+
+* chart widget
+* legend widget
+* playback control widget
+* optional result tree / run selector card
+
+The design should lean closer to the Fluent idea:
+
+* contextual data around the viewport
+* view-first analysis
+* configurable widgets
+
+But keep it calmer and less cluttered than Fluent.
+
+## Image-derived implementation cues
+
+From the attached references and earlier discussion:
+
+* results wants **purposeful floating utilities**, not a permanent build-style property sidebar
+* timeline can be large here, but should feel like part of the results workspace, not a dead slab
+* a small number of visible widgets is enough for V1
+* results should look like a different task context, not the same screen with a chart bolted on
+
+## Acceptance criteria
+
+* Results has its own route/workspace
+* Build and Results no longer share the same shell
+* Running/opening a study can navigate into Results
+* Results can display viewport + playback + at least one chart/legend widget
+* The route transition preserves required study context
+* No second Electron window is introduced in this phase
+
+## Out of scope
+
+* multi-window results
+* full widget layout editor
+* deep solver/settings redesign
+* over-communicated solver state UX
+
+---
+
+# Recommended execution order
+
+Do these in this order:
+
+1. **Epic 1 — Floating Workspace Shell**
+2. **Epic 2 — Contextual Right Panel + Tool Relocation**
+3. **Epic 3 — Dedicated Results Route / Workspace**
+
+That order matters.
+You want the floating shell and tool ownership model in place before building the separate results workspace.
+
+---
+
+# Final instruction I would give all agents
+
+**Do not make MotionLab feel more like legacy CAD.
+Make it feel more focused, more spatial, and more modern.**
+
+That means:
+
+* fewer permanent edges
+* fewer always-visible tools
+* more local actions
+* more viewport ownership
+* simpler, rounded, calmer componentry
+* separate workspaces for separate jobs
+
+If you want, I can also turn this into a stricter engineering ticket format with:
+
+* implementation checklist
+* suggested component names
+* routing names
+* feature flags
+* rollout order
+* QA scenarios

@@ -32,6 +32,8 @@ import { VIEWPORT_PICK_LAYER, type SceneGraphManager } from './scene-graph-three
 export type InteractionMode = 'select' | 'create-datum' | 'create-joint' | 'create-load';
 
 export interface SpatialPickData {
+  bodyId: string;
+  geometryId?: string;
   worldPoint: { x: number; y: number; z: number };
   worldNormal: { x: number; y: number; z: number };
   bodyWorldMatrix: Float32Array;
@@ -47,7 +49,7 @@ export type PickCallback = (
 export type HoverCallback = (entityId: string | null) => void;
 
 export type FaceHoverCallback = (
-  face: { bodyId: string; faceIndex: number; previewType?: DatumPreviewType } | null,
+  face: { bodyId: string; geometryId?: string; faceIndex: number; previewType?: DatumPreviewType } | null,
 ) => void;
 
 // ---------------------------------------------------------------------------
@@ -98,6 +100,17 @@ function resolveEntityMesh(object: Object3D | null): Mesh | null {
       return cur;
     }
     // Also check children when starting from a Group
+    cur = cur.parent;
+  }
+  return null;
+}
+
+function resolveGeometryId(object: Object3D | null): string | null {
+  let cur = object;
+  while (cur) {
+    if (typeof cur.userData?.geometryId === 'string') {
+      return cur.userData.geometryId as string;
+    }
     cur = cur.parent;
   }
   return null;
@@ -170,7 +183,7 @@ export class PickingManager {
   private hoverRafPending = false;
   private hoverRafId: number | null = null;
   private lastHoverEntityId: string | null = null;
-  private lastHoverFace: { bodyId: string; faceIndex: number } | null = null;
+  private lastHoverFace: { bodyId: string; geometryId: string | null; faceIndex: number } | null = null;
   private lastPointerPos: { x: number; y: number } | null = null;
   private lastPreciseHoverAt = Number.NEGATIVE_INFINITY;
   private pointerDragSuppressed = false;
@@ -424,15 +437,9 @@ export class PickingManager {
   private buildSpatialPickData(hit: Intersection): SpatialPickData | undefined {
     if (!hit.face) return undefined;
 
-    const entityId = resolveEntityId(hit.object);
-    if (!entityId) return undefined;
-
-    // World-space hit point
-    const worldPoint = {
-      x: hit.point.x,
-      y: hit.point.y,
-      z: hit.point.z,
-    };
+    const bodyId = resolveEntityId(hit.object);
+    if (!bodyId) return undefined;
+    const geometryId = resolveGeometryId(hit.object) ?? undefined;
 
     // Face normal transformed to world space
     const worldNormal3 = faceNormalToWorld(
@@ -446,11 +453,9 @@ export class PickingManager {
     };
 
     // Body world matrix as Float32Array (column-major, 16 elements)
-    // Walk up to find the group with entityId (the body root node)
-    let bodyObject: Object3D = hit.object;
-    while (bodyObject.parent && !bodyObject.userData?.entityId) {
-      bodyObject = bodyObject.parent;
-    }
+    // Read from the body root node rather than the picked geometry child mesh.
+    const bodyEntity = this.sceneGraph.getEntity(bodyId);
+    const bodyObject: Object3D = bodyEntity?.rootNode ?? hit.object;
     bodyObject.updateMatrixWorld(true);
     const bodyWorldMatrix = new Float32Array(bodyObject.matrixWorld.elements);
 
@@ -458,7 +463,9 @@ export class PickingManager {
     let faceIndex: number | undefined;
     const triangleIndex = hit.faceIndex;
     if (triangleIndex !== undefined && triangleIndex !== null) {
-      const geoIndex = this.sceneGraph.getBodyGeometryIndex(entityId);
+      const geoIndex = geometryId
+        ? this.sceneGraph.getGeometryIndex(bodyId, geometryId)
+        : this.sceneGraph.getBodyGeometryIndex(bodyId);
       if (geoIndex) {
         const resolvedFaceIndex = geoIndex.getFaceFromTriangle(triangleIndex);
         faceIndex = resolvedFaceIndex >= 0 ? resolvedFaceIndex : undefined;
@@ -468,7 +475,21 @@ export class PickingManager {
       }
     }
 
+    // Use face centroid for deterministic positioning when available;
+    // fall back to raw hit point when no geometry index exists.
+    let worldPoint = { x: hit.point.x, y: hit.point.y, z: hit.point.z };
+    if (faceIndex !== undefined) {
+      const centroid = geometryId
+        ? this.sceneGraph.getFaceCentroidWorld(bodyId, geometryId, faceIndex)
+        : this.sceneGraph.getBodyFaceCentroidWorld(bodyId, faceIndex);
+      if (centroid) {
+        worldPoint = { x: centroid[0], y: centroid[1], z: centroid[2] };
+      }
+    }
+
     return {
+      bodyId,
+      geometryId,
       worldPoint,
       worldNormal,
       bodyWorldMatrix,
@@ -486,7 +507,7 @@ export class PickingManager {
 
     if (!hit) {
       this.updateEntityHover(null);
-      this.updateFaceHover(null, null, null);
+      this.updateFaceHover(null, null, null, null);
       return;
     }
 
@@ -497,7 +518,7 @@ export class PickingManager {
     if (this.interactionMode === 'create-datum') {
       this.updateFaceHoverFromHit(hit, entityId);
     } else {
-      this.updateFaceHover(null, null, null);
+      this.updateFaceHover(null, null, null, null);
     }
   }
 
@@ -516,17 +537,21 @@ export class PickingManager {
     entityId: string | null,
   ): void {
     if (!entityId || hit.faceIndex === undefined || hit.faceIndex === null) {
-      this.updateFaceHover(null, null, null);
+      this.updateFaceHover(null, null, null, null);
       return;
     }
 
+    const geometryId = resolveGeometryId(hit.object);
+
     // Resolve face index via geometry index
-    const geoIndex = this.sceneGraph.getBodyGeometryIndex(entityId);
+    const geoIndex = geometryId
+      ? this.sceneGraph.getGeometryIndex(entityId, geometryId)
+      : this.sceneGraph.getBodyGeometryIndex(entityId);
     let faceIndex: number;
     if (geoIndex) {
       faceIndex = geoIndex.getFaceFromTriangle(hit.faceIndex);
       if (faceIndex < 0) {
-        this.updateFaceHover(null, null, null);
+        this.updateFaceHover(null, null, null, null);
         return;
       }
     } else {
@@ -538,22 +563,30 @@ export class PickingManager {
     if (
       this.lastHoverFace &&
       this.lastHoverFace.bodyId === entityId &&
+      this.lastHoverFace.geometryId === (geometryId ?? null) &&
       this.lastHoverFace.faceIndex === faceIndex
     ) {
       return;
     }
 
     // Estimate surface type for this face
-    const facePreview = geoIndex
-      ? this.sceneGraph.getBodyFacePreview(entityId, faceIndex)
-      : null;
+    const facePreview = geoIndex && geometryId
+      ? this.sceneGraph.getGeometryFacePreview(entityId, geometryId, faceIndex)
+      : geoIndex
+        ? this.sceneGraph.getBodyFacePreview(entityId, faceIndex)
+        : null;
     const previewType = facePreview?.previewType;
 
     if (geoIndex && previewType) {
 
       // Update face highlight
       this.sceneGraph.clearAllFaceHighlights();
-      this.sceneGraph.highlightFace(entityId, faceIndex);
+      this.sceneGraph.highlightFace(entityId, geometryId ?? entityId, faceIndex);
+
+      // Look up face centroid in world space for deterministic positioning
+      const centroidWorld = geometryId
+        ? this.sceneGraph.getFaceCentroidWorld(entityId, geometryId, faceIndex)
+        : this.sceneGraph.getBodyFaceCentroidWorld(entityId, faceIndex);
 
       // Show datum preview
       this.updateDatumPreview(
@@ -561,27 +594,28 @@ export class PickingManager {
         entityId,
         previewType,
         facePreview.axisDirection,
+        centroidWorld,
       );
     }
 
-    this.updateFaceHover(entityId, faceIndex, previewType ?? null);
+    this.updateFaceHover(entityId, geometryId, faceIndex, previewType ?? null);
   }
 
   /**
-   * Compute and display a datum preview at the hover point.
+   * Compute and display a datum preview at the face centroid (or hit point fallback).
    */
   private updateDatumPreview(
     hit: Intersection,
     bodyId: string,
     previewType: DatumPreviewType,
     axisDirectionLocal: [number, number, number] | null,
+    centroidWorld: [number, number, number] | null,
   ): void {
-    // World-space position
-    const position: [number, number, number] = [
-      hit.point.x,
-      hit.point.y,
-      hit.point.z,
-    ];
+    // Use face centroid when available for deterministic positioning;
+    // fall back to hit point when no geometry index is available.
+    const position: [number, number, number] = centroidWorld
+      ? centroidWorld
+      : [hit.point.x, hit.point.y, hit.point.z];
 
     // Surface normal in world space
     let normal: [number, number, number] = [0, 1, 0];
@@ -618,16 +652,18 @@ export class PickingManager {
 
   private updateFaceHover(
     bodyId: string | null,
+    geometryId: string | null,
     faceIndex: number | null,
     previewType: DatumPreviewType | null,
   ): void {
     const prev = this.lastHoverFace;
     const next =
-      bodyId !== null && faceIndex !== null ? { bodyId, faceIndex } : null;
+      bodyId !== null && faceIndex !== null ? { bodyId, geometryId, faceIndex } : null;
 
     // No change
     if (
       prev?.bodyId === next?.bodyId &&
+      prev?.geometryId === next?.geometryId &&
       prev?.faceIndex === next?.faceIndex
     ) {
       return;
@@ -646,12 +682,14 @@ export class PickingManager {
       if (next && previewType !== null) {
         this.onFaceHoverChange({
           bodyId: next.bodyId,
+          geometryId: next.geometryId ?? undefined,
           faceIndex: next.faceIndex,
           previewType: previewType ?? undefined,
         });
       } else if (next) {
         this.onFaceHoverChange({
           bodyId: next.bodyId,
+          geometryId: next.geometryId ?? undefined,
           faceIndex: next.faceIndex,
         });
       } else {

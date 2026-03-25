@@ -41,7 +41,7 @@ function QuatDisplay({
     <div data-slot="quat-display" className={cn(className)}>
       {/* Header with toggle */}
       <div className="flex h-5 items-center px-1.5">
-        <span className="text-[length:var(--text-2xs)] font-semibold uppercase tracking-[0.05em] text-[var(--text-secondary)]">
+        <span className="text-[length:var(--text-2xs)] font-semibold text-[var(--text-secondary)]">
           {label}
         </span>
         <button

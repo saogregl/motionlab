@@ -1,9 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
-import { Line, MeshStandardMaterial, OrthographicCamera, Scene, Vector3 } from 'three';
+import { MeshStandardMaterial, OrthographicCamera, Scene, Vector3 } from 'three';
+import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 
 import { ENTITY_COLORS } from '../rendering/colors-three.js';
 import { createMaterialFactory } from '../rendering/materials-three.js';
 import { SceneGraphManager, VIEWPORT_PICK_LAYER } from '../scene-graph-three.js';
+import { createCylinderMeshDataWithTopology } from '../story-helpers.js';
 
 function makeManager(requestRender?: () => void) {
   const scene = new Scene();
@@ -69,6 +71,44 @@ describe('SceneGraphManager', () => {
     expect(manager.getBodyMeshNormals('body-1')).toEqual(makeBodyMesh().normals);
     expect(manager.getBodyGeometryIndex('body-1')).toBeTruthy();
     expect(manager.getBodyBvhState('body-1')).toBe('ready');
+
+    manager.dispose();
+    materialFactory.dispose();
+  });
+
+  it('renders multi-geometry bodies with per-geometry local poses', () => {
+    const { manager, materialFactory } = makeManager();
+
+    manager.upsertBody('body-1', 'Body 1', {
+      position: [1, 2, 3],
+      rotation: [0, 0, 0, 1],
+    });
+    manager.addBodyGeometry(
+      'body-1',
+      'geom-a',
+      'Geom A',
+      makeBodyMesh(),
+      { position: [0, 0, 0], rotation: [0, 0, 0, 1] },
+      new Uint32Array([1, 1]),
+    );
+    manager.addBodyGeometry(
+      'body-1',
+      'geom-b',
+      'Geom B',
+      makeBodyMesh(),
+      { position: [5, 0, 0], rotation: [0, 0, 0, 1] },
+      new Uint32Array([1, 1]),
+    );
+
+    const entity = manager.getEntity('body-1');
+    expect(entity?.meshes).toHaveLength(2);
+
+    const firstWorld = entity?.meshes[0].getWorldPosition(new Vector3());
+    const secondWorld = entity?.meshes[1].getWorldPosition(new Vector3());
+    expect(firstWorld?.toArray()).toEqual([1, 2, 3]);
+    expect(secondWorld?.toArray()).toEqual([6, 2, 3]);
+    expect(manager.getGeometryIndex('body-1', 'geom-a')).toBeTruthy();
+    expect(manager.getGeometryIndex('body-1', 'geom-b')).toBeTruthy();
 
     manager.dispose();
     materialFactory.dispose();
@@ -145,13 +185,52 @@ describe('SceneGraphManager', () => {
       new Uint32Array([1, 1]),
     );
 
-    manager.highlightFace('body-1', 0);
+    manager.highlightFace('body-1', 'body-1', 0);
     const entity = manager.getEntity('body-1');
     const colorAttr = entity?.meshes[0].geometry.getAttribute('color');
     expect(colorAttr?.getX(0)).not.toBeCloseTo(1);
 
     manager.clearFaceHighlight('body-1');
     expect(colorAttr?.getX(0)).toBeCloseTo(1);
+
+    manager.dispose();
+    materialFactory.dispose();
+  });
+
+  it('isolates face highlight to the picked geometry on multi-geometry bodies', () => {
+    const { manager, materialFactory } = makeManager();
+
+    manager.upsertBody('body-1', 'Body 1', {
+      position: [0, 0, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    manager.addBodyGeometry(
+      'body-1',
+      'geom-a',
+      'Geom A',
+      makeBodyMesh(),
+      { position: [0, 0, 0], rotation: [0, 0, 0, 1] },
+      new Uint32Array([1, 1]),
+    );
+    manager.addBodyGeometry(
+      'body-1',
+      'geom-b',
+      'Geom B',
+      makeBodyMesh(),
+      { position: [2, 0, 0], rotation: [0, 0, 0, 1] },
+      new Uint32Array([1, 1]),
+    );
+
+    manager.highlightFace('body-1', 'geom-b', 0);
+    const entity = manager.getEntity('body-1');
+    const colorA = entity?.meshes[0].geometry.getAttribute('color');
+    const colorB = entity?.meshes[1].geometry.getAttribute('color');
+
+    expect(colorA).toBeUndefined();
+    expect(colorB?.getX(0)).not.toBeCloseTo(1);
+
+    manager.clearFaceHighlight('body-1');
+    expect(colorB?.getX(0)).toBeCloseTo(1);
 
     manager.dispose();
     materialFactory.dispose();
@@ -328,13 +407,15 @@ describe('SceneGraphManager', () => {
     });
 
     const previewRoot = (manager as any).jointPreviewRoot;
-    const line = previewRoot.children[0];
-    const position = line.geometry.getAttribute('position');
+    const line = previewRoot.children[0] as Line2;
+    // Line2 stores segment pairs as instanceStart/instanceEnd
+    const instanceStart = line.geometry.getAttribute('instanceStart');
+    const instanceEnd = line.geometry.getAttribute('instanceEnd');
 
-    expect(position.getX(0)).toBeCloseTo(-1);
-    expect(position.getZ(0)).toBeCloseTo(1);
-    expect(position.getX(1)).toBeCloseTo(1);
-    expect(position.getZ(1)).toBeCloseTo(1);
+    expect(instanceStart.getX(0)).toBeCloseTo(-1);
+    expect(instanceStart.getZ(0)).toBeCloseTo(1);
+    expect(instanceEnd.getX(0)).toBeCloseTo(1);
+    expect(instanceEnd.getZ(0)).toBeCloseTo(1);
 
     manager.dispose();
     materialFactory.dispose();
@@ -467,11 +548,13 @@ describe('SceneGraphManager', () => {
 
     const load = manager.getEntity('load-1');
     expect(load).toBeTruthy();
-    const shaft = load?.rootNode.children[0];
-    expect(shaft).toBeInstanceOf(Line);
-    const positions = ((shaft as Line).geometry.getAttribute('position').array as Float32Array);
-    expect(positions[3]).toBeCloseTo(0, 5);
-    expect(positions[4]).toBeGreaterThan(0.9);
+    const shaft = load?.rootNode.children[0] as Line2;
+    expect(shaft).toBeInstanceOf(Line2);
+    // Line2 stores segment pairs as instanceStart/instanceEnd
+    const instanceEnd = shaft.geometry.getAttribute('instanceEnd');
+    // The end point (second point) of the shaft line:
+    expect(instanceEnd.getX(0)).toBeCloseTo(0, 5);
+    expect(instanceEnd.getY(0)).toBeGreaterThan(0.9);
 
     manager.dispose();
     materialFactory.dispose();
@@ -512,6 +595,63 @@ describe('SceneGraphManager', () => {
     });
 
     expect(manager.getEntity('load-1')?.rootNode.children).toHaveLength(2);
+
+    manager.dispose();
+    materialFactory.dispose();
+  });
+
+  it('computes planar face centroid in world space', () => {
+    const { manager, materialFactory } = makeManager();
+
+    manager.addBody(
+      'body-1',
+      'Body 1',
+      makeBodyMesh(),
+      { position: [2, 0, 0], rotation: [0, 0, 0, 1] },
+      new Uint32Array([1, 1]),
+    );
+
+    // Face 0 has triangle 0: vertices 0,1,2 = (0,0,0), (1,0,0), (0,1,0)
+    // Centroid in local space = (1/3, 1/3, 0)
+    // Centroid in world space = (2 + 1/3, 1/3, 0)
+    const centroid = manager.getBodyFaceCentroidWorld('body-1', 0);
+    expect(centroid).toBeTruthy();
+    expect(centroid![0]).toBeCloseTo(2 + 1 / 3, 4);
+    expect(centroid![1]).toBeCloseTo(1 / 3, 4);
+    expect(centroid![2]).toBeCloseTo(0, 4);
+
+    manager.dispose();
+    materialFactory.dispose();
+  });
+
+  it('computes cylindrical face axis center via circle fit', () => {
+    const { manager, materialFactory } = makeManager();
+
+    // Build a cylinder: radius=0.6, height=2, 48 segments
+    // partIndex: [96 (side), 48 (top cap), 48 (bottom cap)]
+    const cyl = createCylinderMeshDataWithTopology(0.6, 0.6, 2, 48);
+
+    // Place the cylinder at [3, 1, 0] so the axis center is at world (3, 1, 0)
+    manager.addBody('cyl', 'Cylinder', cyl, {
+      position: [3, 1, 0],
+      rotation: [0, 0, 0, 1],
+    }, cyl.partIndex);
+
+    // Face 0 = side face (cylindrical). The axis center in local space should
+    // be at (0, 0, 0) — the center of the cylinder. In world space: (3, 1, 0).
+    const centroid = manager.getBodyFaceCentroidWorld('cyl', 0);
+    expect(centroid).toBeTruthy();
+    expect(centroid![0]).toBeCloseTo(3, 2);
+    expect(centroid![1]).toBeCloseTo(1, 2);
+    expect(centroid![2]).toBeCloseTo(0, 2);
+
+    // Face 1 = top cap (planar). Centroid should be near the cap center: (0, 1, 0) local.
+    // In world space: (3, 2, 0). Tolerance 1 for small tessellation-seam bias.
+    const topCap = manager.getBodyFaceCentroidWorld('cyl', 1);
+    expect(topCap).toBeTruthy();
+    expect(topCap![0]).toBeCloseTo(3, 1);
+    expect(topCap![1]).toBeCloseTo(2, 1);
+    expect(topCap![2]).toBeCloseTo(0, 1);
 
     manager.dispose();
     materialFactory.dispose();

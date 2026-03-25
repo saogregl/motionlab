@@ -42,7 +42,7 @@ export const BodyInspector: Story = {
             <input
               type="text"
               defaultValue="Crankshaft"
-              className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
+              className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
             />
           </PropertyRow>
           <PropertyRow label="Visible">
@@ -57,42 +57,42 @@ export const BodyInspector: Story = {
             <input
               type="number"
               defaultValue="0.000"
-              className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+              className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
             />
           </PropertyRow>
           <PropertyRow label="Position Y" unit="mm" numeric showReset onReset={() => {}}>
             <input
               type="number"
               defaultValue="0.000"
-              className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+              className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
             />
           </PropertyRow>
           <PropertyRow label="Position Z" unit="mm" numeric showReset onReset={() => {}}>
             <input
               type="number"
               defaultValue="0.000"
-              className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+              className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
             />
           </PropertyRow>
           <PropertyRow label="Rotation X" unit="deg" numeric>
             <input
               type="number"
               defaultValue="0.000"
-              className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+              className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
             />
           </PropertyRow>
           <PropertyRow label="Rotation Y" unit="deg" numeric>
             <input
               type="number"
               defaultValue="0.000"
-              className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+              className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
             />
           </PropertyRow>
           <PropertyRow label="Rotation Z" unit="deg" numeric>
             <input
               type="number"
               defaultValue="0.000"
-              className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+              className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
             />
           </PropertyRow>
         </InspectorSection>
@@ -114,7 +114,7 @@ export const BodyInspector: Story = {
             </span>
           </PropertyRow>
           <PropertyRow label="Material">
-            <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
+            <select className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
               <option>Steel (AISI 1045)</option>
               <option>Aluminum (6061-T6)</option>
             </select>

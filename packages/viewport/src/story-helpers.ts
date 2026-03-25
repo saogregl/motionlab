@@ -5,7 +5,15 @@
  * scene-graph.stories.tsx to avoid duplication across story files.
  */
 
-import type { CameraPreset } from './scene-graph-three.js';
+import type { CameraPreset, MeshDataInput } from './scene-graph-three.js';
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export interface MeshDataWithTopology extends MeshDataInput {
+  readonly partIndex: Uint32Array;
+}
 
 // ---------------------------------------------------------------------------
 // Mesh helpers
@@ -56,6 +64,16 @@ export function createBoxMeshData(sx = 1, sy = 1, sz = 1) {
 }
 
 /**
+ * Box with B-Rep face topology: 6 faces, 2 triangles each.
+ * Face order: front, back, top, bottom, right, left.
+ */
+export function createBoxMeshDataWithTopology(sx = 1, sy = 1, sz = 1): MeshDataWithTopology {
+  const base = createBoxMeshData(sx, sy, sz);
+  // 6 faces, each face is a quad = 2 triangles
+  return { ...base, partIndex: new Uint32Array([2, 2, 2, 2, 2, 2]) };
+}
+
+/**
  * Generate a UV sphere mesh.
  */
 export function createSphereMeshData(radius = 1, segments = 48, rings = 32) {
@@ -93,6 +111,19 @@ export function createSphereMeshData(radius = 1, segments = 48, rings = 32) {
     indices: new Uint32Array(indices),
     normals: new Float32Array(normals),
   };
+}
+
+/**
+ * Sphere with B-Rep face topology: 1 face (entire surface).
+ */
+export function createSphereMeshDataWithTopology(
+  radius = 1,
+  segments = 48,
+  rings = 32,
+): MeshDataWithTopology {
+  const base = createSphereMeshData(radius, segments, rings);
+  const totalTriangles = base.indices.length / 3;
+  return { ...base, partIndex: new Uint32Array([totalTriangles]) };
 }
 
 /**
@@ -161,6 +192,23 @@ export function createCylinderMeshData(radiusTop = 0.5, radiusBottom = 0.5, heig
 }
 
 /**
+ * Cylinder with B-Rep face topology: 3 faces (side, top cap, bottom cap).
+ */
+export function createCylinderMeshDataWithTopology(
+  radiusTop = 0.5,
+  radiusBottom = 0.5,
+  height = 2,
+  segments = 48,
+): MeshDataWithTopology {
+  const base = createCylinderMeshData(radiusTop, radiusBottom, height, segments);
+  // Side: segments * 2 triangles, top cap: segments, bottom cap: segments
+  return {
+    ...base,
+    partIndex: new Uint32Array([segments * 2, segments, segments]),
+  };
+}
+
+/**
  * Generate a torus mesh.
  */
 export function createTorusMeshData(
@@ -210,6 +258,20 @@ export function createTorusMeshData(
     indices: new Uint32Array(indices),
     normals: new Float32Array(normals),
   };
+}
+
+/**
+ * Torus with B-Rep face topology: 1 face (entire surface).
+ */
+export function createTorusMeshDataWithTopology(
+  majorRadius = 1,
+  minorRadius = 0.3,
+  majorSegments = 48,
+  minorSegments = 24,
+): MeshDataWithTopology {
+  const base = createTorusMeshData(majorRadius, minorRadius, majorSegments, minorSegments);
+  const totalTriangles = base.indices.length / 3;
+  return { ...base, partIndex: new Uint32Array([totalTriangles]) };
 }
 
 // ---------------------------------------------------------------------------

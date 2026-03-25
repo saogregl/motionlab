@@ -111,11 +111,11 @@ function FloatingToolCard({
       ref={cardRef}
       data-slot="floating-tool-card"
       className={cn(
-        'absolute w-[240px] max-w-[300px]',
+        'absolute min-w-[240px] w-[260px] max-w-[300px]',
         'bg-[var(--layer-elevated)] border border-[var(--border-default)] border-t-2 border-t-[var(--accent-primary)]',
-        'rounded-[var(--radius-sm)] shadow-[var(--shadow-overlay)]',
+        'rounded-[var(--radius-sm)] shadow-[var(--shadow-medium)]',
         'z-[var(--z-floating)]',
-        'animate-in fade-in-0 slide-in-from-bottom-1 duration-[var(--duration-normal)]',
+        'animate-in fade-in-0 duration-[var(--duration-fast)]',
         className,
       )}
       style={{ left: position.x, top: position.y }}
@@ -125,8 +125,8 @@ function FloatingToolCard({
         data-slot="floating-tool-card-header"
         role="toolbar"
         className={cn(
-          'flex h-6 items-center gap-1.5 ps-2 pe-1',
-          'border-b border-[var(--border-subtle)]',
+          'flex h-7 items-center gap-1.5 ps-2 pe-1',
+          'bg-[var(--layer-recessed)] border-b border-[var(--border-subtle)]',
           isDragging ? 'cursor-grabbing' : 'cursor-grab',
         )}
         onMouseDown={handleMouseDown}
@@ -142,7 +142,7 @@ function FloatingToolCard({
             {icon}
           </span>
         )}
-        <span className="min-w-0 flex-1 truncate text-[length:var(--text-xs)] font-semibold text-[var(--text-primary)]">
+        <span className="min-w-0 flex-1 truncate text-[length:var(--text-sm)] font-semibold text-[var(--text-primary)]">
           {title}
         </span>
         {onClose && (
@@ -156,6 +156,7 @@ function FloatingToolCard({
       {children && (
         <div
           data-slot="floating-tool-card-body"
+          className="py-0.5"
           style={{ '--inspector-label-w': '70px' } as CSSProperties}
         >
           {children}

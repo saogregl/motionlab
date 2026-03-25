@@ -30,7 +30,9 @@ export const FORCE_ARROW = new Color(0.9, 0.15, 0.15); // crimson
 export const TORQUE_ARROW = new Color(0.15, 0.35, 0.9); // blue
 
 // ── Entity type selection colors (Epic 11, ADR-0014) ──
-export const ENTITY_BODY = new Color(0.29, 0.565, 0.851); // steel blue
+// Use hex strings (sRGB) — new Color(r, g, b) floats are treated as linear by
+// Three.js and would render far too bright for these intended sRGB values.
+export const ENTITY_BODY = new Color('#4A90D9'); // steel blue — matches SolidWorks selection tone
 export const ENTITY_DATUM = new Color(0.314, 0.784, 0.471); // emerald green
 export const ENTITY_JOINT = new Color(1.0, 0.549, 0.0); // dark orange
 export const ENTITY_LOAD = new Color(0.863, 0.078, 0.235); // crimson

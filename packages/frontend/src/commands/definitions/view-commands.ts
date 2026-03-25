@@ -4,9 +4,12 @@ import {
   EyeOff,
   Fullscreen,
   Grid3x3,
+  Hammer,
   Maximize,
   MousePointer2,
   Move,
+  PanelLeft,
+  PanelRight,
   RotateCw,
   Square,
   X,
@@ -132,6 +135,7 @@ export function createViewCommands(): CommandDef[] {
       icon: Move,
       category: 'view',
       shortcut: 'W',
+      enabled: () => useUILayoutStore.getState().activeWorkspace === 'build',
       execute: () => useToolModeStore.getState().setGizmoMode('translate'),
     },
     {
@@ -140,6 +144,7 @@ export function createViewCommands(): CommandDef[] {
       icon: RotateCw,
       category: 'view',
       shortcut: 'E',
+      enabled: () => useUILayoutStore.getState().activeWorkspace === 'build',
       execute: () => useToolModeStore.getState().setGizmoMode('rotate'),
     },
     {
@@ -170,6 +175,48 @@ export function createViewCommands(): CommandDef[] {
       category: 'view',
       shortcut: 'Ctrl+Shift+C',
       execute: () => useUILayoutStore.getState().toggleChartPanel(),
+    },
+    {
+      id: 'view.toggle-left-panel',
+      label: 'Toggle Left Panel',
+      icon: PanelLeft,
+      category: 'view',
+      shortcut: '[',
+      execute: () => {
+        const store = useUILayoutStore.getState();
+        if (store.activeWorkspace === 'results') {
+          store.toggleResultsLeftPanel();
+        } else {
+          store.toggleLeftPanel();
+        }
+      },
+    },
+    {
+      id: 'view.toggle-right-panel',
+      label: 'Toggle Right Panel',
+      icon: PanelRight,
+      category: 'view',
+      shortcut: ']',
+      enabled: () => useUILayoutStore.getState().activeWorkspace === 'build',
+      execute: () => {
+        useUILayoutStore.getState().toggleRightPanel();
+      },
+    },
+    {
+      id: 'view.workspace-build',
+      label: 'Switch to Build',
+      icon: Hammer,
+      category: 'view',
+      shortcut: 'Ctrl+1',
+      execute: () => useUILayoutStore.getState().setActiveWorkspace('build'),
+    },
+    {
+      id: 'view.workspace-results',
+      label: 'Switch to Results',
+      icon: BarChart2,
+      category: 'view',
+      shortcut: 'Ctrl+2',
+      execute: () => useUILayoutStore.getState().setActiveWorkspace('results'),
     },
   ];
 }

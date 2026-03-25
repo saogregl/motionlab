@@ -50,7 +50,7 @@ function PropertyRow({
       <span
         data-slot="property-row-label"
         className={cn(
-          'flex items-center gap-1 truncate text-[length:var(--text-xs)] text-[var(--text-tertiary)]',
+          'flex items-center gap-1 truncate text-[length:var(--text-xs)] font-medium text-[var(--text-secondary)]',
           labelClassName,
         )}
         style={{ minWidth: 'var(--inspector-label-w)' }}
@@ -60,7 +60,7 @@ function PropertyRow({
       </span>
 
       {/* Value slot */}
-      <div data-slot="property-row-value" className="min-w-0 text-[length:var(--text-xs)] text-[var(--text-primary)]">
+      <div data-slot="property-row-value" className="min-w-0 truncate text-[length:var(--text-xs)] text-[var(--text-primary)]">
         {children}
       </div>
 

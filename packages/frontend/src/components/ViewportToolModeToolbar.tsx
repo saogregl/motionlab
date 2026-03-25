@@ -1,5 +1,5 @@
 import { ToolbarButton } from '@motionlab/ui';
-import { Crosshair, Link2, MousePointer2 } from 'lucide-react';
+import { Crosshair, Link2, MousePointer2, Move, RotateCw, X } from 'lucide-react';
 
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
@@ -8,14 +8,18 @@ import { useToolModeStore } from '../stores/tool-mode.js';
 
 export function ViewportToolModeToolbar() {
   const activeMode = useToolModeStore((s) => s.activeMode);
+  const gizmoMode = useToolModeStore((s) => s.gizmoMode);
   const setMode = useToolModeStore((s) => s.setMode);
+  const setGizmoMode = useToolModeStore((s) => s.setGizmoMode);
   const simState = useSimulationStore((s) => s.state);
   const isSimulating = simState === 'running' || simState === 'paused';
 
   return (
-    <div className="flex flex-col gap-0.5 rounded-md bg-background/80 p-0.5 backdrop-blur-sm">
+    <div className="flex flex-col gap-0.5 rounded-[var(--panel-radius)] border border-[var(--border-default)] bg-layer-base p-0.5">
+      {/* Tool modes */}
       <ToolbarButton
-        tooltip="Select (V)"
+        tooltip="Select"
+        shortcut="V"
         active={activeMode === 'select'}
         onClick={() => {
           setMode('select');
@@ -26,7 +30,8 @@ export function ViewportToolModeToolbar() {
         <MousePointer2 className="size-4" />
       </ToolbarButton>
       <ToolbarButton
-        tooltip="Create Datum (D)"
+        tooltip="Create Datum"
+        shortcut="D"
         active={activeMode === 'create-datum'}
         disabled={isSimulating}
         onClick={() => setMode('create-datum')}
@@ -34,7 +39,8 @@ export function ViewportToolModeToolbar() {
         <Crosshair className="size-4" />
       </ToolbarButton>
       <ToolbarButton
-        tooltip="Create Joint (J)"
+        tooltip="Create Joint"
+        shortcut="J"
         active={activeMode === 'create-joint'}
         disabled={isSimulating}
         onClick={() => {
@@ -45,6 +51,35 @@ export function ViewportToolModeToolbar() {
         }}
       >
         <Link2 className="size-4" />
+      </ToolbarButton>
+
+      {/* Separator */}
+      <div className="mx-0.5 h-px bg-[var(--border-default)]" />
+
+      {/* Gizmo modes */}
+      <ToolbarButton
+        tooltip="Translate"
+        shortcut="W"
+        active={gizmoMode === 'translate'}
+        onClick={() => setGizmoMode('translate')}
+      >
+        <Move className="size-4" />
+      </ToolbarButton>
+      <ToolbarButton
+        tooltip="Rotate"
+        shortcut="E"
+        active={gizmoMode === 'rotate'}
+        onClick={() => setGizmoMode('rotate')}
+      >
+        <RotateCw className="size-4" />
+      </ToolbarButton>
+      <ToolbarButton
+        tooltip="Gizmo Off"
+        shortcut="Q"
+        active={gizmoMode === 'off'}
+        onClick={() => setGizmoMode('off')}
+      >
+        <X className="size-4" />
       </ToolbarButton>
     </div>
   );

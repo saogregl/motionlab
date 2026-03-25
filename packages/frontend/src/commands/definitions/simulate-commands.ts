@@ -9,6 +9,7 @@ import {
 import { useDialogStore } from '../../stores/dialogs.js';
 import { useEngineConnection } from '../../stores/engine-connection.js';
 import { useSimulationStore } from '../../stores/simulation.js';
+import { useUILayoutStore } from '../../stores/ui-layout.js';
 import type { CommandDef } from '../types.js';
 
 export function createSimulateCommands(): CommandDef[] {
@@ -25,7 +26,9 @@ export function createSimulateCommands(): CommandDef[] {
         const s = useSimulationStore.getState().state;
         return isEngineReady() && (s === 'idle' || s === 'paused' || s === 'error');
       },
-      execute: () => sendCompileAndPlay(),
+      execute: () => {
+        sendCompileAndPlay();
+      },
     },
     {
       id: 'sim.pause',
@@ -58,7 +61,10 @@ export function createSimulateCommands(): CommandDef[] {
         const s = useSimulationStore.getState().state;
         return isEngineReady() && (s === 'running' || s === 'paused' || s === 'error');
       },
-      execute: () => sendSimulationControl(SimulationAction.RESET),
+      execute: () => {
+        sendSimulationControl(SimulationAction.RESET);
+        useUILayoutStore.getState().setActiveWorkspace('build');
+      },
     },
     {
       id: 'sim.settings',

@@ -405,9 +405,12 @@ struct TransportServer::Impl {
             status->set_state(protocol::EngineStatus::STATE_READY);
             send_event(ws, status_event);
         } else {
-            spdlog::warn("Handshake rejected: token_match={} proto_match={}",
+            spdlog::warn("Handshake rejected: token_match={} name_match={} version_match={} (client_v={} engine_v={})",
                          hs.session_token() == session_token,
-                         hs.protocol().name() == PROTOCOL_NAME);
+                         hs.protocol().name() == PROTOCOL_NAME,
+                         hs.protocol().version() == PROTOCOL_VERSION,
+                         hs.protocol().version(),
+                         PROTOCOL_VERSION);
             ws.close(4002, "Incompatible handshake");
         }
     }
@@ -490,51 +493,48 @@ struct TransportServer::Impl {
 
     void handle_create_datum_from_face(ix::WebSocket& ws, uint64_t sequence_id,
                                        const protocol::CreateDatumFromFaceCommand& cmd) {
-        const std::string body_id = cmd.has_parent_body_id() ? cmd.parent_body_id().id() : "";
-        if (!import_project.ensure_body_shape_loaded(body_id)) {
-            protocol::Event event;
-            event.set_sequence_id(sequence_id);
-            auto* result = event.mutable_create_datum_from_face_result();
-            result->set_error_message("Face-aware datum creation unavailable for body: " + body_id);
-            send_event(ws, event);
-            return;
-        }
-        // Resolve body_id -> geometry_id for shape lookup
-        const TopoDS_Shape* shape = nullptr;
-        auto body_geoms = mechanism_state.get_body_geometries(body_id);
-        for (const auto* geom : body_geoms) {
-            shape = shape_registry.get(geom->id().id());
-            if (shape) break;
-        }
-        // Fallback: legacy shape stored by body_id
-        if (!shape) {
-            shape = shape_registry.get(body_id);
-        }
+        const std::string geometry_id = cmd.has_geometry_id() ? cmd.geometry_id().id() : "";
 
         protocol::Event event;
         event.set_sequence_id(sequence_id);
         auto* result = event.mutable_create_datum_from_face_result();
 
-        if (!mechanism_state.has_body(body_id)) {
-            result->set_error_message("Parent body not found: " + body_id);
+        const auto* geometry = mechanism_state.get_geometry(geometry_id);
+        if (!geometry) {
+            result->set_error_message("Geometry not found: " + geometry_id);
             send_event(ws, event);
             return;
         }
 
+        const std::string body_id = geometry->parent_body_id().id();
+        if (!mechanism_state.has_body(body_id)) {
+            result->set_error_message("Parent body not found for geometry: " + geometry_id);
+            send_event(ws, event);
+            return;
+        }
+
+        if (!import_project.ensure_geometry_shape_loaded(geometry_id)) {
+            result->set_error_message("Face-aware datum creation unavailable for geometry: " + geometry_id);
+            send_event(ws, event);
+            return;
+        }
+
+        const TopoDS_Shape* shape = shape_registry.get(geometry_id);
+
         if (!shape) {
-            result->set_error_message("Face-aware datum creation unavailable for body: " + body_id);
+            result->set_error_message("Face-aware datum creation unavailable for geometry: " + geometry_id);
             send_event(ws, event);
             return;
         }
 
         auto face_pose = engine::classify_face_for_datum(*shape, cmd.face_index());
         if (!face_pose.has_value()) {
-            result->set_error_message("Face index out of range for body: " + body_id);
+            result->set_error_message("Face index out of range for geometry: " + geometry_id);
             send_event(ws, event);
             return;
         }
 
-        const double length_scale = import_project.body_length_scale(body_id);
+        const double length_scale = import_project.geometry_length_scale(geometry_id);
         for (double& component : face_pose->position) {
             component *= length_scale;
         }
@@ -550,6 +550,7 @@ struct TransportServer::Impl {
         populate_proto_datum(success->mutable_datum(), datum.value());
         success->set_face_index(cmd.face_index());
         success->set_surface_class(to_proto_surface_class(face_pose->surface_class));
+        success->mutable_geometry_id()->set_id(geometry_id);
         send_event(ws, event);
     }
 

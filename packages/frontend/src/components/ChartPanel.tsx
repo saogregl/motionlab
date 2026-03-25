@@ -5,11 +5,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import uPlot from 'uplot';
 import 'uplot/dist/uPlot.min.css';
 import { sendScrub, sendSimulationControl } from '../engine/connection.js';
+import { useChartThemeKey } from '../hooks/useChartTheme.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { type StoreSample, useTraceStore } from '../stores/traces.js';
-import { computeAxisLayout } from '../utils/chart-axis-assignment.js';
+import { type AxisTheme, computeAxisLayout } from '../utils/chart-axis-assignment.js';
 
 // ---------------------------------------------------------------------------
 // Theme-aware chart colors (read from CSS custom properties)
@@ -24,6 +25,12 @@ const CHART_SERIES_TOKENS = [
   '--chart-series-6',
   '--chart-series-7',
   '--chart-series-8',
+  '--chart-series-9',
+  '--chart-series-10',
+  '--chart-series-11',
+  '--chart-series-12',
+  '--chart-series-13',
+  '--chart-series-14',
 ] as const;
 
 function readChartColors(): string[] {
@@ -36,6 +43,14 @@ function readChartScrubColor(): string {
     getComputedStyle(document.documentElement).getPropertyValue('--chart-scrub').trim() ||
     'rgba(255,255,255,0.6)'
   );
+}
+
+function readAxisTheme(): AxisTheme {
+  const style = getComputedStyle(document.documentElement);
+  return {
+    axisText: style.getPropertyValue('--chart-axis-text').trim() || '#525252',
+    grid: style.getPropertyValue('--chart-grid').trim() || '#e0e0e0',
+  };
 }
 
 /** Exported for ChannelBrowser color-swatch matching. */
@@ -120,8 +135,9 @@ function buildOpts(
   colors: string[],
   scrubColor: string,
   zoomedRef: React.RefObject<boolean>,
+  axisTheme: AxisTheme,
 ): uPlot.Options {
-  const layout = computeAxisLayout(activeIds, channelMap);
+  const layout = computeAxisLayout(activeIds, channelMap, axisTheme);
 
   const seriesOpts: uPlot.Series[] = [
     { label: 'Time (s)' },
@@ -188,6 +204,7 @@ function buildOpts(
         },
       ],
     },
+    legend: { show: false },
     plugins: [scrubMarkerPlugin(() => useSimulationStore.getState().simTime, scrubColor)],
   };
 }
@@ -203,6 +220,7 @@ export function ChartPanel() {
   const activeIdsRef = useRef<string[]>([]);
   const chartColorsRef = useRef<string[]>(readChartColors());
   const zoomedRef = useRef(false);
+  const themeKey = useChartThemeKey();
 
   const activeChannels = useTraceStore((s) => s.activeChannels);
   const channels = useTraceStore((s) => s.channels);
@@ -277,18 +295,21 @@ export function ChartPanel() {
 
     const rect = container.getBoundingClientRect();
     const width = Math.max(rect.width, 100);
-    const height = Math.max(rect.height - 40, 60); // leave room for legend
+    const height = Math.max(rect.height, 60);
 
     const colors = readChartColors();
     chartColorsRef.current = colors;
     const scrubColor = readChartScrubColor();
-    const opts = buildOpts(width, height, activeIds, channels, colors, scrubColor, zoomedRef);
+    const axisTheme = readAxisTheme();
+    const opts = buildOpts(width, height, activeIds, channels, colors, scrubColor, zoomedRef, axisTheme);
     const data = buildAlignedData(activeIds, useTraceStore.getState().traces);
 
     const uplot = new uPlot(opts, data, container);
     uplotRef.current = uplot;
 
     // Imperative data pump — subscribe to trace store outside React
+    let lastLegendUpdate = 0;
+    const LEGEND_INTERVAL = 200; // update legend text at ~5fps (imperceptible above this)
     const unsub = useTraceStore.subscribe((state) => {
       if (rafRef.current) return; // already scheduled
       rafRef.current = requestAnimationFrame(() => {
@@ -298,15 +319,19 @@ export function ChartPanel() {
         // When zoomed, preserve user's zoom range; otherwise auto-scale
         uplotRef.current.setData(aligned, !zoomedRef.current);
 
-        // Update latest values for legend (throttled by RAF)
-        const vals = new Map<string, number>();
-        for (const id of activeIdsRef.current) {
-          const samples = state.traces.get(id);
-          if (samples && samples.length > 0) {
-            vals.set(id, samples[samples.length - 1].value);
+        // Throttle legend React re-renders to ~5fps
+        const now = performance.now();
+        if (now - lastLegendUpdate >= LEGEND_INTERVAL) {
+          lastLegendUpdate = now;
+          const vals = new Map<string, number>();
+          for (const id of activeIdsRef.current) {
+            const samples = state.traces.get(id);
+            if (samples && samples.length > 0) {
+              vals.set(id, samples[samples.length - 1].value);
+            }
           }
+          setLatestValues(vals);
         }
-        setLatestValues(vals);
       });
     });
 
@@ -314,7 +339,7 @@ export function ChartPanel() {
     const ro = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const w = Math.max(entry.contentRect.width, 100);
-        const h = Math.max(entry.contentRect.height - 40, 60);
+        const h = Math.max(entry.contentRect.height, 60);
         uplotRef.current?.setSize({ width: w, height: h });
       }
     });
@@ -330,9 +355,9 @@ export function ChartPanel() {
         uplotRef.current = null;
       }
     };
-    // Recreate when active channel set changes
+    // Recreate when active channel set changes or theme switches
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIds, channels]);
+  }, [activeIds, channels, themeKey]);
 
   // Redraw chart on simTime changes (scrub marker) when no new data arrives
   const _simTime = useSimulationStore((s) => s.simTime);

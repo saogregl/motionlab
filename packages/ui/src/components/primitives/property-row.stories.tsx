@@ -21,7 +21,7 @@ export const TextInput: Story = {
         <input
           type="text"
           defaultValue="Crank Arm"
-          className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
+          className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
         />
       </PropertyRow>
     </div>
@@ -36,7 +36,7 @@ export const NumberWithUnit: Story = {
           type="number"
           defaultValue="12.450"
           step="0.001"
-          className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+          className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
         />
       </PropertyRow>
     </div>
@@ -47,7 +47,7 @@ export const SelectDropdown: Story = {
   render: () => (
     <div className="w-[320px] bg-[var(--layer-base)] p-1">
       <PropertyRow label="Material">
-        <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]">
+        <select className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]">
           <option>Steel (AISI 1045)</option>
           <option>Aluminum (6061-T6)</option>
           <option>Titanium (Ti-6Al-4V)</option>
@@ -76,7 +76,7 @@ export const WithWarning: Story = {
         <input
           type="number"
           defaultValue="99.9"
-          className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--warning)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+          className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--warning)] bg-[var(--layer-raised)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
         />
       </PropertyRow>
     </div>
@@ -90,7 +90,7 @@ export const WithReset: Story = {
         <input
           type="number"
           defaultValue="42.000"
-          className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+          className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
         />
       </PropertyRow>
     </div>
@@ -104,14 +104,14 @@ export const AllVariants: Story = {
         <input
           type="text"
           defaultValue="Crankshaft"
-          className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
+          className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
         />
       </PropertyRow>
       <PropertyRow label="Mass" unit="kg" numeric showReset onReset={() => {}}>
         <input
           type="number"
           defaultValue="3.250"
-          className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+          className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
         />
       </PropertyRow>
       <PropertyRow label="Volume" unit="mm³" numeric>
@@ -123,11 +123,11 @@ export const AllVariants: Story = {
         <input
           type="number"
           defaultValue="99.9"
-          className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--warning)] bg-[var(--layer-base)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
+          className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--warning)] bg-[var(--layer-raised)] px-1.5 text-right text-[length:var(--text-sm)] text-[var(--text-primary)] tabular-nums outline-none focus:border-[var(--accent-primary)]"
         />
       </PropertyRow>
       <PropertyRow label="Material">
-        <select className="h-6 w-full rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
+        <select className="h-6 w-full rounded-[var(--radius-sm)] border border-transparent bg-[var(--layer-raised)] px-1.5 text-[length:var(--text-sm)] text-[var(--text-primary)] outline-none">
           <option>Steel (AISI 1045)</option>
         </select>
       </PropertyRow>

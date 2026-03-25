@@ -13,6 +13,7 @@ import {
   Toaster,
   TooltipProvider,
   TopBar,
+  WorkspaceTabBar,
   useDensity,
   useTheme,
 } from '@motionlab/ui';
@@ -25,23 +26,29 @@ import { AboutDialog } from './components/AboutDialog.js';
 import { CommandPalette } from './components/CommandPalette.js';
 import { CrashRecoveryDialog } from './components/CrashRecoveryDialog.js';
 import { MissingAssetsDialog } from './components/MissingAssetsDialog.js';
+import { EntityCreationMenu } from './components/EntityCreationMenu.js';
 import { EntityInspector } from './components/EntityInspector.js';
 import { ImportSettingsDialog } from './components/ImportSettingsDialog.js';
 import { KeyboardShortcutsDialog } from './components/KeyboardShortcutsDialog.js';
 import { ProjectTree } from './components/ProjectTree.js';
 import { SimulationSettingsDialog } from './components/SimulationSettingsDialog.js';
 import { MainToolbar } from './components/MainToolbar.js';
+import { ResultsLeftPanel } from './components/ResultsLeftPanel.js';
+import { ResultsBottomDock } from './components/ResultsBottomDock.js';
+import { ResultsToolbar } from './components/ResultsToolbar.js';
 import { TimelinePanel } from './components/TimelinePanel.js';
 import { ViewportOverlay } from './components/ViewportOverlay.js';
 import { WelcomeScreen } from './components/WelcomeScreen.js';
 import { onMissingAssets, sendAutoSave, sendImportAsset, sendLoadProject } from './engine/connection.js';
 import { useDialogStore } from './stores/dialogs.js';
+import { useUILayoutStore } from './stores/ui-layout.js';
 import type { ConnectionStatus } from './stores/engine-connection.js';
 import { useEngineConnection } from './stores/engine-connection.js';
 import { useImportFlowStore } from './stores/import-flow.js';
 import { useMechanismStore } from './stores/mechanism.js';
 import { useSimulationStore } from './stores/simulation.js';
 import { useMechanismDof } from './hooks/useMechanismDof.js';
+import { useSelectionStore } from './stores/selection.js';
 import type { RecoverableProject } from './types/motionlab.js';
 
 type StatusBarConnectionState = 'connected' | 'connecting' | 'disconnected' | 'error';
@@ -209,6 +216,26 @@ export function App() {
   const closeDialog = useDialogStore((s) => s.close);
   const openDialogFn = useDialogStore((s) => s.open);
 
+  const activeWorkspace = useUILayoutStore((s) => s.activeWorkspace);
+  const setActiveWorkspace = useUILayoutStore((s) => s.setActiveWorkspace);
+
+  // Build panel state
+  const leftPanelOpen = useUILayoutStore((s) => s.leftPanelOpen);
+  const rightPanelOpen = useUILayoutStore((s) => s.rightPanelOpen);
+  const leftPanelWidth = useUILayoutStore((s) => s.leftPanelWidth);
+  const rightPanelWidth = useUILayoutStore((s) => s.rightPanelWidth);
+  const setLeftPanelWidth = useUILayoutStore((s) => s.setLeftPanelWidth);
+  const setRightPanelWidth = useUILayoutStore((s) => s.setRightPanelWidth);
+
+  // Bottom dock expanded state
+  const bottomDockExpanded = useUILayoutStore((s) => s.bottomDockExpanded);
+  const resultsBottomDockExpanded = useUILayoutStore((s) => s.resultsBottomDockExpanded);
+
+  // Results panel state
+  const resultsLeftPanelOpen = useUILayoutStore((s) => s.resultsLeftPanelOpen);
+  const resultsLeftPanelWidth = useUILayoutStore((s) => s.resultsLeftPanelWidth);
+  const setResultsLeftPanelWidth = useUILayoutStore((s) => s.setResultsLeftPanelWidth);
+
   const [missingAssets, setMissingAssets] = useState<MissingAssetInfo[]>([]);
   const [recoverableProjects, setRecoverableProjects] = useState<RecoverableProject[]>([]);
   const pendingImportFilePath = useImportFlowStore((s) => s.pendingFilePath);
@@ -273,6 +300,20 @@ export function App() {
   // Centralized keyboard shortcut manager — reads bindings from command registry
   useEffect(() => initShortcutManager(), []);
 
+  // Auto-show/hide right panel based on entity selection (Build workspace only)
+  useEffect(() => {
+    return useSelectionStore.subscribe((state, prevState) => {
+      if (state.selectedIds === prevState.selectedIds) return;
+      const { activeWorkspace, rightPanelAutoShow, setRightPanelOpen } = useUILayoutStore.getState();
+      if (activeWorkspace !== 'build') return;
+      if (state.selectedIds.size > 0 && rightPanelAutoShow) {
+        setRightPanelOpen(true);
+      } else if (state.selectedIds.size === 0) {
+        setRightPanelOpen(false);
+      }
+    });
+  }, []);
+
   return (
     <TooltipProvider>
       <AppShell
@@ -284,19 +325,41 @@ export function App() {
             actions={<TopBarActions />}
           />
         }
-        toolbar={<MainToolbar />}
         leftPanel={
-          <LeftPanel>
-            <ProjectTree />
-          </LeftPanel>
+          activeWorkspace === 'build' ? (
+            <LeftPanel createAction={<EntityCreationMenu />}>
+              <ProjectTree />
+            </LeftPanel>
+          ) : (
+            <ResultsLeftPanel />
+          )
         }
-        viewport={<ViewportOverlay />}
+        leftPanelOpen={activeWorkspace === 'build' ? leftPanelOpen : resultsLeftPanelOpen}
+        leftPanelWidth={activeWorkspace === 'build' ? leftPanelWidth : resultsLeftPanelWidth}
+        onLeftPanelWidthChange={activeWorkspace === 'build' ? setLeftPanelWidth : setResultsLeftPanelWidth}
         rightPanel={
-          <RightPanel>
-            <EntityInspector />
-          </RightPanel>
+          activeWorkspace === 'build' ? (
+            <RightPanel>
+              <EntityInspector />
+            </RightPanel>
+          ) : undefined
         }
-        bottomDock={<TimelinePanel />}
+        rightPanelOpen={activeWorkspace === 'build' ? rightPanelOpen : false}
+        rightPanelWidth={activeWorkspace === 'build' ? rightPanelWidth : undefined}
+        onRightPanelWidthChange={activeWorkspace === 'build' ? setRightPanelWidth : undefined}
+        viewport={<ViewportOverlay />}
+        bottomDock={activeWorkspace === 'build' ? <TimelinePanel /> : <ResultsBottomDock />}
+        bottomDockExpanded={activeWorkspace === 'build' ? bottomDockExpanded : resultsBottomDockExpanded}
+        viewportOverlays={activeWorkspace === 'build' ? <MainToolbar /> : <ResultsToolbar />}
+        tabBar={
+          <WorkspaceTabBar
+            tabs={[
+              { id: 'build', label: 'Build', active: activeWorkspace === 'build' },
+              { id: 'results', label: 'Results', active: activeWorkspace === 'results' },
+            ]}
+            onTabSelect={(id) => setActiveWorkspace(id as 'build' | 'results')}
+          />
+        }
         statusBar={<StatusBarContainer />}
       />
       <WelcomeScreen />

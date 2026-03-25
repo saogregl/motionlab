@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+@import "@fontsource-variable/ibm-plex-sans/index.css";
 
 /* Monorepo source scanning — tell Tailwind where to find utility classes */
 @source "../../ui/src/**/*.{ts,tsx}";
@@ -9,12 +9,6 @@
 @source "../../viewport/src/**/*.{ts,tsx}";
 
 @custom-variant dark (&:is(.dark *));
-
-/* react-resizable-panels: allow panels to shrink below content intrinsic size */
-[data-panel] {
-  min-height: 0;
-  min-width: 0;
-}
 
 /* ============================================================
    Engineering Design Tokens — Layer Architecture
@@ -24,7 +18,7 @@
 
 :root {
   /* ── Font stacks ── */
-  --font-ui: "Geist Variable", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-ui: "IBM Plex Sans Variable", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "Fira Code", "Cascadia Code", monospace;
 
   /* ── Spacing (px) ── */
@@ -86,12 +80,17 @@
   /* ── Layout ── */
   --topbar-h: 38px;
   --toolbar-h: 32px;
-  --panel-left-w: 260px;
+  --panel-left-w: 288px;
   --panel-left-min: 200px;
   --panel-left-max: 380px;
-  --panel-right-w: 320px;
+  --panel-right-w: 288px;
   --panel-right-min: 280px;
   --panel-right-max: 440px;
+  --panel-float-inset: 6px;
+  --panel-min-w: 240px;
+  --panel-max-w: 420px;
+  --panel-radius: 4px;
+  --section-radius: 4px;
   --bottom-dock-h: 240px;
   --bottom-dock-min: 160px;
   --bottom-dock-max: 400px;
@@ -99,21 +98,23 @@
   --statusbar-h: 24px;
 
   /* ── Tree ── */
-  --tree-row-h: 24px;
+  --tree-row-h: 26px;
   --tree-icon-size: 14px;
   --tree-indent: 12px;
   --tree-row-gap: 0px;
   --tree-guide-color: rgba(0, 0, 0, 0.08);
   --tree-header-gap: 6px;
+  --tree-selection-bg: var(--accent-primary);
+  --tree-selection-text: #ffffff;
 
   /* ── Contained tabs ── */
   --tab-contained-bg: var(--layer-recessed);
   --tab-contained-active: var(--layer-base);
 
   /* ── Inspector ── */
-  --inspector-section-gap: 2px;
+  --inspector-section-gap: 5px;
   --inspector-row-h: 26px;
-  --inspector-label-w: 80px;
+  --inspector-label-w: 72px;
 
   /* ── Elevated field — pops above layer-base for inspector inputs ── */
   --field-elevated: #ffffff;
@@ -214,15 +215,23 @@
   --status-failed: #da1e28;
   --status-warning: #ff832b;
 
-  /* ── Chart series colors (data visualization) ── */
-  --chart-series-1: #2563eb;
-  --chart-series-2: #dc2626;
-  --chart-series-3: #16a34a;
-  --chart-series-4: #d97706;
-  --chart-series-5: #7c3aed;
-  --chart-series-6: #db2777;
-  --chart-series-7: #0891b2;
-  --chart-series-8: #ea580c;
+  /* ── Chart series colors — Carbon g10 (light) 14-color palette ── */
+  --chart-series-1:  #6929c4; /* Purple 70  */
+  --chart-series-2:  #1192e8; /* Cyan 50    */
+  --chart-series-3:  #005d5d; /* Teal 70    */
+  --chart-series-4:  #9f1853; /* Magenta 70 */
+  --chart-series-5:  #fa4d56; /* Red 50     */
+  --chart-series-6:  #520408; /* Red 90     */
+  --chart-series-7:  #198038; /* Green 60   */
+  --chart-series-8:  #002d9c; /* Blue 80    */
+  --chart-series-9:  #ee5396; /* Magenta 50 */
+  --chart-series-10: #b28600; /* Yellow 50  */
+  --chart-series-11: #009d9a; /* Teal 50    */
+  --chart-series-12: #012749; /* Cyan 90    */
+  --chart-series-13: #8a3800; /* Orange 70  */
+  --chart-series-14: #a56eff; /* Purple 50  */
+  --chart-grid:      #e0e0e0; /* gray-20    */
+  --chart-axis-text: #525252; /* gray-70    */
   --chart-scrub: rgba(0, 0, 0, 0.5);
 
   /* ── Interactive ── */
@@ -279,63 +288,63 @@
    Each layer should be visually distinct at a glance.
    ============================================================ */
 .dark {
-  --bg-app: #121212;
-  --bg-viewport: #121212;
+  --bg-app: #050505;
+  --bg-viewport: #050505;
 
-  --layer-base: #1e1e1e;
+  --layer-base: #1c1c1c;
   --layer-base-hover: rgba(141, 141, 141, 0.16);
   --layer-base-active: rgba(141, 141, 141, 0.4);
-  --layer-recessed: #181818;
+  --layer-recessed: #151616;
   --layer-recessed-hover: rgba(141, 141, 141, 0.16);
   --layer-recessed-active: rgba(141, 141, 141, 0.4);
-  --layer-raised: #2a2a2a;
+  --layer-raised: #252626;
   --layer-raised-hover: rgba(141, 141, 141, 0.16);
   --layer-raised-active: rgba(141, 141, 141, 0.4);
   --layer-elevated: #333333;
 
-  --bg-muted: #2a2a2a;
+  --bg-muted: #252626;
   --bg-muted-hover: #333333;
 
-  --field-base: #1e1e1e;
+  --field-base: #1c1c1c;
   --field-base-hover: #262626;
-  --field-recessed: #2a2a2a;
+  --field-recessed: #252626;
   --field-recessed-hover: #333333;
 
   /* Elevated field — dark override */
-  --field-elevated: #2a2a2a;
+  --field-elevated: #252626;
   --field-elevated-hover: #333333;
 
   /* Inertia matrix — dark override */
-  --inertia-diagonal: rgba(69, 137, 255, 0.25);
-  --inertia-diagonal-text: #a5c8ff;
-  --inspector-grid-border: #2a2a2a;
+  --inertia-diagonal: rgba(0, 122, 255, 0.25);
+  --inertia-diagonal-text: #66b3ff;
+  --inspector-grid-border: #252626;
 
-  --border-default: #3d3d3d;
-  --border-strong: #525252;
+  --border-default: rgba(37, 38, 38, 0.2);
+  --border-strong: rgba(172, 171, 171, 0.1);
   --border-subtle: #333333;
-  --border-field: #3d3d3d;
-  --border-field-hover: #525252;
+  --border-field: rgba(37, 38, 38, 0.2);
+  --border-field-hover: rgba(172, 171, 171, 0.1);
   --border-field-focus: var(--accent-primary);
 
-  --text-primary: #f4f4f4;
-  --text-secondary: #c6c6c6;
+  --text-primary: #e7e5e5;
+  --text-secondary: #acabab;
   --text-tertiary: #a8a8a8;
-  --text-disabled: #525252;
+  --text-disabled: #5c5b5b;
   --text-inverse: #161616;
 
-  --accent-primary: #4589ff;
-  --accent-hover: #78a9ff;
-  --accent-pressed: #0f62fe;
-  --accent-soft: rgba(69, 137, 255, 0.15);
-  --accent-soft-hover: rgba(69, 137, 255, 0.22);
-  --accent-text: #78a9ff;
+  --accent-primary: #007aff;
+  --accent-hover: #339dff;
+  --accent-pressed: #0062cc;
+  --accent-soft: rgba(0, 122, 255, 0.15);
+  --accent-soft-hover: rgba(0, 122, 255, 0.22);
+  --accent-text: #339dff;
 
   --selection-fill: rgba(141, 141, 141, 0.24);
   --selection-fill-strong: rgba(141, 141, 141, 0.32);
-  --selection-outline: #4589ff;
-  --selection-row: rgba(91, 141, 239, 0.15);
-  --selection-row-hover: rgba(91, 141, 239, 0.18);
-  --selection-row-inactive: rgba(91, 141, 239, 0.06);
+  --selection-outline: #007aff;
+  --selection-row: rgba(0, 122, 255, 0.15);
+  --selection-row-hover: rgba(0, 122, 255, 0.18);
+  --selection-row-inactive: rgba(0, 122, 255, 0.06);
   --selection-drag-bg: var(--accent-soft);
   --selection-drag-border: var(--accent-primary);
 
@@ -346,28 +355,43 @@
   --warning-soft: rgba(241, 194, 27, 0.15);
   --danger: #fa4d56;
   --danger-soft: rgba(250, 77, 86, 0.15);
-  --info: #4589ff;
-  --info-soft: rgba(69, 137, 255, 0.15);
+  --info: #007aff;
+  --info-soft: rgba(0, 122, 255, 0.15);
 
   /* ── Status (dark overrides) ── */
   --status-compiled: #42be65;
   --status-stale: #f1c21b;
-  --status-running: #4589ff;
+  --status-running: #007aff;
   --status-failed: #fa4d56;
   --status-warning: #ff832b;
 
-  /* ── Chart series colors (dark overrides — brighter for dark bg) ── */
-  --chart-series-1: #3b82f6;
-  --chart-series-2: #ef4444;
-  --chart-series-3: #22c55e;
-  --chart-series-4: #f59e0b;
-  --chart-series-5: #8b5cf6;
-  --chart-series-6: #ec4899;
-  --chart-series-7: #06b6d4;
-  --chart-series-8: #f97316;
+  /* ── Axis colors (dark overrides — brighter for dark bg) ── */
+  --axis-x: #ff716c;
+  --axis-y: #4ade80;
+  --axis-z: #007aff;
+
+  /* ── Chart series colors — Carbon g100 (dark) 14-color palette ── */
+  --chart-series-1:  #8a3ffc; /* Purple 60  */
+  --chart-series-2:  #33b1ff; /* Cyan 40    */
+  --chart-series-3:  #007d79; /* Teal 60    */
+  --chart-series-4:  #ff7eb6; /* Magenta 40 */
+  --chart-series-5:  #fa4d56; /* Red 50     */
+  --chart-series-6:  #fff1f1; /* Red 10     */
+  --chart-series-7:  #6fdc8c; /* Green 30   */
+  --chart-series-8:  #4589ff; /* Blue 50    */
+  --chart-series-9:  #d02670; /* Magenta 60 */
+  --chart-series-10: #d2a106; /* Yellow 40  */
+  --chart-series-11: #08bdba; /* Teal 40    */
+  --chart-series-12: #bae6ff; /* Cyan 20    */
+  --chart-series-13: #ba4e00; /* Orange 60  */
+  --chart-series-14: #d4bbff; /* Purple 30  */
+  --chart-grid:      #3d3d3d;
+  --chart-axis-text: #acabab;
   --chart-scrub: rgba(255, 255, 255, 0.6);
 
   --tree-guide-color: rgba(255, 255, 255, 0.08);
+  --tree-selection-bg: var(--accent-primary);
+  --tree-selection-text: #ffffff;
   --tab-contained-bg: var(--layer-recessed);
   --tab-contained-active: var(--layer-base);
 
@@ -383,12 +407,12 @@
 
 /* ── Compact density ── */
 .compact {
-  --tree-row-h: 20px;
+  --tree-row-h: 22px;
   --tree-icon-size: 14px;
   --tree-indent: 12px;
   --tree-header-gap: 4px;
   --inspector-row-h: 22px;
-  --inspector-label-w: 88px;
+  --inspector-label-w: 64px;
   --topbar-h: 34px;
   --toolbar-h: 28px;
   --text-base: 0.8125rem;
@@ -534,6 +558,8 @@
 
   /* Tree tokens */
   --color-tree-guide: var(--tree-guide-color);
+  --color-tree-selection-bg: var(--tree-selection-bg);
+  --color-tree-selection-text: var(--tree-selection-text);
 
   /* Contained tab tokens */
   --color-tab-contained-bg: var(--tab-contained-bg);
@@ -578,8 +604,7 @@
   }
   .text-status {
     font-size: var(--text-3xs);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.02em;
     font-weight: var(--weight-medium);
   }
   .animate-shimmer {

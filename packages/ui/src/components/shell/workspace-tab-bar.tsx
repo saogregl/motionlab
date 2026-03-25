@@ -33,15 +33,17 @@ function WorkspaceTabBar({
       )}
     >
       {/* New tab button */}
-      <Button
-        variant="ghost"
-        size="icon-sm"
-        className="shrink-0"
-        onClick={onNewTab}
-        aria-label="New tab"
-      >
-        <Plus />
-      </Button>
+      {onNewTab && (
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          className="shrink-0"
+          onClick={onNewTab}
+          aria-label="New tab"
+        >
+          <Plus />
+        </Button>
+      )}
 
       {/* Tab items */}
       {tabs.map((tab) => (
@@ -59,21 +61,23 @@ function WorkspaceTabBar({
         >
           {tab.dirty && <span className="size-1.5 shrink-0 rounded-full bg-text-secondary" />}
           <span className="truncate">{tab.label}</span>
-          <span
-            role="button"
-            tabIndex={-1}
-            className={cn(
-              'ml-auto flex size-3.5 shrink-0 items-center justify-center rounded-[1px] text-text-tertiary hover:bg-[var(--layer-recessed-active)] hover:text-text-primary',
-              'opacity-0 group-hover/tab:opacity-100',
-            )}
-            onClick={(e) => {
-              e.stopPropagation();
-              onTabClose?.(tab.id);
-            }}
-            aria-label={`Close ${tab.label}`}
-          >
-            <X className="size-3" />
-          </span>
+          {onTabClose && (
+            <span
+              role="button"
+              tabIndex={-1}
+              className={cn(
+                'ml-auto flex size-3.5 shrink-0 items-center justify-center rounded-[1px] text-text-tertiary hover:bg-[var(--layer-recessed-active)] hover:text-text-primary',
+                'opacity-0 group-hover/tab:opacity-100',
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                onTabClose?.(tab.id);
+              }}
+              aria-label={`Close ${tab.label}`}
+            >
+              <X className="size-3" />
+            </span>
+          )}
         </button>
       ))}
     </div>

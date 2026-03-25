@@ -37,7 +37,12 @@ function ToolbarButton({
             variant={active ? 'toolbar-active' : 'toolbar'}
             size="icon"
             disabled={disabled}
-            onClick={onClick}
+            onClick={() => {
+              onClick?.();
+              if (document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur();
+              }
+            }}
             className={cn(className)}
           />
         }

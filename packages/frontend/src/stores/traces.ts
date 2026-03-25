@@ -9,6 +9,87 @@ export interface StoreSample {
 
 const MAX_TRACE_SECONDS = 60;
 
+// ---------------------------------------------------------------------------
+// Merge helper: combines existing + new samples for a single channel.
+// Uses a fast-path append when timestamps are monotonically increasing
+// (the normal case during live simulation) and falls back to full
+// deduplication when timestamps overlap (scrub / replay).
+// ---------------------------------------------------------------------------
+
+function mergeSamples(existing: StoreSample[], incoming: StoreSample[]): StoreSample[] {
+  if (incoming.length === 0) return existing;
+
+  const lastExistingTime = existing.length > 0 ? existing[existing.length - 1].time : -Infinity;
+  const firstIncomingTime = incoming[0].time;
+
+  let merged: StoreSample[];
+
+  if (firstIncomingTime > lastExistingTime) {
+    // Fast path: pure append (live sim hot path — no dedup, no sort needed)
+    merged = existing.concat(incoming);
+  } else {
+    // Overlap detected (scrub / replay): full dedup via last-write-wins
+    merged = existing.concat(incoming);
+    const seen = new Map<number, StoreSample>();
+    for (const s of merged) seen.set(s.time, s);
+    merged = Array.from(seen.values()).sort((a, b) => a.time - b.time);
+  }
+
+  // Trim to rolling window using binary search
+  if (merged.length > 0) {
+    const maxTime = merged[merged.length - 1].time;
+    const cutoff = maxTime - MAX_TRACE_SECONDS;
+    let lo = 0;
+    let hi = merged.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >>> 1;
+      if (merged[mid].time < cutoff) lo = mid + 1;
+      else hi = mid;
+    }
+    if (lo > 0) merged = merged.slice(lo);
+  }
+
+  return merged;
+}
+
+// ---------------------------------------------------------------------------
+// Batched trace ingestion — coalesces per-channel updates from a single
+// engine batch into one Zustand set() call via queueMicrotask.
+// ---------------------------------------------------------------------------
+
+let pendingBatch: Map<string, StoreSample[]> = new Map();
+let flushScheduled = false;
+
+function flushPendingTraces() {
+  flushScheduled = false;
+  const batch = pendingBatch;
+  pendingBatch = new Map();
+  if (batch.size === 0) return;
+
+  useTraceStore.setState((state) => {
+    const next = new Map(state.traces);
+    for (const [channelId, incoming] of batch) {
+      const existing = next.get(channelId) ?? [];
+      next.set(channelId, mergeSamples(existing, incoming));
+    }
+    return { traces: next };
+  });
+}
+
+/** Queue trace samples for batched flush. Call from the WebSocket handler. */
+export function addSamplesBatched(channelId: string, samples: StoreSample[]): void {
+  const existing = pendingBatch.get(channelId);
+  pendingBatch.set(channelId, existing ? existing.concat(samples) : samples);
+  if (!flushScheduled) {
+    flushScheduled = true;
+    queueMicrotask(flushPendingTraces);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Zustand store
+// ---------------------------------------------------------------------------
+
 interface TraceState {
   channels: Map<string, ChannelDescriptor>;
   traces: Map<string, StoreSample[]>;
@@ -41,25 +122,7 @@ export const useTraceStore = create<TraceState>()((set) => ({
   addSamples: (channelId, samples) =>
     set((state) => {
       const existing = state.traces.get(channelId) ?? [];
-      let merged = existing.concat(samples);
-
-      // Deduplicate by time (last-write-wins) to guard against any overlap from
-      // the backend sending a repeated window, then re-sort.
-      if (samples.length > 0) {
-        const seen = new Map<number, StoreSample>();
-        for (const s of merged) seen.set(s.time, s);
-        merged = Array.from(seen.values()).sort((a, b) => a.time - b.time);
-      }
-
-      if (merged.length > 0) {
-        const maxTime = merged[merged.length - 1].time;
-        const cutoff = maxTime - MAX_TRACE_SECONDS;
-        const idx = merged.findIndex((s) => s.time >= cutoff);
-        if (idx > 0) {
-          merged = merged.slice(idx);
-        }
-      }
-
+      const merged = mergeSamples(existing, samples);
       const next = new Map(state.traces);
       next.set(channelId, merged);
       return { traces: next };

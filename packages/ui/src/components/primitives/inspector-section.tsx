@@ -36,13 +36,13 @@ function InspectorSection({
       open={open}
       onOpenChange={onOpenChange}
       defaultOpen={defaultOpen}
-      className={cn('', className)}
+      className={cn('rounded-[var(--section-radius)] border border-[var(--border-default)] bg-[var(--layer-recessed)]', className)}
     >
       <Collapsible.Trigger
         data-slot="inspector-section-trigger"
-        className="flex h-6 w-full items-center gap-1 border-b border-[var(--border-subtle)] bg-[var(--layer-recessed)] px-1.5 text-[length:var(--text-xs)] font-semibold text-[var(--text-secondary)] hover:bg-[var(--layer-recessed-hover)]"
+        className="flex h-7 w-full items-center gap-1 ps-2 pe-2 text-[length:var(--text-xs)] font-semibold tracking-[0.02em] text-text-primary hover:bg-[var(--layer-recessed-hover)]"
       >
-        <ChevronRight className="size-2.5 shrink-0 transition-transform duration-[var(--duration-normal)] [[data-open]>&]:rotate-90" />
+        <ChevronRight className="size-2 shrink-0 transition-transform duration-[var(--duration-normal)] [[data-open]>&]:rotate-90" />
         {icon && (
           <span className="flex size-3.5 shrink-0 items-center justify-center text-[var(--text-tertiary)]">
             {icon}
@@ -55,7 +55,7 @@ function InspectorSection({
       </Collapsible.Trigger>
       <Collapsible.Panel
         data-slot="inspector-section-panel"
-        className="overflow-hidden bg-[var(--layer-base)] transition-[height] duration-[var(--duration-normal)] ease-[var(--easing-default)]"
+        className="overflow-hidden rounded-b-[var(--section-radius)] bg-[var(--layer-base)] px-1 pb-1.5 pt-0.5 transition-[height] duration-[var(--duration-normal)] ease-[var(--easing-default)]"
       >
         {children}
       </Collapsible.Panel>

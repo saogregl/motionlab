@@ -6,7 +6,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-  SecondaryToolbar,
   ToolbarButton,
   ToolbarGroup,
   Tooltip,
@@ -14,39 +13,22 @@ import {
   TooltipTrigger,
 } from '@motionlab/ui';
 import {
-  Activity,
-  ArrowUpDown,
-  Box,
-  Circle,
-  Crosshair,
-  Cylinder,
   Eye,
   Fullscreen,
-  Gauge,
   Grid3x3,
-  Import,
-  Link2,
-  Lock,
   Maximize,
-  MousePointer2,
-  MoveHorizontal,
   Pause,
   Play,
-  Radio,
   Redo2,
   RotateCcw,
-  RotateCw,
   Square,
   StepForward,
   Undo2,
-  Zap,
 } from 'lucide-react';
 
 import { executeCommand } from '../commands/registry.js';
 import { useCommand } from '../commands/use-commands.js';
 import { useSimulationStore } from '../stores/simulation.js';
-import { useToolModeStore } from '../stores/tool-mode.js';
-import { ToolbarSplitButton } from './toolbar/ToolbarSplitButton.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -59,167 +41,27 @@ function useCmdDisabled(id: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// MainToolbar
+// MainToolbar — centered floating bar
 // ---------------------------------------------------------------------------
 
 export function MainToolbar() {
-  const activeMode = useToolModeStore((s) => s.activeMode);
+  const undoDisabled = useCmdDisabled('edit.undo');
+  const redoDisabled = useCmdDisabled('edit.redo');
+
   const simState = useSimulationStore((s) => s.state);
-  const simTime = useSimulationStore((s) => s.simTime);
   const errorMessage = useSimulationStore((s) => s.errorMessage);
 
-  // Sim button disabled states
   const playDisabled = useCmdDisabled('sim.play');
   const pauseDisabled = useCmdDisabled('sim.pause');
   const stepDisabled = useCmdDisabled('sim.step');
   const resetDisabled = useCmdDisabled('sim.reset');
-  const createBodyDisabled = useCmdDisabled('create.body');
-  const importDisabled = useCmdDisabled('create.import');
-  const datumDisabled = useCmdDisabled('create.datum');
-  const jointDisabled = useCmdDisabled('create.joint');
-  const forceDisabled = useCmdDisabled('create.force.point');
-  const undoDisabled = useCmdDisabled('edit.undo');
-  const redoDisabled = useCmdDisabled('edit.redo');
 
   return (
-    <SecondaryToolbar className="overflow-hidden min-w-0">
-      {/* ── Group 1: Mode & Basic Creation ── */}
-      <ToolbarGroup separator>
-        <ToolbarButton
-          tooltip="Select"
-          shortcut="V"
-          active={activeMode === 'select'}
-          onClick={() => executeCommand('view.select-mode')}
-        >
-          <MousePointer2 className="size-4" />
-        </ToolbarButton>
-        <ToolbarButton
-          tooltip="Create Body"
-          shortcut="B"
-          disabled={createBodyDisabled}
-          onClick={() => executeCommand('create.body')}
-        >
-          <Box className="size-4" />
-        </ToolbarButton>
-        <ToolbarButton
-          tooltip="Import Geometry"
-          disabled={importDisabled}
-          onClick={() => executeCommand('create.import')}
-        >
-          <Import className="size-4" />
-        </ToolbarButton>
-      </ToolbarGroup>
-
-      {/* ── Group 2: Entity Creation Dropdowns ── */}
-      <ToolbarGroup separator>
-        {/* Datum split button */}
-        <ToolbarSplitButton
-          tooltip="Create Datum"
-          shortcut="D"
-          icon={Crosshair}
-          active={activeMode === 'create-datum'}
-          mainDisabled={datumDisabled}
-          menuDisabled={false}
-          onClickMain={() => executeCommand('create.datum')}
-        >
-          <DropdownMenuItem onSelect={() => executeCommand('create.datum.from-face')}>
-            <Crosshair className="size-4" />
-            From Face
-            <DropdownMenuShortcut>D</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem disabled>
-            <Crosshair className="size-4" />
-            Point
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled>
-            <Crosshair className="size-4" />
-            Axis
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled>
-            <Crosshair className="size-4" />
-            Plane
-          </DropdownMenuItem>
-        </ToolbarSplitButton>
-
-        {/* Joint split button */}
-        <ToolbarSplitButton
-          tooltip="Create Joint"
-          shortcut="J"
-          icon={Link2}
-          active={activeMode === 'create-joint'}
-          mainDisabled={jointDisabled}
-          menuDisabled={false}
-          onClickMain={() => executeCommand('create.joint')}
-        >
-          <DropdownMenuItem onSelect={() => executeCommand('create.joint.revolute')}>
-            <RotateCw className="size-4" />
-            Revolute
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => executeCommand('create.joint.prismatic')}>
-            <MoveHorizontal className="size-4" />
-            Prismatic
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => executeCommand('create.joint.fixed')}>
-            <Lock className="size-4" />
-            Fixed
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem disabled>
-            <Circle className="size-4" />
-            Spherical
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled>
-            <Cylinder className="size-4" />
-            Cylindrical
-          </DropdownMenuItem>
-        </ToolbarSplitButton>
-      </ToolbarGroup>
-
-      {/* ── Group 3: Force / Actuator Dropdowns ── */}
-      <ToolbarGroup separator>
-        <ToolbarSplitButton
-          tooltip="Create Force"
-          shortcut="L"
-          icon={Zap}
-          active={activeMode === 'create-load'}
-          mainDisabled={forceDisabled}
-          menuDisabled={false}
-          onClickMain={() => executeCommand('create.force.point')}
-        >
-          <DropdownMenuItem onSelect={() => executeCommand('create.force.point')}>
-            <Zap className="size-4" />
-            Point Force
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => executeCommand('create.force.torque')}>
-            <RotateCcw className="size-4" />
-            Point Torque
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => executeCommand('create.force.spring-damper')}>
-            <Activity className="size-4" />
-            Spring-Damper
-          </DropdownMenuItem>
-        </ToolbarSplitButton>
-
-        <ToolbarSplitButton
-          tooltip="Actuator"
-          icon={Gauge}
-          mainDisabled
-          menuDisabled={false}
-          onClickMain={() => {}}
-        >
-          <DropdownMenuItem disabled>
-            <Gauge className="size-4" />
-            Revolute Motor
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled>
-            <ArrowUpDown className="size-4" />
-            Prismatic Motor
-          </DropdownMenuItem>
-        </ToolbarSplitButton>
-      </ToolbarGroup>
-
-      {/* ── Group 4: Simulation Controls ── */}
+    <div
+      data-slot="main-toolbar"
+      className="pointer-events-auto absolute top-[var(--panel-float-inset)] left-1/2 -translate-x-1/2 z-[var(--z-toolbar)] flex h-[var(--toolbar-h)] w-fit items-center gap-0.5 rounded-[var(--panel-radius)] border border-[var(--border-default)] bg-layer-base ps-1.5 pe-1.5"
+    >
+      {/* ── Simulation controls ── */}
       <ToolbarGroup separator>
         {simState === 'running' ? (
           <ToolbarButton
@@ -271,20 +113,14 @@ export function MainToolbar() {
             {errorMessage}
           </span>
         )}
-        <span className="px-2 font-mono text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
-          t&nbsp;=&nbsp;{simTime.toFixed(3)}s
-        </span>
       </ToolbarGroup>
 
-      {/* ── Group 5: View Dropdown ── */}
+      {/* ── View Dropdown ── */}
       <ToolbarGroup separator>
         <ViewDropdown />
       </ToolbarGroup>
 
-      {/* ── Spacer ── */}
-      <div className="flex-1" />
-
-      {/* ── Group 6: Edit (right-aligned) ── */}
+      {/* ── Undo / Redo ── */}
       <ToolbarGroup>
         <ToolbarButton tooltip="Undo" shortcut="Ctrl+Z" disabled={undoDisabled}>
           <Undo2 className="size-4" />
@@ -293,7 +129,7 @@ export function MainToolbar() {
           <Redo2 className="size-4" />
         </ToolbarButton>
       </ToolbarGroup>
-    </SecondaryToolbar>
+    </div>
   );
 }
 
@@ -301,7 +137,7 @@ export function MainToolbar() {
 // View Dropdown (extracted for readability)
 // ---------------------------------------------------------------------------
 
-function ViewDropdown() {
+export function ViewDropdown() {
   return (
     <DropdownMenu>
       <Tooltip>

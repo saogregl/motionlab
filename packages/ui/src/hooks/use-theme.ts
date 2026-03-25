@@ -1,25 +1,38 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useSyncExternalStore } from 'react';
 
 type Theme = 'light' | 'dark';
 
-function useTheme() {
-  const [theme, setThemeState] = useState<Theme>(() =>
-    document.documentElement.classList.contains('dark') ? 'dark' : 'light',
-  );
+function getThemeSnapshot(): Theme {
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+}
 
-  useEffect(() => {
-    if (theme === 'dark') {
+function subscribeTheme(callback: () => void): () => void {
+  const observer = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (m.attributeName === 'class') {
+        callback();
+        break;
+      }
+    }
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  return () => observer.disconnect();
+}
+
+function useTheme() {
+  const theme = useSyncExternalStore(subscribeTheme, getThemeSnapshot);
+
+  const setTheme = useCallback((t: Theme) => {
+    if (t === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, [theme]);
+  }, []);
 
-  const setTheme = useCallback((t: Theme) => setThemeState(t), []);
-  const toggleTheme = useCallback(
-    () => setThemeState((prev) => (prev === 'dark' ? 'light' : 'dark')),
-    [],
-  );
+  const toggleTheme = useCallback(() => {
+    document.documentElement.classList.toggle('dark');
+  }, []);
 
   return { theme, setTheme, toggleTheme } as const;
 }

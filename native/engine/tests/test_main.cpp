@@ -480,6 +480,7 @@ static void test_delete_joint_nonexistent(uint16_t port) {
 static const Event* create_datum_from_face_and_expect(
     TestClient& client,
     size_t& scan_from,
+    const std::string& geometry_id,
     const std::string& body_id,
     uint32_t face_index,
     uint64_t sequence_id,
@@ -487,7 +488,7 @@ static const Event* create_datum_from_face_and_expect(
     Command face_cmd;
     face_cmd.set_sequence_id(sequence_id);
     auto* create = face_cmd.mutable_create_datum_from_face();
-    create->mutable_parent_body_id()->set_id(body_id);
+    create->mutable_geometry_id()->set_id(geometry_id);
     create->set_face_index(face_index);
     create->set_name("Face Datum");
     client.send_command(face_cmd);
@@ -497,6 +498,7 @@ static const Event* create_datum_from_face_and_expect(
     assert(face_evt->payload_case() == Event::kCreateDatumFromFaceResult);
     assert(face_evt->create_datum_from_face_result().result_case() == CreateDatumFromFaceResult::kSuccess);
     assert(face_evt->create_datum_from_face_result().success().surface_class() == expected_surface_class);
+    assert(face_evt->create_datum_from_face_result().success().geometry_id().id() == geometry_id);
     assert(face_evt->create_datum_from_face_result().success().face_index() == face_index);
     assert(face_evt->create_datum_from_face_result().success().datum().parent_body_id().id() == body_id);
     return face_evt;
@@ -526,6 +528,8 @@ static void test_face_aware_datum_creation_mixed_fixture(uint16_t port,
 
     const auto* box_body = static_cast<const BodyImportResult*>(nullptr);
     const auto* cyl_body = static_cast<const BodyImportResult*>(nullptr);
+    const auto* box_geometry = static_cast<const GeometryImportResult*>(nullptr);
+    const auto* cyl_geometry = static_cast<const GeometryImportResult*>(nullptr);
     for (const auto& body : import_evt->import_asset_result().bodies()) {
         assert(body.part_index_size() > 0);
         uint64_t triangle_count = 0;
@@ -541,12 +545,21 @@ static void test_face_aware_datum_creation_mixed_fixture(uint16_t port,
             cyl_body = &body;
         }
     }
+    for (const auto& geometry : import_evt->import_asset_result().geometries()) {
+        if (geometry.name() == "PlanarBox") {
+            box_geometry = &geometry;
+        } else if (geometry.name() == "CylBody") {
+            cyl_geometry = &geometry;
+        }
+    }
 
     assert(box_body != nullptr);
     assert(cyl_body != nullptr);
+    assert(box_geometry != nullptr);
+    assert(cyl_geometry != nullptr);
 
     const auto* planar_evt =
-        create_datum_from_face_and_expect(client, scan_from, box_body->body_id(), 0, 501, FACE_SURFACE_CLASS_PLANAR);
+        create_datum_from_face_and_expect(client, scan_from, box_geometry->geometry_id(), box_body->body_id(), 0, 501, FACE_SURFACE_CLASS_PLANAR);
     const auto& planar_datum = planar_evt->create_datum_from_face_result().success().datum();
     assert(std::abs(planar_datum.local_pose().orientation().w()) <= 1.0);
 
@@ -556,7 +569,7 @@ static void test_face_aware_datum_creation_mixed_fixture(uint16_t port,
         const uint64_t sequence_id = 510 + static_cast<uint64_t>(face_index);
         face_cmd.set_sequence_id(sequence_id);
         auto* create = face_cmd.mutable_create_datum_from_face();
-        create->mutable_parent_body_id()->set_id(cyl_body->body_id());
+        create->mutable_geometry_id()->set_id(cyl_geometry->geometry_id());
         create->set_face_index(static_cast<uint32_t>(face_index));
         create->set_name("Cylinder Datum");
         client.send_command(face_cmd);
@@ -588,7 +601,7 @@ static void test_face_aware_datum_creation_mixed_fixture(uint16_t port,
     Command invalid_face_cmd;
     invalid_face_cmd.set_sequence_id(599);
     auto* invalid_face = invalid_face_cmd.mutable_create_datum_from_face();
-    invalid_face->mutable_parent_body_id()->set_id(cyl_body->body_id());
+    invalid_face->mutable_geometry_id()->set_id(cyl_geometry->geometry_id());
     invalid_face->set_face_index(9999);
     invalid_face->set_name("Invalid Face Datum");
     client.send_command(invalid_face_cmd);
@@ -748,8 +761,10 @@ static void test_import_unit_system_and_project_roundtrip(uint16_t port) {
     assert(import_evt->payload_case() == Event::kImportAssetResult);
     assert(import_evt->import_asset_result().success());
     assert(import_evt->import_asset_result().bodies_size() >= 1);
+    assert(import_evt->import_asset_result().geometries_size() >= 1);
 
     const auto& body = import_evt->import_asset_result().bodies(0);
+    const auto& geometry = import_evt->import_asset_result().geometries(0);
     assert(body.has_source_asset_ref());
     assert(body.source_asset_ref().content_hash().size() == 64);
     assert(std::abs(body.mass_properties().center_of_mass().x() - 0.127) < 1e-4);
@@ -757,7 +772,7 @@ static void test_import_unit_system_and_project_roundtrip(uint16_t port) {
     Command face_cmd;
     face_cmd.set_sequence_id(4211);
     auto* face = face_cmd.mutable_create_datum_from_face();
-    face->mutable_parent_body_id()->set_id(body.body_id());
+    face->mutable_geometry_id()->set_id(geometry.geometry_id());
     face->set_face_index(0);
     face->set_name("InchFaceDatum");
     client.send_command(face_cmd);
@@ -766,6 +781,7 @@ static void test_import_unit_system_and_project_roundtrip(uint16_t port) {
     assert(face_evt != nullptr);
     assert(face_evt->payload_case() == Event::kCreateDatumFromFaceResult);
     assert(face_evt->create_datum_from_face_result().result_case() == CreateDatumFromFaceResult::kSuccess);
+    assert(face_evt->create_datum_from_face_result().success().geometry_id().id() == geometry.geometry_id());
     const auto& face_datum = face_evt->create_datum_from_face_result().success().datum();
     const double max_abs_face_pos = std::max({
         std::abs(face_datum.local_pose().position().x()),

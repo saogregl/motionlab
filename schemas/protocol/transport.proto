@@ -201,7 +201,7 @@ enum FaceSurfaceClass {
 }
 
 message CreateDatumFromFaceCommand {
-  motionlab.mechanism.ElementId parent_body_id = 1;
+  motionlab.mechanism.ElementId geometry_id = 1;
   uint32 face_index = 2;
   string name = 3;
 }
@@ -210,6 +210,7 @@ message CreateDatumFromFaceSuccess {
   motionlab.mechanism.Datum datum = 1;
   uint32 face_index = 2;
   FaceSurfaceClass surface_class = 3;
+  motionlab.mechanism.ElementId geometry_id = 4;
 }
 
 message CreateDatumResult {

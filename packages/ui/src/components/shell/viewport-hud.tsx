@@ -18,6 +18,12 @@ interface ViewportHUDProps {
   className?: string;
 }
 
+/**
+ * Viewport HUD positions elements in 6 slots around the viewport.
+ *
+ * Panel-aware: reads --vp-inset-left / --vp-inset-right CSS custom properties
+ * (set by AppShell on the main-area div) to offset corners away from floating panels.
+ */
 function ViewportHUD({
   topLeft,
   topCenter,
@@ -33,7 +39,8 @@ function ViewportHUD({
       {topLeft && (
         <div
           data-slot="viewport-hud-top-left"
-          className="absolute top-3 left-3 pointer-events-auto"
+          className="absolute top-3 pointer-events-auto"
+          style={{ left: 'calc(var(--vp-inset-left, 0px) + 12px)' }}
         >
           {topLeft}
         </div>
@@ -43,7 +50,8 @@ function ViewportHUD({
       {topCenter && (
         <div
           data-slot="viewport-hud-top-center"
-          className="absolute top-3 left-1/2 -translate-x-1/2 pointer-events-auto"
+          className="absolute top-3 -translate-x-1/2 pointer-events-auto"
+          style={{ left: 'calc(var(--vp-inset-left, 0px) + (100% - var(--vp-inset-left, 0px) - var(--vp-inset-right, 0px)) / 2)' }}
         >
           {topCenter}
         </div>
@@ -53,7 +61,8 @@ function ViewportHUD({
       {topRight && (
         <div
           data-slot="viewport-hud-top-right"
-          className="absolute top-3 right-3 flex flex-col items-end gap-2 pointer-events-auto"
+          className="absolute top-3 flex flex-col items-end gap-2 pointer-events-auto"
+          style={{ right: 'calc(var(--vp-inset-right, 0px) + 12px)' }}
         >
           {topRight}
         </div>
@@ -63,7 +72,8 @@ function ViewportHUD({
       {bottomLeft && (
         <div
           data-slot="viewport-hud-bottom-left"
-          className="absolute bottom-3 left-3 pointer-events-auto"
+          className="absolute bottom-3 pointer-events-auto"
+          style={{ left: 'calc(var(--vp-inset-left, 0px) + 12px)' }}
         >
           {bottomLeft}
         </div>
@@ -73,7 +83,8 @@ function ViewportHUD({
       {bottomCenter && (
         <div
           data-slot="viewport-hud-bottom-center"
-          className="absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-auto"
+          className="absolute bottom-3 -translate-x-1/2 pointer-events-auto"
+          style={{ left: 'calc(var(--vp-inset-left, 0px) + (100% - var(--vp-inset-left, 0px) - var(--vp-inset-right, 0px)) / 2)' }}
         >
           {bottomCenter}
         </div>
@@ -83,7 +94,8 @@ function ViewportHUD({
       {bottomRight && (
         <div
           data-slot="viewport-hud-bottom-right"
-          className="absolute bottom-3 right-3 pointer-events-auto"
+          className="absolute bottom-3 pointer-events-auto"
+          style={{ right: 'calc(var(--vp-inset-right, 0px) + 12px)' }}
         >
           {bottomRight}
         </div>

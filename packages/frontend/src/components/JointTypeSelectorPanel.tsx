@@ -187,8 +187,8 @@ export function JointTypeSelectorPanel() {
       <div className="ps-2 pe-1.5 py-1.5 text-[length:var(--text-xs)] text-[var(--text-secondary)]">
         {isEditing ? (
           <div className="flex flex-col gap-0.5">
-            <span className="text-green-400">Parent: {parentDatum?.name ?? '?'} ({parentBody?.name ?? '?'})</span>
-            <span className="text-orange-400">Child: {childDatum?.name ?? '?'} ({childBody?.name ?? '?'})</span>
+            <span>Parent: {parentDatum?.name ?? '?'} ({parentBody?.name ?? '?'})</span>
+            <span>Child: {childDatum?.name ?? '?'} ({childBody?.name ?? '?'})</span>
             <span className="text-[10px] text-[var(--text-muted)] italic">To change datums, delete this joint and create a new one.</span>
           </div>
         ) : (

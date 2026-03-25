@@ -24,6 +24,36 @@ export interface AxisLayout {
   mixedUnits: boolean;
 }
 
+export interface AxisTheme {
+  /** Color for axis tick labels and labels. */
+  axisText: string;
+  /** Color for axis grid lines. */
+  grid: string;
+}
+
+/** Font string matching the app's design system (IBM Plex Sans, --text-2xs). */
+const AXIS_FONT = '11px "IBM Plex Sans Variable", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
+const AXIS_LABEL_FONT = '500 11px "IBM Plex Sans Variable", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
+
+/** Applies theme colors to a single axis config in-place. */
+function applyAxisTheme(axis: uPlot.Axis, theme: AxisTheme): uPlot.Axis {
+  return {
+    ...axis,
+    font: AXIS_FONT,
+    labelFont: AXIS_LABEL_FONT,
+    stroke: theme.axisText,
+    ticks: { stroke: theme.axisText, width: 1, ...(axis.ticks ?? {}) },
+    grid: {
+      stroke: theme.grid,
+      width: 1,
+      dash: [3, 3],
+      ...(axis.grid ?? {}),
+      // Preserve explicit show:false from caller
+      ...(axis.grid?.show === false ? { show: false } : {}),
+    },
+  };
+}
+
 /**
  * Computes uPlot scale, axis, and per-series scale assignment from
  * the active channel set and their unit metadata.
@@ -35,6 +65,7 @@ export interface AxisLayout {
 export function computeAxisLayout(
   activeIds: string[],
   channelMap: Map<string, { name: string; unit: string }>,
+  axisTheme?: AxisTheme,
 ): AxisLayout {
   // Group channels by unit
   const unitToIds = new Map<string, string[]>();
@@ -62,9 +93,11 @@ export function computeAxisLayout(
       seriesScaleMap.set(id, 'y');
     }
 
+    const rawAxes: uPlot.Axis[] = [{ label: 'Time (s)' }, { scale: 'y', label }];
+    const axes = axisTheme ? rawAxes.map((a) => applyAxisTheme(a, axisTheme)) : rawAxes;
     return {
       scales: { x: { time: false }, y: {} },
-      axes: [{ label: 'Time (s)' }, { scale: 'y', label }],
+      axes,
       seriesScaleMap,
       mixedUnits: distinctUnits.length > 1,
     };
@@ -72,7 +105,7 @@ export function computeAxisLayout(
 
   // --- Multi-axis: 2 or 3 distinct units ---
   const scales: Record<string, uPlot.Scale> = { x: { time: false } };
-  const axes: uPlot.Axis[] = [{ label: 'Time (s)' }];
+  const rawAxes: uPlot.Axis[] = [{ label: 'Time (s)' }];
 
   // Side assignment: first axis left (3), second right (1), third left (3)
   const sides = [3, 1, 3] as const;
@@ -82,7 +115,7 @@ export function computeAxisLayout(
     const scaleKey = i === 0 ? 'y' : `y${i + 1}`;
 
     scales[scaleKey] = {};
-    axes.push({
+    rawAxes.push({
       scale: scaleKey,
       label: UNIT_LABELS[unit] ?? (unit || 'Value'),
       side: sides[i],
@@ -97,5 +130,6 @@ export function computeAxisLayout(
     }
   }
 
+  const axes = axisTheme ? rawAxes.map((a) => applyAxisTheme(a, axisTheme)) : rawAxes;
   return { scales, axes, seriesScaleMap, mixedUnits: true };
 }

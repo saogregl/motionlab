@@ -1,39 +1,71 @@
 import type { ReactNode } from 'react';
-import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from 'react-resizable-panels';
 
 import { cn } from '../../lib/utils';
+import { FloatingPanel } from './floating-panel';
 
 interface AppShellProps {
-  /** Top bar (44px) */
+  /** Top bar (38px) */
   topBar?: ReactNode;
-  /** Secondary toolbar (36px) */
-  toolbar?: ReactNode;
-  /** Left panel (resizable, 260px default) */
+  /** Left panel content (rendered inside a FloatingPanel) */
   leftPanel?: ReactNode;
-  /** Center viewport (flex) */
-  viewport?: ReactNode;
-  /** Right panel / inspector (resizable, 320px default) */
+  /** Whether the left panel is open */
+  leftPanelOpen?: boolean;
+  /** Left panel width in px */
+  leftPanelWidth?: number;
+  /** Callback when left panel is resized */
+  onLeftPanelWidthChange?: (width: number) => void;
+  /** Right panel content (rendered inside a FloatingPanel) */
   rightPanel?: ReactNode;
-  /** Bottom dock (collapsible, inside center column) */
+  /** Whether the right panel is open */
+  rightPanelOpen?: boolean;
+  /** Right panel width in px */
+  rightPanelWidth?: number;
+  /** Callback when right panel is resized */
+  onRightPanelWidthChange?: (width: number) => void;
+  /** Center viewport (fills main area) */
+  viewport?: ReactNode;
+  /** Bottom dock (floating, centered between panels) */
   bottomDock?: ReactNode;
-  /** Workspace tab bar (32px, bottom of screen) */
+  /** Whether the bottom dock is expanded (controls --vp-inset-bottom) */
+  bottomDockExpanded?: boolean;
+  /** Additional overlays in the main area (floating toolbars, HUD) */
+  viewportOverlays?: ReactNode;
+  /** Workspace tab bar (28px, bottom of screen) */
   tabBar?: ReactNode;
   /** Status bar (24px, very bottom of window) */
   statusBar?: ReactNode;
   className?: string;
 }
 
+const PANEL_FLOAT_INSET = 6;
+const DEFAULT_PANEL_W = 288;
+
 function AppShell({
   topBar,
-  toolbar,
   leftPanel,
-  viewport,
+  leftPanelOpen = true,
+  leftPanelWidth,
+  onLeftPanelWidthChange,
   rightPanel,
+  rightPanelOpen = true,
+  rightPanelWidth,
+  onRightPanelWidthChange,
+  viewport,
   bottomDock,
+  bottomDockExpanded = true,
+  viewportOverlays,
   tabBar,
   statusBar,
   className,
 }: AppShellProps) {
+  const effectiveLeftW = leftPanelOpen ? (leftPanelWidth ?? DEFAULT_PANEL_W) : 0;
+  const effectiveRightW = rightPanelOpen ? (rightPanelWidth ?? DEFAULT_PANEL_W) : 0;
+
+  // Bottom dock inset: expanded uses default dock height (240px), collapsed uses tab bar (~32px)
+  const bottomDockInset = bottomDock
+    ? PANEL_FLOAT_INSET + (bottomDockExpanded ? 240 : 32) + PANEL_FLOAT_INSET
+    : 0;
+
   return (
     <div
       data-slot="app-shell"
@@ -45,79 +77,66 @@ function AppShell({
       {/* Row 1: Top bar */}
       {topBar}
 
-      {/* Row 2: Secondary toolbar */}
-      {toolbar}
+      {/* Row 2: Main area — viewport + floating panels */}
+      <div
+        data-slot="main-area"
+        className="relative flex-1 overflow-hidden"
+        style={{
+          '--vp-inset-left': `${effectiveLeftW ? effectiveLeftW + 2 * PANEL_FLOAT_INSET : 0}px`,
+          '--vp-inset-right': `${effectiveRightW ? effectiveRightW + 2 * PANEL_FLOAT_INSET : 0}px`,
+          '--vp-inset-bottom': `${bottomDockInset}px`,
+        } as React.CSSProperties}
+      >
+        {/* Viewport layer */}
+        <div className="absolute inset-0 z-[var(--z-base)]">{viewport}</div>
 
-      {/* Row 3: Resizable body */}
-      <PanelGroup orientation="horizontal" className="flex-1 overflow-hidden">
-        {/* Left panel */}
-        <Panel
-          id="left"
-          defaultSize={260}
-          minSize={200}
-          maxSize={380}
-          collapsible
-          className="overflow-hidden"
-        >
-          {leftPanel}
-        </Panel>
+        {/* Left floating panel */}
+        {leftPanel && (
+          <FloatingPanel
+            side="left"
+            open={leftPanelOpen}
+            width={leftPanelWidth}
+            onWidthChange={onLeftPanelWidthChange}
+          >
+            {leftPanel}
+          </FloatingPanel>
+        )}
 
-        <PanelResizeHandle
-          className={cn(
-            'w-1 shrink-0 bg-transparent transition-colors duration-[var(--duration-fast)]',
-            'hover:bg-accent-primary/30',
-            'data-[resize-handle-state=drag]:bg-accent-primary',
-          )}
-        />
+        {/* Right floating panel */}
+        {rightPanel && (
+          <FloatingPanel
+            side="right"
+            open={rightPanelOpen}
+            width={rightPanelWidth}
+            onWidthChange={onRightPanelWidthChange}
+          >
+            {rightPanel}
+          </FloatingPanel>
+        )}
 
-        {/* Center column: viewport + resizable bottom dock */}
-        <Panel id="center" style={{ overflow: 'hidden' }}>
-          <PanelGroup orientation="vertical">
-            <Panel id="viewport" defaultSize="70%" minSize="30%">
-              <div className="relative h-full overflow-hidden">{viewport}</div>
-            </Panel>
-            {bottomDock && (
-              <>
-                <PanelResizeHandle
-                  className={cn(
-                    'h-1.5 shrink-0 cursor-row-resize bg-border-default transition-colors duration-[var(--duration-fast)]',
-                    'hover:bg-accent-primary/30',
-                    'data-[resize-handle-state=drag]:bg-accent-primary',
-                  )}
-                />
-                <Panel id="bottom" defaultSize="30%" minSize="10%" maxSize="60%" collapsible>
-                  {bottomDock}
-                </Panel>
-              </>
-            )}
-          </PanelGroup>
-        </Panel>
+        {/* Bottom dock — floating, centered between panels */}
+        {bottomDock && (
+          <div
+            data-slot="bottom-dock-container"
+            className="absolute z-[var(--z-panel)]"
+            style={{
+              bottom: PANEL_FLOAT_INSET,
+              left: effectiveLeftW + 2 * PANEL_FLOAT_INSET,
+              right: effectiveRightW + 2 * PANEL_FLOAT_INSET,
+            }}
+          >
+            {bottomDock}
+          </div>
+        )}
 
-        <PanelResizeHandle
-          className={cn(
-            'w-1 shrink-0 bg-transparent transition-colors duration-[var(--duration-fast)]',
-            'hover:bg-accent-primary/30',
-            'data-[resize-handle-state=drag]:bg-accent-primary',
-          )}
-        />
+        {/* Additional overlays (floating toolbars, HUD, etc.) */}
+        {viewportOverlays}
+      </div>
 
-        {/* Right panel */}
-        <Panel
-          id="right"
-          defaultSize={320}
-          minSize={280}
-          maxSize={440}
-          collapsible
-          className="overflow-hidden"
-        >
-          {rightPanel}
-        </Panel>
-      </PanelGroup>
-
-      {/* Row 4: Workspace tab bar */}
+      {/* Row 3: Workspace tab bar (optional, wired in Epic 3) */}
       {tabBar}
 
-      {/* Row 5: Status bar */}
+      {/* Row 4: Status bar */}
       {statusBar}
     </div>
   );

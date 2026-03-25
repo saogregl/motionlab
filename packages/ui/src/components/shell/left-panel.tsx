@@ -7,9 +7,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 interface LeftPanelProps {
   children?: ReactNode;
   className?: string;
+  createAction?: ReactNode;
 }
 
-function LeftPanel({ children, className }: LeftPanelProps) {
+function LeftPanel({ children, className, createAction }: LeftPanelProps) {
   const [viewMode, setViewMode] = useState<'tree' | 'list'>('tree');
 
   return (
@@ -38,21 +39,22 @@ function LeftPanel({ children, className }: LeftPanelProps) {
         </TabsList>
 
         {/* Filter bar */}
-        <div className="flex items-center gap-1 px-2 py-1">
-          <div className="flex flex-1 items-center gap-1.5 h-6 rounded-[var(--radius-sm)] border border-transparent px-1.5 focus-within:border-[var(--border-field)] focus-within:bg-[var(--layer-base)]">
-            <Search className="size-3 shrink-0 text-text-tertiary" />
+        <div className="flex items-center gap-1.5 px-2 py-1">
+          <div className="relative flex flex-1 items-center h-8 rounded-[var(--panel-radius)] bg-[var(--layer-base)] border border-transparent focus-within:border-[var(--border-field-focus)]">
+            <Search className="absolute left-2 size-3 shrink-0 text-text-tertiary pointer-events-none" />
             <input
-              placeholder="Filter..."
-              className="min-w-0 flex-1 bg-transparent text-[length:var(--text-xs)] outline-none placeholder:text-muted-foreground"
+              placeholder="Search"
+              className="h-full w-full bg-transparent ps-7 pe-2 text-[length:var(--text-xs)] outline-none placeholder:text-[var(--text-disabled)]"
             />
           </div>
           <ToolbarButton
             tooltip={viewMode === 'tree' ? 'List view' : 'Tree view'}
             onClick={() => setViewMode(viewMode === 'tree' ? 'list' : 'tree')}
-            className="size-6 [&_svg]:size-3.5"
+            className="size-8 [&_svg]:size-3.5"
           >
             {viewMode === 'tree' ? <List /> : <TreePine />}
           </ToolbarButton>
+          {createAction}
         </div>
 
         {/* Content */}

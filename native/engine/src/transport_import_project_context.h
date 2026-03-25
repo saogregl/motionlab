@@ -57,10 +57,12 @@ public:
 
     void clear();
 
-    // Shape loading resolves body_id -> geometry_ids for face-picking
+    // Shape loading resolves retained CAD topology for geometry-aware picking.
+    bool ensure_geometry_shape_loaded(const std::string& geometry_id);
     bool ensure_body_shape_loaded(const std::string& body_id);
 
     double body_length_scale(const std::string& body_id) const;
+    double geometry_length_scale(const std::string& geometry_id) const;
 
     // Cleanup helpers for delete operations
     void remove_body_data(const std::string& body_id);

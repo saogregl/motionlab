@@ -20,6 +20,8 @@ interface BottomDockProps {
   /** Content for the active tab */
   children?: ReactNode;
   className?: string;
+  /** Inline styles (useful for overriding --bottom-dock-h) */
+  style?: React.CSSProperties;
 }
 
 function BottomDock({
@@ -30,6 +32,7 @@ function BottomDock({
   onExpandedChange,
   children,
   className,
+  style,
 }: BottomDockProps) {
   const [uncontrolledActiveTab, setUncontrolledActiveTab] = useState(tabs[0]?.id ?? '');
   const [uncontrolledExpanded, setUncontrolledExpanded] = useState(true);
@@ -54,9 +57,11 @@ function BottomDock({
       data-slot="bottom-dock"
       data-expanded={expanded || undefined}
       className={cn(
-        'flex h-full flex-col border-t border-border-default bg-layer-base',
+        'flex flex-col rounded-[var(--panel-radius)] border border-[var(--border-default)] bg-layer-base',
+        expanded ? 'h-[var(--bottom-dock-h)]' : 'h-auto',
         className,
       )}
+      style={style}
     >
       {/* Tab bar — always visible */}
       <div className="flex h-8 shrink-0 items-center bg-[var(--tab-contained-bg)]">

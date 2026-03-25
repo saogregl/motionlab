@@ -1,5 +1,5 @@
 import type { SceneGraphManager, SpatialPickData } from '@motionlab/viewport';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   registerSceneGraph,
@@ -18,7 +18,6 @@ import { useVisibilityStore } from '../stores/visibility.js';
 import { analyzeDatumAlignment, computeDatumWorldPose } from '../utils/datum-alignment.js';
 import { resolveDatumFacePick } from '../utils/datum-face-pick.js';
 import { nextDatumName } from '../utils/datum-naming.js';
-import { mergeGeometryMeshes } from '../utils/merge-geometry-meshes.js';
 import {
   resolveViewportEntityId,
   resolveViewportEntityIds,
@@ -93,6 +92,10 @@ function groupGeometriesByBody(
 
 export function useViewportBridge() {
   const sceneGraphRef = useRef<SceneGraphManager | null>(null);
+  // Incremented by handleSceneReady once the R3F scene is ready. The
+  // subscription effect depends on this so it re-runs after the scene graph
+  // reference is set (R3F fires its effects after the DOM commit phase).
+  const [sgTrigger, setSgTrigger] = useState(0);
 
   const handleSceneReady = useCallback((sceneGraph: SceneGraphManager) => {
     sceneGraphRef.current = sceneGraph;
@@ -104,14 +107,17 @@ export function useViewportBridge() {
     for (const body of bodies.values()) {
       const bodyGeoms = geometriesByBody.get(body.id) ?? [];
       if (bodyGeoms.length === 0) continue;
-      const merged = mergeGeometryMeshes(bodyGeoms);
-      sceneGraph.addBody(
-        body.id,
-        body.name,
-        merged.meshData,
-        convertPose(body.pose),
-        merged.partIndex,
-      );
+      sceneGraph.upsertBody(body.id, body.name, convertPose(body.pose));
+      for (const geometry of bodyGeoms) {
+        sceneGraph.addBodyGeometry(
+          body.id,
+          geometry.id,
+          geometry.name,
+          geometry.meshData,
+          convertPose(geometry.localPose),
+          geometry.partIndex,
+        );
+      }
     }
 
     // Initial sync: add any datums already in the store
@@ -152,6 +158,10 @@ export function useViewportBridge() {
       });
       sceneGraph.refreshJointPositions();
     });
+
+    // Signal the subscription effect to wire up now that the scene graph is ready.
+    setSgTrigger((t) => t + 1);
+
   }, []);
 
   // Store subscriptions — set up after scene is ready, tear down on unmount
@@ -202,34 +212,40 @@ export function useViewportBridge() {
 
       for (const id of currentBodyIds) {
         if (!trackedBodyIds.has(id)) {
-          // New body — add with merged geometry meshes
+          // New body — add with attached geometry meshes
           const body = state.bodies.get(id);
           if (!body) continue;
           const bodyGeoms = geometriesByBody.get(body.id) ?? [];
           if (bodyGeoms.length === 0) continue;
-          const merged = mergeGeometryMeshes(bodyGeoms);
-          sg.addBody(
-            body.id,
-            body.name,
-            merged.meshData,
-            convertPose(body.pose),
-            merged.partIndex,
-          );
+          sg.upsertBody(body.id, body.name, convertPose(body.pose));
+          for (const geometry of bodyGeoms) {
+            sg.addBodyGeometry(
+              body.id,
+              geometry.id,
+              geometry.name,
+              geometry.meshData,
+              convertPose(geometry.localPose),
+              geometry.partIndex,
+            );
+          }
         } else if (bodiesNeedingRebuild.has(id)) {
-          // Body exists but geometries changed — rebuild mesh
+          // Body exists but geometries changed — rebuild child geometry meshes
           const body = state.bodies.get(id);
           if (!body) continue;
           sg.removeBody(id);
           const bodyGeoms = geometriesByBody.get(body.id) ?? [];
           if (bodyGeoms.length > 0) {
-            const merged = mergeGeometryMeshes(bodyGeoms);
-            sg.addBody(
-              body.id,
-              body.name,
-              merged.meshData,
-              convertPose(body.pose),
-              merged.partIndex,
-            );
+            sg.upsertBody(body.id, body.name, convertPose(body.pose));
+            for (const geometry of bodyGeoms) {
+              sg.addBodyGeometry(
+                body.id,
+                geometry.id,
+                geometry.name,
+                geometry.meshData,
+                convertPose(geometry.localPose),
+                geometry.partIndex,
+              );
+            }
           }
         }
       }
@@ -462,6 +478,16 @@ export function useViewportBridge() {
       unsubHover();
       unsubVisibility();
       unsubGizmoMode();
+      // Do NOT call registerSceneGraph(null) here: this cleanup also runs when
+      // the effect re-fires on canvas remount, which would null-out the newly
+      // registered scene graph before the next run can restore it. The scene
+      // graph reference is cleared on true unmount via the effect below.
+    };
+  }, [sgTrigger]);
+
+  // Clear the scene graph reference only when the bridge truly unmounts.
+  useEffect(() => {
+    return () => {
       registerSceneGraph(null);
     };
   }, []);
@@ -491,7 +517,7 @@ export function useViewportBridge() {
           return;
         }
         const name = nextDatumName(datums);
-        sendCreateDatumFromFace(resolution.bodyId, resolution.faceIndex, name);
+        sendCreateDatumFromFace(resolution.geometryId, resolution.faceIndex, name);
         return;
       }
 
@@ -572,7 +598,7 @@ export function useViewportBridge() {
             creationState.setCreatingDatum(true);
             useAuthoringStatusStore.getState().setMessage('Creating datum...');
             const name = nextDatumName(datums);
-            sendCreateDatumFromFace(resolution.bodyId, resolution.faceIndex, name);
+            sendCreateDatumFromFace(resolution.geometryId, resolution.faceIndex, name);
           }
         }
 
@@ -616,7 +642,7 @@ export function useViewportBridge() {
         creationState.setCreatingDatum(true);
         useAuthoringStatusStore.getState().setMessage('Creating datum...');
         const name = nextDatumName(datums);
-        sendCreateDatumFromFace(resolution.bodyId, resolution.faceIndex, name);
+        sendCreateDatumFromFace(resolution.geometryId, resolution.faceIndex, name);
         return;
       }
 

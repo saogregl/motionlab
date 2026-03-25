@@ -16,7 +16,7 @@ import {
   Vec3Display,
   formatEngValue,
 } from '@motionlab/ui';
-import { Activity, ArrowLeftRight, Fingerprint, Link2, Move3D, Pencil, Ruler, Zap } from 'lucide-react';
+import { Link2 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
 import { sendDeleteActuator, sendUpdateJoint } from '../engine/connection.js';
@@ -138,7 +138,7 @@ export function JointInspector({ jointId }: { jointId: string }) {
       entityType="Joint"
       entityIcon={<Link2 className="size-5" />}
     >
-      <InspectorSection title="Identity" icon={<Fingerprint className="size-3.5" />}>
+      <InspectorSection title="Identity">
         <PropertyRow label="Name">
           <InlineEditableName
             value={joint.name}
@@ -179,7 +179,7 @@ export function JointInspector({ jointId }: { jointId: string }) {
       </InspectorSection>
 
       {/* Connection diagram + swap + edit */}
-      <InspectorSection title="Connection" icon={<Link2 className="size-3.5" />}>
+      <InspectorSection title="Connection">
         {parentDatum && childDatum && parentBody && childBody ? (
           <JointConnectionDiagram
             parentBodyName={parentBody.name}
@@ -210,7 +210,6 @@ export function JointInspector({ jointId }: { jointId: string }) {
             onClick={handleSwap}
             className="flex-1"
           >
-            <ArrowLeftRight className="size-3" />
             Swap
           </Button>
           <Button
@@ -220,14 +219,13 @@ export function JointInspector({ jointId }: { jointId: string }) {
             onClick={handleEditJoint}
             className="flex-1"
           >
-            <Pencil className="size-3" />
             Edit Joint
           </Button>
         </div>
       </InspectorSection>
 
       {/* Coordinate frame display */}
-      <InspectorSection title="Coordinate Frames" icon={<Move3D className="size-3.5" />}>
+      <InspectorSection title="Coordinate Frames" defaultOpen={false}>
         <div className="flex gap-px px-1.5 pb-1">
           <button
             type="button"
@@ -255,8 +253,8 @@ export function JointInspector({ jointId }: { jointId: string }) {
         {parentDatumPose && (
           <>
             <div className="px-1.5 pt-1">
-              <span className="text-[10px] font-medium text-green-400">
-                Parent Datum ({frameMode === 'local' ? 'Body Frame' : 'World Frame'})
+              <span className="text-3xs font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
+                Parent Datum
               </span>
             </div>
             <Vec3Display label="Position" value={parentDatumPose.position} unit="m" />
@@ -266,8 +264,8 @@ export function JointInspector({ jointId }: { jointId: string }) {
         {childDatumPose && (
           <>
             <div className="px-1.5 pt-1">
-              <span className="text-[10px] font-medium text-orange-400">
-                Child Datum ({frameMode === 'local' ? 'Body Frame' : 'World Frame'})
+              <span className="text-3xs font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
+                Child Datum
               </span>
             </div>
             <Vec3Display label="Position" value={childDatumPose.position} unit="m" />
@@ -277,7 +275,7 @@ export function JointInspector({ jointId }: { jointId: string }) {
       </InspectorSection>
 
       {(joint.type === 'revolute' || joint.type === 'prismatic' || joint.type === 'cylindrical') && (
-        <InspectorSection title="Limits" icon={<Ruler className="size-3.5" />}>
+        <InspectorSection title="Limits">
           <PropertyRow label="Lower" numeric>
             <NumericInput
               value={joint.lowerLimit}
@@ -300,7 +298,7 @@ export function JointInspector({ jointId }: { jointId: string }) {
       )}
 
       {(joint.type === 'revolute' || joint.type === 'prismatic') && (
-        <InspectorSection title="Actuation" icon={<Zap className="size-3.5" />}>
+        <InspectorSection title="Actuation">
           {actuator ? (
             <>
               <PropertyRow label="Type">
@@ -344,7 +342,7 @@ export function JointInspector({ jointId }: { jointId: string }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1 text-destructive"
+                    className="flex-1"
                     onClick={() => sendDeleteActuator(actuator.id)}
                   >
                     Remove
@@ -361,7 +359,6 @@ export function JointInspector({ jointId }: { jointId: string }) {
                   className="w-full"
                   onClick={() => setCreateActuatorOpen(true)}
                 >
-                  <Zap className="size-3.5 me-1" />
                   Add Motor
                 </Button>
               </div>
@@ -400,7 +397,7 @@ export function JointInspector({ jointId }: { jointId: string }) {
             channels.has(torqueId);
 
           return (
-            <InspectorSection title="Simulation Values" icon={<Activity className="size-3.5" />}>
+            <InspectorSection title="Simulation Values">
               {posVal !== undefined && (
                 <PropertyRow label="Position" unit={posChannel?.unit ?? ''} numeric>
                   <span className="font-[family-name:var(--font-mono)] tabular-nums">

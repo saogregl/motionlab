@@ -793,12 +793,64 @@ void ImportProjectContext::handle_relocate_asset(ix::WebSocket& ws,
     send_event(ws, event);
 }
 
+bool ImportProjectContext::ensure_geometry_shape_loaded(const std::string& geometry_id) {
+    if (shape_registry_.get(geometry_id)) {
+        return true;
+    }
+
+    const auto geometry_it = geometry_topology_keys_.find(geometry_id);
+    if (geometry_it == geometry_topology_keys_.end()) {
+        return false;
+    }
+
+    const auto ctx_it = asset_topology_contexts_.find(geometry_it->second);
+    if (ctx_it == asset_topology_contexts_.end()) {
+        return false;
+    }
+
+    const auto& ctx = ctx_it->second;
+    engine::CadImporter topology_importer;
+    engine::ImportOptions topology_opts{ctx.density, ctx.tessellation_quality, ctx.unit_system};
+    std::string lower_path = ctx.file_path;
+    std::transform(lower_path.begin(), lower_path.end(), lower_path.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+
+    engine::ImportResult topology_result;
+    if (lower_path.ends_with(".iges") || lower_path.ends_with(".igs")) {
+        topology_result = topology_importer.import_iges_topology(ctx.file_path, topology_opts);
+    } else {
+        topology_result = topology_importer.import_step_topology(ctx.file_path, topology_opts);
+    }
+
+    if (!topology_result.success || topology_result.bodies.size() != ctx.body_ids.size()) {
+        return false;
+    }
+
+    // Store shapes by geometry_id where possible, fall back to body_id.
+    for (size_t i = 0; i < ctx.body_ids.size(); ++i) {
+        const auto& topo_body = topology_result.bodies[i];
+        if (topo_body.brep_shape) {
+            const std::string& bid = ctx.body_ids[i];
+            auto gids_it = body_geometry_map_.find(bid);
+            if (gids_it != body_geometry_map_.end() && !gids_it->second.empty()) {
+                // Store by geometry_id
+                shape_registry_.store(gids_it->second[0], *topo_body.brep_shape);
+            } else {
+                // Fallback: store by body_id for pre-v4 compatibility
+                shape_registry_.store(bid, *topo_body.brep_shape);
+            }
+        }
+    }
+
+    return shape_registry_.get(geometry_id) != nullptr;
+}
+
 bool ImportProjectContext::ensure_body_shape_loaded(const std::string& body_id) {
     // First check if any geometry for this body already has a shape loaded
     auto geom_ids_it = body_geometry_map_.find(body_id);
     if (geom_ids_it != body_geometry_map_.end()) {
         for (const auto& gid : geom_ids_it->second) {
-            if (shape_registry_.get(gid)) {
+            if (ensure_geometry_shape_loaded(gid)) {
                 return true;
             }
         }
@@ -809,7 +861,6 @@ bool ImportProjectContext::ensure_body_shape_loaded(const std::string& body_id) 
         return true;
     }
 
-    // Try lazy topology reload
     const auto body_it = body_topology_keys_.find(body_id);
     if (body_it == body_topology_keys_.end()) {
         return false;
@@ -838,34 +889,24 @@ bool ImportProjectContext::ensure_body_shape_loaded(const std::string& body_id) 
         return false;
     }
 
-    // Store shapes by geometry_id where possible, fall back to body_id
     for (size_t i = 0; i < ctx.body_ids.size(); ++i) {
         const auto& topo_body = topology_result.bodies[i];
         if (topo_body.brep_shape) {
-            const std::string& bid = ctx.body_ids[i];
-            auto gids_it = body_geometry_map_.find(bid);
-            if (gids_it != body_geometry_map_.end() && !gids_it->second.empty()) {
-                // Store by geometry_id
-                shape_registry_.store(gids_it->second[0], *topo_body.brep_shape);
-            } else {
-                // Fallback: store by body_id for pre-v4 compatibility
-                shape_registry_.store(bid, *topo_body.brep_shape);
-            }
+            shape_registry_.store(ctx.body_ids[i], *topo_body.brep_shape);
         }
     }
 
-    // Check if we got what we need
-    if (geom_ids_it != body_geometry_map_.end()) {
-        for (const auto& gid : geom_ids_it->second) {
-            if (shape_registry_.get(gid)) return true;
-        }
-    }
     return shape_registry_.get(body_id) != nullptr;
 }
 
 double ImportProjectContext::body_length_scale(const std::string& body_id) const {
     const auto it = body_length_scales_.find(body_id);
     return it != body_length_scales_.end() ? it->second : 1.0;
+}
+
+double ImportProjectContext::geometry_length_scale(const std::string& geometry_id) const {
+    const auto it = geometry_length_scales_.find(geometry_id);
+    return it != geometry_length_scales_.end() ? it->second : 1.0;
 }
 
 void ImportProjectContext::remove_body_data(const std::string& body_id) {

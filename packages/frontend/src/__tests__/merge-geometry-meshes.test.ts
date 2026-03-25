@@ -26,7 +26,7 @@ describe('mergeGeometryMeshes', () => {
   });
 
   it('passes through single geometry', () => {
-    const input = makeGeomInput(3, [0]);
+    const input = makeGeomInput(3, [1]);
     const result = mergeGeometryMeshes([input]);
     expect(result.meshData).toBe(input.meshData); // same reference
     expect(result.partIndex).toBe(input.partIndex);
@@ -63,27 +63,44 @@ describe('mergeGeometryMeshes', () => {
     expect(result.meshData.indices[5]).toBe(5); // 2 + 3
   });
 
-  it('remaps partIndex across geometries', () => {
+  it('concatenates face triangle counts across geometries', () => {
     const g1 = {
       meshData: {
         vertices: new Float32Array(9),
         indices: new Uint32Array([0, 1, 2]),
         normals: new Float32Array(9),
       },
-      partIndex: new Uint32Array([0]), // 1 triangle, part 0
+      partIndex: new Uint32Array([1]),
     };
     const g2 = {
+      meshData: {
+        vertices: new Float32Array(18),
+        indices: new Uint32Array([0, 1, 2, 3, 4, 5]),
+        normals: new Float32Array(18),
+      },
+      partIndex: new Uint32Array([2]),
+    };
+    const result = mergeGeometryMeshes([g1, g2]);
+    expect(result.partIndex).toEqual(new Uint32Array([1, 2]));
+  });
+
+  it('falls back to one triangle per face when topology metadata is missing', () => {
+    const g1 = {
       meshData: {
         vertices: new Float32Array(9),
         indices: new Uint32Array([0, 1, 2]),
         normals: new Float32Array(9),
       },
-      partIndex: new Uint32Array([0]), // 1 triangle, part 0 (different geometry)
+      partIndex: new Uint32Array([1]),
+    };
+    const g2 = {
+      meshData: {
+        vertices: new Float32Array(18),
+        indices: new Uint32Array([0, 1, 2, 3, 4, 5]),
+        normals: new Float32Array(18),
+      },
     };
     const result = mergeGeometryMeshes([g1, g2]);
-    expect(result.partIndex).toBeDefined();
-    // First geometry's part 0 stays as 0, second geometry's part 0 becomes 1
-    expect(result.partIndex![0]).toBe(0);
-    expect(result.partIndex![1]).toBe(1);
+    expect(result.partIndex).toEqual(new Uint32Array([1, 1, 1]));
   });
 });

@@ -1,3 +1,4 @@
+import { PropertyRow } from '@motionlab/ui';
 import { useCallback } from 'react';
 
 import { useSelectionStore } from '../stores/selection.js';
@@ -49,72 +50,75 @@ export function JointConnectionDiagram({
   );
 
   return (
-    <div className="flex items-center gap-0.5 px-1.5 py-1 text-2xs overflow-hidden">
-      {/* Parent body */}
-      <InteractiveLabel
-        label={parentBodyName}
-        entityId={parentBodyId}
-        className="text-green-400"
-        onSelect={select}
-        onHover={handleHover}
-      />
-      <Connector />
-      {/* Parent datum */}
-      <InteractiveLabel
-        label={parentDatumName}
-        entityId={parentDatumId}
-        className="text-green-300"
-        onSelect={select}
-        onHover={handleHover}
-      />
-      <Connector />
-      {/* Joint type badge */}
-      <span className="shrink-0 rounded border border-border-subtle bg-surface-elevated px-1 py-0.5 text-[10px] font-semibold text-text-secondary">
-        {JOINT_TYPE_LABELS[jointType] ?? jointType}
-      </span>
-      <Connector />
-      {/* Child datum */}
-      <InteractiveLabel
-        label={childDatumName}
-        entityId={childDatumId}
-        className="text-orange-300"
-        onSelect={select}
-        onHover={handleHover}
-      />
-      <Connector />
-      {/* Child body */}
-      <InteractiveLabel
-        label={childBodyName}
-        entityId={childBodyId}
-        className="text-orange-400"
-        onSelect={select}
-        onHover={handleHover}
-      />
-    </div>
-  );
-}
+    <>
+      <PropertyRow label="Type">
+        <span className="text-2xs font-medium">
+          {JOINT_TYPE_LABELS[jointType] ?? jointType}
+        </span>
+      </PropertyRow>
 
-function Connector() {
-  return <span className="shrink-0 text-text-tertiary">&mdash;</span>;
+      <div className="px-1.5 pt-1.5">
+        <span className="text-3xs font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
+          Parent
+        </span>
+      </div>
+      <PropertyRow label="Body">
+        <InteractiveLabel
+          label={parentBodyName}
+          entityId={parentBodyId}
+          onSelect={select}
+          onHover={handleHover}
+        />
+      </PropertyRow>
+      <PropertyRow label="Datum">
+        <InteractiveLabel
+          label={parentDatumName}
+          entityId={parentDatumId}
+          onSelect={select}
+          onHover={handleHover}
+        />
+      </PropertyRow>
+
+      <div className="px-1.5 pt-1.5">
+        <span className="text-3xs font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
+          Child
+        </span>
+      </div>
+      <PropertyRow label="Body">
+        <InteractiveLabel
+          label={childBodyName}
+          entityId={childBodyId}
+          onSelect={select}
+          onHover={handleHover}
+        />
+      </PropertyRow>
+      <PropertyRow label="Datum">
+        <InteractiveLabel
+          label={childDatumName}
+          entityId={childDatumId}
+          onSelect={select}
+          onHover={handleHover}
+        />
+      </PropertyRow>
+    </>
+  );
 }
 
 function InteractiveLabel({
   label,
   entityId,
-  className,
   onSelect,
   onHover,
 }: {
   label: string;
   entityId: string;
-  className?: string;
   onSelect: (id: string) => void;
   onHover: (id: string | null) => void;
 }) {
   return (
     <button
       type="button"
-      className={`truncate cursor-pointer hover:underline ${className ?? ''}`}
+      className="truncate cursor-pointer text-2xs hover:underline"
       onClick={() => onSelect(entityId)}
       onMouseEnter={() => onHover(entityId)}
       onMouseLeave={() => onHover(null)}

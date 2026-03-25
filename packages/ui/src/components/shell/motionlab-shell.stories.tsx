@@ -4,7 +4,6 @@ import {
   ArrowLeftRight,
   BarChart3,
   Box,
-  BoxSelect,
   CircleDot,
   Crosshair,
   Eye,
@@ -12,10 +11,8 @@ import {
   Grid3X3,
   Link2,
   Lock,
-  Maximize2,
   MoreHorizontal,
-  Move,
-  Pointer,
+  Plus,
   RotateCcw,
   RotateCw,
   Settings,
@@ -60,7 +57,6 @@ import { AppShell } from './app-shell';
 import { BottomDock } from './bottom-dock';
 import { LeftPanel } from './left-panel';
 import { RightPanel } from './right-panel';
-import { SecondaryToolbar } from './secondary-toolbar';
 import { TopBar } from './top-bar';
 import { ViewportHUD } from './viewport-hud';
 import { WorkspaceTabBar } from './workspace-tab-bar';
@@ -481,6 +477,8 @@ function MotionLabShellDemo() {
   );
   const [activeBottomTab, setActiveBottomTab] = useState('timeline');
   const [bottomExpanded, setBottomExpanded] = useState(true);
+  const [leftWidth, setLeftWidth] = useState(288);
+  const [rightWidth, setRightWidth] = useState(288);
 
   // Timeline state
   const [currentTime, setCurrentTime] = useState(0.342);
@@ -529,47 +527,23 @@ function MotionLabShellDemo() {
               }
             />
           }
-          toolbar={
-            <SecondaryToolbar
-              rightActions={
-                <ToolbarGroup>
-                  <ToolbarButton tooltip="Simulation Settings">
-                    <Settings />
-                  </ToolbarButton>
-                </ToolbarGroup>
+          leftPanelOpen
+          leftPanelWidth={leftWidth}
+          onLeftPanelWidthChange={setLeftWidth}
+          rightPanelOpen
+          rightPanelWidth={rightWidth}
+          onRightPanelWidthChange={setRightWidth}
+          leftPanel={
+            <LeftPanel
+              createAction={
+                <button
+                  type="button"
+                  className="flex size-8 shrink-0 items-center justify-center rounded-[var(--panel-radius)] bg-layer-raised text-text-tertiary hover:text-text-primary hover:bg-layer-raised-hover"
+                >
+                  <Plus className="size-3.5" />
+                </button>
               }
             >
-              <ToolbarGroup separator>
-                <ToolbarButton tooltip="Select" active>
-                  <Pointer />
-                </ToolbarButton>
-                <ToolbarButton tooltip="Box Select">
-                  <BoxSelect />
-                </ToolbarButton>
-              </ToolbarGroup>
-              <ToolbarGroup separator>
-                <ToolbarButton tooltip="Move">
-                  <Move />
-                </ToolbarButton>
-                <ToolbarButton tooltip="Rotate">
-                  <RotateCcw />
-                </ToolbarButton>
-                <ToolbarButton tooltip="Scale">
-                  <Maximize2 />
-                </ToolbarButton>
-              </ToolbarGroup>
-              <ToolbarGroup>
-                <ToolbarButton tooltip="Grid">
-                  <Grid3X3 />
-                </ToolbarButton>
-                <ToolbarButton tooltip="Visibility">
-                  <Eye />
-                </ToolbarButton>
-              </ToolbarGroup>
-            </SecondaryToolbar>
-          }
-          leftPanel={
-            <LeftPanel>
               <TreeView
                 nodes={TREE_NODES}
                 selectedIds={selectedIds}
@@ -686,6 +660,15 @@ function MotionLabShellDemo() {
                     <Button variant="ghost" size="icon-xs">
                       <MoreHorizontal />
                     </Button>
+                  }
+                  footer={
+                    <button
+                      type="button"
+                      className="flex h-8 w-full items-center justify-center gap-1.5 rounded-[var(--panel-radius)] border border-[var(--border-strong)] bg-layer-raised text-[length:var(--text-xs)] font-bold text-text-primary hover:bg-layer-raised-hover"
+                    >
+                      <Plus className="size-3" />
+                      Add Component
+                    </button>
                   }
                 >
                   <InspectorSection title="Identity">

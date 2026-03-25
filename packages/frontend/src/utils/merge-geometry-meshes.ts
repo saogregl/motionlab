@@ -16,9 +16,13 @@ const EMPTY_MESH: MeshData = {
  * SceneGraphManager.addBody(). Single-geometry bodies (the common case)
  * are a zero-cost pass-through.
  *
- * NOTE: geometry localPose is NOT applied to vertices for MVP — import
- * always uses identity local_pose. If non-identity localPose support is
- * needed, vertices must be transformed before merging.
+ * Deprecated for face-aware workflows. The viewport now renders one child mesh
+ * per geometry and uses geometry-local topology for picking.
+ *
+ * If this helper is still used for legacy rendering paths, `partIndex`
+ * preserves BodyGeometryIndex semantics: each entry is the triangle count for
+ * one face, and multi-geometry merges concatenate those face ranges without
+ * rebasing them into synthetic face ids.
  */
 export function mergeGeometryMeshes(geometries: GeometryMeshInput[]): {
   meshData: MeshData;
@@ -54,7 +58,6 @@ export function mergeGeometryMeshes(geometries: GeometryMeshInput[]): {
   let vertexOffset = 0;
   let indexOffset = 0;
   let partIndexOffset = 0;
-  let partBaseIndex = 0;
 
   for (const g of geometries) {
     mergedVertices.set(g.meshData.vertices, vertexOffset);
@@ -69,21 +72,16 @@ export function mergeGeometryMeshes(geometries: GeometryMeshInput[]): {
     // Merge partIndex
     if (mergedPartIndex) {
       if (g.partIndex) {
-        // Find max part value in this geometry to compute next offset
-        let maxPart = 0;
         for (let i = 0; i < g.partIndex.length; i++) {
-          mergedPartIndex[partIndexOffset + i] = g.partIndex[i] + partBaseIndex;
-          if (g.partIndex[i] > maxPart) maxPart = g.partIndex[i];
+          mergedPartIndex[partIndexOffset + i] = g.partIndex[i];
         }
-        partBaseIndex += maxPart + 1;
         partIndexOffset += g.partIndex.length;
       } else {
-        // No partIndex — assign all triangles a single part
+        // No partIndex — treat each triangle as its own face.
         const triCount = g.meshData.indices.length / 3;
         for (let i = 0; i < triCount; i++) {
-          mergedPartIndex[partIndexOffset + i] = partBaseIndex;
+          mergedPartIndex[partIndexOffset + i] = 1;
         }
-        partBaseIndex += 1;
         partIndexOffset += triCount;
       }
     }

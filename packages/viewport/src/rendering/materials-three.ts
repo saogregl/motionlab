@@ -56,7 +56,10 @@ const PRESETS: Record<MaterialPreset, PresetDefinition> = {
   },
 };
 
-const SELECTION_TINT_FACTOR = 0.3;
+// Selection replaces the body's base color almost entirely — the lerp factor
+// is effectively 1.0 (solid overlay) matching professional CAD-tool conventions
+// (e.g. SolidWorks / CATIA solid-blue selection).
+const SELECTION_TINT_FACTOR = 1.0;
 
 export interface MaterialFactory {
   getDefaultMaterial: () => MeshStandardMaterial;
@@ -108,6 +111,10 @@ export function createMaterialFactory(): MaterialFactory {
 
     const original = mesh.userData._originalColor as Color;
     mat.color.copy(original).lerp(tintColor ?? ACCENT, SELECTION_TINT_FACTOR);
+    // Subtle emissive makes the selection pop in shadowed geometry regions,
+    // matching the "lit from within" quality of CAD tool selection highlights.
+    mat.emissive.copy(tintColor ?? ACCENT);
+    mat.emissiveIntensity = 0.1;
   }
 
   function removeSelectionTint(mesh: Mesh): void {
@@ -117,6 +124,8 @@ export function createMaterialFactory(): MaterialFactory {
     const mat = mesh.material;
     if (mat instanceof MeshStandardMaterial) {
       mat.color.copy(originalColor);
+      mat.emissive.set(0x000000);
+      mat.emissiveIntensity = 0;
     }
     delete mesh.userData._originalColor;
   }

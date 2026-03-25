@@ -204,7 +204,6 @@ export function WelcomeScreen() {
                 variant="outline"
                 size="default"
                 onClick={handleOpenProject}
-                disabled={!isReady}
               >
                 <FolderOpen className="size-4 mr-2" />
                 Open Project
@@ -226,7 +225,6 @@ export function WelcomeScreen() {
                   type="button"
                   className={`group flex items-center justify-between px-4 py-2.5 text-left transition-colors hover:bg-layer-hover ${i > 0 ? 'border-t border-border-default' : ''}`}
                   onClick={() => handleOpenRecent(project)}
-                  disabled={!isReady}
                 >
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[length:var(--text-sm)] font-medium text-text-primary">
@@ -274,7 +272,6 @@ export function WelcomeScreen() {
                     type="button"
                     className="flex items-start gap-3 rounded-[var(--radius-md)] border border-border-default bg-layer-overlay px-4 py-3 text-left transition-colors hover:bg-layer-hover"
                     onClick={() => handleOpenTemplate(template)}
-                    disabled={!isReady}
                   >
                     <Icon className="mt-0.5 size-4 shrink-0 text-text-secondary" />
                     <div className="min-w-0 flex-1">

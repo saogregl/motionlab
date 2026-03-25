@@ -40,6 +40,8 @@ interface SimulationState {
   setLoopEnabled(enabled: boolean): void;
   setError(message: string): void;
   setNeedsCompile(v: boolean): void;
+  /** Update time/step without changing state — used by simulationFrame handler. */
+  updateSimTime(time: number, stepCount: number): void;
   reset(): void;
 }
 
@@ -73,6 +75,12 @@ export const useSimulationStore = create<SimulationState>()((set) => ({
   setLoopEnabled: (enabled) => set({ loopEnabled: enabled }),
   setError: (message) => set({ state: 'error', errorMessage: message }),
   setNeedsCompile: (v) => set({ needsCompile: v }),
+  updateSimTime: (time, stepCount) =>
+    set((prev) => ({
+      simTime: time,
+      stepCount,
+      maxSimTime: Math.max(prev.maxSimTime, time),
+    })),
   reset: () =>
     set({
       state: 'idle',

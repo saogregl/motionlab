@@ -17,6 +17,7 @@
 | [ADR-0013](ADR-0013-body-geometry-separation.md) | Body-Geometry Separation | Accepted | Protocol v4 separates Body (physics) from Geometry (visual/CAD), adds mass override, empty body creation, geometry attach/detach, and project file v3 migration. |
 | [ADR-0014](ADR-0014-entity-type-aware-selection-visuals.md) | Entity-Type-Aware Selection Visuals | Accepted | SelectionVisuals API changes from plain mesh arrays to SelectionMeshEntry (mesh + entityType), enabling per-type color-coded selection and hover rendering. |
 | [ADR-0015](ADR-0015-simulation-settings-transport-contract.md) | Simulation Settings Transport Contract | Proposed | SimulationSettings extends to solver, contact, and duration; CompilationDiagnostic replaces string diagnostics; enum names are product-facing. |
+| [ADR-0016](ADR-0016-geometry-local-face-picking.md) | Geometry-Local Face Picking | Accepted | Face-aware viewport picks and datum creation resolve on `geometry_id + face_index`, with per-geometry scene graph topology and meter-normalized STEP story imports. |
 
 ## Adding a New ADR
 

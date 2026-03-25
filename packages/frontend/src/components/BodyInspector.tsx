@@ -80,7 +80,7 @@ export function BodyInspector() {
         <PropertyRow label="Fixed (Ground)">
           <div className="flex items-center gap-1.5">
             <Switch
-              size="sm"
+
               checked={body.isFixed ?? false}
               onCheckedChange={(checked) =>
                 sendUpdateBody(body.id, { isFixed: checked })
@@ -106,7 +106,6 @@ export function BodyInspector() {
         </PropertyRow>
         <PropertyRow label="Override">
           <Switch
-            size="sm"
             checked={body.massOverride ?? false}
             onCheckedChange={(checked) => {
               if (checked) {

@@ -26,8 +26,8 @@ export const VIEWPORT_THEMES: Record<'light' | 'dark', ViewportThemeConfig> = {
   },
   dark: {
     background: new Color('#121212'), // matches --bg-viewport
-    gridCellColor: '#282830',
-    gridSectionColor: '#383848',
+    gridCellColor: '#303040',
+    gridSectionColor: '#505060',
     axisColors: ['#ff4060', '#40df80', '#4080ff'],
   },
 };
