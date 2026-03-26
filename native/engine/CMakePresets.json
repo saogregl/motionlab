@@ -21,8 +21,8 @@
       "inherits": "vcpkg-base",
       "generator": "Ninja",
       "cacheVariables": {
-        "VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic",
-        "VCPKG_HOST_TRIPLET": "x64-mingw-dynamic"
+        "VCPKG_TARGET_TRIPLET": "x64-mingw-static",
+        "VCPKG_HOST_TRIPLET": "x64-mingw-static"
       },
       "condition": {
         "type": "equals",

@@ -1,5 +1,6 @@
 import {
   ChannelDataType,
+  createAnalyzeFacePairCommand,
   createCompileMechanismCommand,
   createCreateDatumCommand,
   createCreateDatumFromFaceCommand,
@@ -40,7 +41,9 @@ import {
   type SimulationSettingsInput,
   engineStateToString,
   eventToDebugJson,
+  FacePairAlignment,
   FaceSurfaceClass,
+  mapFacePairAlignment,
   mapJointType,
   parseEvent,
   SimStateEnum,
@@ -58,7 +61,7 @@ import {
   type PrismaticMotorActuator,
   DiagnosticSeverity,
 } from '@motionlab/protocol';
-import type { CreateDatumFromFaceSuccess, ElementId, Joint, MissingAssetInfo } from '@motionlab/protocol';
+import type { AnalyzeFacePairSuccess, CreateDatumFromFaceSuccess, ElementId, Joint, MissingAssetInfo } from '@motionlab/protocol';
 import type { SceneGraphManager } from '@motionlab/viewport';
 import { useAssetLibraryStore } from '../stores/asset-library.js';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
@@ -76,7 +79,7 @@ import { useUILayoutStore } from '../stores/ui-layout.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
 import { useToastStore } from '../stores/toast.js';
 import { type StoreSample, addSamplesBatched, useTraceStore } from '../stores/traces.js';
-import { analyzeDatumAlignment, computeDatumWorldPose } from '../utils/datum-alignment.js';
+import { alignmentFromEngineAnalysis, analyzeDatumAlignment, computeDatumWorldPose } from '../utils/datum-alignment.js';
 import { commitJointCreation } from '../utils/joint-commit.js';
 import { shouldAutoCommit } from '../utils/joint-frame-inference.js';
 
@@ -1170,7 +1173,7 @@ export function connect(set: SetState, _get: GetState) {
                 const newDatumId = d.id?.id ?? '';
                 const surfaceClass = mapSurfaceClass(success.surfaceClass) ?? null;
                 if (jcs.step === 'pick-parent') {
-                  jcs.setParentDatum(newDatumId, surfaceClass);
+                  jcs.setParentDatum(newDatumId, surfaceClass, success.geometryId?.id ?? null, success.faceIndex);
                 } else if (jcs.step === 'pick-child') {
                   const parentDatum = jcs.parentDatumId
                     ? mechStore.datums.get(jcs.parentDatumId)
@@ -1236,6 +1239,102 @@ export function connect(set: SetState, _get: GetState) {
               statusStore.setMessage(result.result.value);
               console.error('[datum] create-from-face failed:', result.result.value);
               // Clear the creating flag if face-to-datum failed during joint creation
+              const jcs = useJointCreationStore.getState();
+              if (jcs.creatingDatum) {
+                jcs.setCreatingDatum(false);
+              }
+              const lcs = useLoadCreationStore.getState();
+              if (lcs.creatingDatum) {
+                lcs.setCreatingDatum(false);
+              }
+            }
+            break;
+          }
+          case 'analyzeFacePairResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            const statusStore = useAuthoringStatusStore.getState();
+            if (result.result.case === 'success') {
+              const success = result.result.value;
+              const d = success.childDatum;
+              if (!d) break;
+
+              // Add child datum to mechanism store
+              mechStore.addDatum({
+                id: d.id?.id ?? '',
+                name: d.name,
+                parentBodyId: d.parentBodyId?.id ?? '',
+                localPose: {
+                  position: {
+                    x: d.localPose?.position?.x ?? 0,
+                    y: d.localPose?.position?.y ?? 0,
+                    z: d.localPose?.position?.z ?? 0,
+                  },
+                  rotation: {
+                    x: d.localPose?.orientation?.x ?? 0,
+                    y: d.localPose?.orientation?.y ?? 0,
+                    z: d.localPose?.orientation?.z ?? 0,
+                    w: d.localPose?.orientation?.w ?? 1,
+                  },
+                },
+                surfaceClass: mapSurfaceClass(success.childSurfaceClass),
+                faceGeometry: mapFaceGeometry(success.childFaceGeometry),
+              });
+
+              const jcs = useJointCreationStore.getState();
+              if (jcs.creatingDatum) {
+                const childId = d.id?.id ?? '';
+                const childSurfaceClass = mapSurfaceClass(success.childSurfaceClass) ?? null;
+
+                // Build alignment from engine analysis
+                const alignmentKind = mapFacePairAlignment(success.alignment);
+                const recommendedType = mapJointType(success.recommendedJointType);
+                const alignment = alignmentFromEngineAnalysis(alignmentKind, recommendedType, success.recommendationConfidence);
+
+                jcs.setChildDatum(childId, alignment, childSurfaceClass);
+                jcs.setCreatingDatum(false);
+
+                // Auto-commit for high-confidence engine results
+                const updatedJcs = useJointCreationStore.getState();
+                if (
+                  updatedJcs.step === 'select-type' &&
+                  updatedJcs.parentDatumId &&
+                  updatedJcs.childDatumId &&
+                  success.recommendationConfidence >= 0.9
+                ) {
+                  commitJointCreation(
+                    updatedJcs.parentDatumId,
+                    updatedJcs.childDatumId,
+                    recommendedType,
+                  );
+                }
+
+                statusStore.setMessage(
+                  `Analyzed: ${alignmentKind} alignment (${Math.round(success.recommendationConfidence * 100)}% confidence)`,
+                );
+              }
+
+              // Handle load creation fallback (same pattern as createDatumFromFaceResult)
+              const lcs = useLoadCreationStore.getState();
+              if (lcs.creatingDatum) {
+                const newDatumId = d.id?.id ?? '';
+                if (lcs.step === 'pick-datum') {
+                  lcs.setDatum(newDatumId);
+                } else if (lcs.step === 'pick-second-datum') {
+                  if (lcs.datumId === newDatumId) {
+                    useAuthoringStatusStore
+                      .getState()
+                      .setMessage('Choose a different datum for the spring-damper target');
+                  } else {
+                    lcs.setSecondDatum(newDatumId);
+                  }
+                }
+                lcs.setCreatingDatum(false);
+              }
+              useSimulationStore.getState().setNeedsCompile(true);
+            } else if (result.result.case === 'errorMessage') {
+              statusStore.setMessage(result.result.value);
+              console.error('[analyze-face-pair] failed:', result.result.value);
               const jcs = useJointCreationStore.getState();
               if (jcs.creatingDatum) {
                 jcs.setCreatingDatum(false);
@@ -2311,6 +2410,18 @@ export function sendCreateDatumFromFace(
 ): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(createCreateDatumFromFaceCommand(geometryId, faceIndex, name));
+}
+
+export function sendAnalyzeFacePair(
+  parentDatumId: string,
+  parentGeometryId: string,
+  parentFaceIndex: number,
+  childGeometryId: string,
+  childFaceIndex: number,
+  childDatumName: string,
+): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createAnalyzeFacePairCommand(parentDatumId, parentGeometryId, parentFaceIndex, childGeometryId, childFaceIndex, childDatumName));
 }
 
 export function sendDeleteDatum(datumId: string): void {

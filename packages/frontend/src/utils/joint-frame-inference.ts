@@ -113,7 +113,7 @@ export type PairSurfaceClass = 'planar' | 'cylindrical' | 'conical' | 'spherical
 export function shouldAutoCommit(
   parentSurfaceClass: PairSurfaceClass,
   childSurfaceClass: PairSurfaceClass,
-  alignmentKind: 'coaxial' | 'coplanar' | 'coincident' | 'general' | null,
+  alignmentKind: 'coaxial' | 'coplanar' | 'coincident' | 'perpendicular' | 'general' | null,
 ): { autoCommit: boolean; jointType: JointTypeId | null } {
   // Two cylindrical faces, coaxial alignment → revolute
   if (

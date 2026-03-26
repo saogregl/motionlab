@@ -5,6 +5,7 @@ import {
   DETACHED_BODY_PREFIX,
   registerSceneGraph,
   sendCreateDatum,
+  sendAnalyzeFacePair,
   sendCreateDatumFromFace,
   sendUpdateBody,
   sendUpdateDatumPose,
@@ -715,9 +716,28 @@ export function useViewportBridge() {
               }
             }
             creationState.setCreatingDatum(true);
-            useAuthoringStatusStore.getState().setMessage('Setting joint anchor...');
             const name = nextDatumName(datums);
-            sendCreateDatumFromFace(resolution.geometryId, resolution.faceIndex, name);
+            if (
+              creationState.step === 'pick-child' &&
+              creationState.parentGeometryId !== null &&
+              creationState.parentFaceIndex !== null &&
+              creationState.parentDatumId
+            ) {
+              // Pairwise path: engine does analysis + creates child datum
+              useAuthoringStatusStore.getState().setMessage('Analyzing joint alignment...');
+              sendAnalyzeFacePair(
+                creationState.parentDatumId,
+                creationState.parentGeometryId,
+                creationState.parentFaceIndex,
+                resolution.geometryId,
+                resolution.faceIndex,
+                name,
+              );
+            } else {
+              // Standard path: create datum from face (parent pick, or fallback when no provenance)
+              useAuthoringStatusStore.getState().setMessage('Setting joint anchor...');
+              sendCreateDatumFromFace(resolution.geometryId, resolution.faceIndex, name);
+            }
           } else if (resolution.kind === 'error' && spatial?.bodyId && spatial.worldPoint) {
             // Primitive fallback: no B-Rep face data, but we have a hit point.
             // Create a datum at the hit location using the surface normal as Z-axis.

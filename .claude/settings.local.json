@@ -94,7 +94,10 @@
       "Bash(xargs basename:*)",
       "Bash(find /c/Dev/motionlab/packages/frontend/src -type f \\\\\\(-name *command* -o -name *undo* -o -name *history* \\\\\\))",
       "Bash(/tmp/occt_check.txt:*)",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "Bash(xxd C:/Dev/motionlab/native/engine/vcpkg-ports/opencascade/fix-pdb-install-vcpkg-layout.patch)",
+      "Bash(rm -rf C:/Dev/vcpkg/buildtrees/opencascade)",
+      "Bash(rm -rf C:/Dev/vcpkg/downloads/Open-Cascade-SAS-OCCT-V8_0_0_rc4)"
     ]
   },
   "enabledPlugins": {

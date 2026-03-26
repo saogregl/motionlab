@@ -11,6 +11,7 @@
 #include "primitive_generator.h"
 #include "asset_cache.h"
 #include "face_classifier.h"
+#include "face_pair_analyzer.h"
 #include "mechanism_state.h"
 #include "shape_registry.h"
 #include "transport_import_project_context.h"
@@ -284,6 +285,10 @@ struct TransportServer::Impl {
                 if (!authenticated) break;
                 enqueue_command(cmd.sequence_id(), cmd.create_datum_from_face(), &Impl::handle_create_datum_from_face);
                 break;
+            case protocol::Command::kAnalyzeFacePair:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.analyze_face_pair(), &Impl::handle_analyze_face_pair);
+                break;
             case protocol::Command::kUpdateBody:
                 if (!authenticated) break;
                 enqueue_command(cmd.sequence_id(), cmd.update_body(), &Impl::handle_update_body);
@@ -473,6 +478,47 @@ struct TransportServer::Impl {
         }
     }
 
+    protocol::FacePairAlignment to_proto_face_pair_alignment(engine::FacePairAlignmentKind kind) {
+        switch (kind) {
+            case engine::FacePairAlignmentKind::Coaxial:
+                return protocol::FACE_PAIR_ALIGNMENT_COAXIAL;
+            case engine::FacePairAlignmentKind::Coplanar:
+                return protocol::FACE_PAIR_ALIGNMENT_COPLANAR;
+            case engine::FacePairAlignmentKind::Coincident:
+                return protocol::FACE_PAIR_ALIGNMENT_COINCIDENT;
+            case engine::FacePairAlignmentKind::Perpendicular:
+                return protocol::FACE_PAIR_ALIGNMENT_PERPENDICULAR;
+            case engine::FacePairAlignmentKind::General:
+            default:
+                return protocol::FACE_PAIR_ALIGNMENT_GENERAL;
+        }
+    }
+
+    void populate_face_geometry(protocol::FaceGeometryMetadata* fg,
+                                const engine::FaceDatumPose& pose, double length_scale) {
+        if (pose.axis_direction.has_value()) {
+            auto* ad = fg->mutable_axis_direction();
+            ad->set_x((*pose.axis_direction)[0]);
+            ad->set_y((*pose.axis_direction)[1]);
+            ad->set_z((*pose.axis_direction)[2]);
+        }
+        if (pose.normal.has_value()) {
+            auto* n = fg->mutable_normal();
+            n->set_x((*pose.normal)[0]);
+            n->set_y((*pose.normal)[1]);
+            n->set_z((*pose.normal)[2]);
+        }
+        if (pose.radius.has_value()) {
+            fg->set_radius(*pose.radius);
+        }
+        if (pose.secondary_radius.has_value()) {
+            fg->set_secondary_radius(*pose.secondary_radius);
+        }
+        if (pose.semi_angle.has_value()) {
+            fg->set_semi_angle(*pose.semi_angle);
+        }
+    }
+
     void handle_create_datum(ix::WebSocket& ws, uint64_t sequence_id,
                               const protocol::CreateDatumCommand& cmd) {
         double pos[3] = {0, 0, 0};
@@ -592,6 +638,125 @@ struct TransportServer::Impl {
         if (face_pose->semi_angle.has_value()) {
             fg->set_semi_angle(*face_pose->semi_angle);
         }
+
+        send_event(ws, event);
+    }
+
+    void handle_analyze_face_pair(ix::WebSocket& ws, uint64_t sequence_id,
+                                   const protocol::AnalyzeFacePairCommand& cmd) {
+        const std::string parent_datum_id = cmd.has_parent_datum_id() ? cmd.parent_datum_id().id() : "";
+        const std::string parent_geometry_id = cmd.has_parent_geometry_id() ? cmd.parent_geometry_id().id() : "";
+        const std::string child_geometry_id = cmd.has_child_geometry_id() ? cmd.child_geometry_id().id() : "";
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_analyze_face_pair_result();
+
+        // Validate parent datum exists
+        const auto* parent_datum = mechanism_state.get_datum(parent_datum_id);
+        if (!parent_datum) {
+            result->set_error_message("Parent datum not found: " + parent_datum_id);
+            send_event(ws, event);
+            return;
+        }
+        const std::string parent_body_id = parent_datum->parent_body_id().id();
+
+        // Validate parent geometry
+        const auto* parent_geometry = mechanism_state.get_geometry(parent_geometry_id);
+        if (!parent_geometry) {
+            result->set_error_message("Parent geometry not found: " + parent_geometry_id);
+            send_event(ws, event);
+            return;
+        }
+
+        // Validate child geometry
+        const auto* child_geometry = mechanism_state.get_geometry(child_geometry_id);
+        if (!child_geometry) {
+            result->set_error_message("Child geometry not found: " + child_geometry_id);
+            send_event(ws, event);
+            return;
+        }
+        const std::string child_body_id = child_geometry->parent_body_id().id();
+
+        // Validate different bodies
+        if (parent_body_id == child_body_id) {
+            result->set_error_message("Parent and child faces must be on different bodies");
+            send_event(ws, event);
+            return;
+        }
+
+        // Ensure shapes loaded
+        if (!import_project.ensure_geometry_shape_loaded(parent_geometry_id)) {
+            result->set_error_message("Shape not available for parent geometry: " + parent_geometry_id);
+            send_event(ws, event);
+            return;
+        }
+        if (!import_project.ensure_geometry_shape_loaded(child_geometry_id)) {
+            result->set_error_message("Shape not available for child geometry: " + child_geometry_id);
+            send_event(ws, event);
+            return;
+        }
+
+        const TopoDS_Shape* parent_shape = shape_registry.get(parent_geometry_id);
+        const TopoDS_Shape* child_shape = shape_registry.get(child_geometry_id);
+        if (!parent_shape || !child_shape) {
+            result->set_error_message("Shape data unavailable for pairwise analysis");
+            send_event(ws, event);
+            return;
+        }
+
+        const double parent_scale = import_project.geometry_length_scale(parent_geometry_id);
+        const double child_scale = import_project.geometry_length_scale(child_geometry_id);
+
+        auto analysis = engine::analyze_face_pair(
+            *parent_shape, cmd.parent_face_index(), parent_scale,
+            *child_shape, cmd.child_face_index(), child_scale);
+
+        if (!analysis) {
+            result->set_error_message("Face index out of range during pairwise analysis");
+            send_event(ws, event);
+            return;
+        }
+
+        // Create child datum
+        auto child_datum = mechanism_state.create_datum(
+            child_body_id, cmd.child_datum_name(),
+            analysis->child_pose.position, analysis->child_pose.orientation);
+        if (!child_datum) {
+            result->set_error_message("Failed to create child datum on body: " + child_body_id);
+            send_event(ws, event);
+            return;
+        }
+
+        // Build success response
+        auto* success = result->mutable_success();
+        populate_proto_datum(success->mutable_child_datum(), child_datum.value());
+        success->set_child_surface_class(to_proto_surface_class(analysis->child_pose.surface_class));
+        populate_face_geometry(success->mutable_child_face_geometry(), analysis->child_pose, 1.0);
+        success->mutable_child_geometry_id()->set_id(child_geometry_id);
+        success->set_child_face_index(cmd.child_face_index());
+
+        success->set_parent_surface_class(to_proto_surface_class(analysis->parent_pose.surface_class));
+        populate_face_geometry(success->mutable_parent_face_geometry(), analysis->parent_pose, 1.0);
+
+        success->set_alignment(to_proto_face_pair_alignment(analysis->alignment));
+        success->set_alignment_error(analysis->alignment_error);
+        success->set_recommended_joint_type(static_cast<mechanism::JointType>(analysis->recommended_joint_type));
+        success->set_recommendation_confidence(analysis->confidence);
+
+        auto* frame = success->mutable_proposed_joint_frame();
+        auto* frame_pos = frame->mutable_position();
+        frame_pos->set_x(analysis->joint_frame_position[0]);
+        frame_pos->set_y(analysis->joint_frame_position[1]);
+        frame_pos->set_z(analysis->joint_frame_position[2]);
+        auto* frame_orient = frame->mutable_orientation();
+        frame_orient->set_w(analysis->joint_frame_orientation[0]);
+        frame_orient->set_x(analysis->joint_frame_orientation[1]);
+        frame_orient->set_y(analysis->joint_frame_orientation[2]);
+        frame_orient->set_z(analysis->joint_frame_orientation[3]);
+
+        spdlog::debug("Analyzed face pair: alignment={}, confidence={}, recommended_type={}",
+                       static_cast<int>(analysis->alignment), analysis->confidence, analysis->recommended_joint_type);
 
         send_event(ws, event);
     }

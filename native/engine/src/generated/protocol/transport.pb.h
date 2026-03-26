@@ -55,6 +55,15 @@ extern const ::google::protobuf::internal::DescriptorTable
     descriptor_table_protocol_2ftransport_2eproto;
 namespace motionlab {
 namespace protocol {
+class AnalyzeFacePairCommand;
+struct AnalyzeFacePairCommandDefaultTypeInternal;
+extern AnalyzeFacePairCommandDefaultTypeInternal _AnalyzeFacePairCommand_default_instance_;
+class AnalyzeFacePairResult;
+struct AnalyzeFacePairResultDefaultTypeInternal;
+extern AnalyzeFacePairResultDefaultTypeInternal _AnalyzeFacePairResult_default_instance_;
+class AnalyzeFacePairSuccess;
+struct AnalyzeFacePairSuccessDefaultTypeInternal;
+extern AnalyzeFacePairSuccessDefaultTypeInternal _AnalyzeFacePairSuccess_default_instance_;
 class AttachGeometryCommand;
 struct AttachGeometryCommandDefaultTypeInternal;
 extern AttachGeometryCommandDefaultTypeInternal _AttachGeometryCommand_default_instance_;
@@ -457,6 +466,43 @@ inline bool FaceSurfaceClass_Parse(absl::string_view name, FaceSurfaceClass* val
   return ::google::protobuf::internal::ParseNamedEnum<FaceSurfaceClass>(
       FaceSurfaceClass_descriptor(), name, value);
 }
+enum FacePairAlignment : int {
+  FACE_PAIR_ALIGNMENT_UNSPECIFIED = 0,
+  FACE_PAIR_ALIGNMENT_COAXIAL = 1,
+  FACE_PAIR_ALIGNMENT_COPLANAR = 2,
+  FACE_PAIR_ALIGNMENT_COINCIDENT = 3,
+  FACE_PAIR_ALIGNMENT_PERPENDICULAR = 4,
+  FACE_PAIR_ALIGNMENT_GENERAL = 5,
+  FacePairAlignment_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::min(),
+  FacePairAlignment_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      std::numeric_limits<::int32_t>::max(),
+};
+
+bool FacePairAlignment_IsValid(int value);
+extern const uint32_t FacePairAlignment_internal_data_[];
+constexpr FacePairAlignment FacePairAlignment_MIN = static_cast<FacePairAlignment>(0);
+constexpr FacePairAlignment FacePairAlignment_MAX = static_cast<FacePairAlignment>(5);
+constexpr int FacePairAlignment_ARRAYSIZE = 5 + 1;
+const ::google::protobuf::EnumDescriptor*
+FacePairAlignment_descriptor();
+template <typename T>
+const std::string& FacePairAlignment_Name(T value) {
+  static_assert(std::is_same<T, FacePairAlignment>::value ||
+                    std::is_integral<T>::value,
+                "Incorrect type passed to FacePairAlignment_Name().");
+  return FacePairAlignment_Name(static_cast<FacePairAlignment>(value));
+}
+template <>
+inline const std::string& FacePairAlignment_Name(FacePairAlignment value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<FacePairAlignment_descriptor,
+                                                 0, 5>(
+      static_cast<int>(value));
+}
+inline bool FacePairAlignment_Parse(absl::string_view name, FacePairAlignment* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<FacePairAlignment>(
+      FacePairAlignment_descriptor(), name, value);
+}
 enum SolverType : int {
   SOLVER_PSOR = 0,
   SOLVER_BARZILAI_BORWEIN = 1,
@@ -731,7 +777,7 @@ class SolverSettings final : public ::google::protobuf::Message
     return reinterpret_cast<const SolverSettings*>(
         &_SolverSettings_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 68;
+  static constexpr int kIndexInFileMessages = 71;
   friend void swap(SolverSettings& a, SolverSettings& b) { a.Swap(&b); }
   inline void Swap(SolverSettings* other) {
     if (other == this) return;
@@ -957,7 +1003,7 @@ class SimulationStateEvent final : public ::google::protobuf::Message
     return reinterpret_cast<const SimulationStateEvent*>(
         &_SimulationStateEvent_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 75;
+  static constexpr int kIndexInFileMessages = 78;
   friend void swap(SimulationStateEvent& a, SimulationStateEvent& b) { a.Swap(&b); }
   inline void Swap(SimulationStateEvent* other) {
     if (other == this) return;
@@ -1171,7 +1217,7 @@ class SimulationControlCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const SimulationControlCommand*>(
         &_SimulationControlCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 73;
+  static constexpr int kIndexInFileMessages = 76;
   friend void swap(SimulationControlCommand& a, SimulationControlCommand& b) { a.Swap(&b); }
   inline void Swap(SimulationControlCommand* other) {
     if (other == this) return;
@@ -1361,7 +1407,7 @@ class ScrubCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const ScrubCommand*>(
         &_ScrubCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 82;
+  static constexpr int kIndexInFileMessages = 85;
   friend void swap(ScrubCommand& a, ScrubCommand& b) { a.Swap(&b); }
   inline void Swap(ScrubCommand* other) {
     if (other == this) return;
@@ -1556,7 +1602,7 @@ class SaveProjectResult final : public ::google::protobuf::Message
     return reinterpret_cast<const SaveProjectResult*>(
         &_SaveProjectResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 84;
+  static constexpr int kIndexInFileMessages = 87;
   friend void swap(SaveProjectResult& a, SaveProjectResult& b) { a.Swap(&b); }
   inline void Swap(SaveProjectResult* other) {
     if (other == this) return;
@@ -1783,7 +1829,7 @@ class SaveProjectCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const SaveProjectCommand*>(
         &_SaveProjectCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 83;
+  static constexpr int kIndexInFileMessages = 86;
   friend void swap(SaveProjectCommand& a, SaveProjectCommand& b) { a.Swap(&b); }
   inline void Swap(SaveProjectCommand* other) {
     if (other == this) return;
@@ -2567,7 +2613,7 @@ class OutputChannelDescriptor final : public ::google::protobuf::Message
     return reinterpret_cast<const OutputChannelDescriptor*>(
         &_OutputChannelDescriptor_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 79;
+  static constexpr int kIndexInFileMessages = 82;
   friend void swap(OutputChannelDescriptor& a, OutputChannelDescriptor& b) { a.Swap(&b); }
   inline void Swap(OutputChannelDescriptor* other) {
     if (other == this) return;
@@ -2811,7 +2857,7 @@ class NewProjectResult final : public ::google::protobuf::Message
     return reinterpret_cast<const NewProjectResult*>(
         &_NewProjectResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 92;
+  static constexpr int kIndexInFileMessages = 95;
   friend void swap(NewProjectResult& a, NewProjectResult& b) { a.Swap(&b); }
   inline void Swap(NewProjectResult* other) {
     if (other == this) return;
@@ -3019,7 +3065,7 @@ class NewProjectCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const NewProjectCommand*>(
         &_NewProjectCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 91;
+  static constexpr int kIndexInFileMessages = 94;
   friend void swap(NewProjectCommand& a, NewProjectCommand& b) { a.Swap(&b); }
   inline void Swap(NewProjectCommand* other) {
     if (other == this) return;
@@ -3215,7 +3261,7 @@ class LoadProjectCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const LoadProjectCommand*>(
         &_LoadProjectCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 85;
+  static constexpr int kIndexInFileMessages = 88;
   friend void swap(LoadProjectCommand& a, LoadProjectCommand& b) { a.Swap(&b); }
   inline void Swap(LoadProjectCommand* other) {
     if (other == this) return;
@@ -3874,7 +3920,7 @@ class ContactSettings final : public ::google::protobuf::Message
     return reinterpret_cast<const ContactSettings*>(
         &_ContactSettings_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 69;
+  static constexpr int kIndexInFileMessages = 72;
   friend void swap(ContactSettings& a, ContactSettings& b) { a.Swap(&b); }
   inline void Swap(ContactSettings* other) {
     if (other == this) return;
@@ -4112,7 +4158,7 @@ class CompilationDiagnostic final : public ::google::protobuf::Message
     return reinterpret_cast<const CompilationDiagnostic*>(
         &_CompilationDiagnostic_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 70;
+  static constexpr int kIndexInFileMessages = 73;
   friend void swap(CompilationDiagnostic& a, CompilationDiagnostic& b) { a.Swap(&b); }
   inline void Swap(CompilationDiagnostic* other) {
     if (other == this) return;
@@ -4385,7 +4431,7 @@ class TimeSample final : public ::google::protobuf::Message
     return reinterpret_cast<const TimeSample*>(
         &_TimeSample_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 80;
+  static constexpr int kIndexInFileMessages = 83;
   friend void swap(TimeSample& a, TimeSample& b) { a.Swap(&b); }
   inline void Swap(TimeSample* other) {
     if (other == this) return;
@@ -4620,7 +4666,7 @@ class SimulationSettings final : public ::google::protobuf::Message
     return reinterpret_cast<const SimulationSettings*>(
         &_SimulationSettings_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 71;
+  static constexpr int kIndexInFileMessages = 74;
   friend void swap(SimulationSettings& a, SimulationSettings& b) { a.Swap(&b); }
   inline void Swap(SimulationSettings* other) {
     if (other == this) return;
@@ -4874,7 +4920,7 @@ class RenameGeometryCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const RenameGeometryCommand*>(
         &_RenameGeometryCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 38;
+  static constexpr int kIndexInFileMessages = 41;
   friend void swap(RenameGeometryCommand& a, RenameGeometryCommand& b) { a.Swap(&b); }
   inline void Swap(RenameGeometryCommand* other) {
     if (other == this) return;
@@ -5302,7 +5348,7 @@ class RelocateAssetCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const RelocateAssetCommand*>(
         &_RelocateAssetCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 89;
+  static constexpr int kIndexInFileMessages = 92;
   friend void swap(RelocateAssetCommand& a, RelocateAssetCommand& b) { a.Swap(&b); }
   inline void Swap(RelocateAssetCommand* other) {
     if (other == this) return;
@@ -5534,7 +5580,7 @@ class PlaceAssetInSceneCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const PlaceAssetInSceneCommand*>(
         &_PlaceAssetInSceneCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 93;
+  static constexpr int kIndexInFileMessages = 96;
   friend void swap(PlaceAssetInSceneCommand& a, PlaceAssetInSceneCommand& b) { a.Swap(&b); }
   inline void Swap(PlaceAssetInSceneCommand* other) {
     if (other == this) return;
@@ -5748,7 +5794,7 @@ class MissingAssetInfo final : public ::google::protobuf::Message
     return reinterpret_cast<const MissingAssetInfo*>(
         &_MissingAssetInfo_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 88;
+  static constexpr int kIndexInFileMessages = 91;
   friend void swap(MissingAssetInfo& a, MissingAssetInfo& b) { a.Swap(&b); }
   inline void Swap(MissingAssetInfo* other) {
     if (other == this) return;
@@ -5998,7 +6044,7 @@ class JointStateData final : public ::google::protobuf::Message
     return reinterpret_cast<const JointStateData*>(
         &_JointStateData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 77;
+  static constexpr int kIndexInFileMessages = 80;
   friend void swap(JointStateData& a, JointStateData& b) { a.Swap(&b); }
   inline void Swap(JointStateData* other) {
     if (other == this) return;
@@ -7159,7 +7205,7 @@ class DetachGeometryCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const DetachGeometryCommand*>(
         &_DetachGeometryCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 34;
+  static constexpr int kIndexInFileMessages = 37;
   friend void swap(DetachGeometryCommand& a, DetachGeometryCommand& b) { a.Swap(&b); }
   inline void Swap(DetachGeometryCommand* other) {
     if (other == this) return;
@@ -7360,7 +7406,7 @@ class DeleteLoadResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteLoadResult*>(
         &_DeleteLoadResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 61;
+  static constexpr int kIndexInFileMessages = 64;
   friend void swap(DeleteLoadResult& a, DeleteLoadResult& b) { a.Swap(&b); }
   inline void Swap(DeleteLoadResult* other) {
     if (other == this) return;
@@ -7589,7 +7635,7 @@ class DeleteLoadCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteLoadCommand*>(
         &_DeleteLoadCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 58;
+  static constexpr int kIndexInFileMessages = 61;
   friend void swap(DeleteLoadCommand& a, DeleteLoadCommand& b) { a.Swap(&b); }
   inline void Swap(DeleteLoadCommand* other) {
     if (other == this) return;
@@ -7790,7 +7836,7 @@ class DeleteJointResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteJointResult*>(
         &_DeleteJointResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 55;
+  static constexpr int kIndexInFileMessages = 58;
   friend void swap(DeleteJointResult& a, DeleteJointResult& b) { a.Swap(&b); }
   inline void Swap(DeleteJointResult* other) {
     if (other == this) return;
@@ -8019,7 +8065,7 @@ class DeleteJointCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteJointCommand*>(
         &_DeleteJointCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 52;
+  static constexpr int kIndexInFileMessages = 55;
   friend void swap(DeleteJointCommand& a, DeleteJointCommand& b) { a.Swap(&b); }
   inline void Swap(DeleteJointCommand* other) {
     if (other == this) return;
@@ -8220,7 +8266,7 @@ class DeleteGeometryResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteGeometryResult*>(
         &_DeleteGeometryResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 37;
+  static constexpr int kIndexInFileMessages = 40;
   friend void swap(DeleteGeometryResult& a, DeleteGeometryResult& b) { a.Swap(&b); }
   inline void Swap(DeleteGeometryResult* other) {
     if (other == this) return;
@@ -8449,7 +8495,7 @@ class DeleteGeometryCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteGeometryCommand*>(
         &_DeleteGeometryCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 36;
+  static constexpr int kIndexInFileMessages = 39;
   friend void swap(DeleteGeometryCommand& a, DeleteGeometryCommand& b) { a.Swap(&b); }
   inline void Swap(DeleteGeometryCommand* other) {
     if (other == this) return;
@@ -8650,7 +8696,7 @@ class DeleteDatumResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteDatumResult*>(
         &_DeleteDatumResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 22;
+  static constexpr int kIndexInFileMessages = 25;
   friend void swap(DeleteDatumResult& a, DeleteDatumResult& b) { a.Swap(&b); }
   inline void Swap(DeleteDatumResult* other) {
     if (other == this) return;
@@ -9080,7 +9126,7 @@ class DeleteBodyResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteBodyResult*>(
         &_DeleteBodyResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 31;
+  static constexpr int kIndexInFileMessages = 34;
   friend void swap(DeleteBodyResult& a, DeleteBodyResult& b) { a.Swap(&b); }
   inline void Swap(DeleteBodyResult* other) {
     if (other == this) return;
@@ -9309,7 +9355,7 @@ class DeleteBodyCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteBodyCommand*>(
         &_DeleteBodyCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 30;
+  static constexpr int kIndexInFileMessages = 33;
   friend void swap(DeleteBodyCommand& a, DeleteBodyCommand& b) { a.Swap(&b); }
   inline void Swap(DeleteBodyCommand* other) {
     if (other == this) return;
@@ -9510,7 +9556,7 @@ class DeleteActuatorResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteActuatorResult*>(
         &_DeleteActuatorResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 67;
+  static constexpr int kIndexInFileMessages = 70;
   friend void swap(DeleteActuatorResult& a, DeleteActuatorResult& b) { a.Swap(&b); }
   inline void Swap(DeleteActuatorResult* other) {
     if (other == this) return;
@@ -9739,7 +9785,7 @@ class DeleteActuatorCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteActuatorCommand*>(
         &_DeleteActuatorCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 64;
+  static constexpr int kIndexInFileMessages = 67;
   friend void swap(DeleteActuatorCommand& a, DeleteActuatorCommand& b) { a.Swap(&b); }
   inline void Swap(DeleteActuatorCommand* other) {
     if (other == this) return;
@@ -10161,7 +10207,7 @@ class CompilationResultEvent final : public ::google::protobuf::Message
     return reinterpret_cast<const CompilationResultEvent*>(
         &_CompilationResultEvent_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 74;
+  static constexpr int kIndexInFileMessages = 77;
   friend void swap(CompilationResultEvent& a, CompilationResultEvent& b) { a.Swap(&b); }
   inline void Swap(CompilationResultEvent* other) {
     if (other == this) return;
@@ -10431,7 +10477,7 @@ class BodyPoseData final : public ::google::protobuf::Message
     return reinterpret_cast<const BodyPoseData*>(
         &_BodyPoseData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 76;
+  static constexpr int kIndexInFileMessages = 79;
   friend void swap(BodyPoseData& a, BodyPoseData& b) { a.Swap(&b); }
   inline void Swap(BodyPoseData* other) {
     if (other == this) return;
@@ -10603,6 +10649,278 @@ class BodyPoseData final : public ::google::protobuf::Message
 };
 // -------------------------------------------------------------------
 
+class AnalyzeFacePairCommand final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.AnalyzeFacePairCommand) */ {
+ public:
+  inline AnalyzeFacePairCommand() : AnalyzeFacePairCommand(nullptr) {}
+  ~AnalyzeFacePairCommand() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(AnalyzeFacePairCommand* msg, std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(AnalyzeFacePairCommand));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR AnalyzeFacePairCommand(
+      ::google::protobuf::internal::ConstantInitialized);
+
+  inline AnalyzeFacePairCommand(const AnalyzeFacePairCommand& from) : AnalyzeFacePairCommand(nullptr, from) {}
+  inline AnalyzeFacePairCommand(AnalyzeFacePairCommand&& from) noexcept
+      : AnalyzeFacePairCommand(nullptr, std::move(from)) {}
+  inline AnalyzeFacePairCommand& operator=(const AnalyzeFacePairCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline AnalyzeFacePairCommand& operator=(AnalyzeFacePairCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const AnalyzeFacePairCommand& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const AnalyzeFacePairCommand* internal_default_instance() {
+    return reinterpret_cast<const AnalyzeFacePairCommand*>(
+        &_AnalyzeFacePairCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 22;
+  friend void swap(AnalyzeFacePairCommand& a, AnalyzeFacePairCommand& b) { a.Swap(&b); }
+  inline void Swap(AnalyzeFacePairCommand* other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(AnalyzeFacePairCommand* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  AnalyzeFacePairCommand* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<AnalyzeFacePairCommand>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const AnalyzeFacePairCommand& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const AnalyzeFacePairCommand& from) { AnalyzeFacePairCommand::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(
+      ::google::protobuf::MessageLite& to_msg,
+      const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* _InternalSerialize(
+      const MessageLite& msg, ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(AnalyzeFacePairCommand* other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(
+      ::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.AnalyzeFacePairCommand"; }
+
+ protected:
+  explicit AnalyzeFacePairCommand(::google::protobuf::Arena* arena);
+  AnalyzeFacePairCommand(::google::protobuf::Arena* arena, const AnalyzeFacePairCommand& from);
+  AnalyzeFacePairCommand(::google::protobuf::Arena* arena, AnalyzeFacePairCommand&& from) noexcept
+      : AnalyzeFacePairCommand(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
+
+ public:
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kChildDatumNameFieldNumber = 6,
+    kParentDatumIdFieldNumber = 1,
+    kParentGeometryIdFieldNumber = 2,
+    kChildGeometryIdFieldNumber = 4,
+    kParentFaceIndexFieldNumber = 3,
+    kChildFaceIndexFieldNumber = 5,
+  };
+  // string child_datum_name = 6 [json_name = "childDatumName"];
+  void clear_child_datum_name() ;
+  const std::string& child_datum_name() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_child_datum_name(Arg_&& arg, Args_... args);
+  std::string* mutable_child_datum_name();
+  PROTOBUF_NODISCARD std::string* release_child_datum_name();
+  void set_allocated_child_datum_name(std::string* value);
+
+  private:
+  const std::string& _internal_child_datum_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_child_datum_name(
+      const std::string& value);
+  std::string* _internal_mutable_child_datum_name();
+
+  public:
+  // .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
+  bool has_parent_datum_id() const;
+  void clear_parent_datum_id() ;
+  const ::motionlab::mechanism::ElementId& parent_datum_id() const;
+  PROTOBUF_NODISCARD ::motionlab::mechanism::ElementId* release_parent_datum_id();
+  ::motionlab::mechanism::ElementId* mutable_parent_datum_id();
+  void set_allocated_parent_datum_id(::motionlab::mechanism::ElementId* value);
+  void unsafe_arena_set_allocated_parent_datum_id(::motionlab::mechanism::ElementId* value);
+  ::motionlab::mechanism::ElementId* unsafe_arena_release_parent_datum_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_parent_datum_id() const;
+  ::motionlab::mechanism::ElementId* _internal_mutable_parent_datum_id();
+
+  public:
+  // .motionlab.mechanism.ElementId parent_geometry_id = 2 [json_name = "parentGeometryId"];
+  bool has_parent_geometry_id() const;
+  void clear_parent_geometry_id() ;
+  const ::motionlab::mechanism::ElementId& parent_geometry_id() const;
+  PROTOBUF_NODISCARD ::motionlab::mechanism::ElementId* release_parent_geometry_id();
+  ::motionlab::mechanism::ElementId* mutable_parent_geometry_id();
+  void set_allocated_parent_geometry_id(::motionlab::mechanism::ElementId* value);
+  void unsafe_arena_set_allocated_parent_geometry_id(::motionlab::mechanism::ElementId* value);
+  ::motionlab::mechanism::ElementId* unsafe_arena_release_parent_geometry_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_parent_geometry_id() const;
+  ::motionlab::mechanism::ElementId* _internal_mutable_parent_geometry_id();
+
+  public:
+  // .motionlab.mechanism.ElementId child_geometry_id = 4 [json_name = "childGeometryId"];
+  bool has_child_geometry_id() const;
+  void clear_child_geometry_id() ;
+  const ::motionlab::mechanism::ElementId& child_geometry_id() const;
+  PROTOBUF_NODISCARD ::motionlab::mechanism::ElementId* release_child_geometry_id();
+  ::motionlab::mechanism::ElementId* mutable_child_geometry_id();
+  void set_allocated_child_geometry_id(::motionlab::mechanism::ElementId* value);
+  void unsafe_arena_set_allocated_child_geometry_id(::motionlab::mechanism::ElementId* value);
+  ::motionlab::mechanism::ElementId* unsafe_arena_release_child_geometry_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_child_geometry_id() const;
+  ::motionlab::mechanism::ElementId* _internal_mutable_child_geometry_id();
+
+  public:
+  // uint32 parent_face_index = 3 [json_name = "parentFaceIndex"];
+  void clear_parent_face_index() ;
+  ::uint32_t parent_face_index() const;
+  void set_parent_face_index(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_parent_face_index() const;
+  void _internal_set_parent_face_index(::uint32_t value);
+
+  public:
+  // uint32 child_face_index = 5 [json_name = "childFaceIndex"];
+  void clear_child_face_index() ;
+  ::uint32_t child_face_index() const;
+  void set_child_face_index(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_child_face_index() const;
+  void _internal_set_child_face_index(::uint32_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.AnalyzeFacePairCommand)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      3, 6, 3,
+      66, 2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(
+        ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena);
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena, const Impl_& from,
+                          const AnalyzeFacePairCommand& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr child_datum_name_;
+    ::motionlab::mechanism::ElementId* parent_datum_id_;
+    ::motionlab::mechanism::ElementId* parent_geometry_id_;
+    ::motionlab::mechanism::ElementId* child_geometry_id_;
+    ::uint32_t parent_face_index_;
+    ::uint32_t child_face_index_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+// -------------------------------------------------------------------
+
 class UpdatePrimitiveCommand final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdatePrimitiveCommand) */ {
  public:
@@ -10662,7 +10980,7 @@ class UpdatePrimitiveCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdatePrimitiveCommand*>(
         &_UpdatePrimitiveCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 44;
+  static constexpr int kIndexInFileMessages = 47;
   friend void swap(UpdatePrimitiveCommand& a, UpdatePrimitiveCommand& b) { a.Swap(&b); }
   inline void Swap(UpdatePrimitiveCommand* other) {
     if (other == this) return;
@@ -10887,7 +11205,7 @@ class UpdateMassPropertiesCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateMassPropertiesCommand*>(
         &_UpdateMassPropertiesCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 40;
+  static constexpr int kIndexInFileMessages = 43;
   friend void swap(UpdateMassPropertiesCommand& a, UpdateMassPropertiesCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateMassPropertiesCommand* other) {
     if (other == this) return;
@@ -11112,7 +11430,7 @@ class UpdateDatumPoseCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateDatumPoseCommand*>(
         &_UpdateDatumPoseCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 24;
+  static constexpr int kIndexInFileMessages = 27;
   friend void swap(UpdateDatumPoseCommand& a, UpdateDatumPoseCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateDatumPoseCommand* other) {
     if (other == this) return;
@@ -11325,7 +11643,7 @@ class UpdateCollisionConfigCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateCollisionConfigCommand*>(
         &_UpdateCollisionConfigCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 47;
+  static constexpr int kIndexInFileMessages = 50;
   friend void swap(UpdateCollisionConfigCommand& a, UpdateCollisionConfigCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateCollisionConfigCommand* other) {
     if (other == this) return;
@@ -11538,7 +11856,7 @@ class UpdateBodyCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateBodyCommand*>(
         &_UpdateBodyCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 26;
+  static constexpr int kIndexInFileMessages = 29;
   friend void swap(UpdateBodyCommand& a, UpdateBodyCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateBodyCommand* other) {
     if (other == this) return;
@@ -11796,7 +12114,7 @@ class SimulationTrace final : public ::google::protobuf::Message
     return reinterpret_cast<const SimulationTrace*>(
         &_SimulationTrace_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 81;
+  static constexpr int kIndexInFileMessages = 84;
   friend void swap(SimulationTrace& a, SimulationTrace& b) { a.Swap(&b); }
   inline void Swap(SimulationTrace* other) {
     if (other == this) return;
@@ -12011,7 +12329,7 @@ class SimulationFrame final : public ::google::protobuf::Message
     return reinterpret_cast<const SimulationFrame*>(
         &_SimulationFrame_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 78;
+  static constexpr int kIndexInFileMessages = 81;
   friend void swap(SimulationFrame& a, SimulationFrame& b) { a.Swap(&b); }
   inline void Swap(SimulationFrame* other) {
     if (other == this) return;
@@ -12251,7 +12569,7 @@ class CreatePrimitiveBodyCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const CreatePrimitiveBodyCommand*>(
         &_CreatePrimitiveBodyCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 42;
+  static constexpr int kIndexInFileMessages = 45;
   friend void swap(CreatePrimitiveBodyCommand& a, CreatePrimitiveBodyCommand& b) { a.Swap(&b); }
   inline void Swap(CreatePrimitiveBodyCommand* other) {
     if (other == this) return;
@@ -12737,7 +13055,7 @@ class CreateBodyCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateBodyCommand*>(
         &_CreateBodyCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 28;
+  static constexpr int kIndexInFileMessages = 31;
   friend void swap(CreateBodyCommand& a, CreateBodyCommand& b) { a.Swap(&b); }
   inline void Swap(CreateBodyCommand* other) {
     if (other == this) return;
@@ -12992,7 +13310,7 @@ class CompileMechanismCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const CompileMechanismCommand*>(
         &_CompileMechanismCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 72;
+  static constexpr int kIndexInFileMessages = 75;
   friend void swap(CompileMechanismCommand& a, CompileMechanismCommand& b) { a.Swap(&b); }
   inline void Swap(CompileMechanismCommand* other) {
     if (other == this) return;
@@ -13492,7 +13810,7 @@ class AttachGeometryCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const AttachGeometryCommand*>(
         &_AttachGeometryCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 32;
+  static constexpr int kIndexInFileMessages = 35;
   friend void swap(AttachGeometryCommand& a, AttachGeometryCommand& b) { a.Swap(&b); }
   inline void Swap(AttachGeometryCommand* other) {
     if (other == this) return;
@@ -13727,7 +14045,7 @@ class UpdateMassPropertiesResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateMassPropertiesResult*>(
         &_UpdateMassPropertiesResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 41;
+  static constexpr int kIndexInFileMessages = 44;
   friend void swap(UpdateMassPropertiesResult& a, UpdateMassPropertiesResult& b) { a.Swap(&b); }
   inline void Swap(UpdateMassPropertiesResult* other) {
     if (other == this) return;
@@ -13961,7 +14279,7 @@ class UpdateLoadResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateLoadResult*>(
         &_UpdateLoadResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 60;
+  static constexpr int kIndexInFileMessages = 63;
   friend void swap(UpdateLoadResult& a, UpdateLoadResult& b) { a.Swap(&b); }
   inline void Swap(UpdateLoadResult* other) {
     if (other == this) return;
@@ -14190,7 +14508,7 @@ class UpdateLoadCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateLoadCommand*>(
         &_UpdateLoadCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 57;
+  static constexpr int kIndexInFileMessages = 60;
   friend void swap(UpdateLoadCommand& a, UpdateLoadCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateLoadCommand* other) {
     if (other == this) return;
@@ -14391,7 +14709,7 @@ class UpdateJointResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateJointResult*>(
         &_UpdateJointResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 54;
+  static constexpr int kIndexInFileMessages = 57;
   friend void swap(UpdateJointResult& a, UpdateJointResult& b) { a.Swap(&b); }
   inline void Swap(UpdateJointResult* other) {
     if (other == this) return;
@@ -14620,7 +14938,7 @@ class UpdateJointCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateJointCommand*>(
         &_UpdateJointCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 51;
+  static constexpr int kIndexInFileMessages = 54;
   friend void swap(UpdateJointCommand& a, UpdateJointCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateJointCommand* other) {
     if (other == this) return;
@@ -14821,7 +15139,7 @@ class UpdateDatumPoseResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateDatumPoseResult*>(
         &_UpdateDatumPoseResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 25;
+  static constexpr int kIndexInFileMessages = 28;
   friend void swap(UpdateDatumPoseResult& a, UpdateDatumPoseResult& b) { a.Swap(&b); }
   inline void Swap(UpdateDatumPoseResult* other) {
     if (other == this) return;
@@ -15055,7 +15373,7 @@ class UpdateBodyResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateBodyResult*>(
         &_UpdateBodyResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 27;
+  static constexpr int kIndexInFileMessages = 30;
   friend void swap(UpdateBodyResult& a, UpdateBodyResult& b) { a.Swap(&b); }
   inline void Swap(UpdateBodyResult* other) {
     if (other == this) return;
@@ -15289,7 +15607,7 @@ class UpdateActuatorResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateActuatorResult*>(
         &_UpdateActuatorResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 66;
+  static constexpr int kIndexInFileMessages = 69;
   friend void swap(UpdateActuatorResult& a, UpdateActuatorResult& b) { a.Swap(&b); }
   inline void Swap(UpdateActuatorResult* other) {
     if (other == this) return;
@@ -15518,7 +15836,7 @@ class UpdateActuatorCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateActuatorCommand*>(
         &_UpdateActuatorCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 63;
+  static constexpr int kIndexInFileMessages = 66;
   friend void swap(UpdateActuatorCommand& a, UpdateActuatorCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateActuatorCommand* other) {
     if (other == this) return;
@@ -15719,7 +16037,7 @@ class RenameDatumResult final : public ::google::protobuf::Message
     return reinterpret_cast<const RenameDatumResult*>(
         &_RenameDatumResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 23;
+  static constexpr int kIndexInFileMessages = 26;
   friend void swap(RenameDatumResult& a, RenameDatumResult& b) { a.Swap(&b); }
   inline void Swap(RenameDatumResult* other) {
     if (other == this) return;
@@ -15953,7 +16271,7 @@ class RelocateAssetResult final : public ::google::protobuf::Message
     return reinterpret_cast<const RelocateAssetResult*>(
         &_RelocateAssetResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 90;
+  static constexpr int kIndexInFileMessages = 93;
   friend void swap(RelocateAssetResult& a, RelocateAssetResult& b) { a.Swap(&b); }
   inline void Swap(RelocateAssetResult* other) {
     if (other == this) return;
@@ -16538,7 +16856,7 @@ class CreateLoadResult final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateLoadResult*>(
         &_CreateLoadResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 59;
+  static constexpr int kIndexInFileMessages = 62;
   friend void swap(CreateLoadResult& a, CreateLoadResult& b) { a.Swap(&b); }
   inline void Swap(CreateLoadResult* other) {
     if (other == this) return;
@@ -16767,7 +17085,7 @@ class CreateLoadCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateLoadCommand*>(
         &_CreateLoadCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 56;
+  static constexpr int kIndexInFileMessages = 59;
   friend void swap(CreateLoadCommand& a, CreateLoadCommand& b) { a.Swap(&b); }
   inline void Swap(CreateLoadCommand* other) {
     if (other == this) return;
@@ -16968,7 +17286,7 @@ class CreateJointResult final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateJointResult*>(
         &_CreateJointResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 53;
+  static constexpr int kIndexInFileMessages = 56;
   friend void swap(CreateJointResult& a, CreateJointResult& b) { a.Swap(&b); }
   inline void Swap(CreateJointResult* other) {
     if (other == this) return;
@@ -17197,7 +17515,7 @@ class CreateJointCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateJointCommand*>(
         &_CreateJointCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 50;
+  static constexpr int kIndexInFileMessages = 53;
   friend void swap(CreateJointCommand& a, CreateJointCommand& b) { a.Swap(&b); }
   inline void Swap(CreateJointCommand* other) {
     if (other == this) return;
@@ -17886,7 +18204,7 @@ class CreateBodyResult final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateBodyResult*>(
         &_CreateBodyResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 29;
+  static constexpr int kIndexInFileMessages = 32;
   friend void swap(CreateBodyResult& a, CreateBodyResult& b) { a.Swap(&b); }
   inline void Swap(CreateBodyResult* other) {
     if (other == this) return;
@@ -18120,7 +18438,7 @@ class CreateActuatorResult final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateActuatorResult*>(
         &_CreateActuatorResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 65;
+  static constexpr int kIndexInFileMessages = 68;
   friend void swap(CreateActuatorResult& a, CreateActuatorResult& b) { a.Swap(&b); }
   inline void Swap(CreateActuatorResult* other) {
     if (other == this) return;
@@ -18349,7 +18667,7 @@ class CreateActuatorCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateActuatorCommand*>(
         &_CreateActuatorCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 62;
+  static constexpr int kIndexInFileMessages = 65;
   friend void swap(CreateActuatorCommand& a, CreateActuatorCommand& b) { a.Swap(&b); }
   inline void Swap(CreateActuatorCommand* other) {
     if (other == this) return;
@@ -18486,6 +18804,354 @@ class CreateActuatorCommand final : public ::google::protobuf::Message
 };
 // -------------------------------------------------------------------
 
+class AnalyzeFacePairSuccess final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.AnalyzeFacePairSuccess) */ {
+ public:
+  inline AnalyzeFacePairSuccess() : AnalyzeFacePairSuccess(nullptr) {}
+  ~AnalyzeFacePairSuccess() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(AnalyzeFacePairSuccess* msg, std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(AnalyzeFacePairSuccess));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR AnalyzeFacePairSuccess(
+      ::google::protobuf::internal::ConstantInitialized);
+
+  inline AnalyzeFacePairSuccess(const AnalyzeFacePairSuccess& from) : AnalyzeFacePairSuccess(nullptr, from) {}
+  inline AnalyzeFacePairSuccess(AnalyzeFacePairSuccess&& from) noexcept
+      : AnalyzeFacePairSuccess(nullptr, std::move(from)) {}
+  inline AnalyzeFacePairSuccess& operator=(const AnalyzeFacePairSuccess& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline AnalyzeFacePairSuccess& operator=(AnalyzeFacePairSuccess&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const AnalyzeFacePairSuccess& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const AnalyzeFacePairSuccess* internal_default_instance() {
+    return reinterpret_cast<const AnalyzeFacePairSuccess*>(
+        &_AnalyzeFacePairSuccess_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 23;
+  friend void swap(AnalyzeFacePairSuccess& a, AnalyzeFacePairSuccess& b) { a.Swap(&b); }
+  inline void Swap(AnalyzeFacePairSuccess* other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(AnalyzeFacePairSuccess* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  AnalyzeFacePairSuccess* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<AnalyzeFacePairSuccess>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const AnalyzeFacePairSuccess& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const AnalyzeFacePairSuccess& from) { AnalyzeFacePairSuccess::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(
+      ::google::protobuf::MessageLite& to_msg,
+      const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* _InternalSerialize(
+      const MessageLite& msg, ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(AnalyzeFacePairSuccess* other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(
+      ::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.AnalyzeFacePairSuccess"; }
+
+ protected:
+  explicit AnalyzeFacePairSuccess(::google::protobuf::Arena* arena);
+  AnalyzeFacePairSuccess(::google::protobuf::Arena* arena, const AnalyzeFacePairSuccess& from);
+  AnalyzeFacePairSuccess(::google::protobuf::Arena* arena, AnalyzeFacePairSuccess&& from) noexcept
+      : AnalyzeFacePairSuccess(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
+
+ public:
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kChildDatumFieldNumber = 1,
+    kChildFaceGeometryFieldNumber = 3,
+    kChildGeometryIdFieldNumber = 4,
+    kParentFaceGeometryFieldNumber = 7,
+    kProposedJointFrameFieldNumber = 14,
+    kChildSurfaceClassFieldNumber = 2,
+    kChildFaceIndexFieldNumber = 5,
+    kParentSurfaceClassFieldNumber = 6,
+    kAlignmentFieldNumber = 10,
+    kAlignmentErrorFieldNumber = 11,
+    kRecommendationConfidenceFieldNumber = 13,
+    kRecommendedJointTypeFieldNumber = 12,
+  };
+  // .motionlab.mechanism.Datum child_datum = 1 [json_name = "childDatum"];
+  bool has_child_datum() const;
+  void clear_child_datum() ;
+  const ::motionlab::mechanism::Datum& child_datum() const;
+  PROTOBUF_NODISCARD ::motionlab::mechanism::Datum* release_child_datum();
+  ::motionlab::mechanism::Datum* mutable_child_datum();
+  void set_allocated_child_datum(::motionlab::mechanism::Datum* value);
+  void unsafe_arena_set_allocated_child_datum(::motionlab::mechanism::Datum* value);
+  ::motionlab::mechanism::Datum* unsafe_arena_release_child_datum();
+
+  private:
+  const ::motionlab::mechanism::Datum& _internal_child_datum() const;
+  ::motionlab::mechanism::Datum* _internal_mutable_child_datum();
+
+  public:
+  // .motionlab.protocol.FaceGeometryMetadata child_face_geometry = 3 [json_name = "childFaceGeometry"];
+  bool has_child_face_geometry() const;
+  void clear_child_face_geometry() ;
+  const ::motionlab::protocol::FaceGeometryMetadata& child_face_geometry() const;
+  PROTOBUF_NODISCARD ::motionlab::protocol::FaceGeometryMetadata* release_child_face_geometry();
+  ::motionlab::protocol::FaceGeometryMetadata* mutable_child_face_geometry();
+  void set_allocated_child_face_geometry(::motionlab::protocol::FaceGeometryMetadata* value);
+  void unsafe_arena_set_allocated_child_face_geometry(::motionlab::protocol::FaceGeometryMetadata* value);
+  ::motionlab::protocol::FaceGeometryMetadata* unsafe_arena_release_child_face_geometry();
+
+  private:
+  const ::motionlab::protocol::FaceGeometryMetadata& _internal_child_face_geometry() const;
+  ::motionlab::protocol::FaceGeometryMetadata* _internal_mutable_child_face_geometry();
+
+  public:
+  // .motionlab.mechanism.ElementId child_geometry_id = 4 [json_name = "childGeometryId"];
+  bool has_child_geometry_id() const;
+  void clear_child_geometry_id() ;
+  const ::motionlab::mechanism::ElementId& child_geometry_id() const;
+  PROTOBUF_NODISCARD ::motionlab::mechanism::ElementId* release_child_geometry_id();
+  ::motionlab::mechanism::ElementId* mutable_child_geometry_id();
+  void set_allocated_child_geometry_id(::motionlab::mechanism::ElementId* value);
+  void unsafe_arena_set_allocated_child_geometry_id(::motionlab::mechanism::ElementId* value);
+  ::motionlab::mechanism::ElementId* unsafe_arena_release_child_geometry_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_child_geometry_id() const;
+  ::motionlab::mechanism::ElementId* _internal_mutable_child_geometry_id();
+
+  public:
+  // .motionlab.protocol.FaceGeometryMetadata parent_face_geometry = 7 [json_name = "parentFaceGeometry"];
+  bool has_parent_face_geometry() const;
+  void clear_parent_face_geometry() ;
+  const ::motionlab::protocol::FaceGeometryMetadata& parent_face_geometry() const;
+  PROTOBUF_NODISCARD ::motionlab::protocol::FaceGeometryMetadata* release_parent_face_geometry();
+  ::motionlab::protocol::FaceGeometryMetadata* mutable_parent_face_geometry();
+  void set_allocated_parent_face_geometry(::motionlab::protocol::FaceGeometryMetadata* value);
+  void unsafe_arena_set_allocated_parent_face_geometry(::motionlab::protocol::FaceGeometryMetadata* value);
+  ::motionlab::protocol::FaceGeometryMetadata* unsafe_arena_release_parent_face_geometry();
+
+  private:
+  const ::motionlab::protocol::FaceGeometryMetadata& _internal_parent_face_geometry() const;
+  ::motionlab::protocol::FaceGeometryMetadata* _internal_mutable_parent_face_geometry();
+
+  public:
+  // .motionlab.mechanism.Pose proposed_joint_frame = 14 [json_name = "proposedJointFrame"];
+  bool has_proposed_joint_frame() const;
+  void clear_proposed_joint_frame() ;
+  const ::motionlab::mechanism::Pose& proposed_joint_frame() const;
+  PROTOBUF_NODISCARD ::motionlab::mechanism::Pose* release_proposed_joint_frame();
+  ::motionlab::mechanism::Pose* mutable_proposed_joint_frame();
+  void set_allocated_proposed_joint_frame(::motionlab::mechanism::Pose* value);
+  void unsafe_arena_set_allocated_proposed_joint_frame(::motionlab::mechanism::Pose* value);
+  ::motionlab::mechanism::Pose* unsafe_arena_release_proposed_joint_frame();
+
+  private:
+  const ::motionlab::mechanism::Pose& _internal_proposed_joint_frame() const;
+  ::motionlab::mechanism::Pose* _internal_mutable_proposed_joint_frame();
+
+  public:
+  // .motionlab.protocol.FaceSurfaceClass child_surface_class = 2 [json_name = "childSurfaceClass"];
+  void clear_child_surface_class() ;
+  ::motionlab::protocol::FaceSurfaceClass child_surface_class() const;
+  void set_child_surface_class(::motionlab::protocol::FaceSurfaceClass value);
+
+  private:
+  ::motionlab::protocol::FaceSurfaceClass _internal_child_surface_class() const;
+  void _internal_set_child_surface_class(::motionlab::protocol::FaceSurfaceClass value);
+
+  public:
+  // uint32 child_face_index = 5 [json_name = "childFaceIndex"];
+  void clear_child_face_index() ;
+  ::uint32_t child_face_index() const;
+  void set_child_face_index(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_child_face_index() const;
+  void _internal_set_child_face_index(::uint32_t value);
+
+  public:
+  // .motionlab.protocol.FaceSurfaceClass parent_surface_class = 6 [json_name = "parentSurfaceClass"];
+  void clear_parent_surface_class() ;
+  ::motionlab::protocol::FaceSurfaceClass parent_surface_class() const;
+  void set_parent_surface_class(::motionlab::protocol::FaceSurfaceClass value);
+
+  private:
+  ::motionlab::protocol::FaceSurfaceClass _internal_parent_surface_class() const;
+  void _internal_set_parent_surface_class(::motionlab::protocol::FaceSurfaceClass value);
+
+  public:
+  // .motionlab.protocol.FacePairAlignment alignment = 10 [json_name = "alignment"];
+  void clear_alignment() ;
+  ::motionlab::protocol::FacePairAlignment alignment() const;
+  void set_alignment(::motionlab::protocol::FacePairAlignment value);
+
+  private:
+  ::motionlab::protocol::FacePairAlignment _internal_alignment() const;
+  void _internal_set_alignment(::motionlab::protocol::FacePairAlignment value);
+
+  public:
+  // double alignment_error = 11 [json_name = "alignmentError"];
+  void clear_alignment_error() ;
+  double alignment_error() const;
+  void set_alignment_error(double value);
+
+  private:
+  double _internal_alignment_error() const;
+  void _internal_set_alignment_error(double value);
+
+  public:
+  // double recommendation_confidence = 13 [json_name = "recommendationConfidence"];
+  void clear_recommendation_confidence() ;
+  double recommendation_confidence() const;
+  void set_recommendation_confidence(double value);
+
+  private:
+  double _internal_recommendation_confidence() const;
+  void _internal_set_recommendation_confidence(double value);
+
+  public:
+  // .motionlab.mechanism.JointType recommended_joint_type = 12 [json_name = "recommendedJointType"];
+  void clear_recommended_joint_type() ;
+  ::motionlab::mechanism::JointType recommended_joint_type() const;
+  void set_recommended_joint_type(::motionlab::mechanism::JointType value);
+
+  private:
+  ::motionlab::mechanism::JointType _internal_recommended_joint_type() const;
+  void _internal_set_recommended_joint_type(::motionlab::mechanism::JointType value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.AnalyzeFacePairSuccess)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      4, 12, 5,
+      0, 2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(
+        ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena);
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena, const Impl_& from,
+                          const AnalyzeFacePairSuccess& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::Datum* child_datum_;
+    ::motionlab::protocol::FaceGeometryMetadata* child_face_geometry_;
+    ::motionlab::mechanism::ElementId* child_geometry_id_;
+    ::motionlab::protocol::FaceGeometryMetadata* parent_face_geometry_;
+    ::motionlab::mechanism::Pose* proposed_joint_frame_;
+    int child_surface_class_;
+    ::uint32_t child_face_index_;
+    int parent_surface_class_;
+    int alignment_;
+    double alignment_error_;
+    double recommendation_confidence_;
+    int recommended_joint_type_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+// -------------------------------------------------------------------
+
 class UpdatePrimitiveSuccess final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdatePrimitiveSuccess) */ {
  public:
@@ -18545,7 +19211,7 @@ class UpdatePrimitiveSuccess final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdatePrimitiveSuccess*>(
         &_UpdatePrimitiveSuccess_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 46;
+  static constexpr int kIndexInFileMessages = 49;
   friend void swap(UpdatePrimitiveSuccess& a, UpdatePrimitiveSuccess& b) { a.Swap(&b); }
   inline void Swap(UpdatePrimitiveSuccess* other) {
     if (other == this) return;
@@ -18808,7 +19474,7 @@ class UpdateCollisionConfigSuccess final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateCollisionConfigSuccess*>(
         &_UpdateCollisionConfigSuccess_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 49;
+  static constexpr int kIndexInFileMessages = 52;
   friend void swap(UpdateCollisionConfigSuccess& a, UpdateCollisionConfigSuccess& b) { a.Swap(&b); }
   inline void Swap(UpdateCollisionConfigSuccess* other) {
     if (other == this) return;
@@ -19026,7 +19692,7 @@ class RenameGeometryResult final : public ::google::protobuf::Message
     return reinterpret_cast<const RenameGeometryResult*>(
         &_RenameGeometryResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 39;
+  static constexpr int kIndexInFileMessages = 42;
   friend void swap(RenameGeometryResult& a, RenameGeometryResult& b) { a.Swap(&b); }
   inline void Swap(RenameGeometryResult* other) {
     if (other == this) return;
@@ -19255,7 +19921,7 @@ class PlaceAssetInSceneResult final : public ::google::protobuf::Message
     return reinterpret_cast<const PlaceAssetInSceneResult*>(
         &_PlaceAssetInSceneResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 94;
+  static constexpr int kIndexInFileMessages = 97;
   friend void swap(PlaceAssetInSceneResult& a, PlaceAssetInSceneResult& b) { a.Swap(&b); }
   inline void Swap(PlaceAssetInSceneResult* other) {
     if (other == this) return;
@@ -19812,7 +20478,7 @@ class DetachGeometryResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DetachGeometryResult*>(
         &_DetachGeometryResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 35;
+  static constexpr int kIndexInFileMessages = 38;
   friend void swap(DetachGeometryResult& a, DetachGeometryResult& b) { a.Swap(&b); }
   inline void Swap(DetachGeometryResult* other) {
     if (other == this) return;
@@ -20081,7 +20747,7 @@ class CreatePrimitiveBodyResult final : public ::google::protobuf::Message
     return reinterpret_cast<const CreatePrimitiveBodyResult*>(
         &_CreatePrimitiveBodyResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 43;
+  static constexpr int kIndexInFileMessages = 46;
   friend void swap(CreatePrimitiveBodyResult& a, CreatePrimitiveBodyResult& b) { a.Swap(&b); }
   inline void Swap(CreatePrimitiveBodyResult* other) {
     if (other == this) return;
@@ -20568,6 +21234,7 @@ class Command final : public ::google::protobuf::Message
     kCreateDatumFromFace = 16,
     kUpdateBody = 17,
     kUpdateDatumPose = 18,
+    kAnalyzeFacePair = 19,
     kCreateJoint = 20,
     kUpdateJoint = 21,
     kDeleteJoint = 22,
@@ -20698,6 +21365,7 @@ class Command final : public ::google::protobuf::Message
     kCreateDatumFromFaceFieldNumber = 16,
     kUpdateBodyFieldNumber = 17,
     kUpdateDatumPoseFieldNumber = 18,
+    kAnalyzeFacePairFieldNumber = 19,
     kCreateJointFieldNumber = 20,
     kUpdateJointFieldNumber = 21,
     kDeleteJointFieldNumber = 22,
@@ -20905,6 +21573,25 @@ class Command final : public ::google::protobuf::Message
   private:
   const ::motionlab::protocol::UpdateDatumPoseCommand& _internal_update_datum_pose() const;
   ::motionlab::protocol::UpdateDatumPoseCommand* _internal_mutable_update_datum_pose();
+
+  public:
+  // .motionlab.protocol.AnalyzeFacePairCommand analyze_face_pair = 19 [json_name = "analyzeFacePair"];
+  bool has_analyze_face_pair() const;
+  private:
+  bool _internal_has_analyze_face_pair() const;
+
+  public:
+  void clear_analyze_face_pair() ;
+  const ::motionlab::protocol::AnalyzeFacePairCommand& analyze_face_pair() const;
+  PROTOBUF_NODISCARD ::motionlab::protocol::AnalyzeFacePairCommand* release_analyze_face_pair();
+  ::motionlab::protocol::AnalyzeFacePairCommand* mutable_analyze_face_pair();
+  void set_allocated_analyze_face_pair(::motionlab::protocol::AnalyzeFacePairCommand* value);
+  void unsafe_arena_set_allocated_analyze_face_pair(::motionlab::protocol::AnalyzeFacePairCommand* value);
+  ::motionlab::protocol::AnalyzeFacePairCommand* unsafe_arena_release_analyze_face_pair();
+
+  private:
+  const ::motionlab::protocol::AnalyzeFacePairCommand& _internal_analyze_face_pair() const;
+  ::motionlab::protocol::AnalyzeFacePairCommand* _internal_mutable_analyze_face_pair();
 
   public:
   // .motionlab.protocol.CreateJointCommand create_joint = 20 [json_name = "createJoint"];
@@ -21434,6 +22121,7 @@ class Command final : public ::google::protobuf::Message
   void set_has_create_datum_from_face();
   void set_has_update_body();
   void set_has_update_datum_pose();
+  void set_has_analyze_face_pair();
   void set_has_create_joint();
   void set_has_update_joint();
   void set_has_delete_joint();
@@ -21465,7 +22153,7 @@ class Command final : public ::google::protobuf::Message
   inline void clear_has_payload();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 37, 36,
+      0, 38, 37,
       0, 9>
       _table_;
 
@@ -21496,6 +22184,7 @@ class Command final : public ::google::protobuf::Message
       ::motionlab::protocol::CreateDatumFromFaceCommand* create_datum_from_face_;
       ::motionlab::protocol::UpdateBodyCommand* update_body_;
       ::motionlab::protocol::UpdateDatumPoseCommand* update_datum_pose_;
+      ::motionlab::protocol::AnalyzeFacePairCommand* analyze_face_pair_;
       ::motionlab::protocol::CreateJointCommand* create_joint_;
       ::motionlab::protocol::UpdateJointCommand* update_joint_;
       ::motionlab::protocol::DeleteJointCommand* delete_joint_;
@@ -21597,7 +22286,7 @@ class AttachGeometryResult final : public ::google::protobuf::Message
     return reinterpret_cast<const AttachGeometryResult*>(
         &_AttachGeometryResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 33;
+  static constexpr int kIndexInFileMessages = 36;
   friend void swap(AttachGeometryResult& a, AttachGeometryResult& b) { a.Swap(&b); }
   inline void Swap(AttachGeometryResult* other) {
     if (other == this) return;
@@ -21802,6 +22491,240 @@ class AttachGeometryResult final : public ::google::protobuf::Message
 };
 // -------------------------------------------------------------------
 
+class AnalyzeFacePairResult final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.AnalyzeFacePairResult) */ {
+ public:
+  inline AnalyzeFacePairResult() : AnalyzeFacePairResult(nullptr) {}
+  ~AnalyzeFacePairResult() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(AnalyzeFacePairResult* msg, std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(AnalyzeFacePairResult));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR AnalyzeFacePairResult(
+      ::google::protobuf::internal::ConstantInitialized);
+
+  inline AnalyzeFacePairResult(const AnalyzeFacePairResult& from) : AnalyzeFacePairResult(nullptr, from) {}
+  inline AnalyzeFacePairResult(AnalyzeFacePairResult&& from) noexcept
+      : AnalyzeFacePairResult(nullptr, std::move(from)) {}
+  inline AnalyzeFacePairResult& operator=(const AnalyzeFacePairResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline AnalyzeFacePairResult& operator=(AnalyzeFacePairResult&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const AnalyzeFacePairResult& default_instance() {
+    return *internal_default_instance();
+  }
+  enum ResultCase {
+    kSuccess = 1,
+    kErrorMessage = 2,
+    RESULT_NOT_SET = 0,
+  };
+  static inline const AnalyzeFacePairResult* internal_default_instance() {
+    return reinterpret_cast<const AnalyzeFacePairResult*>(
+        &_AnalyzeFacePairResult_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 24;
+  friend void swap(AnalyzeFacePairResult& a, AnalyzeFacePairResult& b) { a.Swap(&b); }
+  inline void Swap(AnalyzeFacePairResult* other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(AnalyzeFacePairResult* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  AnalyzeFacePairResult* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<AnalyzeFacePairResult>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const AnalyzeFacePairResult& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const AnalyzeFacePairResult& from) { AnalyzeFacePairResult::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(
+      ::google::protobuf::MessageLite& to_msg,
+      const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* _InternalSerialize(
+      const MessageLite& msg, ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(AnalyzeFacePairResult* other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(
+      ::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.AnalyzeFacePairResult"; }
+
+ protected:
+  explicit AnalyzeFacePairResult(::google::protobuf::Arena* arena);
+  AnalyzeFacePairResult(::google::protobuf::Arena* arena, const AnalyzeFacePairResult& from);
+  AnalyzeFacePairResult(::google::protobuf::Arena* arena, AnalyzeFacePairResult&& from) noexcept
+      : AnalyzeFacePairResult(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
+
+ public:
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kSuccessFieldNumber = 1,
+    kErrorMessageFieldNumber = 2,
+  };
+  // .motionlab.protocol.AnalyzeFacePairSuccess success = 1 [json_name = "success"];
+  bool has_success() const;
+  private:
+  bool _internal_has_success() const;
+
+  public:
+  void clear_success() ;
+  const ::motionlab::protocol::AnalyzeFacePairSuccess& success() const;
+  PROTOBUF_NODISCARD ::motionlab::protocol::AnalyzeFacePairSuccess* release_success();
+  ::motionlab::protocol::AnalyzeFacePairSuccess* mutable_success();
+  void set_allocated_success(::motionlab::protocol::AnalyzeFacePairSuccess* value);
+  void unsafe_arena_set_allocated_success(::motionlab::protocol::AnalyzeFacePairSuccess* value);
+  ::motionlab::protocol::AnalyzeFacePairSuccess* unsafe_arena_release_success();
+
+  private:
+  const ::motionlab::protocol::AnalyzeFacePairSuccess& _internal_success() const;
+  ::motionlab::protocol::AnalyzeFacePairSuccess* _internal_mutable_success();
+
+  public:
+  // string error_message = 2 [json_name = "errorMessage"];
+  bool has_error_message() const;
+  void clear_error_message() ;
+  const std::string& error_message() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_error_message(Arg_&& arg, Args_... args);
+  std::string* mutable_error_message();
+  PROTOBUF_NODISCARD std::string* release_error_message();
+  void set_allocated_error_message(std::string* value);
+
+  private:
+  const std::string& _internal_error_message() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_error_message(
+      const std::string& value);
+  std::string* _internal_mutable_error_message();
+
+  public:
+  void clear_result();
+  ResultCase result_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.AnalyzeFacePairResult)
+ private:
+  class _Internal;
+  void set_has_success();
+  void set_has_error_message();
+  inline bool has_result() const;
+  inline void clear_has_result();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      0, 2, 1,
+      62, 2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(
+        ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena);
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena, const Impl_& from,
+                          const AnalyzeFacePairResult& from_msg);
+    union ResultUnion {
+      constexpr ResultUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::motionlab::protocol::AnalyzeFacePairSuccess* success_;
+      ::google::protobuf::internal::ArenaStringPtr error_message_;
+    } result_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+// -------------------------------------------------------------------
+
 class UpdatePrimitiveResult final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:motionlab.protocol.UpdatePrimitiveResult) */ {
  public:
@@ -21866,7 +22789,7 @@ class UpdatePrimitiveResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdatePrimitiveResult*>(
         &_UpdatePrimitiveResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 45;
+  static constexpr int kIndexInFileMessages = 48;
   friend void swap(UpdatePrimitiveResult& a, UpdatePrimitiveResult& b) { a.Swap(&b); }
   inline void Swap(UpdatePrimitiveResult* other) {
     if (other == this) return;
@@ -22100,7 +23023,7 @@ class UpdateCollisionConfigResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateCollisionConfigResult*>(
         &_UpdateCollisionConfigResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 48;
+  static constexpr int kIndexInFileMessages = 51;
   friend void swap(UpdateCollisionConfigResult& a, UpdateCollisionConfigResult& b) { a.Swap(&b); }
   inline void Swap(UpdateCollisionConfigResult* other) {
     if (other == this) return;
@@ -22525,7 +23448,7 @@ class LoadProjectSuccess final : public ::google::protobuf::Message
     return reinterpret_cast<const LoadProjectSuccess*>(
         &_LoadProjectSuccess_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 87;
+  static constexpr int kIndexInFileMessages = 90;
   friend void swap(LoadProjectSuccess& a, LoadProjectSuccess& b) { a.Swap(&b); }
   inline void Swap(LoadProjectSuccess* other) {
     if (other == this) return;
@@ -22800,7 +23723,7 @@ class LoadProjectResult final : public ::google::protobuf::Message
     return reinterpret_cast<const LoadProjectResult*>(
         &_LoadProjectResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 86;
+  static constexpr int kIndexInFileMessages = 89;
   friend void swap(LoadProjectResult& a, LoadProjectResult& b) { a.Swap(&b); }
   inline void Swap(LoadProjectResult* other) {
     if (other == this) return;
@@ -23057,6 +23980,7 @@ class Event final : public ::google::protobuf::Message
     kUpdatePrimitiveResult = 58,
     kUpdateCollisionConfigResult = 59,
     kPlaceAssetInSceneResult = 60,
+    kAnalyzeFacePairResult = 61,
     kCompilationResult = 30,
     kSimulationState = 31,
     kSimulationFrame = 32,
@@ -23190,6 +24114,7 @@ class Event final : public ::google::protobuf::Message
     kUpdatePrimitiveResultFieldNumber = 58,
     kUpdateCollisionConfigResultFieldNumber = 59,
     kPlaceAssetInSceneResultFieldNumber = 60,
+    kAnalyzeFacePairResultFieldNumber = 61,
     kCompilationResultFieldNumber = 30,
     kSimulationStateFieldNumber = 31,
     kSimulationFrameFieldNumber = 32,
@@ -23798,6 +24723,25 @@ class Event final : public ::google::protobuf::Message
   ::motionlab::protocol::PlaceAssetInSceneResult* _internal_mutable_place_asset_in_scene_result();
 
   public:
+  // .motionlab.protocol.AnalyzeFacePairResult analyze_face_pair_result = 61 [json_name = "analyzeFacePairResult"];
+  bool has_analyze_face_pair_result() const;
+  private:
+  bool _internal_has_analyze_face_pair_result() const;
+
+  public:
+  void clear_analyze_face_pair_result() ;
+  const ::motionlab::protocol::AnalyzeFacePairResult& analyze_face_pair_result() const;
+  PROTOBUF_NODISCARD ::motionlab::protocol::AnalyzeFacePairResult* release_analyze_face_pair_result();
+  ::motionlab::protocol::AnalyzeFacePairResult* mutable_analyze_face_pair_result();
+  void set_allocated_analyze_face_pair_result(::motionlab::protocol::AnalyzeFacePairResult* value);
+  void unsafe_arena_set_allocated_analyze_face_pair_result(::motionlab::protocol::AnalyzeFacePairResult* value);
+  ::motionlab::protocol::AnalyzeFacePairResult* unsafe_arena_release_analyze_face_pair_result();
+
+  private:
+  const ::motionlab::protocol::AnalyzeFacePairResult& _internal_analyze_face_pair_result() const;
+  ::motionlab::protocol::AnalyzeFacePairResult* _internal_mutable_analyze_face_pair_result();
+
+  public:
   // .motionlab.protocol.CompilationResultEvent compilation_result = 30 [json_name = "compilationResult"];
   bool has_compilation_result() const;
   private:
@@ -23986,6 +24930,7 @@ class Event final : public ::google::protobuf::Message
   void set_has_update_primitive_result();
   void set_has_update_collision_config_result();
   void set_has_place_asset_in_scene_result();
+  void set_has_analyze_face_pair_result();
   void set_has_compilation_result();
   void set_has_simulation_state();
   void set_has_simulation_frame();
@@ -23998,7 +24943,7 @@ class Event final : public ::google::protobuf::Message
   inline void clear_has_payload();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 40, 39,
+      0, 41, 40,
       0, 9>
       _table_;
 
@@ -24051,6 +24996,7 @@ class Event final : public ::google::protobuf::Message
       ::motionlab::protocol::UpdatePrimitiveResult* update_primitive_result_;
       ::motionlab::protocol::UpdateCollisionConfigResult* update_collision_config_result_;
       ::motionlab::protocol::PlaceAssetInSceneResult* place_asset_in_scene_result_;
+      ::motionlab::protocol::AnalyzeFacePairResult* analyze_face_pair_result_;
       ::motionlab::protocol::CompilationResultEvent* compilation_result_;
       ::motionlab::protocol::SimulationStateEvent* simulation_state_;
       ::motionlab::protocol::SimulationFrame* simulation_frame_;
@@ -24888,6 +25834,85 @@ inline ::motionlab::protocol::UpdateDatumPoseCommand* Command::_internal_mutable
 inline ::motionlab::protocol::UpdateDatumPoseCommand* Command::mutable_update_datum_pose() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::motionlab::protocol::UpdateDatumPoseCommand* _msg = _internal_mutable_update_datum_pose();
   // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.update_datum_pose)
+  return _msg;
+}
+
+// .motionlab.protocol.AnalyzeFacePairCommand analyze_face_pair = 19 [json_name = "analyzeFacePair"];
+inline bool Command::has_analyze_face_pair() const {
+  return payload_case() == kAnalyzeFacePair;
+}
+inline bool Command::_internal_has_analyze_face_pair() const {
+  return payload_case() == kAnalyzeFacePair;
+}
+inline void Command::set_has_analyze_face_pair() {
+  _impl_._oneof_case_[0] = kAnalyzeFacePair;
+}
+inline void Command::clear_analyze_face_pair() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kAnalyzeFacePair) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.analyze_face_pair_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.analyze_face_pair_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::AnalyzeFacePairCommand* Command::release_analyze_face_pair() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Command.analyze_face_pair)
+  if (payload_case() == kAnalyzeFacePair) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.analyze_face_pair_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.analyze_face_pair_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::AnalyzeFacePairCommand& Command::_internal_analyze_face_pair() const {
+  return payload_case() == kAnalyzeFacePair ? *_impl_.payload_.analyze_face_pair_ : reinterpret_cast<::motionlab::protocol::AnalyzeFacePairCommand&>(::motionlab::protocol::_AnalyzeFacePairCommand_default_instance_);
+}
+inline const ::motionlab::protocol::AnalyzeFacePairCommand& Command::analyze_face_pair() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Command.analyze_face_pair)
+  return _internal_analyze_face_pair();
+}
+inline ::motionlab::protocol::AnalyzeFacePairCommand* Command::unsafe_arena_release_analyze_face_pair() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Command.analyze_face_pair)
+  if (payload_case() == kAnalyzeFacePair) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.analyze_face_pair_;
+    _impl_.payload_.analyze_face_pair_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Command::unsafe_arena_set_allocated_analyze_face_pair(::motionlab::protocol::AnalyzeFacePairCommand* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_analyze_face_pair();
+    _impl_.payload_.analyze_face_pair_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Command.analyze_face_pair)
+}
+inline ::motionlab::protocol::AnalyzeFacePairCommand* Command::_internal_mutable_analyze_face_pair() {
+  if (payload_case() != kAnalyzeFacePair) {
+    clear_payload();
+    set_has_analyze_face_pair();
+    _impl_.payload_.analyze_face_pair_ =
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::AnalyzeFacePairCommand>(GetArena());
+  }
+  return _impl_.payload_.analyze_face_pair_;
+}
+inline ::motionlab::protocol::AnalyzeFacePairCommand* Command::mutable_analyze_face_pair() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::AnalyzeFacePairCommand* _msg = _internal_mutable_analyze_face_pair();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Command.analyze_face_pair)
   return _msg;
 }
 
@@ -29508,6 +30533,85 @@ inline ::motionlab::protocol::PlaceAssetInSceneResult* Event::mutable_place_asse
   return _msg;
 }
 
+// .motionlab.protocol.AnalyzeFacePairResult analyze_face_pair_result = 61 [json_name = "analyzeFacePairResult"];
+inline bool Event::has_analyze_face_pair_result() const {
+  return payload_case() == kAnalyzeFacePairResult;
+}
+inline bool Event::_internal_has_analyze_face_pair_result() const {
+  return payload_case() == kAnalyzeFacePairResult;
+}
+inline void Event::set_has_analyze_face_pair_result() {
+  _impl_._oneof_case_[0] = kAnalyzeFacePairResult;
+}
+inline void Event::clear_analyze_face_pair_result() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kAnalyzeFacePairResult) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.analyze_face_pair_result_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.analyze_face_pair_result_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::motionlab::protocol::AnalyzeFacePairResult* Event::release_analyze_face_pair_result() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.Event.analyze_face_pair_result)
+  if (payload_case() == kAnalyzeFacePairResult) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.analyze_face_pair_result_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.analyze_face_pair_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::AnalyzeFacePairResult& Event::_internal_analyze_face_pair_result() const {
+  return payload_case() == kAnalyzeFacePairResult ? *_impl_.payload_.analyze_face_pair_result_ : reinterpret_cast<::motionlab::protocol::AnalyzeFacePairResult&>(::motionlab::protocol::_AnalyzeFacePairResult_default_instance_);
+}
+inline const ::motionlab::protocol::AnalyzeFacePairResult& Event::analyze_face_pair_result() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.Event.analyze_face_pair_result)
+  return _internal_analyze_face_pair_result();
+}
+inline ::motionlab::protocol::AnalyzeFacePairResult* Event::unsafe_arena_release_analyze_face_pair_result() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.Event.analyze_face_pair_result)
+  if (payload_case() == kAnalyzeFacePairResult) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.analyze_face_pair_result_;
+    _impl_.payload_.analyze_face_pair_result_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Event::unsafe_arena_set_allocated_analyze_face_pair_result(::motionlab::protocol::AnalyzeFacePairResult* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_analyze_face_pair_result();
+    _impl_.payload_.analyze_face_pair_result_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.Event.analyze_face_pair_result)
+}
+inline ::motionlab::protocol::AnalyzeFacePairResult* Event::_internal_mutable_analyze_face_pair_result() {
+  if (payload_case() != kAnalyzeFacePairResult) {
+    clear_payload();
+    set_has_analyze_face_pair_result();
+    _impl_.payload_.analyze_face_pair_result_ =
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::AnalyzeFacePairResult>(GetArena());
+  }
+  return _impl_.payload_.analyze_face_pair_result_;
+}
+inline ::motionlab::protocol::AnalyzeFacePairResult* Event::mutable_analyze_face_pair_result() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::AnalyzeFacePairResult* _msg = _internal_mutable_analyze_face_pair_result();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.Event.analyze_face_pair_result)
+  return _msg;
+}
+
 // .motionlab.protocol.CompilationResultEvent compilation_result = 30 [json_name = "compilationResult"];
 inline bool Event::has_compilation_result() const {
   return payload_case() == kCompilationResult;
@@ -33992,6 +35096,1175 @@ inline void CreateDatumFromFaceResult::clear_has_result() {
 }
 inline CreateDatumFromFaceResult::ResultCase CreateDatumFromFaceResult::result_case() const {
   return CreateDatumFromFaceResult::ResultCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// AnalyzeFacePairCommand
+
+// .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
+inline bool AnalyzeFacePairCommand::has_parent_datum_id() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000001u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.parent_datum_id_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::ElementId& AnalyzeFacePairCommand::_internal_parent_datum_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::ElementId* p = _impl_.parent_datum_id_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& AnalyzeFacePairCommand::parent_datum_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairCommand.parent_datum_id)
+  return _internal_parent_datum_id();
+}
+inline void AnalyzeFacePairCommand::unsafe_arena_set_allocated_parent_datum_id(::motionlab::mechanism::ElementId* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.parent_datum_id_);
+  }
+  _impl_.parent_datum_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000001u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000001u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AnalyzeFacePairCommand.parent_datum_id)
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairCommand::release_parent_datum_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000001u;
+  ::motionlab::mechanism::ElementId* released = _impl_.parent_datum_id_;
+  _impl_.parent_datum_id_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairCommand::unsafe_arena_release_parent_datum_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AnalyzeFacePairCommand.parent_datum_id)
+
+  _impl_._has_bits_[0] &= ~0x00000001u;
+  ::motionlab::mechanism::ElementId* temp = _impl_.parent_datum_id_;
+  _impl_.parent_datum_id_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairCommand::_internal_mutable_parent_datum_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.parent_datum_id_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+    _impl_.parent_datum_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+  }
+  return _impl_.parent_datum_id_;
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairCommand::mutable_parent_datum_id() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000001u;
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_parent_datum_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AnalyzeFacePairCommand.parent_datum_id)
+  return _msg;
+}
+inline void AnalyzeFacePairCommand::set_allocated_parent_datum_id(::motionlab::mechanism::ElementId* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.parent_datum_id_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000001u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000001u;
+  }
+
+  _impl_.parent_datum_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AnalyzeFacePairCommand.parent_datum_id)
+}
+
+// .motionlab.mechanism.ElementId parent_geometry_id = 2 [json_name = "parentGeometryId"];
+inline bool AnalyzeFacePairCommand::has_parent_geometry_id() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000002u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.parent_geometry_id_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::ElementId& AnalyzeFacePairCommand::_internal_parent_geometry_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::ElementId* p = _impl_.parent_geometry_id_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& AnalyzeFacePairCommand::parent_geometry_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairCommand.parent_geometry_id)
+  return _internal_parent_geometry_id();
+}
+inline void AnalyzeFacePairCommand::unsafe_arena_set_allocated_parent_geometry_id(::motionlab::mechanism::ElementId* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.parent_geometry_id_);
+  }
+  _impl_.parent_geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000002u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000002u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AnalyzeFacePairCommand.parent_geometry_id)
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairCommand::release_parent_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000002u;
+  ::motionlab::mechanism::ElementId* released = _impl_.parent_geometry_id_;
+  _impl_.parent_geometry_id_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairCommand::unsafe_arena_release_parent_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AnalyzeFacePairCommand.parent_geometry_id)
+
+  _impl_._has_bits_[0] &= ~0x00000002u;
+  ::motionlab::mechanism::ElementId* temp = _impl_.parent_geometry_id_;
+  _impl_.parent_geometry_id_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairCommand::_internal_mutable_parent_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.parent_geometry_id_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+    _impl_.parent_geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+  }
+  return _impl_.parent_geometry_id_;
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairCommand::mutable_parent_geometry_id() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000002u;
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_parent_geometry_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AnalyzeFacePairCommand.parent_geometry_id)
+  return _msg;
+}
+inline void AnalyzeFacePairCommand::set_allocated_parent_geometry_id(::motionlab::mechanism::ElementId* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.parent_geometry_id_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000002u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000002u;
+  }
+
+  _impl_.parent_geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AnalyzeFacePairCommand.parent_geometry_id)
+}
+
+// uint32 parent_face_index = 3 [json_name = "parentFaceIndex"];
+inline void AnalyzeFacePairCommand::clear_parent_face_index() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.parent_face_index_ = 0u;
+}
+inline ::uint32_t AnalyzeFacePairCommand::parent_face_index() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairCommand.parent_face_index)
+  return _internal_parent_face_index();
+}
+inline void AnalyzeFacePairCommand::set_parent_face_index(::uint32_t value) {
+  _internal_set_parent_face_index(value);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.AnalyzeFacePairCommand.parent_face_index)
+}
+inline ::uint32_t AnalyzeFacePairCommand::_internal_parent_face_index() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.parent_face_index_;
+}
+inline void AnalyzeFacePairCommand::_internal_set_parent_face_index(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.parent_face_index_ = value;
+}
+
+// .motionlab.mechanism.ElementId child_geometry_id = 4 [json_name = "childGeometryId"];
+inline bool AnalyzeFacePairCommand::has_child_geometry_id() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000004u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.child_geometry_id_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::ElementId& AnalyzeFacePairCommand::_internal_child_geometry_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::ElementId* p = _impl_.child_geometry_id_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& AnalyzeFacePairCommand::child_geometry_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairCommand.child_geometry_id)
+  return _internal_child_geometry_id();
+}
+inline void AnalyzeFacePairCommand::unsafe_arena_set_allocated_child_geometry_id(::motionlab::mechanism::ElementId* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.child_geometry_id_);
+  }
+  _impl_.child_geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000004u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000004u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AnalyzeFacePairCommand.child_geometry_id)
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairCommand::release_child_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000004u;
+  ::motionlab::mechanism::ElementId* released = _impl_.child_geometry_id_;
+  _impl_.child_geometry_id_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairCommand::unsafe_arena_release_child_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AnalyzeFacePairCommand.child_geometry_id)
+
+  _impl_._has_bits_[0] &= ~0x00000004u;
+  ::motionlab::mechanism::ElementId* temp = _impl_.child_geometry_id_;
+  _impl_.child_geometry_id_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairCommand::_internal_mutable_child_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.child_geometry_id_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+    _impl_.child_geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+  }
+  return _impl_.child_geometry_id_;
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairCommand::mutable_child_geometry_id() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000004u;
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_child_geometry_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AnalyzeFacePairCommand.child_geometry_id)
+  return _msg;
+}
+inline void AnalyzeFacePairCommand::set_allocated_child_geometry_id(::motionlab::mechanism::ElementId* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.child_geometry_id_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000004u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000004u;
+  }
+
+  _impl_.child_geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AnalyzeFacePairCommand.child_geometry_id)
+}
+
+// uint32 child_face_index = 5 [json_name = "childFaceIndex"];
+inline void AnalyzeFacePairCommand::clear_child_face_index() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.child_face_index_ = 0u;
+}
+inline ::uint32_t AnalyzeFacePairCommand::child_face_index() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairCommand.child_face_index)
+  return _internal_child_face_index();
+}
+inline void AnalyzeFacePairCommand::set_child_face_index(::uint32_t value) {
+  _internal_set_child_face_index(value);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.AnalyzeFacePairCommand.child_face_index)
+}
+inline ::uint32_t AnalyzeFacePairCommand::_internal_child_face_index() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.child_face_index_;
+}
+inline void AnalyzeFacePairCommand::_internal_set_child_face_index(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.child_face_index_ = value;
+}
+
+// string child_datum_name = 6 [json_name = "childDatumName"];
+inline void AnalyzeFacePairCommand::clear_child_datum_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.child_datum_name_.ClearToEmpty();
+}
+inline const std::string& AnalyzeFacePairCommand::child_datum_name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairCommand.child_datum_name)
+  return _internal_child_datum_name();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void AnalyzeFacePairCommand::set_child_datum_name(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.child_datum_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.AnalyzeFacePairCommand.child_datum_name)
+}
+inline std::string* AnalyzeFacePairCommand::mutable_child_datum_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_child_datum_name();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AnalyzeFacePairCommand.child_datum_name)
+  return _s;
+}
+inline const std::string& AnalyzeFacePairCommand::_internal_child_datum_name() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.child_datum_name_.Get();
+}
+inline void AnalyzeFacePairCommand::_internal_set_child_datum_name(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.child_datum_name_.Set(value, GetArena());
+}
+inline std::string* AnalyzeFacePairCommand::_internal_mutable_child_datum_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.child_datum_name_.Mutable( GetArena());
+}
+inline std::string* AnalyzeFacePairCommand::release_child_datum_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AnalyzeFacePairCommand.child_datum_name)
+  return _impl_.child_datum_name_.Release();
+}
+inline void AnalyzeFacePairCommand::set_allocated_child_datum_name(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.child_datum_name_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.child_datum_name_.IsDefault()) {
+    _impl_.child_datum_name_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AnalyzeFacePairCommand.child_datum_name)
+}
+
+// -------------------------------------------------------------------
+
+// AnalyzeFacePairSuccess
+
+// .motionlab.mechanism.Datum child_datum = 1 [json_name = "childDatum"];
+inline bool AnalyzeFacePairSuccess::has_child_datum() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000001u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.child_datum_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Datum& AnalyzeFacePairSuccess::_internal_child_datum() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Datum* p = _impl_.child_datum_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Datum&>(::motionlab::mechanism::_Datum_default_instance_);
+}
+inline const ::motionlab::mechanism::Datum& AnalyzeFacePairSuccess::child_datum() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairSuccess.child_datum)
+  return _internal_child_datum();
+}
+inline void AnalyzeFacePairSuccess::unsafe_arena_set_allocated_child_datum(::motionlab::mechanism::Datum* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.child_datum_);
+  }
+  _impl_.child_datum_ = reinterpret_cast<::motionlab::mechanism::Datum*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000001u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000001u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AnalyzeFacePairSuccess.child_datum)
+}
+inline ::motionlab::mechanism::Datum* AnalyzeFacePairSuccess::release_child_datum() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000001u;
+  ::motionlab::mechanism::Datum* released = _impl_.child_datum_;
+  _impl_.child_datum_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Datum* AnalyzeFacePairSuccess::unsafe_arena_release_child_datum() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AnalyzeFacePairSuccess.child_datum)
+
+  _impl_._has_bits_[0] &= ~0x00000001u;
+  ::motionlab::mechanism::Datum* temp = _impl_.child_datum_;
+  _impl_.child_datum_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Datum* AnalyzeFacePairSuccess::_internal_mutable_child_datum() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.child_datum_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Datum>(GetArena());
+    _impl_.child_datum_ = reinterpret_cast<::motionlab::mechanism::Datum*>(p);
+  }
+  return _impl_.child_datum_;
+}
+inline ::motionlab::mechanism::Datum* AnalyzeFacePairSuccess::mutable_child_datum() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000001u;
+  ::motionlab::mechanism::Datum* _msg = _internal_mutable_child_datum();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AnalyzeFacePairSuccess.child_datum)
+  return _msg;
+}
+inline void AnalyzeFacePairSuccess::set_allocated_child_datum(::motionlab::mechanism::Datum* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.child_datum_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000001u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000001u;
+  }
+
+  _impl_.child_datum_ = reinterpret_cast<::motionlab::mechanism::Datum*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AnalyzeFacePairSuccess.child_datum)
+}
+
+// .motionlab.protocol.FaceSurfaceClass child_surface_class = 2 [json_name = "childSurfaceClass"];
+inline void AnalyzeFacePairSuccess::clear_child_surface_class() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.child_surface_class_ = 0;
+}
+inline ::motionlab::protocol::FaceSurfaceClass AnalyzeFacePairSuccess::child_surface_class() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairSuccess.child_surface_class)
+  return _internal_child_surface_class();
+}
+inline void AnalyzeFacePairSuccess::set_child_surface_class(::motionlab::protocol::FaceSurfaceClass value) {
+  _internal_set_child_surface_class(value);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.AnalyzeFacePairSuccess.child_surface_class)
+}
+inline ::motionlab::protocol::FaceSurfaceClass AnalyzeFacePairSuccess::_internal_child_surface_class() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::motionlab::protocol::FaceSurfaceClass>(_impl_.child_surface_class_);
+}
+inline void AnalyzeFacePairSuccess::_internal_set_child_surface_class(::motionlab::protocol::FaceSurfaceClass value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.child_surface_class_ = value;
+}
+
+// .motionlab.protocol.FaceGeometryMetadata child_face_geometry = 3 [json_name = "childFaceGeometry"];
+inline bool AnalyzeFacePairSuccess::has_child_face_geometry() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000002u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.child_face_geometry_ != nullptr);
+  return value;
+}
+inline void AnalyzeFacePairSuccess::clear_child_face_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.child_face_geometry_ != nullptr) _impl_.child_face_geometry_->Clear();
+  _impl_._has_bits_[0] &= ~0x00000002u;
+}
+inline const ::motionlab::protocol::FaceGeometryMetadata& AnalyzeFacePairSuccess::_internal_child_face_geometry() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::protocol::FaceGeometryMetadata* p = _impl_.child_face_geometry_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::protocol::FaceGeometryMetadata&>(::motionlab::protocol::_FaceGeometryMetadata_default_instance_);
+}
+inline const ::motionlab::protocol::FaceGeometryMetadata& AnalyzeFacePairSuccess::child_face_geometry() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairSuccess.child_face_geometry)
+  return _internal_child_face_geometry();
+}
+inline void AnalyzeFacePairSuccess::unsafe_arena_set_allocated_child_face_geometry(::motionlab::protocol::FaceGeometryMetadata* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.child_face_geometry_);
+  }
+  _impl_.child_face_geometry_ = reinterpret_cast<::motionlab::protocol::FaceGeometryMetadata*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000002u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000002u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AnalyzeFacePairSuccess.child_face_geometry)
+}
+inline ::motionlab::protocol::FaceGeometryMetadata* AnalyzeFacePairSuccess::release_child_face_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000002u;
+  ::motionlab::protocol::FaceGeometryMetadata* released = _impl_.child_face_geometry_;
+  _impl_.child_face_geometry_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::protocol::FaceGeometryMetadata* AnalyzeFacePairSuccess::unsafe_arena_release_child_face_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AnalyzeFacePairSuccess.child_face_geometry)
+
+  _impl_._has_bits_[0] &= ~0x00000002u;
+  ::motionlab::protocol::FaceGeometryMetadata* temp = _impl_.child_face_geometry_;
+  _impl_.child_face_geometry_ = nullptr;
+  return temp;
+}
+inline ::motionlab::protocol::FaceGeometryMetadata* AnalyzeFacePairSuccess::_internal_mutable_child_face_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.child_face_geometry_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::FaceGeometryMetadata>(GetArena());
+    _impl_.child_face_geometry_ = reinterpret_cast<::motionlab::protocol::FaceGeometryMetadata*>(p);
+  }
+  return _impl_.child_face_geometry_;
+}
+inline ::motionlab::protocol::FaceGeometryMetadata* AnalyzeFacePairSuccess::mutable_child_face_geometry() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000002u;
+  ::motionlab::protocol::FaceGeometryMetadata* _msg = _internal_mutable_child_face_geometry();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AnalyzeFacePairSuccess.child_face_geometry)
+  return _msg;
+}
+inline void AnalyzeFacePairSuccess::set_allocated_child_face_geometry(::motionlab::protocol::FaceGeometryMetadata* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete (_impl_.child_face_geometry_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = (value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000002u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000002u;
+  }
+
+  _impl_.child_face_geometry_ = reinterpret_cast<::motionlab::protocol::FaceGeometryMetadata*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AnalyzeFacePairSuccess.child_face_geometry)
+}
+
+// .motionlab.mechanism.ElementId child_geometry_id = 4 [json_name = "childGeometryId"];
+inline bool AnalyzeFacePairSuccess::has_child_geometry_id() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000004u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.child_geometry_id_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::ElementId& AnalyzeFacePairSuccess::_internal_child_geometry_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::ElementId* p = _impl_.child_geometry_id_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::ElementId&>(::motionlab::mechanism::_ElementId_default_instance_);
+}
+inline const ::motionlab::mechanism::ElementId& AnalyzeFacePairSuccess::child_geometry_id() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairSuccess.child_geometry_id)
+  return _internal_child_geometry_id();
+}
+inline void AnalyzeFacePairSuccess::unsafe_arena_set_allocated_child_geometry_id(::motionlab::mechanism::ElementId* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.child_geometry_id_);
+  }
+  _impl_.child_geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000004u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000004u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AnalyzeFacePairSuccess.child_geometry_id)
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairSuccess::release_child_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000004u;
+  ::motionlab::mechanism::ElementId* released = _impl_.child_geometry_id_;
+  _impl_.child_geometry_id_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairSuccess::unsafe_arena_release_child_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AnalyzeFacePairSuccess.child_geometry_id)
+
+  _impl_._has_bits_[0] &= ~0x00000004u;
+  ::motionlab::mechanism::ElementId* temp = _impl_.child_geometry_id_;
+  _impl_.child_geometry_id_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairSuccess::_internal_mutable_child_geometry_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.child_geometry_id_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::ElementId>(GetArena());
+    _impl_.child_geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(p);
+  }
+  return _impl_.child_geometry_id_;
+}
+inline ::motionlab::mechanism::ElementId* AnalyzeFacePairSuccess::mutable_child_geometry_id() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000004u;
+  ::motionlab::mechanism::ElementId* _msg = _internal_mutable_child_geometry_id();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AnalyzeFacePairSuccess.child_geometry_id)
+  return _msg;
+}
+inline void AnalyzeFacePairSuccess::set_allocated_child_geometry_id(::motionlab::mechanism::ElementId* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.child_geometry_id_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000004u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000004u;
+  }
+
+  _impl_.child_geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AnalyzeFacePairSuccess.child_geometry_id)
+}
+
+// uint32 child_face_index = 5 [json_name = "childFaceIndex"];
+inline void AnalyzeFacePairSuccess::clear_child_face_index() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.child_face_index_ = 0u;
+}
+inline ::uint32_t AnalyzeFacePairSuccess::child_face_index() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairSuccess.child_face_index)
+  return _internal_child_face_index();
+}
+inline void AnalyzeFacePairSuccess::set_child_face_index(::uint32_t value) {
+  _internal_set_child_face_index(value);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.AnalyzeFacePairSuccess.child_face_index)
+}
+inline ::uint32_t AnalyzeFacePairSuccess::_internal_child_face_index() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.child_face_index_;
+}
+inline void AnalyzeFacePairSuccess::_internal_set_child_face_index(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.child_face_index_ = value;
+}
+
+// .motionlab.protocol.FaceSurfaceClass parent_surface_class = 6 [json_name = "parentSurfaceClass"];
+inline void AnalyzeFacePairSuccess::clear_parent_surface_class() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.parent_surface_class_ = 0;
+}
+inline ::motionlab::protocol::FaceSurfaceClass AnalyzeFacePairSuccess::parent_surface_class() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairSuccess.parent_surface_class)
+  return _internal_parent_surface_class();
+}
+inline void AnalyzeFacePairSuccess::set_parent_surface_class(::motionlab::protocol::FaceSurfaceClass value) {
+  _internal_set_parent_surface_class(value);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.AnalyzeFacePairSuccess.parent_surface_class)
+}
+inline ::motionlab::protocol::FaceSurfaceClass AnalyzeFacePairSuccess::_internal_parent_surface_class() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::motionlab::protocol::FaceSurfaceClass>(_impl_.parent_surface_class_);
+}
+inline void AnalyzeFacePairSuccess::_internal_set_parent_surface_class(::motionlab::protocol::FaceSurfaceClass value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.parent_surface_class_ = value;
+}
+
+// .motionlab.protocol.FaceGeometryMetadata parent_face_geometry = 7 [json_name = "parentFaceGeometry"];
+inline bool AnalyzeFacePairSuccess::has_parent_face_geometry() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000008u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.parent_face_geometry_ != nullptr);
+  return value;
+}
+inline void AnalyzeFacePairSuccess::clear_parent_face_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.parent_face_geometry_ != nullptr) _impl_.parent_face_geometry_->Clear();
+  _impl_._has_bits_[0] &= ~0x00000008u;
+}
+inline const ::motionlab::protocol::FaceGeometryMetadata& AnalyzeFacePairSuccess::_internal_parent_face_geometry() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::protocol::FaceGeometryMetadata* p = _impl_.parent_face_geometry_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::protocol::FaceGeometryMetadata&>(::motionlab::protocol::_FaceGeometryMetadata_default_instance_);
+}
+inline const ::motionlab::protocol::FaceGeometryMetadata& AnalyzeFacePairSuccess::parent_face_geometry() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairSuccess.parent_face_geometry)
+  return _internal_parent_face_geometry();
+}
+inline void AnalyzeFacePairSuccess::unsafe_arena_set_allocated_parent_face_geometry(::motionlab::protocol::FaceGeometryMetadata* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.parent_face_geometry_);
+  }
+  _impl_.parent_face_geometry_ = reinterpret_cast<::motionlab::protocol::FaceGeometryMetadata*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000008u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000008u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AnalyzeFacePairSuccess.parent_face_geometry)
+}
+inline ::motionlab::protocol::FaceGeometryMetadata* AnalyzeFacePairSuccess::release_parent_face_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000008u;
+  ::motionlab::protocol::FaceGeometryMetadata* released = _impl_.parent_face_geometry_;
+  _impl_.parent_face_geometry_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::protocol::FaceGeometryMetadata* AnalyzeFacePairSuccess::unsafe_arena_release_parent_face_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AnalyzeFacePairSuccess.parent_face_geometry)
+
+  _impl_._has_bits_[0] &= ~0x00000008u;
+  ::motionlab::protocol::FaceGeometryMetadata* temp = _impl_.parent_face_geometry_;
+  _impl_.parent_face_geometry_ = nullptr;
+  return temp;
+}
+inline ::motionlab::protocol::FaceGeometryMetadata* AnalyzeFacePairSuccess::_internal_mutable_parent_face_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.parent_face_geometry_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::FaceGeometryMetadata>(GetArena());
+    _impl_.parent_face_geometry_ = reinterpret_cast<::motionlab::protocol::FaceGeometryMetadata*>(p);
+  }
+  return _impl_.parent_face_geometry_;
+}
+inline ::motionlab::protocol::FaceGeometryMetadata* AnalyzeFacePairSuccess::mutable_parent_face_geometry() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000008u;
+  ::motionlab::protocol::FaceGeometryMetadata* _msg = _internal_mutable_parent_face_geometry();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AnalyzeFacePairSuccess.parent_face_geometry)
+  return _msg;
+}
+inline void AnalyzeFacePairSuccess::set_allocated_parent_face_geometry(::motionlab::protocol::FaceGeometryMetadata* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete (_impl_.parent_face_geometry_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = (value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000008u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000008u;
+  }
+
+  _impl_.parent_face_geometry_ = reinterpret_cast<::motionlab::protocol::FaceGeometryMetadata*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AnalyzeFacePairSuccess.parent_face_geometry)
+}
+
+// .motionlab.protocol.FacePairAlignment alignment = 10 [json_name = "alignment"];
+inline void AnalyzeFacePairSuccess::clear_alignment() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.alignment_ = 0;
+}
+inline ::motionlab::protocol::FacePairAlignment AnalyzeFacePairSuccess::alignment() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairSuccess.alignment)
+  return _internal_alignment();
+}
+inline void AnalyzeFacePairSuccess::set_alignment(::motionlab::protocol::FacePairAlignment value) {
+  _internal_set_alignment(value);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.AnalyzeFacePairSuccess.alignment)
+}
+inline ::motionlab::protocol::FacePairAlignment AnalyzeFacePairSuccess::_internal_alignment() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::motionlab::protocol::FacePairAlignment>(_impl_.alignment_);
+}
+inline void AnalyzeFacePairSuccess::_internal_set_alignment(::motionlab::protocol::FacePairAlignment value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.alignment_ = value;
+}
+
+// double alignment_error = 11 [json_name = "alignmentError"];
+inline void AnalyzeFacePairSuccess::clear_alignment_error() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.alignment_error_ = 0;
+}
+inline double AnalyzeFacePairSuccess::alignment_error() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairSuccess.alignment_error)
+  return _internal_alignment_error();
+}
+inline void AnalyzeFacePairSuccess::set_alignment_error(double value) {
+  _internal_set_alignment_error(value);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.AnalyzeFacePairSuccess.alignment_error)
+}
+inline double AnalyzeFacePairSuccess::_internal_alignment_error() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.alignment_error_;
+}
+inline void AnalyzeFacePairSuccess::_internal_set_alignment_error(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.alignment_error_ = value;
+}
+
+// .motionlab.mechanism.JointType recommended_joint_type = 12 [json_name = "recommendedJointType"];
+inline void AnalyzeFacePairSuccess::clear_recommended_joint_type() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.recommended_joint_type_ = 0;
+}
+inline ::motionlab::mechanism::JointType AnalyzeFacePairSuccess::recommended_joint_type() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairSuccess.recommended_joint_type)
+  return _internal_recommended_joint_type();
+}
+inline void AnalyzeFacePairSuccess::set_recommended_joint_type(::motionlab::mechanism::JointType value) {
+  _internal_set_recommended_joint_type(value);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.AnalyzeFacePairSuccess.recommended_joint_type)
+}
+inline ::motionlab::mechanism::JointType AnalyzeFacePairSuccess::_internal_recommended_joint_type() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::motionlab::mechanism::JointType>(_impl_.recommended_joint_type_);
+}
+inline void AnalyzeFacePairSuccess::_internal_set_recommended_joint_type(::motionlab::mechanism::JointType value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.recommended_joint_type_ = value;
+}
+
+// double recommendation_confidence = 13 [json_name = "recommendationConfidence"];
+inline void AnalyzeFacePairSuccess::clear_recommendation_confidence() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.recommendation_confidence_ = 0;
+}
+inline double AnalyzeFacePairSuccess::recommendation_confidence() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairSuccess.recommendation_confidence)
+  return _internal_recommendation_confidence();
+}
+inline void AnalyzeFacePairSuccess::set_recommendation_confidence(double value) {
+  _internal_set_recommendation_confidence(value);
+  // @@protoc_insertion_point(field_set:motionlab.protocol.AnalyzeFacePairSuccess.recommendation_confidence)
+}
+inline double AnalyzeFacePairSuccess::_internal_recommendation_confidence() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.recommendation_confidence_;
+}
+inline void AnalyzeFacePairSuccess::_internal_set_recommendation_confidence(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.recommendation_confidence_ = value;
+}
+
+// .motionlab.mechanism.Pose proposed_joint_frame = 14 [json_name = "proposedJointFrame"];
+inline bool AnalyzeFacePairSuccess::has_proposed_joint_frame() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000010u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.proposed_joint_frame_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Pose& AnalyzeFacePairSuccess::_internal_proposed_joint_frame() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Pose* p = _impl_.proposed_joint_frame_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Pose&>(::motionlab::mechanism::_Pose_default_instance_);
+}
+inline const ::motionlab::mechanism::Pose& AnalyzeFacePairSuccess::proposed_joint_frame() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairSuccess.proposed_joint_frame)
+  return _internal_proposed_joint_frame();
+}
+inline void AnalyzeFacePairSuccess::unsafe_arena_set_allocated_proposed_joint_frame(::motionlab::mechanism::Pose* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.proposed_joint_frame_);
+  }
+  _impl_.proposed_joint_frame_ = reinterpret_cast<::motionlab::mechanism::Pose*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000010u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000010u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AnalyzeFacePairSuccess.proposed_joint_frame)
+}
+inline ::motionlab::mechanism::Pose* AnalyzeFacePairSuccess::release_proposed_joint_frame() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000010u;
+  ::motionlab::mechanism::Pose* released = _impl_.proposed_joint_frame_;
+  _impl_.proposed_joint_frame_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Pose* AnalyzeFacePairSuccess::unsafe_arena_release_proposed_joint_frame() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AnalyzeFacePairSuccess.proposed_joint_frame)
+
+  _impl_._has_bits_[0] &= ~0x00000010u;
+  ::motionlab::mechanism::Pose* temp = _impl_.proposed_joint_frame_;
+  _impl_.proposed_joint_frame_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Pose* AnalyzeFacePairSuccess::_internal_mutable_proposed_joint_frame() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.proposed_joint_frame_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Pose>(GetArena());
+    _impl_.proposed_joint_frame_ = reinterpret_cast<::motionlab::mechanism::Pose*>(p);
+  }
+  return _impl_.proposed_joint_frame_;
+}
+inline ::motionlab::mechanism::Pose* AnalyzeFacePairSuccess::mutable_proposed_joint_frame() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000010u;
+  ::motionlab::mechanism::Pose* _msg = _internal_mutable_proposed_joint_frame();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AnalyzeFacePairSuccess.proposed_joint_frame)
+  return _msg;
+}
+inline void AnalyzeFacePairSuccess::set_allocated_proposed_joint_frame(::motionlab::mechanism::Pose* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.proposed_joint_frame_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000010u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000010u;
+  }
+
+  _impl_.proposed_joint_frame_ = reinterpret_cast<::motionlab::mechanism::Pose*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AnalyzeFacePairSuccess.proposed_joint_frame)
+}
+
+// -------------------------------------------------------------------
+
+// AnalyzeFacePairResult
+
+// .motionlab.protocol.AnalyzeFacePairSuccess success = 1 [json_name = "success"];
+inline bool AnalyzeFacePairResult::has_success() const {
+  return result_case() == kSuccess;
+}
+inline bool AnalyzeFacePairResult::_internal_has_success() const {
+  return result_case() == kSuccess;
+}
+inline void AnalyzeFacePairResult::set_has_success() {
+  _impl_._oneof_case_[0] = kSuccess;
+}
+inline void AnalyzeFacePairResult::clear_success() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kSuccess) {
+    if (GetArena() == nullptr) {
+      delete _impl_.result_.success_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.success_);
+    }
+    clear_has_result();
+  }
+}
+inline ::motionlab::protocol::AnalyzeFacePairSuccess* AnalyzeFacePairResult::release_success() {
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AnalyzeFacePairResult.success)
+  if (result_case() == kSuccess) {
+    clear_has_result();
+    auto* temp = _impl_.result_.success_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.result_.success_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::protocol::AnalyzeFacePairSuccess& AnalyzeFacePairResult::_internal_success() const {
+  return result_case() == kSuccess ? *_impl_.result_.success_ : reinterpret_cast<::motionlab::protocol::AnalyzeFacePairSuccess&>(::motionlab::protocol::_AnalyzeFacePairSuccess_default_instance_);
+}
+inline const ::motionlab::protocol::AnalyzeFacePairSuccess& AnalyzeFacePairResult::success() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairResult.success)
+  return _internal_success();
+}
+inline ::motionlab::protocol::AnalyzeFacePairSuccess* AnalyzeFacePairResult::unsafe_arena_release_success() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.protocol.AnalyzeFacePairResult.success)
+  if (result_case() == kSuccess) {
+    clear_has_result();
+    auto* temp = _impl_.result_.success_;
+    _impl_.result_.success_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void AnalyzeFacePairResult::unsafe_arena_set_allocated_success(::motionlab::protocol::AnalyzeFacePairSuccess* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_result();
+  if (value) {
+    set_has_success();
+    _impl_.result_.success_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.AnalyzeFacePairResult.success)
+}
+inline ::motionlab::protocol::AnalyzeFacePairSuccess* AnalyzeFacePairResult::_internal_mutable_success() {
+  if (result_case() != kSuccess) {
+    clear_result();
+    set_has_success();
+    _impl_.result_.success_ =
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::AnalyzeFacePairSuccess>(GetArena());
+  }
+  return _impl_.result_.success_;
+}
+inline ::motionlab::protocol::AnalyzeFacePairSuccess* AnalyzeFacePairResult::mutable_success() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::protocol::AnalyzeFacePairSuccess* _msg = _internal_mutable_success();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AnalyzeFacePairResult.success)
+  return _msg;
+}
+
+// string error_message = 2 [json_name = "errorMessage"];
+inline bool AnalyzeFacePairResult::has_error_message() const {
+  return result_case() == kErrorMessage;
+}
+inline void AnalyzeFacePairResult::set_has_error_message() {
+  _impl_._oneof_case_[0] = kErrorMessage;
+}
+inline void AnalyzeFacePairResult::clear_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() == kErrorMessage) {
+    _impl_.result_.error_message_.Destroy();
+    clear_has_result();
+  }
+}
+inline const std::string& AnalyzeFacePairResult::error_message() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.AnalyzeFacePairResult.error_message)
+  return _internal_error_message();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void AnalyzeFacePairResult::set_error_message(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  _impl_.result_.error_message_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:motionlab.protocol.AnalyzeFacePairResult.error_message)
+}
+inline std::string* AnalyzeFacePairResult::mutable_error_message() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_error_message();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.AnalyzeFacePairResult.error_message)
+  return _s;
+}
+inline const std::string& AnalyzeFacePairResult::_internal_error_message() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  if (result_case() != kErrorMessage) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.result_.error_message_.Get();
+}
+inline void AnalyzeFacePairResult::_internal_set_error_message(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  _impl_.result_.error_message_.Set(value, GetArena());
+}
+inline std::string* AnalyzeFacePairResult::_internal_mutable_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (result_case() != kErrorMessage) {
+    clear_result();
+
+    set_has_error_message();
+    _impl_.result_.error_message_.InitDefault();
+  }
+  return _impl_.result_.error_message_.Mutable( GetArena());
+}
+inline std::string* AnalyzeFacePairResult::release_error_message() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.AnalyzeFacePairResult.error_message)
+  if (result_case() != kErrorMessage) {
+    return nullptr;
+  }
+  clear_has_result();
+  return _impl_.result_.error_message_.Release();
+}
+inline void AnalyzeFacePairResult::set_allocated_error_message(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_result()) {
+    clear_result();
+  }
+  if (value != nullptr) {
+    set_has_error_message();
+    _impl_.result_.error_message_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.AnalyzeFacePairResult.error_message)
+}
+
+inline bool AnalyzeFacePairResult::has_result() const {
+  return result_case() != RESULT_NOT_SET;
+}
+inline void AnalyzeFacePairResult::clear_has_result() {
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+inline AnalyzeFacePairResult::ResultCase AnalyzeFacePairResult::result_case() const {
+  return AnalyzeFacePairResult::ResultCase(_impl_._oneof_case_[0]);
 }
 // -------------------------------------------------------------------
 
@@ -46265,6 +48538,12 @@ struct is_proto_enum<::motionlab::protocol::FaceSurfaceClass> : std::true_type {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor<::motionlab::protocol::FaceSurfaceClass>() {
   return ::motionlab::protocol::FaceSurfaceClass_descriptor();
+}
+template <>
+struct is_proto_enum<::motionlab::protocol::FacePairAlignment> : std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor<::motionlab::protocol::FacePairAlignment>() {
+  return ::motionlab::protocol::FacePairAlignment_descriptor();
 }
 template <>
 struct is_proto_enum<::motionlab::protocol::SolverType> : std::true_type {};

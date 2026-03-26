@@ -1,7 +1,7 @@
 import type { BodyPose, JointTypeId } from '../stores/mechanism.js';
 import { composeWorldPose } from './pose-composition.js';
 
-export type AlignmentKind = 'coaxial' | 'coplanar' | 'coincident' | 'general';
+export type AlignmentKind = 'coaxial' | 'coplanar' | 'coincident' | 'perpendicular' | 'general';
 
 export interface Vec3 {
   x: number;
@@ -172,5 +172,39 @@ export function analyzeDatumAlignment(
     kind: 'general',
     recommendedTypes: ['fixed', 'revolute', 'prismatic', 'spherical', 'cylindrical', 'planar'],
     distance,
+  };
+}
+
+/**
+ * Build a DatumAlignment from engine-side pairwise analysis results.
+ *
+ * Maps alignment kind to recommended types list, using the engine's
+ * recommended type as the first in the list.
+ */
+export function alignmentFromEngineAnalysis(
+  alignmentKind: AlignmentKind,
+  recommendedJointType: JointTypeId,
+  confidence: number,
+): DatumAlignment {
+  // Build type lists per alignment, with engine's recommendation first
+  const typesByAlignment: Record<AlignmentKind, JointTypeId[]> = {
+    coaxial: ['revolute', 'cylindrical', 'prismatic'],
+    coplanar: ['planar', 'fixed'],
+    coincident: ['spherical', 'revolute', 'fixed'],
+    perpendicular: ['revolute', 'fixed'],
+    general: ['fixed', 'revolute', 'prismatic', 'spherical', 'cylindrical', 'planar'],
+  };
+
+  const types = typesByAlignment[alignmentKind] ?? typesByAlignment.general;
+
+  // Move the engine-recommended type to the front if it's in the list
+  const reordered = types.includes(recommendedJointType)
+    ? [recommendedJointType, ...types.filter((t) => t !== recommendedJointType)]
+    : [recommendedJointType, ...types];
+
+  return {
+    kind: alignmentKind,
+    recommendedTypes: reordered,
+    distance: 0, // engine doesn't provide distance in this path
   };
 }

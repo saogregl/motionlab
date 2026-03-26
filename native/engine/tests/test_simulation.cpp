@@ -816,6 +816,230 @@ static int test_no_geometry_mass_preserved() {
 }
 
 // ===========================================================================
+// Epic 3: ChLinkMate Migration Tests
+// ===========================================================================
+
+// Helper: build a two-body fixed-joint mechanism
+static mech::Mechanism build_fixed_joint_mechanism() {
+    mech::Mechanism m;
+    m.mutable_id()->set_id("mech-fixed");
+    m.set_name("Fixed joint test");
+
+    // Ground
+    auto* ground = m.add_bodies();
+    ground->mutable_id()->set_id("body-ground");
+    ground->set_name("Ground");
+    ground->set_is_fixed(true);
+    auto* gpose = ground->mutable_pose();
+    gpose->mutable_position()->set_x(0); gpose->mutable_position()->set_y(0); gpose->mutable_position()->set_z(0);
+    gpose->mutable_orientation()->set_w(1);
+    auto* gmp = ground->mutable_mass_properties();
+    gmp->set_mass(1.0);
+    gmp->set_ixx(0.1); gmp->set_iyy(0.1); gmp->set_izz(0.1);
+
+    // Moving body at (1, 0, 0)
+    auto* body = m.add_bodies();
+    body->mutable_id()->set_id("body-block");
+    body->set_name("Block");
+    auto* bpose = body->mutable_pose();
+    bpose->mutable_position()->set_x(1); bpose->mutable_position()->set_y(0); bpose->mutable_position()->set_z(0);
+    bpose->mutable_orientation()->set_w(1);
+    auto* bmp = body->mutable_mass_properties();
+    bmp->set_mass(1.0);
+    bmp->set_ixx(0.1); bmp->set_iyy(0.1); bmp->set_izz(0.1);
+
+    // Datums at midpoint
+    auto* dg = m.add_datums();
+    dg->mutable_id()->set_id("datum-g");
+    dg->set_name("Ground attach");
+    dg->mutable_parent_body_id()->set_id("body-ground");
+    dg->mutable_local_pose()->mutable_position()->set_x(0.5);
+    dg->mutable_local_pose()->mutable_orientation()->set_w(1);
+
+    auto* db = m.add_datums();
+    db->mutable_id()->set_id("datum-b");
+    db->set_name("Block attach");
+    db->mutable_parent_body_id()->set_id("body-block");
+    db->mutable_local_pose()->mutable_position()->set_x(-0.5);
+    db->mutable_local_pose()->mutable_orientation()->set_w(1);
+
+    auto* joint = m.add_joints();
+    joint->mutable_id()->set_id("joint-fix");
+    joint->set_name("Fixed");
+    joint->set_type(mech::JOINT_TYPE_FIXED);
+    joint->mutable_parent_datum_id()->set_id("datum-g");
+    joint->mutable_child_datum_id()->set_id("datum-b");
+
+    return m;
+}
+
+// Test: Fixed joint (ChLinkMateFix) — body should not move
+static int test_fixed_joint_no_motion() {
+    std::cout << "  [test_fixed_joint_no_motion] ";
+
+    eng::SimulationRuntime runtime;
+    auto mechanism = build_fixed_joint_mechanism();
+    auto result = runtime.compile(mechanism);
+    assert(result.success && "Fixed joint mechanism should compile");
+
+    // Step 200 times at dt=0.001
+    for (int i = 0; i < 200; i++) {
+        runtime.step(0.001);
+    }
+
+    auto poses = runtime.getBodyPoses();
+    const eng::BodyPose* block = nullptr;
+    for (const auto& p : poses) {
+        if (p.body_id == "body-block") block = &p;
+    }
+    assert(block);
+
+    // Fixed joint: block should stay at (1, 0, 0)
+    assert(std::abs(block->position[0] - 1.0) < 1e-4 && "Fixed body X should not drift");
+    assert(std::abs(block->position[1]) < 1e-4 && "Fixed body Y should not drift");
+    assert(std::abs(block->position[2]) < 1e-4 && "Fixed body Z should not drift");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test: Limited revolute (ChLinkLock fallback) — limits enforced
+static int test_limited_revolute_fallback() {
+    std::cout << "  [test_limited_revolute_fallback] ";
+
+    auto m = build_pendulum_mechanism();
+    // Set angle limits on the revolute joint: ±0.5 rad
+    auto* joint = m.mutable_joints(0);
+    auto* lim = joint->mutable_revolute()->mutable_angle_limit();
+    lim->set_lower(-0.5);
+    lim->set_upper(0.5);
+
+    eng::SimulationRuntime runtime;
+    auto result = runtime.compile(m);
+    assert(result.success && "Limited revolute should compile (ChLinkLock fallback)");
+
+    // Step enough to let pendulum hit limit
+    for (int i = 0; i < 500; i++) {
+        runtime.step(0.001);
+    }
+
+    auto states = runtime.getJointStates();
+    assert(states.size() == 1);
+    // Position should be clamped within limits (with some solver tolerance)
+    assert(states[0].position >= -0.6 && states[0].position <= 0.6 &&
+           "Revolute joint should respect angle limits");
+
+    std::cout << "PASS (pos=" << states[0].position << ")\n";
+    return 0;
+}
+
+// Helper: build a multi-type mechanism
+static mech::Mechanism build_multi_type_mechanism() {
+    mech::Mechanism m;
+    m.mutable_id()->set_id("mech-multi");
+    m.set_name("Multi-type test");
+
+    // Helper lambda: add a body at a given X position
+    auto add_body = [&](const std::string& id, const std::string& name, double x, bool fixed) {
+        auto* body = m.add_bodies();
+        body->mutable_id()->set_id(id);
+        body->set_name(name);
+        body->set_is_fixed(fixed);
+        auto* pose = body->mutable_pose();
+        pose->mutable_position()->set_x(x);
+        pose->mutable_orientation()->set_w(1);
+        auto* mp = body->mutable_mass_properties();
+        mp->set_mass(1.0);
+        mp->set_ixx(0.1); mp->set_iyy(0.1); mp->set_izz(0.1);
+    };
+
+    // Helper lambda: add a datum
+    auto add_datum = [&](const std::string& id, const std::string& body_id, double lx) {
+        auto* d = m.add_datums();
+        d->mutable_id()->set_id(id);
+        d->mutable_parent_body_id()->set_id(body_id);
+        d->mutable_local_pose()->mutable_position()->set_x(lx);
+        d->mutable_local_pose()->mutable_orientation()->set_w(1);
+    };
+
+    // Helper lambda: add a joint
+    auto add_joint = [&](const std::string& id, const std::string& name,
+                         mech::JointType type,
+                         const std::string& parent_datum, const std::string& child_datum) {
+        auto* j = m.add_joints();
+        j->mutable_id()->set_id(id);
+        j->set_name(name);
+        j->set_type(type);
+        j->mutable_parent_datum_id()->set_id(parent_datum);
+        j->mutable_child_datum_id()->set_id(child_datum);
+    };
+
+    // Ground + 4 bodies in a chain
+    add_body("bg", "Ground", 0, true);
+    add_body("b1", "Body1", 1, false);
+    add_body("b2", "Body2", 2, false);
+    add_body("b3", "Body3", 3, false);
+    add_body("b4", "Body4", 4, false);
+
+    // Datums: parent side at +0.5, child side at -0.5
+    add_datum("dg-r", "bg", 0.5);
+    add_datum("d1-l", "b1", -0.5);
+    add_datum("d1-r", "b1", 0.5);
+    add_datum("d2-l", "b2", -0.5);
+    add_datum("d2-r", "b2", 0.5);
+    add_datum("d3-l", "b3", -0.5);
+    add_datum("d3-r", "b3", 0.5);
+    add_datum("d4-l", "b4", -0.5);
+
+    // Chain: ground -[revolute]-> b1 -[prismatic]-> b2 -[fixed]-> b3 -[spherical]-> b4
+    add_joint("j1", "Rev", mech::JOINT_TYPE_REVOLUTE, "dg-r", "d1-l");
+    add_joint("j2", "Prism", mech::JOINT_TYPE_PRISMATIC, "d1-r", "d2-l");
+    add_joint("j3", "Fix", mech::JOINT_TYPE_FIXED, "d2-r", "d3-l");
+    add_joint("j4", "Sph", mech::JOINT_TYPE_SPHERICAL, "d3-r", "d4-l");
+
+    return m;
+}
+
+// Test: Multi-type mechanism — all channels return non-NaN
+static int test_multi_type_channels() {
+    std::cout << "  [test_multi_type_channels] ";
+
+    eng::SimulationRuntime runtime;
+    auto mechanism = build_multi_type_mechanism();
+    auto result = runtime.compile(mechanism);
+    assert(result.success && "Multi-type mechanism should compile");
+
+    // Step 100 iterations
+    for (int i = 0; i < 100; i++) {
+        runtime.step(0.001);
+    }
+
+    auto channels = runtime.getChannelValues();
+    assert(!channels.empty() && "Should have channel values");
+
+    for (const auto& ch : channels) {
+        if (ch.data_type == 1) {
+            assert(!std::isnan(ch.scalar) && "Scalar channel should not be NaN");
+        } else if (ch.data_type == 2) {
+            assert(!std::isnan(ch.vector[0]) && "Vector[0] should not be NaN");
+            assert(!std::isnan(ch.vector[1]) && "Vector[1] should not be NaN");
+            assert(!std::isnan(ch.vector[2]) && "Vector[2] should not be NaN");
+        }
+    }
+
+    // Also verify joint states for revolute and prismatic
+    auto states = runtime.getJointStates();
+    assert(states.size() >= 2 && "Should have at least revolute + prismatic joint states");
+    for (const auto& s : states) {
+        assert(!std::isnan(s.position) && "Joint position should not be NaN");
+        assert(!std::isnan(s.velocity) && "Joint velocity should not be NaN");
+    }
+
+    std::cout << "PASS (" << channels.size() << " channels, " << states.size() << " joint states)\n";
+    return 0;
+}
+
+// ===========================================================================
 // Pre-Simulation Validation Tests (Epic 17, Prompt 3)
 // ===========================================================================
 
@@ -1273,6 +1497,11 @@ int main() {
     failures += test_contact_config();
     failures += test_backward_compat();
     failures += test_no_geometry_mass_preserved();
+
+    std::cout << "\n=== ChLinkMate Migration Tests (Epic 3) ===\n";
+    failures += test_fixed_joint_no_motion();
+    failures += test_limited_revolute_fallback();
+    failures += test_multi_type_channels();
 
     std::cout << "\n=== Pre-Simulation Validation Tests (Epic 17 Prompt 3) ===\n";
     failures += test_no_ground_error();

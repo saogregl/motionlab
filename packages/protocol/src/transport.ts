@@ -39,6 +39,7 @@ import {
   DetachGeometryCommandSchema,
   EngineStatus_State,
   EventSchema,
+  FacePairAlignment,
   HandshakeSchema,
   ImportAssetCommandSchema,
   ImportMode,
@@ -61,6 +62,7 @@ import {
   IntegratorType,
   CompilationDiagnosticSchema,
   DiagnosticSeverity,
+  AnalyzeFacePairCommandSchema,
   AttachGeometryCommandSchema,
   UpdateActuatorCommandSchema,
   UpdateBodyCommandSchema,
@@ -227,6 +229,35 @@ export function createCreateDatumFromFaceCommand(
         geometryId: create(ElementIdSchema, { id: geometryId }),
         faceIndex,
         name,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing an AnalyzeFacePair payload.
+ */
+export function createAnalyzeFacePairCommand(
+  parentDatumId: string,
+  parentGeometryId: string,
+  parentFaceIndex: number,
+  childGeometryId: string,
+  childFaceIndex: number,
+  childDatumName: string,
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'analyzeFacePair',
+      value: create(AnalyzeFacePairCommandSchema, {
+        parentDatumId: create(ElementIdSchema, { id: parentDatumId }),
+        parentGeometryId: create(ElementIdSchema, { id: parentGeometryId }),
+        parentFaceIndex,
+        childGeometryId: create(ElementIdSchema, { id: childGeometryId }),
+        childFaceIndex,
+        childDatumName,
       }),
     },
   });
@@ -527,6 +558,27 @@ export function toProtoJointType(type: string): JointType {
       return JointType.POINT_PLANE;
     default:
       return JointType.UNSPECIFIED;
+  }
+}
+
+/**
+ * Maps a proto FacePairAlignment enum to a store-friendly string.
+ */
+export type FacePairAlignmentId = 'coaxial' | 'coplanar' | 'coincident' | 'perpendicular' | 'general';
+
+export function mapFacePairAlignment(alignment: FacePairAlignment): FacePairAlignmentId {
+  switch (alignment) {
+    case FacePairAlignment.COAXIAL:
+      return 'coaxial';
+    case FacePairAlignment.COPLANAR:
+      return 'coplanar';
+    case FacePairAlignment.COINCIDENT:
+      return 'coincident';
+    case FacePairAlignment.PERPENDICULAR:
+      return 'perpendicular';
+    case FacePairAlignment.GENERAL:
+    default:
+      return 'general';
   }
 }
 

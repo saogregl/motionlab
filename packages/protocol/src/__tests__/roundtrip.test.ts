@@ -30,6 +30,9 @@ import {
   Vec3Schema,
 } from '../generated/mechanism/mechanism_pb.js';
 import {
+  AnalyzeFacePairCommandSchema,
+  AnalyzeFacePairResultSchema,
+  AnalyzeFacePairSuccessSchema,
   BodyImportResultSchema,
   BodyPoseDataSchema,
   ChannelDataType,
@@ -61,6 +64,7 @@ import {
   EngineStatus_State,
   EngineStatusSchema,
   EventSchema,
+  FacePairAlignment,
   FaceSurfaceClass,
   HandshakeAckSchema,
   HandshakeSchema,
@@ -2501,6 +2505,124 @@ describe('Phase 3: ImportMode on ImportOptions round-trips', () => {
     expect(cmd.payload.case).toBe('importAsset');
     if (cmd.payload.case === 'importAsset') {
       expect(cmd.payload.value.importOptions?.importMode).toBe(ImportMode.AUTO_BODY);
+    }
+  });
+});
+
+describe('AnalyzeFacePair round-trip', () => {
+  it('should round-trip an AnalyzeFacePairCommand in Command envelope', () => {
+    const cmd = create(CommandSchema, {
+      sequenceId: 100n,
+      payload: {
+        case: 'analyzeFacePair',
+        value: create(AnalyzeFacePairCommandSchema, {
+          parentDatumId: create(ElementIdSchema, { id: 'datum-parent' }),
+          parentGeometryId: create(ElementIdSchema, { id: 'geom-parent' }),
+          parentFaceIndex: 3,
+          childGeometryId: create(ElementIdSchema, { id: 'geom-child' }),
+          childFaceIndex: 5,
+          childDatumName: 'Child Datum',
+        }),
+      },
+    });
+
+    const bytes = toBinary(CommandSchema, cmd);
+    const restored = fromBinary(CommandSchema, bytes);
+
+    expect(restored.sequenceId).toBe(100n);
+    expect(restored.payload.case).toBe('analyzeFacePair');
+    if (restored.payload.case === 'analyzeFacePair') {
+      expect(restored.payload.value.parentDatumId?.id).toBe('datum-parent');
+      expect(restored.payload.value.parentGeometryId?.id).toBe('geom-parent');
+      expect(restored.payload.value.parentFaceIndex).toBe(3);
+      expect(restored.payload.value.childGeometryId?.id).toBe('geom-child');
+      expect(restored.payload.value.childFaceIndex).toBe(5);
+      expect(restored.payload.value.childDatumName).toBe('Child Datum');
+    }
+  });
+
+  it('should round-trip an AnalyzeFacePairResult (success) in Event envelope', () => {
+    const event = create(EventSchema, {
+      sequenceId: 101n,
+      payload: {
+        case: 'analyzeFacePairResult',
+        value: create(AnalyzeFacePairResultSchema, {
+          result: {
+            case: 'success',
+            value: create(AnalyzeFacePairSuccessSchema, {
+              childDatum: create(DatumSchema, {
+                id: create(ElementIdSchema, { id: 'datum-child' }),
+                name: 'Child Datum',
+                parentBodyId: create(ElementIdSchema, { id: 'body-child' }),
+                localPose: create(PoseSchema, {
+                  position: create(Vec3Schema, { x: 1, y: 2, z: 3 }),
+                  orientation: create(QuatSchema, { w: 1, x: 0, y: 0, z: 0 }),
+                }),
+              }),
+              childSurfaceClass: FaceSurfaceClass.CYLINDRICAL,
+              childFaceIndex: 5,
+              childGeometryId: create(ElementIdSchema, { id: 'geom-child' }),
+              parentSurfaceClass: FaceSurfaceClass.CYLINDRICAL,
+              alignment: FacePairAlignment.COAXIAL,
+              alignmentError: 0.0001,
+              recommendedJointType: JointType.REVOLUTE,
+              recommendationConfidence: 1.0,
+              proposedJointFrame: create(PoseSchema, {
+                position: create(Vec3Schema, { x: 0.5, y: 1, z: 1.5 }),
+                orientation: create(QuatSchema, { w: 1, x: 0, y: 0, z: 0 }),
+              }),
+            }),
+          },
+        }),
+      },
+    });
+
+    const bytes = toBinary(EventSchema, event);
+    const restored = fromBinary(EventSchema, bytes);
+
+    expect(restored.sequenceId).toBe(101n);
+    expect(restored.payload.case).toBe('analyzeFacePairResult');
+    if (restored.payload.case === 'analyzeFacePairResult') {
+      expect(restored.payload.value.result.case).toBe('success');
+      if (restored.payload.value.result.case === 'success') {
+        const s = restored.payload.value.result.value;
+        expect(s.childDatum?.id?.id).toBe('datum-child');
+        expect(s.childDatum?.name).toBe('Child Datum');
+        expect(s.childSurfaceClass).toBe(FaceSurfaceClass.CYLINDRICAL);
+        expect(s.parentSurfaceClass).toBe(FaceSurfaceClass.CYLINDRICAL);
+        expect(s.alignment).toBe(FacePairAlignment.COAXIAL);
+        expect(s.alignmentError).toBe(0.0001);
+        expect(s.recommendedJointType).toBe(JointType.REVOLUTE);
+        expect(s.recommendationConfidence).toBe(1.0);
+        expect(s.proposedJointFrame?.position?.x).toBe(0.5);
+      }
+    }
+  });
+
+  it('should round-trip an AnalyzeFacePairResult (error) in Event envelope', () => {
+    const event = create(EventSchema, {
+      sequenceId: 102n,
+      payload: {
+        case: 'analyzeFacePairResult',
+        value: create(AnalyzeFacePairResultSchema, {
+          result: {
+            case: 'errorMessage',
+            value: 'Parent datum not found',
+          },
+        }),
+      },
+    });
+
+    const bytes = toBinary(EventSchema, event);
+    const restored = fromBinary(EventSchema, bytes);
+
+    expect(restored.sequenceId).toBe(102n);
+    expect(restored.payload.case).toBe('analyzeFacePairResult');
+    if (restored.payload.case === 'analyzeFacePairResult') {
+      expect(restored.payload.value.result.case).toBe('errorMessage');
+      if (restored.payload.value.result.case === 'errorMessage') {
+        expect(restored.payload.value.result.value).toBe('Parent datum not found');
+      }
     }
   });
 });

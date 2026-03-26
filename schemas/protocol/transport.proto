@@ -31,6 +31,7 @@ message Command {
     CreateDatumFromFaceCommand create_datum_from_face = 16;
     UpdateBodyCommand update_body = 17;
     UpdateDatumPoseCommand update_datum_pose = 18;
+    AnalyzeFacePairCommand analyze_face_pair = 19;
     CreateJointCommand create_joint = 20;
     UpdateJointCommand update_joint = 21;
     DeleteJointCommand delete_joint = 22;
@@ -96,6 +97,7 @@ message Event {
     UpdatePrimitiveResult update_primitive_result = 58;
     UpdateCollisionConfigResult update_collision_config_result = 59;
     PlaceAssetInSceneResult place_asset_in_scene_result = 60;
+    AnalyzeFacePairResult analyze_face_pair_result = 61;
     CompilationResultEvent compilation_result = 30;
     SimulationStateEvent simulation_state = 31;
     SimulationFrame simulation_frame = 32;
@@ -261,6 +263,48 @@ message CreateDatumResult {
 message CreateDatumFromFaceResult {
   oneof result {
     CreateDatumFromFaceSuccess success = 1;
+    string error_message = 2;
+  }
+}
+
+enum FacePairAlignment {
+  FACE_PAIR_ALIGNMENT_UNSPECIFIED = 0;
+  FACE_PAIR_ALIGNMENT_COAXIAL = 1;
+  FACE_PAIR_ALIGNMENT_COPLANAR = 2;
+  FACE_PAIR_ALIGNMENT_COINCIDENT = 3;
+  FACE_PAIR_ALIGNMENT_PERPENDICULAR = 4;
+  FACE_PAIR_ALIGNMENT_GENERAL = 5;
+}
+
+message AnalyzeFacePairCommand {
+  motionlab.mechanism.ElementId parent_datum_id = 1;
+  motionlab.mechanism.ElementId parent_geometry_id = 2;
+  uint32 parent_face_index = 3;
+  motionlab.mechanism.ElementId child_geometry_id = 4;
+  uint32 child_face_index = 5;
+  string child_datum_name = 6;
+}
+
+message AnalyzeFacePairSuccess {
+  motionlab.mechanism.Datum child_datum = 1;
+  FaceSurfaceClass child_surface_class = 2;
+  FaceGeometryMetadata child_face_geometry = 3;
+  motionlab.mechanism.ElementId child_geometry_id = 4;
+  uint32 child_face_index = 5;
+
+  FaceSurfaceClass parent_surface_class = 6;
+  FaceGeometryMetadata parent_face_geometry = 7;
+
+  FacePairAlignment alignment = 10;
+  double alignment_error = 11;
+  motionlab.mechanism.JointType recommended_joint_type = 12;
+  double recommendation_confidence = 13;
+  motionlab.mechanism.Pose proposed_joint_frame = 14;
+}
+
+message AnalyzeFacePairResult {
+  oneof result {
+    AnalyzeFacePairSuccess success = 1;
     string error_message = 2;
   }
 }

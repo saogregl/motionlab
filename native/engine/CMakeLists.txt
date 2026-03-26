@@ -138,6 +138,7 @@ add_library(motionlab-engine-lib STATIC
   src/primitive_generator.cpp
   src/asset_cache.cpp
   src/face_classifier.cpp
+  src/face_pair_analyzer.cpp
   src/mechanism_state.cpp
   src/ring_buffer.cpp
   src/shape_registry.cpp
@@ -225,5 +226,6 @@ if(BUILD_TESTS)
   motionlab_add_test(motionlab-mechanism-tests  tests/test_mechanism_state.cpp)
   motionlab_add_test(motionlab-cad-tests        tests/test_cad_import.cpp)
   motionlab_add_test(motionlab-face-tests       tests/test_face_classifier.cpp)
+  motionlab_add_test(motionlab-face-pair-tests   tests/test_face_pair_analyzer.cpp)
   motionlab_add_test(motionlab-sim-tests        tests/test_simulation.cpp)
 endif()

@@ -96,7 +96,7 @@ export interface PoseInput {
 }
 
 export interface JointPreviewAlignment {
-  readonly kind: 'coaxial' | 'coplanar' | 'coincident' | 'general';
+  readonly kind: 'coaxial' | 'coplanar' | 'coincident' | 'perpendicular' | 'general';
   readonly axis?: { readonly x: number; readonly y: number; readonly z: number };
   readonly distance: number;
 }

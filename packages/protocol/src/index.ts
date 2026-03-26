@@ -4,6 +4,9 @@
 export * from './generated/mechanism/mechanism_pb.js';
 // Selected generated types for consumers
 export type {
+  AnalyzeFacePairCommand,
+  AnalyzeFacePairResult,
+  AnalyzeFacePairSuccess,
   AttachGeometryCommand,
   AttachGeometryResult,
   BodyImportResult,
@@ -87,6 +90,7 @@ export {
   ContactSettingsSchema,
   DiagnosticSeverity,
   EngineStatus_State,
+  FacePairAlignment,
   FaceSurfaceClass,
   ImportMode,
   IntegratorType,
@@ -97,6 +101,7 @@ export {
 } from './generated/protocol/transport_pb.js';
 // Binary transport helpers
 export {
+  createAnalyzeFacePairCommand,
   createAttachGeometryCommand,
   createCreateActuatorCommand,
   createCreateBodyCommand,
@@ -135,6 +140,7 @@ export {
   createUpdateLoadCommand,
   engineStateToString,
   eventToDebugJson,
+  mapFacePairAlignment,
   mapJointType,
   mapMotionType,
   parseEvent,
@@ -144,6 +150,7 @@ export {
   type MotionTypeId,
   type CollisionConfigInput,
   type CollisionShapeTypeId,
+  type FacePairAlignmentId,
   type PrimitiveParamsInput,
   type PrimitiveShapeType,
   type SimulationSettingsInput,
