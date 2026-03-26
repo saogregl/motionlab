@@ -15,6 +15,10 @@ import {
 } from '@motionlab/ui';
 import { useState } from 'react';
 
+import { useUILayoutStore } from '../stores/ui-layout.js';
+
+export type ImportMode = 'auto-body' | 'visual-only';
+
 interface ImportSettingsDialogProps {
   open: boolean;
   filePath: string;
@@ -22,6 +26,7 @@ interface ImportSettingsDialogProps {
     densityOverride: number;
     tessellationQuality: number;
     unitSystem: string;
+    importMode: ImportMode;
   }) => void;
   onCancel: () => void;
 }
@@ -35,6 +40,9 @@ export function ImportSettingsDialog({
   const [density, setDensity] = useState(1000);
   const [quality, setQuality] = useState('0.1');
   const [units, setUnits] = useState('millimeter');
+  const [importMode, setImportMode] = useState<ImportMode>(
+    () => useUILayoutStore.getState().importMode,
+  );
 
   const fileName = filePath.split(/[/\\]/).pop() ?? filePath;
 
@@ -72,14 +80,33 @@ export function ImportSettingsDialog({
               </SelectContent>
             </Select>
           </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-muted-foreground">Placement Mode</label>
+            <Select value={importMode} onValueChange={(v) => { if (v) setImportMode(v as ImportMode); }}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="auto-body">Auto-body</SelectItem>
+                <SelectItem value="visual-only">Visual only</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-[11px] text-muted-foreground/70">
+              {importMode === 'visual-only'
+                ? 'Parts import as loose geometry. Use "Make Body" to assign them to bodies later.'
+                : 'Each STEP part automatically creates a body with attached geometry.'}
+            </p>
+          </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onCancel}>Cancel</Button>
-          <Button onClick={() => onConfirm({
-            densityOverride: density,
-            tessellationQuality: parseFloat(quality),
-            unitSystem: units,
-          })}>Import</Button>
+          <Button onClick={() => {
+            useUILayoutStore.getState().setImportMode(importMode);
+            onConfirm({
+              densityOverride: density,
+              tessellationQuality: parseFloat(quality),
+              unitSystem: units,
+              importMode,
+            });
+          }}>Import</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

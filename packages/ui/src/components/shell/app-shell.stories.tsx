@@ -15,8 +15,9 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { TooltipProvider } from '../ui/tooltip';
 
+import { LayoutProvider } from '../../layout';
 import { AppShell } from './app-shell';
-import { BottomDock } from './bottom-dock';
+import { BottomPanel } from './bottom-panel';
 import { LeftPanel } from './left-panel';
 import { RightPanel } from './right-panel';
 import { TopBar } from './top-bar';
@@ -344,8 +345,8 @@ function ComposedAppShell() {
             </InspectorPanel>
           </RightPanel>
         }
-        bottomDock={
-          <BottomDock
+        bottomPanel={
+          <BottomPanel
             tabs={[
               { id: 'timeline', label: 'Timeline' },
               { id: 'charts', label: 'Charts' },
@@ -356,7 +357,7 @@ function ComposedAppShell() {
             <div className="flex h-full items-center justify-center bg-layer-recessed text-[length:var(--text-sm)] text-text-tertiary">
               Timeline content
             </div>
-          </BottomDock>
+          </BottomPanel>
         }
         tabBar={
           <WorkspaceTabBar
@@ -380,6 +381,13 @@ const meta: Meta = {
   parameters: {
     layout: 'fullscreen',
   },
+  decorators: [
+    (Story) => (
+      <LayoutProvider>
+        <Story />
+      </LayoutProvider>
+    ),
+  ],
 };
 
 export default meta;

@@ -135,6 +135,7 @@ add_library(motionlab-engine-lib STATIC
   src/transport_import_project_context.cpp
   src/transport_runtime_session.cpp
   src/cad_import.cpp
+  src/primitive_generator.cpp
   src/asset_cache.cpp
   src/face_classifier.cpp
   src/mechanism_state.cpp

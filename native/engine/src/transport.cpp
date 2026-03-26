@@ -8,6 +8,7 @@
 #include "mechanism/mechanism.pb.h"
 
 #include "cad_import.h"
+#include "primitive_generator.h"
 #include "asset_cache.h"
 #include "face_classifier.h"
 #include "mechanism_state.h"
@@ -375,6 +376,14 @@ struct TransportServer::Impl {
                 if (!authenticated) break;
                 enqueue_command(cmd.sequence_id(), cmd.update_mass_properties(), &Impl::handle_update_mass_properties);
                 break;
+            case protocol::Command::kCreatePrimitiveBody:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.create_primitive_body(), &Impl::handle_create_primitive_body);
+                break;
+            case protocol::Command::kPlaceAssetInScene:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.place_asset_in_scene(), &Impl::handle_place_asset_in_scene);
+                break;
             default:
                 break;
         }
@@ -653,6 +662,20 @@ struct TransportServer::Impl {
         if (cmd.has_name()) {
             mechanism_state.rename_body(body_id, cmd.name());
         }
+        if (cmd.has_pose()) {
+            double pos[3] = {
+                cmd.pose().position().x(),
+                cmd.pose().position().y(),
+                cmd.pose().position().z()
+            };
+            double orient[4] = {
+                cmd.pose().orientation().w(),
+                cmd.pose().orientation().x(),
+                cmd.pose().orientation().y(),
+                cmd.pose().orientation().z()
+            };
+            mechanism_state.set_body_pose(body_id, pos, orient);
+        }
 
         // Build response Body proto from mechanism_state
         auto body_proto = mechanism_state.build_body_proto(body_id);
@@ -802,6 +825,119 @@ struct TransportServer::Impl {
         } else {
             result->set_error_message("Body not found: " + body_id);
         }
+        send_event(ws, event);
+    }
+
+    void handle_create_primitive_body(ix::WebSocket& ws, uint64_t sequence_id,
+                                       const protocol::CreatePrimitiveBodyCommand& cmd) {
+        double density = cmd.density() > 0 ? cmd.density() : 1000.0;
+
+        auto prim = engine::generate_primitive(cmd.shape(), cmd.params(), density);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_create_primitive_body_result();
+
+        if (!prim.success) {
+            result->set_error_message(prim.error_message);
+            send_event(ws, event);
+            return;
+        }
+
+        std::string body_id = engine::generate_uuidv7();
+        std::string geometry_id = engine::generate_uuidv7();
+
+        // Default name from shape type
+        std::string name = cmd.name();
+        if (name.empty()) {
+            switch (cmd.shape()) {
+                case mechanism::PRIMITIVE_SHAPE_BOX:      name = "Box"; break;
+                case mechanism::PRIMITIVE_SHAPE_CYLINDER:  name = "Cylinder"; break;
+                case mechanism::PRIMITIVE_SHAPE_SPHERE:    name = "Sphere"; break;
+                default:                                   name = "Primitive"; break;
+            }
+        }
+
+        // Extract position
+        double pos[3] = {0, 0, 0};
+        if (cmd.has_position()) {
+            pos[0] = cmd.position().x();
+            pos[1] = cmd.position().y();
+            pos[2] = cmd.position().z();
+        }
+        double orient[4] = {1, 0, 0, 0};
+
+        // Register body in mechanism state
+        mechanism_state.add_body(body_id, name, pos, orient,
+                                  prim.mass_properties.mass,
+                                  prim.mass_properties.center_of_mass.data(),
+                                  prim.mass_properties.inertia.data());
+
+        // Build mass properties proto for geometry
+        mechanism::MassProperties geom_mass;
+        geom_mass.set_mass(prim.mass_properties.mass);
+        geom_mass.mutable_center_of_mass()->set_x(prim.mass_properties.center_of_mass[0]);
+        geom_mass.mutable_center_of_mass()->set_y(prim.mass_properties.center_of_mass[1]);
+        geom_mass.mutable_center_of_mass()->set_z(prim.mass_properties.center_of_mass[2]);
+        geom_mass.set_ixx(prim.mass_properties.inertia[0]);
+        geom_mass.set_iyy(prim.mass_properties.inertia[1]);
+        geom_mass.set_izz(prim.mass_properties.inertia[2]);
+        geom_mass.set_ixy(prim.mass_properties.inertia[3]);
+        geom_mass.set_ixz(prim.mass_properties.inertia[4]);
+        geom_mass.set_iyz(prim.mass_properties.inertia[5]);
+
+        // Build PrimitiveSource for persistence
+        mechanism::PrimitiveSource prim_source;
+        prim_source.set_shape(cmd.shape());
+        *prim_source.mutable_params() = cmd.params();
+
+        // Register geometry with primitive source (no AssetReference)
+        double g_pos[3] = {0, 0, 0};
+        double g_orient[4] = {1, 0, 0, 0};
+        auto geom_result = mechanism_state.add_geometry(
+            geometry_id, name, body_id,
+            g_pos, g_orient, geom_mass,
+            nullptr, prim.face_count, &prim_source);
+
+        if (!geom_result.error.empty()) {
+            result->set_error_message(geom_result.error);
+            send_event(ws, event);
+            return;
+        }
+
+        // Store B-Rep shape for face-aware picking
+        if (prim.brep_shape) {
+            shape_registry.store(geometry_id, *prim.brep_shape);
+        }
+
+        // Build GeometryImportResult for the response
+        auto* gir = result->mutable_geometry();
+        gir->set_geometry_id(geometry_id);
+        gir->set_body_id(body_id);
+        gir->set_name(name);
+        auto* gir_mesh = gir->mutable_display_mesh();
+        gir_mesh->mutable_vertices()->Assign(prim.mesh.vertices.begin(), prim.mesh.vertices.end());
+        gir_mesh->mutable_indices()->Assign(prim.mesh.indices.begin(), prim.mesh.indices.end());
+        gir_mesh->mutable_normals()->Assign(prim.mesh.normals.begin(), prim.mesh.normals.end());
+        gir->mutable_part_index()->Assign(prim.mesh.part_index.begin(), prim.mesh.part_index.end());
+        *gir->mutable_computed_mass_properties() = geom_mass;
+        auto* gir_pose = gir->mutable_pose();
+        gir_pose->mutable_position()->set_x(pos[0]);
+        gir_pose->mutable_position()->set_y(pos[1]);
+        gir_pose->mutable_position()->set_z(pos[2]);
+        gir_pose->mutable_orientation()->set_w(1.0);
+
+        // Populate body proto in the result
+        auto body_proto = mechanism_state.build_body_proto(body_id);
+        if (body_proto.has_value()) {
+            *result->mutable_body() = std::move(body_proto.value());
+        }
+
+        // Register in import project context for save/load
+        import_project.register_primitive_geometry(geometry_id, body_id, *gir);
+
+        spdlog::info("Created primitive body '{}' (body={}, geom={}, shape={})",
+                     name, body_id, geometry_id, static_cast<int>(cmd.shape()));
         send_event(ws, event);
     }
 
@@ -973,6 +1109,15 @@ struct TransportServer::Impl {
     void handle_relocate_asset(ix::WebSocket& ws, uint64_t sequence_id,
                                 const protocol::RelocateAssetCommand& cmd) {
         import_project.handle_relocate_asset(
+            ws, sequence_id, cmd,
+            [this](ix::WebSocket& target_ws, const protocol::Event& event) {
+                send_event(target_ws, event);
+            });
+    }
+
+    void handle_place_asset_in_scene(ix::WebSocket& ws, uint64_t sequence_id,
+                                      const protocol::PlaceAssetInSceneCommand& cmd) {
+        import_project.handle_place_asset_in_scene(
             ws, sequence_id, cmd,
             [this](ix::WebSocket& target_ws, const protocol::Event& event) {
                 send_event(target_ws, event);

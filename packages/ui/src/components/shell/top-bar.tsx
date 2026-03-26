@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { cn } from '../../lib/utils';
 
 interface TopBarProps {
-  /** Project name display */
+  /** Project name display — omit or pass undefined for home mode */
   projectName?: string;
   /** Whether the project has unsaved changes */
   isDirty?: boolean;
@@ -15,6 +15,8 @@ interface TopBarProps {
   actions?: ReactNode;
   /** Transport controls (play/pause/step/reset) slot */
   transportControls?: ReactNode;
+  /** Called when the logo/brand is clicked (e.g. navigate home) */
+  onLogoClick?: () => void;
   className?: string;
 }
 
@@ -77,7 +79,9 @@ function WindowControls() {
   );
 }
 
-function TopBar({ projectName = 'Untitled Project', isDirty, status, actions, transportControls, className }: TopBarProps) {
+function TopBar({ projectName, isDirty, status, actions, transportControls, onLogoClick, className }: TopBarProps) {
+  const hasProject = projectName != null;
+
   return (
     <div
       data-slot="top-bar"
@@ -88,26 +92,45 @@ function TopBar({ projectName = 'Untitled Project', isDirty, status, actions, tr
     >
       {/* Left cluster */}
       <div className="flex min-w-0 items-center gap-2">
-        <span className="max-w-[280px] truncate text-[length:var(--text-base)] text-text-primary">
-          <span className="font-semibold">MotionLab</span>
-          <span className="text-text-tertiary"> / {projectName}{isDirty ? '*' : ''}</span>
-        </span>
-        <ChevronDown className="size-3 shrink-0 text-text-tertiary" />
+        {onLogoClick ? (
+          <button
+            type="button"
+            onClick={onLogoClick}
+            className="max-w-[280px] truncate text-[length:var(--text-base)] text-text-primary [-webkit-app-region:no-drag] hover:text-accent-text transition-colors"
+          >
+            <span className="font-semibold">MotionLab</span>
+            {hasProject && (
+              <span className="text-text-tertiary"> / {projectName}{isDirty ? '*' : ''}</span>
+            )}
+          </button>
+        ) : (
+          <span className="max-w-[280px] truncate text-[length:var(--text-base)] text-text-primary">
+            <span className="font-semibold">MotionLab</span>
+            {hasProject && (
+              <span className="text-text-tertiary"> / {projectName}{isDirty ? '*' : ''}</span>
+            )}
+          </span>
+        )}
+        {hasProject && <ChevronDown className="size-3 shrink-0 text-text-tertiary" />}
       </div>
 
-      {/* Center — command search trigger */}
-      <div className="flex flex-1 justify-center px-4">
-        <button
-          type="button"
-          className="flex h-7 w-56 items-center gap-1.5 rounded-[var(--radius-sm)] bg-transparent px-3 text-[length:var(--text-sm)] text-text-tertiary transition-colors hover:bg-field-base [-webkit-app-region:no-drag]"
-        >
-          <Search className="size-3.5 shrink-0" />
-          <span className="flex-1 text-left">Search commands...</span>
-          <kbd className="shrink-0 rounded-[1px] px-1 text-[length:var(--text-2xs)] font-medium text-text-tertiary">
-            Ctrl+K
-          </kbd>
-        </button>
-      </div>
+      {/* Center — command search trigger (only in workbench mode) */}
+      {hasProject ? (
+        <div className="flex flex-1 justify-center px-4">
+          <button
+            type="button"
+            className="flex h-7 w-56 items-center gap-1.5 rounded-[var(--radius-sm)] bg-transparent px-3 text-[length:var(--text-sm)] text-text-tertiary transition-colors hover:bg-field-base [-webkit-app-region:no-drag]"
+          >
+            <Search className="size-3.5 shrink-0" />
+            <span className="flex-1 text-left">Search commands...</span>
+            <kbd className="shrink-0 rounded-[1px] px-1 text-[length:var(--text-2xs)] font-medium text-text-tertiary">
+              Ctrl+K
+            </kbd>
+          </button>
+        </div>
+      ) : (
+        <div className="flex-1" />
+      )}
 
       {/* Right cluster */}
       <div className="flex shrink-0 items-center gap-3 [-webkit-app-region:no-drag]">

@@ -1,13 +1,19 @@
 import { create, fromBinary, toBinary, toJsonString } from '@bufbuild/protobuf';
 import {
   ActuatorSchema,
+  BoxParamsSchema,
+  CylinderParamsSchema,
   ElementIdSchema,
   JointSchema,
   JointType,
   LoadSchema,
   MassPropertiesSchema,
+  MotionType,
   PoseSchema,
+  PrimitiveParamsSchema,
+  PrimitiveShape,
   QuatSchema,
+  SphereParamsSchema,
   Vec3Schema,
 } from './generated/mechanism/mechanism_pb.js';
 import type { Actuator, Joint, Load } from './generated/mechanism/mechanism_pb.js';
@@ -16,19 +22,25 @@ import {
   CommandSchema,
   CompileMechanismCommandSchema,
   CreateActuatorCommandSchema,
+  CreateBodyCommandSchema,
   CreateDatumCommandSchema,
   CreateDatumFromFaceCommandSchema,
   CreateJointCommandSchema,
   CreateLoadCommandSchema,
+  CreatePrimitiveBodyCommandSchema,
   DeleteDatumCommandSchema,
   DeleteActuatorCommandSchema,
+  DeleteBodyCommandSchema,
   DeleteJointCommandSchema,
   DeleteLoadCommandSchema,
+  DetachGeometryCommandSchema,
   EngineStatus_State,
   EventSchema,
   HandshakeSchema,
   ImportAssetCommandSchema,
+  ImportMode,
   ImportOptionsSchema,
+  PlaceAssetInSceneCommandSchema,
   LoadProjectCommandSchema,
   NewProjectCommandSchema,
   PingSchema,
@@ -46,9 +58,6 @@ import {
   CompilationDiagnosticSchema,
   DiagnosticSeverity,
   AttachGeometryCommandSchema,
-  CreateBodyCommandSchema,
-  DeleteBodyCommandSchema,
-  DetachGeometryCommandSchema,
   UpdateActuatorCommandSchema,
   UpdateBodyCommandSchema,
   UpdateDatumPoseCommandSchema,
@@ -97,9 +106,11 @@ export function createPingCommand(sequenceId: bigint): Uint8Array {
 /**
  * Creates a binary-encoded Command envelope containing an ImportAsset payload.
  */
+export type ImportModeType = 'auto-body' | 'visual-only';
+
 export function createImportAssetCommand(
   filePath: string,
-  options?: { densityOverride?: number; tessellationQuality?: number; unitSystem?: string },
+  options?: { densityOverride?: number; tessellationQuality?: number; unitSystem?: string; importMode?: ImportModeType },
   sequenceId?: bigint,
 ): Uint8Array {
   const cmd = create(CommandSchema, {
@@ -113,8 +124,32 @@ export function createImportAssetCommand(
               densityOverride: options.densityOverride ?? 0,
               tessellationQuality: options.tessellationQuality ?? 0,
               unitSystem: options.unitSystem ?? '',
+              importMode: options.importMode === 'visual-only'
+                ? ImportMode.VISUAL_ONLY
+                : ImportMode.AUTO_BODY,
             })
           : undefined,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a PlaceAssetInScene payload.
+ */
+export function createPlaceAssetInSceneCommand(
+  assetId: string,
+  position: { x: number; y: number; z: number },
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'placeAssetInScene',
+      value: create(PlaceAssetInSceneCommandSchema, {
+        assetId,
+        position: create(Vec3Schema, position),
       }),
     },
   });
@@ -490,6 +525,35 @@ export function toProtoJointType(type: string): JointType {
 }
 
 /**
+ * Store-friendly motion type identifier.
+ */
+export type MotionTypeId = 'dynamic' | 'fixed';
+
+/**
+ * Maps a proto MotionType enum value to a store-friendly string.
+ */
+export function mapMotionType(proto: number): MotionTypeId {
+  switch (proto) {
+    case MotionType.FIXED:
+      return 'fixed';
+    case MotionType.DYNAMIC:
+    case MotionType.UNSPECIFIED:
+    default:
+      return 'dynamic';
+  }
+}
+
+/**
+ * Maps a store-friendly motion type string to the proto MotionType enum value.
+ */
+export function toProtoMotionType(id: MotionTypeId): MotionType {
+  switch (id) {
+    case 'fixed': return MotionType.FIXED;
+    case 'dynamic': return MotionType.DYNAMIC;
+  }
+}
+
+/**
  * Maps a proto EngineStatus.State enum value to a store-friendly string.
  */
 export function engineStateToString(state: EngineStatus_State): string {
@@ -669,17 +733,44 @@ export function createNewProjectCommand(projectName: string, sequenceId?: bigint
  */
 export function createUpdateBodyCommand(
   bodyId: string,
-  updates: { isFixed?: boolean; name?: string },
+  updates: {
+    isFixed?: boolean;
+    name?: string;
+    pose?: {
+      position: { x: number; y: number; z: number };
+      orientation: { x: number; y: number; z: number; w: number };
+    };
+    motionType?: MotionTypeId;
+  },
   sequenceId?: bigint,
 ): Uint8Array {
+  // Dual-write: set isFixed from motionType for backward compat with C++ engine
+  const isFixed = updates.motionType !== undefined
+    ? updates.motionType === 'fixed'
+    : updates.isFixed;
+
   const cmd = create(CommandSchema, {
     sequenceId: sequenceId ?? 0n,
     payload: {
       case: 'updateBody',
       value: create(UpdateBodyCommandSchema, {
         bodyId: create(ElementIdSchema, { id: bodyId }),
-        isFixed: updates.isFixed,
+        isFixed,
         name: updates.name,
+        pose: updates.pose
+          ? create(PoseSchema, {
+              position: create(Vec3Schema, updates.pose.position),
+              orientation: create(QuatSchema, {
+                w: updates.pose.orientation.w,
+                x: updates.pose.orientation.x,
+                y: updates.pose.orientation.y,
+                z: updates.pose.orientation.z,
+              }),
+            })
+          : undefined,
+        motionType: updates.motionType !== undefined
+          ? toProtoMotionType(updates.motionType)
+          : undefined,
       }),
     },
   });
@@ -724,9 +815,15 @@ export function createCreateBodyCommand(
     massProperties?: { mass: number; centerOfMass: { x: number; y: number; z: number }; ixx: number; iyy: number; izz: number; ixy: number; ixz: number; iyz: number };
     pose?: { position: { x: number; y: number; z: number }; orientation: { x: number; y: number; z: number; w: number } };
     isFixed?: boolean;
+    motionType?: MotionTypeId;
   },
   sequenceId?: bigint,
 ): Uint8Array {
+  // Dual-write: set isFixed from motionType for backward compat with C++ engine
+  const isFixed = options?.motionType !== undefined
+    ? options.motionType === 'fixed'
+    : (options?.isFixed ?? false);
+
   const cmd = create(CommandSchema, {
     sequenceId: sequenceId ?? 0n,
     payload: {
@@ -751,7 +848,10 @@ export function createCreateBodyCommand(
               orientation: create(QuatSchema, options.pose.orientation),
             })
           : undefined,
-        isFixed: options?.isFixed ?? false,
+        isFixed,
+        motionType: options?.motionType !== undefined
+          ? toProtoMotionType(options.motionType)
+          : MotionType.DYNAMIC,
       }),
     },
   });
@@ -852,6 +952,59 @@ export function createUpdateMassPropertiesCommand(
               iyz: massProperties.iyz,
             })
           : undefined,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+export type PrimitiveShapeType = 'box' | 'cylinder' | 'sphere';
+
+export interface PrimitiveParamsInput {
+  box?: { width: number; height: number; depth: number };
+  cylinder?: { radius: number; height: number };
+  sphere?: { radius: number };
+}
+
+function mapPrimitiveShape(shape: PrimitiveShapeType): PrimitiveShape {
+  switch (shape) {
+    case 'box': return PrimitiveShape.BOX;
+    case 'cylinder': return PrimitiveShape.CYLINDER;
+    case 'sphere': return PrimitiveShape.SPHERE;
+  }
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a CreatePrimitiveBody payload.
+ */
+export function createCreatePrimitiveBodyCommand(
+  shape: PrimitiveShapeType,
+  name: string,
+  position: { x: number; y: number; z: number },
+  params: PrimitiveParamsInput,
+  density?: number,
+  sequenceId?: bigint,
+): Uint8Array {
+  const protoParams = create(PrimitiveParamsSchema, {
+    shapeParams: params.box
+      ? { case: 'box' as const, value: create(BoxParamsSchema, params.box) }
+      : params.cylinder
+        ? { case: 'cylinder' as const, value: create(CylinderParamsSchema, params.cylinder) }
+        : params.sphere
+          ? { case: 'sphere' as const, value: create(SphereParamsSchema, params.sphere) }
+          : { case: undefined, value: undefined },
+  });
+
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'createPrimitiveBody',
+      value: create(CreatePrimitiveBodyCommandSchema, {
+        shape: mapPrimitiveShape(shape),
+        name,
+        position: create(Vec3Schema, position),
+        params: protoParams,
+        density: density ?? 0,
       }),
     },
   });

@@ -108,6 +108,7 @@ export type GizmoMode = 'translate' | 'rotate' | 'off';
 
 export interface GizmoDragEndEvent {
   entityId: string;
+  entityKind: 'datum' | 'body';
   position: [number, number, number];
   rotation: [number, number, number, number];
 }
@@ -419,6 +420,7 @@ export class SceneGraphManager {
   private _gizmoMode: GizmoMode = 'off';
   private _gizmoAttachedId: string | null = null;
   private _gizmoDragEndCallback: GizmoDragEndCallback | undefined;
+  private _orbitTarget = new Vector3(0, 0, 0);
   private _datumPreviewBodyId: string | null = null;
   private mutationDepth = 0;
   private pendingJointRefresh = false;
@@ -2115,7 +2117,9 @@ export class SceneGraphManager {
       return null;
     }
     const entity = this.entities.get(this._gizmoAttachedId);
-    return entity?.meta.kind === 'datum' ? entity.rootNode : null;
+    if (!entity) return null;
+    if (entity.meta.kind === 'datum' || entity.meta.kind === 'body') return entity.rootNode;
+    return null;
   }
 
   notifyGizmoObjectChanged(): void {
@@ -2129,7 +2133,7 @@ export class SceneGraphManager {
   notifyGizmoDragEnd(): void {
     if (!this._gizmoAttachedId || !this._gizmoDragEndCallback) return;
     const entity = this.entities.get(this._gizmoAttachedId);
-    if (!entity || entity.meta.kind !== 'datum') return;
+    if (!entity || (entity.meta.kind !== 'datum' && entity.meta.kind !== 'body')) return;
 
     const position: [number, number, number] = [
       entity.rootNode.position.x,
@@ -2143,12 +2147,27 @@ export class SceneGraphManager {
       entity.rootNode.quaternion.w,
     ];
 
-    entity.meta.localPose = { position, rotation };
+    if (entity.meta.kind === 'datum') {
+      entity.meta.localPose = { position, rotation };
+    }
     this._gizmoDragEndCallback({
       entityId: entity.id,
+      entityKind: entity.meta.kind as 'datum' | 'body',
       position,
       rotation,
     });
+  }
+
+  // ── Viewport focus point (placement strategy) ──────────────────
+
+  /** Update the cached orbit target — called from OrbitControls onChange. */
+  setOrbitTarget(target: Vector3): void {
+    this._orbitTarget.copy(target);
+  }
+
+  /** Return the viewport focus point projected onto the ground plane (Y=0). */
+  getViewportFocusPoint(): { x: number; y: number; z: number } {
+    return { x: this._orbitTarget.x, y: 0, z: this._orbitTarget.z };
   }
 
   // TODO (Epic 15.2): Wire to simulation channels `joint/{id}/reaction-force`

@@ -5,6 +5,7 @@ import {
   AppShell,
   Button,
   DensityToggle,
+  LayoutProvider,
   LeftPanel,
   RightPanel,
   StatusBadge,
@@ -36,9 +37,8 @@ import { MainToolbar } from './components/MainToolbar.js';
 import { ResultsLeftPanel } from './components/ResultsLeftPanel.js';
 import { ResultsBottomDock } from './components/ResultsBottomDock.js';
 import { ResultsToolbar } from './components/ResultsToolbar.js';
-import { TimelinePanel } from './components/TimelinePanel.js';
+import { BuildBottomPanel } from './components/BuildBottomPanel.js';
 import { ViewportOverlay } from './components/ViewportOverlay.js';
-import { WelcomeScreen } from './components/WelcomeScreen.js';
 import { onMissingAssets, sendAutoSave, sendImportAsset, sendLoadProject } from './engine/connection.js';
 import { useDialogStore } from './stores/dialogs.js';
 import { useUILayoutStore } from './stores/ui-layout.js';
@@ -227,8 +227,8 @@ export function App() {
   const setLeftPanelWidth = useUILayoutStore((s) => s.setLeftPanelWidth);
   const setRightPanelWidth = useUILayoutStore((s) => s.setRightPanelWidth);
 
-  // Bottom dock expanded state
-  const bottomDockExpanded = useUILayoutStore((s) => s.bottomDockExpanded);
+  // Bottom panel expanded state
+  const bottomPanelExpanded = useUILayoutStore((s) => s.bottomPanelExpanded);
   const resultsBottomDockExpanded = useUILayoutStore((s) => s.resultsBottomDockExpanded);
 
   // Results panel state
@@ -240,6 +240,7 @@ export function App() {
   const [recoverableProjects, setRecoverableProjects] = useState<RecoverableProject[]>([]);
   const pendingImportFilePath = useImportFlowStore((s) => s.pendingFilePath);
   const closeImportDialog = useImportFlowStore((s) => s.closeImportDialog);
+  const setPendingImportOptions = useImportFlowStore((s) => s.setPendingImportOptions);
   const setImporting = useMechanismStore((s) => s.setImporting);
   const setImportError = useMechanismStore((s) => s.setImportError);
 
@@ -316,6 +317,7 @@ export function App() {
 
   return (
     <TooltipProvider>
+      <LayoutProvider>
       <AppShell
         topBar={
           <TopBar
@@ -348,8 +350,7 @@ export function App() {
         rightPanelWidth={activeWorkspace === 'build' ? rightPanelWidth : undefined}
         onRightPanelWidthChange={activeWorkspace === 'build' ? setRightPanelWidth : undefined}
         viewport={<ViewportOverlay />}
-        bottomDock={activeWorkspace === 'build' ? <TimelinePanel /> : <ResultsBottomDock />}
-        bottomDockExpanded={activeWorkspace === 'build' ? bottomDockExpanded : resultsBottomDockExpanded}
+        bottomPanel={activeWorkspace === 'build' ? <BuildBottomPanel /> : <ResultsBottomDock />}
         viewportOverlays={activeWorkspace === 'build' ? <MainToolbar /> : <ResultsToolbar />}
         tabBar={
           <WorkspaceTabBar
@@ -362,7 +363,7 @@ export function App() {
         }
         statusBar={<StatusBarContainer />}
       />
-      <WelcomeScreen />
+      </LayoutProvider>
       <Toaster />
       <CommandPalette />
       <ImportSettingsDialog
@@ -372,6 +373,7 @@ export function App() {
           if (!pendingImportFilePath) return;
           setImportError(null);
           setImporting(true);
+          setPendingImportOptions(options ?? {});
           sendImportAsset(pendingImportFilePath, options);
           closeImportDialog();
         }}

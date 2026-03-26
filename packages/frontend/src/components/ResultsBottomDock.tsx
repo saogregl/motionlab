@@ -1,4 +1,4 @@
-import { BottomDock, TimelineScrubber, TimelineTransport } from '@motionlab/ui';
+import { BottomPanel, TimelineScrubber, TimelineTransport } from '@motionlab/ui';
 
 import { useTimelineTransport } from '../hooks/useTimelineTransport.js';
 import { useUILayoutStore } from '../stores/ui-layout.js';
@@ -28,7 +28,7 @@ export function ResultsBottomDock() {
   const setExpanded = useUILayoutStore((s) => s.setResultsBottomDockExpanded);
 
   return (
-    <BottomDock
+    <BottomPanel
       tabs={[
         { id: 'charts', label: 'Charts' },
         { id: 'diagnostics', label: 'Diagnostics' },
@@ -37,7 +37,7 @@ export function ResultsBottomDock() {
       onTabChange={setActiveTab}
       expanded={expanded}
       onExpandedChange={setExpanded}
-      style={{ '--bottom-dock-h': '45vh' } as React.CSSProperties}
+      style={{ '--bottom-panel-h': '45vh' } as React.CSSProperties}
     >
       <div className="flex h-full flex-col">
         {/* Timeline transport — always visible */}
@@ -70,6 +70,6 @@ export function ResultsBottomDock() {
           {activeTab === 'diagnostics' && <DiagnosticsPanel />}
         </div>
       </div>
-    </BottomDock>
+    </BottomPanel>
   );
 }

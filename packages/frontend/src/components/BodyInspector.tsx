@@ -1,19 +1,14 @@
 import {
   Button,
-  CopyableId,
-  EditableInertiaMatrix,
-  InertiaMatrixDisplay,
   InspectorPanel,
-  InspectorSection,
-  NumericInput,
   PropertyRow,
-  QuatDisplay,
-  Switch,
-  Vec3Display,
-  formatEngValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@motionlab/ui';
-import type { Axis } from '@motionlab/ui';
-import { Box, Fingerprint, Grid3X3, Move3D, Scale } from 'lucide-react';
+import { Box } from 'lucide-react';
 import { useCallback, useRef } from 'react';
 import { sendUpdateBody, sendUpdateMassProperties } from '../engine/connection.js';
 import { getBodyPose } from '../stores/body-poses.js';
@@ -21,6 +16,7 @@ import type { BodyMassProperties } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
+import { IdentitySection, MassSection, PoseSection } from './inspector/sections/index.js';
 
 const DEBOUNCE_MS = 300;
 
@@ -67,114 +63,50 @@ export function BodyInspector() {
       entityType="Body"
       entityIcon={<Box className="size-5" />}
     >
-      <InspectorSection title="Identity" icon={<Fingerprint className="size-3.5" />}>
-        <PropertyRow label="Name">
-          <span className="text-2xs truncate">{body.name}</span>
-        </PropertyRow>
-        <PropertyRow label="Source">
-          <span className="text-2xs truncate">{sourceFilename}</span>
-        </PropertyRow>
-        <PropertyRow label="Body ID">
-          <CopyableId value={body.id} />
-        </PropertyRow>
-        <PropertyRow label="Fixed (Ground)">
-          <div className="flex items-center gap-1.5">
-            <Switch
+      <IdentitySection
+        entityId={body.id}
+        entityType="body"
+        name={body.name}
+        metadata={[
+          {
+            label: 'Source',
+            value: <span className="text-2xs truncate">{sourceFilename}</span>,
+          },
+        ]}
+      />
 
-              checked={body.isFixed ?? false}
-              onCheckedChange={(checked) =>
-                sendUpdateBody(body.id, { isFixed: checked })
-              }
-              disabled={isSimulating}
-            />
-            <span className="text-2xs text-[var(--text-secondary)]">
-              {body.isFixed ? 'Yes' : 'No'}
-            </span>
-          </div>
-        </PropertyRow>
-      </InspectorSection>
+      <PropertyRow label="Motion Type">
+        <Select
+          value={body.motionType}
+          onValueChange={(v) => sendUpdateBody(body.id, { motionType: v as 'dynamic' | 'fixed' })}
+        >
+          <SelectTrigger size="sm" disabled={isSimulating}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="dynamic">Dynamic</SelectItem>
+            <SelectItem value="fixed">Fixed (Ground)</SelectItem>
+          </SelectContent>
+        </Select>
+      </PropertyRow>
 
-      <InspectorSection title="Mass Properties" icon={<Scale className="size-3.5" />}>
-        <PropertyRow label="Source">
-          <span className="text-2xs text-[var(--text-secondary)]">
-            {body.massOverride
-              ? 'User override'
-              : geometryCount > 0
-                ? `Computed from ${geometryCount} ${geometryCount === 1 ? 'geometry' : 'geometries'}`
-                : 'Computed (no geometry attached)'}
-          </span>
-        </PropertyRow>
-        <PropertyRow label="Override">
-          <Switch
-            checked={body.massOverride ?? false}
-            onCheckedChange={(checked) => {
-              if (checked) {
-                // Switch to override — keep current values as starting point
-                sendUpdateMassProperties(body.id, true, body.massProperties);
-              } else {
-                // Revert to computed — engine will recalculate from geometries
-                sendUpdateMassProperties(body.id, false);
-              }
-            }}
-            disabled={isSimulating}
-          />
-        </PropertyRow>
-        <PropertyRow label="Mass" unit="kg" numeric>
-          {body.massOverride ? (
-            <NumericInput
-              value={mp.mass}
-              onChange={(v) =>
-                debouncedMassUpdate(body.id, true, { ...mp, mass: v })
-              }
-              min={0.001}
-              step={0.1}
-              disabled={isSimulating}
-            />
-          ) : (
-            <span className="font-[family-name:var(--font-mono)] tabular-nums">
-              {formatEngValue(mp.mass)}
-            </span>
-          )}
-        </PropertyRow>
-        <Vec3Display
-          label="Center of Mass"
-          value={mp.centerOfMass}
-          unit="m"
-          editable={body.massOverride && !isSimulating}
-          onChange={(axis: Axis, val: number) => {
-            const newCom = { ...mp.centerOfMass, [axis]: val };
-            debouncedMassUpdate(body.id, true, { ...mp, centerOfMass: newCom });
-          }}
-        />
-      </InspectorSection>
-
-      <InspectorSection title="Inertia Tensor" icon={<Grid3X3 className="size-3.5" />}>
-        {body.massOverride ? (
-          <EditableInertiaMatrix
-            ixx={mp.ixx}
-            iyy={mp.iyy}
-            izz={mp.izz}
-            ixy={mp.ixy}
-            ixz={mp.ixz}
-            iyz={mp.iyz}
-            unit="kg m²"
-            onChange={(values) =>
-              debouncedMassUpdate(body.id, true, { ...mp, ...values })
-            }
-            disabled={isSimulating}
-          />
-        ) : (
-          <InertiaMatrixDisplay
-            ixx={mp.ixx}
-            iyy={mp.iyy}
-            izz={mp.izz}
-            ixy={mp.ixy}
-            ixz={mp.ixz}
-            iyz={mp.iyz}
-            unit="kg m²"
-          />
-        )}
-      </InspectorSection>
+      <MassSection
+        bodyId={body.id}
+        massProperties={mp}
+        massOverride={body.massOverride ?? false}
+        geometryCount={geometryCount}
+        isSimulating={isSimulating}
+        onOverrideChange={(checked) => {
+          if (checked) {
+            sendUpdateMassProperties(body.id, true, body.massProperties);
+          } else {
+            sendUpdateMassProperties(body.id, false);
+          }
+        }}
+        onMassPropertiesChange={(newMp) =>
+          debouncedMassUpdate(body.id, true, newMp)
+        }
+      />
 
       {body.massOverride && (
         <div className="ps-3 pe-3 pb-2">
@@ -191,10 +123,11 @@ export function BodyInspector() {
       )}
 
       {livePose && (
-        <InspectorSection title="Current Pose" icon={<Move3D className="size-3.5" />}>
-          <Vec3Display label="Position" value={livePose.position} unit="m" />
-          <QuatDisplay value={livePose.rotation} label="Rotation" />
-        </InspectorSection>
+        <PoseSection
+          title="Current Pose"
+          position={livePose.position}
+          rotation={livePose.rotation}
+        />
       )}
     </InspectorPanel>
   );

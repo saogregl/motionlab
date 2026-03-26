@@ -45,6 +45,8 @@ message Command {
     AttachGeometryCommand attach_geometry = 52;
     DetachGeometryCommand detach_geometry = 53;
     UpdateMassPropertiesCommand update_mass_properties = 54;
+    CreatePrimitiveBodyCommand create_primitive_body = 55;
+    PlaceAssetInSceneCommand place_asset_in_scene = 60;
     CompileMechanismCommand compile_mechanism = 30;
     SimulationControlCommand simulation_control = 31;
     ScrubCommand scrub = 32;
@@ -84,6 +86,8 @@ message Event {
     AttachGeometryResult attach_geometry_result = 52;
     DetachGeometryResult detach_geometry_result = 53;
     UpdateMassPropertiesResult update_mass_properties_result = 54;
+    CreatePrimitiveBodyResult create_primitive_body_result = 55;
+    PlaceAssetInSceneResult place_asset_in_scene_result = 60;
     CompilationResultEvent compilation_result = 30;
     SimulationStateEvent simulation_state = 31;
     SimulationFrame simulation_frame = 32;
@@ -128,10 +132,17 @@ message EngineStatus {
   string message = 2;
 }
 
+// Import placement mode
+enum ImportMode {
+  IMPORT_MODE_AUTO_BODY = 0;     // Default: each part creates Body + Geometry (current behavior)
+  IMPORT_MODE_VISUAL_ONLY = 1;   // Geometry only, no bodies — for manual body authoring
+}
+
 message ImportOptions {
   double density_override = 1;       // kg/m³, 0 = use default (1000)
   double tessellation_quality = 2;   // linear deflection, 0 = use default (0.1)
   string unit_system = 3;           // source CAD length units; engine normalizes to meters
+  ImportMode import_mode = 4;       // placement mode, default AUTO_BODY
 }
 
 message ImportAssetCommand {
@@ -166,6 +177,7 @@ message ImportAssetResult {
   repeated BodyImportResult bodies = 3;            // DEPRECATED — kept for backward compat
   repeated string diagnostics = 4;
   repeated GeometryImportResult geometries = 5;    // v4 clients use this
+  string asset_id = 6;                             // cache_key for subsequent PlaceAssetInScene
 }
 
 // Serialized mechanism snapshot for persistence and transport
@@ -257,8 +269,10 @@ message UpdateDatumPoseResult {
 
 message UpdateBodyCommand {
   motionlab.mechanism.ElementId body_id = 1;
-  optional bool is_fixed = 2;
+  optional bool is_fixed = 2 [deprecated = true];  // Use motion_type instead
   optional string name = 3;
+  optional motionlab.mechanism.Pose pose = 4;
+  optional motionlab.mechanism.MotionType motion_type = 5;
 }
 
 message UpdateBodyResult {
@@ -277,7 +291,8 @@ message CreateBodyCommand {
   string name = 1;
   motionlab.mechanism.MassProperties mass_properties = 2;  // optional
   motionlab.mechanism.Pose pose = 3;                        // optional
-  bool is_fixed = 4;
+  bool is_fixed = 4 [deprecated = true];  // Use motion_type instead
+  motionlab.mechanism.MotionType motion_type = 5;
 }
 
 message CreateBodyResult {
@@ -341,6 +356,29 @@ message UpdateMassPropertiesResult {
     motionlab.mechanism.Body body = 1;    // returns body with effective mass properties
     string error_message = 2;
   }
+}
+
+// ──────────────────────────────────────────────
+// Primitive body creation (Scene Building C1)
+// ──────────────────────────────────────────────
+
+// Create a Body + Geometry pair from a parametric primitive shape.
+// Engine generates a full B-Rep solid (OCCT), tessellates it, computes mass properties,
+// and stores the shape in ShapeRegistry for face-aware datum creation.
+message CreatePrimitiveBodyCommand {
+  motionlab.mechanism.PrimitiveShape shape = 1;
+  string name = 2;
+  motionlab.mechanism.Vec3 position = 3;       // initial world position
+  motionlab.mechanism.PrimitiveParams params = 4;
+  double density = 5;                           // kg/m³, 0 = use default (1000)
+}
+
+message CreatePrimitiveBodyResult {
+  oneof result {
+    GeometryImportResult geometry = 1;
+    string error_message = 2;
+  }
+  motionlab.mechanism.Body body = 3;  // the created body with effective mass properties
 }
 
 // Joint CRUD — Command→Result pattern with oneof success/error
@@ -673,4 +711,22 @@ message NewProjectCommand {
 message NewProjectResult {
   bool success = 1;
   string error_message = 2;
+}
+
+// ──────────────────────────────────────────────
+// Asset placement (Workstream A2)
+// ──────────────────────────────────────────────
+
+// Place an already-imported asset into the scene with fresh entity IDs.
+message PlaceAssetInSceneCommand {
+  string asset_id = 1;                          // cache_key from original import
+  motionlab.mechanism.Vec3 position = 2;        // world-space spawn position
+}
+
+message PlaceAssetInSceneResult {
+  bool success = 1;
+  string error_message = 2;
+  repeated GeometryImportResult geometries = 3; // newly created entities
+  repeated BodyImportResult bodies = 4;         // backward compat
+  string asset_id = 5;                          // echoed back for frontend correlation
 }

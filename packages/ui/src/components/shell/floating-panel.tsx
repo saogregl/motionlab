@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import { useCallback, useRef, useState } from 'react';
 
+import { useLayoutManager } from '../../layout';
+import { useLayoutSlot } from '../../layout';
 import { cn } from '../../lib/utils';
 
 interface FloatingPanelProps {
@@ -28,6 +30,9 @@ function FloatingPanel({
   const panelRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef<{ startX: number; startWidth: number } | null>(null);
+  const manager = useLayoutManager();
+
+  useLayoutSlot(`panel-${side}`, side, width ?? 288, open, isDragging);
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
@@ -46,15 +51,26 @@ function FloatingPanel({
       const { startX, startWidth } = dragStartRef.current;
       const delta = side === 'left' ? e.clientX - startX : startX - e.clientX;
       const newWidth = Math.round(Math.min(maxWidth, Math.max(minWidth, startWidth + delta)));
-      onWidthChange?.(newWidth);
+      // Direct DOM mutation — no React re-render during drag
+      const panel = panelRef.current;
+      if (panel) panel.style.width = `${newWidth}px`;
+      // Update layout engine imperatively so side-panel offsets stay in sync
+      manager.updateSlot({ id: `panel-${side}`, side, size: newWidth, open: true, instant: true });
     },
-    [side, minWidth, maxWidth, onWidthChange],
+    [side, minWidth, maxWidth, manager],
   );
 
   const handlePointerUp = useCallback(() => {
+    if (!dragStartRef.current) return;
+    // Commit final width to React state (single re-render)
+    const panel = panelRef.current;
+    if (panel) {
+      const finalWidth = panel.offsetWidth;
+      onWidthChange?.(finalWidth);
+    }
     dragStartRef.current = null;
     setIsDragging(false);
-  }, []);
+  }, [onWidthChange]);
 
   const isLeft = side === 'left';
 
@@ -65,7 +81,7 @@ function FloatingPanel({
       data-side={side}
       data-open={open || undefined}
       className={cn(
-        'absolute top-[var(--panel-float-inset)] bottom-[var(--panel-float-inset)] z-[var(--z-panel)]',
+        'absolute top-[var(--panel-float-inset)] bottom-[var(--side-panel-bottom,var(--panel-float-inset))] z-[var(--z-panel)]',
         'flex flex-col overflow-hidden',
         'rounded-[var(--panel-radius)] border border-[var(--border-default)] bg-layer-base',
         'transition-[transform,opacity] duration-[var(--duration-normal)] ease-[var(--easing-default)]',

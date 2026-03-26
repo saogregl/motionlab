@@ -80,13 +80,17 @@ export type { ViewCubeProps } from './components/primitives/view-cube';
 export { ViewCube } from './components/primitives/view-cube';
 export type { ViewportToolbarProps } from './components/primitives/viewport-toolbar';
 export { ViewportToolbar } from './components/primitives/viewport-toolbar';
+// Layout engine
+export { LayoutProvider, useLayoutManager } from './layout';
+export { useLayoutRoot, useLayoutSlot, useViewportInsets } from './layout';
+export type { PanelSide, PanelSlot, ViewportInsets } from './layout';
 export type { AppShellProps } from './components/shell/app-shell';
 // Shell
 export { AppShell } from './components/shell/app-shell';
 export type { FloatingPanelProps, FloatingPanelHeaderProps } from './components/shell/floating-panel';
 export { FloatingPanel, FloatingPanelHeader } from './components/shell/floating-panel';
-export type { BottomDockProps, DockTab } from './components/shell/bottom-dock';
-export { BottomDock } from './components/shell/bottom-dock';
+export type { BottomPanelProps, DockTab } from './components/shell/bottom-panel';
+export { BottomPanel } from './components/shell/bottom-panel';
 export type { LeftPanelProps } from './components/shell/left-panel';
 export { LeftPanel } from './components/shell/left-panel';
 export type { RightPanelProps } from './components/shell/right-panel';

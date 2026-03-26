@@ -52,6 +52,7 @@ public:
     bool rename_body(const std::string& body_id, const std::string& new_name);
     bool has_body(const std::string& id) const;
     bool set_body_fixed(const std::string& id, bool is_fixed);
+    bool set_body_pose(const std::string& id, const double pos[3], const double orient[4]);
     size_t body_count() const;
 
     // Geometry CRUD
@@ -60,7 +61,8 @@ public:
                                 const double pos[3], const double orient[4],
                                 const motionlab::mechanism::MassProperties& computed_mass,
                                 const motionlab::mechanism::AssetReference* source_asset_ref = nullptr,
-                                uint32_t face_count = 0);
+                                uint32_t face_count = 0,
+                                const motionlab::mechanism::PrimitiveSource* primitive_source = nullptr);
     bool remove_geometry(const std::string& geometry_id);
     const GeometryEntry* get_geometry(const std::string& id) const;
     size_t geometry_count() const;

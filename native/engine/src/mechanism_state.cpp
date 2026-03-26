@@ -200,6 +200,22 @@ bool MechanismState::set_body_fixed(const std::string& id, bool is_fixed) {
     return true;
 }
 
+bool MechanismState::set_body_pose(const std::string& id, const double pos[3], const double orient[4]) {
+    auto it = bodies_.find(id);
+    if (it == bodies_.end()) return false;
+    auto* pose = it->second.mutable_pose();
+    auto* p = pose->mutable_position();
+    p->set_x(pos[0]);
+    p->set_y(pos[1]);
+    p->set_z(pos[2]);
+    auto* o = pose->mutable_orientation();
+    o->set_w(orient[0]);
+    o->set_x(orient[1]);
+    o->set_y(orient[2]);
+    o->set_z(orient[3]);
+    return true;
+}
+
 size_t MechanismState::body_count() const {
     return bodies_.size();
 }
@@ -214,7 +230,8 @@ MechanismState::GeometryResult MechanismState::add_geometry(
     const double pos[3], const double orient[4],
     const mech::MassProperties& computed_mass,
     const mech::AssetReference* source_asset_ref,
-    uint32_t face_count) {
+    uint32_t face_count,
+    const mech::PrimitiveSource* primitive_source) {
     if (!has_body(parent_body_id)) {
         return {{}, "Parent body not found: " + parent_body_id};
     }
@@ -227,6 +244,9 @@ MechanismState::GeometryResult MechanismState::add_geometry(
     *geom.mutable_computed_mass_properties() = computed_mass;
     if (source_asset_ref) {
         *geom.mutable_source_asset_ref() = *source_asset_ref;
+    }
+    if (primitive_source) {
+        *geom.mutable_primitive_source() = *primitive_source;
     }
     geom.set_face_count(face_count);
     geometries_[id] = geom;

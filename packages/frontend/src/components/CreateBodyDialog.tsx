@@ -8,6 +8,11 @@ import {
   DialogTitle,
   Input,
   NumericInput,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Switch,
 } from '@motionlab/ui';
 import { useState } from 'react';
@@ -23,7 +28,7 @@ interface CreateBodyDialogProps {
 export function CreateBodyDialog({ open, onOpenChange }: CreateBodyDialogProps) {
   const [name, setName] = useState('');
   const [mass, setMass] = useState(1.0);
-  const [isFixed, setIsFixed] = useState(false);
+  const [motionType, setMotionType] = useState<'dynamic' | 'fixed'>('dynamic');
   const [manualMassOverride, setManualMassOverride] = useState(false);
   const bodyCount = useMechanismStore((s) => s.bodies.size);
 
@@ -43,12 +48,12 @@ export function CreateBodyDialog({ open, onOpenChange }: CreateBodyDialogProps) 
             iyz: 0,
           }
         : undefined,
-      isFixed,
+      motionType,
     });
     onOpenChange(false);
     setName('');
     setMass(1.0);
-    setIsFixed(false);
+    setMotionType('dynamic');
     setManualMassOverride(false);
   };
 
@@ -90,13 +95,17 @@ export function CreateBodyDialog({ open, onOpenChange }: CreateBodyDialogProps) 
               disabled={!manualMassOverride}
             />
           </div>
-          <div className="flex items-center justify-between">
-            <label className="text-xs text-muted-foreground">Fixed (Ground)</label>
-            <Switch
-
-              checked={isFixed}
-              onCheckedChange={setIsFixed}
-            />
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-muted-foreground">Motion Type</label>
+            <Select value={motionType} onValueChange={(v) => setMotionType(v as 'dynamic' | 'fixed')}>
+              <SelectTrigger size="sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="dynamic">Dynamic</SelectItem>
+                <SelectItem value="fixed">Fixed (Ground)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
         <DialogFooter>

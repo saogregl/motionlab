@@ -27,7 +27,8 @@ export interface BodyState {
   name: string;
   massProperties: BodyMassProperties;
   pose: BodyPose;
-  isFixed?: boolean;
+  isFixed?: boolean;           // deprecated — use motionType
+  motionType: 'dynamic' | 'fixed';
   massOverride?: boolean;
 }
 
@@ -40,6 +41,14 @@ export interface GeometryState {
   partIndex?: Uint32Array;
   computedMassProperties: BodyMassProperties;
   sourceAssetRef: { contentHash: string; originalFilename: string };
+  primitiveSource?: {
+    shape: 'box' | 'cylinder' | 'sphere';
+    params: {
+      box?: { width: number; height: number; depth: number };
+      cylinder?: { radius: number; height: number };
+      sphere?: { radius: number };
+    };
+  };
 }
 
 export interface DatumState {
@@ -135,6 +144,10 @@ export interface MechanismState {
   setProjectMeta: (name: string, filePath: string | null) => void;
   markDirty: () => void;
   markClean: () => void;
+
+  // Pending "Make Body" workflow — geometry IDs to attach after body creation
+  pendingMakeBodyGeometries: string[] | null;
+  setPendingMakeBodyGeometries: (ids: string[] | null) => void;
 }
 
 export const useMechanismStore = create<MechanismState>()((set) => ({
@@ -149,6 +162,8 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
   projectName: 'Untitled',
   projectFilePath: null,
   isDirty: false,
+  pendingMakeBodyGeometries: null,
+  setPendingMakeBodyGeometries: (ids) => set({ pendingMakeBodyGeometries: ids }),
 
   addBodies: (bodies) =>
     set((state) => {

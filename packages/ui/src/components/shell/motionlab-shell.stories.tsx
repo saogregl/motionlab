@@ -53,8 +53,9 @@ import {
 import { Input } from '../ui/input';
 import { TooltipProvider } from '../ui/tooltip';
 
+import { LayoutProvider } from '../../layout';
 import { AppShell } from './app-shell';
-import { BottomDock } from './bottom-dock';
+import { BottomPanel } from './bottom-panel';
 import { LeftPanel } from './left-panel';
 import { RightPanel } from './right-panel';
 import { TopBar } from './top-bar';
@@ -744,8 +745,8 @@ function MotionLabShellDemo() {
               )}
             </RightPanel>
           }
-          bottomDock={
-            <BottomDock
+          bottomPanel={
+            <BottomPanel
               tabs={[
                 { id: 'timeline', label: 'Timeline' },
                 { id: 'charts', label: 'Charts' },
@@ -798,7 +799,7 @@ function MotionLabShellDemo() {
                   className="h-full"
                 />
               )}
-            </BottomDock>
+            </BottomPanel>
           }
           tabBar={
             <WorkspaceTabBar
@@ -838,10 +839,17 @@ function MotionLabShellDemo() {
 
 /* ── Storybook meta ── */
 
-const meta = {
+const meta: Meta = {
   title: 'Shell/MotionLabShell',
   parameters: { layout: 'fullscreen' },
-} satisfies Meta;
+  decorators: [
+    (Story) => (
+      <LayoutProvider>
+        <Story />
+      </LayoutProvider>
+    ),
+  ],
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

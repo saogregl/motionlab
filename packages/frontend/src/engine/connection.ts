@@ -14,6 +14,8 @@ import {
   createDeleteLoadCommand,
   createHandshakeCommand,
   createImportAssetCommand,
+  createPlaceAssetInSceneCommand,
+  createCreatePrimitiveBodyCommand,
   createLoadProjectCommand,
   createNewProjectCommand,
   createRelocateAssetCommand,
@@ -52,9 +54,11 @@ import {
 } from '@motionlab/protocol';
 import type { ElementId, Joint, MissingAssetInfo } from '@motionlab/protocol';
 import type { SceneGraphManager } from '@motionlab/viewport';
+import { useAssetLibraryStore } from '../stores/asset-library.js';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { clearBodyPoses, setBodyPose } from '../stores/body-poses.js';
 import type { EngineConnectionState } from '../stores/engine-connection.js';
+import { useImportFlowStore } from '../stores/import-flow.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useLoadCreationStore } from '../stores/load-creation.js';
 import type { ActuatorState, ActuatorTypeId, ControlModeId, BodyMassProperties, BodyPose, BodyState, DatumState, GeometryState, JointTypeId, LoadState, LoadTypeId, ReferenceFrameId, MeshData } from '../stores/mechanism.js';
@@ -379,14 +383,21 @@ function extractBodyState(
     };
     isFixed?: boolean;
     massOverride?: boolean;
+    motionType?: number;
   },
 ): BodyState {
+  // Read motionType, fall back to isFixed for old projects
+  const motionType: 'dynamic' | 'fixed' = body.motionType === 2 ? 'fixed'
+    : body.motionType === 1 ? 'dynamic'
+    : body.isFixed ? 'fixed' : 'dynamic';
+
   return {
     id: body.id?.id ?? '',
     name: body.name ?? '',
     massProperties: extractMassProperties(body.massProperties),
     pose: extractPose(body.pose),
     isFixed: body.isFixed ?? false,
+    motionType,
     massOverride: body.massOverride ?? false,
   };
 }
@@ -397,6 +408,28 @@ const IDENTITY_POSE: BodyPose = {
 };
 
 /** Add a body's merged geometry meshes to the scene graph. */
+export const DETACHED_BODY_PREFIX = '__detached_';
+
+function addDetachedGeometryToSceneGraph(
+  sg: SceneGraphManager,
+  geometry: GeometryState,
+): void {
+  const syntheticBodyId = `${DETACHED_BODY_PREFIX}${geometry.id}`;
+  const pose = geometry.localPose; // for detached geometries, localPose stores world pose
+  sg.upsertBody(syntheticBodyId, geometry.name, {
+    position: [pose.position.x, pose.position.y, pose.position.z],
+    rotation: [pose.rotation.x, pose.rotation.y, pose.rotation.z, pose.rotation.w],
+  });
+  sg.addBodyGeometry(
+    syntheticBodyId,
+    geometry.id,
+    geometry.name,
+    geometry.meshData,
+    { position: [0, 0, 0], rotation: [0, 0, 0, 1] },
+    geometry.partIndex,
+  );
+}
+
 function addBodyToSceneGraph(
   sg: SceneGraphManager,
   body: BodyState,
@@ -614,7 +647,8 @@ export function connect(set: SetState, _get: GetState) {
                 // V4 path: geometry-based import
                 const seenBodies = new Set<string>();
                 for (const g of result.geometries) {
-                  if (!seenBodies.has(g.bodyId)) {
+                  const hasBody = !!g.bodyId;
+                  if (hasBody && !seenBodies.has(g.bodyId)) {
                     seenBodies.add(g.bodyId);
                     bodies.push({
                       id: g.bodyId,
@@ -622,14 +656,16 @@ export function connect(set: SetState, _get: GetState) {
                       massProperties: extractMassProperties(g.computedMassProperties),
                       pose: extractPose(g.pose),
                       isFixed: false,
+                      motionType: 'dynamic',
                       massOverride: false,
                     });
                   }
                   geometries.push({
                     id: g.geometryId,
                     name: g.name,
-                    parentBodyId: g.bodyId,
-                    localPose: IDENTITY_POSE,
+                    parentBodyId: hasBody ? g.bodyId : null,
+                    // Bodyless geometries store world pose in localPose; parented use identity
+                    localPose: hasBody ? IDENTITY_POSE : extractPose(g.pose),
                     meshData: extractMeshData(g.displayMesh),
                     partIndex: g.partIndex.length > 0 ? new Uint32Array(g.partIndex) : undefined,
                     computedMassProperties: extractMassProperties(g.computedMassProperties),
@@ -645,6 +681,7 @@ export function connect(set: SetState, _get: GetState) {
                     massProperties: extractMassProperties(b.massProperties),
                     pose: extractPose(b.pose),
                     isFixed: false,
+                    motionType: 'dynamic',
                     massOverride: false,
                   });
                   geometries.push({
@@ -668,13 +705,76 @@ export function connect(set: SetState, _get: GetState) {
                   const bodyGeoms = geometries.filter((g) => g.parentBodyId === body.id);
                   addBodyToSceneGraph(sceneGraphManager, body, bodyGeoms);
                 }
+                // Add bodyless geometries as detached viewport entities
+                for (const geom of geometries) {
+                  if (!geom.parentBodyId) {
+                    addDetachedGeometryToSceneGraph(sceneGraphManager, geom);
+                  }
+                }
+              }
+
+              // Apply viewport focus-point offset so imports land near the camera target
+              if (sceneGraphManager && bodies.length > 0) {
+                const focusPoint = sceneGraphManager.getViewportFocusPoint();
+                // Compute centroid of all imported body positions
+                let cx = 0, cy = 0, cz = 0;
+                for (const b of bodies) {
+                  cx += b.pose.position.x;
+                  cy += b.pose.position.y;
+                  cz += b.pose.position.z;
+                }
+                cx /= bodies.length;
+                cy /= bodies.length;
+                cz /= bodies.length;
+                const dx = focusPoint.x - cx;
+                const dz = focusPoint.z - cz;
+                // Only offset if the focus point is meaningfully different from centroid
+                if (Math.abs(dx) > 0.001 || Math.abs(dz) > 0.001) {
+                  for (const b of bodies) {
+                    sendUpdateBody(b.id, {
+                      pose: {
+                        position: {
+                          x: b.pose.position.x + dx,
+                          y: b.pose.position.y,
+                          z: b.pose.position.z + dz,
+                        },
+                        orientation: b.pose.rotation,
+                      },
+                    });
+                  }
+                }
+              }
+
+              // Auto-select first imported entity
+              if (bodies.length > 0) {
+                useSelectionStore.getState().select(bodies[0].id);
+              } else if (geometries.length > 0) {
+                useSelectionStore.getState().select(geometries[0].id);
+              }
+
+              // Register in asset library for subsequent Place-in-Scene
+              const assetId = result.assetId;
+              if (assetId) {
+                const importFlowStore = useImportFlowStore.getState();
+                useAssetLibraryStore.getState().registerImportedAsset({
+                  assetId,
+                  filename: geometries[0]?.sourceAssetRef.originalFilename || bodies[0]?.name || 'Unknown',
+                  contentHash: geometries[0]?.sourceAssetRef.contentHash || '',
+                  partCount: geometries.length || bodies.length,
+                  type: 'cad-import',
+                  importFilePath: importFlowStore.pendingFilePath || '',
+                  importOptions: importFlowStore.pendingImportOptions ?? undefined,
+                });
               }
 
               useSimulationStore.getState().setNeedsCompile(true);
+              const detachedCount = geometries.filter((g) => !g.parentBodyId).length;
               useToastStore.getState().addToast({
                 variant: 'success',
                 title: 'Import complete',
-                description: `${bodies.length} ${bodies.length === 1 ? 'body' : 'bodies'} imported`,
+                description: detachedCount > 0
+                  ? `${detachedCount} ${detachedCount === 1 ? 'geometry' : 'geometries'} imported (visual only)`
+                  : `${bodies.length} ${bodies.length === 1 ? 'body' : 'bodies'} imported`,
                 duration: 3000,
               });
             } else {
@@ -686,6 +786,148 @@ export function connect(set: SetState, _get: GetState) {
               });
             }
             mechStore.setImporting(false);
+            break;
+          }
+          case 'placeAssetInSceneResult': {
+            const result = evt.payload.value;
+            if (!result.success) {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Placement failed',
+                description: result.errorMessage || 'Asset not found in cache. Re-import required.',
+              });
+              break;
+            }
+
+            const mechStore = useMechanismStore.getState();
+            const bodies: BodyState[] = [];
+            const geometries: GeometryState[] = [];
+
+            if (result.geometries.length > 0) {
+              const seenBodies = new Set<string>();
+              for (const g of result.geometries) {
+                if (!seenBodies.has(g.bodyId)) {
+                  seenBodies.add(g.bodyId);
+                  bodies.push({
+                    id: g.bodyId,
+                    name: g.name,
+                    massProperties: extractMassProperties(g.computedMassProperties),
+                    pose: extractPose(g.pose),
+                    isFixed: false,
+                    motionType: 'dynamic',
+                    massOverride: false,
+                  });
+                }
+                geometries.push({
+                  id: g.geometryId,
+                  name: g.name,
+                  parentBodyId: g.bodyId,
+                  localPose: IDENTITY_POSE,
+                  meshData: extractMeshData(g.displayMesh),
+                  partIndex: g.partIndex.length > 0 ? new Uint32Array(g.partIndex) : undefined,
+                  computedMassProperties: extractMassProperties(g.computedMassProperties),
+                  sourceAssetRef: extractAssetRef(g.sourceAssetRef),
+                });
+              }
+            } else if (result.bodies.length > 0) {
+              for (const b of result.bodies) {
+                bodies.push({
+                  id: b.bodyId,
+                  name: b.name,
+                  massProperties: extractMassProperties(b.massProperties),
+                  pose: extractPose(b.pose),
+                  isFixed: false,
+                  motionType: 'dynamic',
+                  massOverride: false,
+                });
+                geometries.push({
+                  id: `${b.bodyId}_geom`,
+                  name: b.name,
+                  parentBodyId: b.bodyId,
+                  localPose: IDENTITY_POSE,
+                  meshData: extractMeshData(b.displayMesh),
+                  partIndex: b.partIndex.length > 0 ? new Uint32Array(b.partIndex) : undefined,
+                  computedMassProperties: extractMassProperties(b.massProperties),
+                  sourceAssetRef: extractAssetRef(b.sourceAssetRef),
+                });
+              }
+            }
+
+            mechStore.addBodiesWithGeometries(bodies, geometries);
+
+            // Add to scene graph
+            if (sceneGraphManager) {
+              for (const body of bodies) {
+                const bodyGeoms = geometries.filter((g) => g.parentBodyId === body.id);
+                addBodyToSceneGraph(sceneGraphManager, body, bodyGeoms);
+              }
+            }
+
+            // Auto-select the first placed body
+            if (bodies.length > 0) {
+              useSelectionStore.getState().select(bodies[0].id);
+            }
+
+            useSimulationStore.getState().setNeedsCompile(true);
+            useToastStore.getState().addToast({
+              variant: 'success',
+              title: 'Asset placed',
+              description: `${bodies.length} ${bodies.length === 1 ? 'body' : 'bodies'} added to scene`,
+              duration: 3000,
+            });
+            break;
+          }
+          case 'createPrimitiveBodyResult': {
+            const result = evt.payload.value;
+            if (result.result.case === 'geometry') {
+              const g = result.result.value;
+              const bodyProto = result.body;
+
+              const body: BodyState = {
+                id: g.bodyId,
+                name: g.name,
+                massProperties: extractMassProperties(bodyProto?.massProperties),
+                pose: extractPose(bodyProto?.pose ?? g.pose),
+                isFixed: bodyProto?.isFixed ?? false,
+                motionType: bodyProto?.motionType === 2 ? 'fixed'
+                  : bodyProto?.motionType === 1 ? 'dynamic'
+                  : bodyProto?.isFixed ? 'fixed' : 'dynamic',
+                massOverride: bodyProto?.massOverride ?? false,
+              };
+
+              const geometry: GeometryState = {
+                id: g.geometryId,
+                name: g.name,
+                parentBodyId: g.bodyId,
+                localPose: IDENTITY_POSE,
+                meshData: extractMeshData(g.displayMesh),
+                partIndex: g.partIndex.length > 0 ? new Uint32Array(g.partIndex) : undefined,
+                computedMassProperties: extractMassProperties(g.computedMassProperties),
+                sourceAssetRef: { contentHash: '', originalFilename: '' },
+              };
+
+              const mechStore = useMechanismStore.getState();
+              mechStore.addBodiesWithGeometries([body], [geometry]);
+
+              if (sceneGraphManager) {
+                addBodyToSceneGraph(sceneGraphManager, body, [geometry]);
+              }
+
+              useSelectionStore.getState().select(body.id);
+              useSimulationStore.getState().setNeedsCompile(true);
+              useToastStore.getState().addToast({
+                variant: 'success',
+                title: 'Primitive created',
+                description: `${g.name} added to scene`,
+                duration: 3000,
+              });
+            } else if (result.result.case === 'errorMessage') {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Primitive creation failed',
+                description: result.result.value,
+              });
+            }
             break;
           }
           case 'createDatumResult': {
@@ -1021,7 +1263,7 @@ export function connect(set: SetState, _get: GetState) {
             useTraceStore.getState().setChannels(channels);
             // Auto-switch to diagnostics tab if there are issues
             if (structuredDiags.length > 0) {
-              useUILayoutStore.getState().setBottomDockActiveTab('diagnostics');
+              useUILayoutStore.getState().setBottomPanelActiveTab('diagnostics');
             }
             if (result.success) {
               useToolModeStore.getState().setMode('select');
@@ -1475,14 +1717,32 @@ export function connect(set: SetState, _get: GetState) {
             if (result.result.case === 'body') {
               const b = result.result.value;
               const mechStore = useMechanismStore.getState();
+              const bodyId = b.id?.id ?? '';
               mechStore.addBodies([extractBodyState(b)]);
               useSimulationStore.getState().setNeedsCompile(true);
-              useToastStore.getState().addToast({
-                variant: 'success',
-                title: 'Body created',
-                description: b.name,
-                duration: 3000,
-              });
+
+              // Check for pending "Make Body" geometry attachments
+              const pendingGeoms = mechStore.pendingMakeBodyGeometries;
+              if (pendingGeoms && pendingGeoms.length > 0) {
+                mechStore.setPendingMakeBodyGeometries(null);
+                for (const geomId of pendingGeoms) {
+                  sendAttachGeometry(geomId, bodyId);
+                }
+                useSelectionStore.getState().select(bodyId);
+                useToastStore.getState().addToast({
+                  variant: 'success',
+                  title: 'Body created',
+                  description: `${b.name} — attaching ${pendingGeoms.length} ${pendingGeoms.length === 1 ? 'geometry' : 'geometries'}`,
+                  duration: 3000,
+                });
+              } else {
+                useToastStore.getState().addToast({
+                  variant: 'success',
+                  title: 'Body created',
+                  description: b.name,
+                  duration: 3000,
+                });
+              }
             } else if (result.result.case === 'errorMessage') {
               useToastStore.getState().addToast({
                 variant: 'error',
@@ -1561,6 +1821,10 @@ export function connect(set: SetState, _get: GetState) {
               // Rebuild scene graph for affected bodies
               if (sceneGraphManager) {
                 const updatedStore = useMechanismStore.getState();
+                // Remove synthetic detached body if geometry was previously unparented
+                if (!oldParentId) {
+                  sceneGraphManager.removeBody(`${DETACHED_BODY_PREFIX}${geomId}`);
+                }
                 if (oldParentId) {
                   sceneGraphManager.removeBody(oldParentId);
                   const oldBody = updatedStore.bodies.get(oldParentId);
@@ -1612,6 +1876,11 @@ export function connect(set: SetState, _get: GetState) {
                 if (oldBody) {
                   const bodyGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === oldParentId);
                   addBodyToSceneGraph(sceneGraphManager, oldBody, bodyGeoms);
+                }
+                // Render the now-detached geometry as a standalone viewport entity
+                const detachedGeom = updatedStore.geometries.get(geomId);
+                if (detachedGeom) {
+                  addDetachedGeometryToSceneGraph(sceneGraphManager, detachedGeom);
                 }
               }
               useSimulationStore.getState().setNeedsCompile(true);
@@ -1693,10 +1962,29 @@ export function disconnect(set: SetState) {
 
 export function sendImportAsset(
   filePath: string,
-  options?: { densityOverride?: number; tessellationQuality?: number; unitSystem?: string },
+  options?: { densityOverride?: number; tessellationQuality?: number; unitSystem?: string; importMode?: 'auto-body' | 'visual-only' },
 ): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(createImportAssetCommand(filePath, options));
+}
+
+export function sendPlaceAssetInScene(
+  assetId: string,
+  position: { x: number; y: number; z: number },
+): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createPlaceAssetInSceneCommand(assetId, position));
+}
+
+export function sendCreatePrimitiveBody(
+  shape: 'box' | 'cylinder' | 'sphere',
+  name: string,
+  position: { x: number; y: number; z: number },
+  params: { box?: { width: number; height: number; depth: number }; cylinder?: { radius: number; height: number }; sphere?: { radius: number } },
+  density?: number,
+): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createCreatePrimitiveBodyCommand(shape, name, position, params, density));
 }
 
 export function sendCreateDatum(
@@ -1789,7 +2077,18 @@ export function sendUpdateJoint(
   );
 }
 
-export function sendUpdateBody(bodyId: string, updates: { isFixed?: boolean; name?: string }): void {
+export function sendUpdateBody(
+  bodyId: string,
+  updates: {
+    isFixed?: boolean;
+    name?: string;
+    pose?: {
+      position: { x: number; y: number; z: number };
+      orientation: { x: number; y: number; z: number; w: number };
+    };
+    motionType?: 'dynamic' | 'fixed';
+  },
+): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(createUpdateBodyCommand(bodyId, updates));
 }
@@ -1799,6 +2098,7 @@ export function sendCreateBody(
   options?: {
     massProperties?: { mass: number; centerOfMass: { x: number; y: number; z: number }; ixx: number; iyy: number; izz: number; ixy: number; ixz: number; iyz: number };
     isFixed?: boolean;
+    motionType?: 'dynamic' | 'fixed';
   },
 ): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;

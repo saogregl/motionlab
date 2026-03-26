@@ -13,7 +13,7 @@ import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
-import { useUILayoutStore } from '../stores/ui-layout.js';
+
 import { useTraceStore } from '../stores/traces.js';
 import { nearestSample } from '../utils/nearest-sample.js';
 import { getJointCoordinateChannelIds } from '../utils/runtime-channel-ids.js';
@@ -185,22 +185,12 @@ function JointCreationDatumLabel({ sceneGraph }: { sceneGraph: SceneGraphManager
   );
 }
 
-const PANEL_FLOAT_INSET = 6;
-
 export function ViewportOverlay() {
   const { handleSceneReady, handlePick, handleHover, sceneGraphRef } = useViewportBridge();
   const { theme } = useTheme();
   const [sceneGraph, setSceneGraph] = useState<SceneGraphManager | null>(null);
   const activeMode = useToolModeStore((s) => s.activeMode);
   const selectedEntity = useSelectedEntity();
-  const activeWorkspace = useUILayoutStore((s) => s.activeWorkspace);
-  const rightPanelOpen = useUILayoutStore((s) => s.rightPanelOpen);
-  const rightPanelWidth = useUILayoutStore((s) => s.rightPanelWidth);
-  const rightPanelInset = activeWorkspace === 'build' && rightPanelOpen ? rightPanelWidth + 2 * PANEL_FLOAT_INSET : 0;
-  const bottomDockExpanded = useUILayoutStore((s) => s.bottomDockExpanded);
-  const resultsBottomDockExpanded = useUILayoutStore((s) => s.resultsBottomDockExpanded);
-  const isBottomDockExpanded = activeWorkspace === 'build' ? bottomDockExpanded : resultsBottomDockExpanded;
-  const bottomDockInset = PANEL_FLOAT_INSET + (isBottomDockExpanded ? 240 : 32) + PANEL_FLOAT_INSET;
   const [hoveredFace, setHoveredFace] = useState<{ bodyId: string; faceIndex: number; previewType?: DatumPreviewType } | null>(null);
   const viewportContainerRef = useRef<HTMLDivElement>(null);
   const connStatus = useEngineConnection((s) => s.status);
@@ -391,8 +381,6 @@ export function ViewportOverlay() {
           onHover={handleHover}
           onFaceHover={setHoveredFace}
           interactionMode={activeMode}
-          rightPanelInset={rightPanelInset}
-          bottomDockInset={bottomDockInset}
           theme={theme}
         />
         {activeMode === 'create-datum' && (

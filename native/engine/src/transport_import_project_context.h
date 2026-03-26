@@ -55,6 +55,11 @@ public:
                                const protocol::RelocateAssetCommand& cmd,
                                const SendEventFn& send_event);
 
+    void handle_place_asset_in_scene(ix::WebSocket& ws,
+                                      uint64_t sequence_id,
+                                      const protocol::PlaceAssetInSceneCommand& cmd,
+                                      const SendEventFn& send_event);
+
     void clear();
 
     // Shape loading resolves retained CAD topology for geometry-aware picking.
@@ -63,6 +68,11 @@ public:
 
     double body_length_scale(const std::string& body_id) const;
     double geometry_length_scale(const std::string& geometry_id) const;
+
+    // Register a primitive-created geometry for save/load tracking
+    void register_primitive_geometry(const std::string& geometry_id,
+                                     const std::string& body_id,
+                                     const protocol::GeometryImportResult& gir);
 
     // Cleanup helpers for delete operations
     void remove_body_data(const std::string& body_id);

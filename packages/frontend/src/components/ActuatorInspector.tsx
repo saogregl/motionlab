@@ -1,6 +1,4 @@
 import {
-  CopyableId,
-  InlineEditableName,
   InspectorPanel,
   InspectorSection,
   NumericInput,
@@ -11,10 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
   Switch,
-  formatEngValue,
 } from '@motionlab/ui';
-import { Activity, Cog, Fingerprint, Settings2 } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { Cog, Settings2 } from 'lucide-react';
 
 import { sendUpdateActuator } from '../engine/connection.js';
 import type { ActuatorState, ActuatorTypeId, ControlModeId } from '../stores/mechanism.js';
@@ -22,8 +18,8 @@ import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { useTraceStore } from '../stores/traces.js';
-import { nearestSample } from '../utils/nearest-sample.js';
 import { getJointCoordinateChannelIds } from '../utils/runtime-channel-ids.js';
+import { IdentitySection, SimulationValuesSection } from './inspector/sections/index.js';
 
 function getActuatorUnit(actuatorType: ActuatorTypeId, controlMode: ControlModeId): string {
   const isRevolute = actuatorType === 'revolute-motor';
@@ -48,30 +44,11 @@ export function ActuatorInspector({ actuatorId }: { actuatorId: string }) {
   );
 
   const simState = useSimulationStore((s) => s.state);
-  const simTime = useSimulationStore((s) => s.simTime);
-  const traces = useTraceStore((s) => s.traces);
   const channels = useTraceStore((s) => s.channels);
   const isSimulating = simState === 'running' || simState === 'paused';
 
   const select = useSelectionStore((s) => s.select);
   const setHovered = useSelectionStore((s) => s.setHovered);
-
-  const [editingName, setEditingName] = useState(false);
-
-  const startEditName = useCallback(() => {
-    if (!actuator || isSimulating) return;
-    setEditingName(true);
-  }, [actuator, isSimulating]);
-
-  const commitName = useCallback(
-    (newName: string) => {
-      if (actuator && newName !== actuator.name) {
-        updateActuator(actuator, { name: newName });
-      }
-      setEditingName(false);
-    },
-    [actuator],
-  );
 
   if (!actuator) return <InspectorPanel />;
 
@@ -79,32 +56,62 @@ export function ActuatorInspector({ actuatorId }: { actuatorId: string }) {
   const effortUnit = actuator.type === 'revolute-motor' ? 'Nm' : 'N';
   const hasEffortLimit = actuator.effortLimit !== undefined;
 
+  // Build channel definitions for SimulationValuesSection
+  const coordChannels = joint ? getJointCoordinateChannelIds(actuator.jointId, joint.type) : null;
+  const channelDefs = [
+    ...(coordChannels?.position
+      ? [{
+          channelId: coordChannels.position,
+          label: 'Actual Position',
+          unit: channels.get(coordChannels.position)?.unit ?? '',
+          type: 'scalar' as const,
+        }]
+      : []),
+    ...(coordChannels?.velocity
+      ? [{
+          channelId: coordChannels.velocity,
+          label: 'Actual Velocity',
+          unit: channels.get(coordChannels.velocity)?.unit ?? '',
+          type: 'scalar' as const,
+        }]
+      : []),
+    {
+      channelId: `actuator/${actuatorId}/command`,
+      label: 'Commanded',
+      unit: commandUnit,
+      type: 'scalar' as const,
+    },
+    {
+      channelId: `actuator/${actuatorId}/effort`,
+      label: 'Applied Effort',
+      unit: effortUnit,
+      type: 'scalar' as const,
+    },
+  ];
+
   return (
     <InspectorPanel
       entityName={actuator.name}
       entityType="Actuator"
       entityIcon={<Cog className="size-5" />}
     >
-      {/* Identity */}
-      <InspectorSection title="Identity" icon={<Fingerprint className="size-3.5" />}>
-        <PropertyRow label="Name">
-          <InlineEditableName
-            value={actuator.name}
-            isEditing={editingName}
-            onStartEdit={startEditName}
-            onCommit={commitName}
-            onCancel={() => setEditingName(false)}
-          />
-        </PropertyRow>
-        <PropertyRow label="Type">
-          <span className="text-2xs">
-            {actuator.type === 'revolute-motor' ? 'Revolute Motor' : 'Prismatic Motor'}
-          </span>
-        </PropertyRow>
-        <PropertyRow label="Actuator ID">
-          <CopyableId value={actuatorId} />
-        </PropertyRow>
-      </InspectorSection>
+      <IdentitySection
+        entityId={actuatorId}
+        entityType="actuator"
+        name={actuator.name}
+        onRename={(newName) => updateActuator(actuator, { name: newName })}
+        metadata={[
+          {
+            label: 'Type',
+            value: (
+              <span className="text-2xs">
+                {actuator.type === 'revolute-motor' ? 'Revolute Motor' : 'Prismatic Motor'}
+              </span>
+            ),
+          },
+        ]}
+        disabled={isSimulating}
+      />
 
       {/* Configuration */}
       <InspectorSection title="Configuration" icon={<Settings2 className="size-3.5" />}>
@@ -176,73 +183,7 @@ export function ActuatorInspector({ actuatorId }: { actuatorId: string }) {
         </PropertyRow>
       </InspectorSection>
 
-      {/* Simulation Values */}
-      {isSimulating &&
-        (() => {
-          const jointId = actuator.jointId;
-          const coordChannels = joint ? getJointCoordinateChannelIds(jointId, joint.type) : null;
-          const posId = coordChannels?.position;
-          const velId = coordChannels?.velocity;
-          const effortId = `actuator/${actuatorId}/effort`;
-          const cmdId = `actuator/${actuatorId}/command`;
-
-          const posSamples = posId ? traces.get(posId) : undefined;
-          const velSamples = velId ? traces.get(velId) : undefined;
-          const effortSamples = traces.get(effortId);
-          const cmdSamples = traces.get(cmdId);
-
-          const posChannel = posId ? channels.get(posId) : undefined;
-          const velChannel = velId ? channels.get(velId) : undefined;
-
-          const posVal = posSamples ? nearestSample(posSamples, simTime) : undefined;
-          const velVal = velSamples ? nearestSample(velSamples, simTime) : undefined;
-          const effortVal = effortSamples ? nearestSample(effortSamples, simTime) : undefined;
-          const cmdVal = cmdSamples ? nearestSample(cmdSamples, simTime) : undefined;
-
-          const hasAnyData =
-            posVal !== undefined ||
-            velVal !== undefined ||
-            effortVal !== undefined ||
-            cmdVal !== undefined;
-
-          return (
-            <InspectorSection title="Simulation Values" icon={<Activity className="size-3.5" />}>
-              {posVal !== undefined && (
-                <PropertyRow label="Actual Position" unit={posChannel?.unit ?? ''} numeric>
-                  <span className="font-[family-name:var(--font-mono)] tabular-nums">
-                    {formatEngValue(posVal.value)}
-                  </span>
-                </PropertyRow>
-              )}
-              {velVal !== undefined && (
-                <PropertyRow label="Actual Velocity" unit={velChannel?.unit ?? ''} numeric>
-                  <span className="font-[family-name:var(--font-mono)] tabular-nums">
-                    {formatEngValue(velVal.value)}
-                  </span>
-                </PropertyRow>
-              )}
-              {cmdVal !== undefined && (
-                <PropertyRow label="Commanded" unit={commandUnit} numeric>
-                  <span className="font-[family-name:var(--font-mono)] tabular-nums">
-                    {formatEngValue(cmdVal.value)}
-                  </span>
-                </PropertyRow>
-              )}
-              {effortVal !== undefined && (
-                <PropertyRow label="Applied Effort" unit={effortUnit} numeric>
-                  <span className="font-[family-name:var(--font-mono)] tabular-nums">
-                    {formatEngValue(effortVal.value)}
-                  </span>
-                </PropertyRow>
-              )}
-              {!hasAnyData && (
-                <PropertyRow label="Status">
-                  <span className="text-2xs text-text-tertiary">Awaiting data...</span>
-                </PropertyRow>
-              )}
-            </InspectorSection>
-          );
-        })()}
+      <SimulationValuesSection channelDefinitions={channelDefs} />
     </InspectorPanel>
   );
 }

@@ -1,6 +1,4 @@
 import {
-  CopyableId,
-  InlineEditableName,
   InspectorPanel,
   InspectorSection,
   NumericInput,
@@ -13,8 +11,8 @@ import {
   Vec3Display,
   formatEngValue,
 } from '@motionlab/ui';
-import { Activity, Fingerprint, MapPin, Zap } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { Activity, MapPin, Zap } from 'lucide-react';
+import { useMemo } from 'react';
 
 import { sendUpdateLoad } from '../engine/connection.js';
 import type { LoadState, ReferenceFrameId } from '../stores/mechanism.js';
@@ -24,6 +22,7 @@ import { useSimulationStore } from '../stores/simulation.js';
 import { useTraceStore } from '../stores/traces.js';
 import { nearestSample } from '../utils/nearest-sample.js';
 import { getLoadChannelIds } from '../utils/runtime-channel-ids.js';
+import { IdentitySection } from './inspector/sections/index.js';
 
 const LOAD_TYPE_LABELS: Record<string, string> = {
   'point-force': 'Point Force',
@@ -70,23 +69,6 @@ export function LoadInspector({ loadId }: { loadId: string }) {
   const channels = useTraceStore((s) => s.channels);
   const isSimulating = simState === 'running' || simState === 'paused';
 
-  const [editingName, setEditingName] = useState(false);
-
-  const startEditName = useCallback(() => {
-    if (!load || isSimulating) return;
-    setEditingName(true);
-  }, [load, isSimulating]);
-
-  const commitName = useCallback(
-    (newName: string) => {
-      if (load && newName !== load.name) {
-        updateLoad(load, { name: newName });
-      }
-      setEditingName(false);
-    },
-    [load],
-  );
-
   const magnitude = useMemo(() => {
     if (!load?.vector) return 0;
     const { x, y, z } = load.vector;
@@ -105,24 +87,21 @@ export function LoadInspector({ loadId }: { loadId: string }) {
       entityType="Load"
       entityIcon={<Zap className="size-5" />}
     >
-      {/* Identity */}
-      <InspectorSection title="Identity" icon={<Fingerprint className="size-3.5" />}>
-        <PropertyRow label="Name">
-          <InlineEditableName
-            value={load.name}
-            isEditing={editingName}
-            onStartEdit={startEditName}
-            onCommit={commitName}
-            onCancel={() => setEditingName(false)}
-          />
-        </PropertyRow>
-        <PropertyRow label="Type">
-          <span className="text-2xs">{LOAD_TYPE_LABELS[load.type] ?? load.type}</span>
-        </PropertyRow>
-        <PropertyRow label="Load ID">
-          <CopyableId value={loadId} />
-        </PropertyRow>
-      </InspectorSection>
+      <IdentitySection
+        entityId={loadId}
+        entityType="load"
+        name={load.name}
+        onRename={(newName) => updateLoad(load, { name: newName })}
+        metadata={[
+          {
+            label: 'Type',
+            value: (
+              <span className="text-2xs">{LOAD_TYPE_LABELS[load.type] ?? load.type}</span>
+            ),
+          },
+        ]}
+        disabled={isSimulating}
+      />
 
       {/* Application — point force / point torque */}
       {isForceOrTorque && (

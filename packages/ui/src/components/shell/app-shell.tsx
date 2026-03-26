@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 
+import { useLayoutManager, useLayoutRoot } from '../../layout';
 import { cn } from '../../lib/utils';
 import { FloatingPanel } from './floating-panel';
 
@@ -24,10 +25,10 @@ interface AppShellProps {
   onRightPanelWidthChange?: (width: number) => void;
   /** Center viewport (fills main area) */
   viewport?: ReactNode;
-  /** Bottom dock (floating, centered between panels) */
-  bottomDock?: ReactNode;
-  /** Whether the bottom dock is expanded (controls --vp-inset-bottom) */
-  bottomDockExpanded?: boolean;
+  /** Bottom panel (full-width layout row) */
+  bottomPanel?: ReactNode;
+  /** Whether the bottom panel is expanded */
+  bottomPanelExpanded?: boolean;
   /** Additional overlays in the main area (floating toolbars, HUD) */
   viewportOverlays?: ReactNode;
   /** Workspace tab bar (28px, bottom of screen) */
@@ -37,7 +38,6 @@ interface AppShellProps {
   className?: string;
 }
 
-const PANEL_FLOAT_INSET = 6;
 const DEFAULT_PANEL_W = 288;
 
 function AppShell({
@@ -51,20 +51,33 @@ function AppShell({
   rightPanelWidth,
   onRightPanelWidthChange,
   viewport,
-  bottomDock,
-  bottomDockExpanded = true,
+  bottomPanel,
   viewportOverlays,
   tabBar,
   statusBar,
   className,
 }: AppShellProps) {
-  const effectiveLeftW = leftPanelOpen ? (leftPanelWidth ?? DEFAULT_PANEL_W) : 0;
-  const effectiveRightW = rightPanelOpen ? (rightPanelWidth ?? DEFAULT_PANEL_W) : 0;
+  const layoutRef = useLayoutRoot();
+  const manager = useLayoutManager();
+  const bottomContainerRef = useRef<HTMLDivElement>(null);
+  const hasBottomPanel = !!bottomPanel;
 
-  // Bottom dock inset: expanded uses default dock height (240px), collapsed uses tab bar (~32px)
-  const bottomDockInset = bottomDock
-    ? PANEL_FLOAT_INSET + (bottomDockExpanded ? 240 : 32) + PANEL_FLOAT_INSET
-    : 0;
+  useEffect(() => {
+    const el = bottomContainerRef.current;
+    if (!el || !hasBottomPanel) {
+      manager.removeSlot('panel-bottom');
+      return;
+    }
+    const ro = new ResizeObserver(() => {
+      const h = el.getBoundingClientRect().height;
+      manager.updateSlot({ id: 'panel-bottom', side: 'bottom', size: h, open: h > 0 });
+    });
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      manager.removeSlot('panel-bottom');
+    };
+  }, [manager, hasBottomPanel]);
 
   return (
     <div
@@ -79,13 +92,9 @@ function AppShell({
 
       {/* Row 2: Main area — viewport + floating panels */}
       <div
+        ref={layoutRef}
         data-slot="main-area"
         className="relative flex-1 overflow-hidden"
-        style={{
-          '--vp-inset-left': `${effectiveLeftW ? effectiveLeftW + 2 * PANEL_FLOAT_INSET : 0}px`,
-          '--vp-inset-right': `${effectiveRightW ? effectiveRightW + 2 * PANEL_FLOAT_INSET : 0}px`,
-          '--vp-inset-bottom': `${bottomDockInset}px`,
-        } as React.CSSProperties}
       >
         {/* Viewport layer */}
         <div className="absolute inset-0 z-[var(--z-base)]">{viewport}</div>
@@ -114,18 +123,19 @@ function AppShell({
           </FloatingPanel>
         )}
 
-        {/* Bottom dock — floating, centered between panels */}
-        {bottomDock && (
+        {/* Bottom floating panel */}
+        {bottomPanel && (
           <div
-            data-slot="bottom-dock-container"
+            ref={bottomContainerRef}
+            data-slot="bottom-panel-container"
             className="absolute z-[var(--z-panel)]"
             style={{
-              bottom: PANEL_FLOAT_INSET,
-              left: effectiveLeftW + 2 * PANEL_FLOAT_INSET,
-              right: effectiveRightW + 2 * PANEL_FLOAT_INSET,
+              bottom: 'var(--panel-float-inset)',
+              left: 'var(--panel-float-inset)',
+              right: 'var(--panel-float-inset)',
             }}
           >
-            {bottomDock}
+            {bottomPanel}
           </div>
         )}
 
@@ -133,10 +143,10 @@ function AppShell({
         {viewportOverlays}
       </div>
 
-      {/* Row 3: Workspace tab bar (optional, wired in Epic 3) */}
+      {/* Row 4: Workspace tab bar */}
       {tabBar}
 
-      {/* Row 4: Status bar */}
+      {/* Row 5: Status bar */}
       {statusBar}
     </div>
   );

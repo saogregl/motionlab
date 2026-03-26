@@ -1,8 +1,6 @@
 import { DOF_TABLE } from '@motionlab/viewport';
 import {
   Button,
-  CopyableId,
-  InlineEditableName,
   InspectorPanel,
   InspectorSection,
   NumericInput,
@@ -23,15 +21,15 @@ import { sendDeleteActuator, sendUpdateJoint } from '../engine/connection.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSimulationStore } from '../stores/simulation.js';
+import { useTraceStore } from '../stores/traces.js';
 import { useToastStore } from '../stores/toast.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
-import { useTraceStore } from '../stores/traces.js';
-import { nearestSample } from '../utils/nearest-sample.js';
 import { composeWorldPose } from '../utils/pose-composition.js';
 import { getJointCoordinateChannelIds } from '../utils/runtime-channel-ids.js';
 
 import { CreateActuatorDialog } from './CreateActuatorDialog.js';
 import { JointConnectionDiagram } from './JointConnectionDiagram.js';
+import { IdentitySection, SimulationValuesSection } from './inspector/sections/index.js';
 
 import type { ActuatorTypeId, ControlModeId, JointTypeId } from '../stores/mechanism.js';
 
@@ -65,8 +63,6 @@ export function JointInspector({ jointId }: { jointId: string }) {
   );
 
   const simState = useSimulationStore((s) => s.state);
-  const simTime = useSimulationStore((s) => s.simTime);
-  const traces = useTraceStore((s) => s.traces);
   const channels = useTraceStore((s) => s.channels);
   const isSimulating = simState === 'running' || simState === 'paused';
 
@@ -77,24 +73,8 @@ export function JointInspector({ jointId }: { jointId: string }) {
     return undefined;
   });
 
-  const [editingName, setEditingName] = useState(false);
   const [frameMode, setFrameMode] = useState<'local' | 'world'>('local');
   const [createActuatorOpen, setCreateActuatorOpen] = useState(false);
-
-  const startEditName = useCallback(() => {
-    if (!joint || isSimulating) return;
-    setEditingName(true);
-  }, [joint, isSimulating]);
-
-  const commitName = useCallback(
-    (newName: string) => {
-      if (joint && newName !== joint.name) {
-        sendUpdateJoint(jointId, { name: newName });
-      }
-      setEditingName(false);
-    },
-    [joint, jointId],
-  );
 
   const handleSwap = useCallback(() => {
     if (!joint || isSimulating) return;
@@ -132,51 +112,85 @@ export function JointInspector({ jointId }: { jointId: string }) {
 
   if (!joint) return <InspectorPanel />;
 
+  // Build channel definitions for SimulationValuesSection
+  const coordChannels = getJointCoordinateChannelIds(jointId, joint.type);
+  const channelDefs = [
+    ...(coordChannels?.position
+      ? [{
+          channelId: coordChannels.position,
+          label: 'Position',
+          unit: channels.get(coordChannels.position)?.unit ?? '',
+          type: 'scalar' as const,
+        }]
+      : []),
+    ...(coordChannels?.velocity
+      ? [{
+          channelId: coordChannels.velocity,
+          label: 'Velocity',
+          unit: channels.get(coordChannels.velocity)?.unit ?? '',
+          type: 'scalar' as const,
+        }]
+      : []),
+    {
+      channelId: `joint/${jointId}/reaction_force`,
+      label: 'Reaction Force',
+      unit: 'N',
+      type: 'vec3' as const,
+    },
+    {
+      channelId: `joint/${jointId}/reaction_torque`,
+      label: 'Reaction Torque',
+      unit: 'N\u00B7m',
+      type: 'vec3' as const,
+    },
+  ];
+
   return (
     <InspectorPanel
       entityName={joint.name}
       entityType="Joint"
       entityIcon={<Link2 className="size-5" />}
     >
-      <InspectorSection title="Identity">
-        <PropertyRow label="Name">
-          <InlineEditableName
-            value={joint.name}
-            isEditing={editingName}
-            onStartEdit={startEditName}
-            onCommit={commitName}
-            onCancel={() => setEditingName(false)}
-          />
-        </PropertyRow>
-        <PropertyRow label="Type">
-          <Select
-            value={joint.type}
-            onValueChange={(v) => sendUpdateJoint(jointId, { type: v as JointType })}
-          >
-            <SelectTrigger size="sm" disabled={isSimulating}>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="revolute">Revolute</SelectItem>
-              <SelectItem value="prismatic">Prismatic</SelectItem>
-              <SelectItem value="fixed">Fixed</SelectItem>
-              <SelectItem value="spherical">Spherical</SelectItem>
-              <SelectItem value="cylindrical">Cylindrical</SelectItem>
-              <SelectItem value="planar">Planar</SelectItem>
-            </SelectContent>
-          </Select>
-        </PropertyRow>
-        <PropertyRow label="Joint ID">
-          <CopyableId value={jointId} />
-        </PropertyRow>
-        {DOF_TABLE[joint.type] && (
-          <PropertyRow label="DOF">
-            <span className="text-2xs">
-              {DOF_TABLE[joint.type].label} ({DOF_TABLE[joint.type].total} of 6 free)
-            </span>
-          </PropertyRow>
-        )}
-      </InspectorSection>
+      <IdentitySection
+        entityId={jointId}
+        entityType="joint"
+        name={joint.name}
+        onRename={(newName) => sendUpdateJoint(jointId, { name: newName })}
+        metadata={[
+          {
+            label: 'Type',
+            value: (
+              <Select
+                value={joint.type}
+                onValueChange={(v) => sendUpdateJoint(jointId, { type: v as JointType })}
+              >
+                <SelectTrigger size="sm" disabled={isSimulating}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="revolute">Revolute</SelectItem>
+                  <SelectItem value="prismatic">Prismatic</SelectItem>
+                  <SelectItem value="fixed">Fixed</SelectItem>
+                  <SelectItem value="spherical">Spherical</SelectItem>
+                  <SelectItem value="cylindrical">Cylindrical</SelectItem>
+                  <SelectItem value="planar">Planar</SelectItem>
+                </SelectContent>
+              </Select>
+            ),
+          },
+          ...(DOF_TABLE[joint.type]
+            ? [{
+                label: 'DOF',
+                value: (
+                  <span className="text-2xs">
+                    {DOF_TABLE[joint.type].label} ({DOF_TABLE[joint.type].total} of 6 free)
+                  </span>
+                ),
+              }]
+            : []),
+        ]}
+        disabled={isSimulating}
+      />
 
       {/* Connection diagram + swap + edit */}
       <InspectorSection title="Connection">
@@ -367,83 +381,8 @@ export function JointInspector({ jointId }: { jointId: string }) {
         </InspectorSection>
       )}
 
-      {isSimulating &&
-        (() => {
-          const coordChannels = getJointCoordinateChannelIds(jointId, joint.type);
-          const posId = coordChannels?.position;
-          const velId = coordChannels?.velocity;
-          const forceId = `joint/${jointId}/reaction_force`;
-          const torqueId = `joint/${jointId}/reaction_torque`;
-          const posSamples = posId ? traces.get(posId) : undefined;
-          const velSamples = velId ? traces.get(velId) : undefined;
-          const forceSamples = traces.get(forceId);
-          const torqueSamples = traces.get(torqueId);
-          const posChannel = posId ? channels.get(posId) : undefined;
-          const velChannel = velId ? channels.get(velId) : undefined;
-          const posVal = posSamples ? nearestSample(posSamples, simTime) : undefined;
-          const velVal = velSamples ? nearestSample(velSamples, simTime) : undefined;
-          const forceVal = forceSamples ? nearestSample(forceSamples, simTime) : undefined;
-          const torqueVal = torqueSamples ? nearestSample(torqueSamples, simTime) : undefined;
+      <SimulationValuesSection channelDefinitions={channelDefs} />
 
-          const hasAnyData =
-            posVal !== undefined ||
-            velVal !== undefined ||
-            forceVal !== undefined ||
-            torqueVal !== undefined;
-          const hasAnyTelemetry =
-            (posId ? channels.has(posId) : false) ||
-            (velId ? channels.has(velId) : false) ||
-            channels.has(forceId) ||
-            channels.has(torqueId);
-
-          return (
-            <InspectorSection title="Simulation Values">
-              {posVal !== undefined && (
-                <PropertyRow label="Position" unit={posChannel?.unit ?? ''} numeric>
-                  <span className="font-[family-name:var(--font-mono)] tabular-nums">
-                    {formatEngValue(posVal.value)}
-                  </span>
-                </PropertyRow>
-              )}
-              {velVal !== undefined && (
-                <PropertyRow label="Velocity" unit={velChannel?.unit ?? ''} numeric>
-                  <span className="font-[family-name:var(--font-mono)] tabular-nums">
-                    {formatEngValue(velVal.value)}
-                  </span>
-                </PropertyRow>
-              )}
-              {forceVal?.vec ? (
-                <Vec3Display label="Reaction Force" value={forceVal.vec} unit="N" />
-              ) : channels.has(forceId) ? (
-                <PropertyRow label="Reaction Force">
-                  <span className="text-2xs text-text-tertiary">Awaiting data...</span>
-                </PropertyRow>
-              ) : (
-                <PropertyRow label="Reaction Force">
-                  <span className="text-2xs text-text-tertiary">Not available</span>
-                </PropertyRow>
-              )}
-              {torqueVal?.vec ? (
-                <Vec3Display label="Reaction Torque" value={torqueVal.vec} unit="N\u00B7m" />
-              ) : channels.has(torqueId) ? (
-                <PropertyRow label="Reaction Torque">
-                  <span className="text-2xs text-text-tertiary">Awaiting data...</span>
-                </PropertyRow>
-              ) : (
-                <PropertyRow label="Reaction Torque">
-                  <span className="text-2xs text-text-tertiary">Not available</span>
-                </PropertyRow>
-              )}
-              {!hasAnyData && (
-                <PropertyRow label="Status">
-                  <span className="text-2xs text-text-tertiary">
-                    {hasAnyTelemetry ? 'Awaiting data...' : 'Not available'}
-                  </span>
-                </PropertyRow>
-              )}
-            </InspectorSection>
-          );
-        })()}
       <CreateActuatorDialog
         jointId={jointId}
         jointType={joint.type}

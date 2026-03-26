@@ -19,6 +19,7 @@
     "storybook:build": "storybook build -o storybook-static"
   },
   "dependencies": {
+    "@motionlab/ui": "workspace:*",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "three": "^0.183.2",

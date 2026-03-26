@@ -85,8 +85,9 @@ message Body {
   Pose pose = 3;
   MassProperties mass_properties = 4;  // effective mass used by solver
   AssetReference source_asset_ref = 5 [deprecated = true];  // Moved to Geometry in v4; kept for v2 migration
-  bool is_fixed = 6;  // If true, body is treated as ground (fixed in space)
+  bool is_fixed = 6 [deprecated = true];  // Use motion_type instead
   bool mass_override = 7;  // If true, mass_properties are user-set, not aggregated from geometries
+  MotionType motion_type = 8;  // default MOTION_TYPE_UNSPECIFIED treated as DYNAMIC
 }
 
 // Visual geometry attached to a body — imported from CAD.
@@ -101,6 +102,45 @@ message Geometry {
   DisplayMesh display_mesh = 6;     // tessellated mesh for viewport
   MassProperties computed_mass_properties = 7;  // from CAD via BRepGProp
   uint32 face_count = 8;            // number of B-Rep faces (for face-aware picking)
+  PrimitiveSource primitive_source = 9;  // set when geometry was created from a primitive
+}
+
+// Primitive shape types for parametric geometry creation
+enum PrimitiveShape {
+  PRIMITIVE_SHAPE_UNSPECIFIED = 0;
+  PRIMITIVE_SHAPE_BOX = 1;
+  PRIMITIVE_SHAPE_CYLINDER = 2;
+  PRIMITIVE_SHAPE_SPHERE = 3;
+}
+
+message BoxParams {
+  double width = 1;   // X extent in meters
+  double height = 2;  // Y extent in meters
+  double depth = 3;   // Z extent in meters
+}
+
+message CylinderParams {
+  double radius = 1;  // meters
+  double height = 2;  // meters
+}
+
+message SphereParams {
+  double radius = 1;  // meters
+}
+
+message PrimitiveParams {
+  oneof shape_params {
+    BoxParams box = 1;
+    CylinderParams cylinder = 2;
+    SphereParams sphere = 3;
+  }
+}
+
+// Source info for a parametric primitive, stored on Geometry for save/load round-trip.
+// Enables B-Rep regeneration on project load without needing a source file.
+message PrimitiveSource {
+  PrimitiveShape shape = 1;
+  PrimitiveParams params = 2;
 }
 
 // Datum frame anchored to a body
@@ -124,6 +164,14 @@ enum JointType {
   JOINT_TYPE_DISTANCE = 8;
   JOINT_TYPE_POINT_LINE = 9;
   JOINT_TYPE_POINT_PLANE = 10;
+}
+
+// Motion behavior of a body
+enum MotionType {
+  MOTION_TYPE_UNSPECIFIED = 0;  // treated as DYNAMIC
+  MOTION_TYPE_DYNAMIC = 1;      // solved by physics engine
+  MOTION_TYPE_FIXED = 2;        // fixed in space (ground)
+  // MOTION_TYPE_KINEMATIC = 3; // reserved for future trajectory-driven motion
 }
 
 message RevoluteJointConfig {

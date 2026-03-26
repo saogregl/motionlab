@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 
 import {
   ArrowLeftRight,
+  Box,
   Crosshair,
   Eye,
   EyeOff,
@@ -330,6 +331,10 @@ interface GeometryContextMenuProps {
   onSelectInViewport?: () => void;
   onFocusViewport?: () => void;
   focusDisabledReason?: string;
+  onMakeBody?: () => void;
+  makeBodyDisabledReason?: string;
+  bodyList?: Array<{ id: string; name: string }>;
+  onMoveToBody?: (bodyId: string) => void;
   onAttachToBody?: () => void;
   attachDisabledReason?: string;
   onDetachFromBody?: () => void;
@@ -342,6 +347,10 @@ function GeometryContextMenuItems({
   onSelectInViewport,
   onFocusViewport,
   focusDisabledReason,
+  onMakeBody,
+  makeBodyDisabledReason,
+  bodyList,
+  onMoveToBody,
   onAttachToBody,
   attachDisabledReason,
   onDetachFromBody,
@@ -359,10 +368,33 @@ function GeometryContextMenuItems({
         Focus Viewport on Geometry
       </ContextMenuItem>
       <ContextMenuSeparator />
-      <ContextMenuItem className={itemCls} onSelect={onAttachToBody} disabled={!onAttachToBody} title={!onAttachToBody ? attachDisabledReason : undefined}>
-        <Link2 className={iconCls} />
-        Attach to Body…
-      </ContextMenuItem>
+      {!isParented && (
+        <ContextMenuItem className={itemCls} onSelect={onMakeBody} disabled={!onMakeBody} title={!onMakeBody ? makeBodyDisabledReason : undefined}>
+          <Box className={iconCls} />
+          Make Body
+        </ContextMenuItem>
+      )}
+      {bodyList && bodyList.length > 0 && onMoveToBody && (
+        <ContextMenuSub>
+          <ContextMenuSubTrigger className={itemCls}>
+            <Link2 className={iconCls} />
+            {isParented ? 'Move to Body' : 'Attach to Body'}
+          </ContextMenuSubTrigger>
+          <ContextMenuSubContent>
+            {bodyList.map((body) => (
+              <ContextMenuItem key={body.id} className={itemCls} onSelect={() => onMoveToBody(body.id)}>
+                {body.name}
+              </ContextMenuItem>
+            ))}
+          </ContextMenuSubContent>
+        </ContextMenuSub>
+      )}
+      {(!bodyList || bodyList.length === 0) && (
+        <ContextMenuItem className={itemCls} onSelect={onAttachToBody} disabled={!onAttachToBody} title={!onAttachToBody ? attachDisabledReason : undefined}>
+          <Link2 className={iconCls} />
+          Attach to Body…
+        </ContextMenuItem>
+      )}
       <ContextMenuItem className={itemCls} onSelect={onDetachFromBody} disabled={!onDetachFromBody || !isParented} title={!onDetachFromBody ? detachDisabledReason : !isParented ? 'Geometry is not attached to a body' : undefined}>
         <Unlink className={iconCls} />
         Detach from Body

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 import { useToolModeStore } from './tool-mode.js';
 
-export type Workspace = 'build' | 'results';
+export type Workspace = 'home' | 'build' | 'results';
 
 interface UILayoutState {
   // Workspace
@@ -10,15 +10,15 @@ interface UILayoutState {
   setActiveWorkspace(workspace: Workspace): void;
 
   // Build panel state
-  bottomDockExpanded: boolean;
-  bottomDockActiveTab: string;
+  bottomPanelExpanded: boolean;
+  bottomPanelActiveTab: string;
   leftPanelOpen: boolean;
   rightPanelOpen: boolean;
   rightPanelAutoShow: boolean;
   leftPanelWidth: number;
   rightPanelWidth: number;
-  setBottomDockExpanded(expanded: boolean): void;
-  setBottomDockActiveTab(tab: string): void;
+  setBottomPanelExpanded(expanded: boolean): void;
+  setBottomPanelActiveTab(tab: string): void;
   toggleChartPanel(): void;
   toggleLeftPanel(): void;
   toggleRightPanel(): void;
@@ -37,6 +37,10 @@ interface UILayoutState {
   resultsBottomDockActiveTab: string;
   setResultsBottomDockExpanded(expanded: boolean): void;
   setResultsBottomDockActiveTab(tab: string): void;
+
+  // Import preferences
+  importMode: 'auto-body' | 'visual-only';
+  setImportMode(mode: 'auto-body' | 'visual-only'): void;
 }
 
 const PANEL_MIN_W = 240;
@@ -48,7 +52,7 @@ function clampWidth(w: number): number {
 
 export const useUILayoutStore = create<UILayoutState>()((set, get) => ({
   // Workspace
-  activeWorkspace: 'build',
+  activeWorkspace: 'home',
   setActiveWorkspace: (workspace) => {
     if (get().activeWorkspace === workspace) return;
     set({ activeWorkspace: workspace });
@@ -59,15 +63,15 @@ export const useUILayoutStore = create<UILayoutState>()((set, get) => ({
   },
 
   // Build panel state
-  bottomDockExpanded: false,
-  bottomDockActiveTab: 'timeline',
+  bottomPanelExpanded: false,
+  bottomPanelActiveTab: 'assets',
   leftPanelOpen: true,
   rightPanelOpen: false,
   rightPanelAutoShow: true,
   leftPanelWidth: 288,
   rightPanelWidth: 288,
-  setBottomDockExpanded: (expanded) => set({ bottomDockExpanded: expanded }),
-  setBottomDockActiveTab: (tab) => set({ bottomDockActiveTab: tab }),
+  setBottomPanelExpanded: (expanded) => set({ bottomPanelExpanded: expanded }),
+  setBottomPanelActiveTab: (tab) => set({ bottomPanelActiveTab: tab }),
   toggleChartPanel: () => {
     const { resultsBottomDockActiveTab, resultsBottomDockExpanded } = get();
     if (resultsBottomDockActiveTab === 'charts' && resultsBottomDockExpanded) {
@@ -105,4 +109,8 @@ export const useUILayoutStore = create<UILayoutState>()((set, get) => ({
   resultsBottomDockActiveTab: 'charts',
   setResultsBottomDockExpanded: (expanded) => set({ resultsBottomDockExpanded: expanded }),
   setResultsBottomDockActiveTab: (tab) => set({ resultsBottomDockActiveTab: tab }),
+
+  // Import preferences
+  importMode: 'auto-body',
+  setImportMode: (mode) => set({ importMode: mode }),
 }));

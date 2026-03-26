@@ -386,7 +386,8 @@ inline constexpr ImportOptions::Impl_::Impl_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
         density_override_{0},
-        tessellation_quality_{0} {}
+        tessellation_quality_{0},
+        import_mode_{static_cast< ::motionlab::protocol::ImportMode >(0)} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR ImportOptions::ImportOptions(::_pbi::ConstantInitialized)
@@ -499,35 +500,6 @@ struct CompilationDiagnosticDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CompilationDiagnosticDefaultTypeInternal _CompilationDiagnostic_default_instance_;
-
-inline constexpr UpdateBodyCommand::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : _cached_size_{0},
-        name_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
-        body_id_{nullptr},
-        is_fixed_{false} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR UpdateBodyCommand::UpdateBodyCommand(::_pbi::ConstantInitialized)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(UpdateBodyCommand_class_data_.base()),
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(),
-#endif  // PROTOBUF_CUSTOM_VTABLE
-      _impl_(::_pbi::ConstantInitialized()) {
-}
-struct UpdateBodyCommandDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR UpdateBodyCommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~UpdateBodyCommandDefaultTypeInternal() {}
-  union {
-    UpdateBodyCommand _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 UpdateBodyCommandDefaultTypeInternal _UpdateBodyCommand_default_instance_;
 
 inline constexpr TimeSample::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -643,6 +615,34 @@ struct RelocateAssetCommandDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RelocateAssetCommandDefaultTypeInternal _RelocateAssetCommand_default_instance_;
+
+inline constexpr PlaceAssetInSceneCommand::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        asset_id_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        position_{nullptr} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR PlaceAssetInSceneCommand::PlaceAssetInSceneCommand(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(PlaceAssetInSceneCommand_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct PlaceAssetInSceneCommandDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR PlaceAssetInSceneCommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~PlaceAssetInSceneCommandDefaultTypeInternal() {}
+  union {
+    PlaceAssetInSceneCommand _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PlaceAssetInSceneCommandDefaultTypeInternal _PlaceAssetInSceneCommand_default_instance_;
 
 inline constexpr MissingAssetInfo::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -1216,6 +1216,37 @@ struct UpdateDatumPoseCommandDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 UpdateDatumPoseCommandDefaultTypeInternal _UpdateDatumPoseCommand_default_instance_;
 
+inline constexpr UpdateBodyCommand::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        body_id_{nullptr},
+        pose_{nullptr},
+        is_fixed_{false},
+        motion_type_{static_cast< ::motionlab::mechanism::MotionType >(0)} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR UpdateBodyCommand::UpdateBodyCommand(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(UpdateBodyCommand_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct UpdateBodyCommandDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR UpdateBodyCommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~UpdateBodyCommandDefaultTypeInternal() {}
+  union {
+    UpdateBodyCommand _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 UpdateBodyCommandDefaultTypeInternal _UpdateBodyCommand_default_instance_;
+
 inline constexpr SimulationTrace::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
@@ -1311,6 +1342,37 @@ struct GeometryImportResultDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GeometryImportResultDefaultTypeInternal _GeometryImportResult_default_instance_;
 
+inline constexpr CreatePrimitiveBodyCommand::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        position_{nullptr},
+        params_{nullptr},
+        density_{0},
+        shape_{static_cast< ::motionlab::mechanism::PrimitiveShape >(0)} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR CreatePrimitiveBodyCommand::CreatePrimitiveBodyCommand(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(CreatePrimitiveBodyCommand_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct CreatePrimitiveBodyCommandDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR CreatePrimitiveBodyCommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CreatePrimitiveBodyCommandDefaultTypeInternal() {}
+  union {
+    CreatePrimitiveBodyCommand _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CreatePrimitiveBodyCommandDefaultTypeInternal _CreatePrimitiveBodyCommand_default_instance_;
+
 inline constexpr CreateDatumCommand::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
@@ -1348,7 +1410,8 @@ inline constexpr CreateBodyCommand::Impl_::Impl_(
             ::_pbi::ConstantInitialized()),
         mass_properties_{nullptr},
         pose_{nullptr},
-        is_fixed_{false} {}
+        is_fixed_{false},
+        motion_type_{static_cast< ::motionlab::mechanism::MotionType >(0)} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR CreateBodyCommand::CreateBodyCommand(::_pbi::ConstantInitialized)
@@ -1741,6 +1804,39 @@ struct RelocateAssetResultDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RelocateAssetResultDefaultTypeInternal _RelocateAssetResult_default_instance_;
 
+inline constexpr PlaceAssetInSceneResult::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        geometries_{},
+        bodies_{},
+        error_message_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        asset_id_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        success_{false} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR PlaceAssetInSceneResult::PlaceAssetInSceneResult(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(PlaceAssetInSceneResult_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct PlaceAssetInSceneResultDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR PlaceAssetInSceneResultDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~PlaceAssetInSceneResultDefaultTypeInternal() {}
+  union {
+    PlaceAssetInSceneResult _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PlaceAssetInSceneResultDefaultTypeInternal _PlaceAssetInSceneResult_default_instance_;
+
 inline constexpr ImportAssetResult::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
@@ -1748,6 +1844,9 @@ inline constexpr ImportAssetResult::Impl_::Impl_(
         diagnostics_{},
         geometries_{},
         error_message_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        asset_id_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
         success_{false} {}
@@ -1772,33 +1871,32 @@ struct ImportAssetResultDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ImportAssetResultDefaultTypeInternal _ImportAssetResult_default_instance_;
 
-inline constexpr DetachGeometryResult::Impl_::Impl_(
+inline constexpr CreatePrimitiveBodyResult::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
-        geometry_{nullptr},
-        former_parent_body_{nullptr},
+        body_{nullptr},
         result_{},
         _oneof_case_{} {}
 
 template <typename>
-PROTOBUF_CONSTEXPR DetachGeometryResult::DetachGeometryResult(::_pbi::ConstantInitialized)
+PROTOBUF_CONSTEXPR CreatePrimitiveBodyResult::CreatePrimitiveBodyResult(::_pbi::ConstantInitialized)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(DetachGeometryResult_class_data_.base()),
+    : ::google::protobuf::Message(CreatePrimitiveBodyResult_class_data_.base()),
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(),
 #endif  // PROTOBUF_CUSTOM_VTABLE
       _impl_(::_pbi::ConstantInitialized()) {
 }
-struct DetachGeometryResultDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR DetachGeometryResultDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~DetachGeometryResultDefaultTypeInternal() {}
+struct CreatePrimitiveBodyResultDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR CreatePrimitiveBodyResultDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CreatePrimitiveBodyResultDefaultTypeInternal() {}
   union {
-    DetachGeometryResult _instance;
+    CreatePrimitiveBodyResult _instance;
   };
 };
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DetachGeometryResultDefaultTypeInternal _DetachGeometryResult_default_instance_;
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CreatePrimitiveBodyResultDefaultTypeInternal _CreatePrimitiveBodyResult_default_instance_;
 
 inline constexpr CreateLoadResult::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -2033,6 +2131,87 @@ struct CreateActuatorCommandDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CreateActuatorCommandDefaultTypeInternal _CreateActuatorCommand_default_instance_;
 
+inline constexpr DetachGeometryResult::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        geometry_{nullptr},
+        former_parent_body_{nullptr},
+        result_{},
+        _oneof_case_{} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR DetachGeometryResult::DetachGeometryResult(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(DetachGeometryResult_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct DetachGeometryResultDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR DetachGeometryResultDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~DetachGeometryResultDefaultTypeInternal() {}
+  union {
+    DetachGeometryResult _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DetachGeometryResultDefaultTypeInternal _DetachGeometryResult_default_instance_;
+
+inline constexpr CreateDatumFromFaceResult::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : result_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR CreateDatumFromFaceResult::CreateDatumFromFaceResult(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(CreateDatumFromFaceResult_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct CreateDatumFromFaceResultDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR CreateDatumFromFaceResultDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CreateDatumFromFaceResultDefaultTypeInternal() {}
+  union {
+    CreateDatumFromFaceResult _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CreateDatumFromFaceResultDefaultTypeInternal _CreateDatumFromFaceResult_default_instance_;
+
+inline constexpr Command::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        sequence_id_{::uint64_t{0u}},
+        payload_{},
+        _oneof_case_{} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR Command::Command(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(Command_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct CommandDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR CommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CommandDefaultTypeInternal() {}
+  union {
+    Command _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CommandDefaultTypeInternal _Command_default_instance_;
+
 inline constexpr AttachGeometryResult::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
@@ -2115,59 +2294,6 @@ struct LoadProjectSuccessDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 LoadProjectSuccessDefaultTypeInternal _LoadProjectSuccess_default_instance_;
 
-inline constexpr CreateDatumFromFaceResult::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : result_{},
-        _cached_size_{0},
-        _oneof_case_{} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR CreateDatumFromFaceResult::CreateDatumFromFaceResult(::_pbi::ConstantInitialized)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(CreateDatumFromFaceResult_class_data_.base()),
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(),
-#endif  // PROTOBUF_CUSTOM_VTABLE
-      _impl_(::_pbi::ConstantInitialized()) {
-}
-struct CreateDatumFromFaceResultDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR CreateDatumFromFaceResultDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~CreateDatumFromFaceResultDefaultTypeInternal() {}
-  union {
-    CreateDatumFromFaceResult _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CreateDatumFromFaceResultDefaultTypeInternal _CreateDatumFromFaceResult_default_instance_;
-
-inline constexpr Command::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : _cached_size_{0},
-        sequence_id_{::uint64_t{0u}},
-        payload_{},
-        _oneof_case_{} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR Command::Command(::_pbi::ConstantInitialized)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(Command_class_data_.base()),
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(),
-#endif  // PROTOBUF_CUSTOM_VTABLE
-      _impl_(::_pbi::ConstantInitialized()) {
-}
-struct CommandDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR CommandDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~CommandDefaultTypeInternal() {}
-  union {
-    Command _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CommandDefaultTypeInternal _Command_default_instance_;
-
 inline constexpr LoadProjectResult::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : result_{},
@@ -2223,7 +2349,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 }  // namespace protocol
 }  // namespace motionlab
 static const ::_pb::EnumDescriptor* PROTOBUF_NONNULL
-    file_level_enum_descriptors_protocol_2ftransport_2eproto[8];
+    file_level_enum_descriptors_protocol_2ftransport_2eproto[9];
 static constexpr const ::_pb::ServiceDescriptor* PROTOBUF_NONNULL* PROTOBUF_NULLABLE
     file_level_service_descriptors_protocol_2ftransport_2eproto = nullptr;
 const ::uint32_t
@@ -2239,7 +2365,7 @@ const ::uint32_t
         0x085, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_._has_bits_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_._oneof_case_[0]),
-        36, // hasbit index offset
+        38, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.sequence_id_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
@@ -2272,7 +2398,11 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Command, _impl_.payload_),
         0,
+        ~0u,
+        ~0u,
         ~0u,
         ~0u,
         ~0u,
@@ -2306,7 +2436,7 @@ const ::uint32_t
         0x085, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_._has_bits_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_._oneof_case_[0]),
-        39, // hasbit index offset
+        41, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.sequence_id_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
@@ -2342,7 +2472,11 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::Event, _impl_.payload_),
         0,
+        ~0u,
+        ~0u,
         ~0u,
         ~0u,
         ~0u,
@@ -2411,13 +2545,15 @@ const ::uint32_t
         0,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::ImportOptions, _impl_._has_bits_),
-        6, // hasbit index offset
+        7, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::ImportOptions, _impl_.density_override_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::ImportOptions, _impl_.tessellation_quality_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::ImportOptions, _impl_.unit_system_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::ImportOptions, _impl_.import_mode_),
         1,
         2,
         0,
+        3,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::ImportAssetCommand, _impl_._has_bits_),
         5, // hasbit index offset
@@ -2463,17 +2599,19 @@ const ::uint32_t
         0,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::ImportAssetResult, _impl_._has_bits_),
-        8, // hasbit index offset
+        9, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::ImportAssetResult, _impl_.success_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::ImportAssetResult, _impl_.error_message_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::ImportAssetResult, _impl_.bodies_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::ImportAssetResult, _impl_.diagnostics_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::ImportAssetResult, _impl_.geometries_),
-        4,
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::ImportAssetResult, _impl_.asset_id_),
+        5,
         3,
         0,
         1,
         2,
+        4,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::MechanismSnapshot, _impl_._has_bits_),
         4, // hasbit index offset
@@ -2554,13 +2692,17 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateDatumPoseResult, _impl_.result_),
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateBodyCommand, _impl_._has_bits_),
-        6, // hasbit index offset
+        8, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateBodyCommand, _impl_.body_id_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateBodyCommand, _impl_.is_fixed_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateBodyCommand, _impl_.name_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateBodyCommand, _impl_.pose_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateBodyCommand, _impl_.motion_type_),
         1,
-        2,
+        3,
         0,
+        2,
+        4,
         0x004, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateBodyResult, _impl_._oneof_case_[0]),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateBodyResult, _impl_.result_),
@@ -2568,15 +2710,17 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateBodyResult, _impl_.result_),
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateBodyCommand, _impl_._has_bits_),
-        7, // hasbit index offset
+        8, // hasbit index offset
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateBodyCommand, _impl_.name_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateBodyCommand, _impl_.mass_properties_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateBodyCommand, _impl_.pose_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateBodyCommand, _impl_.is_fixed_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateBodyCommand, _impl_.motion_type_),
         0,
         1,
         2,
         3,
+        4,
         0x004, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateBodyResult, _impl_._oneof_case_[0]),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateBodyResult, _impl_.result_),
@@ -2646,6 +2790,30 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateMassPropertiesResult, _impl_.result_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateMassPropertiesResult, _impl_.result_),
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::UpdateMassPropertiesResult, _impl_.result_),
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreatePrimitiveBodyCommand, _impl_._has_bits_),
+        8, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreatePrimitiveBodyCommand, _impl_.shape_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreatePrimitiveBodyCommand, _impl_.name_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreatePrimitiveBodyCommand, _impl_.position_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreatePrimitiveBodyCommand, _impl_.params_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreatePrimitiveBodyCommand, _impl_.density_),
+        4,
+        0,
+        1,
+        2,
+        3,
+        0x085, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreatePrimitiveBodyResult, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreatePrimitiveBodyResult, _impl_._oneof_case_[0]),
+        8, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreatePrimitiveBodyResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreatePrimitiveBodyResult, _impl_.result_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreatePrimitiveBodyResult, _impl_.body_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreatePrimitiveBodyResult, _impl_.result_),
+        ~0u,
+        ~0u,
+        0,
         0x081, // bitmap
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreateJointCommand, _impl_._has_bits_),
         4, // hasbit index offset
@@ -2955,90 +3123,114 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::motionlab::protocol::NewProjectResult, _impl_.error_message_),
         1,
         0,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::PlaceAssetInSceneCommand, _impl_._has_bits_),
+        5, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::PlaceAssetInSceneCommand, _impl_.asset_id_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::PlaceAssetInSceneCommand, _impl_.position_),
+        0,
+        1,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::PlaceAssetInSceneResult, _impl_._has_bits_),
+        8, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::PlaceAssetInSceneResult, _impl_.success_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::PlaceAssetInSceneResult, _impl_.error_message_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::PlaceAssetInSceneResult, _impl_.geometries_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::PlaceAssetInSceneResult, _impl_.bodies_),
+        PROTOBUF_FIELD_OFFSET(::motionlab::protocol::PlaceAssetInSceneResult, _impl_.asset_id_),
+        4,
+        2,
+        0,
+        1,
+        3,
 };
 
 static const ::_pbi::MigrationSchema
     schemas[] ABSL_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
         {0, sizeof(::motionlab::protocol::ProtocolVersion)},
         {7, sizeof(::motionlab::protocol::Command)},
-        {74, sizeof(::motionlab::protocol::Event)},
-        {147, sizeof(::motionlab::protocol::Handshake)},
-        {154, sizeof(::motionlab::protocol::HandshakeAck)},
-        {163, sizeof(::motionlab::protocol::Ping)},
-        {168, sizeof(::motionlab::protocol::Pong)},
-        {173, sizeof(::motionlab::protocol::EngineStatus)},
-        {180, sizeof(::motionlab::protocol::ImportOptions)},
-        {189, sizeof(::motionlab::protocol::ImportAssetCommand)},
-        {196, sizeof(::motionlab::protocol::BodyImportResult)},
-        {213, sizeof(::motionlab::protocol::GeometryImportResult)},
-        {232, sizeof(::motionlab::protocol::ImportAssetResult)},
-        {245, sizeof(::motionlab::protocol::MechanismSnapshot)},
-        {250, sizeof(::motionlab::protocol::CreateDatumCommand)},
-        {259, sizeof(::motionlab::protocol::DeleteDatumCommand)},
-        {264, sizeof(::motionlab::protocol::RenameDatumCommand)},
-        {271, sizeof(::motionlab::protocol::CreateDatumFromFaceCommand)},
-        {280, sizeof(::motionlab::protocol::CreateDatumFromFaceSuccess)},
-        {291, sizeof(::motionlab::protocol::CreateDatumResult)},
-        {296, sizeof(::motionlab::protocol::CreateDatumFromFaceResult)},
-        {301, sizeof(::motionlab::protocol::DeleteDatumResult)},
-        {306, sizeof(::motionlab::protocol::RenameDatumResult)},
-        {311, sizeof(::motionlab::protocol::UpdateDatumPoseCommand)},
-        {318, sizeof(::motionlab::protocol::UpdateDatumPoseResult)},
-        {323, sizeof(::motionlab::protocol::UpdateBodyCommand)},
-        {332, sizeof(::motionlab::protocol::UpdateBodyResult)},
-        {337, sizeof(::motionlab::protocol::CreateBodyCommand)},
-        {348, sizeof(::motionlab::protocol::CreateBodyResult)},
-        {353, sizeof(::motionlab::protocol::DeleteBodyCommand)},
-        {358, sizeof(::motionlab::protocol::DeleteBodyResult)},
-        {363, sizeof(::motionlab::protocol::AttachGeometryCommand)},
-        {372, sizeof(::motionlab::protocol::AttachGeometryResult)},
-        {385, sizeof(::motionlab::protocol::DetachGeometryCommand)},
-        {390, sizeof(::motionlab::protocol::DetachGeometryResult)},
-        {403, sizeof(::motionlab::protocol::UpdateMassPropertiesCommand)},
-        {412, sizeof(::motionlab::protocol::UpdateMassPropertiesResult)},
-        {417, sizeof(::motionlab::protocol::CreateJointCommand)},
-        {422, sizeof(::motionlab::protocol::UpdateJointCommand)},
-        {427, sizeof(::motionlab::protocol::DeleteJointCommand)},
-        {432, sizeof(::motionlab::protocol::CreateJointResult)},
-        {437, sizeof(::motionlab::protocol::UpdateJointResult)},
-        {442, sizeof(::motionlab::protocol::DeleteJointResult)},
-        {447, sizeof(::motionlab::protocol::CreateLoadCommand)},
-        {452, sizeof(::motionlab::protocol::UpdateLoadCommand)},
-        {457, sizeof(::motionlab::protocol::DeleteLoadCommand)},
-        {462, sizeof(::motionlab::protocol::CreateLoadResult)},
-        {467, sizeof(::motionlab::protocol::UpdateLoadResult)},
-        {472, sizeof(::motionlab::protocol::DeleteLoadResult)},
-        {477, sizeof(::motionlab::protocol::CreateActuatorCommand)},
-        {482, sizeof(::motionlab::protocol::UpdateActuatorCommand)},
-        {487, sizeof(::motionlab::protocol::DeleteActuatorCommand)},
-        {492, sizeof(::motionlab::protocol::CreateActuatorResult)},
-        {497, sizeof(::motionlab::protocol::UpdateActuatorResult)},
-        {502, sizeof(::motionlab::protocol::DeleteActuatorResult)},
-        {507, sizeof(::motionlab::protocol::SolverSettings)},
-        {518, sizeof(::motionlab::protocol::ContactSettings)},
-        {531, sizeof(::motionlab::protocol::CompilationDiagnostic)},
-        {544, sizeof(::motionlab::protocol::SimulationSettings)},
-        {557, sizeof(::motionlab::protocol::CompileMechanismCommand)},
-        {562, sizeof(::motionlab::protocol::SimulationControlCommand)},
-        {567, sizeof(::motionlab::protocol::CompilationResultEvent)},
-        {580, sizeof(::motionlab::protocol::SimulationStateEvent)},
-        {589, sizeof(::motionlab::protocol::BodyPoseData)},
-        {598, sizeof(::motionlab::protocol::JointStateData)},
-        {611, sizeof(::motionlab::protocol::SimulationFrame)},
-        {622, sizeof(::motionlab::protocol::OutputChannelDescriptor)},
-        {633, sizeof(::motionlab::protocol::TimeSample)},
-        {644, sizeof(::motionlab::protocol::SimulationTrace)},
-        {651, sizeof(::motionlab::protocol::ScrubCommand)},
-        {656, sizeof(::motionlab::protocol::SaveProjectCommand)},
-        {661, sizeof(::motionlab::protocol::SaveProjectResult)},
-        {666, sizeof(::motionlab::protocol::LoadProjectCommand)},
-        {671, sizeof(::motionlab::protocol::LoadProjectResult)},
-        {676, sizeof(::motionlab::protocol::LoadProjectSuccess)},
-        {689, sizeof(::motionlab::protocol::MissingAssetInfo)},
-        {700, sizeof(::motionlab::protocol::RelocateAssetCommand)},
-        {709, sizeof(::motionlab::protocol::RelocateAssetResult)},
-        {714, sizeof(::motionlab::protocol::NewProjectCommand)},
-        {719, sizeof(::motionlab::protocol::NewProjectResult)},
+        {78, sizeof(::motionlab::protocol::Event)},
+        {155, sizeof(::motionlab::protocol::Handshake)},
+        {162, sizeof(::motionlab::protocol::HandshakeAck)},
+        {171, sizeof(::motionlab::protocol::Ping)},
+        {176, sizeof(::motionlab::protocol::Pong)},
+        {181, sizeof(::motionlab::protocol::EngineStatus)},
+        {188, sizeof(::motionlab::protocol::ImportOptions)},
+        {199, sizeof(::motionlab::protocol::ImportAssetCommand)},
+        {206, sizeof(::motionlab::protocol::BodyImportResult)},
+        {223, sizeof(::motionlab::protocol::GeometryImportResult)},
+        {242, sizeof(::motionlab::protocol::ImportAssetResult)},
+        {257, sizeof(::motionlab::protocol::MechanismSnapshot)},
+        {262, sizeof(::motionlab::protocol::CreateDatumCommand)},
+        {271, sizeof(::motionlab::protocol::DeleteDatumCommand)},
+        {276, sizeof(::motionlab::protocol::RenameDatumCommand)},
+        {283, sizeof(::motionlab::protocol::CreateDatumFromFaceCommand)},
+        {292, sizeof(::motionlab::protocol::CreateDatumFromFaceSuccess)},
+        {303, sizeof(::motionlab::protocol::CreateDatumResult)},
+        {308, sizeof(::motionlab::protocol::CreateDatumFromFaceResult)},
+        {313, sizeof(::motionlab::protocol::DeleteDatumResult)},
+        {318, sizeof(::motionlab::protocol::RenameDatumResult)},
+        {323, sizeof(::motionlab::protocol::UpdateDatumPoseCommand)},
+        {330, sizeof(::motionlab::protocol::UpdateDatumPoseResult)},
+        {335, sizeof(::motionlab::protocol::UpdateBodyCommand)},
+        {348, sizeof(::motionlab::protocol::UpdateBodyResult)},
+        {353, sizeof(::motionlab::protocol::CreateBodyCommand)},
+        {366, sizeof(::motionlab::protocol::CreateBodyResult)},
+        {371, sizeof(::motionlab::protocol::DeleteBodyCommand)},
+        {376, sizeof(::motionlab::protocol::DeleteBodyResult)},
+        {381, sizeof(::motionlab::protocol::AttachGeometryCommand)},
+        {390, sizeof(::motionlab::protocol::AttachGeometryResult)},
+        {403, sizeof(::motionlab::protocol::DetachGeometryCommand)},
+        {408, sizeof(::motionlab::protocol::DetachGeometryResult)},
+        {421, sizeof(::motionlab::protocol::UpdateMassPropertiesCommand)},
+        {430, sizeof(::motionlab::protocol::UpdateMassPropertiesResult)},
+        {435, sizeof(::motionlab::protocol::CreatePrimitiveBodyCommand)},
+        {448, sizeof(::motionlab::protocol::CreatePrimitiveBodyResult)},
+        {459, sizeof(::motionlab::protocol::CreateJointCommand)},
+        {464, sizeof(::motionlab::protocol::UpdateJointCommand)},
+        {469, sizeof(::motionlab::protocol::DeleteJointCommand)},
+        {474, sizeof(::motionlab::protocol::CreateJointResult)},
+        {479, sizeof(::motionlab::protocol::UpdateJointResult)},
+        {484, sizeof(::motionlab::protocol::DeleteJointResult)},
+        {489, sizeof(::motionlab::protocol::CreateLoadCommand)},
+        {494, sizeof(::motionlab::protocol::UpdateLoadCommand)},
+        {499, sizeof(::motionlab::protocol::DeleteLoadCommand)},
+        {504, sizeof(::motionlab::protocol::CreateLoadResult)},
+        {509, sizeof(::motionlab::protocol::UpdateLoadResult)},
+        {514, sizeof(::motionlab::protocol::DeleteLoadResult)},
+        {519, sizeof(::motionlab::protocol::CreateActuatorCommand)},
+        {524, sizeof(::motionlab::protocol::UpdateActuatorCommand)},
+        {529, sizeof(::motionlab::protocol::DeleteActuatorCommand)},
+        {534, sizeof(::motionlab::protocol::CreateActuatorResult)},
+        {539, sizeof(::motionlab::protocol::UpdateActuatorResult)},
+        {544, sizeof(::motionlab::protocol::DeleteActuatorResult)},
+        {549, sizeof(::motionlab::protocol::SolverSettings)},
+        {560, sizeof(::motionlab::protocol::ContactSettings)},
+        {573, sizeof(::motionlab::protocol::CompilationDiagnostic)},
+        {586, sizeof(::motionlab::protocol::SimulationSettings)},
+        {599, sizeof(::motionlab::protocol::CompileMechanismCommand)},
+        {604, sizeof(::motionlab::protocol::SimulationControlCommand)},
+        {609, sizeof(::motionlab::protocol::CompilationResultEvent)},
+        {622, sizeof(::motionlab::protocol::SimulationStateEvent)},
+        {631, sizeof(::motionlab::protocol::BodyPoseData)},
+        {640, sizeof(::motionlab::protocol::JointStateData)},
+        {653, sizeof(::motionlab::protocol::SimulationFrame)},
+        {664, sizeof(::motionlab::protocol::OutputChannelDescriptor)},
+        {675, sizeof(::motionlab::protocol::TimeSample)},
+        {686, sizeof(::motionlab::protocol::SimulationTrace)},
+        {693, sizeof(::motionlab::protocol::ScrubCommand)},
+        {698, sizeof(::motionlab::protocol::SaveProjectCommand)},
+        {703, sizeof(::motionlab::protocol::SaveProjectResult)},
+        {708, sizeof(::motionlab::protocol::LoadProjectCommand)},
+        {713, sizeof(::motionlab::protocol::LoadProjectResult)},
+        {718, sizeof(::motionlab::protocol::LoadProjectSuccess)},
+        {731, sizeof(::motionlab::protocol::MissingAssetInfo)},
+        {742, sizeof(::motionlab::protocol::RelocateAssetCommand)},
+        {751, sizeof(::motionlab::protocol::RelocateAssetResult)},
+        {756, sizeof(::motionlab::protocol::NewProjectCommand)},
+        {761, sizeof(::motionlab::protocol::NewProjectResult)},
+        {768, sizeof(::motionlab::protocol::PlaceAssetInSceneCommand)},
+        {775, sizeof(::motionlab::protocol::PlaceAssetInSceneResult)},
 };
 static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::motionlab::protocol::_ProtocolVersion_default_instance_._instance,
@@ -3078,6 +3270,8 @@ static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::motionlab::protocol::_DetachGeometryResult_default_instance_._instance,
     &::motionlab::protocol::_UpdateMassPropertiesCommand_default_instance_._instance,
     &::motionlab::protocol::_UpdateMassPropertiesResult_default_instance_._instance,
+    &::motionlab::protocol::_CreatePrimitiveBodyCommand_default_instance_._instance,
+    &::motionlab::protocol::_CreatePrimitiveBodyResult_default_instance_._instance,
     &::motionlab::protocol::_CreateJointCommand_default_instance_._instance,
     &::motionlab::protocol::_UpdateJointCommand_default_instance_._instance,
     &::motionlab::protocol::_DeleteJointCommand_default_instance_._instance,
@@ -3121,454 +3315,409 @@ static const ::_pb::Message* PROTOBUF_NONNULL const file_default_instances[] = {
     &::motionlab::protocol::_RelocateAssetResult_default_instance_._instance,
     &::motionlab::protocol::_NewProjectCommand_default_instance_._instance,
     &::motionlab::protocol::_NewProjectResult_default_instance_._instance,
+    &::motionlab::protocol::_PlaceAssetInSceneCommand_default_instance_._instance,
+    &::motionlab::protocol::_PlaceAssetInSceneResult_default_instance_._instance,
 };
 const char descriptor_table_protodef_protocol_2ftransport_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
     "\n\030protocol/transport.proto\022\022motionlab.pr"
-    "otocol\032\031mechanism/mechanism.proto\"\?\n\017Pro"
-    "tocolVersion\022\022\n\004name\030\001 \001(\tR\004name\022\030\n\007vers"
-    "ion\030\002 \001(\rR\007version\"\377\022\n\007Command\022\037\n\013sequen"
-    "ce_id\030\001 \001(\004R\nsequenceId\022=\n\thandshake\030\n \001"
-    "(\0132\035.motionlab.protocol.HandshakeH\000R\than"
-    "dshake\022.\n\004ping\030\013 \001(\0132\030.motionlab.protoco"
-    "l.PingH\000R\004ping\022K\n\014import_asset\030\014 \001(\0132&.m"
-    "otionlab.protocol.ImportAssetCommandH\000R\013"
-    "importAsset\022K\n\014create_datum\030\r \001(\0132&.moti"
-    "onlab.protocol.CreateDatumCommandH\000R\013cre"
-    "ateDatum\022K\n\014delete_datum\030\016 \001(\0132&.motionl"
-    "ab.protocol.DeleteDatumCommandH\000R\013delete"
-    "Datum\022K\n\014rename_datum\030\017 \001(\0132&.motionlab."
-    "protocol.RenameDatumCommandH\000R\013renameDat"
-    "um\022e\n\026create_datum_from_face\030\020 \001(\0132..mot"
-    "ionlab.protocol.CreateDatumFromFaceComma"
-    "ndH\000R\023createDatumFromFace\022H\n\013update_body"
-    "\030\021 \001(\0132%.motionlab.protocol.UpdateBodyCo"
-    "mmandH\000R\nupdateBody\022X\n\021update_datum_pose"
-    "\030\022 \001(\0132*.motionlab.protocol.UpdateDatumP"
-    "oseCommandH\000R\017updateDatumPose\022K\n\014create_"
-    "joint\030\024 \001(\0132&.motionlab.protocol.CreateJ"
-    "ointCommandH\000R\013createJoint\022K\n\014update_joi"
-    "nt\030\025 \001(\0132&.motionlab.protocol.UpdateJoin"
-    "tCommandH\000R\013updateJoint\022K\n\014delete_joint\030"
-    "\026 \001(\0132&.motionlab.protocol.DeleteJointCo"
-    "mmandH\000R\013deleteJoint\022H\n\013create_load\030\027 \001("
-    "\0132%.motionlab.protocol.CreateLoadCommand"
-    "H\000R\ncreateLoad\022H\n\013update_load\030\030 \001(\0132%.mo"
-    "tionlab.protocol.UpdateLoadCommandH\000R\nup"
-    "dateLoad\022H\n\013delete_load\030\031 \001(\0132%.motionla"
-    "b.protocol.DeleteLoadCommandH\000R\ndeleteLo"
-    "ad\022T\n\017create_actuator\030\032 \001(\0132).motionlab."
-    "protocol.CreateActuatorCommandH\000R\016create"
-    "Actuator\022T\n\017update_actuator\030\033 \001(\0132).moti"
-    "onlab.protocol.UpdateActuatorCommandH\000R\016"
-    "updateActuator\022T\n\017delete_actuator\030\034 \001(\0132"
-    ").motionlab.protocol.DeleteActuatorComma"
-    "ndH\000R\016deleteActuator\022H\n\013create_body\0302 \001("
-    "\0132%.motionlab.protocol.CreateBodyCommand"
-    "H\000R\ncreateBody\022H\n\013delete_body\0303 \001(\0132%.mo"
-    "tionlab.protocol.DeleteBodyCommandH\000R\nde"
-    "leteBody\022T\n\017attach_geometry\0304 \001(\0132).moti"
-    "onlab.protocol.AttachGeometryCommandH\000R\016"
-    "attachGeometry\022T\n\017detach_geometry\0305 \001(\0132"
-    ").motionlab.protocol.DetachGeometryComma"
-    "ndH\000R\016detachGeometry\022g\n\026update_mass_prop"
-    "erties\0306 \001(\0132/.motionlab.protocol.Update"
-    "MassPropertiesCommandH\000R\024updateMassPrope"
-    "rties\022Z\n\021compile_mechanism\030\036 \001(\0132+.motio"
-    "nlab.protocol.CompileMechanismCommandH\000R"
-    "\020compileMechanism\022]\n\022simulation_control\030"
-    "\037 \001(\0132,.motionlab.protocol.SimulationCon"
-    "trolCommandH\000R\021simulationControl\0228\n\005scru"
-    "b\030  \001(\0132 .motionlab.protocol.ScrubComman"
-    "dH\000R\005scrub\022K\n\014save_project\030( \001(\0132&.motio"
-    "nlab.protocol.SaveProjectCommandH\000R\013save"
-    "Project\022K\n\014load_project\030) \001(\0132&.motionla"
-    "b.protocol.LoadProjectCommandH\000R\013loadPro"
-    "ject\022Q\n\016relocate_asset\030* \001(\0132(.motionlab"
-    ".protocol.RelocateAssetCommandH\000R\rreloca"
-    "teAsset\022H\n\013new_project\030+ \001(\0132%.motionlab"
-    ".protocol.NewProjectCommandH\000R\nnewProjec"
-    "tB\t\n\007payload\"\267\027\n\005Event\022\037\n\013sequence_id\030\001 "
-    "\001(\004R\nsequenceId\022G\n\rhandshake_ack\030\n \001(\0132 "
-    ".motionlab.protocol.HandshakeAckH\000R\014hand"
-    "shakeAck\022.\n\004pong\030\013 \001(\0132\030.motionlab.proto"
-    "col.PongH\000R\004pong\022G\n\rengine_status\030\014 \001(\0132"
-    " .motionlab.protocol.EngineStatusH\000R\014eng"
-    "ineStatus\022W\n\023import_asset_result\030\r \001(\0132%"
-    ".motionlab.protocol.ImportAssetResultH\000R"
-    "\021importAssetResult\022V\n\022mechanism_snapshot"
-    "\030\016 \001(\0132%.motionlab.protocol.MechanismSna"
-    "pshotH\000R\021mechanismSnapshot\022W\n\023create_dat"
-    "um_result\030\017 \001(\0132%.motionlab.protocol.Cre"
-    "ateDatumResultH\000R\021createDatumResult\022W\n\023d"
-    "elete_datum_result\030\020 \001(\0132%.motionlab.pro"
-    "tocol.DeleteDatumResultH\000R\021deleteDatumRe"
-    "sult\022W\n\023rename_datum_result\030\021 \001(\0132%.moti"
-    "onlab.protocol.RenameDatumResultH\000R\021rena"
-    "meDatumResult\022q\n\035create_datum_from_face_"
-    "result\030\022 \001(\0132-.motionlab.protocol.Create"
-    "DatumFromFaceResultH\000R\031createDatumFromFa"
-    "ceResult\022T\n\022update_body_result\030\023 \001(\0132$.m"
-    "otionlab.protocol.UpdateBodyResultH\000R\020up"
-    "dateBodyResult\022W\n\023create_joint_result\030\024 "
-    "\001(\0132%.motionlab.protocol.CreateJointResu"
-    "ltH\000R\021createJointResult\022W\n\023update_joint_"
-    "result\030\025 \001(\0132%.motionlab.protocol.Update"
-    "JointResultH\000R\021updateJointResult\022W\n\023dele"
-    "te_joint_result\030\026 \001(\0132%.motionlab.protoc"
-    "ol.DeleteJointResultH\000R\021deleteJointResul"
-    "t\022d\n\030update_datum_pose_result\030\027 \001(\0132).mo"
-    "tionlab.protocol.UpdateDatumPoseResultH\000"
-    "R\025updateDatumPoseResult\022T\n\022create_load_r"
-    "esult\030\030 \001(\0132$.motionlab.protocol.CreateL"
-    "oadResultH\000R\020createLoadResult\022T\n\022update_"
-    "load_result\030\031 \001(\0132$.motionlab.protocol.U"
-    "pdateLoadResultH\000R\020updateLoadResult\022T\n\022d"
-    "elete_load_result\030\032 \001(\0132$.motionlab.prot"
-    "ocol.DeleteLoadResultH\000R\020deleteLoadResul"
-    "t\022`\n\026create_actuator_result\030\033 \001(\0132(.moti"
-    "onlab.protocol.CreateActuatorResultH\000R\024c"
-    "reateActuatorResult\022`\n\026update_actuator_r"
-    "esult\030\034 \001(\0132(.motionlab.protocol.UpdateA"
-    "ctuatorResultH\000R\024updateActuatorResult\022`\n"
-    "\026delete_actuator_result\030\035 \001(\0132(.motionla"
-    "b.protocol.DeleteActuatorResultH\000R\024delet"
-    "eActuatorResult\022T\n\022create_body_result\0302 "
-    "\001(\0132$.motionlab.protocol.CreateBodyResul"
-    "tH\000R\020createBodyResult\022T\n\022delete_body_res"
-    "ult\0303 \001(\0132$.motionlab.protocol.DeleteBod"
-    "yResultH\000R\020deleteBodyResult\022`\n\026attach_ge"
-    "ometry_result\0304 \001(\0132(.motionlab.protocol"
-    ".AttachGeometryResultH\000R\024attachGeometryR"
-    "esult\022`\n\026detach_geometry_result\0305 \001(\0132(."
-    "motionlab.protocol.DetachGeometryResultH"
-    "\000R\024detachGeometryResult\022s\n\035update_mass_p"
-    "roperties_result\0306 \001(\0132..motionlab.proto"
-    "col.UpdateMassPropertiesResultH\000R\032update"
-    "MassPropertiesResult\022[\n\022compilation_resu"
-    "lt\030\036 \001(\0132*.motionlab.protocol.Compilatio"
-    "nResultEventH\000R\021compilationResult\022U\n\020sim"
-    "ulation_state\030\037 \001(\0132(.motionlab.protocol"
-    ".SimulationStateEventH\000R\017simulationState"
-    "\022P\n\020simulation_frame\030  \001(\0132#.motionlab.p"
-    "rotocol.SimulationFrameH\000R\017simulationFra"
-    "me\022P\n\020simulation_trace\030! \001(\0132#.motionlab"
-    ".protocol.SimulationTraceH\000R\017simulationT"
-    "race\022W\n\023save_project_result\030( \001(\0132%.moti"
-    "onlab.protocol.SaveProjectResultH\000R\021save"
-    "ProjectResult\022W\n\023load_project_result\030) \001"
-    "(\0132%.motionlab.protocol.LoadProjectResul"
-    "tH\000R\021loadProjectResult\022]\n\025relocate_asset"
-    "_result\030* \001(\0132\'.motionlab.protocol.Reloc"
-    "ateAssetResultH\000R\023relocateAssetResult\022T\n"
-    "\022new_project_result\030+ \001(\0132$.motionlab.pr"
-    "otocol.NewProjectResultH\000R\020newProjectRes"
-    "ultB\t\n\007payload\"q\n\tHandshake\022\?\n\010protocol\030"
-    "\001 \001(\0132#.motionlab.protocol.ProtocolVersi"
-    "onR\010protocol\022#\n\rsession_token\030\002 \001(\tR\014ses"
-    "sionToken\"\243\001\n\014HandshakeAck\022\036\n\ncompatible"
-    "\030\001 \001(\010R\ncompatible\022L\n\017engine_protocol\030\002 "
-    "\001(\0132#.motionlab.protocol.ProtocolVersion"
-    "R\016engineProtocol\022%\n\016engine_version\030\003 \001(\t"
-    "R\rengineVersion\"$\n\004Ping\022\034\n\ttimestamp\030\001 \001"
-    "(\004R\ttimestamp\"$\n\004Pong\022\034\n\ttimestamp\030\001 \001(\004"
-    "R\ttimestamp\"\352\001\n\014EngineStatus\022<\n\005state\030\001 "
-    "\001(\0162&.motionlab.protocol.EngineStatus.St"
-    "ateR\005state\022\030\n\007message\030\002 \001(\tR\007message\"\201\001\n"
-    "\005State\022\025\n\021STATE_UNSPECIFIED\020\000\022\026\n\022STATE_I"
-    "NITIALIZING\020\001\022\017\n\013STATE_READY\020\002\022\016\n\nSTATE_"
-    "BUSY\020\003\022\017\n\013STATE_ERROR\020\004\022\027\n\023STATE_SHUTTIN"
-    "G_DOWN\020\005\"\216\001\n\rImportOptions\022)\n\020density_ov"
-    "erride\030\001 \001(\001R\017densityOverride\0221\n\024tessell"
-    "ation_quality\030\002 \001(\001R\023tessellationQuality"
-    "\022\037\n\013unit_system\030\003 \001(\tR\nunitSystem\"{\n\022Imp"
-    "ortAssetCommand\022\033\n\tfile_path\030\001 \001(\tR\010file"
-    "Path\022H\n\016import_options\030\002 \001(\0132!.motionlab"
-    ".protocol.ImportOptionsR\rimportOptions\"\357"
-    "\002\n\020BodyImportResult\022\027\n\007body_id\030\001 \001(\tR\006bo"
-    "dyId\022\022\n\004name\030\002 \001(\tR\004name\022C\n\014display_mesh"
-    "\030\003 \001(\0132 .motionlab.mechanism.DisplayMesh"
-    "R\013displayMesh\022L\n\017mass_properties\030\004 \001(\0132#"
-    ".motionlab.mechanism.MassPropertiesR\016mas"
-    "sProperties\022-\n\004pose\030\005 \001(\0132\031.motionlab.me"
-    "chanism.PoseR\004pose\022M\n\020source_asset_ref\030\006"
-    " \001(\0132#.motionlab.mechanism.AssetReferenc"
-    "eR\016sourceAssetRef\022\035\n\npart_index\030\007 \003(\rR\tp"
-    "artIndex\"\245\003\n\024GeometryImportResult\022\037\n\013geo"
-    "metry_id\030\001 \001(\tR\ngeometryId\022\027\n\007body_id\030\002 "
-    "\001(\tR\006bodyId\022\022\n\004name\030\003 \001(\tR\004name\022C\n\014displ"
-    "ay_mesh\030\004 \001(\0132 .motionlab.mechanism.Disp"
-    "layMeshR\013displayMesh\022]\n\030computed_mass_pr"
-    "operties\030\005 \001(\0132#.motionlab.mechanism.Mas"
-    "sPropertiesR\026computedMassProperties\022-\n\004p"
-    "ose\030\006 \001(\0132\031.motionlab.mechanism.PoseR\004po"
-    "se\022M\n\020source_asset_ref\030\007 \001(\0132#.motionlab"
-    ".mechanism.AssetReferenceR\016sourceAssetRe"
-    "f\022\035\n\npart_index\030\010 \003(\rR\tpartIndex\"\374\001\n\021Imp"
-    "ortAssetResult\022\030\n\007success\030\001 \001(\010R\007success"
-    "\022#\n\rerror_message\030\002 \001(\tR\014errorMessage\022<\n"
-    "\006bodies\030\003 \003(\0132$.motionlab.protocol.BodyI"
-    "mportResultR\006bodies\022 \n\013diagnostics\030\004 \003(\t"
-    "R\013diagnostics\022H\n\ngeometries\030\005 \003(\0132(.moti"
-    "onlab.protocol.GeometryImportResultR\ngeo"
-    "metries\"Q\n\021MechanismSnapshot\022<\n\tmechanis"
-    "m\030\001 \001(\0132\036.motionlab.mechanism.MechanismR"
-    "\tmechanism\"\250\001\n\022CreateDatumCommand\022D\n\016par"
-    "ent_body_id\030\001 \001(\0132\036.motionlab.mechanism."
-    "ElementIdR\014parentBodyId\0228\n\nlocal_pose\030\002 "
-    "\001(\0132\031.motionlab.mechanism.PoseR\tlocalPos"
-    "e\022\022\n\004name\030\003 \001(\tR\004name\"O\n\022DeleteDatumComm"
-    "and\0229\n\010datum_id\030\001 \001(\0132\036.motionlab.mechan"
-    "ism.ElementIdR\007datumId\"c\n\022RenameDatumCom"
-    "mand\0229\n\010datum_id\030\001 \001(\0132\036.motionlab.mecha"
-    "nism.ElementIdR\007datumId\022\022\n\004name\030\002 \001(\tR\004n"
-    "ame\"\220\001\n\032CreateDatumFromFaceCommand\022\?\n\013ge"
+    "otocol\032\031mechanism/mechanism.proto\"0\n\017Pro"
+    "tocolVersion\022\014\n\004name\030\001 \001(\t\022\017\n\007version\030\002 "
+    "\001(\r\"\361\020\n\007Command\022\023\n\013sequence_id\030\001 \001(\004\0222\n\t"
+    "handshake\030\n \001(\0132\035.motionlab.protocol.Han"
+    "dshakeH\000\022(\n\004ping\030\013 \001(\0132\030.motionlab.proto"
+    "col.PingH\000\022>\n\014import_asset\030\014 \001(\0132&.motio"
+    "nlab.protocol.ImportAssetCommandH\000\022>\n\014cr"
+    "eate_datum\030\r \001(\0132&.motionlab.protocol.Cr"
+    "eateDatumCommandH\000\022>\n\014delete_datum\030\016 \001(\013"
+    "2&.motionlab.protocol.DeleteDatumCommand"
+    "H\000\022>\n\014rename_datum\030\017 \001(\0132&.motionlab.pro"
+    "tocol.RenameDatumCommandH\000\022P\n\026create_dat"
+    "um_from_face\030\020 \001(\0132..motionlab.protocol."
+    "CreateDatumFromFaceCommandH\000\022<\n\013update_b"
+    "ody\030\021 \001(\0132%.motionlab.protocol.UpdateBod"
+    "yCommandH\000\022G\n\021update_datum_pose\030\022 \001(\0132*."
+    "motionlab.protocol.UpdateDatumPoseComman"
+    "dH\000\022>\n\014create_joint\030\024 \001(\0132&.motionlab.pr"
+    "otocol.CreateJointCommandH\000\022>\n\014update_jo"
+    "int\030\025 \001(\0132&.motionlab.protocol.UpdateJoi"
+    "ntCommandH\000\022>\n\014delete_joint\030\026 \001(\0132&.moti"
+    "onlab.protocol.DeleteJointCommandH\000\022<\n\013c"
+    "reate_load\030\027 \001(\0132%.motionlab.protocol.Cr"
+    "eateLoadCommandH\000\022<\n\013update_load\030\030 \001(\0132%"
+    ".motionlab.protocol.UpdateLoadCommandH\000\022"
+    "<\n\013delete_load\030\031 \001(\0132%.motionlab.protoco"
+    "l.DeleteLoadCommandH\000\022D\n\017create_actuator"
+    "\030\032 \001(\0132).motionlab.protocol.CreateActuat"
+    "orCommandH\000\022D\n\017update_actuator\030\033 \001(\0132).m"
+    "otionlab.protocol.UpdateActuatorCommandH"
+    "\000\022D\n\017delete_actuator\030\034 \001(\0132).motionlab.p"
+    "rotocol.DeleteActuatorCommandH\000\022<\n\013creat"
+    "e_body\0302 \001(\0132%.motionlab.protocol.Create"
+    "BodyCommandH\000\022<\n\013delete_body\0303 \001(\0132%.mot"
+    "ionlab.protocol.DeleteBodyCommandH\000\022D\n\017a"
+    "ttach_geometry\0304 \001(\0132).motionlab.protoco"
+    "l.AttachGeometryCommandH\000\022D\n\017detach_geom"
+    "etry\0305 \001(\0132).motionlab.protocol.DetachGe"
+    "ometryCommandH\000\022Q\n\026update_mass_propertie"
+    "s\0306 \001(\0132/.motionlab.protocol.UpdateMassP"
+    "ropertiesCommandH\000\022O\n\025create_primitive_b"
+    "ody\0307 \001(\0132..motionlab.protocol.CreatePri"
+    "mitiveBodyCommandH\000\022L\n\024place_asset_in_sc"
+    "ene\030< \001(\0132,.motionlab.protocol.PlaceAsse"
+    "tInSceneCommandH\000\022H\n\021compile_mechanism\030\036"
+    " \001(\0132+.motionlab.protocol.CompileMechani"
+    "smCommandH\000\022J\n\022simulation_control\030\037 \001(\0132"
+    ",.motionlab.protocol.SimulationControlCo"
+    "mmandH\000\0221\n\005scrub\030  \001(\0132 .motionlab.proto"
+    "col.ScrubCommandH\000\022>\n\014save_project\030( \001(\013"
+    "2&.motionlab.protocol.SaveProjectCommand"
+    "H\000\022>\n\014load_project\030) \001(\0132&.motionlab.pro"
+    "tocol.LoadProjectCommandH\000\022B\n\016relocate_a"
+    "sset\030* \001(\0132(.motionlab.protocol.Relocate"
+    "AssetCommandH\000\022<\n\013new_project\030+ \001(\0132%.mo"
+    "tionlab.protocol.NewProjectCommandH\000B\t\n\007"
+    "payload\"\341\023\n\005Event\022\023\n\013sequence_id\030\001 \001(\004\0229"
+    "\n\rhandshake_ack\030\n \001(\0132 .motionlab.protoc"
+    "ol.HandshakeAckH\000\022(\n\004pong\030\013 \001(\0132\030.motion"
+    "lab.protocol.PongH\000\0229\n\rengine_status\030\014 \001"
+    "(\0132 .motionlab.protocol.EngineStatusH\000\022D"
+    "\n\023import_asset_result\030\r \001(\0132%.motionlab."
+    "protocol.ImportAssetResultH\000\022C\n\022mechanis"
+    "m_snapshot\030\016 \001(\0132%.motionlab.protocol.Me"
+    "chanismSnapshotH\000\022D\n\023create_datum_result"
+    "\030\017 \001(\0132%.motionlab.protocol.CreateDatumR"
+    "esultH\000\022D\n\023delete_datum_result\030\020 \001(\0132%.m"
+    "otionlab.protocol.DeleteDatumResultH\000\022D\n"
+    "\023rename_datum_result\030\021 \001(\0132%.motionlab.p"
+    "rotocol.RenameDatumResultH\000\022V\n\035create_da"
+    "tum_from_face_result\030\022 \001(\0132-.motionlab.p"
+    "rotocol.CreateDatumFromFaceResultH\000\022B\n\022u"
+    "pdate_body_result\030\023 \001(\0132$.motionlab.prot"
+    "ocol.UpdateBodyResultH\000\022D\n\023create_joint_"
+    "result\030\024 \001(\0132%.motionlab.protocol.Create"
+    "JointResultH\000\022D\n\023update_joint_result\030\025 \001"
+    "(\0132%.motionlab.protocol.UpdateJointResul"
+    "tH\000\022D\n\023delete_joint_result\030\026 \001(\0132%.motio"
+    "nlab.protocol.DeleteJointResultH\000\022M\n\030upd"
+    "ate_datum_pose_result\030\027 \001(\0132).motionlab."
+    "protocol.UpdateDatumPoseResultH\000\022B\n\022crea"
+    "te_load_result\030\030 \001(\0132$.motionlab.protoco"
+    "l.CreateLoadResultH\000\022B\n\022update_load_resu"
+    "lt\030\031 \001(\0132$.motionlab.protocol.UpdateLoad"
+    "ResultH\000\022B\n\022delete_load_result\030\032 \001(\0132$.m"
+    "otionlab.protocol.DeleteLoadResultH\000\022J\n\026"
+    "create_actuator_result\030\033 \001(\0132(.motionlab"
+    ".protocol.CreateActuatorResultH\000\022J\n\026upda"
+    "te_actuator_result\030\034 \001(\0132(.motionlab.pro"
+    "tocol.UpdateActuatorResultH\000\022J\n\026delete_a"
+    "ctuator_result\030\035 \001(\0132(.motionlab.protoco"
+    "l.DeleteActuatorResultH\000\022B\n\022create_body_"
+    "result\0302 \001(\0132$.motionlab.protocol.Create"
+    "BodyResultH\000\022B\n\022delete_body_result\0303 \001(\013"
+    "2$.motionlab.protocol.DeleteBodyResultH\000"
+    "\022J\n\026attach_geometry_result\0304 \001(\0132(.motio"
+    "nlab.protocol.AttachGeometryResultH\000\022J\n\026"
+    "detach_geometry_result\0305 \001(\0132(.motionlab"
+    ".protocol.DetachGeometryResultH\000\022W\n\035upda"
+    "te_mass_properties_result\0306 \001(\0132..motion"
+    "lab.protocol.UpdateMassPropertiesResultH"
+    "\000\022U\n\034create_primitive_body_result\0307 \001(\0132"
+    "-.motionlab.protocol.CreatePrimitiveBody"
+    "ResultH\000\022R\n\033place_asset_in_scene_result\030"
+    "< \001(\0132+.motionlab.protocol.PlaceAssetInS"
+    "ceneResultH\000\022H\n\022compilation_result\030\036 \001(\013"
+    "2*.motionlab.protocol.CompilationResultE"
+    "ventH\000\022D\n\020simulation_state\030\037 \001(\0132(.motio"
+    "nlab.protocol.SimulationStateEventH\000\022\?\n\020"
+    "simulation_frame\030  \001(\0132#.motionlab.proto"
+    "col.SimulationFrameH\000\022\?\n\020simulation_trac"
+    "e\030! \001(\0132#.motionlab.protocol.SimulationT"
+    "raceH\000\022D\n\023save_project_result\030( \001(\0132%.mo"
+    "tionlab.protocol.SaveProjectResultH\000\022D\n\023"
+    "load_project_result\030) \001(\0132%.motionlab.pr"
+    "otocol.LoadProjectResultH\000\022H\n\025relocate_a"
+    "sset_result\030* \001(\0132\'.motionlab.protocol.R"
+    "elocateAssetResultH\000\022B\n\022new_project_resu"
+    "lt\030+ \001(\0132$.motionlab.protocol.NewProject"
+    "ResultH\000B\t\n\007payload\"Y\n\tHandshake\0225\n\010prot"
+    "ocol\030\001 \001(\0132#.motionlab.protocol.Protocol"
+    "Version\022\025\n\rsession_token\030\002 \001(\t\"x\n\014Handsh"
+    "akeAck\022\022\n\ncompatible\030\001 \001(\010\022<\n\017engine_pro"
+    "tocol\030\002 \001(\0132#.motionlab.protocol.Protoco"
+    "lVersion\022\026\n\016engine_version\030\003 \001(\t\"\031\n\004Ping"
+    "\022\021\n\ttimestamp\030\001 \001(\004\"\031\n\004Pong\022\021\n\ttimestamp"
+    "\030\001 \001(\004\"\332\001\n\014EngineStatus\0225\n\005state\030\001 \001(\0162&"
+    ".motionlab.protocol.EngineStatus.State\022\017"
+    "\n\007message\030\002 \001(\t\"\201\001\n\005State\022\025\n\021STATE_UNSPE"
+    "CIFIED\020\000\022\026\n\022STATE_INITIALIZING\020\001\022\017\n\013STAT"
+    "E_READY\020\002\022\016\n\nSTATE_BUSY\020\003\022\017\n\013STATE_ERROR"
+    "\020\004\022\027\n\023STATE_SHUTTING_DOWN\020\005\"\221\001\n\rImportOp"
+    "tions\022\030\n\020density_override\030\001 \001(\001\022\034\n\024tesse"
+    "llation_quality\030\002 \001(\001\022\023\n\013unit_system\030\003 \001"
+    "(\t\0223\n\013import_mode\030\004 \001(\0162\036.motionlab.prot"
+    "ocol.ImportMode\"b\n\022ImportAssetCommand\022\021\n"
+    "\tfile_path\030\001 \001(\t\0229\n\016import_options\030\002 \001(\013"
+    "2!.motionlab.protocol.ImportOptions\"\243\002\n\020"
+    "BodyImportResult\022\017\n\007body_id\030\001 \001(\t\022\014\n\004nam"
+    "e\030\002 \001(\t\0226\n\014display_mesh\030\003 \001(\0132 .motionla"
+    "b.mechanism.DisplayMesh\022<\n\017mass_properti"
+    "es\030\004 \001(\0132#.motionlab.mechanism.MassPrope"
+    "rties\022\'\n\004pose\030\005 \001(\0132\031.motionlab.mechanis"
+    "m.Pose\022=\n\020source_asset_ref\030\006 \001(\0132#.motio"
+    "nlab.mechanism.AssetReference\022\022\n\npart_in"
+    "dex\030\007 \003(\r\"\305\002\n\024GeometryImportResult\022\023\n\013ge"
+    "ometry_id\030\001 \001(\t\022\017\n\007body_id\030\002 \001(\t\022\014\n\004name"
+    "\030\003 \001(\t\0226\n\014display_mesh\030\004 \001(\0132 .motionlab"
+    ".mechanism.DisplayMesh\022E\n\030computed_mass_"
+    "properties\030\005 \001(\0132#.motionlab.mechanism.M"
+    "assProperties\022\'\n\004pose\030\006 \001(\0132\031.motionlab."
+    "mechanism.Pose\022=\n\020source_asset_ref\030\007 \001(\013"
+    "2#.motionlab.mechanism.AssetReference\022\022\n"
+    "\npart_index\030\010 \003(\r\"\326\001\n\021ImportAssetResult\022"
+    "\017\n\007success\030\001 \001(\010\022\025\n\rerror_message\030\002 \001(\t\022"
+    "4\n\006bodies\030\003 \003(\0132$.motionlab.protocol.Bod"
+    "yImportResult\022\023\n\013diagnostics\030\004 \003(\t\022<\n\nge"
+    "ometries\030\005 \003(\0132(.motionlab.protocol.Geom"
+    "etryImportResult\022\020\n\010asset_id\030\006 \001(\t\"F\n\021Me"
+    "chanismSnapshot\0221\n\tmechanism\030\001 \001(\0132\036.mot"
+    "ionlab.mechanism.Mechanism\"\211\001\n\022CreateDat"
+    "umCommand\0226\n\016parent_body_id\030\001 \001(\0132\036.moti"
+    "onlab.mechanism.ElementId\022-\n\nlocal_pose\030"
+    "\002 \001(\0132\031.motionlab.mechanism.Pose\022\014\n\004name"
+    "\030\003 \001(\t\"F\n\022DeleteDatumCommand\0220\n\010datum_id"
+    "\030\001 \001(\0132\036.motionlab.mechanism.ElementId\"T"
+    "\n\022RenameDatumCommand\0220\n\010datum_id\030\001 \001(\0132\036"
+    ".motionlab.mechanism.ElementId\022\014\n\004name\030\002"
+    " \001(\t\"s\n\032CreateDatumFromFaceCommand\0223\n\013ge"
     "ometry_id\030\001 \001(\0132\036.motionlab.mechanism.El"
-    "ementIdR\ngeometryId\022\035\n\nface_index\030\002 \001(\rR"
-    "\tfaceIndex\022\022\n\004name\030\003 \001(\tR\004name\"\371\001\n\032Creat"
-    "eDatumFromFaceSuccess\0220\n\005datum\030\001 \001(\0132\032.m"
-    "otionlab.mechanism.DatumR\005datum\022\035\n\nface_"
-    "index\030\002 \001(\rR\tfaceIndex\022I\n\rsurface_class\030"
-    "\003 \001(\0162$.motionlab.protocol.FaceSurfaceCl"
-    "assR\014surfaceClass\022\?\n\013geometry_id\030\004 \001(\0132\036"
-    ".motionlab.mechanism.ElementIdR\ngeometry"
-    "Id\"x\n\021CreateDatumResult\0222\n\005datum\030\001 \001(\0132\032"
-    ".motionlab.mechanism.DatumH\000R\005datum\022%\n\re"
-    "rror_message\030\002 \001(\tH\000R\014errorMessageB\010\n\006re"
-    "sult\"\230\001\n\031CreateDatumFromFaceResult\022J\n\007su"
-    "ccess\030\001 \001(\0132..motionlab.protocol.CreateD"
-    "atumFromFaceSuccessH\000R\007success\022%\n\rerror_"
-    "message\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\""
-    "\205\001\n\021DeleteDatumResult\022\?\n\ndeleted_id\030\001 \001("
-    "\0132\036.motionlab.mechanism.ElementIdH\000R\tdel"
-    "etedId\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMe"
-    "ssageB\010\n\006result\"x\n\021RenameDatumResult\0222\n\005"
-    "datum\030\001 \001(\0132\032.motionlab.mechanism.DatumH"
-    "\000R\005datum\022%\n\rerror_message\030\002 \001(\tH\000R\014error"
-    "MessageB\010\n\006result\"\224\001\n\026UpdateDatumPoseCom"
-    "mand\0229\n\010datum_id\030\001 \001(\0132\036.motionlab.mecha"
-    "nism.ElementIdR\007datumId\022\?\n\016new_local_pos"
-    "e\030\002 \001(\0132\031.motionlab.mechanism.PoseR\014newL"
-    "ocalPose\"|\n\025UpdateDatumPoseResult\0222\n\005dat"
-    "um\030\001 \001(\0132\032.motionlab.mechanism.DatumH\000R\005"
-    "datum\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMes"
-    "sageB\010\n\006result\"\233\001\n\021UpdateBodyCommand\0227\n\007"
-    "body_id\030\001 \001(\0132\036.motionlab.mechanism.Elem"
-    "entIdR\006bodyId\022\036\n\010is_fixed\030\002 \001(\010H\000R\007isFix"
-    "ed\210\001\001\022\027\n\004name\030\003 \001(\tH\001R\004name\210\001\001B\013\n\t_is_fi"
-    "xedB\007\n\005_name\"t\n\020UpdateBodyResult\022/\n\004body"
-    "\030\001 \001(\0132\031.motionlab.mechanism.BodyH\000R\004bod"
-    "y\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMessage"
-    "B\010\n\006result\"\277\001\n\021CreateBodyCommand\022\022\n\004name"
-    "\030\001 \001(\tR\004name\022L\n\017mass_properties\030\002 \001(\0132#."
-    "motionlab.mechanism.MassPropertiesR\016mass"
-    "Properties\022-\n\004pose\030\003 \001(\0132\031.motionlab.mec"
-    "hanism.PoseR\004pose\022\031\n\010is_fixed\030\004 \001(\010R\007isF"
-    "ixed\"t\n\020CreateBodyResult\022/\n\004body\030\001 \001(\0132\031"
-    ".motionlab.mechanism.BodyH\000R\004body\022%\n\rerr"
-    "or_message\030\002 \001(\tH\000R\014errorMessageB\010\n\006resu"
-    "lt\"L\n\021DeleteBodyCommand\0227\n\007body_id\030\001 \001(\013"
-    "2\036.motionlab.mechanism.ElementIdR\006bodyId"
-    "\"\204\001\n\020DeleteBodyResult\022\?\n\ndeleted_id\030\001 \001("
-    "\0132\036.motionlab.mechanism.ElementIdH\000R\tdel"
-    "etedId\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMe"
-    "ssageB\010\n\006result\"\330\001\n\025AttachGeometryComman"
-    "d\022\?\n\013geometry_id\030\001 \001(\0132\036.motionlab.mecha"
-    "nism.ElementIdR\ngeometryId\022D\n\016target_bod"
-    "y_id\030\002 \001(\0132\036.motionlab.mechanism.Element"
-    "IdR\014targetBodyId\0228\n\nlocal_pose\030\003 \001(\0132\031.m"
-    "otionlab.mechanism.PoseR\tlocalPose\"\212\002\n\024A"
-    "ttachGeometryResult\022;\n\010geometry\030\001 \001(\0132\035."
-    "motionlab.mechanism.GeometryH\000R\010geometry"
-    "\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMessage\022"
-    "A\n\017old_parent_body\030\003 \001(\0132\031.motionlab.mec"
-    "hanism.BodyR\roldParentBody\022A\n\017new_parent"
-    "_body\030\004 \001(\0132\031.motionlab.mechanism.BodyR\r"
-    "newParentBodyB\010\n\006result\"X\n\025DetachGeometr"
-    "yCommand\022\?\n\013geometry_id\030\001 \001(\0132\036.motionla"
-    "b.mechanism.ElementIdR\ngeometryId\"\216\002\n\024De"
-    "tachGeometryResult\022A\n\013detached_id\030\001 \001(\0132"
-    "\036.motionlab.mechanism.ElementIdH\000R\ndetac"
-    "hedId\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMes"
-    "sage\0229\n\010geometry\030\003 \001(\0132\035.motionlab.mecha"
-    "nism.GeometryR\010geometry\022G\n\022former_parent"
-    "_body\030\004 \001(\0132\031.motionlab.mechanism.BodyR\020"
-    "formerParentBodyB\010\n\006result\"\311\001\n\033UpdateMas"
-    "sPropertiesCommand\0227\n\007body_id\030\001 \001(\0132\036.mo"
-    "tionlab.mechanism.ElementIdR\006bodyId\022#\n\rm"
-    "ass_override\030\002 \001(\010R\014massOverride\022L\n\017mass"
-    "_properties\030\003 \001(\0132#.motionlab.mechanism."
-    "MassPropertiesR\016massProperties\"~\n\032Update"
-    "MassPropertiesResult\022/\n\004body\030\001 \001(\0132\031.mot"
-    "ionlab.mechanism.BodyH\000R\004body\022%\n\rerror_m"
-    "essage\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\"F"
-    "\n\022CreateJointCommand\0220\n\005draft\030\001 \001(\0132\032.mo"
-    "tionlab.mechanism.JointR\005draft\"F\n\022Update"
-    "JointCommand\0220\n\005joint\030\001 \001(\0132\032.motionlab."
-    "mechanism.JointR\005joint\"O\n\022DeleteJointCom"
-    "mand\0229\n\010joint_id\030\001 \001(\0132\036.motionlab.mecha"
-    "nism.ElementIdR\007jointId\"x\n\021CreateJointRe"
-    "sult\0222\n\005joint\030\001 \001(\0132\032.motionlab.mechanis"
-    "m.JointH\000R\005joint\022%\n\rerror_message\030\002 \001(\tH"
-    "\000R\014errorMessageB\010\n\006result\"x\n\021UpdateJoint"
-    "Result\0222\n\005joint\030\001 \001(\0132\032.motionlab.mechan"
-    "ism.JointH\000R\005joint\022%\n\rerror_message\030\002 \001("
-    "\tH\000R\014errorMessageB\010\n\006result\"\205\001\n\021DeleteJo"
-    "intResult\022\?\n\ndeleted_id\030\001 \001(\0132\036.motionla"
-    "b.mechanism.ElementIdH\000R\tdeletedId\022%\n\rer"
-    "ror_message\030\002 \001(\tH\000R\014errorMessageB\010\n\006res"
-    "ult\"D\n\021CreateLoadCommand\022/\n\005draft\030\001 \001(\0132"
-    "\031.motionlab.mechanism.LoadR\005draft\"B\n\021Upd"
-    "ateLoadCommand\022-\n\004load\030\001 \001(\0132\031.motionlab"
-    ".mechanism.LoadR\004load\"L\n\021DeleteLoadComma"
-    "nd\0227\n\007load_id\030\001 \001(\0132\036.motionlab.mechanis"
-    "m.ElementIdR\006loadId\"t\n\020CreateLoadResult\022"
-    "/\n\004load\030\001 \001(\0132\031.motionlab.mechanism.Load"
-    "H\000R\004load\022%\n\rerror_message\030\002 \001(\tH\000R\014error"
-    "MessageB\010\n\006result\"t\n\020UpdateLoadResult\022/\n"
-    "\004load\030\001 \001(\0132\031.motionlab.mechanism.LoadH\000"
-    "R\004load\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMe"
-    "ssageB\010\n\006result\"\204\001\n\020DeleteLoadResult\022\?\n\n"
-    "deleted_id\030\001 \001(\0132\036.motionlab.mechanism.E"
-    "lementIdH\000R\tdeletedId\022%\n\rerror_message\030\002"
-    " \001(\tH\000R\014errorMessageB\010\n\006result\"L\n\025Create"
-    "ActuatorCommand\0223\n\005draft\030\001 \001(\0132\035.motionl"
-    "ab.mechanism.ActuatorR\005draft\"R\n\025UpdateAc"
-    "tuatorCommand\0229\n\010actuator\030\001 \001(\0132\035.motion"
-    "lab.mechanism.ActuatorR\010actuator\"X\n\025Dele"
-    "teActuatorCommand\022\?\n\013actuator_id\030\001 \001(\0132\036"
-    ".motionlab.mechanism.ElementIdR\nactuator"
-    "Id\"\204\001\n\024CreateActuatorResult\022;\n\010actuator\030"
-    "\001 \001(\0132\035.motionlab.mechanism.ActuatorH\000R\010"
-    "actuator\022%\n\rerror_message\030\002 \001(\tH\000R\014error"
-    "MessageB\010\n\006result\"\204\001\n\024UpdateActuatorResu"
-    "lt\022;\n\010actuator\030\001 \001(\0132\035.motionlab.mechani"
-    "sm.ActuatorH\000R\010actuator\022%\n\rerror_message"
-    "\030\002 \001(\tH\000R\014errorMessageB\010\n\006result\"\210\001\n\024Del"
-    "eteActuatorResult\022\?\n\ndeleted_id\030\001 \001(\0132\036."
-    "motionlab.mechanism.ElementIdH\000R\tdeleted"
-    "Id\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMessag"
-    "eB\010\n\006result\"\315\001\n\016SolverSettings\0222\n\004type\030\001"
-    " \001(\0162\036.motionlab.protocol.SolverTypeR\004ty"
-    "pe\022%\n\016max_iterations\030\002 \001(\005R\rmaxIteration"
-    "s\022\034\n\ttolerance\030\003 \001(\001R\ttolerance\022B\n\ninteg"
-    "rator\030\004 \001(\0162\".motionlab.protocol.Integra"
-    "torTypeR\nintegrator\"\260\001\n\017ContactSettings\022"
-    "\032\n\010friction\030\001 \001(\001R\010friction\022 \n\013restituti"
-    "on\030\002 \001(\001R\013restitution\022\036\n\ncompliance\030\003 \001("
-    "\001R\ncompliance\022\030\n\007damping\030\004 \001(\001R\007damping\022"
-    "%\n\016enable_contact\030\005 \001(\010R\renableContact\"\331"
-    "\001\n\025CompilationDiagnostic\022B\n\010severity\030\001 \001"
-    "(\0162&.motionlab.protocol.DiagnosticSeveri"
-    "tyR\010severity\022\030\n\007message\030\002 \001(\tR\007message\022."
-    "\n\023affected_entity_ids\030\003 \003(\tR\021affectedEnt"
-    "ityIds\022\036\n\nsuggestion\030\004 \001(\tR\nsuggestion\022\022"
-    "\n\004code\030\005 \001(\tR\004code\"\374\001\n\022SimulationSetting"
-    "s\022\032\n\010timestep\030\001 \001(\001R\010timestep\0223\n\007gravity"
-    "\030\002 \001(\0132\031.motionlab.mechanism.Vec3R\007gravi"
-    "ty\022:\n\006solver\030\003 \001(\0132\".motionlab.protocol."
-    "SolverSettingsR\006solver\022=\n\007contact\030\004 \001(\0132"
-    "#.motionlab.protocol.ContactSettingsR\007co"
-    "ntact\022\032\n\010duration\030\005 \001(\001R\010duration\"]\n\027Com"
-    "pileMechanismCommand\022B\n\010settings\030\001 \001(\0132&"
-    ".motionlab.protocol.SimulationSettingsR\010"
-    "settings\"X\n\030SimulationControlCommand\022<\n\006"
-    "action\030\001 \001(\0162$.motionlab.protocol.Simula"
-    "tionActionR\006action\"\250\002\n\026CompilationResult"
-    "Event\022\030\n\007success\030\001 \001(\010R\007success\022#\n\rerror"
-    "_message\030\002 \001(\tR\014errorMessage\022$\n\013diagnost"
-    "ics\030\003 \003(\tB\002\030\001R\013diagnostics\022G\n\010channels\030\004"
-    " \003(\0132+.motionlab.protocol.OutputChannelD"
-    "escriptorR\010channels\022`\n\026structured_diagno"
-    "stics\030\005 \003(\0132).motionlab.protocol.Compila"
-    "tionDiagnosticR\025structuredDiagnostics\"\210\001"
-    "\n\024SimulationStateEvent\0226\n\005state\030\001 \001(\0162 ."
-    "motionlab.protocol.SimStateEnumR\005state\022\031"
-    "\n\010sim_time\030\002 \001(\001R\007simTime\022\035\n\nstep_count\030"
-    "\003 \001(\004R\tstepCount\"\233\001\n\014BodyPoseData\022\027\n\007bod"
-    "y_id\030\001 \001(\tR\006bodyId\0225\n\010position\030\002 \001(\0132\031.m"
-    "otionlab.mechanism.Vec3R\010position\022;\n\013ori"
-    "entation\030\003 \001(\0132\031.motionlab.mechanism.Qua"
-    "tR\013orientation\"\351\001\n\016JointStateData\022\031\n\010joi"
-    "nt_id\030\001 \001(\tR\007jointId\022\032\n\010position\030\002 \001(\001R\010"
-    "position\022\032\n\010velocity\030\003 \001(\001R\010velocity\022@\n\016"
-    "reaction_force\030\004 \001(\0132\031.motionlab.mechani"
-    "sm.Vec3R\rreactionForce\022B\n\017reaction_torqu"
-    "e\030\005 \001(\0132\031.motionlab.mechanism.Vec3R\016reac"
-    "tionTorque\"\327\001\n\017SimulationFrame\022\031\n\010sim_ti"
-    "me\030\001 \001(\001R\007simTime\022\035\n\nstep_count\030\002 \001(\004R\ts"
-    "tepCount\022\?\n\nbody_poses\030\003 \003(\0132 .motionlab"
-    ".protocol.BodyPoseDataR\tbodyPoses\022I\n\014joi"
-    "nt_states\030\004 \003(\0132\".motionlab.protocol.Joi"
-    "ntStateDataB\002\030\001R\013jointStates\"\242\001\n\027OutputC"
-    "hannelDescriptor\022\035\n\nchannel_id\030\001 \001(\tR\tch"
-    "annelId\022\022\n\004name\030\002 \001(\tR\004name\022\022\n\004unit\030\003 \001("
-    "\tR\004unit\022@\n\tdata_type\030\004 \001(\0162#.motionlab.p"
-    "rotocol.ChannelDataTypeR\010dataType\"x\n\nTim"
-    "eSample\022\022\n\004time\030\001 \001(\001R\004time\022\030\n\006scalar\030\002 "
-    "\001(\001H\000R\006scalar\0223\n\006vector\030\003 \001(\0132\031.motionla"
-    "b.mechanism.Vec3H\000R\006vectorB\007\n\005value\"j\n\017S"
-    "imulationTrace\022\035\n\nchannel_id\030\001 \001(\tR\tchan"
-    "nelId\0228\n\007samples\030\002 \003(\0132\036.motionlab.proto"
-    "col.TimeSampleR\007samples\"\"\n\014ScrubCommand\022"
-    "\022\n\004time\030\001 \001(\001R\004time\"7\n\022SaveProjectComman"
-    "d\022!\n\014project_name\030\001 \001(\tR\013projectName\"i\n\021"
-    "SaveProjectResult\022#\n\014project_data\030\001 \001(\014H"
-    "\000R\013projectData\022%\n\rerror_message\030\002 \001(\tH\000R"
-    "\014errorMessageB\010\n\006result\"7\n\022LoadProjectCo"
-    "mmand\022!\n\014project_data\030\001 \001(\014R\013projectData"
-    "\"\210\001\n\021LoadProjectResult\022B\n\007success\030\001 \001(\0132"
-    "&.motionlab.protocol.LoadProjectSuccessH"
-    "\000R\007success\022%\n\rerror_message\030\002 \001(\tH\000R\014err"
-    "orMessageB\010\n\006result\"\351\002\n\022LoadProjectSucce"
-    "ss\022<\n\tmechanism\030\001 \001(\0132\036.motionlab.mechan"
-    "ism.MechanismR\tmechanism\022<\n\006bodies\030\002 \003(\013"
-    "2$.motionlab.protocol.BodyImportResultR\006"
-    "bodies\022@\n\010metadata\030\003 \001(\0132$.motionlab.mec"
-    "hanism.ProjectMetadataR\010metadata\022K\n\016miss"
-    "ing_assets\030\004 \003(\0132$.motionlab.protocol.Mi"
-    "ssingAssetInfoR\rmissingAssets\022H\n\ngeometr"
-    "ies\030\005 \003(\0132(.motionlab.protocol.GeometryI"
-    "mportResultR\ngeometries\"\254\001\n\020MissingAsset"
-    "Info\022\027\n\007body_id\030\001 \001(\tR\006bodyId\022\033\n\tbody_na"
-    "me\030\002 \001(\tR\010bodyName\022J\n\016expected_asset\030\003 \001"
-    "(\0132#.motionlab.mechanism.AssetReferenceR"
-    "\rexpectedAsset\022\026\n\006reason\030\004 \001(\tR\006reason\"\235"
-    "\001\n\024RelocateAssetCommand\022\027\n\007body_id\030\001 \001(\t"
-    "R\006bodyId\022\"\n\rnew_file_path\030\002 \001(\tR\013newFile"
-    "Path\022H\n\016import_options\030\003 \001(\0132!.motionlab"
-    ".protocol.ImportOptionsR\rimportOptions\"\202"
-    "\001\n\023RelocateAssetResult\022:\n\004body\030\001 \001(\0132$.m"
-    "otionlab.protocol.BodyImportResultH\000R\004bo"
-    "dy\022%\n\rerror_message\030\002 \001(\tH\000R\014errorMessag"
-    "eB\010\n\006result\"6\n\021NewProjectCommand\022!\n\014proj"
-    "ect_name\030\001 \001(\tR\013projectName\"Q\n\020NewProjec"
-    "tResult\022\030\n\007success\030\001 \001(\010R\007success\022#\n\rerr"
-    "or_message\030\002 \001(\tR\014errorMessage*\372\001\n\020FaceS"
-    "urfaceClass\022\"\n\036FACE_SURFACE_CLASS_UNSPEC"
-    "IFIED\020\000\022\035\n\031FACE_SURFACE_CLASS_PLANAR\020\001\022\""
-    "\n\036FACE_SURFACE_CLASS_CYLINDRICAL\020\002\022\036\n\032FA"
-    "CE_SURFACE_CLASS_CONICAL\020\003\022 \n\034FACE_SURFA"
-    "CE_CLASS_SPHERICAL\020\004\022\034\n\030FACE_SURFACE_CLA"
-    "SS_OTHER\020\005\022\037\n\033FACE_SURFACE_CLASS_TOROIDA"
-    "L\020\006*^\n\nSolverType\022\017\n\013SOLVER_PSOR\020\000\022\033\n\027SO"
-    "LVER_BARZILAI_BORWEIN\020\001\022\017\n\013SOLVER_APGD\020\002"
-    "\022\021\n\rSOLVER_MINRES\020\003*f\n\016IntegratorType\022(\n"
-    "$INTEGRATOR_EULER_IMPLICIT_LINEARIZED\020\000\022"
-    "\022\n\016INTEGRATOR_HHT\020\001\022\026\n\022INTEGRATOR_NEWMAR"
-    "K\020\002*W\n\022DiagnosticSeverity\022\023\n\017DIAGNOSTIC_"
-    "INFO\020\000\022\026\n\022DIAGNOSTIC_WARNING\020\001\022\024\n\020DIAGNO"
-    "STIC_ERROR\020\002*\247\001\n\020SimulationAction\022!\n\035SIM"
-    "ULATION_ACTION_UNSPECIFIED\020\000\022\032\n\026SIMULATI"
-    "ON_ACTION_PLAY\020\001\022\033\n\027SIMULATION_ACTION_PA"
-    "USE\020\002\022\032\n\026SIMULATION_ACTION_STEP\020\003\022\033\n\027SIM"
-    "ULATION_ACTION_RESET\020\004*}\n\014SimStateEnum\022\022"
-    "\n\016SIM_STATE_IDLE\020\000\022\027\n\023SIM_STATE_COMPILIN"
-    "G\020\001\022\025\n\021SIM_STATE_RUNNING\020\002\022\024\n\020SIM_STATE_"
-    "PAUSED\020\003\022\023\n\017SIM_STATE_ERROR\020\004*n\n\017Channel"
-    "DataType\022!\n\035CHANNEL_DATA_TYPE_UNSPECIFIE"
-    "D\020\000\022\034\n\030CHANNEL_DATA_TYPE_SCALAR\020\001\022\032\n\026CHA"
-    "NNEL_DATA_TYPE_VEC3\020\002b\006proto3"
+    "ementId\022\022\n\nface_index\030\002 \001(\r\022\014\n\004name\030\003 \001("
+    "\t\"\315\001\n\032CreateDatumFromFaceSuccess\022)\n\005datu"
+    "m\030\001 \001(\0132\032.motionlab.mechanism.Datum\022\022\n\nf"
+    "ace_index\030\002 \001(\r\022;\n\rsurface_class\030\003 \001(\0162$"
+    ".motionlab.protocol.FaceSurfaceClass\0223\n\013"
+    "geometry_id\030\004 \001(\0132\036.motionlab.mechanism."
+    "ElementId\"c\n\021CreateDatumResult\022+\n\005datum\030"
+    "\001 \001(\0132\032.motionlab.mechanism.DatumH\000\022\027\n\re"
+    "rror_message\030\002 \001(\tH\000B\010\n\006result\"\201\001\n\031Creat"
+    "eDatumFromFaceResult\022A\n\007success\030\001 \001(\0132.."
+    "motionlab.protocol.CreateDatumFromFaceSu"
+    "ccessH\000\022\027\n\rerror_message\030\002 \001(\tH\000B\010\n\006resu"
+    "lt\"l\n\021DeleteDatumResult\0224\n\ndeleted_id\030\001 "
+    "\001(\0132\036.motionlab.mechanism.ElementIdH\000\022\027\n"
+    "\rerror_message\030\002 \001(\tH\000B\010\n\006result\"c\n\021Rena"
+    "meDatumResult\022+\n\005datum\030\001 \001(\0132\032.motionlab"
+    ".mechanism.DatumH\000\022\027\n\rerror_message\030\002 \001("
+    "\tH\000B\010\n\006result\"}\n\026UpdateDatumPoseCommand\022"
+    "0\n\010datum_id\030\001 \001(\0132\036.motionlab.mechanism."
+    "ElementId\0221\n\016new_local_pose\030\002 \001(\0132\031.moti"
+    "onlab.mechanism.Pose\"g\n\025UpdateDatumPoseR"
+    "esult\022+\n\005datum\030\001 \001(\0132\032.motionlab.mechani"
+    "sm.DatumH\000\022\027\n\rerror_message\030\002 \001(\tH\000B\010\n\006r"
+    "esult\"\212\002\n\021UpdateBodyCommand\022/\n\007body_id\030\001"
+    " \001(\0132\036.motionlab.mechanism.ElementId\022\031\n\010"
+    "is_fixed\030\002 \001(\010B\002\030\001H\000\210\001\001\022\021\n\004name\030\003 \001(\tH\001\210"
+    "\001\001\022,\n\004pose\030\004 \001(\0132\031.motionlab.mechanism.P"
+    "oseH\002\210\001\001\0229\n\013motion_type\030\005 \001(\0162\037.motionla"
+    "b.mechanism.MotionTypeH\003\210\001\001B\013\n\t_is_fixed"
+    "B\007\n\005_nameB\007\n\005_poseB\016\n\014_motion_type\"`\n\020Up"
+    "dateBodyResult\022)\n\004body\030\001 \001(\0132\031.motionlab"
+    ".mechanism.BodyH\000\022\027\n\rerror_message\030\002 \001(\t"
+    "H\000B\010\n\006result\"\324\001\n\021CreateBodyCommand\022\014\n\004na"
+    "me\030\001 \001(\t\022<\n\017mass_properties\030\002 \001(\0132#.moti"
+    "onlab.mechanism.MassProperties\022\'\n\004pose\030\003"
+    " \001(\0132\031.motionlab.mechanism.Pose\022\024\n\010is_fi"
+    "xed\030\004 \001(\010B\002\030\001\0224\n\013motion_type\030\005 \001(\0162\037.mot"
+    "ionlab.mechanism.MotionType\"`\n\020CreateBod"
+    "yResult\022)\n\004body\030\001 \001(\0132\031.motionlab.mechan"
+    "ism.BodyH\000\022\027\n\rerror_message\030\002 \001(\tH\000B\010\n\006r"
+    "esult\"D\n\021DeleteBodyCommand\022/\n\007body_id\030\001 "
+    "\001(\0132\036.motionlab.mechanism.ElementId\"k\n\020D"
+    "eleteBodyResult\0224\n\ndeleted_id\030\001 \001(\0132\036.mo"
+    "tionlab.mechanism.ElementIdH\000\022\027\n\rerror_m"
+    "essage\030\002 \001(\tH\000B\010\n\006result\"\263\001\n\025AttachGeome"
+    "tryCommand\0223\n\013geometry_id\030\001 \001(\0132\036.motion"
+    "lab.mechanism.ElementId\0226\n\016target_body_i"
+    "d\030\002 \001(\0132\036.motionlab.mechanism.ElementId\022"
+    "-\n\nlocal_pose\030\003 \001(\0132\031.motionlab.mechanis"
+    "m.Pose\"\324\001\n\024AttachGeometryResult\0221\n\010geome"
+    "try\030\001 \001(\0132\035.motionlab.mechanism.Geometry"
+    "H\000\022\027\n\rerror_message\030\002 \001(\tH\000\0222\n\017old_paren"
+    "t_body\030\003 \001(\0132\031.motionlab.mechanism.Body\022"
+    "2\n\017new_parent_body\030\004 \001(\0132\031.motionlab.mec"
+    "hanism.BodyB\010\n\006result\"L\n\025DetachGeometryC"
+    "ommand\0223\n\013geometry_id\030\001 \001(\0132\036.motionlab."
+    "mechanism.ElementId\"\330\001\n\024DetachGeometryRe"
+    "sult\0225\n\013detached_id\030\001 \001(\0132\036.motionlab.me"
+    "chanism.ElementIdH\000\022\027\n\rerror_message\030\002 \001"
+    "(\tH\000\022/\n\010geometry\030\003 \001(\0132\035.motionlab.mecha"
+    "nism.Geometry\0225\n\022former_parent_body\030\004 \001("
+    "\0132\031.motionlab.mechanism.BodyB\010\n\006result\"\243"
+    "\001\n\033UpdateMassPropertiesCommand\022/\n\007body_i"
+    "d\030\001 \001(\0132\036.motionlab.mechanism.ElementId\022"
+    "\025\n\rmass_override\030\002 \001(\010\022<\n\017mass_propertie"
+    "s\030\003 \001(\0132#.motionlab.mechanism.MassProper"
+    "ties\"j\n\032UpdateMassPropertiesResult\022)\n\004bo"
+    "dy\030\001 \001(\0132\031.motionlab.mechanism.BodyH\000\022\027\n"
+    "\rerror_message\030\002 \001(\tH\000B\010\n\006result\"\322\001\n\032Cre"
+    "atePrimitiveBodyCommand\0222\n\005shape\030\001 \001(\0162#"
+    ".motionlab.mechanism.PrimitiveShape\022\014\n\004n"
+    "ame\030\002 \001(\t\022+\n\010position\030\003 \001(\0132\031.motionlab."
+    "mechanism.Vec3\0224\n\006params\030\004 \001(\0132$.motionl"
+    "ab.mechanism.PrimitiveParams\022\017\n\007density\030"
+    "\005 \001(\001\"\245\001\n\031CreatePrimitiveBodyResult\022<\n\010g"
+    "eometry\030\001 \001(\0132(.motionlab.protocol.Geome"
+    "tryImportResultH\000\022\027\n\rerror_message\030\002 \001(\t"
+    "H\000\022\'\n\004body\030\003 \001(\0132\031.motionlab.mechanism.B"
+    "odyB\010\n\006result\"\?\n\022CreateJointCommand\022)\n\005d"
+    "raft\030\001 \001(\0132\032.motionlab.mechanism.Joint\"\?"
+    "\n\022UpdateJointCommand\022)\n\005joint\030\001 \001(\0132\032.mo"
+    "tionlab.mechanism.Joint\"F\n\022DeleteJointCo"
+    "mmand\0220\n\010joint_id\030\001 \001(\0132\036.motionlab.mech"
+    "anism.ElementId\"c\n\021CreateJointResult\022+\n\005"
+    "joint\030\001 \001(\0132\032.motionlab.mechanism.JointH"
+    "\000\022\027\n\rerror_message\030\002 \001(\tH\000B\010\n\006result\"c\n\021"
+    "UpdateJointResult\022+\n\005joint\030\001 \001(\0132\032.motio"
+    "nlab.mechanism.JointH\000\022\027\n\rerror_message\030"
+    "\002 \001(\tH\000B\010\n\006result\"l\n\021DeleteJointResult\0224"
+    "\n\ndeleted_id\030\001 \001(\0132\036.motionlab.mechanism"
+    ".ElementIdH\000\022\027\n\rerror_message\030\002 \001(\tH\000B\010\n"
+    "\006result\"=\n\021CreateLoadCommand\022(\n\005draft\030\001 "
+    "\001(\0132\031.motionlab.mechanism.Load\"<\n\021Update"
+    "LoadCommand\022\'\n\004load\030\001 \001(\0132\031.motionlab.me"
+    "chanism.Load\"D\n\021DeleteLoadCommand\022/\n\007loa"
+    "d_id\030\001 \001(\0132\036.motionlab.mechanism.Element"
+    "Id\"`\n\020CreateLoadResult\022)\n\004load\030\001 \001(\0132\031.m"
+    "otionlab.mechanism.LoadH\000\022\027\n\rerror_messa"
+    "ge\030\002 \001(\tH\000B\010\n\006result\"`\n\020UpdateLoadResult"
+    "\022)\n\004load\030\001 \001(\0132\031.motionlab.mechanism.Loa"
+    "dH\000\022\027\n\rerror_message\030\002 \001(\tH\000B\010\n\006result\"k"
+    "\n\020DeleteLoadResult\0224\n\ndeleted_id\030\001 \001(\0132\036"
+    ".motionlab.mechanism.ElementIdH\000\022\027\n\rerro"
+    "r_message\030\002 \001(\tH\000B\010\n\006result\"E\n\025CreateAct"
+    "uatorCommand\022,\n\005draft\030\001 \001(\0132\035.motionlab."
+    "mechanism.Actuator\"H\n\025UpdateActuatorComm"
+    "and\022/\n\010actuator\030\001 \001(\0132\035.motionlab.mechan"
+    "ism.Actuator\"L\n\025DeleteActuatorCommand\0223\n"
+    "\013actuator_id\030\001 \001(\0132\036.motionlab.mechanism"
+    ".ElementId\"l\n\024CreateActuatorResult\0221\n\010ac"
+    "tuator\030\001 \001(\0132\035.motionlab.mechanism.Actua"
+    "torH\000\022\027\n\rerror_message\030\002 \001(\tH\000B\010\n\006result"
+    "\"l\n\024UpdateActuatorResult\0221\n\010actuator\030\001 \001"
+    "(\0132\035.motionlab.mechanism.ActuatorH\000\022\027\n\re"
+    "rror_message\030\002 \001(\tH\000B\010\n\006result\"o\n\024Delete"
+    "ActuatorResult\0224\n\ndeleted_id\030\001 \001(\0132\036.mot"
+    "ionlab.mechanism.ElementIdH\000\022\027\n\rerror_me"
+    "ssage\030\002 \001(\tH\000B\010\n\006result\"\241\001\n\016SolverSettin"
+    "gs\022,\n\004type\030\001 \001(\0162\036.motionlab.protocol.So"
+    "lverType\022\026\n\016max_iterations\030\002 \001(\005\022\021\n\ttole"
+    "rance\030\003 \001(\001\0226\n\nintegrator\030\004 \001(\0162\".motion"
+    "lab.protocol.IntegratorType\"u\n\017ContactSe"
+    "ttings\022\020\n\010friction\030\001 \001(\001\022\023\n\013restitution\030"
+    "\002 \001(\001\022\022\n\ncompliance\030\003 \001(\001\022\017\n\007damping\030\004 \001"
+    "(\001\022\026\n\016enable_contact\030\005 \001(\010\"\241\001\n\025Compilati"
+    "onDiagnostic\0228\n\010severity\030\001 \001(\0162&.motionl"
+    "ab.protocol.DiagnosticSeverity\022\017\n\007messag"
+    "e\030\002 \001(\t\022\033\n\023affected_entity_ids\030\003 \003(\t\022\022\n\n"
+    "suggestion\030\004 \001(\t\022\014\n\004code\030\005 \001(\t\"\316\001\n\022Simul"
+    "ationSettings\022\020\n\010timestep\030\001 \001(\001\022*\n\007gravi"
+    "ty\030\002 \001(\0132\031.motionlab.mechanism.Vec3\0222\n\006s"
+    "olver\030\003 \001(\0132\".motionlab.protocol.SolverS"
+    "ettings\0224\n\007contact\030\004 \001(\0132#.motionlab.pro"
+    "tocol.ContactSettings\022\020\n\010duration\030\005 \001(\001\""
+    "S\n\027CompileMechanismCommand\0228\n\010settings\030\001"
+    " \001(\0132&.motionlab.protocol.SimulationSett"
+    "ings\"P\n\030SimulationControlCommand\0224\n\006acti"
+    "on\030\001 \001(\0162$.motionlab.protocol.Simulation"
+    "Action\"\343\001\n\026CompilationResultEvent\022\017\n\007suc"
+    "cess\030\001 \001(\010\022\025\n\rerror_message\030\002 \001(\t\022\027\n\013dia"
+    "gnostics\030\003 \003(\tB\002\030\001\022=\n\010channels\030\004 \003(\0132+.m"
+    "otionlab.protocol.OutputChannelDescripto"
+    "r\022I\n\026structured_diagnostics\030\005 \003(\0132).moti"
+    "onlab.protocol.CompilationDiagnostic\"m\n\024"
+    "SimulationStateEvent\022/\n\005state\030\001 \001(\0162 .mo"
+    "tionlab.protocol.SimStateEnum\022\020\n\010sim_tim"
+    "e\030\002 \001(\001\022\022\n\nstep_count\030\003 \001(\004\"|\n\014BodyPoseD"
+    "ata\022\017\n\007body_id\030\001 \001(\t\022+\n\010position\030\002 \001(\0132\031"
+    ".motionlab.mechanism.Vec3\022.\n\013orientation"
+    "\030\003 \001(\0132\031.motionlab.mechanism.Quat\"\255\001\n\016Jo"
+    "intStateData\022\020\n\010joint_id\030\001 \001(\t\022\020\n\010positi"
+    "on\030\002 \001(\001\022\020\n\010velocity\030\003 \001(\001\0221\n\016reaction_f"
+    "orce\030\004 \001(\0132\031.motionlab.mechanism.Vec3\0222\n"
+    "\017reaction_torque\030\005 \001(\0132\031.motionlab.mecha"
+    "nism.Vec3\"\253\001\n\017SimulationFrame\022\020\n\010sim_tim"
+    "e\030\001 \001(\001\022\022\n\nstep_count\030\002 \001(\004\0224\n\nbody_pose"
+    "s\030\003 \003(\0132 .motionlab.protocol.BodyPoseDat"
+    "a\022<\n\014joint_states\030\004 \003(\0132\".motionlab.prot"
+    "ocol.JointStateDataB\002\030\001\"\201\001\n\027OutputChanne"
+    "lDescriptor\022\022\n\nchannel_id\030\001 \001(\t\022\014\n\004name\030"
+    "\002 \001(\t\022\014\n\004unit\030\003 \001(\t\0226\n\tdata_type\030\004 \001(\0162#"
+    ".motionlab.protocol.ChannelDataType\"b\n\nT"
+    "imeSample\022\014\n\004time\030\001 \001(\001\022\020\n\006scalar\030\002 \001(\001H"
+    "\000\022+\n\006vector\030\003 \001(\0132\031.motionlab.mechanism."
+    "Vec3H\000B\007\n\005value\"V\n\017SimulationTrace\022\022\n\nch"
+    "annel_id\030\001 \001(\t\022/\n\007samples\030\002 \003(\0132\036.motion"
+    "lab.protocol.TimeSample\"\034\n\014ScrubCommand\022"
+    "\014\n\004time\030\001 \001(\001\"*\n\022SaveProjectCommand\022\024\n\014p"
+    "roject_name\030\001 \001(\t\"N\n\021SaveProjectResult\022\026"
+    "\n\014project_data\030\001 \001(\014H\000\022\027\n\rerror_message\030"
+    "\002 \001(\tH\000B\010\n\006result\"*\n\022LoadProjectCommand\022"
+    "\024\n\014project_data\030\001 \001(\014\"q\n\021LoadProjectResu"
+    "lt\0229\n\007success\030\001 \001(\0132&.motionlab.protocol"
+    ".LoadProjectSuccessH\000\022\027\n\rerror_message\030\002"
+    " \001(\tH\000B\010\n\006result\"\261\002\n\022LoadProjectSuccess\022"
+    "1\n\tmechanism\030\001 \001(\0132\036.motionlab.mechanism"
+    ".Mechanism\0224\n\006bodies\030\002 \003(\0132$.motionlab.p"
+    "rotocol.BodyImportResult\0226\n\010metadata\030\003 \001"
+    "(\0132$.motionlab.mechanism.ProjectMetadata"
+    "\022<\n\016missing_assets\030\004 \003(\0132$.motionlab.pro"
+    "tocol.MissingAssetInfo\022<\n\ngeometries\030\005 \003"
+    "(\0132(.motionlab.protocol.GeometryImportRe"
+    "sult\"\203\001\n\020MissingAssetInfo\022\017\n\007body_id\030\001 \001"
+    "(\t\022\021\n\tbody_name\030\002 \001(\t\022;\n\016expected_asset\030"
+    "\003 \001(\0132#.motionlab.mechanism.AssetReferen"
+    "ce\022\016\n\006reason\030\004 \001(\t\"y\n\024RelocateAssetComma"
+    "nd\022\017\n\007body_id\030\001 \001(\t\022\025\n\rnew_file_path\030\002 \001"
+    "(\t\0229\n\016import_options\030\003 \001(\0132!.motionlab.p"
+    "rotocol.ImportOptions\"n\n\023RelocateAssetRe"
+    "sult\0224\n\004body\030\001 \001(\0132$.motionlab.protocol."
+    "BodyImportResultH\000\022\027\n\rerror_message\030\002 \001("
+    "\tH\000B\010\n\006result\")\n\021NewProjectCommand\022\024\n\014pr"
+    "oject_name\030\001 \001(\t\":\n\020NewProjectResult\022\017\n\007"
+    "success\030\001 \001(\010\022\025\n\rerror_message\030\002 \001(\t\"Y\n\030"
+    "PlaceAssetInSceneCommand\022\020\n\010asset_id\030\001 \001"
+    "(\t\022+\n\010position\030\002 \001(\0132\031.motionlab.mechani"
+    "sm.Vec3\"\307\001\n\027PlaceAssetInSceneResult\022\017\n\007s"
+    "uccess\030\001 \001(\010\022\025\n\rerror_message\030\002 \001(\t\022<\n\ng"
+    "eometries\030\003 \003(\0132(.motionlab.protocol.Geo"
+    "metryImportResult\0224\n\006bodies\030\004 \003(\0132$.moti"
+    "onlab.protocol.BodyImportResult\022\020\n\010asset"
+    "_id\030\005 \001(\t*D\n\nImportMode\022\031\n\025IMPORT_MODE_A"
+    "UTO_BODY\020\000\022\033\n\027IMPORT_MODE_VISUAL_ONLY\020\001*"
+    "\372\001\n\020FaceSurfaceClass\022\"\n\036FACE_SURFACE_CLA"
+    "SS_UNSPECIFIED\020\000\022\035\n\031FACE_SURFACE_CLASS_P"
+    "LANAR\020\001\022\"\n\036FACE_SURFACE_CLASS_CYLINDRICA"
+    "L\020\002\022\036\n\032FACE_SURFACE_CLASS_CONICAL\020\003\022 \n\034F"
+    "ACE_SURFACE_CLASS_SPHERICAL\020\004\022\034\n\030FACE_SU"
+    "RFACE_CLASS_OTHER\020\005\022\037\n\033FACE_SURFACE_CLAS"
+    "S_TOROIDAL\020\006*^\n\nSolverType\022\017\n\013SOLVER_PSO"
+    "R\020\000\022\033\n\027SOLVER_BARZILAI_BORWEIN\020\001\022\017\n\013SOLV"
+    "ER_APGD\020\002\022\021\n\rSOLVER_MINRES\020\003*f\n\016Integrat"
+    "orType\022(\n$INTEGRATOR_EULER_IMPLICIT_LINE"
+    "ARIZED\020\000\022\022\n\016INTEGRATOR_HHT\020\001\022\026\n\022INTEGRAT"
+    "OR_NEWMARK\020\002*W\n\022DiagnosticSeverity\022\023\n\017DI"
+    "AGNOSTIC_INFO\020\000\022\026\n\022DIAGNOSTIC_WARNING\020\001\022"
+    "\024\n\020DIAGNOSTIC_ERROR\020\002*\247\001\n\020SimulationActi"
+    "on\022!\n\035SIMULATION_ACTION_UNSPECIFIED\020\000\022\032\n"
+    "\026SIMULATION_ACTION_PLAY\020\001\022\033\n\027SIMULATION_"
+    "ACTION_PAUSE\020\002\022\032\n\026SIMULATION_ACTION_STEP"
+    "\020\003\022\033\n\027SIMULATION_ACTION_RESET\020\004*}\n\014SimSt"
+    "ateEnum\022\022\n\016SIM_STATE_IDLE\020\000\022\027\n\023SIM_STATE"
+    "_COMPILING\020\001\022\025\n\021SIM_STATE_RUNNING\020\002\022\024\n\020S"
+    "IM_STATE_PAUSED\020\003\022\023\n\017SIM_STATE_ERROR\020\004*n"
+    "\n\017ChannelDataType\022!\n\035CHANNEL_DATA_TYPE_U"
+    "NSPECIFIED\020\000\022\034\n\030CHANNEL_DATA_TYPE_SCALAR"
+    "\020\001\022\032\n\026CHANNEL_DATA_TYPE_VEC3\020\002b\006proto3"
 };
 static const ::_pbi::DescriptorTable* PROTOBUF_NONNULL const
     descriptor_table_protocol_2ftransport_2eproto_deps[1] = {
@@ -3578,13 +3727,13 @@ static ::absl::once_flag descriptor_table_protocol_2ftransport_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_protocol_2ftransport_2eproto = {
     false,
     false,
-    17789,
+    15918,
     descriptor_table_protodef_protocol_2ftransport_2eproto,
     "protocol/transport.proto",
     &descriptor_table_protocol_2ftransport_2eproto_once,
     descriptor_table_protocol_2ftransport_2eproto_deps,
     1,
-    80,
+    84,
     schemas,
     file_default_instances,
     TableStruct_protocol_2ftransport_2eproto::offsets,
@@ -3599,45 +3748,51 @@ const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL EngineStatus_State_de
 }
 PROTOBUF_CONSTINIT const uint32_t EngineStatus_State_internal_data_[] = {
     393216u, 0u, };
-const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL FaceSurfaceClass_descriptor() {
+const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL ImportMode_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_protocol_2ftransport_2eproto);
   return file_level_enum_descriptors_protocol_2ftransport_2eproto[1];
+}
+PROTOBUF_CONSTINIT const uint32_t ImportMode_internal_data_[] = {
+    131072u, 0u, };
+const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL FaceSurfaceClass_descriptor() {
+  ::google::protobuf::internal::AssignDescriptors(&descriptor_table_protocol_2ftransport_2eproto);
+  return file_level_enum_descriptors_protocol_2ftransport_2eproto[2];
 }
 PROTOBUF_CONSTINIT const uint32_t FaceSurfaceClass_internal_data_[] = {
     458752u, 0u, };
 const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL SolverType_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_protocol_2ftransport_2eproto);
-  return file_level_enum_descriptors_protocol_2ftransport_2eproto[2];
+  return file_level_enum_descriptors_protocol_2ftransport_2eproto[3];
 }
 PROTOBUF_CONSTINIT const uint32_t SolverType_internal_data_[] = {
     262144u, 0u, };
 const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL IntegratorType_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_protocol_2ftransport_2eproto);
-  return file_level_enum_descriptors_protocol_2ftransport_2eproto[3];
+  return file_level_enum_descriptors_protocol_2ftransport_2eproto[4];
 }
 PROTOBUF_CONSTINIT const uint32_t IntegratorType_internal_data_[] = {
     196608u, 0u, };
 const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL DiagnosticSeverity_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_protocol_2ftransport_2eproto);
-  return file_level_enum_descriptors_protocol_2ftransport_2eproto[4];
+  return file_level_enum_descriptors_protocol_2ftransport_2eproto[5];
 }
 PROTOBUF_CONSTINIT const uint32_t DiagnosticSeverity_internal_data_[] = {
     196608u, 0u, };
 const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL SimulationAction_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_protocol_2ftransport_2eproto);
-  return file_level_enum_descriptors_protocol_2ftransport_2eproto[5];
+  return file_level_enum_descriptors_protocol_2ftransport_2eproto[6];
 }
 PROTOBUF_CONSTINIT const uint32_t SimulationAction_internal_data_[] = {
     327680u, 0u, };
 const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL SimStateEnum_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_protocol_2ftransport_2eproto);
-  return file_level_enum_descriptors_protocol_2ftransport_2eproto[6];
+  return file_level_enum_descriptors_protocol_2ftransport_2eproto[7];
 }
 PROTOBUF_CONSTINIT const uint32_t SimStateEnum_internal_data_[] = {
     327680u, 0u, };
 const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL ChannelDataType_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_protocol_2ftransport_2eproto);
-  return file_level_enum_descriptors_protocol_2ftransport_2eproto[7];
+  return file_level_enum_descriptors_protocol_2ftransport_2eproto[8];
 }
 PROTOBUF_CONSTINIT const uint32_t ChannelDataType_internal_data_[] = {
     196608u, 0u, };
@@ -3772,20 +3927,20 @@ ProtocolVersion::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::ProtocolVersion>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // uint32 version = 2 [json_name = "version"];
+    // uint32 version = 2;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(ProtocolVersion, _impl_.version_), 1>(),
      {16, 1, 0,
       PROTOBUF_FIELD_OFFSET(ProtocolVersion, _impl_.version_)}},
-    // string name = 1 [json_name = "name"];
+    // string name = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(ProtocolVersion, _impl_.name_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string name = 1 [json_name = "name"];
+    // string name = 1;
     {PROTOBUF_FIELD_OFFSET(ProtocolVersion, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // uint32 version = 2 [json_name = "version"];
+    // uint32 version = 2;
     {PROTOBUF_FIELD_OFFSET(ProtocolVersion, _impl_.version_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
   }},
   // no aux_entries
@@ -3830,7 +3985,7 @@ PROTOBUF_NOINLINE void ProtocolVersion::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string name = 1 [json_name = "name"];
+  // string name = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
@@ -3840,7 +3995,7 @@ PROTOBUF_NOINLINE void ProtocolVersion::Clear() {
     }
   }
 
-  // uint32 version = 2 [json_name = "version"];
+  // uint32 version = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (this_._internal_version() != 0) {
       target = stream->EnsureSpace(target);
@@ -3875,14 +4030,14 @@ PROTOBUF_NOINLINE void ProtocolVersion::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // string name = 1 [json_name = "name"];
+    // string name = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
-    // uint32 version = 2 [json_name = "version"];
+    // uint32 version = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (this_._internal_version() != 0) {
         total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
@@ -4261,6 +4416,32 @@ void Command::set_allocated_update_mass_properties(::motionlab::protocol::Update
   }
   // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Command.update_mass_properties)
 }
+void Command::set_allocated_create_primitive_body(::motionlab::protocol::CreatePrimitiveBodyCommand* PROTOBUF_NULLABLE create_primitive_body) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (create_primitive_body) {
+    ::google::protobuf::Arena* submessage_arena = create_primitive_body->GetArena();
+    if (message_arena != submessage_arena) {
+      create_primitive_body = ::google::protobuf::internal::GetOwnedMessage(message_arena, create_primitive_body, submessage_arena);
+    }
+    set_has_create_primitive_body();
+    _impl_.payload_.create_primitive_body_ = create_primitive_body;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Command.create_primitive_body)
+}
+void Command::set_allocated_place_asset_in_scene(::motionlab::protocol::PlaceAssetInSceneCommand* PROTOBUF_NULLABLE place_asset_in_scene) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (place_asset_in_scene) {
+    ::google::protobuf::Arena* submessage_arena = place_asset_in_scene->GetArena();
+    if (message_arena != submessage_arena) {
+      place_asset_in_scene = ::google::protobuf::internal::GetOwnedMessage(message_arena, place_asset_in_scene, submessage_arena);
+    }
+    set_has_place_asset_in_scene();
+    _impl_.payload_.place_asset_in_scene_ = place_asset_in_scene;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Command.place_asset_in_scene)
+}
 void Command::set_allocated_compile_mechanism(::motionlab::protocol::CompileMechanismCommand* PROTOBUF_NULLABLE compile_mechanism) {
   ::google::protobuf::Arena* message_arena = GetArena();
   clear_payload();
@@ -4455,6 +4636,12 @@ Command::Command(
         break;
       case kUpdateMassProperties:
         _impl_.payload_.update_mass_properties_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.update_mass_properties_);
+        break;
+      case kCreatePrimitiveBody:
+        _impl_.payload_.create_primitive_body_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.create_primitive_body_);
+        break;
+      case kPlaceAssetInScene:
+        _impl_.payload_.place_asset_in_scene_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.place_asset_in_scene_);
         break;
       case kCompileMechanism:
         _impl_.payload_.compile_mechanism_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.compile_mechanism_);
@@ -4697,6 +4884,22 @@ void Command::clear_payload() {
       }
       break;
     }
+    case kCreatePrimitiveBody: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.create_primitive_body_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.create_primitive_body_);
+      }
+      break;
+    }
+    case kPlaceAssetInScene: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.place_asset_in_scene_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.place_asset_in_scene_);
+      }
+      break;
+    }
     case kCompileMechanism: {
       if (GetArena() == nullptr) {
         delete _impl_.payload_.compile_mechanism_;
@@ -4804,17 +5007,17 @@ Command::GetClassData() const {
   return Command_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 31, 30, 0, 7>
+const ::_pbi::TcParseTable<0, 33, 32, 0, 9>
 Command::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Command, _impl_._has_bits_),
     0, // no _extensions_
-    54, 0,  // max_field_number, fast_idx_mask
+    60, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
     268698110,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    31,  // num_field_entries
-    30,  // num_aux_entries
+    33,  // num_field_entries
+    32,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     Command_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -4823,77 +5026,82 @@ Command::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::Command>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // uint64 sequence_id = 1 [json_name = "sequenceId"];
+    // uint64 sequence_id = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(Command, _impl_.sequence_id_), 0>(),
      {8, 0, 0,
       PROTOBUF_FIELD_OFFSET(Command, _impl_.sequence_id_)}},
   }}, {{
-    40, 0, 1,
-    33776, 22,
+    40, 0, 2,
+    1008, 22,
+    65519, 32,
     65535, 65535
   }}, {{
-    // uint64 sequence_id = 1 [json_name = "sequenceId"];
+    // uint64 sequence_id = 1;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.sequence_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt64)},
-    // .motionlab.protocol.Handshake handshake = 10 [json_name = "handshake"];
+    // .motionlab.protocol.Handshake handshake = 10;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.handshake_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.Ping ping = 11 [json_name = "ping"];
+    // .motionlab.protocol.Ping ping = 11;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.ping_), _Internal::kOneofCaseOffset + 0, 1, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.ImportAssetCommand import_asset = 12 [json_name = "importAsset"];
+    // .motionlab.protocol.ImportAssetCommand import_asset = 12;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.import_asset_), _Internal::kOneofCaseOffset + 0, 2, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CreateDatumCommand create_datum = 13 [json_name = "createDatum"];
+    // .motionlab.protocol.CreateDatumCommand create_datum = 13;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.create_datum_), _Internal::kOneofCaseOffset + 0, 3, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.DeleteDatumCommand delete_datum = 14 [json_name = "deleteDatum"];
+    // .motionlab.protocol.DeleteDatumCommand delete_datum = 14;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.delete_datum_), _Internal::kOneofCaseOffset + 0, 4, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.RenameDatumCommand rename_datum = 15 [json_name = "renameDatum"];
+    // .motionlab.protocol.RenameDatumCommand rename_datum = 15;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.rename_datum_), _Internal::kOneofCaseOffset + 0, 5, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CreateDatumFromFaceCommand create_datum_from_face = 16 [json_name = "createDatumFromFace"];
+    // .motionlab.protocol.CreateDatumFromFaceCommand create_datum_from_face = 16;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.create_datum_from_face_), _Internal::kOneofCaseOffset + 0, 6, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.UpdateBodyCommand update_body = 17 [json_name = "updateBody"];
+    // .motionlab.protocol.UpdateBodyCommand update_body = 17;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.update_body_), _Internal::kOneofCaseOffset + 0, 7, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.UpdateDatumPoseCommand update_datum_pose = 18 [json_name = "updateDatumPose"];
+    // .motionlab.protocol.UpdateDatumPoseCommand update_datum_pose = 18;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.update_datum_pose_), _Internal::kOneofCaseOffset + 0, 8, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CreateJointCommand create_joint = 20 [json_name = "createJoint"];
+    // .motionlab.protocol.CreateJointCommand create_joint = 20;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.create_joint_), _Internal::kOneofCaseOffset + 0, 9, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.UpdateJointCommand update_joint = 21 [json_name = "updateJoint"];
+    // .motionlab.protocol.UpdateJointCommand update_joint = 21;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.update_joint_), _Internal::kOneofCaseOffset + 0, 10, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.DeleteJointCommand delete_joint = 22 [json_name = "deleteJoint"];
+    // .motionlab.protocol.DeleteJointCommand delete_joint = 22;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.delete_joint_), _Internal::kOneofCaseOffset + 0, 11, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CreateLoadCommand create_load = 23 [json_name = "createLoad"];
+    // .motionlab.protocol.CreateLoadCommand create_load = 23;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.create_load_), _Internal::kOneofCaseOffset + 0, 12, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.UpdateLoadCommand update_load = 24 [json_name = "updateLoad"];
+    // .motionlab.protocol.UpdateLoadCommand update_load = 24;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.update_load_), _Internal::kOneofCaseOffset + 0, 13, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.DeleteLoadCommand delete_load = 25 [json_name = "deleteLoad"];
+    // .motionlab.protocol.DeleteLoadCommand delete_load = 25;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.delete_load_), _Internal::kOneofCaseOffset + 0, 14, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CreateActuatorCommand create_actuator = 26 [json_name = "createActuator"];
+    // .motionlab.protocol.CreateActuatorCommand create_actuator = 26;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.create_actuator_), _Internal::kOneofCaseOffset + 0, 15, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.UpdateActuatorCommand update_actuator = 27 [json_name = "updateActuator"];
+    // .motionlab.protocol.UpdateActuatorCommand update_actuator = 27;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.update_actuator_), _Internal::kOneofCaseOffset + 0, 16, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.DeleteActuatorCommand delete_actuator = 28 [json_name = "deleteActuator"];
+    // .motionlab.protocol.DeleteActuatorCommand delete_actuator = 28;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.delete_actuator_), _Internal::kOneofCaseOffset + 0, 17, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CompileMechanismCommand compile_mechanism = 30 [json_name = "compileMechanism"];
+    // .motionlab.protocol.CompileMechanismCommand compile_mechanism = 30;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.compile_mechanism_), _Internal::kOneofCaseOffset + 0, 18, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.SimulationControlCommand simulation_control = 31 [json_name = "simulationControl"];
+    // .motionlab.protocol.SimulationControlCommand simulation_control = 31;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.simulation_control_), _Internal::kOneofCaseOffset + 0, 19, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.ScrubCommand scrub = 32 [json_name = "scrub"];
+    // .motionlab.protocol.ScrubCommand scrub = 32;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.scrub_), _Internal::kOneofCaseOffset + 0, 20, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.SaveProjectCommand save_project = 40 [json_name = "saveProject"];
+    // .motionlab.protocol.SaveProjectCommand save_project = 40;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.save_project_), _Internal::kOneofCaseOffset + 0, 21, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.LoadProjectCommand load_project = 41 [json_name = "loadProject"];
+    // .motionlab.protocol.LoadProjectCommand load_project = 41;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.load_project_), _Internal::kOneofCaseOffset + 0, 22, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.RelocateAssetCommand relocate_asset = 42 [json_name = "relocateAsset"];
+    // .motionlab.protocol.RelocateAssetCommand relocate_asset = 42;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.relocate_asset_), _Internal::kOneofCaseOffset + 0, 23, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.NewProjectCommand new_project = 43 [json_name = "newProject"];
+    // .motionlab.protocol.NewProjectCommand new_project = 43;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.new_project_), _Internal::kOneofCaseOffset + 0, 24, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CreateBodyCommand create_body = 50 [json_name = "createBody"];
+    // .motionlab.protocol.CreateBodyCommand create_body = 50;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.create_body_), _Internal::kOneofCaseOffset + 0, 25, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.DeleteBodyCommand delete_body = 51 [json_name = "deleteBody"];
+    // .motionlab.protocol.DeleteBodyCommand delete_body = 51;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.delete_body_), _Internal::kOneofCaseOffset + 0, 26, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.AttachGeometryCommand attach_geometry = 52 [json_name = "attachGeometry"];
+    // .motionlab.protocol.AttachGeometryCommand attach_geometry = 52;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.attach_geometry_), _Internal::kOneofCaseOffset + 0, 27, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.DetachGeometryCommand detach_geometry = 53 [json_name = "detachGeometry"];
+    // .motionlab.protocol.DetachGeometryCommand detach_geometry = 53;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.detach_geometry_), _Internal::kOneofCaseOffset + 0, 28, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.UpdateMassPropertiesCommand update_mass_properties = 54 [json_name = "updateMassProperties"];
+    // .motionlab.protocol.UpdateMassPropertiesCommand update_mass_properties = 54;
     {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.update_mass_properties_), _Internal::kOneofCaseOffset + 0, 29, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.CreatePrimitiveBodyCommand create_primitive_body = 55;
+    {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.create_primitive_body_), _Internal::kOneofCaseOffset + 0, 30, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.PlaceAssetInSceneCommand place_asset_in_scene = 60;
+    {PROTOBUF_FIELD_OFFSET(Command, _impl_.payload_.place_asset_in_scene_), _Internal::kOneofCaseOffset + 0, 31, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::motionlab::protocol::Handshake>()},
@@ -4926,6 +5134,8 @@ Command::_table_ = {
       {::_pbi::TcParser::GetTable<::motionlab::protocol::AttachGeometryCommand>()},
       {::_pbi::TcParser::GetTable<::motionlab::protocol::DetachGeometryCommand>()},
       {::_pbi::TcParser::GetTable<::motionlab::protocol::UpdateMassPropertiesCommand>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::CreatePrimitiveBodyCommand>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::PlaceAssetInSceneCommand>()},
   }},
   {{
   }},
@@ -4962,7 +5172,7 @@ PROTOBUF_NOINLINE void Command::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // uint64 sequence_id = 1 [json_name = "sequenceId"];
+  // uint64 sequence_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (this_._internal_sequence_id() != 0) {
       target = stream->EnsureSpace(target);
@@ -5152,6 +5362,18 @@ PROTOBUF_NOINLINE void Command::Clear() {
           stream);
       break;
     }
+    case kCreatePrimitiveBody: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          55, *this_._impl_.payload_.create_primitive_body_, this_._impl_.payload_.create_primitive_body_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kPlaceAssetInScene: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          60, *this_._impl_.payload_.place_asset_in_scene_, this_._impl_.payload_.place_asset_in_scene_->GetCachedSize(), target,
+          stream);
+      break;
+    }
     default:
       break;
   }
@@ -5179,7 +5401,7 @@ PROTOBUF_NOINLINE void Command::Clear() {
   (void)cached_has_bits;
 
    {
-    // uint64 sequence_id = 1 [json_name = "sequenceId"];
+    // uint64 sequence_id = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (this_._internal_sequence_id() != 0) {
@@ -5189,181 +5411,193 @@ PROTOBUF_NOINLINE void Command::Clear() {
     }
   }
   switch (this_.payload_case()) {
-    // .motionlab.protocol.Handshake handshake = 10 [json_name = "handshake"];
+    // .motionlab.protocol.Handshake handshake = 10;
     case kHandshake: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.handshake_);
       break;
     }
-    // .motionlab.protocol.Ping ping = 11 [json_name = "ping"];
+    // .motionlab.protocol.Ping ping = 11;
     case kPing: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.ping_);
       break;
     }
-    // .motionlab.protocol.ImportAssetCommand import_asset = 12 [json_name = "importAsset"];
+    // .motionlab.protocol.ImportAssetCommand import_asset = 12;
     case kImportAsset: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.import_asset_);
       break;
     }
-    // .motionlab.protocol.CreateDatumCommand create_datum = 13 [json_name = "createDatum"];
+    // .motionlab.protocol.CreateDatumCommand create_datum = 13;
     case kCreateDatum: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_datum_);
       break;
     }
-    // .motionlab.protocol.DeleteDatumCommand delete_datum = 14 [json_name = "deleteDatum"];
+    // .motionlab.protocol.DeleteDatumCommand delete_datum = 14;
     case kDeleteDatum: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_datum_);
       break;
     }
-    // .motionlab.protocol.RenameDatumCommand rename_datum = 15 [json_name = "renameDatum"];
+    // .motionlab.protocol.RenameDatumCommand rename_datum = 15;
     case kRenameDatum: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.rename_datum_);
       break;
     }
-    // .motionlab.protocol.CreateDatumFromFaceCommand create_datum_from_face = 16 [json_name = "createDatumFromFace"];
+    // .motionlab.protocol.CreateDatumFromFaceCommand create_datum_from_face = 16;
     case kCreateDatumFromFace: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_datum_from_face_);
       break;
     }
-    // .motionlab.protocol.UpdateBodyCommand update_body = 17 [json_name = "updateBody"];
+    // .motionlab.protocol.UpdateBodyCommand update_body = 17;
     case kUpdateBody: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_body_);
       break;
     }
-    // .motionlab.protocol.UpdateDatumPoseCommand update_datum_pose = 18 [json_name = "updateDatumPose"];
+    // .motionlab.protocol.UpdateDatumPoseCommand update_datum_pose = 18;
     case kUpdateDatumPose: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_datum_pose_);
       break;
     }
-    // .motionlab.protocol.CreateJointCommand create_joint = 20 [json_name = "createJoint"];
+    // .motionlab.protocol.CreateJointCommand create_joint = 20;
     case kCreateJoint: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_joint_);
       break;
     }
-    // .motionlab.protocol.UpdateJointCommand update_joint = 21 [json_name = "updateJoint"];
+    // .motionlab.protocol.UpdateJointCommand update_joint = 21;
     case kUpdateJoint: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_joint_);
       break;
     }
-    // .motionlab.protocol.DeleteJointCommand delete_joint = 22 [json_name = "deleteJoint"];
+    // .motionlab.protocol.DeleteJointCommand delete_joint = 22;
     case kDeleteJoint: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_joint_);
       break;
     }
-    // .motionlab.protocol.CreateLoadCommand create_load = 23 [json_name = "createLoad"];
+    // .motionlab.protocol.CreateLoadCommand create_load = 23;
     case kCreateLoad: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_load_);
       break;
     }
-    // .motionlab.protocol.UpdateLoadCommand update_load = 24 [json_name = "updateLoad"];
+    // .motionlab.protocol.UpdateLoadCommand update_load = 24;
     case kUpdateLoad: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_load_);
       break;
     }
-    // .motionlab.protocol.DeleteLoadCommand delete_load = 25 [json_name = "deleteLoad"];
+    // .motionlab.protocol.DeleteLoadCommand delete_load = 25;
     case kDeleteLoad: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_load_);
       break;
     }
-    // .motionlab.protocol.CreateActuatorCommand create_actuator = 26 [json_name = "createActuator"];
+    // .motionlab.protocol.CreateActuatorCommand create_actuator = 26;
     case kCreateActuator: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_actuator_);
       break;
     }
-    // .motionlab.protocol.UpdateActuatorCommand update_actuator = 27 [json_name = "updateActuator"];
+    // .motionlab.protocol.UpdateActuatorCommand update_actuator = 27;
     case kUpdateActuator: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_actuator_);
       break;
     }
-    // .motionlab.protocol.DeleteActuatorCommand delete_actuator = 28 [json_name = "deleteActuator"];
+    // .motionlab.protocol.DeleteActuatorCommand delete_actuator = 28;
     case kDeleteActuator: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_actuator_);
       break;
     }
-    // .motionlab.protocol.CreateBodyCommand create_body = 50 [json_name = "createBody"];
+    // .motionlab.protocol.CreateBodyCommand create_body = 50;
     case kCreateBody: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_body_);
       break;
     }
-    // .motionlab.protocol.DeleteBodyCommand delete_body = 51 [json_name = "deleteBody"];
+    // .motionlab.protocol.DeleteBodyCommand delete_body = 51;
     case kDeleteBody: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_body_);
       break;
     }
-    // .motionlab.protocol.AttachGeometryCommand attach_geometry = 52 [json_name = "attachGeometry"];
+    // .motionlab.protocol.AttachGeometryCommand attach_geometry = 52;
     case kAttachGeometry: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.attach_geometry_);
       break;
     }
-    // .motionlab.protocol.DetachGeometryCommand detach_geometry = 53 [json_name = "detachGeometry"];
+    // .motionlab.protocol.DetachGeometryCommand detach_geometry = 53;
     case kDetachGeometry: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.detach_geometry_);
       break;
     }
-    // .motionlab.protocol.UpdateMassPropertiesCommand update_mass_properties = 54 [json_name = "updateMassProperties"];
+    // .motionlab.protocol.UpdateMassPropertiesCommand update_mass_properties = 54;
     case kUpdateMassProperties: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_mass_properties_);
       break;
     }
-    // .motionlab.protocol.CompileMechanismCommand compile_mechanism = 30 [json_name = "compileMechanism"];
+    // .motionlab.protocol.CreatePrimitiveBodyCommand create_primitive_body = 55;
+    case kCreatePrimitiveBody: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_primitive_body_);
+      break;
+    }
+    // .motionlab.protocol.PlaceAssetInSceneCommand place_asset_in_scene = 60;
+    case kPlaceAssetInScene: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.place_asset_in_scene_);
+      break;
+    }
+    // .motionlab.protocol.CompileMechanismCommand compile_mechanism = 30;
     case kCompileMechanism: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.compile_mechanism_);
       break;
     }
-    // .motionlab.protocol.SimulationControlCommand simulation_control = 31 [json_name = "simulationControl"];
+    // .motionlab.protocol.SimulationControlCommand simulation_control = 31;
     case kSimulationControl: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.simulation_control_);
       break;
     }
-    // .motionlab.protocol.ScrubCommand scrub = 32 [json_name = "scrub"];
+    // .motionlab.protocol.ScrubCommand scrub = 32;
     case kScrub: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.scrub_);
       break;
     }
-    // .motionlab.protocol.SaveProjectCommand save_project = 40 [json_name = "saveProject"];
+    // .motionlab.protocol.SaveProjectCommand save_project = 40;
     case kSaveProject: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.save_project_);
       break;
     }
-    // .motionlab.protocol.LoadProjectCommand load_project = 41 [json_name = "loadProject"];
+    // .motionlab.protocol.LoadProjectCommand load_project = 41;
     case kLoadProject: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.load_project_);
       break;
     }
-    // .motionlab.protocol.RelocateAssetCommand relocate_asset = 42 [json_name = "relocateAsset"];
+    // .motionlab.protocol.RelocateAssetCommand relocate_asset = 42;
     case kRelocateAsset: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.relocate_asset_);
       break;
     }
-    // .motionlab.protocol.NewProjectCommand new_project = 43 [json_name = "newProject"];
+    // .motionlab.protocol.NewProjectCommand new_project = 43;
     case kNewProject: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.new_project_);
@@ -5591,6 +5825,22 @@ void Command::MergeImpl(::google::protobuf::MessageLite& to_msg,
           _this->_impl_.payload_.update_mass_properties_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.update_mass_properties_);
         } else {
           _this->_impl_.payload_.update_mass_properties_->MergeFrom(*from._impl_.payload_.update_mass_properties_);
+        }
+        break;
+      }
+      case kCreatePrimitiveBody: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.create_primitive_body_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.create_primitive_body_);
+        } else {
+          _this->_impl_.payload_.create_primitive_body_->MergeFrom(*from._impl_.payload_.create_primitive_body_);
+        }
+        break;
+      }
+      case kPlaceAssetInScene: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.place_asset_in_scene_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.place_asset_in_scene_);
+        } else {
+          _this->_impl_.payload_.place_asset_in_scene_->MergeFrom(*from._impl_.payload_.place_asset_in_scene_);
         }
         break;
       }
@@ -6015,6 +6265,32 @@ void Event::set_allocated_update_mass_properties_result(::motionlab::protocol::U
   }
   // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Event.update_mass_properties_result)
 }
+void Event::set_allocated_create_primitive_body_result(::motionlab::protocol::CreatePrimitiveBodyResult* PROTOBUF_NULLABLE create_primitive_body_result) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (create_primitive_body_result) {
+    ::google::protobuf::Arena* submessage_arena = create_primitive_body_result->GetArena();
+    if (message_arena != submessage_arena) {
+      create_primitive_body_result = ::google::protobuf::internal::GetOwnedMessage(message_arena, create_primitive_body_result, submessage_arena);
+    }
+    set_has_create_primitive_body_result();
+    _impl_.payload_.create_primitive_body_result_ = create_primitive_body_result;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Event.create_primitive_body_result)
+}
+void Event::set_allocated_place_asset_in_scene_result(::motionlab::protocol::PlaceAssetInSceneResult* PROTOBUF_NULLABLE place_asset_in_scene_result) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (place_asset_in_scene_result) {
+    ::google::protobuf::Arena* submessage_arena = place_asset_in_scene_result->GetArena();
+    if (message_arena != submessage_arena) {
+      place_asset_in_scene_result = ::google::protobuf::internal::GetOwnedMessage(message_arena, place_asset_in_scene_result, submessage_arena);
+    }
+    set_has_place_asset_in_scene_result();
+    _impl_.payload_.place_asset_in_scene_result_ = place_asset_in_scene_result;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.Event.place_asset_in_scene_result)
+}
 void Event::set_allocated_compilation_result(::motionlab::protocol::CompilationResultEvent* PROTOBUF_NULLABLE compilation_result) {
   ::google::protobuf::Arena* message_arena = GetArena();
   clear_payload();
@@ -6228,6 +6504,12 @@ Event::Event(
         break;
       case kUpdateMassPropertiesResult:
         _impl_.payload_.update_mass_properties_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.update_mass_properties_result_);
+        break;
+      case kCreatePrimitiveBodyResult:
+        _impl_.payload_.create_primitive_body_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.create_primitive_body_result_);
+        break;
+      case kPlaceAssetInSceneResult:
+        _impl_.payload_.place_asset_in_scene_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.place_asset_in_scene_result_);
         break;
       case kCompilationResult:
         _impl_.payload_.compilation_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.compilation_result_);
@@ -6489,6 +6771,22 @@ void Event::clear_payload() {
       }
       break;
     }
+    case kCreatePrimitiveBodyResult: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.create_primitive_body_result_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.create_primitive_body_result_);
+      }
+      break;
+    }
+    case kPlaceAssetInSceneResult: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.place_asset_in_scene_result_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.place_asset_in_scene_result_);
+      }
+      break;
+    }
     case kCompilationResult: {
       if (GetArena() == nullptr) {
         delete _impl_.payload_.compilation_result_;
@@ -6604,17 +6902,17 @@ Event::GetClassData() const {
   return Event_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 34, 33, 0, 9>
+const ::_pbi::TcParseTable<0, 36, 35, 0, 9>
 Event::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Event, _impl_._has_bits_),
     0, // no _extensions_
-    54, 0,  // max_field_number, fast_idx_mask
+    60, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
     510,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    34,  // num_field_entries
-    33,  // num_aux_entries
+    36,  // num_field_entries
+    35,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     Event_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -6623,84 +6921,88 @@ Event::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::Event>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // uint64 sequence_id = 1 [json_name = "sequenceId"];
+    // uint64 sequence_id = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(Event, _impl_.sequence_id_), 0>(),
      {8, 0, 0,
       PROTOBUF_FIELD_OFFSET(Event, _impl_.sequence_id_)}},
   }}, {{
     33, 0, 2,
     63614, 24,
-    65473, 29,
+    63361, 29,
     65535, 65535
   }}, {{
-    // uint64 sequence_id = 1 [json_name = "sequenceId"];
+    // uint64 sequence_id = 1;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.sequence_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt64)},
-    // .motionlab.protocol.HandshakeAck handshake_ack = 10 [json_name = "handshakeAck"];
+    // .motionlab.protocol.HandshakeAck handshake_ack = 10;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.handshake_ack_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.Pong pong = 11 [json_name = "pong"];
+    // .motionlab.protocol.Pong pong = 11;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.pong_), _Internal::kOneofCaseOffset + 0, 1, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.EngineStatus engine_status = 12 [json_name = "engineStatus"];
+    // .motionlab.protocol.EngineStatus engine_status = 12;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.engine_status_), _Internal::kOneofCaseOffset + 0, 2, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.ImportAssetResult import_asset_result = 13 [json_name = "importAssetResult"];
+    // .motionlab.protocol.ImportAssetResult import_asset_result = 13;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.import_asset_result_), _Internal::kOneofCaseOffset + 0, 3, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.MechanismSnapshot mechanism_snapshot = 14 [json_name = "mechanismSnapshot"];
+    // .motionlab.protocol.MechanismSnapshot mechanism_snapshot = 14;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.mechanism_snapshot_), _Internal::kOneofCaseOffset + 0, 4, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CreateDatumResult create_datum_result = 15 [json_name = "createDatumResult"];
+    // .motionlab.protocol.CreateDatumResult create_datum_result = 15;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.create_datum_result_), _Internal::kOneofCaseOffset + 0, 5, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.DeleteDatumResult delete_datum_result = 16 [json_name = "deleteDatumResult"];
+    // .motionlab.protocol.DeleteDatumResult delete_datum_result = 16;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.delete_datum_result_), _Internal::kOneofCaseOffset + 0, 6, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.RenameDatumResult rename_datum_result = 17 [json_name = "renameDatumResult"];
+    // .motionlab.protocol.RenameDatumResult rename_datum_result = 17;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.rename_datum_result_), _Internal::kOneofCaseOffset + 0, 7, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CreateDatumFromFaceResult create_datum_from_face_result = 18 [json_name = "createDatumFromFaceResult"];
+    // .motionlab.protocol.CreateDatumFromFaceResult create_datum_from_face_result = 18;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.create_datum_from_face_result_), _Internal::kOneofCaseOffset + 0, 8, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.UpdateBodyResult update_body_result = 19 [json_name = "updateBodyResult"];
+    // .motionlab.protocol.UpdateBodyResult update_body_result = 19;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.update_body_result_), _Internal::kOneofCaseOffset + 0, 9, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CreateJointResult create_joint_result = 20 [json_name = "createJointResult"];
+    // .motionlab.protocol.CreateJointResult create_joint_result = 20;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.create_joint_result_), _Internal::kOneofCaseOffset + 0, 10, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.UpdateJointResult update_joint_result = 21 [json_name = "updateJointResult"];
+    // .motionlab.protocol.UpdateJointResult update_joint_result = 21;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.update_joint_result_), _Internal::kOneofCaseOffset + 0, 11, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.DeleteJointResult delete_joint_result = 22 [json_name = "deleteJointResult"];
+    // .motionlab.protocol.DeleteJointResult delete_joint_result = 22;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.delete_joint_result_), _Internal::kOneofCaseOffset + 0, 12, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.UpdateDatumPoseResult update_datum_pose_result = 23 [json_name = "updateDatumPoseResult"];
+    // .motionlab.protocol.UpdateDatumPoseResult update_datum_pose_result = 23;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.update_datum_pose_result_), _Internal::kOneofCaseOffset + 0, 13, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CreateLoadResult create_load_result = 24 [json_name = "createLoadResult"];
+    // .motionlab.protocol.CreateLoadResult create_load_result = 24;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.create_load_result_), _Internal::kOneofCaseOffset + 0, 14, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.UpdateLoadResult update_load_result = 25 [json_name = "updateLoadResult"];
+    // .motionlab.protocol.UpdateLoadResult update_load_result = 25;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.update_load_result_), _Internal::kOneofCaseOffset + 0, 15, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.DeleteLoadResult delete_load_result = 26 [json_name = "deleteLoadResult"];
+    // .motionlab.protocol.DeleteLoadResult delete_load_result = 26;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.delete_load_result_), _Internal::kOneofCaseOffset + 0, 16, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CreateActuatorResult create_actuator_result = 27 [json_name = "createActuatorResult"];
+    // .motionlab.protocol.CreateActuatorResult create_actuator_result = 27;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.create_actuator_result_), _Internal::kOneofCaseOffset + 0, 17, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.UpdateActuatorResult update_actuator_result = 28 [json_name = "updateActuatorResult"];
+    // .motionlab.protocol.UpdateActuatorResult update_actuator_result = 28;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.update_actuator_result_), _Internal::kOneofCaseOffset + 0, 18, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.DeleteActuatorResult delete_actuator_result = 29 [json_name = "deleteActuatorResult"];
+    // .motionlab.protocol.DeleteActuatorResult delete_actuator_result = 29;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.delete_actuator_result_), _Internal::kOneofCaseOffset + 0, 19, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CompilationResultEvent compilation_result = 30 [json_name = "compilationResult"];
+    // .motionlab.protocol.CompilationResultEvent compilation_result = 30;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.compilation_result_), _Internal::kOneofCaseOffset + 0, 20, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.SimulationStateEvent simulation_state = 31 [json_name = "simulationState"];
+    // .motionlab.protocol.SimulationStateEvent simulation_state = 31;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.simulation_state_), _Internal::kOneofCaseOffset + 0, 21, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.SimulationFrame simulation_frame = 32 [json_name = "simulationFrame"];
+    // .motionlab.protocol.SimulationFrame simulation_frame = 32;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.simulation_frame_), _Internal::kOneofCaseOffset + 0, 22, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.SimulationTrace simulation_trace = 33 [json_name = "simulationTrace"];
+    // .motionlab.protocol.SimulationTrace simulation_trace = 33;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.simulation_trace_), _Internal::kOneofCaseOffset + 0, 23, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.SaveProjectResult save_project_result = 40 [json_name = "saveProjectResult"];
+    // .motionlab.protocol.SaveProjectResult save_project_result = 40;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.save_project_result_), _Internal::kOneofCaseOffset + 0, 24, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.LoadProjectResult load_project_result = 41 [json_name = "loadProjectResult"];
+    // .motionlab.protocol.LoadProjectResult load_project_result = 41;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.load_project_result_), _Internal::kOneofCaseOffset + 0, 25, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.RelocateAssetResult relocate_asset_result = 42 [json_name = "relocateAssetResult"];
+    // .motionlab.protocol.RelocateAssetResult relocate_asset_result = 42;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.relocate_asset_result_), _Internal::kOneofCaseOffset + 0, 26, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.NewProjectResult new_project_result = 43 [json_name = "newProjectResult"];
+    // .motionlab.protocol.NewProjectResult new_project_result = 43;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.new_project_result_), _Internal::kOneofCaseOffset + 0, 27, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.CreateBodyResult create_body_result = 50 [json_name = "createBodyResult"];
+    // .motionlab.protocol.CreateBodyResult create_body_result = 50;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.create_body_result_), _Internal::kOneofCaseOffset + 0, 28, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.DeleteBodyResult delete_body_result = 51 [json_name = "deleteBodyResult"];
+    // .motionlab.protocol.DeleteBodyResult delete_body_result = 51;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.delete_body_result_), _Internal::kOneofCaseOffset + 0, 29, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.AttachGeometryResult attach_geometry_result = 52 [json_name = "attachGeometryResult"];
+    // .motionlab.protocol.AttachGeometryResult attach_geometry_result = 52;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.attach_geometry_result_), _Internal::kOneofCaseOffset + 0, 30, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.DetachGeometryResult detach_geometry_result = 53 [json_name = "detachGeometryResult"];
+    // .motionlab.protocol.DetachGeometryResult detach_geometry_result = 53;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.detach_geometry_result_), _Internal::kOneofCaseOffset + 0, 31, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.UpdateMassPropertiesResult update_mass_properties_result = 54 [json_name = "updateMassPropertiesResult"];
+    // .motionlab.protocol.UpdateMassPropertiesResult update_mass_properties_result = 54;
     {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.update_mass_properties_result_), _Internal::kOneofCaseOffset + 0, 32, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.CreatePrimitiveBodyResult create_primitive_body_result = 55;
+    {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.create_primitive_body_result_), _Internal::kOneofCaseOffset + 0, 33, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.protocol.PlaceAssetInSceneResult place_asset_in_scene_result = 60;
+    {PROTOBUF_FIELD_OFFSET(Event, _impl_.payload_.place_asset_in_scene_result_), _Internal::kOneofCaseOffset + 0, 34, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::motionlab::protocol::HandshakeAck>()},
@@ -6736,6 +7038,8 @@ Event::_table_ = {
       {::_pbi::TcParser::GetTable<::motionlab::protocol::AttachGeometryResult>()},
       {::_pbi::TcParser::GetTable<::motionlab::protocol::DetachGeometryResult>()},
       {::_pbi::TcParser::GetTable<::motionlab::protocol::UpdateMassPropertiesResult>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::CreatePrimitiveBodyResult>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::PlaceAssetInSceneResult>()},
   }},
   {{
   }},
@@ -6772,7 +7076,7 @@ PROTOBUF_NOINLINE void Event::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // uint64 sequence_id = 1 [json_name = "sequenceId"];
+  // uint64 sequence_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (this_._internal_sequence_id() != 0) {
       target = stream->EnsureSpace(target);
@@ -6980,6 +7284,18 @@ PROTOBUF_NOINLINE void Event::Clear() {
           stream);
       break;
     }
+    case kCreatePrimitiveBodyResult: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          55, *this_._impl_.payload_.create_primitive_body_result_, this_._impl_.payload_.create_primitive_body_result_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kPlaceAssetInSceneResult: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          60, *this_._impl_.payload_.place_asset_in_scene_result_, this_._impl_.payload_.place_asset_in_scene_result_->GetCachedSize(), target,
+          stream);
+      break;
+    }
     default:
       break;
   }
@@ -7007,7 +7323,7 @@ PROTOBUF_NOINLINE void Event::Clear() {
   (void)cached_has_bits;
 
    {
-    // uint64 sequence_id = 1 [json_name = "sequenceId"];
+    // uint64 sequence_id = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (this_._internal_sequence_id() != 0) {
@@ -7017,199 +7333,211 @@ PROTOBUF_NOINLINE void Event::Clear() {
     }
   }
   switch (this_.payload_case()) {
-    // .motionlab.protocol.HandshakeAck handshake_ack = 10 [json_name = "handshakeAck"];
+    // .motionlab.protocol.HandshakeAck handshake_ack = 10;
     case kHandshakeAck: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.handshake_ack_);
       break;
     }
-    // .motionlab.protocol.Pong pong = 11 [json_name = "pong"];
+    // .motionlab.protocol.Pong pong = 11;
     case kPong: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.pong_);
       break;
     }
-    // .motionlab.protocol.EngineStatus engine_status = 12 [json_name = "engineStatus"];
+    // .motionlab.protocol.EngineStatus engine_status = 12;
     case kEngineStatus: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.engine_status_);
       break;
     }
-    // .motionlab.protocol.ImportAssetResult import_asset_result = 13 [json_name = "importAssetResult"];
+    // .motionlab.protocol.ImportAssetResult import_asset_result = 13;
     case kImportAssetResult: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.import_asset_result_);
       break;
     }
-    // .motionlab.protocol.MechanismSnapshot mechanism_snapshot = 14 [json_name = "mechanismSnapshot"];
+    // .motionlab.protocol.MechanismSnapshot mechanism_snapshot = 14;
     case kMechanismSnapshot: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.mechanism_snapshot_);
       break;
     }
-    // .motionlab.protocol.CreateDatumResult create_datum_result = 15 [json_name = "createDatumResult"];
+    // .motionlab.protocol.CreateDatumResult create_datum_result = 15;
     case kCreateDatumResult: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_datum_result_);
       break;
     }
-    // .motionlab.protocol.DeleteDatumResult delete_datum_result = 16 [json_name = "deleteDatumResult"];
+    // .motionlab.protocol.DeleteDatumResult delete_datum_result = 16;
     case kDeleteDatumResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_datum_result_);
       break;
     }
-    // .motionlab.protocol.RenameDatumResult rename_datum_result = 17 [json_name = "renameDatumResult"];
+    // .motionlab.protocol.RenameDatumResult rename_datum_result = 17;
     case kRenameDatumResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.rename_datum_result_);
       break;
     }
-    // .motionlab.protocol.CreateDatumFromFaceResult create_datum_from_face_result = 18 [json_name = "createDatumFromFaceResult"];
+    // .motionlab.protocol.CreateDatumFromFaceResult create_datum_from_face_result = 18;
     case kCreateDatumFromFaceResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_datum_from_face_result_);
       break;
     }
-    // .motionlab.protocol.UpdateBodyResult update_body_result = 19 [json_name = "updateBodyResult"];
+    // .motionlab.protocol.UpdateBodyResult update_body_result = 19;
     case kUpdateBodyResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_body_result_);
       break;
     }
-    // .motionlab.protocol.CreateJointResult create_joint_result = 20 [json_name = "createJointResult"];
+    // .motionlab.protocol.CreateJointResult create_joint_result = 20;
     case kCreateJointResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_joint_result_);
       break;
     }
-    // .motionlab.protocol.UpdateJointResult update_joint_result = 21 [json_name = "updateJointResult"];
+    // .motionlab.protocol.UpdateJointResult update_joint_result = 21;
     case kUpdateJointResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_joint_result_);
       break;
     }
-    // .motionlab.protocol.DeleteJointResult delete_joint_result = 22 [json_name = "deleteJointResult"];
+    // .motionlab.protocol.DeleteJointResult delete_joint_result = 22;
     case kDeleteJointResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_joint_result_);
       break;
     }
-    // .motionlab.protocol.UpdateDatumPoseResult update_datum_pose_result = 23 [json_name = "updateDatumPoseResult"];
+    // .motionlab.protocol.UpdateDatumPoseResult update_datum_pose_result = 23;
     case kUpdateDatumPoseResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_datum_pose_result_);
       break;
     }
-    // .motionlab.protocol.CreateLoadResult create_load_result = 24 [json_name = "createLoadResult"];
+    // .motionlab.protocol.CreateLoadResult create_load_result = 24;
     case kCreateLoadResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_load_result_);
       break;
     }
-    // .motionlab.protocol.UpdateLoadResult update_load_result = 25 [json_name = "updateLoadResult"];
+    // .motionlab.protocol.UpdateLoadResult update_load_result = 25;
     case kUpdateLoadResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_load_result_);
       break;
     }
-    // .motionlab.protocol.DeleteLoadResult delete_load_result = 26 [json_name = "deleteLoadResult"];
+    // .motionlab.protocol.DeleteLoadResult delete_load_result = 26;
     case kDeleteLoadResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_load_result_);
       break;
     }
-    // .motionlab.protocol.CreateActuatorResult create_actuator_result = 27 [json_name = "createActuatorResult"];
+    // .motionlab.protocol.CreateActuatorResult create_actuator_result = 27;
     case kCreateActuatorResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_actuator_result_);
       break;
     }
-    // .motionlab.protocol.UpdateActuatorResult update_actuator_result = 28 [json_name = "updateActuatorResult"];
+    // .motionlab.protocol.UpdateActuatorResult update_actuator_result = 28;
     case kUpdateActuatorResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_actuator_result_);
       break;
     }
-    // .motionlab.protocol.DeleteActuatorResult delete_actuator_result = 29 [json_name = "deleteActuatorResult"];
+    // .motionlab.protocol.DeleteActuatorResult delete_actuator_result = 29;
     case kDeleteActuatorResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_actuator_result_);
       break;
     }
-    // .motionlab.protocol.CreateBodyResult create_body_result = 50 [json_name = "createBodyResult"];
+    // .motionlab.protocol.CreateBodyResult create_body_result = 50;
     case kCreateBodyResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_body_result_);
       break;
     }
-    // .motionlab.protocol.DeleteBodyResult delete_body_result = 51 [json_name = "deleteBodyResult"];
+    // .motionlab.protocol.DeleteBodyResult delete_body_result = 51;
     case kDeleteBodyResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.delete_body_result_);
       break;
     }
-    // .motionlab.protocol.AttachGeometryResult attach_geometry_result = 52 [json_name = "attachGeometryResult"];
+    // .motionlab.protocol.AttachGeometryResult attach_geometry_result = 52;
     case kAttachGeometryResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.attach_geometry_result_);
       break;
     }
-    // .motionlab.protocol.DetachGeometryResult detach_geometry_result = 53 [json_name = "detachGeometryResult"];
+    // .motionlab.protocol.DetachGeometryResult detach_geometry_result = 53;
     case kDetachGeometryResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.detach_geometry_result_);
       break;
     }
-    // .motionlab.protocol.UpdateMassPropertiesResult update_mass_properties_result = 54 [json_name = "updateMassPropertiesResult"];
+    // .motionlab.protocol.UpdateMassPropertiesResult update_mass_properties_result = 54;
     case kUpdateMassPropertiesResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.update_mass_properties_result_);
       break;
     }
-    // .motionlab.protocol.CompilationResultEvent compilation_result = 30 [json_name = "compilationResult"];
+    // .motionlab.protocol.CreatePrimitiveBodyResult create_primitive_body_result = 55;
+    case kCreatePrimitiveBodyResult: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.create_primitive_body_result_);
+      break;
+    }
+    // .motionlab.protocol.PlaceAssetInSceneResult place_asset_in_scene_result = 60;
+    case kPlaceAssetInSceneResult: {
+      total_size += 2 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.place_asset_in_scene_result_);
+      break;
+    }
+    // .motionlab.protocol.CompilationResultEvent compilation_result = 30;
     case kCompilationResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.compilation_result_);
       break;
     }
-    // .motionlab.protocol.SimulationStateEvent simulation_state = 31 [json_name = "simulationState"];
+    // .motionlab.protocol.SimulationStateEvent simulation_state = 31;
     case kSimulationState: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.simulation_state_);
       break;
     }
-    // .motionlab.protocol.SimulationFrame simulation_frame = 32 [json_name = "simulationFrame"];
+    // .motionlab.protocol.SimulationFrame simulation_frame = 32;
     case kSimulationFrame: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.simulation_frame_);
       break;
     }
-    // .motionlab.protocol.SimulationTrace simulation_trace = 33 [json_name = "simulationTrace"];
+    // .motionlab.protocol.SimulationTrace simulation_trace = 33;
     case kSimulationTrace: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.simulation_trace_);
       break;
     }
-    // .motionlab.protocol.SaveProjectResult save_project_result = 40 [json_name = "saveProjectResult"];
+    // .motionlab.protocol.SaveProjectResult save_project_result = 40;
     case kSaveProjectResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.save_project_result_);
       break;
     }
-    // .motionlab.protocol.LoadProjectResult load_project_result = 41 [json_name = "loadProjectResult"];
+    // .motionlab.protocol.LoadProjectResult load_project_result = 41;
     case kLoadProjectResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.load_project_result_);
       break;
     }
-    // .motionlab.protocol.RelocateAssetResult relocate_asset_result = 42 [json_name = "relocateAssetResult"];
+    // .motionlab.protocol.RelocateAssetResult relocate_asset_result = 42;
     case kRelocateAssetResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.relocate_asset_result_);
       break;
     }
-    // .motionlab.protocol.NewProjectResult new_project_result = 43 [json_name = "newProjectResult"];
+    // .motionlab.protocol.NewProjectResult new_project_result = 43;
     case kNewProjectResult: {
       total_size += 2 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.new_project_result_);
@@ -7456,6 +7784,22 @@ void Event::MergeImpl(::google::protobuf::MessageLite& to_msg,
         }
         break;
       }
+      case kCreatePrimitiveBodyResult: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.create_primitive_body_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.create_primitive_body_result_);
+        } else {
+          _this->_impl_.payload_.create_primitive_body_result_->MergeFrom(*from._impl_.payload_.create_primitive_body_result_);
+        }
+        break;
+      }
+      case kPlaceAssetInSceneResult: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.place_asset_in_scene_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.place_asset_in_scene_result_);
+        } else {
+          _this->_impl_.payload_.place_asset_in_scene_result_->MergeFrom(*from._impl_.payload_.place_asset_in_scene_result_);
+        }
+        break;
+      }
       case kCompilationResult: {
         if (oneof_needs_init) {
           _this->_impl_.payload_.compilation_result_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.payload_.compilation_result_);
@@ -7683,20 +8027,20 @@ Handshake::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::Handshake>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string session_token = 2 [json_name = "sessionToken"];
+    // string session_token = 2;
     {::_pbi::TcParser::FastUS1,
      {18, 0, 0,
       PROTOBUF_FIELD_OFFSET(Handshake, _impl_.session_token_)}},
-    // .motionlab.protocol.ProtocolVersion protocol = 1 [json_name = "protocol"];
+    // .motionlab.protocol.ProtocolVersion protocol = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 1, 0,
       PROTOBUF_FIELD_OFFSET(Handshake, _impl_.protocol_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.protocol.ProtocolVersion protocol = 1 [json_name = "protocol"];
+    // .motionlab.protocol.ProtocolVersion protocol = 1;
     {PROTOBUF_FIELD_OFFSET(Handshake, _impl_.protocol_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string session_token = 2 [json_name = "sessionToken"];
+    // string session_token = 2;
     {PROTOBUF_FIELD_OFFSET(Handshake, _impl_.session_token_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -7748,14 +8092,14 @@ PROTOBUF_NOINLINE void Handshake::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.protocol.ProtocolVersion protocol = 1 [json_name = "protocol"];
+  // .motionlab.protocol.ProtocolVersion protocol = 1;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.protocol_, this_._impl_.protocol_->GetCachedSize(), target,
         stream);
   }
 
-  // string session_token = 2 [json_name = "sessionToken"];
+  // string session_token = 2;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_session_token().empty()) {
       const ::std::string& _s = this_._internal_session_token();
@@ -7791,14 +8135,14 @@ PROTOBUF_NOINLINE void Handshake::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // string session_token = 2 [json_name = "sessionToken"];
+    // string session_token = 2;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_session_token().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_session_token());
       }
     }
-    // .motionlab.protocol.ProtocolVersion protocol = 1 [json_name = "protocol"];
+    // .motionlab.protocol.ProtocolVersion protocol = 1;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.protocol_);
@@ -8010,26 +8354,26 @@ HandshakeAck::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // bool compatible = 1 [json_name = "compatible"];
+    // bool compatible = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(HandshakeAck, _impl_.compatible_), 2>(),
      {8, 2, 0,
       PROTOBUF_FIELD_OFFSET(HandshakeAck, _impl_.compatible_)}},
-    // .motionlab.protocol.ProtocolVersion engine_protocol = 2 [json_name = "engineProtocol"];
+    // .motionlab.protocol.ProtocolVersion engine_protocol = 2;
     {::_pbi::TcParser::FastMtS1,
      {18, 1, 0,
       PROTOBUF_FIELD_OFFSET(HandshakeAck, _impl_.engine_protocol_)}},
-    // string engine_version = 3 [json_name = "engineVersion"];
+    // string engine_version = 3;
     {::_pbi::TcParser::FastUS1,
      {26, 0, 0,
       PROTOBUF_FIELD_OFFSET(HandshakeAck, _impl_.engine_version_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // bool compatible = 1 [json_name = "compatible"];
+    // bool compatible = 1;
     {PROTOBUF_FIELD_OFFSET(HandshakeAck, _impl_.compatible_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
-    // .motionlab.protocol.ProtocolVersion engine_protocol = 2 [json_name = "engineProtocol"];
+    // .motionlab.protocol.ProtocolVersion engine_protocol = 2;
     {PROTOBUF_FIELD_OFFSET(HandshakeAck, _impl_.engine_protocol_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string engine_version = 3 [json_name = "engineVersion"];
+    // string engine_version = 3;
     {PROTOBUF_FIELD_OFFSET(HandshakeAck, _impl_.engine_version_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -8082,7 +8426,7 @@ PROTOBUF_NOINLINE void HandshakeAck::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // bool compatible = 1 [json_name = "compatible"];
+  // bool compatible = 1;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (this_._internal_compatible() != 0) {
       target = stream->EnsureSpace(target);
@@ -8091,14 +8435,14 @@ PROTOBUF_NOINLINE void HandshakeAck::Clear() {
     }
   }
 
-  // .motionlab.protocol.ProtocolVersion engine_protocol = 2 [json_name = "engineProtocol"];
+  // .motionlab.protocol.ProtocolVersion engine_protocol = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.engine_protocol_, this_._impl_.engine_protocol_->GetCachedSize(), target,
         stream);
   }
 
-  // string engine_version = 3 [json_name = "engineVersion"];
+  // string engine_version = 3;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_engine_version().empty()) {
       const ::std::string& _s = this_._internal_engine_version();
@@ -8134,19 +8478,19 @@ PROTOBUF_NOINLINE void HandshakeAck::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
-    // string engine_version = 3 [json_name = "engineVersion"];
+    // string engine_version = 3;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_engine_version().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_engine_version());
       }
     }
-    // .motionlab.protocol.ProtocolVersion engine_protocol = 2 [json_name = "engineProtocol"];
+    // .motionlab.protocol.ProtocolVersion engine_protocol = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.engine_protocol_);
     }
-    // bool compatible = 1 [json_name = "compatible"];
+    // bool compatible = 1;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (this_._internal_compatible() != 0) {
         total_size += 2;
@@ -8342,14 +8686,14 @@ Ping::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::Ping>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // uint64 timestamp = 1 [json_name = "timestamp"];
+    // uint64 timestamp = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(Ping, _impl_.timestamp_), 0>(),
      {8, 0, 0,
       PROTOBUF_FIELD_OFFSET(Ping, _impl_.timestamp_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // uint64 timestamp = 1 [json_name = "timestamp"];
+    // uint64 timestamp = 1;
     {PROTOBUF_FIELD_OFFSET(Ping, _impl_.timestamp_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt64)},
   }},
   // no aux_entries
@@ -8387,7 +8731,7 @@ PROTOBUF_NOINLINE void Ping::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // uint64 timestamp = 1 [json_name = "timestamp"];
+  // uint64 timestamp = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (this_._internal_timestamp() != 0) {
       target = stream->EnsureSpace(target);
@@ -8420,7 +8764,7 @@ PROTOBUF_NOINLINE void Ping::Clear() {
   (void)cached_has_bits;
 
    {
-    // uint64 timestamp = 1 [json_name = "timestamp"];
+    // uint64 timestamp = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (this_._internal_timestamp() != 0) {
@@ -8590,14 +8934,14 @@ Pong::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::Pong>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // uint64 timestamp = 1 [json_name = "timestamp"];
+    // uint64 timestamp = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(Pong, _impl_.timestamp_), 0>(),
      {8, 0, 0,
       PROTOBUF_FIELD_OFFSET(Pong, _impl_.timestamp_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // uint64 timestamp = 1 [json_name = "timestamp"];
+    // uint64 timestamp = 1;
     {PROTOBUF_FIELD_OFFSET(Pong, _impl_.timestamp_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt64)},
   }},
   // no aux_entries
@@ -8635,7 +8979,7 @@ PROTOBUF_NOINLINE void Pong::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // uint64 timestamp = 1 [json_name = "timestamp"];
+  // uint64 timestamp = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (this_._internal_timestamp() != 0) {
       target = stream->EnsureSpace(target);
@@ -8668,7 +9012,7 @@ PROTOBUF_NOINLINE void Pong::Clear() {
   (void)cached_has_bits;
 
    {
-    // uint64 timestamp = 1 [json_name = "timestamp"];
+    // uint64 timestamp = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (this_._internal_timestamp() != 0) {
@@ -8854,20 +9198,20 @@ EngineStatus::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::EngineStatus>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string message = 2 [json_name = "message"];
+    // string message = 2;
     {::_pbi::TcParser::FastUS1,
      {18, 0, 0,
       PROTOBUF_FIELD_OFFSET(EngineStatus, _impl_.message_)}},
-    // .motionlab.protocol.EngineStatus.State state = 1 [json_name = "state"];
+    // .motionlab.protocol.EngineStatus.State state = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(EngineStatus, _impl_.state_), 1>(),
      {8, 1, 0,
       PROTOBUF_FIELD_OFFSET(EngineStatus, _impl_.state_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.protocol.EngineStatus.State state = 1 [json_name = "state"];
+    // .motionlab.protocol.EngineStatus.State state = 1;
     {PROTOBUF_FIELD_OFFSET(EngineStatus, _impl_.state_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
-    // string message = 2 [json_name = "message"];
+    // string message = 2;
     {PROTOBUF_FIELD_OFFSET(EngineStatus, _impl_.message_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
@@ -8912,7 +9256,7 @@ PROTOBUF_NOINLINE void EngineStatus::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.protocol.EngineStatus.State state = 1 [json_name = "state"];
+  // .motionlab.protocol.EngineStatus.State state = 1;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (this_._internal_state() != 0) {
       target = stream->EnsureSpace(target);
@@ -8921,7 +9265,7 @@ PROTOBUF_NOINLINE void EngineStatus::Clear() {
     }
   }
 
-  // string message = 2 [json_name = "message"];
+  // string message = 2;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_message().empty()) {
       const ::std::string& _s = this_._internal_message();
@@ -8957,14 +9301,14 @@ PROTOBUF_NOINLINE void EngineStatus::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // string message = 2 [json_name = "message"];
+    // string message = 2;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_message().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_message());
       }
     }
-    // .motionlab.protocol.EngineStatus.State state = 1 [json_name = "state"];
+    // .motionlab.protocol.EngineStatus.State state = 1;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (this_._internal_state() != 0) {
         total_size += 1 +
@@ -9076,9 +9420,9 @@ ImportOptions::ImportOptions(
                offsetof(Impl_, density_override_),
            reinterpret_cast<const char*>(&from._impl_) +
                offsetof(Impl_, density_override_),
-           offsetof(Impl_, tessellation_quality_) -
+           offsetof(Impl_, import_mode_) -
                offsetof(Impl_, density_override_) +
-               sizeof(Impl_::tessellation_quality_));
+               sizeof(Impl_::import_mode_));
 
   // @@protoc_insertion_point(copy_constructor:motionlab.protocol.ImportOptions)
 }
@@ -9093,9 +9437,9 @@ inline void ImportOptions::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   ::memset(reinterpret_cast<char*>(&_impl_) +
                offsetof(Impl_, density_override_),
            0,
-           offsetof(Impl_, tessellation_quality_) -
+           offsetof(Impl_, import_mode_) -
                offsetof(Impl_, density_override_) +
-               sizeof(Impl_::tessellation_quality_));
+               sizeof(Impl_::import_mode_));
 }
 ImportOptions::~ImportOptions() {
   // @@protoc_insertion_point(destructor:motionlab.protocol.ImportOptions)
@@ -9155,16 +9499,16 @@ ImportOptions::GetClassData() const {
   return ImportOptions_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 0, 52, 2>
+const ::_pbi::TcParseTable<2, 4, 0, 52, 2>
 ImportOptions::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(ImportOptions, _impl_._has_bits_),
     0, // no _extensions_
-    3, 24,  // max_field_number, fast_idx_mask
+    4, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967280,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
+    4,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     ImportOptions_class_data_.base(),
@@ -9174,28 +9518,33 @@ ImportOptions::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::ImportOptions>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
-    // double density_override = 1 [json_name = "densityOverride"];
+    // .motionlab.protocol.ImportMode import_mode = 4;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(ImportOptions, _impl_.import_mode_), 3>(),
+     {32, 3, 0,
+      PROTOBUF_FIELD_OFFSET(ImportOptions, _impl_.import_mode_)}},
+    // double density_override = 1;
     {::_pbi::TcParser::FastF64S1,
      {9, 1, 0,
       PROTOBUF_FIELD_OFFSET(ImportOptions, _impl_.density_override_)}},
-    // double tessellation_quality = 2 [json_name = "tessellationQuality"];
+    // double tessellation_quality = 2;
     {::_pbi::TcParser::FastF64S1,
      {17, 2, 0,
       PROTOBUF_FIELD_OFFSET(ImportOptions, _impl_.tessellation_quality_)}},
-    // string unit_system = 3 [json_name = "unitSystem"];
+    // string unit_system = 3;
     {::_pbi::TcParser::FastUS1,
      {26, 0, 0,
       PROTOBUF_FIELD_OFFSET(ImportOptions, _impl_.unit_system_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // double density_override = 1 [json_name = "densityOverride"];
+    // double density_override = 1;
     {PROTOBUF_FIELD_OFFSET(ImportOptions, _impl_.density_override_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double tessellation_quality = 2 [json_name = "tessellationQuality"];
+    // double tessellation_quality = 2;
     {PROTOBUF_FIELD_OFFSET(ImportOptions, _impl_.tessellation_quality_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // string unit_system = 3 [json_name = "unitSystem"];
+    // string unit_system = 3;
     {PROTOBUF_FIELD_OFFSET(ImportOptions, _impl_.unit_system_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // .motionlab.protocol.ImportMode import_mode = 4;
+    {PROTOBUF_FIELD_OFFSET(ImportOptions, _impl_.import_mode_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
   }},
   // no aux_entries
   {{
@@ -9215,10 +9564,10 @@ PROTOBUF_NOINLINE void ImportOptions::Clear() {
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     _impl_.unit_system_.ClearNonDefaultToEmpty();
   }
-  if (BatchCheckHasBit(cached_has_bits, 0x00000006U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000eU)) {
     ::memset(&_impl_.density_override_, 0, static_cast<::size_t>(
-        reinterpret_cast<char*>(&_impl_.tessellation_quality_) -
-        reinterpret_cast<char*>(&_impl_.density_override_)) + sizeof(_impl_.tessellation_quality_));
+        reinterpret_cast<char*>(&_impl_.import_mode_) -
+        reinterpret_cast<char*>(&_impl_.density_override_)) + sizeof(_impl_.import_mode_));
   }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
@@ -9243,7 +9592,7 @@ PROTOBUF_NOINLINE void ImportOptions::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // double density_override = 1 [json_name = "densityOverride"];
+  // double density_override = 1;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_density_override()) != 0) {
       target = stream->EnsureSpace(target);
@@ -9252,7 +9601,7 @@ PROTOBUF_NOINLINE void ImportOptions::Clear() {
     }
   }
 
-  // double tessellation_quality = 2 [json_name = "tessellationQuality"];
+  // double tessellation_quality = 2;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_tessellation_quality()) != 0) {
       target = stream->EnsureSpace(target);
@@ -9261,13 +9610,22 @@ PROTOBUF_NOINLINE void ImportOptions::Clear() {
     }
   }
 
-  // string unit_system = 3 [json_name = "unitSystem"];
+  // string unit_system = 3;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_unit_system().empty()) {
       const ::std::string& _s = this_._internal_unit_system();
       ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
           _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.ImportOptions.unit_system");
       target = stream->WriteStringMaybeAliased(3, _s, target);
+    }
+  }
+
+  // .motionlab.protocol.ImportMode import_mode = 4;
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (this_._internal_import_mode() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteEnumToArray(
+          4, this_._internal_import_mode(), target);
     }
   }
 
@@ -9296,24 +9654,31 @@ PROTOBUF_NOINLINE void ImportOptions::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
-    // string unit_system = 3 [json_name = "unitSystem"];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
+    // string unit_system = 3;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_unit_system().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_unit_system());
       }
     }
-    // double density_override = 1 [json_name = "densityOverride"];
+    // double density_override = 1;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_density_override()) != 0) {
         total_size += 9;
       }
     }
-    // double tessellation_quality = 2 [json_name = "tessellationQuality"];
+    // double tessellation_quality = 2;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_tessellation_quality()) != 0) {
         total_size += 9;
+      }
+    }
+    // .motionlab.protocol.ImportMode import_mode = 4;
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (this_._internal_import_mode() != 0) {
+        total_size += 1 +
+                      ::_pbi::WireFormatLite::EnumSize(this_._internal_import_mode());
       }
     }
   }
@@ -9335,7 +9700,7 @@ void ImportOptions::MergeImpl(::google::protobuf::MessageLite& to_msg,
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!from._internal_unit_system().empty()) {
         _this->_internal_set_unit_system(from._internal_unit_system());
@@ -9353,6 +9718,11 @@ void ImportOptions::MergeImpl(::google::protobuf::MessageLite& to_msg,
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (::absl::bit_cast<::uint64_t>(from._internal_tessellation_quality()) != 0) {
         _this->_impl_.tessellation_quality_ = from._impl_.tessellation_quality_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (from._internal_import_mode() != 0) {
+        _this->_impl_.import_mode_ = from._impl_.import_mode_;
       }
     }
   }
@@ -9377,8 +9747,8 @@ void ImportOptions::InternalSwap(ImportOptions* PROTOBUF_RESTRICT PROTOBUF_NONNU
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.unit_system_, &other->_impl_.unit_system_, arena);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(ImportOptions, _impl_.tessellation_quality_)
-      + sizeof(ImportOptions::_impl_.tessellation_quality_)
+      PROTOBUF_FIELD_OFFSET(ImportOptions, _impl_.import_mode_)
+      + sizeof(ImportOptions::_impl_.import_mode_)
       - PROTOBUF_FIELD_OFFSET(ImportOptions, _impl_.density_override_)>(
           reinterpret_cast<char*>(&_impl_.density_override_),
           reinterpret_cast<char*>(&other->_impl_.density_override_));
@@ -9522,20 +9892,20 @@ ImportAssetCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::ImportAssetCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.protocol.ImportOptions import_options = 2 [json_name = "importOptions"];
+    // .motionlab.protocol.ImportOptions import_options = 2;
     {::_pbi::TcParser::FastMtS1,
      {18, 1, 0,
       PROTOBUF_FIELD_OFFSET(ImportAssetCommand, _impl_.import_options_)}},
-    // string file_path = 1 [json_name = "filePath"];
+    // string file_path = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(ImportAssetCommand, _impl_.file_path_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string file_path = 1 [json_name = "filePath"];
+    // string file_path = 1;
     {PROTOBUF_FIELD_OFFSET(ImportAssetCommand, _impl_.file_path_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .motionlab.protocol.ImportOptions import_options = 2 [json_name = "importOptions"];
+    // .motionlab.protocol.ImportOptions import_options = 2;
     {PROTOBUF_FIELD_OFFSET(ImportAssetCommand, _impl_.import_options_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -9587,7 +9957,7 @@ PROTOBUF_NOINLINE void ImportAssetCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string file_path = 1 [json_name = "filePath"];
+  // string file_path = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_file_path().empty()) {
       const ::std::string& _s = this_._internal_file_path();
@@ -9597,7 +9967,7 @@ PROTOBUF_NOINLINE void ImportAssetCommand::Clear() {
     }
   }
 
-  // .motionlab.protocol.ImportOptions import_options = 2 [json_name = "importOptions"];
+  // .motionlab.protocol.ImportOptions import_options = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.import_options_, this_._impl_.import_options_->GetCachedSize(), target,
@@ -9630,14 +10000,14 @@ PROTOBUF_NOINLINE void ImportAssetCommand::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // string file_path = 1 [json_name = "filePath"];
+    // string file_path = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_file_path().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_file_path());
       }
     }
-    // .motionlab.protocol.ImportOptions import_options = 2 [json_name = "importOptions"];
+    // .motionlab.protocol.ImportOptions import_options = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.import_options_);
@@ -9903,50 +10273,50 @@ BodyImportResult::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // string body_id = 1 [json_name = "bodyId"];
+    // string body_id = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 1, 0,
       PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.body_id_)}},
-    // string name = 2 [json_name = "name"];
+    // string name = 2;
     {::_pbi::TcParser::FastUS1,
      {18, 2, 0,
       PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.name_)}},
-    // .motionlab.mechanism.DisplayMesh display_mesh = 3 [json_name = "displayMesh"];
+    // .motionlab.mechanism.DisplayMesh display_mesh = 3;
     {::_pbi::TcParser::FastMtS1,
      {26, 3, 0,
       PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.display_mesh_)}},
-    // .motionlab.mechanism.MassProperties mass_properties = 4 [json_name = "massProperties"];
+    // .motionlab.mechanism.MassProperties mass_properties = 4;
     {::_pbi::TcParser::FastMtS1,
      {34, 4, 1,
       PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.mass_properties_)}},
-    // .motionlab.mechanism.Pose pose = 5 [json_name = "pose"];
+    // .motionlab.mechanism.Pose pose = 5;
     {::_pbi::TcParser::FastMtS1,
      {42, 5, 2,
       PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.pose_)}},
-    // .motionlab.mechanism.AssetReference source_asset_ref = 6 [json_name = "sourceAssetRef"];
+    // .motionlab.mechanism.AssetReference source_asset_ref = 6;
     {::_pbi::TcParser::FastMtS1,
      {50, 6, 3,
       PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.source_asset_ref_)}},
-    // repeated uint32 part_index = 7 [json_name = "partIndex"];
+    // repeated uint32 part_index = 7;
     {::_pbi::TcParser::FastV32P1,
      {58, 0, 0,
       PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.part_index_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string body_id = 1 [json_name = "bodyId"];
+    // string body_id = 1;
     {PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.body_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string name = 2 [json_name = "name"];
+    // string name = 2;
     {PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.name_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .motionlab.mechanism.DisplayMesh display_mesh = 3 [json_name = "displayMesh"];
+    // .motionlab.mechanism.DisplayMesh display_mesh = 3;
     {PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.display_mesh_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.MassProperties mass_properties = 4 [json_name = "massProperties"];
+    // .motionlab.mechanism.MassProperties mass_properties = 4;
     {PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.mass_properties_), _Internal::kHasBitsOffset + 4, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.Pose pose = 5 [json_name = "pose"];
+    // .motionlab.mechanism.Pose pose = 5;
     {PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.pose_), _Internal::kHasBitsOffset + 5, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.AssetReference source_asset_ref = 6 [json_name = "sourceAssetRef"];
+    // .motionlab.mechanism.AssetReference source_asset_ref = 6;
     {PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.source_asset_ref_), _Internal::kHasBitsOffset + 6, 3, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // repeated uint32 part_index = 7 [json_name = "partIndex"];
+    // repeated uint32 part_index = 7;
     {PROTOBUF_FIELD_OFFSET(BodyImportResult, _impl_.part_index_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kPackedUInt32)},
   }},
   {{
@@ -10020,7 +10390,7 @@ PROTOBUF_NOINLINE void BodyImportResult::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string body_id = 1 [json_name = "bodyId"];
+  // string body_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (!this_._internal_body_id().empty()) {
       const ::std::string& _s = this_._internal_body_id();
@@ -10030,7 +10400,7 @@ PROTOBUF_NOINLINE void BodyImportResult::Clear() {
     }
   }
 
-  // string name = 2 [json_name = "name"];
+  // string name = 2;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
@@ -10040,35 +10410,35 @@ PROTOBUF_NOINLINE void BodyImportResult::Clear() {
     }
   }
 
-  // .motionlab.mechanism.DisplayMesh display_mesh = 3 [json_name = "displayMesh"];
+  // .motionlab.mechanism.DisplayMesh display_mesh = 3;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.display_mesh_, this_._impl_.display_mesh_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.MassProperties mass_properties = 4 [json_name = "massProperties"];
+  // .motionlab.mechanism.MassProperties mass_properties = 4;
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         4, *this_._impl_.mass_properties_, this_._impl_.mass_properties_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.Pose pose = 5 [json_name = "pose"];
+  // .motionlab.mechanism.Pose pose = 5;
   if (CheckHasBit(cached_has_bits, 0x00000020U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         5, *this_._impl_.pose_, this_._impl_.pose_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.AssetReference source_asset_ref = 6 [json_name = "sourceAssetRef"];
+  // .motionlab.mechanism.AssetReference source_asset_ref = 6;
   if (CheckHasBit(cached_has_bits, 0x00000040U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         6, *this_._impl_.source_asset_ref_, this_._impl_.source_asset_ref_->GetCachedSize(), target,
         stream);
   }
 
-  // repeated uint32 part_index = 7 [json_name = "partIndex"];
+  // repeated uint32 part_index = 7;
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
     {
       int byte_size = this_._impl_._part_index_cached_byte_size_.Get();
@@ -10105,43 +10475,43 @@ PROTOBUF_NOINLINE void BodyImportResult::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000007fU)) {
-    // repeated uint32 part_index = 7 [json_name = "partIndex"];
+    // repeated uint32 part_index = 7;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       total_size +=
           ::_pbi::WireFormatLite::UInt32SizeWithPackedTagSize(
               this_._internal_part_index(), 1,
               this_._impl_._part_index_cached_byte_size_);
     }
-    // string body_id = 1 [json_name = "bodyId"];
+    // string body_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (!this_._internal_body_id().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_body_id());
       }
     }
-    // string name = 2 [json_name = "name"];
+    // string name = 2;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
-    // .motionlab.mechanism.DisplayMesh display_mesh = 3 [json_name = "displayMesh"];
+    // .motionlab.mechanism.DisplayMesh display_mesh = 3;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.display_mesh_);
     }
-    // .motionlab.mechanism.MassProperties mass_properties = 4 [json_name = "massProperties"];
+    // .motionlab.mechanism.MassProperties mass_properties = 4;
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.mass_properties_);
     }
-    // .motionlab.mechanism.Pose pose = 5 [json_name = "pose"];
+    // .motionlab.mechanism.Pose pose = 5;
     if (CheckHasBit(cached_has_bits, 0x00000020U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.pose_);
     }
-    // .motionlab.mechanism.AssetReference source_asset_ref = 6 [json_name = "sourceAssetRef"];
+    // .motionlab.mechanism.AssetReference source_asset_ref = 6;
     if (CheckHasBit(cached_has_bits, 0x00000040U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.source_asset_ref_);
@@ -10452,56 +10822,56 @@ GeometryImportResult::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::GeometryImportResult>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // repeated uint32 part_index = 8 [json_name = "partIndex"];
+    // repeated uint32 part_index = 8;
     {::_pbi::TcParser::FastV32P1,
      {66, 0, 0,
       PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.part_index_)}},
-    // string geometry_id = 1 [json_name = "geometryId"];
+    // string geometry_id = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 1, 0,
       PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.geometry_id_)}},
-    // string body_id = 2 [json_name = "bodyId"];
+    // string body_id = 2;
     {::_pbi::TcParser::FastUS1,
      {18, 2, 0,
       PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.body_id_)}},
-    // string name = 3 [json_name = "name"];
+    // string name = 3;
     {::_pbi::TcParser::FastUS1,
      {26, 3, 0,
       PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.name_)}},
-    // .motionlab.mechanism.DisplayMesh display_mesh = 4 [json_name = "displayMesh"];
+    // .motionlab.mechanism.DisplayMesh display_mesh = 4;
     {::_pbi::TcParser::FastMtS1,
      {34, 4, 0,
       PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.display_mesh_)}},
-    // .motionlab.mechanism.MassProperties computed_mass_properties = 5 [json_name = "computedMassProperties"];
+    // .motionlab.mechanism.MassProperties computed_mass_properties = 5;
     {::_pbi::TcParser::FastMtS1,
      {42, 5, 1,
       PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.computed_mass_properties_)}},
-    // .motionlab.mechanism.Pose pose = 6 [json_name = "pose"];
+    // .motionlab.mechanism.Pose pose = 6;
     {::_pbi::TcParser::FastMtS1,
      {50, 6, 2,
       PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.pose_)}},
-    // .motionlab.mechanism.AssetReference source_asset_ref = 7 [json_name = "sourceAssetRef"];
+    // .motionlab.mechanism.AssetReference source_asset_ref = 7;
     {::_pbi::TcParser::FastMtS1,
      {58, 7, 3,
       PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.source_asset_ref_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string geometry_id = 1 [json_name = "geometryId"];
+    // string geometry_id = 1;
     {PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.geometry_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string body_id = 2 [json_name = "bodyId"];
+    // string body_id = 2;
     {PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.body_id_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string name = 3 [json_name = "name"];
+    // string name = 3;
     {PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.name_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .motionlab.mechanism.DisplayMesh display_mesh = 4 [json_name = "displayMesh"];
+    // .motionlab.mechanism.DisplayMesh display_mesh = 4;
     {PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.display_mesh_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.MassProperties computed_mass_properties = 5 [json_name = "computedMassProperties"];
+    // .motionlab.mechanism.MassProperties computed_mass_properties = 5;
     {PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.computed_mass_properties_), _Internal::kHasBitsOffset + 5, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.Pose pose = 6 [json_name = "pose"];
+    // .motionlab.mechanism.Pose pose = 6;
     {PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.pose_), _Internal::kHasBitsOffset + 6, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.AssetReference source_asset_ref = 7 [json_name = "sourceAssetRef"];
+    // .motionlab.mechanism.AssetReference source_asset_ref = 7;
     {PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.source_asset_ref_), _Internal::kHasBitsOffset + 7, 3, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // repeated uint32 part_index = 8 [json_name = "partIndex"];
+    // repeated uint32 part_index = 8;
     {PROTOBUF_FIELD_OFFSET(GeometryImportResult, _impl_.part_index_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kPackedUInt32)},
   }},
   {{
@@ -10579,7 +10949,7 @@ PROTOBUF_NOINLINE void GeometryImportResult::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string geometry_id = 1 [json_name = "geometryId"];
+  // string geometry_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (!this_._internal_geometry_id().empty()) {
       const ::std::string& _s = this_._internal_geometry_id();
@@ -10589,7 +10959,7 @@ PROTOBUF_NOINLINE void GeometryImportResult::Clear() {
     }
   }
 
-  // string body_id = 2 [json_name = "bodyId"];
+  // string body_id = 2;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (!this_._internal_body_id().empty()) {
       const ::std::string& _s = this_._internal_body_id();
@@ -10599,7 +10969,7 @@ PROTOBUF_NOINLINE void GeometryImportResult::Clear() {
     }
   }
 
-  // string name = 3 [json_name = "name"];
+  // string name = 3;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
@@ -10609,35 +10979,35 @@ PROTOBUF_NOINLINE void GeometryImportResult::Clear() {
     }
   }
 
-  // .motionlab.mechanism.DisplayMesh display_mesh = 4 [json_name = "displayMesh"];
+  // .motionlab.mechanism.DisplayMesh display_mesh = 4;
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         4, *this_._impl_.display_mesh_, this_._impl_.display_mesh_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.MassProperties computed_mass_properties = 5 [json_name = "computedMassProperties"];
+  // .motionlab.mechanism.MassProperties computed_mass_properties = 5;
   if (CheckHasBit(cached_has_bits, 0x00000020U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         5, *this_._impl_.computed_mass_properties_, this_._impl_.computed_mass_properties_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.Pose pose = 6 [json_name = "pose"];
+  // .motionlab.mechanism.Pose pose = 6;
   if (CheckHasBit(cached_has_bits, 0x00000040U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         6, *this_._impl_.pose_, this_._impl_.pose_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.AssetReference source_asset_ref = 7 [json_name = "sourceAssetRef"];
+  // .motionlab.mechanism.AssetReference source_asset_ref = 7;
   if (CheckHasBit(cached_has_bits, 0x00000080U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         7, *this_._impl_.source_asset_ref_, this_._impl_.source_asset_ref_->GetCachedSize(), target,
         stream);
   }
 
-  // repeated uint32 part_index = 8 [json_name = "partIndex"];
+  // repeated uint32 part_index = 8;
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
     {
       int byte_size = this_._impl_._part_index_cached_byte_size_.Get();
@@ -10674,50 +11044,50 @@ PROTOBUF_NOINLINE void GeometryImportResult::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x000000ffU)) {
-    // repeated uint32 part_index = 8 [json_name = "partIndex"];
+    // repeated uint32 part_index = 8;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       total_size +=
           ::_pbi::WireFormatLite::UInt32SizeWithPackedTagSize(
               this_._internal_part_index(), 1,
               this_._impl_._part_index_cached_byte_size_);
     }
-    // string geometry_id = 1 [json_name = "geometryId"];
+    // string geometry_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (!this_._internal_geometry_id().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_geometry_id());
       }
     }
-    // string body_id = 2 [json_name = "bodyId"];
+    // string body_id = 2;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (!this_._internal_body_id().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_body_id());
       }
     }
-    // string name = 3 [json_name = "name"];
+    // string name = 3;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
-    // .motionlab.mechanism.DisplayMesh display_mesh = 4 [json_name = "displayMesh"];
+    // .motionlab.mechanism.DisplayMesh display_mesh = 4;
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.display_mesh_);
     }
-    // .motionlab.mechanism.MassProperties computed_mass_properties = 5 [json_name = "computedMassProperties"];
+    // .motionlab.mechanism.MassProperties computed_mass_properties = 5;
     if (CheckHasBit(cached_has_bits, 0x00000020U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.computed_mass_properties_);
     }
-    // .motionlab.mechanism.Pose pose = 6 [json_name = "pose"];
+    // .motionlab.mechanism.Pose pose = 6;
     if (CheckHasBit(cached_has_bits, 0x00000040U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.pose_);
     }
-    // .motionlab.mechanism.AssetReference source_asset_ref = 7 [json_name = "sourceAssetRef"];
+    // .motionlab.mechanism.AssetReference source_asset_ref = 7;
     if (CheckHasBit(cached_has_bits, 0x00000080U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.source_asset_ref_);
@@ -10868,7 +11238,8 @@ PROTOBUF_NDEBUG_INLINE ImportAssetResult::Impl_::Impl_(
         bodies_{visibility, arena, from.bodies_},
         diagnostics_{visibility, arena, from.diagnostics_},
         geometries_{visibility, arena, from.geometries_},
-        error_message_(arena, from.error_message_) {}
+        error_message_(arena, from.error_message_),
+        asset_id_(arena, from.asset_id_) {}
 
 ImportAssetResult::ImportAssetResult(
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
@@ -10894,7 +11265,8 @@ PROTOBUF_NDEBUG_INLINE ImportAssetResult::Impl_::Impl_(
         bodies_{visibility, arena},
         diagnostics_{visibility, arena},
         geometries_{visibility, arena},
-        error_message_(arena) {}
+        error_message_(arena),
+        asset_id_(arena) {}
 
 inline void ImportAssetResult::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
@@ -10912,6 +11284,7 @@ inline void ImportAssetResult::SharedDtor(MessageLite& self) {
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
   this_._impl_.error_message_.Destroy();
+  this_._impl_.asset_id_.Destroy();
   this_._impl_.~Impl_();
 }
 
@@ -10978,16 +11351,16 @@ ImportAssetResult::GetClassData() const {
   return ImportAssetResult_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 5, 2, 69, 2>
+const ::_pbi::TcParseTable<3, 6, 2, 77, 2>
 ImportAssetResult::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_._has_bits_),
     0, // no _extensions_
-    5, 56,  // max_field_number, fast_idx_mask
+    6, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967264,  // skipmap
+    4294967232,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    5,  // num_field_entries
+    6,  // num_field_entries
     2,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     ImportAssetResult_class_data_.base(),
@@ -10998,51 +11371,57 @@ ImportAssetResult::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // bool success = 1 [json_name = "success"];
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(ImportAssetResult, _impl_.success_), 4>(),
-     {8, 4, 0,
+    // bool success = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(ImportAssetResult, _impl_.success_), 5>(),
+     {8, 5, 0,
       PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_.success_)}},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {::_pbi::TcParser::FastUS1,
      {18, 3, 0,
       PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_.error_message_)}},
-    // repeated .motionlab.protocol.BodyImportResult bodies = 3 [json_name = "bodies"];
+    // repeated .motionlab.protocol.BodyImportResult bodies = 3;
     {::_pbi::TcParser::FastMtR1,
      {26, 0, 0,
       PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_.bodies_)}},
-    // repeated string diagnostics = 4 [json_name = "diagnostics"];
+    // repeated string diagnostics = 4;
     {::_pbi::TcParser::FastUR1,
      {34, 1, 0,
       PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_.diagnostics_)}},
-    // repeated .motionlab.protocol.GeometryImportResult geometries = 5 [json_name = "geometries"];
+    // repeated .motionlab.protocol.GeometryImportResult geometries = 5;
     {::_pbi::TcParser::FastMtR1,
      {42, 2, 1,
       PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_.geometries_)}},
-    {::_pbi::TcParser::MiniParse, {}},
+    // string asset_id = 6;
+    {::_pbi::TcParser::FastUS1,
+     {50, 4, 0,
+      PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_.asset_id_)}},
     {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
-    // bool success = 1 [json_name = "success"];
-    {PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_.success_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // bool success = 1;
+    {PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_.success_), _Internal::kHasBitsOffset + 5, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_.error_message_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // repeated .motionlab.protocol.BodyImportResult bodies = 3 [json_name = "bodies"];
+    // repeated .motionlab.protocol.BodyImportResult bodies = 3;
     {PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_.bodies_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
-    // repeated string diagnostics = 4 [json_name = "diagnostics"];
+    // repeated string diagnostics = 4;
     {PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_.diagnostics_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcRepeated | ::_fl::kUtf8String | ::_fl::kRepSString)},
-    // repeated .motionlab.protocol.GeometryImportResult geometries = 5 [json_name = "geometries"];
+    // repeated .motionlab.protocol.GeometryImportResult geometries = 5;
     {PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_.geometries_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string asset_id = 6;
+    {PROTOBUF_FIELD_OFFSET(ImportAssetResult, _impl_.asset_id_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::motionlab::protocol::BodyImportResult>()},
       {::_pbi::TcParser::GetTable<::motionlab::protocol::GeometryImportResult>()},
   }},
   {{
-    "\44\0\15\0\13\0\0\0"
+    "\44\0\15\0\13\0\10\0"
     "motionlab.protocol.ImportAssetResult"
     "error_message"
     "diagnostics"
+    "asset_id"
   }},
 };
 PROTOBUF_NOINLINE void ImportAssetResult::Clear() {
@@ -11053,7 +11432,7 @@ PROTOBUF_NOINLINE void ImportAssetResult::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       _impl_.bodies_.Clear();
     }
@@ -11065,6 +11444,9 @@ PROTOBUF_NOINLINE void ImportAssetResult::Clear() {
     }
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       _impl_.error_message_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      _impl_.asset_id_.ClearNonDefaultToEmpty();
     }
   }
   _impl_.success_ = false;
@@ -11091,8 +11473,8 @@ PROTOBUF_NOINLINE void ImportAssetResult::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // bool success = 1 [json_name = "success"];
-  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+  // bool success = 1;
+  if (CheckHasBit(cached_has_bits, 0x00000020U)) {
     if (this_._internal_success() != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteBoolToArray(
@@ -11100,7 +11482,7 @@ PROTOBUF_NOINLINE void ImportAssetResult::Clear() {
     }
   }
 
-  // string error_message = 2 [json_name = "errorMessage"];
+  // string error_message = 2;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (!this_._internal_error_message().empty()) {
       const ::std::string& _s = this_._internal_error_message();
@@ -11110,7 +11492,7 @@ PROTOBUF_NOINLINE void ImportAssetResult::Clear() {
     }
   }
 
-  // repeated .motionlab.protocol.BodyImportResult bodies = 3 [json_name = "bodies"];
+  // repeated .motionlab.protocol.BodyImportResult bodies = 3;
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_bodies_size());
@@ -11123,7 +11505,7 @@ PROTOBUF_NOINLINE void ImportAssetResult::Clear() {
     }
   }
 
-  // repeated string diagnostics = 4 [json_name = "diagnostics"];
+  // repeated string diagnostics = 4;
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
     for (int i = 0, n = this_._internal_diagnostics_size(); i < n; ++i) {
       const auto& s = this_._internal_diagnostics().Get(i);
@@ -11133,7 +11515,7 @@ PROTOBUF_NOINLINE void ImportAssetResult::Clear() {
     }
   }
 
-  // repeated .motionlab.protocol.GeometryImportResult geometries = 5 [json_name = "geometries"];
+  // repeated .motionlab.protocol.GeometryImportResult geometries = 5;
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000004U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_geometries_size());
@@ -11143,6 +11525,16 @@ PROTOBUF_NOINLINE void ImportAssetResult::Clear() {
           ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
               5, repfield, repfield.GetCachedSize(),
               target, stream);
+    }
+  }
+
+  // string asset_id = 6;
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    if (!this_._internal_asset_id().empty()) {
+      const ::std::string& _s = this_._internal_asset_id();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.ImportAssetResult.asset_id");
+      target = stream->WriteStringMaybeAliased(6, _s, target);
     }
   }
 
@@ -11171,15 +11563,15 @@ PROTOBUF_NOINLINE void ImportAssetResult::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
-    // repeated .motionlab.protocol.BodyImportResult bodies = 3 [json_name = "bodies"];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000003fU)) {
+    // repeated .motionlab.protocol.BodyImportResult bodies = 3;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       total_size += 1UL * this_._internal_bodies_size();
       for (const auto& msg : this_._internal_bodies()) {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
-    // repeated string diagnostics = 4 [json_name = "diagnostics"];
+    // repeated string diagnostics = 4;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
       total_size +=
           1 * ::google::protobuf::internal::FromIntSize(this_._internal_diagnostics().size());
@@ -11188,22 +11580,29 @@ PROTOBUF_NOINLINE void ImportAssetResult::Clear() {
             this_._internal_diagnostics().Get(i));
       }
     }
-    // repeated .motionlab.protocol.GeometryImportResult geometries = 5 [json_name = "geometries"];
+    // repeated .motionlab.protocol.GeometryImportResult geometries = 5;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000004U)) {
       total_size += 1UL * this_._internal_geometries_size();
       for (const auto& msg : this_._internal_geometries()) {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (!this_._internal_error_message().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_error_message());
       }
     }
-    // bool success = 1 [json_name = "success"];
+    // string asset_id = 6;
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (!this_._internal_asset_id().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_asset_id());
+      }
+    }
+    // bool success = 1;
+    if (CheckHasBit(cached_has_bits, 0x00000020U)) {
       if (this_._internal_success() != 0) {
         total_size += 2;
       }
@@ -11228,7 +11627,7 @@ void ImportAssetResult::MergeImpl(::google::protobuf::MessageLite& to_msg,
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000003fU)) {
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       _this->_internal_mutable_bodies()->InternalMergeFromWithArena(
           ::google::protobuf::MessageLite::internal_visibility(), arena,
@@ -11254,6 +11653,15 @@ void ImportAssetResult::MergeImpl(::google::protobuf::MessageLite& to_msg,
       }
     }
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (!from._internal_asset_id().empty()) {
+        _this->_internal_set_asset_id(from._internal_asset_id());
+      } else {
+        if (_this->_impl_.asset_id_.IsDefault()) {
+          _this->_internal_set_asset_id("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000020U)) {
       if (from._internal_success() != 0) {
         _this->_impl_.success_ = from._impl_.success_;
       }
@@ -11282,6 +11690,7 @@ void ImportAssetResult::InternalSwap(ImportAssetResult* PROTOBUF_RESTRICT PROTOB
   _impl_.diagnostics_.InternalSwap(&other->_impl_.diagnostics_);
   _impl_.geometries_.InternalSwap(&other->_impl_.geometries_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.error_message_, &other->_impl_.error_message_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.asset_id_, &other->_impl_.asset_id_, arena);
   swap(_impl_.success_, other->_impl_.success_);
 }
 
@@ -11426,14 +11835,14 @@ MechanismSnapshot::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::MechanismSnapshot>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.Mechanism mechanism = 1 [json_name = "mechanism"];
+    // .motionlab.mechanism.Mechanism mechanism = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(MechanismSnapshot, _impl_.mechanism_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Mechanism mechanism = 1 [json_name = "mechanism"];
+    // .motionlab.mechanism.Mechanism mechanism = 1;
     {PROTOBUF_FIELD_OFFSET(MechanismSnapshot, _impl_.mechanism_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -11477,7 +11886,7 @@ PROTOBUF_NOINLINE void MechanismSnapshot::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.Mechanism mechanism = 1 [json_name = "mechanism"];
+  // .motionlab.mechanism.Mechanism mechanism = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.mechanism_, this_._impl_.mechanism_->GetCachedSize(), target,
@@ -11508,7 +11917,7 @@ PROTOBUF_NOINLINE void MechanismSnapshot::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.mechanism.Mechanism mechanism = 1 [json_name = "mechanism"];
+    // .motionlab.mechanism.Mechanism mechanism = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -11722,26 +12131,26 @@ CreateDatumCommand::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
+    // .motionlab.mechanism.ElementId parent_body_id = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 1, 0,
       PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.parent_body_id_)}},
-    // .motionlab.mechanism.Pose local_pose = 2 [json_name = "localPose"];
+    // .motionlab.mechanism.Pose local_pose = 2;
     {::_pbi::TcParser::FastMtS1,
      {18, 2, 1,
       PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.local_pose_)}},
-    // string name = 3 [json_name = "name"];
+    // string name = 3;
     {::_pbi::TcParser::FastUS1,
      {26, 0, 0,
       PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.name_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
+    // .motionlab.mechanism.ElementId parent_body_id = 1;
     {PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.parent_body_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.Pose local_pose = 2 [json_name = "localPose"];
+    // .motionlab.mechanism.Pose local_pose = 2;
     {PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.local_pose_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string name = 3 [json_name = "name"];
+    // string name = 3;
     {PROTOBUF_FIELD_OFFSET(CreateDatumCommand, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -11798,21 +12207,21 @@ PROTOBUF_NOINLINE void CreateDatumCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
+  // .motionlab.mechanism.ElementId parent_body_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.parent_body_id_, this_._impl_.parent_body_id_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.Pose local_pose = 2 [json_name = "localPose"];
+  // .motionlab.mechanism.Pose local_pose = 2;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.local_pose_, this_._impl_.local_pose_->GetCachedSize(), target,
         stream);
   }
 
-  // string name = 3 [json_name = "name"];
+  // string name = 3;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
@@ -11848,19 +12257,19 @@ PROTOBUF_NOINLINE void CreateDatumCommand::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
-    // string name = 3 [json_name = "name"];
+    // string name = 3;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
-    // .motionlab.mechanism.ElementId parent_body_id = 1 [json_name = "parentBodyId"];
+    // .motionlab.mechanism.ElementId parent_body_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.parent_body_id_);
     }
-    // .motionlab.mechanism.Pose local_pose = 2 [json_name = "localPose"];
+    // .motionlab.mechanism.Pose local_pose = 2;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.local_pose_);
@@ -12081,14 +12490,14 @@ DeleteDatumCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::DeleteDatumCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    // .motionlab.mechanism.ElementId datum_id = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(DeleteDatumCommand, _impl_.datum_id_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    // .motionlab.mechanism.ElementId datum_id = 1;
     {PROTOBUF_FIELD_OFFSET(DeleteDatumCommand, _impl_.datum_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -12132,7 +12541,7 @@ PROTOBUF_NOINLINE void DeleteDatumCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+  // .motionlab.mechanism.ElementId datum_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.datum_id_, this_._impl_.datum_id_->GetCachedSize(), target,
@@ -12163,7 +12572,7 @@ PROTOBUF_NOINLINE void DeleteDatumCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    // .motionlab.mechanism.ElementId datum_id = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -12361,20 +12770,20 @@ RenameDatumCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::RenameDatumCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string name = 2 [json_name = "name"];
+    // string name = 2;
     {::_pbi::TcParser::FastUS1,
      {18, 0, 0,
       PROTOBUF_FIELD_OFFSET(RenameDatumCommand, _impl_.name_)}},
-    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    // .motionlab.mechanism.ElementId datum_id = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 1, 0,
       PROTOBUF_FIELD_OFFSET(RenameDatumCommand, _impl_.datum_id_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    // .motionlab.mechanism.ElementId datum_id = 1;
     {PROTOBUF_FIELD_OFFSET(RenameDatumCommand, _impl_.datum_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string name = 2 [json_name = "name"];
+    // string name = 2;
     {PROTOBUF_FIELD_OFFSET(RenameDatumCommand, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -12426,14 +12835,14 @@ PROTOBUF_NOINLINE void RenameDatumCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+  // .motionlab.mechanism.ElementId datum_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.datum_id_, this_._impl_.datum_id_->GetCachedSize(), target,
         stream);
   }
 
-  // string name = 2 [json_name = "name"];
+  // string name = 2;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
@@ -12469,14 +12878,14 @@ PROTOBUF_NOINLINE void RenameDatumCommand::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // string name = 2 [json_name = "name"];
+    // string name = 2;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
-    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    // .motionlab.mechanism.ElementId datum_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.datum_id_);
@@ -12694,26 +13103,26 @@ CreateDatumFromFaceCommand::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+    // .motionlab.mechanism.ElementId geometry_id = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 1, 0,
       PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.geometry_id_)}},
-    // uint32 face_index = 2 [json_name = "faceIndex"];
+    // uint32 face_index = 2;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateDatumFromFaceCommand, _impl_.face_index_), 2>(),
      {16, 2, 0,
       PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.face_index_)}},
-    // string name = 3 [json_name = "name"];
+    // string name = 3;
     {::_pbi::TcParser::FastUS1,
      {26, 0, 0,
       PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.name_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+    // .motionlab.mechanism.ElementId geometry_id = 1;
     {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.geometry_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // uint32 face_index = 2 [json_name = "faceIndex"];
+    // uint32 face_index = 2;
     {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.face_index_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
-    // string name = 3 [json_name = "name"];
+    // string name = 3;
     {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceCommand, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -12766,14 +13175,14 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+  // .motionlab.mechanism.ElementId geometry_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.geometry_id_, this_._impl_.geometry_id_->GetCachedSize(), target,
         stream);
   }
 
-  // uint32 face_index = 2 [json_name = "faceIndex"];
+  // uint32 face_index = 2;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (this_._internal_face_index() != 0) {
       target = stream->EnsureSpace(target);
@@ -12782,7 +13191,7 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceCommand::Clear() {
     }
   }
 
-  // string name = 3 [json_name = "name"];
+  // string name = 3;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
@@ -12818,19 +13227,19 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceCommand::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
-    // string name = 3 [json_name = "name"];
+    // string name = 3;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
-    // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+    // .motionlab.mechanism.ElementId geometry_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.geometry_id_);
     }
-    // uint32 face_index = 2 [json_name = "faceIndex"];
+    // uint32 face_index = 2;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (this_._internal_face_index() != 0) {
         total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
@@ -13072,32 +13481,32 @@ CreateDatumFromFaceSuccess::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::CreateDatumFromFaceSuccess>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.ElementId geometry_id = 4 [json_name = "geometryId"];
+    // .motionlab.mechanism.ElementId geometry_id = 4;
     {::_pbi::TcParser::FastMtS1,
      {34, 1, 1,
       PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.geometry_id_)}},
-    // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+    // .motionlab.mechanism.Datum datum = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.datum_)}},
-    // uint32 face_index = 2 [json_name = "faceIndex"];
+    // uint32 face_index = 2;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateDatumFromFaceSuccess, _impl_.face_index_), 2>(),
      {16, 2, 0,
       PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.face_index_)}},
-    // .motionlab.protocol.FaceSurfaceClass surface_class = 3 [json_name = "surfaceClass"];
+    // .motionlab.protocol.FaceSurfaceClass surface_class = 3;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateDatumFromFaceSuccess, _impl_.surface_class_), 3>(),
      {24, 3, 0,
       PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.surface_class_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+    // .motionlab.mechanism.Datum datum = 1;
     {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.datum_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // uint32 face_index = 2 [json_name = "faceIndex"];
+    // uint32 face_index = 2;
     {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.face_index_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
-    // .motionlab.protocol.FaceSurfaceClass surface_class = 3 [json_name = "surfaceClass"];
+    // .motionlab.protocol.FaceSurfaceClass surface_class = 3;
     {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.surface_class_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
-    // .motionlab.mechanism.ElementId geometry_id = 4 [json_name = "geometryId"];
+    // .motionlab.mechanism.ElementId geometry_id = 4;
     {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceSuccess, _impl_.geometry_id_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -13153,14 +13562,14 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceSuccess::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+  // .motionlab.mechanism.Datum datum = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.datum_, this_._impl_.datum_->GetCachedSize(), target,
         stream);
   }
 
-  // uint32 face_index = 2 [json_name = "faceIndex"];
+  // uint32 face_index = 2;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (this_._internal_face_index() != 0) {
       target = stream->EnsureSpace(target);
@@ -13169,7 +13578,7 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceSuccess::Clear() {
     }
   }
 
-  // .motionlab.protocol.FaceSurfaceClass surface_class = 3 [json_name = "surfaceClass"];
+  // .motionlab.protocol.FaceSurfaceClass surface_class = 3;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (this_._internal_surface_class() != 0) {
       target = stream->EnsureSpace(target);
@@ -13178,7 +13587,7 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceSuccess::Clear() {
     }
   }
 
-  // .motionlab.mechanism.ElementId geometry_id = 4 [json_name = "geometryId"];
+  // .motionlab.mechanism.ElementId geometry_id = 4;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         4, *this_._impl_.geometry_id_, this_._impl_.geometry_id_->GetCachedSize(), target,
@@ -13211,24 +13620,24 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceSuccess::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
-    // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+    // .motionlab.mechanism.Datum datum = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.datum_);
     }
-    // .motionlab.mechanism.ElementId geometry_id = 4 [json_name = "geometryId"];
+    // .motionlab.mechanism.ElementId geometry_id = 4;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.geometry_id_);
     }
-    // uint32 face_index = 2 [json_name = "faceIndex"];
+    // uint32 face_index = 2;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (this_._internal_face_index() != 0) {
         total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
             this_._internal_face_index());
       }
     }
-    // .motionlab.protocol.FaceSurfaceClass surface_class = 3 [json_name = "surfaceClass"];
+    // .motionlab.protocol.FaceSurfaceClass surface_class = 3;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (this_._internal_surface_class() != 0) {
         total_size += 1 +
@@ -13503,9 +13912,9 @@ CreateDatumResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+    // .motionlab.mechanism.Datum datum = 1;
     {PROTOBUF_FIELD_OFFSET(CreateDatumResult, _impl_.result_.datum_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(CreateDatumResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -13587,13 +13996,13 @@ PROTOBUF_NOINLINE void CreateDatumResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+    // .motionlab.mechanism.Datum datum = 1;
     case kDatum: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.datum_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -13855,9 +14264,9 @@ CreateDatumFromFaceResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.protocol.CreateDatumFromFaceSuccess success = 1 [json_name = "success"];
+    // .motionlab.protocol.CreateDatumFromFaceSuccess success = 1;
     {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceResult, _impl_.result_.success_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(CreateDatumFromFaceResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -13939,13 +14348,13 @@ PROTOBUF_NOINLINE void CreateDatumFromFaceResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.protocol.CreateDatumFromFaceSuccess success = 1 [json_name = "success"];
+    // .motionlab.protocol.CreateDatumFromFaceSuccess success = 1;
     case kSuccess: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.success_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -14218,9 +14627,9 @@ DeleteDatumResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    // .motionlab.mechanism.ElementId deleted_id = 1;
     {PROTOBUF_FIELD_OFFSET(DeleteDatumResult, _impl_.result_.deleted_id_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(DeleteDatumResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -14302,13 +14711,13 @@ PROTOBUF_NOINLINE void DeleteDatumResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    // .motionlab.mechanism.ElementId deleted_id = 1;
     case kDeletedId: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.deleted_id_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -14581,9 +14990,9 @@ RenameDatumResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+    // .motionlab.mechanism.Datum datum = 1;
     {PROTOBUF_FIELD_OFFSET(RenameDatumResult, _impl_.result_.datum_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(RenameDatumResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -14665,13 +15074,13 @@ PROTOBUF_NOINLINE void RenameDatumResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+    // .motionlab.mechanism.Datum datum = 1;
     case kDatum: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.datum_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -14905,20 +15314,20 @@ UpdateDatumPoseCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::UpdateDatumPoseCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.Pose new_local_pose = 2 [json_name = "newLocalPose"];
+    // .motionlab.mechanism.Pose new_local_pose = 2;
     {::_pbi::TcParser::FastMtS1,
      {18, 1, 1,
       PROTOBUF_FIELD_OFFSET(UpdateDatumPoseCommand, _impl_.new_local_pose_)}},
-    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    // .motionlab.mechanism.ElementId datum_id = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(UpdateDatumPoseCommand, _impl_.datum_id_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    // .motionlab.mechanism.ElementId datum_id = 1;
     {PROTOBUF_FIELD_OFFSET(UpdateDatumPoseCommand, _impl_.datum_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.Pose new_local_pose = 2 [json_name = "newLocalPose"];
+    // .motionlab.mechanism.Pose new_local_pose = 2;
     {PROTOBUF_FIELD_OFFSET(UpdateDatumPoseCommand, _impl_.new_local_pose_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -14969,14 +15378,14 @@ PROTOBUF_NOINLINE void UpdateDatumPoseCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+  // .motionlab.mechanism.ElementId datum_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.datum_id_, this_._impl_.datum_id_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.Pose new_local_pose = 2 [json_name = "newLocalPose"];
+  // .motionlab.mechanism.Pose new_local_pose = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.new_local_pose_, this_._impl_.new_local_pose_->GetCachedSize(), target,
@@ -15009,12 +15418,12 @@ PROTOBUF_NOINLINE void UpdateDatumPoseCommand::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+    // .motionlab.mechanism.ElementId datum_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.datum_id_);
     }
-    // .motionlab.mechanism.Pose new_local_pose = 2 [json_name = "newLocalPose"];
+    // .motionlab.mechanism.Pose new_local_pose = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.new_local_pose_);
@@ -15277,9 +15686,9 @@ UpdateDatumPoseResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+    // .motionlab.mechanism.Datum datum = 1;
     {PROTOBUF_FIELD_OFFSET(UpdateDatumPoseResult, _impl_.result_.datum_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(UpdateDatumPoseResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -15361,13 +15770,13 @@ PROTOBUF_NOINLINE void UpdateDatumPoseResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.Datum datum = 1 [json_name = "datum"];
+    // .motionlab.mechanism.Datum datum = 1;
     case kDatum: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.datum_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -15464,6 +15873,12 @@ void UpdateBodyCommand::clear_body_id() {
   ClearHasBit(_impl_._has_bits_[0],
                   0x00000002U);
 }
+void UpdateBodyCommand::clear_pose() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.pose_ != nullptr) _impl_.pose_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
 UpdateBodyCommand::UpdateBodyCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, UpdateBodyCommand_class_data_.base()) {
@@ -15498,7 +15913,16 @@ UpdateBodyCommand::UpdateBodyCommand(
   _impl_.body_id_ = (CheckHasBit(cached_has_bits, 0x00000002U))
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.body_id_)
                 : nullptr;
-  _impl_.is_fixed_ = from._impl_.is_fixed_;
+  _impl_.pose_ = (CheckHasBit(cached_has_bits, 0x00000004U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.pose_)
+                : nullptr;
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, is_fixed_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, is_fixed_),
+           offsetof(Impl_, motion_type_) -
+               offsetof(Impl_, is_fixed_) +
+               sizeof(Impl_::motion_type_));
 
   // @@protoc_insertion_point(copy_constructor:motionlab.protocol.UpdateBodyCommand)
 }
@@ -15513,9 +15937,9 @@ inline void UpdateBodyCommand::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena)
   ::memset(reinterpret_cast<char*>(&_impl_) +
                offsetof(Impl_, body_id_),
            0,
-           offsetof(Impl_, is_fixed_) -
+           offsetof(Impl_, motion_type_) -
                offsetof(Impl_, body_id_) +
-               sizeof(Impl_::is_fixed_));
+               sizeof(Impl_::motion_type_));
 }
 UpdateBodyCommand::~UpdateBodyCommand() {
   // @@protoc_insertion_point(destructor:motionlab.protocol.UpdateBodyCommand)
@@ -15530,6 +15954,7 @@ inline void UpdateBodyCommand::SharedDtor(MessageLite& self) {
   ABSL_DCHECK(this_.GetArena() == nullptr);
   this_._impl_.name_.Destroy();
   delete this_._impl_.body_id_;
+  delete this_._impl_.pose_;
   this_._impl_.~Impl_();
 }
 
@@ -15576,17 +16001,17 @@ UpdateBodyCommand::GetClassData() const {
   return UpdateBodyCommand_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 1, 49, 2>
+const ::_pbi::TcParseTable<3, 5, 2, 49, 2>
 UpdateBodyCommand::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_._has_bits_),
     0, // no _extensions_
-    3, 24,  // max_field_number, fast_idx_mask
+    5, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967264,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
-    1,  // num_aux_entries
+    5,  // num_field_entries
+    2,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     UpdateBodyCommand_class_data_.base(),
     nullptr,  // post_loop_handler
@@ -15596,30 +16021,45 @@ UpdateBodyCommand::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+    // .motionlab.mechanism.ElementId body_id = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 1, 0,
       PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.body_id_)}},
-    // optional bool is_fixed = 2 [json_name = "isFixed"];
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(UpdateBodyCommand, _impl_.is_fixed_), 2>(),
-     {16, 2, 0,
+    // optional bool is_fixed = 2 [deprecated = true];
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(UpdateBodyCommand, _impl_.is_fixed_), 3>(),
+     {16, 3, 0,
       PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.is_fixed_)}},
-    // optional string name = 3 [json_name = "name"];
+    // optional string name = 3;
     {::_pbi::TcParser::FastUS1,
      {26, 0, 0,
       PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.name_)}},
+    // optional .motionlab.mechanism.Pose pose = 4;
+    {::_pbi::TcParser::FastMtS1,
+     {34, 2, 1,
+      PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.pose_)}},
+    // optional .motionlab.mechanism.MotionType motion_type = 5;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(UpdateBodyCommand, _impl_.motion_type_), 4>(),
+     {40, 4, 0,
+      PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.motion_type_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+    // .motionlab.mechanism.ElementId body_id = 1;
     {PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.body_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // optional bool is_fixed = 2 [json_name = "isFixed"];
-    {PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.is_fixed_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
-    // optional string name = 3 [json_name = "name"];
+    // optional bool is_fixed = 2 [deprecated = true];
+    {PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.is_fixed_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    // optional string name = 3;
     {PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // optional .motionlab.mechanism.Pose pose = 4;
+    {PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.pose_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // optional .motionlab.mechanism.MotionType motion_type = 5;
+    {PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.motion_type_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::ElementId>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Pose>()},
   }},
   {{
     "\44\0\0\4\0\0\0\0"
@@ -15635,7 +16075,7 @@ PROTOBUF_NOINLINE void UpdateBodyCommand::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       _impl_.name_.ClearNonDefaultToEmpty();
     }
@@ -15643,8 +16083,16 @@ PROTOBUF_NOINLINE void UpdateBodyCommand::Clear() {
       ABSL_DCHECK(_impl_.body_id_ != nullptr);
       _impl_.body_id_->Clear();
     }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      ABSL_DCHECK(_impl_.pose_ != nullptr);
+      _impl_.pose_->Clear();
+    }
   }
-  _impl_.is_fixed_ = false;
+  if (BatchCheckHasBit(cached_has_bits, 0x00000018U)) {
+    ::memset(&_impl_.is_fixed_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.motion_type_) -
+        reinterpret_cast<char*>(&_impl_.is_fixed_)) + sizeof(_impl_.motion_type_));
+  }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -15668,26 +16116,40 @@ PROTOBUF_NOINLINE void UpdateBodyCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+  // .motionlab.mechanism.ElementId body_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.body_id_, this_._impl_.body_id_->GetCachedSize(), target,
         stream);
   }
 
-  // optional bool is_fixed = 2 [json_name = "isFixed"];
-  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+  // optional bool is_fixed = 2 [deprecated = true];
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteBoolToArray(
         2, this_._internal_is_fixed(), target);
   }
 
-  // optional string name = 3 [json_name = "name"];
+  // optional string name = 3;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     const ::std::string& _s = this_._internal_name();
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
         _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.UpdateBodyCommand.name");
     target = stream->WriteStringMaybeAliased(3, _s, target);
+  }
+
+  // optional .motionlab.mechanism.Pose pose = 4;
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        4, *this_._impl_.pose_, this_._impl_.pose_->GetCachedSize(), target,
+        stream);
+  }
+
+  // optional .motionlab.mechanism.MotionType motion_type = 5;
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteEnumToArray(
+        5, this_._internal_motion_type(), target);
   }
 
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
@@ -15715,17 +16177,27 @@ PROTOBUF_NOINLINE void UpdateBodyCommand::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  total_size += static_cast<bool>(0x00000004U & cached_has_bits) * 2;
-  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // optional string name = 3 [json_name = "name"];
+  total_size += static_cast<bool>(0x00000008U & cached_has_bits) * 2;
+  if (BatchCheckHasBit(cached_has_bits, 0x00000017U)) {
+    // optional string name = 3;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_name());
     }
-    // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+    // .motionlab.mechanism.ElementId body_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.body_id_);
+    }
+    // optional .motionlab.mechanism.Pose pose = 4;
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.pose_);
+    }
+    // optional .motionlab.mechanism.MotionType motion_type = 5;
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      total_size += 1 +
+                    ::_pbi::WireFormatLite::EnumSize(this_._internal_motion_type());
     }
   }
   return this_.MaybeComputeUnknownFieldsSize(total_size,
@@ -15747,7 +16219,7 @@ void UpdateBodyCommand::MergeImpl(::google::protobuf::MessageLite& to_msg,
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       _this->_internal_set_name(from._internal_name());
     }
@@ -15760,7 +16232,18 @@ void UpdateBodyCommand::MergeImpl(::google::protobuf::MessageLite& to_msg,
       }
     }
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      ABSL_DCHECK(from._impl_.pose_ != nullptr);
+      if (_this->_impl_.pose_ == nullptr) {
+        _this->_impl_.pose_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.pose_);
+      } else {
+        _this->_impl_.pose_->MergeFrom(*from._impl_.pose_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       _this->_impl_.is_fixed_ = from._impl_.is_fixed_;
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      _this->_impl_.motion_type_ = from._impl_.motion_type_;
     }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
@@ -15784,8 +16267,8 @@ void UpdateBodyCommand::InternalSwap(UpdateBodyCommand* PROTOBUF_RESTRICT PROTOB
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.is_fixed_)
-      + sizeof(UpdateBodyCommand::_impl_.is_fixed_)
+      PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.motion_type_)
+      + sizeof(UpdateBodyCommand::_impl_.motion_type_)
       - PROTOBUF_FIELD_OFFSET(UpdateBodyCommand, _impl_.body_id_)>(
           reinterpret_cast<char*>(&_impl_.body_id_),
           reinterpret_cast<char*>(&other->_impl_.body_id_));
@@ -15986,9 +16469,9 @@ UpdateBodyResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Body body = 1 [json_name = "body"];
+    // .motionlab.mechanism.Body body = 1;
     {PROTOBUF_FIELD_OFFSET(UpdateBodyResult, _impl_.result_.body_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(UpdateBodyResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -16070,13 +16553,13 @@ PROTOBUF_NOINLINE void UpdateBodyResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.Body body = 1 [json_name = "body"];
+    // .motionlab.mechanism.Body body = 1;
     case kBody: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.body_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -16216,7 +16699,13 @@ CreateBodyCommand::CreateBodyCommand(
   _impl_.pose_ = (CheckHasBit(cached_has_bits, 0x00000004U))
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.pose_)
                 : nullptr;
-  _impl_.is_fixed_ = from._impl_.is_fixed_;
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, is_fixed_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, is_fixed_),
+           offsetof(Impl_, motion_type_) -
+               offsetof(Impl_, is_fixed_) +
+               sizeof(Impl_::motion_type_));
 
   // @@protoc_insertion_point(copy_constructor:motionlab.protocol.CreateBodyCommand)
 }
@@ -16231,9 +16720,9 @@ inline void CreateBodyCommand::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena)
   ::memset(reinterpret_cast<char*>(&_impl_) +
                offsetof(Impl_, mass_properties_),
            0,
-           offsetof(Impl_, is_fixed_) -
+           offsetof(Impl_, motion_type_) -
                offsetof(Impl_, mass_properties_) +
-               sizeof(Impl_::is_fixed_));
+               sizeof(Impl_::motion_type_));
 }
 CreateBodyCommand::~CreateBodyCommand() {
   // @@protoc_insertion_point(destructor:motionlab.protocol.CreateBodyCommand)
@@ -16295,16 +16784,16 @@ CreateBodyCommand::GetClassData() const {
   return CreateBodyCommand_class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 4, 2, 49, 2>
+const ::_pbi::TcParseTable<3, 5, 2, 49, 2>
 CreateBodyCommand::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_._has_bits_),
     0, // no _extensions_
-    4, 24,  // max_field_number, fast_idx_mask
+    5, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967280,  // skipmap
+    4294967264,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    4,  // num_field_entries
+    5,  // num_field_entries
     2,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     CreateBodyCommand_class_data_.base(),
@@ -16314,33 +16803,42 @@ CreateBodyCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::CreateBodyCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // bool is_fixed = 4 [json_name = "isFixed"];
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(CreateBodyCommand, _impl_.is_fixed_), 3>(),
-     {32, 3, 0,
-      PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.is_fixed_)}},
-    // string name = 1 [json_name = "name"];
+    {::_pbi::TcParser::MiniParse, {}},
+    // string name = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.name_)}},
-    // .motionlab.mechanism.MassProperties mass_properties = 2 [json_name = "massProperties"];
+    // .motionlab.mechanism.MassProperties mass_properties = 2;
     {::_pbi::TcParser::FastMtS1,
      {18, 1, 0,
       PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.mass_properties_)}},
-    // .motionlab.mechanism.Pose pose = 3 [json_name = "pose"];
+    // .motionlab.mechanism.Pose pose = 3;
     {::_pbi::TcParser::FastMtS1,
      {26, 2, 1,
       PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.pose_)}},
+    // bool is_fixed = 4 [deprecated = true];
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(CreateBodyCommand, _impl_.is_fixed_), 3>(),
+     {32, 3, 0,
+      PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.is_fixed_)}},
+    // .motionlab.mechanism.MotionType motion_type = 5;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreateBodyCommand, _impl_.motion_type_), 4>(),
+     {40, 4, 0,
+      PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.motion_type_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
-    // string name = 1 [json_name = "name"];
+    // string name = 1;
     {PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .motionlab.mechanism.MassProperties mass_properties = 2 [json_name = "massProperties"];
+    // .motionlab.mechanism.MassProperties mass_properties = 2;
     {PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.mass_properties_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.Pose pose = 3 [json_name = "pose"];
+    // .motionlab.mechanism.Pose pose = 3;
     {PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.pose_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // bool is_fixed = 4 [json_name = "isFixed"];
+    // bool is_fixed = 4 [deprecated = true];
     {PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.is_fixed_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    // .motionlab.mechanism.MotionType motion_type = 5;
+    {PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.motion_type_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
   }},
   {{
       {::_pbi::TcParser::GetTable<::motionlab::mechanism::MassProperties>()},
@@ -16373,7 +16871,11 @@ PROTOBUF_NOINLINE void CreateBodyCommand::Clear() {
       _impl_.pose_->Clear();
     }
   }
-  _impl_.is_fixed_ = false;
+  if (BatchCheckHasBit(cached_has_bits, 0x00000018U)) {
+    ::memset(&_impl_.is_fixed_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.motion_type_) -
+        reinterpret_cast<char*>(&_impl_.is_fixed_)) + sizeof(_impl_.motion_type_));
+  }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -16397,7 +16899,7 @@ PROTOBUF_NOINLINE void CreateBodyCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string name = 1 [json_name = "name"];
+  // string name = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
@@ -16407,26 +16909,35 @@ PROTOBUF_NOINLINE void CreateBodyCommand::Clear() {
     }
   }
 
-  // .motionlab.mechanism.MassProperties mass_properties = 2 [json_name = "massProperties"];
+  // .motionlab.mechanism.MassProperties mass_properties = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.mass_properties_, this_._impl_.mass_properties_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.Pose pose = 3 [json_name = "pose"];
+  // .motionlab.mechanism.Pose pose = 3;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.pose_, this_._impl_.pose_->GetCachedSize(), target,
         stream);
   }
 
-  // bool is_fixed = 4 [json_name = "isFixed"];
+  // bool is_fixed = 4 [deprecated = true];
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (this_._internal_is_fixed() != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteBoolToArray(
           4, this_._internal_is_fixed(), target);
+    }
+  }
+
+  // .motionlab.mechanism.MotionType motion_type = 5;
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    if (this_._internal_motion_type() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteEnumToArray(
+          5, this_._internal_motion_type(), target);
     }
   }
 
@@ -16455,28 +16966,35 @@ PROTOBUF_NOINLINE void CreateBodyCommand::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
-    // string name = 1 [json_name = "name"];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+    // string name = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
-    // .motionlab.mechanism.MassProperties mass_properties = 2 [json_name = "massProperties"];
+    // .motionlab.mechanism.MassProperties mass_properties = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.mass_properties_);
     }
-    // .motionlab.mechanism.Pose pose = 3 [json_name = "pose"];
+    // .motionlab.mechanism.Pose pose = 3;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.pose_);
     }
-    // bool is_fixed = 4 [json_name = "isFixed"];
+    // bool is_fixed = 4 [deprecated = true];
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (this_._internal_is_fixed() != 0) {
         total_size += 2;
+      }
+    }
+    // .motionlab.mechanism.MotionType motion_type = 5;
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (this_._internal_motion_type() != 0) {
+        total_size += 1 +
+                      ::_pbi::WireFormatLite::EnumSize(this_._internal_motion_type());
       }
     }
   }
@@ -16499,7 +17017,7 @@ void CreateBodyCommand::MergeImpl(::google::protobuf::MessageLite& to_msg,
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!from._internal_name().empty()) {
         _this->_internal_set_name(from._internal_name());
@@ -16530,6 +17048,11 @@ void CreateBodyCommand::MergeImpl(::google::protobuf::MessageLite& to_msg,
         _this->_impl_.is_fixed_ = from._impl_.is_fixed_;
       }
     }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (from._internal_motion_type() != 0) {
+        _this->_impl_.motion_type_ = from._impl_.motion_type_;
+      }
+    }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
@@ -16552,8 +17075,8 @@ void CreateBodyCommand::InternalSwap(CreateBodyCommand* PROTOBUF_RESTRICT PROTOB
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.is_fixed_)
-      + sizeof(CreateBodyCommand::_impl_.is_fixed_)
+      PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.motion_type_)
+      + sizeof(CreateBodyCommand::_impl_.motion_type_)
       - PROTOBUF_FIELD_OFFSET(CreateBodyCommand, _impl_.mass_properties_)>(
           reinterpret_cast<char*>(&_impl_.mass_properties_),
           reinterpret_cast<char*>(&other->_impl_.mass_properties_));
@@ -16754,9 +17277,9 @@ CreateBodyResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Body body = 1 [json_name = "body"];
+    // .motionlab.mechanism.Body body = 1;
     {PROTOBUF_FIELD_OFFSET(CreateBodyResult, _impl_.result_.body_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(CreateBodyResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -16838,13 +17361,13 @@ PROTOBUF_NOINLINE void CreateBodyResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.Body body = 1 [json_name = "body"];
+    // .motionlab.mechanism.Body body = 1;
     case kBody: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.body_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -17063,14 +17586,14 @@ DeleteBodyCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::DeleteBodyCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+    // .motionlab.mechanism.ElementId body_id = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(DeleteBodyCommand, _impl_.body_id_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+    // .motionlab.mechanism.ElementId body_id = 1;
     {PROTOBUF_FIELD_OFFSET(DeleteBodyCommand, _impl_.body_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -17114,7 +17637,7 @@ PROTOBUF_NOINLINE void DeleteBodyCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+  // .motionlab.mechanism.ElementId body_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.body_id_, this_._impl_.body_id_->GetCachedSize(), target,
@@ -17145,7 +17668,7 @@ PROTOBUF_NOINLINE void DeleteBodyCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+    // .motionlab.mechanism.ElementId body_id = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -17394,9 +17917,9 @@ DeleteBodyResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    // .motionlab.mechanism.ElementId deleted_id = 1;
     {PROTOBUF_FIELD_OFFSET(DeleteBodyResult, _impl_.result_.deleted_id_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(DeleteBodyResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -17478,13 +18001,13 @@ PROTOBUF_NOINLINE void DeleteBodyResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    // .motionlab.mechanism.ElementId deleted_id = 1;
     case kDeletedId: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.deleted_id_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -17729,26 +18252,26 @@ AttachGeometryCommand::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+    // .motionlab.mechanism.ElementId geometry_id = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(AttachGeometryCommand, _impl_.geometry_id_)}},
-    // .motionlab.mechanism.ElementId target_body_id = 2 [json_name = "targetBodyId"];
+    // .motionlab.mechanism.ElementId target_body_id = 2;
     {::_pbi::TcParser::FastMtS1,
      {18, 1, 1,
       PROTOBUF_FIELD_OFFSET(AttachGeometryCommand, _impl_.target_body_id_)}},
-    // .motionlab.mechanism.Pose local_pose = 3 [json_name = "localPose"];
+    // .motionlab.mechanism.Pose local_pose = 3;
     {::_pbi::TcParser::FastMtS1,
      {26, 2, 2,
       PROTOBUF_FIELD_OFFSET(AttachGeometryCommand, _impl_.local_pose_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+    // .motionlab.mechanism.ElementId geometry_id = 1;
     {PROTOBUF_FIELD_OFFSET(AttachGeometryCommand, _impl_.geometry_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.ElementId target_body_id = 2 [json_name = "targetBodyId"];
+    // .motionlab.mechanism.ElementId target_body_id = 2;
     {PROTOBUF_FIELD_OFFSET(AttachGeometryCommand, _impl_.target_body_id_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.Pose local_pose = 3 [json_name = "localPose"];
+    // .motionlab.mechanism.Pose local_pose = 3;
     {PROTOBUF_FIELD_OFFSET(AttachGeometryCommand, _impl_.local_pose_), _Internal::kHasBitsOffset + 2, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -17804,21 +18327,21 @@ PROTOBUF_NOINLINE void AttachGeometryCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+  // .motionlab.mechanism.ElementId geometry_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.geometry_id_, this_._impl_.geometry_id_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.ElementId target_body_id = 2 [json_name = "targetBodyId"];
+  // .motionlab.mechanism.ElementId target_body_id = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.target_body_id_, this_._impl_.target_body_id_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.Pose local_pose = 3 [json_name = "localPose"];
+  // .motionlab.mechanism.Pose local_pose = 3;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.local_pose_, this_._impl_.local_pose_->GetCachedSize(), target,
@@ -17851,17 +18374,17 @@ PROTOBUF_NOINLINE void AttachGeometryCommand::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
-    // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+    // .motionlab.mechanism.ElementId geometry_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.geometry_id_);
     }
-    // .motionlab.mechanism.ElementId target_body_id = 2 [json_name = "targetBodyId"];
+    // .motionlab.mechanism.ElementId target_body_id = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.target_body_id_);
     }
-    // .motionlab.mechanism.Pose local_pose = 3 [json_name = "localPose"];
+    // .motionlab.mechanism.Pose local_pose = 3;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.local_pose_);
@@ -18160,24 +18683,24 @@ AttachGeometryResult::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::AttachGeometryResult>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.Body new_parent_body = 4 [json_name = "newParentBody"];
+    // .motionlab.mechanism.Body new_parent_body = 4;
     {::_pbi::TcParser::FastMtS1,
      {34, 1, 2,
       PROTOBUF_FIELD_OFFSET(AttachGeometryResult, _impl_.new_parent_body_)}},
-    // .motionlab.mechanism.Body old_parent_body = 3 [json_name = "oldParentBody"];
+    // .motionlab.mechanism.Body old_parent_body = 3;
     {::_pbi::TcParser::FastMtS1,
      {26, 0, 1,
       PROTOBUF_FIELD_OFFSET(AttachGeometryResult, _impl_.old_parent_body_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Geometry geometry = 1 [json_name = "geometry"];
+    // .motionlab.mechanism.Geometry geometry = 1;
     {PROTOBUF_FIELD_OFFSET(AttachGeometryResult, _impl_.result_.geometry_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(AttachGeometryResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .motionlab.mechanism.Body old_parent_body = 3 [json_name = "oldParentBody"];
+    // .motionlab.mechanism.Body old_parent_body = 3;
     {PROTOBUF_FIELD_OFFSET(AttachGeometryResult, _impl_.old_parent_body_), _Internal::kHasBitsOffset + 0, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.Body new_parent_body = 4 [json_name = "newParentBody"];
+    // .motionlab.mechanism.Body new_parent_body = 4;
     {PROTOBUF_FIELD_OFFSET(AttachGeometryResult, _impl_.new_parent_body_), _Internal::kHasBitsOffset + 1, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -18250,14 +18773,14 @@ PROTOBUF_NOINLINE void AttachGeometryResult::Clear() {
       break;
   }
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.Body old_parent_body = 3 [json_name = "oldParentBody"];
+  // .motionlab.mechanism.Body old_parent_body = 3;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.old_parent_body_, this_._impl_.old_parent_body_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.Body new_parent_body = 4 [json_name = "newParentBody"];
+  // .motionlab.mechanism.Body new_parent_body = 4;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         4, *this_._impl_.new_parent_body_, this_._impl_.new_parent_body_->GetCachedSize(), target,
@@ -18290,25 +18813,25 @@ PROTOBUF_NOINLINE void AttachGeometryResult::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // .motionlab.mechanism.Body old_parent_body = 3 [json_name = "oldParentBody"];
+    // .motionlab.mechanism.Body old_parent_body = 3;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.old_parent_body_);
     }
-    // .motionlab.mechanism.Body new_parent_body = 4 [json_name = "newParentBody"];
+    // .motionlab.mechanism.Body new_parent_body = 4;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.new_parent_body_);
     }
   }
   switch (this_.result_case()) {
-    // .motionlab.mechanism.Geometry geometry = 1 [json_name = "geometry"];
+    // .motionlab.mechanism.Geometry geometry = 1;
     case kGeometry: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.geometry_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -18554,14 +19077,14 @@ DetachGeometryCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::DetachGeometryCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+    // .motionlab.mechanism.ElementId geometry_id = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(DetachGeometryCommand, _impl_.geometry_id_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+    // .motionlab.mechanism.ElementId geometry_id = 1;
     {PROTOBUF_FIELD_OFFSET(DetachGeometryCommand, _impl_.geometry_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -18605,7 +19128,7 @@ PROTOBUF_NOINLINE void DetachGeometryCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+  // .motionlab.mechanism.ElementId geometry_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.geometry_id_, this_._impl_.geometry_id_->GetCachedSize(), target,
@@ -18636,7 +19159,7 @@ PROTOBUF_NOINLINE void DetachGeometryCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
+    // .motionlab.mechanism.ElementId geometry_id = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -18913,24 +19436,24 @@ DetachGeometryResult::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::DetachGeometryResult>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.Body former_parent_body = 4 [json_name = "formerParentBody"];
+    // .motionlab.mechanism.Body former_parent_body = 4;
     {::_pbi::TcParser::FastMtS1,
      {34, 1, 2,
       PROTOBUF_FIELD_OFFSET(DetachGeometryResult, _impl_.former_parent_body_)}},
-    // .motionlab.mechanism.Geometry geometry = 3 [json_name = "geometry"];
+    // .motionlab.mechanism.Geometry geometry = 3;
     {::_pbi::TcParser::FastMtS1,
      {26, 0, 1,
       PROTOBUF_FIELD_OFFSET(DetachGeometryResult, _impl_.geometry_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId detached_id = 1 [json_name = "detachedId"];
+    // .motionlab.mechanism.ElementId detached_id = 1;
     {PROTOBUF_FIELD_OFFSET(DetachGeometryResult, _impl_.result_.detached_id_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(DetachGeometryResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .motionlab.mechanism.Geometry geometry = 3 [json_name = "geometry"];
+    // .motionlab.mechanism.Geometry geometry = 3;
     {PROTOBUF_FIELD_OFFSET(DetachGeometryResult, _impl_.geometry_), _Internal::kHasBitsOffset + 0, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.Body former_parent_body = 4 [json_name = "formerParentBody"];
+    // .motionlab.mechanism.Body former_parent_body = 4;
     {PROTOBUF_FIELD_OFFSET(DetachGeometryResult, _impl_.former_parent_body_), _Internal::kHasBitsOffset + 1, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -19003,14 +19526,14 @@ PROTOBUF_NOINLINE void DetachGeometryResult::Clear() {
       break;
   }
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.Geometry geometry = 3 [json_name = "geometry"];
+  // .motionlab.mechanism.Geometry geometry = 3;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.geometry_, this_._impl_.geometry_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.Body former_parent_body = 4 [json_name = "formerParentBody"];
+  // .motionlab.mechanism.Body former_parent_body = 4;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         4, *this_._impl_.former_parent_body_, this_._impl_.former_parent_body_->GetCachedSize(), target,
@@ -19043,25 +19566,25 @@ PROTOBUF_NOINLINE void DetachGeometryResult::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // .motionlab.mechanism.Geometry geometry = 3 [json_name = "geometry"];
+    // .motionlab.mechanism.Geometry geometry = 3;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.geometry_);
     }
-    // .motionlab.mechanism.Body former_parent_body = 4 [json_name = "formerParentBody"];
+    // .motionlab.mechanism.Body former_parent_body = 4;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.former_parent_body_);
     }
   }
   switch (this_.result_case()) {
-    // .motionlab.mechanism.ElementId detached_id = 1 [json_name = "detachedId"];
+    // .motionlab.mechanism.ElementId detached_id = 1;
     case kDetachedId: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.detached_id_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -19324,26 +19847,26 @@ UpdateMassPropertiesCommand::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+    // .motionlab.mechanism.ElementId body_id = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(UpdateMassPropertiesCommand, _impl_.body_id_)}},
-    // bool mass_override = 2 [json_name = "massOverride"];
+    // bool mass_override = 2;
     {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(UpdateMassPropertiesCommand, _impl_.mass_override_), 2>(),
      {16, 2, 0,
       PROTOBUF_FIELD_OFFSET(UpdateMassPropertiesCommand, _impl_.mass_override_)}},
-    // .motionlab.mechanism.MassProperties mass_properties = 3 [json_name = "massProperties"];
+    // .motionlab.mechanism.MassProperties mass_properties = 3;
     {::_pbi::TcParser::FastMtS1,
      {26, 1, 1,
       PROTOBUF_FIELD_OFFSET(UpdateMassPropertiesCommand, _impl_.mass_properties_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+    // .motionlab.mechanism.ElementId body_id = 1;
     {PROTOBUF_FIELD_OFFSET(UpdateMassPropertiesCommand, _impl_.body_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // bool mass_override = 2 [json_name = "massOverride"];
+    // bool mass_override = 2;
     {PROTOBUF_FIELD_OFFSET(UpdateMassPropertiesCommand, _impl_.mass_override_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
-    // .motionlab.mechanism.MassProperties mass_properties = 3 [json_name = "massProperties"];
+    // .motionlab.mechanism.MassProperties mass_properties = 3;
     {PROTOBUF_FIELD_OFFSET(UpdateMassPropertiesCommand, _impl_.mass_properties_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -19395,14 +19918,14 @@ PROTOBUF_NOINLINE void UpdateMassPropertiesCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+  // .motionlab.mechanism.ElementId body_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.body_id_, this_._impl_.body_id_->GetCachedSize(), target,
         stream);
   }
 
-  // bool mass_override = 2 [json_name = "massOverride"];
+  // bool mass_override = 2;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (this_._internal_mass_override() != 0) {
       target = stream->EnsureSpace(target);
@@ -19411,7 +19934,7 @@ PROTOBUF_NOINLINE void UpdateMassPropertiesCommand::Clear() {
     }
   }
 
-  // .motionlab.mechanism.MassProperties mass_properties = 3 [json_name = "massProperties"];
+  // .motionlab.mechanism.MassProperties mass_properties = 3;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.mass_properties_, this_._impl_.mass_properties_->GetCachedSize(), target,
@@ -19444,17 +19967,17 @@ PROTOBUF_NOINLINE void UpdateMassPropertiesCommand::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
-    // .motionlab.mechanism.ElementId body_id = 1 [json_name = "bodyId"];
+    // .motionlab.mechanism.ElementId body_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.body_id_);
     }
-    // .motionlab.mechanism.MassProperties mass_properties = 3 [json_name = "massProperties"];
+    // .motionlab.mechanism.MassProperties mass_properties = 3;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.mass_properties_);
     }
-    // bool mass_override = 2 [json_name = "massOverride"];
+    // bool mass_override = 2;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (this_._internal_mass_override() != 0) {
         total_size += 2;
@@ -19723,9 +20246,9 @@ UpdateMassPropertiesResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Body body = 1 [json_name = "body"];
+    // .motionlab.mechanism.Body body = 1;
     {PROTOBUF_FIELD_OFFSET(UpdateMassPropertiesResult, _impl_.result_.body_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(UpdateMassPropertiesResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -19807,13 +20330,13 @@ PROTOBUF_NOINLINE void UpdateMassPropertiesResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.Body body = 1 [json_name = "body"];
+    // .motionlab.mechanism.Body body = 1;
     case kBody: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.body_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -19892,6 +20415,860 @@ void UpdateMassPropertiesResult::InternalSwap(UpdateMassPropertiesResult* PROTOB
 }
 
 ::google::protobuf::Metadata UpdateMassPropertiesResult::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class CreatePrimitiveBodyCommand::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<CreatePrimitiveBodyCommand>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_._has_bits_);
+};
+
+void CreatePrimitiveBodyCommand::clear_position() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.position_ != nullptr) _impl_.position_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+void CreatePrimitiveBodyCommand::clear_params() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.params_ != nullptr) _impl_.params_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+CreatePrimitiveBodyCommand::CreatePrimitiveBodyCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CreatePrimitiveBodyCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.CreatePrimitiveBodyCommand)
+}
+PROTOBUF_NDEBUG_INLINE CreatePrimitiveBodyCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::CreatePrimitiveBodyCommand& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        name_(arena, from.name_) {}
+
+CreatePrimitiveBodyCommand::CreatePrimitiveBodyCommand(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const CreatePrimitiveBodyCommand& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CreatePrimitiveBodyCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  CreatePrimitiveBodyCommand* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.position_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.position_)
+                : nullptr;
+  _impl_.params_ = (CheckHasBit(cached_has_bits, 0x00000004U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.params_)
+                : nullptr;
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, density_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, density_),
+           offsetof(Impl_, shape_) -
+               offsetof(Impl_, density_) +
+               sizeof(Impl_::shape_));
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.CreatePrimitiveBodyCommand)
+}
+PROTOBUF_NDEBUG_INLINE CreatePrimitiveBodyCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        name_(arena) {}
+
+inline void CreatePrimitiveBodyCommand::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, position_),
+           0,
+           offsetof(Impl_, shape_) -
+               offsetof(Impl_, position_) +
+               sizeof(Impl_::shape_));
+}
+CreatePrimitiveBodyCommand::~CreatePrimitiveBodyCommand() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.CreatePrimitiveBodyCommand)
+  SharedDtor(*this);
+}
+inline void CreatePrimitiveBodyCommand::SharedDtor(MessageLite& self) {
+  CreatePrimitiveBodyCommand& this_ = static_cast<CreatePrimitiveBodyCommand&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.name_.Destroy();
+  delete this_._impl_.position_;
+  delete this_._impl_.params_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL CreatePrimitiveBodyCommand::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) CreatePrimitiveBodyCommand(arena);
+}
+constexpr auto CreatePrimitiveBodyCommand::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(CreatePrimitiveBodyCommand),
+                                            alignof(CreatePrimitiveBodyCommand));
+}
+constexpr auto CreatePrimitiveBodyCommand::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_CreatePrimitiveBodyCommand_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &CreatePrimitiveBodyCommand::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<CreatePrimitiveBodyCommand>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &CreatePrimitiveBodyCommand::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<CreatePrimitiveBodyCommand>(), &CreatePrimitiveBodyCommand::ByteSizeLong,
+              &CreatePrimitiveBodyCommand::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_._cached_size_),
+          false,
+      },
+      &CreatePrimitiveBodyCommand::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull CreatePrimitiveBodyCommand_class_data_ =
+        CreatePrimitiveBodyCommand::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+CreatePrimitiveBodyCommand::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&CreatePrimitiveBodyCommand_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(CreatePrimitiveBodyCommand_class_data_.tc_table);
+  return CreatePrimitiveBodyCommand_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<3, 5, 2, 58, 2>
+CreatePrimitiveBodyCommand::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_._has_bits_),
+    0, // no _extensions_
+    5, 56,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967264,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    5,  // num_field_entries
+    2,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    CreatePrimitiveBodyCommand_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::CreatePrimitiveBodyCommand>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // .motionlab.mechanism.PrimitiveShape shape = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CreatePrimitiveBodyCommand, _impl_.shape_), 4>(),
+     {8, 4, 0,
+      PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_.shape_)}},
+    // string name = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 0, 0,
+      PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_.name_)}},
+    // .motionlab.mechanism.Vec3 position = 3;
+    {::_pbi::TcParser::FastMtS1,
+     {26, 1, 0,
+      PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_.position_)}},
+    // .motionlab.mechanism.PrimitiveParams params = 4;
+    {::_pbi::TcParser::FastMtS1,
+     {34, 2, 1,
+      PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_.params_)}},
+    // double density = 5;
+    {::_pbi::TcParser::FastF64S1,
+     {41, 3, 0,
+      PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_.density_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.mechanism.PrimitiveShape shape = 1;
+    {PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_.shape_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+    // string name = 2;
+    {PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_.name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // .motionlab.mechanism.Vec3 position = 3;
+    {PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_.position_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .motionlab.mechanism.PrimitiveParams params = 4;
+    {PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_.params_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // double density = 5;
+    {PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_.density_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Vec3>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::PrimitiveParams>()},
+  }},
+  {{
+    "\55\0\4\0\0\0\0\0"
+    "motionlab.protocol.CreatePrimitiveBodyCommand"
+    "name"
+  }},
+};
+PROTOBUF_NOINLINE void CreatePrimitiveBodyCommand::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.CreatePrimitiveBodyCommand)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _impl_.name_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.position_ != nullptr);
+      _impl_.position_->Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      ABSL_DCHECK(_impl_.params_ != nullptr);
+      _impl_.params_->Clear();
+    }
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x00000018U)) {
+    ::memset(&_impl_.density_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.shape_) -
+        reinterpret_cast<char*>(&_impl_.density_)) + sizeof(_impl_.shape_));
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL CreatePrimitiveBodyCommand::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const CreatePrimitiveBodyCommand& this_ = static_cast<const CreatePrimitiveBodyCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL CreatePrimitiveBodyCommand::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const CreatePrimitiveBodyCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.CreatePrimitiveBodyCommand)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.PrimitiveShape shape = 1;
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    if (this_._internal_shape() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteEnumToArray(
+          1, this_._internal_shape(), target);
+    }
+  }
+
+  // string name = 2;
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!this_._internal_name().empty()) {
+      const ::std::string& _s = this_._internal_name();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.CreatePrimitiveBodyCommand.name");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+    }
+  }
+
+  // .motionlab.mechanism.Vec3 position = 3;
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        3, *this_._impl_.position_, this_._impl_.position_->GetCachedSize(), target,
+        stream);
+  }
+
+  // .motionlab.mechanism.PrimitiveParams params = 4;
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        4, *this_._impl_.params_, this_._impl_.params_->GetCachedSize(), target,
+        stream);
+  }
+
+  // double density = 5;
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_density()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          5, this_._internal_density(), target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.CreatePrimitiveBodyCommand)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t CreatePrimitiveBodyCommand::ByteSizeLong(const MessageLite& base) {
+  const CreatePrimitiveBodyCommand& this_ = static_cast<const CreatePrimitiveBodyCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t CreatePrimitiveBodyCommand::ByteSizeLong() const {
+  const CreatePrimitiveBodyCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.CreatePrimitiveBodyCommand)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+    // string name = 2;
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!this_._internal_name().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_name());
+      }
+    }
+    // .motionlab.mechanism.Vec3 position = 3;
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.position_);
+    }
+    // .motionlab.mechanism.PrimitiveParams params = 4;
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.params_);
+    }
+    // double density = 5;
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_density()) != 0) {
+        total_size += 9;
+      }
+    }
+    // .motionlab.mechanism.PrimitiveShape shape = 1;
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (this_._internal_shape() != 0) {
+        total_size += 1 +
+                      ::_pbi::WireFormatLite::EnumSize(this_._internal_shape());
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void CreatePrimitiveBodyCommand::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<CreatePrimitiveBodyCommand*>(&to_msg);
+  auto& from = static_cast<const CreatePrimitiveBodyCommand&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.CreatePrimitiveBodyCommand)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!from._internal_name().empty()) {
+        _this->_internal_set_name(from._internal_name());
+      } else {
+        if (_this->_impl_.name_.IsDefault()) {
+          _this->_internal_set_name("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.position_ != nullptr);
+      if (_this->_impl_.position_ == nullptr) {
+        _this->_impl_.position_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.position_);
+      } else {
+        _this->_impl_.position_->MergeFrom(*from._impl_.position_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      ABSL_DCHECK(from._impl_.params_ != nullptr);
+      if (_this->_impl_.params_ == nullptr) {
+        _this->_impl_.params_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.params_);
+      } else {
+        _this->_impl_.params_->MergeFrom(*from._impl_.params_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_density()) != 0) {
+        _this->_impl_.density_ = from._impl_.density_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (from._internal_shape() != 0) {
+        _this->_impl_.shape_ = from._impl_.shape_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void CreatePrimitiveBodyCommand::CopyFrom(const CreatePrimitiveBodyCommand& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.CreatePrimitiveBodyCommand)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void CreatePrimitiveBodyCommand::InternalSwap(CreatePrimitiveBodyCommand* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_.shape_)
+      + sizeof(CreatePrimitiveBodyCommand::_impl_.shape_)
+      - PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyCommand, _impl_.position_)>(
+          reinterpret_cast<char*>(&_impl_.position_),
+          reinterpret_cast<char*>(&other->_impl_.position_));
+}
+
+::google::protobuf::Metadata CreatePrimitiveBodyCommand::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class CreatePrimitiveBodyResult::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<CreatePrimitiveBodyResult>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyResult, _impl_._has_bits_);
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::motionlab::protocol::CreatePrimitiveBodyResult, _impl_._oneof_case_);
+};
+
+void CreatePrimitiveBodyResult::set_allocated_geometry(::motionlab::protocol::GeometryImportResult* PROTOBUF_NULLABLE geometry) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_result();
+  if (geometry) {
+    ::google::protobuf::Arena* submessage_arena = geometry->GetArena();
+    if (message_arena != submessage_arena) {
+      geometry = ::google::protobuf::internal::GetOwnedMessage(message_arena, geometry, submessage_arena);
+    }
+    set_has_geometry();
+    _impl_.result_.geometry_ = geometry;
+  }
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreatePrimitiveBodyResult.geometry)
+}
+void CreatePrimitiveBodyResult::clear_body() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.body_ != nullptr) _impl_.body_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+CreatePrimitiveBodyResult::CreatePrimitiveBodyResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CreatePrimitiveBodyResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.CreatePrimitiveBodyResult)
+}
+PROTOBUF_NDEBUG_INLINE CreatePrimitiveBodyResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::CreatePrimitiveBodyResult& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        result_{},
+        _oneof_case_{from._oneof_case_[0]} {}
+
+CreatePrimitiveBodyResult::CreatePrimitiveBodyResult(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const CreatePrimitiveBodyResult& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, CreatePrimitiveBodyResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  CreatePrimitiveBodyResult* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.body_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.body_)
+                : nullptr;
+  switch (result_case()) {
+    case RESULT_NOT_SET:
+      break;
+      case kGeometry:
+        _impl_.result_.geometry_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.geometry_);
+        break;
+      case kErrorMessage:
+        new (&_impl_.result_.error_message_) decltype(_impl_.result_.error_message_){arena, from._impl_.result_.error_message_};
+        break;
+  }
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.CreatePrimitiveBodyResult)
+}
+PROTOBUF_NDEBUG_INLINE CreatePrimitiveBodyResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        result_{},
+        _oneof_case_{} {}
+
+inline void CreatePrimitiveBodyResult::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.body_ = {};
+}
+CreatePrimitiveBodyResult::~CreatePrimitiveBodyResult() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.CreatePrimitiveBodyResult)
+  SharedDtor(*this);
+}
+inline void CreatePrimitiveBodyResult::SharedDtor(MessageLite& self) {
+  CreatePrimitiveBodyResult& this_ = static_cast<CreatePrimitiveBodyResult&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.body_;
+  if (this_.has_result()) {
+    this_.clear_result();
+  }
+  this_._impl_.~Impl_();
+}
+
+void CreatePrimitiveBodyResult::clear_result() {
+// @@protoc_insertion_point(one_of_clear_start:motionlab.protocol.CreatePrimitiveBodyResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (result_case()) {
+    case kGeometry: {
+      if (GetArena() == nullptr) {
+        delete _impl_.result_.geometry_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.result_.geometry_);
+      }
+      break;
+    }
+    case kErrorMessage: {
+      _impl_.result_.error_message_.Destroy();
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = RESULT_NOT_SET;
+}
+
+
+inline void* PROTOBUF_NONNULL CreatePrimitiveBodyResult::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) CreatePrimitiveBodyResult(arena);
+}
+constexpr auto CreatePrimitiveBodyResult::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(CreatePrimitiveBodyResult),
+                                            alignof(CreatePrimitiveBodyResult));
+}
+constexpr auto CreatePrimitiveBodyResult::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_CreatePrimitiveBodyResult_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &CreatePrimitiveBodyResult::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<CreatePrimitiveBodyResult>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &CreatePrimitiveBodyResult::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<CreatePrimitiveBodyResult>(), &CreatePrimitiveBodyResult::ByteSizeLong,
+              &CreatePrimitiveBodyResult::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyResult, _impl_._cached_size_),
+          false,
+      },
+      &CreatePrimitiveBodyResult::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull CreatePrimitiveBodyResult_class_data_ =
+        CreatePrimitiveBodyResult::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+CreatePrimitiveBodyResult::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&CreatePrimitiveBodyResult_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(CreatePrimitiveBodyResult_class_data_.tc_table);
+  return CreatePrimitiveBodyResult_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 3, 2, 66, 2>
+CreatePrimitiveBodyResult::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyResult, _impl_._has_bits_),
+    0, // no _extensions_
+    3, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967288,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    3,  // num_field_entries
+    2,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    CreatePrimitiveBodyResult_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::CreatePrimitiveBodyResult>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // .motionlab.mechanism.Body body = 3;
+    {::_pbi::TcParser::FastMtS1,
+     {26, 0, 1,
+      PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyResult, _impl_.body_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .motionlab.protocol.GeometryImportResult geometry = 1;
+    {PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyResult, _impl_.result_.geometry_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string error_message = 2;
+    {PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // .motionlab.mechanism.Body body = 3;
+    {PROTOBUF_FIELD_OFFSET(CreatePrimitiveBodyResult, _impl_.body_), _Internal::kHasBitsOffset + 0, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::GeometryImportResult>()},
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Body>()},
+  }},
+  {{
+    "\54\0\15\0\0\0\0\0"
+    "motionlab.protocol.CreatePrimitiveBodyResult"
+    "error_message"
+  }},
+};
+PROTOBUF_NOINLINE void CreatePrimitiveBodyResult::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.CreatePrimitiveBodyResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(_impl_.body_ != nullptr);
+    _impl_.body_->Clear();
+  }
+  clear_result();
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL CreatePrimitiveBodyResult::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const CreatePrimitiveBodyResult& this_ = static_cast<const CreatePrimitiveBodyResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL CreatePrimitiveBodyResult::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const CreatePrimitiveBodyResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.CreatePrimitiveBodyResult)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  switch (this_.result_case()) {
+    case kGeometry: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          1, *this_._impl_.result_.geometry_, this_._impl_.result_.geometry_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kErrorMessage: {
+      const ::std::string& _s = this_._internal_error_message();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.CreatePrimitiveBodyResult.error_message");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+      break;
+    }
+    default:
+      break;
+  }
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // .motionlab.mechanism.Body body = 3;
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        3, *this_._impl_.body_, this_._impl_.body_->GetCachedSize(), target,
+        stream);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.CreatePrimitiveBodyResult)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t CreatePrimitiveBodyResult::ByteSizeLong(const MessageLite& base) {
+  const CreatePrimitiveBodyResult& this_ = static_cast<const CreatePrimitiveBodyResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t CreatePrimitiveBodyResult::ByteSizeLong() const {
+  const CreatePrimitiveBodyResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.CreatePrimitiveBodyResult)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+   {
+    // .motionlab.mechanism.Body body = 3;
+    cached_has_bits = this_._impl_._has_bits_[0];
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.body_);
+    }
+  }
+  switch (this_.result_case()) {
+    // .motionlab.protocol.GeometryImportResult geometry = 1;
+    case kGeometry: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.geometry_);
+      break;
+    }
+    // string error_message = 2;
+    case kErrorMessage: {
+      total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                      this_._internal_error_message());
+      break;
+    }
+    case RESULT_NOT_SET: {
+      break;
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void CreatePrimitiveBodyResult::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<CreatePrimitiveBodyResult*>(&to_msg);
+  auto& from = static_cast<const CreatePrimitiveBodyResult&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.CreatePrimitiveBodyResult)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(from._impl_.body_ != nullptr);
+    if (_this->_impl_.body_ == nullptr) {
+      _this->_impl_.body_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.body_);
+    } else {
+      _this->_impl_.body_->MergeFrom(*from._impl_.body_);
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  if (const uint32_t oneof_from_case =
+          from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_result();
+      }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kGeometry: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.geometry_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.result_.geometry_);
+        } else {
+          _this->_impl_.result_.geometry_->MergeFrom(*from._impl_.result_.geometry_);
+        }
+        break;
+      }
+      case kErrorMessage: {
+        if (oneof_needs_init) {
+          _this->_impl_.result_.error_message_.InitDefault();
+        }
+        _this->_impl_.result_.error_message_.Set(from._internal_error_message(), arena);
+        break;
+      }
+      case RESULT_NOT_SET:
+        break;
+    }
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void CreatePrimitiveBodyResult::CopyFrom(const CreatePrimitiveBodyResult& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.CreatePrimitiveBodyResult)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void CreatePrimitiveBodyResult::InternalSwap(CreatePrimitiveBodyResult* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  swap(_impl_.body_, other->_impl_.body_);
+  swap(_impl_.result_, other->_impl_.result_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
+}
+
+::google::protobuf::Metadata CreatePrimitiveBodyResult::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
@@ -20032,14 +21409,14 @@ CreateJointCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::CreateJointCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.Joint draft = 1 [json_name = "draft"];
+    // .motionlab.mechanism.Joint draft = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.draft_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Joint draft = 1 [json_name = "draft"];
+    // .motionlab.mechanism.Joint draft = 1;
     {PROTOBUF_FIELD_OFFSET(CreateJointCommand, _impl_.draft_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -20083,7 +21460,7 @@ PROTOBUF_NOINLINE void CreateJointCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.Joint draft = 1 [json_name = "draft"];
+  // .motionlab.mechanism.Joint draft = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.draft_, this_._impl_.draft_->GetCachedSize(), target,
@@ -20114,7 +21491,7 @@ PROTOBUF_NOINLINE void CreateJointCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.mechanism.Joint draft = 1 [json_name = "draft"];
+    // .motionlab.mechanism.Joint draft = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -20309,14 +21686,14 @@ UpdateJointCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::UpdateJointCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+    // .motionlab.mechanism.Joint joint = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.joint_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+    // .motionlab.mechanism.Joint joint = 1;
     {PROTOBUF_FIELD_OFFSET(UpdateJointCommand, _impl_.joint_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -20360,7 +21737,7 @@ PROTOBUF_NOINLINE void UpdateJointCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+  // .motionlab.mechanism.Joint joint = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.joint_, this_._impl_.joint_->GetCachedSize(), target,
@@ -20391,7 +21768,7 @@ PROTOBUF_NOINLINE void UpdateJointCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+    // .motionlab.mechanism.Joint joint = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -20586,14 +21963,14 @@ DeleteJointCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::DeleteJointCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    // .motionlab.mechanism.ElementId joint_id = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(DeleteJointCommand, _impl_.joint_id_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    // .motionlab.mechanism.ElementId joint_id = 1;
     {PROTOBUF_FIELD_OFFSET(DeleteJointCommand, _impl_.joint_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -20637,7 +22014,7 @@ PROTOBUF_NOINLINE void DeleteJointCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+  // .motionlab.mechanism.ElementId joint_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.joint_id_, this_._impl_.joint_id_->GetCachedSize(), target,
@@ -20668,7 +22045,7 @@ PROTOBUF_NOINLINE void DeleteJointCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+    // .motionlab.mechanism.ElementId joint_id = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -20917,9 +22294,9 @@ CreateJointResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+    // .motionlab.mechanism.Joint joint = 1;
     {PROTOBUF_FIELD_OFFSET(CreateJointResult, _impl_.result_.joint_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(CreateJointResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -21001,13 +22378,13 @@ PROTOBUF_NOINLINE void CreateJointResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+    // .motionlab.mechanism.Joint joint = 1;
     case kJoint: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.joint_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -21280,9 +22657,9 @@ UpdateJointResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+    // .motionlab.mechanism.Joint joint = 1;
     {PROTOBUF_FIELD_OFFSET(UpdateJointResult, _impl_.result_.joint_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(UpdateJointResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -21364,13 +22741,13 @@ PROTOBUF_NOINLINE void UpdateJointResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.Joint joint = 1 [json_name = "joint"];
+    // .motionlab.mechanism.Joint joint = 1;
     case kJoint: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.joint_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -21643,9 +23020,9 @@ DeleteJointResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    // .motionlab.mechanism.ElementId deleted_id = 1;
     {PROTOBUF_FIELD_OFFSET(DeleteJointResult, _impl_.result_.deleted_id_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(DeleteJointResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -21727,13 +23104,13 @@ PROTOBUF_NOINLINE void DeleteJointResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    // .motionlab.mechanism.ElementId deleted_id = 1;
     case kDeletedId: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.deleted_id_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -21952,14 +23329,14 @@ CreateLoadCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::CreateLoadCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.Load draft = 1 [json_name = "draft"];
+    // .motionlab.mechanism.Load draft = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(CreateLoadCommand, _impl_.draft_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Load draft = 1 [json_name = "draft"];
+    // .motionlab.mechanism.Load draft = 1;
     {PROTOBUF_FIELD_OFFSET(CreateLoadCommand, _impl_.draft_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -22003,7 +23380,7 @@ PROTOBUF_NOINLINE void CreateLoadCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.Load draft = 1 [json_name = "draft"];
+  // .motionlab.mechanism.Load draft = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.draft_, this_._impl_.draft_->GetCachedSize(), target,
@@ -22034,7 +23411,7 @@ PROTOBUF_NOINLINE void CreateLoadCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.mechanism.Load draft = 1 [json_name = "draft"];
+    // .motionlab.mechanism.Load draft = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -22229,14 +23606,14 @@ UpdateLoadCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::UpdateLoadCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.Load load = 1 [json_name = "load"];
+    // .motionlab.mechanism.Load load = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(UpdateLoadCommand, _impl_.load_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Load load = 1 [json_name = "load"];
+    // .motionlab.mechanism.Load load = 1;
     {PROTOBUF_FIELD_OFFSET(UpdateLoadCommand, _impl_.load_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -22280,7 +23657,7 @@ PROTOBUF_NOINLINE void UpdateLoadCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.Load load = 1 [json_name = "load"];
+  // .motionlab.mechanism.Load load = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.load_, this_._impl_.load_->GetCachedSize(), target,
@@ -22311,7 +23688,7 @@ PROTOBUF_NOINLINE void UpdateLoadCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.mechanism.Load load = 1 [json_name = "load"];
+    // .motionlab.mechanism.Load load = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -22506,14 +23883,14 @@ DeleteLoadCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::DeleteLoadCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.ElementId load_id = 1 [json_name = "loadId"];
+    // .motionlab.mechanism.ElementId load_id = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(DeleteLoadCommand, _impl_.load_id_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId load_id = 1 [json_name = "loadId"];
+    // .motionlab.mechanism.ElementId load_id = 1;
     {PROTOBUF_FIELD_OFFSET(DeleteLoadCommand, _impl_.load_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -22557,7 +23934,7 @@ PROTOBUF_NOINLINE void DeleteLoadCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId load_id = 1 [json_name = "loadId"];
+  // .motionlab.mechanism.ElementId load_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.load_id_, this_._impl_.load_id_->GetCachedSize(), target,
@@ -22588,7 +23965,7 @@ PROTOBUF_NOINLINE void DeleteLoadCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.mechanism.ElementId load_id = 1 [json_name = "loadId"];
+    // .motionlab.mechanism.ElementId load_id = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -22837,9 +24214,9 @@ CreateLoadResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Load load = 1 [json_name = "load"];
+    // .motionlab.mechanism.Load load = 1;
     {PROTOBUF_FIELD_OFFSET(CreateLoadResult, _impl_.result_.load_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(CreateLoadResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -22921,13 +24298,13 @@ PROTOBUF_NOINLINE void CreateLoadResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.Load load = 1 [json_name = "load"];
+    // .motionlab.mechanism.Load load = 1;
     case kLoad: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.load_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -23200,9 +24577,9 @@ UpdateLoadResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Load load = 1 [json_name = "load"];
+    // .motionlab.mechanism.Load load = 1;
     {PROTOBUF_FIELD_OFFSET(UpdateLoadResult, _impl_.result_.load_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(UpdateLoadResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -23284,13 +24661,13 @@ PROTOBUF_NOINLINE void UpdateLoadResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.Load load = 1 [json_name = "load"];
+    // .motionlab.mechanism.Load load = 1;
     case kLoad: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.load_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -23563,9 +24940,9 @@ DeleteLoadResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    // .motionlab.mechanism.ElementId deleted_id = 1;
     {PROTOBUF_FIELD_OFFSET(DeleteLoadResult, _impl_.result_.deleted_id_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(DeleteLoadResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -23647,13 +25024,13 @@ PROTOBUF_NOINLINE void DeleteLoadResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    // .motionlab.mechanism.ElementId deleted_id = 1;
     case kDeletedId: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.deleted_id_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -23872,14 +25249,14 @@ CreateActuatorCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::CreateActuatorCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.Actuator draft = 1 [json_name = "draft"];
+    // .motionlab.mechanism.Actuator draft = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(CreateActuatorCommand, _impl_.draft_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Actuator draft = 1 [json_name = "draft"];
+    // .motionlab.mechanism.Actuator draft = 1;
     {PROTOBUF_FIELD_OFFSET(CreateActuatorCommand, _impl_.draft_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -23923,7 +25300,7 @@ PROTOBUF_NOINLINE void CreateActuatorCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.Actuator draft = 1 [json_name = "draft"];
+  // .motionlab.mechanism.Actuator draft = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.draft_, this_._impl_.draft_->GetCachedSize(), target,
@@ -23954,7 +25331,7 @@ PROTOBUF_NOINLINE void CreateActuatorCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.mechanism.Actuator draft = 1 [json_name = "draft"];
+    // .motionlab.mechanism.Actuator draft = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -24149,14 +25526,14 @@ UpdateActuatorCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::UpdateActuatorCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+    // .motionlab.mechanism.Actuator actuator = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(UpdateActuatorCommand, _impl_.actuator_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+    // .motionlab.mechanism.Actuator actuator = 1;
     {PROTOBUF_FIELD_OFFSET(UpdateActuatorCommand, _impl_.actuator_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -24200,7 +25577,7 @@ PROTOBUF_NOINLINE void UpdateActuatorCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+  // .motionlab.mechanism.Actuator actuator = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.actuator_, this_._impl_.actuator_->GetCachedSize(), target,
@@ -24231,7 +25608,7 @@ PROTOBUF_NOINLINE void UpdateActuatorCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+    // .motionlab.mechanism.Actuator actuator = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -24426,14 +25803,14 @@ DeleteActuatorCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::DeleteActuatorCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.mechanism.ElementId actuator_id = 1 [json_name = "actuatorId"];
+    // .motionlab.mechanism.ElementId actuator_id = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(DeleteActuatorCommand, _impl_.actuator_id_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId actuator_id = 1 [json_name = "actuatorId"];
+    // .motionlab.mechanism.ElementId actuator_id = 1;
     {PROTOBUF_FIELD_OFFSET(DeleteActuatorCommand, _impl_.actuator_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -24477,7 +25854,7 @@ PROTOBUF_NOINLINE void DeleteActuatorCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.ElementId actuator_id = 1 [json_name = "actuatorId"];
+  // .motionlab.mechanism.ElementId actuator_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.actuator_id_, this_._impl_.actuator_id_->GetCachedSize(), target,
@@ -24508,7 +25885,7 @@ PROTOBUF_NOINLINE void DeleteActuatorCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.mechanism.ElementId actuator_id = 1 [json_name = "actuatorId"];
+    // .motionlab.mechanism.ElementId actuator_id = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -24757,9 +26134,9 @@ CreateActuatorResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+    // .motionlab.mechanism.Actuator actuator = 1;
     {PROTOBUF_FIELD_OFFSET(CreateActuatorResult, _impl_.result_.actuator_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(CreateActuatorResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -24841,13 +26218,13 @@ PROTOBUF_NOINLINE void CreateActuatorResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+    // .motionlab.mechanism.Actuator actuator = 1;
     case kActuator: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.actuator_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -25120,9 +26497,9 @@ UpdateActuatorResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+    // .motionlab.mechanism.Actuator actuator = 1;
     {PROTOBUF_FIELD_OFFSET(UpdateActuatorResult, _impl_.result_.actuator_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(UpdateActuatorResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -25204,13 +26581,13 @@ PROTOBUF_NOINLINE void UpdateActuatorResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.Actuator actuator = 1 [json_name = "actuator"];
+    // .motionlab.mechanism.Actuator actuator = 1;
     case kActuator: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.actuator_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -25483,9 +26860,9 @@ DeleteActuatorResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    // .motionlab.mechanism.ElementId deleted_id = 1;
     {PROTOBUF_FIELD_OFFSET(DeleteActuatorResult, _impl_.result_.deleted_id_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(DeleteActuatorResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -25567,13 +26944,13 @@ PROTOBUF_NOINLINE void DeleteActuatorResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.mechanism.ElementId deleted_id = 1 [json_name = "deletedId"];
+    // .motionlab.mechanism.ElementId deleted_id = 1;
     case kDeletedId: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.deleted_id_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -25774,32 +27151,32 @@ SolverSettings::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::SolverSettings>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.protocol.IntegratorType integrator = 4 [json_name = "integrator"];
+    // .motionlab.protocol.IntegratorType integrator = 4;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SolverSettings, _impl_.integrator_), 3>(),
      {32, 3, 0,
       PROTOBUF_FIELD_OFFSET(SolverSettings, _impl_.integrator_)}},
-    // .motionlab.protocol.SolverType type = 1 [json_name = "type"];
+    // .motionlab.protocol.SolverType type = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SolverSettings, _impl_.type_), 0>(),
      {8, 0, 0,
       PROTOBUF_FIELD_OFFSET(SolverSettings, _impl_.type_)}},
-    // int32 max_iterations = 2 [json_name = "maxIterations"];
+    // int32 max_iterations = 2;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SolverSettings, _impl_.max_iterations_), 1>(),
      {16, 1, 0,
       PROTOBUF_FIELD_OFFSET(SolverSettings, _impl_.max_iterations_)}},
-    // double tolerance = 3 [json_name = "tolerance"];
+    // double tolerance = 3;
     {::_pbi::TcParser::FastF64S1,
      {25, 2, 0,
       PROTOBUF_FIELD_OFFSET(SolverSettings, _impl_.tolerance_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.protocol.SolverType type = 1 [json_name = "type"];
+    // .motionlab.protocol.SolverType type = 1;
     {PROTOBUF_FIELD_OFFSET(SolverSettings, _impl_.type_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
-    // int32 max_iterations = 2 [json_name = "maxIterations"];
+    // int32 max_iterations = 2;
     {PROTOBUF_FIELD_OFFSET(SolverSettings, _impl_.max_iterations_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kInt32)},
-    // double tolerance = 3 [json_name = "tolerance"];
+    // double tolerance = 3;
     {PROTOBUF_FIELD_OFFSET(SolverSettings, _impl_.tolerance_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // .motionlab.protocol.IntegratorType integrator = 4 [json_name = "integrator"];
+    // .motionlab.protocol.IntegratorType integrator = 4;
     {PROTOBUF_FIELD_OFFSET(SolverSettings, _impl_.integrator_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
   }},
   // no aux_entries
@@ -25842,7 +27219,7 @@ PROTOBUF_NOINLINE void SolverSettings::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.protocol.SolverType type = 1 [json_name = "type"];
+  // .motionlab.protocol.SolverType type = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (this_._internal_type() != 0) {
       target = stream->EnsureSpace(target);
@@ -25851,7 +27228,7 @@ PROTOBUF_NOINLINE void SolverSettings::Clear() {
     }
   }
 
-  // int32 max_iterations = 2 [json_name = "maxIterations"];
+  // int32 max_iterations = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (this_._internal_max_iterations() != 0) {
       target =
@@ -25860,7 +27237,7 @@ PROTOBUF_NOINLINE void SolverSettings::Clear() {
     }
   }
 
-  // double tolerance = 3 [json_name = "tolerance"];
+  // double tolerance = 3;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_tolerance()) != 0) {
       target = stream->EnsureSpace(target);
@@ -25869,7 +27246,7 @@ PROTOBUF_NOINLINE void SolverSettings::Clear() {
     }
   }
 
-  // .motionlab.protocol.IntegratorType integrator = 4 [json_name = "integrator"];
+  // .motionlab.protocol.IntegratorType integrator = 4;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (this_._internal_integrator() != 0) {
       target = stream->EnsureSpace(target);
@@ -25904,27 +27281,27 @@ PROTOBUF_NOINLINE void SolverSettings::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
-    // .motionlab.protocol.SolverType type = 1 [json_name = "type"];
+    // .motionlab.protocol.SolverType type = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (this_._internal_type() != 0) {
         total_size += 1 +
                       ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
       }
     }
-    // int32 max_iterations = 2 [json_name = "maxIterations"];
+    // int32 max_iterations = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (this_._internal_max_iterations() != 0) {
         total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
             this_._internal_max_iterations());
       }
     }
-    // double tolerance = 3 [json_name = "tolerance"];
+    // double tolerance = 3;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_tolerance()) != 0) {
         total_size += 9;
       }
     }
-    // .motionlab.protocol.IntegratorType integrator = 4 [json_name = "integrator"];
+    // .motionlab.protocol.IntegratorType integrator = 4;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (this_._internal_integrator() != 0) {
         total_size += 1 +
@@ -26121,23 +27498,23 @@ ContactSettings::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // double friction = 1 [json_name = "friction"];
+    // double friction = 1;
     {::_pbi::TcParser::FastF64S1,
      {9, 0, 0,
       PROTOBUF_FIELD_OFFSET(ContactSettings, _impl_.friction_)}},
-    // double restitution = 2 [json_name = "restitution"];
+    // double restitution = 2;
     {::_pbi::TcParser::FastF64S1,
      {17, 1, 0,
       PROTOBUF_FIELD_OFFSET(ContactSettings, _impl_.restitution_)}},
-    // double compliance = 3 [json_name = "compliance"];
+    // double compliance = 3;
     {::_pbi::TcParser::FastF64S1,
      {25, 2, 0,
       PROTOBUF_FIELD_OFFSET(ContactSettings, _impl_.compliance_)}},
-    // double damping = 4 [json_name = "damping"];
+    // double damping = 4;
     {::_pbi::TcParser::FastF64S1,
      {33, 3, 0,
       PROTOBUF_FIELD_OFFSET(ContactSettings, _impl_.damping_)}},
-    // bool enable_contact = 5 [json_name = "enableContact"];
+    // bool enable_contact = 5;
     {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(ContactSettings, _impl_.enable_contact_), 4>(),
      {40, 4, 0,
       PROTOBUF_FIELD_OFFSET(ContactSettings, _impl_.enable_contact_)}},
@@ -26146,15 +27523,15 @@ ContactSettings::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // double friction = 1 [json_name = "friction"];
+    // double friction = 1;
     {PROTOBUF_FIELD_OFFSET(ContactSettings, _impl_.friction_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double restitution = 2 [json_name = "restitution"];
+    // double restitution = 2;
     {PROTOBUF_FIELD_OFFSET(ContactSettings, _impl_.restitution_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double compliance = 3 [json_name = "compliance"];
+    // double compliance = 3;
     {PROTOBUF_FIELD_OFFSET(ContactSettings, _impl_.compliance_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double damping = 4 [json_name = "damping"];
+    // double damping = 4;
     {PROTOBUF_FIELD_OFFSET(ContactSettings, _impl_.damping_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // bool enable_contact = 5 [json_name = "enableContact"];
+    // bool enable_contact = 5;
     {PROTOBUF_FIELD_OFFSET(ContactSettings, _impl_.enable_contact_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
   }},
   // no aux_entries
@@ -26197,7 +27574,7 @@ PROTOBUF_NOINLINE void ContactSettings::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // double friction = 1 [json_name = "friction"];
+  // double friction = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_friction()) != 0) {
       target = stream->EnsureSpace(target);
@@ -26206,7 +27583,7 @@ PROTOBUF_NOINLINE void ContactSettings::Clear() {
     }
   }
 
-  // double restitution = 2 [json_name = "restitution"];
+  // double restitution = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_restitution()) != 0) {
       target = stream->EnsureSpace(target);
@@ -26215,7 +27592,7 @@ PROTOBUF_NOINLINE void ContactSettings::Clear() {
     }
   }
 
-  // double compliance = 3 [json_name = "compliance"];
+  // double compliance = 3;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_compliance()) != 0) {
       target = stream->EnsureSpace(target);
@@ -26224,7 +27601,7 @@ PROTOBUF_NOINLINE void ContactSettings::Clear() {
     }
   }
 
-  // double damping = 4 [json_name = "damping"];
+  // double damping = 4;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_damping()) != 0) {
       target = stream->EnsureSpace(target);
@@ -26233,7 +27610,7 @@ PROTOBUF_NOINLINE void ContactSettings::Clear() {
     }
   }
 
-  // bool enable_contact = 5 [json_name = "enableContact"];
+  // bool enable_contact = 5;
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     if (this_._internal_enable_contact() != 0) {
       target = stream->EnsureSpace(target);
@@ -26268,31 +27645,31 @@ PROTOBUF_NOINLINE void ContactSettings::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
-    // double friction = 1 [json_name = "friction"];
+    // double friction = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_friction()) != 0) {
         total_size += 9;
       }
     }
-    // double restitution = 2 [json_name = "restitution"];
+    // double restitution = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_restitution()) != 0) {
         total_size += 9;
       }
     }
-    // double compliance = 3 [json_name = "compliance"];
+    // double compliance = 3;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_compliance()) != 0) {
         total_size += 9;
       }
     }
-    // double damping = 4 [json_name = "damping"];
+    // double damping = 4;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_damping()) != 0) {
         total_size += 9;
       }
     }
-    // bool enable_contact = 5 [json_name = "enableContact"];
+    // bool enable_contact = 5;
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       if (this_._internal_enable_contact() != 0) {
         total_size += 2;
@@ -26524,23 +27901,23 @@ CompilationDiagnostic::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // .motionlab.protocol.DiagnosticSeverity severity = 1 [json_name = "severity"];
+    // .motionlab.protocol.DiagnosticSeverity severity = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(CompilationDiagnostic, _impl_.severity_), 4>(),
      {8, 4, 0,
       PROTOBUF_FIELD_OFFSET(CompilationDiagnostic, _impl_.severity_)}},
-    // string message = 2 [json_name = "message"];
+    // string message = 2;
     {::_pbi::TcParser::FastUS1,
      {18, 1, 0,
       PROTOBUF_FIELD_OFFSET(CompilationDiagnostic, _impl_.message_)}},
-    // repeated string affected_entity_ids = 3 [json_name = "affectedEntityIds"];
+    // repeated string affected_entity_ids = 3;
     {::_pbi::TcParser::FastUR1,
      {26, 0, 0,
       PROTOBUF_FIELD_OFFSET(CompilationDiagnostic, _impl_.affected_entity_ids_)}},
-    // string suggestion = 4 [json_name = "suggestion"];
+    // string suggestion = 4;
     {::_pbi::TcParser::FastUS1,
      {34, 2, 0,
       PROTOBUF_FIELD_OFFSET(CompilationDiagnostic, _impl_.suggestion_)}},
-    // string code = 5 [json_name = "code"];
+    // string code = 5;
     {::_pbi::TcParser::FastUS1,
      {42, 3, 0,
       PROTOBUF_FIELD_OFFSET(CompilationDiagnostic, _impl_.code_)}},
@@ -26549,15 +27926,15 @@ CompilationDiagnostic::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.protocol.DiagnosticSeverity severity = 1 [json_name = "severity"];
+    // .motionlab.protocol.DiagnosticSeverity severity = 1;
     {PROTOBUF_FIELD_OFFSET(CompilationDiagnostic, _impl_.severity_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
-    // string message = 2 [json_name = "message"];
+    // string message = 2;
     {PROTOBUF_FIELD_OFFSET(CompilationDiagnostic, _impl_.message_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // repeated string affected_entity_ids = 3 [json_name = "affectedEntityIds"];
+    // repeated string affected_entity_ids = 3;
     {PROTOBUF_FIELD_OFFSET(CompilationDiagnostic, _impl_.affected_entity_ids_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kUtf8String | ::_fl::kRepSString)},
-    // string suggestion = 4 [json_name = "suggestion"];
+    // string suggestion = 4;
     {PROTOBUF_FIELD_OFFSET(CompilationDiagnostic, _impl_.suggestion_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string code = 5 [json_name = "code"];
+    // string code = 5;
     {PROTOBUF_FIELD_OFFSET(CompilationDiagnostic, _impl_.code_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
@@ -26616,7 +27993,7 @@ PROTOBUF_NOINLINE void CompilationDiagnostic::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.protocol.DiagnosticSeverity severity = 1 [json_name = "severity"];
+  // .motionlab.protocol.DiagnosticSeverity severity = 1;
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     if (this_._internal_severity() != 0) {
       target = stream->EnsureSpace(target);
@@ -26625,7 +28002,7 @@ PROTOBUF_NOINLINE void CompilationDiagnostic::Clear() {
     }
   }
 
-  // string message = 2 [json_name = "message"];
+  // string message = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (!this_._internal_message().empty()) {
       const ::std::string& _s = this_._internal_message();
@@ -26635,7 +28012,7 @@ PROTOBUF_NOINLINE void CompilationDiagnostic::Clear() {
     }
   }
 
-  // repeated string affected_entity_ids = 3 [json_name = "affectedEntityIds"];
+  // repeated string affected_entity_ids = 3;
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
     for (int i = 0, n = this_._internal_affected_entity_ids_size(); i < n; ++i) {
       const auto& s = this_._internal_affected_entity_ids().Get(i);
@@ -26645,7 +28022,7 @@ PROTOBUF_NOINLINE void CompilationDiagnostic::Clear() {
     }
   }
 
-  // string suggestion = 4 [json_name = "suggestion"];
+  // string suggestion = 4;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (!this_._internal_suggestion().empty()) {
       const ::std::string& _s = this_._internal_suggestion();
@@ -26655,7 +28032,7 @@ PROTOBUF_NOINLINE void CompilationDiagnostic::Clear() {
     }
   }
 
-  // string code = 5 [json_name = "code"];
+  // string code = 5;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (!this_._internal_code().empty()) {
       const ::std::string& _s = this_._internal_code();
@@ -26691,7 +28068,7 @@ PROTOBUF_NOINLINE void CompilationDiagnostic::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
-    // repeated string affected_entity_ids = 3 [json_name = "affectedEntityIds"];
+    // repeated string affected_entity_ids = 3;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       total_size +=
           1 * ::google::protobuf::internal::FromIntSize(this_._internal_affected_entity_ids().size());
@@ -26700,28 +28077,28 @@ PROTOBUF_NOINLINE void CompilationDiagnostic::Clear() {
             this_._internal_affected_entity_ids().Get(i));
       }
     }
-    // string message = 2 [json_name = "message"];
+    // string message = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (!this_._internal_message().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_message());
       }
     }
-    // string suggestion = 4 [json_name = "suggestion"];
+    // string suggestion = 4;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (!this_._internal_suggestion().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_suggestion());
       }
     }
-    // string code = 5 [json_name = "code"];
+    // string code = 5;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (!this_._internal_code().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_code());
       }
     }
-    // .motionlab.protocol.DiagnosticSeverity severity = 1 [json_name = "severity"];
+    // .motionlab.protocol.DiagnosticSeverity severity = 1;
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       if (this_._internal_severity() != 0) {
         total_size += 1 +
@@ -26975,23 +28352,23 @@ SimulationSettings::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // double timestep = 1 [json_name = "timestep"];
+    // double timestep = 1;
     {::_pbi::TcParser::FastF64S1,
      {9, 3, 0,
       PROTOBUF_FIELD_OFFSET(SimulationSettings, _impl_.timestep_)}},
-    // .motionlab.mechanism.Vec3 gravity = 2 [json_name = "gravity"];
+    // .motionlab.mechanism.Vec3 gravity = 2;
     {::_pbi::TcParser::FastMtS1,
      {18, 0, 0,
       PROTOBUF_FIELD_OFFSET(SimulationSettings, _impl_.gravity_)}},
-    // .motionlab.protocol.SolverSettings solver = 3 [json_name = "solver"];
+    // .motionlab.protocol.SolverSettings solver = 3;
     {::_pbi::TcParser::FastMtS1,
      {26, 1, 1,
       PROTOBUF_FIELD_OFFSET(SimulationSettings, _impl_.solver_)}},
-    // .motionlab.protocol.ContactSettings contact = 4 [json_name = "contact"];
+    // .motionlab.protocol.ContactSettings contact = 4;
     {::_pbi::TcParser::FastMtS1,
      {34, 2, 2,
       PROTOBUF_FIELD_OFFSET(SimulationSettings, _impl_.contact_)}},
-    // double duration = 5 [json_name = "duration"];
+    // double duration = 5;
     {::_pbi::TcParser::FastF64S1,
      {41, 4, 0,
       PROTOBUF_FIELD_OFFSET(SimulationSettings, _impl_.duration_)}},
@@ -27000,15 +28377,15 @@ SimulationSettings::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // double timestep = 1 [json_name = "timestep"];
+    // double timestep = 1;
     {PROTOBUF_FIELD_OFFSET(SimulationSettings, _impl_.timestep_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // .motionlab.mechanism.Vec3 gravity = 2 [json_name = "gravity"];
+    // .motionlab.mechanism.Vec3 gravity = 2;
     {PROTOBUF_FIELD_OFFSET(SimulationSettings, _impl_.gravity_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.SolverSettings solver = 3 [json_name = "solver"];
+    // .motionlab.protocol.SolverSettings solver = 3;
     {PROTOBUF_FIELD_OFFSET(SimulationSettings, _impl_.solver_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.protocol.ContactSettings contact = 4 [json_name = "contact"];
+    // .motionlab.protocol.ContactSettings contact = 4;
     {PROTOBUF_FIELD_OFFSET(SimulationSettings, _impl_.contact_), _Internal::kHasBitsOffset + 2, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // double duration = 5 [json_name = "duration"];
+    // double duration = 5;
     {PROTOBUF_FIELD_OFFSET(SimulationSettings, _impl_.duration_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
   }},
   {{
@@ -27069,7 +28446,7 @@ PROTOBUF_NOINLINE void SimulationSettings::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // double timestep = 1 [json_name = "timestep"];
+  // double timestep = 1;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_timestep()) != 0) {
       target = stream->EnsureSpace(target);
@@ -27078,28 +28455,28 @@ PROTOBUF_NOINLINE void SimulationSettings::Clear() {
     }
   }
 
-  // .motionlab.mechanism.Vec3 gravity = 2 [json_name = "gravity"];
+  // .motionlab.mechanism.Vec3 gravity = 2;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.gravity_, this_._impl_.gravity_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.protocol.SolverSettings solver = 3 [json_name = "solver"];
+  // .motionlab.protocol.SolverSettings solver = 3;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.solver_, this_._impl_.solver_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.protocol.ContactSettings contact = 4 [json_name = "contact"];
+  // .motionlab.protocol.ContactSettings contact = 4;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         4, *this_._impl_.contact_, this_._impl_.contact_->GetCachedSize(), target,
         stream);
   }
 
-  // double duration = 5 [json_name = "duration"];
+  // double duration = 5;
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_duration()) != 0) {
       target = stream->EnsureSpace(target);
@@ -27134,28 +28511,28 @@ PROTOBUF_NOINLINE void SimulationSettings::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
-    // .motionlab.mechanism.Vec3 gravity = 2 [json_name = "gravity"];
+    // .motionlab.mechanism.Vec3 gravity = 2;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.gravity_);
     }
-    // .motionlab.protocol.SolverSettings solver = 3 [json_name = "solver"];
+    // .motionlab.protocol.SolverSettings solver = 3;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.solver_);
     }
-    // .motionlab.protocol.ContactSettings contact = 4 [json_name = "contact"];
+    // .motionlab.protocol.ContactSettings contact = 4;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.contact_);
     }
-    // double timestep = 1 [json_name = "timestep"];
+    // double timestep = 1;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_timestep()) != 0) {
         total_size += 9;
       }
     }
-    // double duration = 5 [json_name = "duration"];
+    // double duration = 5;
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_duration()) != 0) {
         total_size += 9;
@@ -27377,14 +28754,14 @@ CompileMechanismCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::CompileMechanismCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.protocol.SimulationSettings settings = 1 [json_name = "settings"];
+    // .motionlab.protocol.SimulationSettings settings = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(CompileMechanismCommand, _impl_.settings_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.protocol.SimulationSettings settings = 1 [json_name = "settings"];
+    // .motionlab.protocol.SimulationSettings settings = 1;
     {PROTOBUF_FIELD_OFFSET(CompileMechanismCommand, _impl_.settings_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -27428,7 +28805,7 @@ PROTOBUF_NOINLINE void CompileMechanismCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.protocol.SimulationSettings settings = 1 [json_name = "settings"];
+  // .motionlab.protocol.SimulationSettings settings = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.settings_, this_._impl_.settings_->GetCachedSize(), target,
@@ -27459,7 +28836,7 @@ PROTOBUF_NOINLINE void CompileMechanismCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.protocol.SimulationSettings settings = 1 [json_name = "settings"];
+    // .motionlab.protocol.SimulationSettings settings = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
@@ -27631,14 +29008,14 @@ SimulationControlCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::SimulationControlCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.protocol.SimulationAction action = 1 [json_name = "action"];
+    // .motionlab.protocol.SimulationAction action = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SimulationControlCommand, _impl_.action_), 0>(),
      {8, 0, 0,
       PROTOBUF_FIELD_OFFSET(SimulationControlCommand, _impl_.action_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.protocol.SimulationAction action = 1 [json_name = "action"];
+    // .motionlab.protocol.SimulationAction action = 1;
     {PROTOBUF_FIELD_OFFSET(SimulationControlCommand, _impl_.action_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
   }},
   // no aux_entries
@@ -27676,7 +29053,7 @@ PROTOBUF_NOINLINE void SimulationControlCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.protocol.SimulationAction action = 1 [json_name = "action"];
+  // .motionlab.protocol.SimulationAction action = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (this_._internal_action() != 0) {
       target = stream->EnsureSpace(target);
@@ -27709,7 +29086,7 @@ PROTOBUF_NOINLINE void SimulationControlCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // .motionlab.protocol.SimulationAction action = 1 [json_name = "action"];
+    // .motionlab.protocol.SimulationAction action = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (this_._internal_action() != 0) {
@@ -27922,23 +29299,23 @@ CompilationResultEvent::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // bool success = 1 [json_name = "success"];
+    // bool success = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(CompilationResultEvent, _impl_.success_), 4>(),
      {8, 4, 0,
       PROTOBUF_FIELD_OFFSET(CompilationResultEvent, _impl_.success_)}},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {::_pbi::TcParser::FastUS1,
      {18, 3, 0,
       PROTOBUF_FIELD_OFFSET(CompilationResultEvent, _impl_.error_message_)}},
-    // repeated string diagnostics = 3 [json_name = "diagnostics", deprecated = true];
+    // repeated string diagnostics = 3 [deprecated = true];
     {::_pbi::TcParser::FastUR1,
      {26, 0, 0,
       PROTOBUF_FIELD_OFFSET(CompilationResultEvent, _impl_.diagnostics_)}},
-    // repeated .motionlab.protocol.OutputChannelDescriptor channels = 4 [json_name = "channels"];
+    // repeated .motionlab.protocol.OutputChannelDescriptor channels = 4;
     {::_pbi::TcParser::FastMtR1,
      {34, 1, 0,
       PROTOBUF_FIELD_OFFSET(CompilationResultEvent, _impl_.channels_)}},
-    // repeated .motionlab.protocol.CompilationDiagnostic structured_diagnostics = 5 [json_name = "structuredDiagnostics"];
+    // repeated .motionlab.protocol.CompilationDiagnostic structured_diagnostics = 5;
     {::_pbi::TcParser::FastMtR1,
      {42, 2, 1,
       PROTOBUF_FIELD_OFFSET(CompilationResultEvent, _impl_.structured_diagnostics_)}},
@@ -27947,15 +29324,15 @@ CompilationResultEvent::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // bool success = 1 [json_name = "success"];
+    // bool success = 1;
     {PROTOBUF_FIELD_OFFSET(CompilationResultEvent, _impl_.success_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(CompilationResultEvent, _impl_.error_message_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // repeated string diagnostics = 3 [json_name = "diagnostics", deprecated = true];
+    // repeated string diagnostics = 3 [deprecated = true];
     {PROTOBUF_FIELD_OFFSET(CompilationResultEvent, _impl_.diagnostics_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kUtf8String | ::_fl::kRepSString)},
-    // repeated .motionlab.protocol.OutputChannelDescriptor channels = 4 [json_name = "channels"];
+    // repeated .motionlab.protocol.OutputChannelDescriptor channels = 4;
     {PROTOBUF_FIELD_OFFSET(CompilationResultEvent, _impl_.channels_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
-    // repeated .motionlab.protocol.CompilationDiagnostic structured_diagnostics = 5 [json_name = "structuredDiagnostics"];
+    // repeated .motionlab.protocol.CompilationDiagnostic structured_diagnostics = 5;
     {PROTOBUF_FIELD_OFFSET(CompilationResultEvent, _impl_.structured_diagnostics_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -28015,7 +29392,7 @@ PROTOBUF_NOINLINE void CompilationResultEvent::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // bool success = 1 [json_name = "success"];
+  // bool success = 1;
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     if (this_._internal_success() != 0) {
       target = stream->EnsureSpace(target);
@@ -28024,7 +29401,7 @@ PROTOBUF_NOINLINE void CompilationResultEvent::Clear() {
     }
   }
 
-  // string error_message = 2 [json_name = "errorMessage"];
+  // string error_message = 2;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (!this_._internal_error_message().empty()) {
       const ::std::string& _s = this_._internal_error_message();
@@ -28034,7 +29411,7 @@ PROTOBUF_NOINLINE void CompilationResultEvent::Clear() {
     }
   }
 
-  // repeated string diagnostics = 3 [json_name = "diagnostics", deprecated = true];
+  // repeated string diagnostics = 3 [deprecated = true];
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
     for (int i = 0, n = this_._internal_diagnostics_size(); i < n; ++i) {
       const auto& s = this_._internal_diagnostics().Get(i);
@@ -28044,7 +29421,7 @@ PROTOBUF_NOINLINE void CompilationResultEvent::Clear() {
     }
   }
 
-  // repeated .motionlab.protocol.OutputChannelDescriptor channels = 4 [json_name = "channels"];
+  // repeated .motionlab.protocol.OutputChannelDescriptor channels = 4;
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_channels_size());
@@ -28057,7 +29434,7 @@ PROTOBUF_NOINLINE void CompilationResultEvent::Clear() {
     }
   }
 
-  // repeated .motionlab.protocol.CompilationDiagnostic structured_diagnostics = 5 [json_name = "structuredDiagnostics"];
+  // repeated .motionlab.protocol.CompilationDiagnostic structured_diagnostics = 5;
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000004U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_structured_diagnostics_size());
@@ -28096,7 +29473,7 @@ PROTOBUF_NOINLINE void CompilationResultEvent::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
-    // repeated string diagnostics = 3 [json_name = "diagnostics", deprecated = true];
+    // repeated string diagnostics = 3 [deprecated = true];
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       total_size +=
           1 * ::google::protobuf::internal::FromIntSize(this_._internal_diagnostics().size());
@@ -28105,28 +29482,28 @@ PROTOBUF_NOINLINE void CompilationResultEvent::Clear() {
             this_._internal_diagnostics().Get(i));
       }
     }
-    // repeated .motionlab.protocol.OutputChannelDescriptor channels = 4 [json_name = "channels"];
+    // repeated .motionlab.protocol.OutputChannelDescriptor channels = 4;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
       total_size += 1UL * this_._internal_channels_size();
       for (const auto& msg : this_._internal_channels()) {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
-    // repeated .motionlab.protocol.CompilationDiagnostic structured_diagnostics = 5 [json_name = "structuredDiagnostics"];
+    // repeated .motionlab.protocol.CompilationDiagnostic structured_diagnostics = 5;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000004U)) {
       total_size += 1UL * this_._internal_structured_diagnostics_size();
       for (const auto& msg : this_._internal_structured_diagnostics()) {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (!this_._internal_error_message().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_error_message());
       }
     }
-    // bool success = 1 [json_name = "success"];
+    // bool success = 1;
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       if (this_._internal_success() != 0) {
         total_size += 2;
@@ -28333,26 +29710,26 @@ SimulationStateEvent::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // .motionlab.protocol.SimStateEnum state = 1 [json_name = "state"];
+    // .motionlab.protocol.SimStateEnum state = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SimulationStateEvent, _impl_.state_), 2>(),
      {8, 2, 0,
       PROTOBUF_FIELD_OFFSET(SimulationStateEvent, _impl_.state_)}},
-    // double sim_time = 2 [json_name = "simTime"];
+    // double sim_time = 2;
     {::_pbi::TcParser::FastF64S1,
      {17, 0, 0,
       PROTOBUF_FIELD_OFFSET(SimulationStateEvent, _impl_.sim_time_)}},
-    // uint64 step_count = 3 [json_name = "stepCount"];
+    // uint64 step_count = 3;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(SimulationStateEvent, _impl_.step_count_), 1>(),
      {24, 1, 0,
       PROTOBUF_FIELD_OFFSET(SimulationStateEvent, _impl_.step_count_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.protocol.SimStateEnum state = 1 [json_name = "state"];
+    // .motionlab.protocol.SimStateEnum state = 1;
     {PROTOBUF_FIELD_OFFSET(SimulationStateEvent, _impl_.state_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
-    // double sim_time = 2 [json_name = "simTime"];
+    // double sim_time = 2;
     {PROTOBUF_FIELD_OFFSET(SimulationStateEvent, _impl_.sim_time_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // uint64 step_count = 3 [json_name = "stepCount"];
+    // uint64 step_count = 3;
     {PROTOBUF_FIELD_OFFSET(SimulationStateEvent, _impl_.step_count_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt64)},
   }},
   // no aux_entries
@@ -28395,7 +29772,7 @@ PROTOBUF_NOINLINE void SimulationStateEvent::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.protocol.SimStateEnum state = 1 [json_name = "state"];
+  // .motionlab.protocol.SimStateEnum state = 1;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (this_._internal_state() != 0) {
       target = stream->EnsureSpace(target);
@@ -28404,7 +29781,7 @@ PROTOBUF_NOINLINE void SimulationStateEvent::Clear() {
     }
   }
 
-  // double sim_time = 2 [json_name = "simTime"];
+  // double sim_time = 2;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_sim_time()) != 0) {
       target = stream->EnsureSpace(target);
@@ -28413,7 +29790,7 @@ PROTOBUF_NOINLINE void SimulationStateEvent::Clear() {
     }
   }
 
-  // uint64 step_count = 3 [json_name = "stepCount"];
+  // uint64 step_count = 3;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (this_._internal_step_count() != 0) {
       target = stream->EnsureSpace(target);
@@ -28448,20 +29825,20 @@ PROTOBUF_NOINLINE void SimulationStateEvent::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
-    // double sim_time = 2 [json_name = "simTime"];
+    // double sim_time = 2;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_sim_time()) != 0) {
         total_size += 9;
       }
     }
-    // uint64 step_count = 3 [json_name = "stepCount"];
+    // uint64 step_count = 3;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (this_._internal_step_count() != 0) {
         total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(
             this_._internal_step_count());
       }
     }
-    // .motionlab.protocol.SimStateEnum state = 1 [json_name = "state"];
+    // .motionlab.protocol.SimStateEnum state = 1;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (this_._internal_state() != 0) {
         total_size += 1 +
@@ -28689,26 +30066,26 @@ BodyPoseData::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // string body_id = 1 [json_name = "bodyId"];
+    // string body_id = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(BodyPoseData, _impl_.body_id_)}},
-    // .motionlab.mechanism.Vec3 position = 2 [json_name = "position"];
+    // .motionlab.mechanism.Vec3 position = 2;
     {::_pbi::TcParser::FastMtS1,
      {18, 1, 0,
       PROTOBUF_FIELD_OFFSET(BodyPoseData, _impl_.position_)}},
-    // .motionlab.mechanism.Quat orientation = 3 [json_name = "orientation"];
+    // .motionlab.mechanism.Quat orientation = 3;
     {::_pbi::TcParser::FastMtS1,
      {26, 2, 1,
       PROTOBUF_FIELD_OFFSET(BodyPoseData, _impl_.orientation_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string body_id = 1 [json_name = "bodyId"];
+    // string body_id = 1;
     {PROTOBUF_FIELD_OFFSET(BodyPoseData, _impl_.body_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .motionlab.mechanism.Vec3 position = 2 [json_name = "position"];
+    // .motionlab.mechanism.Vec3 position = 2;
     {PROTOBUF_FIELD_OFFSET(BodyPoseData, _impl_.position_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.Quat orientation = 3 [json_name = "orientation"];
+    // .motionlab.mechanism.Quat orientation = 3;
     {PROTOBUF_FIELD_OFFSET(BodyPoseData, _impl_.orientation_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -28765,7 +30142,7 @@ PROTOBUF_NOINLINE void BodyPoseData::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string body_id = 1 [json_name = "bodyId"];
+  // string body_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_body_id().empty()) {
       const ::std::string& _s = this_._internal_body_id();
@@ -28775,14 +30152,14 @@ PROTOBUF_NOINLINE void BodyPoseData::Clear() {
     }
   }
 
-  // .motionlab.mechanism.Vec3 position = 2 [json_name = "position"];
+  // .motionlab.mechanism.Vec3 position = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.position_, this_._impl_.position_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.Quat orientation = 3 [json_name = "orientation"];
+  // .motionlab.mechanism.Quat orientation = 3;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.orientation_, this_._impl_.orientation_->GetCachedSize(), target,
@@ -28815,19 +30192,19 @@ PROTOBUF_NOINLINE void BodyPoseData::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
-    // string body_id = 1 [json_name = "bodyId"];
+    // string body_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_body_id().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_body_id());
       }
     }
-    // .motionlab.mechanism.Vec3 position = 2 [json_name = "position"];
+    // .motionlab.mechanism.Vec3 position = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.position_);
     }
-    // .motionlab.mechanism.Quat orientation = 3 [json_name = "orientation"];
+    // .motionlab.mechanism.Quat orientation = 3;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.orientation_);
@@ -29074,23 +30451,23 @@ JointStateData::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // string joint_id = 1 [json_name = "jointId"];
+    // string joint_id = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(JointStateData, _impl_.joint_id_)}},
-    // double position = 2 [json_name = "position"];
+    // double position = 2;
     {::_pbi::TcParser::FastF64S1,
      {17, 3, 0,
       PROTOBUF_FIELD_OFFSET(JointStateData, _impl_.position_)}},
-    // double velocity = 3 [json_name = "velocity"];
+    // double velocity = 3;
     {::_pbi::TcParser::FastF64S1,
      {25, 4, 0,
       PROTOBUF_FIELD_OFFSET(JointStateData, _impl_.velocity_)}},
-    // .motionlab.mechanism.Vec3 reaction_force = 4 [json_name = "reactionForce"];
+    // .motionlab.mechanism.Vec3 reaction_force = 4;
     {::_pbi::TcParser::FastMtS1,
      {34, 1, 0,
       PROTOBUF_FIELD_OFFSET(JointStateData, _impl_.reaction_force_)}},
-    // .motionlab.mechanism.Vec3 reaction_torque = 5 [json_name = "reactionTorque"];
+    // .motionlab.mechanism.Vec3 reaction_torque = 5;
     {::_pbi::TcParser::FastMtS1,
      {42, 2, 1,
       PROTOBUF_FIELD_OFFSET(JointStateData, _impl_.reaction_torque_)}},
@@ -29099,15 +30476,15 @@ JointStateData::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // string joint_id = 1 [json_name = "jointId"];
+    // string joint_id = 1;
     {PROTOBUF_FIELD_OFFSET(JointStateData, _impl_.joint_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // double position = 2 [json_name = "position"];
+    // double position = 2;
     {PROTOBUF_FIELD_OFFSET(JointStateData, _impl_.position_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double velocity = 3 [json_name = "velocity"];
+    // double velocity = 3;
     {PROTOBUF_FIELD_OFFSET(JointStateData, _impl_.velocity_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // .motionlab.mechanism.Vec3 reaction_force = 4 [json_name = "reactionForce"];
+    // .motionlab.mechanism.Vec3 reaction_force = 4;
     {PROTOBUF_FIELD_OFFSET(JointStateData, _impl_.reaction_force_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.Vec3 reaction_torque = 5 [json_name = "reactionTorque"];
+    // .motionlab.mechanism.Vec3 reaction_torque = 5;
     {PROTOBUF_FIELD_OFFSET(JointStateData, _impl_.reaction_torque_), _Internal::kHasBitsOffset + 2, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -29169,7 +30546,7 @@ PROTOBUF_NOINLINE void JointStateData::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string joint_id = 1 [json_name = "jointId"];
+  // string joint_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_joint_id().empty()) {
       const ::std::string& _s = this_._internal_joint_id();
@@ -29179,7 +30556,7 @@ PROTOBUF_NOINLINE void JointStateData::Clear() {
     }
   }
 
-  // double position = 2 [json_name = "position"];
+  // double position = 2;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_position()) != 0) {
       target = stream->EnsureSpace(target);
@@ -29188,7 +30565,7 @@ PROTOBUF_NOINLINE void JointStateData::Clear() {
     }
   }
 
-  // double velocity = 3 [json_name = "velocity"];
+  // double velocity = 3;
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_velocity()) != 0) {
       target = stream->EnsureSpace(target);
@@ -29197,14 +30574,14 @@ PROTOBUF_NOINLINE void JointStateData::Clear() {
     }
   }
 
-  // .motionlab.mechanism.Vec3 reaction_force = 4 [json_name = "reactionForce"];
+  // .motionlab.mechanism.Vec3 reaction_force = 4;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         4, *this_._impl_.reaction_force_, this_._impl_.reaction_force_->GetCachedSize(), target,
         stream);
   }
 
-  // .motionlab.mechanism.Vec3 reaction_torque = 5 [json_name = "reactionTorque"];
+  // .motionlab.mechanism.Vec3 reaction_torque = 5;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         5, *this_._impl_.reaction_torque_, this_._impl_.reaction_torque_->GetCachedSize(), target,
@@ -29237,30 +30614,30 @@ PROTOBUF_NOINLINE void JointStateData::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
-    // string joint_id = 1 [json_name = "jointId"];
+    // string joint_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_joint_id().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_joint_id());
       }
     }
-    // .motionlab.mechanism.Vec3 reaction_force = 4 [json_name = "reactionForce"];
+    // .motionlab.mechanism.Vec3 reaction_force = 4;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.reaction_force_);
     }
-    // .motionlab.mechanism.Vec3 reaction_torque = 5 [json_name = "reactionTorque"];
+    // .motionlab.mechanism.Vec3 reaction_torque = 5;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.reaction_torque_);
     }
-    // double position = 2 [json_name = "position"];
+    // double position = 2;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_position()) != 0) {
         total_size += 9;
       }
     }
-    // double velocity = 3 [json_name = "velocity"];
+    // double velocity = 3;
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_velocity()) != 0) {
         total_size += 9;
@@ -29513,32 +30890,32 @@ SimulationFrame::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::SimulationFrame>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // repeated .motionlab.protocol.JointStateData joint_states = 4 [json_name = "jointStates", deprecated = true];
+    // repeated .motionlab.protocol.JointStateData joint_states = 4 [deprecated = true];
     {::_pbi::TcParser::FastMtR1,
      {34, 1, 1,
       PROTOBUF_FIELD_OFFSET(SimulationFrame, _impl_.joint_states_)}},
-    // double sim_time = 1 [json_name = "simTime"];
+    // double sim_time = 1;
     {::_pbi::TcParser::FastF64S1,
      {9, 2, 0,
       PROTOBUF_FIELD_OFFSET(SimulationFrame, _impl_.sim_time_)}},
-    // uint64 step_count = 2 [json_name = "stepCount"];
+    // uint64 step_count = 2;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(SimulationFrame, _impl_.step_count_), 3>(),
      {16, 3, 0,
       PROTOBUF_FIELD_OFFSET(SimulationFrame, _impl_.step_count_)}},
-    // repeated .motionlab.protocol.BodyPoseData body_poses = 3 [json_name = "bodyPoses"];
+    // repeated .motionlab.protocol.BodyPoseData body_poses = 3;
     {::_pbi::TcParser::FastMtR1,
      {26, 0, 0,
       PROTOBUF_FIELD_OFFSET(SimulationFrame, _impl_.body_poses_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // double sim_time = 1 [json_name = "simTime"];
+    // double sim_time = 1;
     {PROTOBUF_FIELD_OFFSET(SimulationFrame, _impl_.sim_time_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // uint64 step_count = 2 [json_name = "stepCount"];
+    // uint64 step_count = 2;
     {PROTOBUF_FIELD_OFFSET(SimulationFrame, _impl_.step_count_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt64)},
-    // repeated .motionlab.protocol.BodyPoseData body_poses = 3 [json_name = "bodyPoses"];
+    // repeated .motionlab.protocol.BodyPoseData body_poses = 3;
     {PROTOBUF_FIELD_OFFSET(SimulationFrame, _impl_.body_poses_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
-    // repeated .motionlab.protocol.JointStateData joint_states = 4 [json_name = "jointStates", deprecated = true];
+    // repeated .motionlab.protocol.JointStateData joint_states = 4 [deprecated = true];
     {PROTOBUF_FIELD_OFFSET(SimulationFrame, _impl_.joint_states_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -29592,7 +30969,7 @@ PROTOBUF_NOINLINE void SimulationFrame::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // double sim_time = 1 [json_name = "simTime"];
+  // double sim_time = 1;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_sim_time()) != 0) {
       target = stream->EnsureSpace(target);
@@ -29601,7 +30978,7 @@ PROTOBUF_NOINLINE void SimulationFrame::Clear() {
     }
   }
 
-  // uint64 step_count = 2 [json_name = "stepCount"];
+  // uint64 step_count = 2;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (this_._internal_step_count() != 0) {
       target = stream->EnsureSpace(target);
@@ -29610,7 +30987,7 @@ PROTOBUF_NOINLINE void SimulationFrame::Clear() {
     }
   }
 
-  // repeated .motionlab.protocol.BodyPoseData body_poses = 3 [json_name = "bodyPoses"];
+  // repeated .motionlab.protocol.BodyPoseData body_poses = 3;
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_body_poses_size());
@@ -29623,7 +31000,7 @@ PROTOBUF_NOINLINE void SimulationFrame::Clear() {
     }
   }
 
-  // repeated .motionlab.protocol.JointStateData joint_states = 4 [json_name = "jointStates", deprecated = true];
+  // repeated .motionlab.protocol.JointStateData joint_states = 4 [deprecated = true];
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_joint_states_size());
@@ -29662,27 +31039,27 @@ PROTOBUF_NOINLINE void SimulationFrame::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
-    // repeated .motionlab.protocol.BodyPoseData body_poses = 3 [json_name = "bodyPoses"];
+    // repeated .motionlab.protocol.BodyPoseData body_poses = 3;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       total_size += 1UL * this_._internal_body_poses_size();
       for (const auto& msg : this_._internal_body_poses()) {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
-    // repeated .motionlab.protocol.JointStateData joint_states = 4 [json_name = "jointStates", deprecated = true];
+    // repeated .motionlab.protocol.JointStateData joint_states = 4 [deprecated = true];
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
       total_size += 1UL * this_._internal_joint_states_size();
       for (const auto& msg : this_._internal_joint_states()) {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
-    // double sim_time = 1 [json_name = "simTime"];
+    // double sim_time = 1;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_sim_time()) != 0) {
         total_size += 9;
       }
     }
-    // uint64 step_count = 2 [json_name = "stepCount"];
+    // uint64 step_count = 2;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (this_._internal_step_count() != 0) {
         total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(
@@ -29898,32 +31275,32 @@ OutputChannelDescriptor::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::OutputChannelDescriptor>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // .motionlab.protocol.ChannelDataType data_type = 4 [json_name = "dataType"];
+    // .motionlab.protocol.ChannelDataType data_type = 4;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(OutputChannelDescriptor, _impl_.data_type_), 3>(),
      {32, 3, 0,
       PROTOBUF_FIELD_OFFSET(OutputChannelDescriptor, _impl_.data_type_)}},
-    // string channel_id = 1 [json_name = "channelId"];
+    // string channel_id = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(OutputChannelDescriptor, _impl_.channel_id_)}},
-    // string name = 2 [json_name = "name"];
+    // string name = 2;
     {::_pbi::TcParser::FastUS1,
      {18, 1, 0,
       PROTOBUF_FIELD_OFFSET(OutputChannelDescriptor, _impl_.name_)}},
-    // string unit = 3 [json_name = "unit"];
+    // string unit = 3;
     {::_pbi::TcParser::FastUS1,
      {26, 2, 0,
       PROTOBUF_FIELD_OFFSET(OutputChannelDescriptor, _impl_.unit_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string channel_id = 1 [json_name = "channelId"];
+    // string channel_id = 1;
     {PROTOBUF_FIELD_OFFSET(OutputChannelDescriptor, _impl_.channel_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string name = 2 [json_name = "name"];
+    // string name = 2;
     {PROTOBUF_FIELD_OFFSET(OutputChannelDescriptor, _impl_.name_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string unit = 3 [json_name = "unit"];
+    // string unit = 3;
     {PROTOBUF_FIELD_OFFSET(OutputChannelDescriptor, _impl_.unit_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .motionlab.protocol.ChannelDataType data_type = 4 [json_name = "dataType"];
+    // .motionlab.protocol.ChannelDataType data_type = 4;
     {PROTOBUF_FIELD_OFFSET(OutputChannelDescriptor, _impl_.data_type_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
   }},
   // no aux_entries
@@ -29978,7 +31355,7 @@ PROTOBUF_NOINLINE void OutputChannelDescriptor::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string channel_id = 1 [json_name = "channelId"];
+  // string channel_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_channel_id().empty()) {
       const ::std::string& _s = this_._internal_channel_id();
@@ -29988,7 +31365,7 @@ PROTOBUF_NOINLINE void OutputChannelDescriptor::Clear() {
     }
   }
 
-  // string name = 2 [json_name = "name"];
+  // string name = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (!this_._internal_name().empty()) {
       const ::std::string& _s = this_._internal_name();
@@ -29998,7 +31375,7 @@ PROTOBUF_NOINLINE void OutputChannelDescriptor::Clear() {
     }
   }
 
-  // string unit = 3 [json_name = "unit"];
+  // string unit = 3;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (!this_._internal_unit().empty()) {
       const ::std::string& _s = this_._internal_unit();
@@ -30008,7 +31385,7 @@ PROTOBUF_NOINLINE void OutputChannelDescriptor::Clear() {
     }
   }
 
-  // .motionlab.protocol.ChannelDataType data_type = 4 [json_name = "dataType"];
+  // .motionlab.protocol.ChannelDataType data_type = 4;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (this_._internal_data_type() != 0) {
       target = stream->EnsureSpace(target);
@@ -30043,28 +31420,28 @@ PROTOBUF_NOINLINE void OutputChannelDescriptor::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
-    // string channel_id = 1 [json_name = "channelId"];
+    // string channel_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_channel_id().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_channel_id());
       }
     }
-    // string name = 2 [json_name = "name"];
+    // string name = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (!this_._internal_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_name());
       }
     }
-    // string unit = 3 [json_name = "unit"];
+    // string unit = 3;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (!this_._internal_unit().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_unit());
       }
     }
-    // .motionlab.protocol.ChannelDataType data_type = 4 [json_name = "dataType"];
+    // .motionlab.protocol.ChannelDataType data_type = 4;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (this_._internal_data_type() != 0) {
         total_size += 1 +
@@ -30347,18 +31724,18 @@ TimeSample::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::TimeSample>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // double time = 1 [json_name = "time"];
+    // double time = 1;
     {::_pbi::TcParser::FastF64S1,
      {9, 0, 0,
       PROTOBUF_FIELD_OFFSET(TimeSample, _impl_.time_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // double time = 1 [json_name = "time"];
+    // double time = 1;
     {PROTOBUF_FIELD_OFFSET(TimeSample, _impl_.time_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    // double scalar = 2 [json_name = "scalar"];
+    // double scalar = 2;
     {PROTOBUF_FIELD_OFFSET(TimeSample, _impl_.value_.scalar_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kDouble)},
-    // .motionlab.mechanism.Vec3 vector = 3 [json_name = "vector"];
+    // .motionlab.mechanism.Vec3 vector = 3;
     {PROTOBUF_FIELD_OFFSET(TimeSample, _impl_.value_.vector_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -30399,7 +31776,7 @@ PROTOBUF_NOINLINE void TimeSample::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // double time = 1 [json_name = "time"];
+  // double time = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_time()) != 0) {
       target = stream->EnsureSpace(target);
@@ -30448,7 +31825,7 @@ PROTOBUF_NOINLINE void TimeSample::Clear() {
   (void)cached_has_bits;
 
    {
-    // double time = 1 [json_name = "time"];
+    // double time = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_time()) != 0) {
@@ -30457,12 +31834,12 @@ PROTOBUF_NOINLINE void TimeSample::Clear() {
     }
   }
   switch (this_.value_case()) {
-    // double scalar = 2 [json_name = "scalar"];
+    // double scalar = 2;
     case kScalar: {
       total_size += 9;
       break;
     }
-    // .motionlab.mechanism.Vec3 vector = 3 [json_name = "vector"];
+    // .motionlab.mechanism.Vec3 vector = 3;
     case kVector: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.value_.vector_);
@@ -30692,20 +32069,20 @@ SimulationTrace::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::SimulationTrace>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // repeated .motionlab.protocol.TimeSample samples = 2 [json_name = "samples"];
+    // repeated .motionlab.protocol.TimeSample samples = 2;
     {::_pbi::TcParser::FastMtR1,
      {18, 0, 0,
       PROTOBUF_FIELD_OFFSET(SimulationTrace, _impl_.samples_)}},
-    // string channel_id = 1 [json_name = "channelId"];
+    // string channel_id = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 1, 0,
       PROTOBUF_FIELD_OFFSET(SimulationTrace, _impl_.channel_id_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string channel_id = 1 [json_name = "channelId"];
+    // string channel_id = 1;
     {PROTOBUF_FIELD_OFFSET(SimulationTrace, _impl_.channel_id_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // repeated .motionlab.protocol.TimeSample samples = 2 [json_name = "samples"];
+    // repeated .motionlab.protocol.TimeSample samples = 2;
     {PROTOBUF_FIELD_OFFSET(SimulationTrace, _impl_.samples_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -30756,7 +32133,7 @@ PROTOBUF_NOINLINE void SimulationTrace::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string channel_id = 1 [json_name = "channelId"];
+  // string channel_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (!this_._internal_channel_id().empty()) {
       const ::std::string& _s = this_._internal_channel_id();
@@ -30766,7 +32143,7 @@ PROTOBUF_NOINLINE void SimulationTrace::Clear() {
     }
   }
 
-  // repeated .motionlab.protocol.TimeSample samples = 2 [json_name = "samples"];
+  // repeated .motionlab.protocol.TimeSample samples = 2;
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_samples_size());
@@ -30805,14 +32182,14 @@ PROTOBUF_NOINLINE void SimulationTrace::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // repeated .motionlab.protocol.TimeSample samples = 2 [json_name = "samples"];
+    // repeated .motionlab.protocol.TimeSample samples = 2;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       total_size += 1UL * this_._internal_samples_size();
       for (const auto& msg : this_._internal_samples()) {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
-    // string channel_id = 1 [json_name = "channelId"];
+    // string channel_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (!this_._internal_channel_id().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -30996,14 +32373,14 @@ ScrubCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::ScrubCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // double time = 1 [json_name = "time"];
+    // double time = 1;
     {::_pbi::TcParser::FastF64S1,
      {9, 0, 0,
       PROTOBUF_FIELD_OFFSET(ScrubCommand, _impl_.time_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // double time = 1 [json_name = "time"];
+    // double time = 1;
     {PROTOBUF_FIELD_OFFSET(ScrubCommand, _impl_.time_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
   }},
   // no aux_entries
@@ -31041,7 +32418,7 @@ PROTOBUF_NOINLINE void ScrubCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // double time = 1 [json_name = "time"];
+  // double time = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_time()) != 0) {
       target = stream->EnsureSpace(target);
@@ -31074,7 +32451,7 @@ PROTOBUF_NOINLINE void ScrubCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // double time = 1 [json_name = "time"];
+    // double time = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_time()) != 0) {
@@ -31257,14 +32634,14 @@ SaveProjectCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::SaveProjectCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string project_name = 1 [json_name = "projectName"];
+    // string project_name = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(SaveProjectCommand, _impl_.project_name_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string project_name = 1 [json_name = "projectName"];
+    // string project_name = 1;
     {PROTOBUF_FIELD_OFFSET(SaveProjectCommand, _impl_.project_name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
@@ -31308,7 +32685,7 @@ PROTOBUF_NOINLINE void SaveProjectCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string project_name = 1 [json_name = "projectName"];
+  // string project_name = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_project_name().empty()) {
       const ::std::string& _s = this_._internal_project_name();
@@ -31342,7 +32719,7 @@ PROTOBUF_NOINLINE void SaveProjectCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // string project_name = 1 [json_name = "projectName"];
+    // string project_name = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_project_name().empty()) {
@@ -31567,9 +32944,9 @@ SaveProjectResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // bytes project_data = 1 [json_name = "projectData"];
+    // bytes project_data = 1;
     {PROTOBUF_FIELD_OFFSET(SaveProjectResult, _impl_.result_.project_data_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kBytes | ::_fl::kRepAString)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(SaveProjectResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
@@ -31648,13 +33025,13 @@ PROTOBUF_NOINLINE void SaveProjectResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // bytes project_data = 1 [json_name = "projectData"];
+    // bytes project_data = 1;
     case kProjectData: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
                                       this_._internal_project_data());
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -31863,14 +33240,14 @@ LoadProjectCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::LoadProjectCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // bytes project_data = 1 [json_name = "projectData"];
+    // bytes project_data = 1;
     {::_pbi::TcParser::FastBS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(LoadProjectCommand, _impl_.project_data_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // bytes project_data = 1 [json_name = "projectData"];
+    // bytes project_data = 1;
     {PROTOBUF_FIELD_OFFSET(LoadProjectCommand, _impl_.project_data_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kBytes | ::_fl::kRepAString)},
   }},
   // no aux_entries
@@ -31911,7 +33288,7 @@ PROTOBUF_NOINLINE void LoadProjectCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // bytes project_data = 1 [json_name = "projectData"];
+  // bytes project_data = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_project_data().empty()) {
       const ::std::string& _s = this_._internal_project_data();
@@ -31943,7 +33320,7 @@ PROTOBUF_NOINLINE void LoadProjectCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // bytes project_data = 1 [json_name = "projectData"];
+    // bytes project_data = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_project_data().empty()) {
@@ -32185,9 +33562,9 @@ LoadProjectResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.protocol.LoadProjectSuccess success = 1 [json_name = "success"];
+    // .motionlab.protocol.LoadProjectSuccess success = 1;
     {PROTOBUF_FIELD_OFFSET(LoadProjectResult, _impl_.result_.success_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(LoadProjectResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -32269,13 +33646,13 @@ PROTOBUF_NOINLINE void LoadProjectResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.protocol.LoadProjectSuccess success = 1 [json_name = "success"];
+    // .motionlab.protocol.LoadProjectSuccess success = 1;
     case kSuccess: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.success_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -32536,23 +33913,23 @@ LoadProjectSuccess::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // .motionlab.mechanism.Mechanism mechanism = 1 [json_name = "mechanism"];
+    // .motionlab.mechanism.Mechanism mechanism = 1;
     {::_pbi::TcParser::FastMtS1,
      {10, 3, 0,
       PROTOBUF_FIELD_OFFSET(LoadProjectSuccess, _impl_.mechanism_)}},
-    // repeated .motionlab.protocol.BodyImportResult bodies = 2 [json_name = "bodies"];
+    // repeated .motionlab.protocol.BodyImportResult bodies = 2;
     {::_pbi::TcParser::FastMtR1,
      {18, 0, 1,
       PROTOBUF_FIELD_OFFSET(LoadProjectSuccess, _impl_.bodies_)}},
-    // .motionlab.mechanism.ProjectMetadata metadata = 3 [json_name = "metadata"];
+    // .motionlab.mechanism.ProjectMetadata metadata = 3;
     {::_pbi::TcParser::FastMtS1,
      {26, 4, 2,
       PROTOBUF_FIELD_OFFSET(LoadProjectSuccess, _impl_.metadata_)}},
-    // repeated .motionlab.protocol.MissingAssetInfo missing_assets = 4 [json_name = "missingAssets"];
+    // repeated .motionlab.protocol.MissingAssetInfo missing_assets = 4;
     {::_pbi::TcParser::FastMtR1,
      {34, 1, 3,
       PROTOBUF_FIELD_OFFSET(LoadProjectSuccess, _impl_.missing_assets_)}},
-    // repeated .motionlab.protocol.GeometryImportResult geometries = 5 [json_name = "geometries"];
+    // repeated .motionlab.protocol.GeometryImportResult geometries = 5;
     {::_pbi::TcParser::FastMtR1,
      {42, 2, 4,
       PROTOBUF_FIELD_OFFSET(LoadProjectSuccess, _impl_.geometries_)}},
@@ -32561,15 +33938,15 @@ LoadProjectSuccess::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.mechanism.Mechanism mechanism = 1 [json_name = "mechanism"];
+    // .motionlab.mechanism.Mechanism mechanism = 1;
     {PROTOBUF_FIELD_OFFSET(LoadProjectSuccess, _impl_.mechanism_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // repeated .motionlab.protocol.BodyImportResult bodies = 2 [json_name = "bodies"];
+    // repeated .motionlab.protocol.BodyImportResult bodies = 2;
     {PROTOBUF_FIELD_OFFSET(LoadProjectSuccess, _impl_.bodies_), _Internal::kHasBitsOffset + 0, 1, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .motionlab.mechanism.ProjectMetadata metadata = 3 [json_name = "metadata"];
+    // .motionlab.mechanism.ProjectMetadata metadata = 3;
     {PROTOBUF_FIELD_OFFSET(LoadProjectSuccess, _impl_.metadata_), _Internal::kHasBitsOffset + 4, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // repeated .motionlab.protocol.MissingAssetInfo missing_assets = 4 [json_name = "missingAssets"];
+    // repeated .motionlab.protocol.MissingAssetInfo missing_assets = 4;
     {PROTOBUF_FIELD_OFFSET(LoadProjectSuccess, _impl_.missing_assets_), _Internal::kHasBitsOffset + 1, 3, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
-    // repeated .motionlab.protocol.GeometryImportResult geometries = 5 [json_name = "geometries"];
+    // repeated .motionlab.protocol.GeometryImportResult geometries = 5;
     {PROTOBUF_FIELD_OFFSET(LoadProjectSuccess, _impl_.geometries_), _Internal::kHasBitsOffset + 2, 4, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -32632,14 +34009,14 @@ PROTOBUF_NOINLINE void LoadProjectSuccess::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .motionlab.mechanism.Mechanism mechanism = 1 [json_name = "mechanism"];
+  // .motionlab.mechanism.Mechanism mechanism = 1;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.mechanism_, this_._impl_.mechanism_->GetCachedSize(), target,
         stream);
   }
 
-  // repeated .motionlab.protocol.BodyImportResult bodies = 2 [json_name = "bodies"];
+  // repeated .motionlab.protocol.BodyImportResult bodies = 2;
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_bodies_size());
@@ -32652,14 +34029,14 @@ PROTOBUF_NOINLINE void LoadProjectSuccess::Clear() {
     }
   }
 
-  // .motionlab.mechanism.ProjectMetadata metadata = 3 [json_name = "metadata"];
+  // .motionlab.mechanism.ProjectMetadata metadata = 3;
   if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.metadata_, this_._impl_.metadata_->GetCachedSize(), target,
         stream);
   }
 
-  // repeated .motionlab.protocol.MissingAssetInfo missing_assets = 4 [json_name = "missingAssets"];
+  // repeated .motionlab.protocol.MissingAssetInfo missing_assets = 4;
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_missing_assets_size());
@@ -32672,7 +34049,7 @@ PROTOBUF_NOINLINE void LoadProjectSuccess::Clear() {
     }
   }
 
-  // repeated .motionlab.protocol.GeometryImportResult geometries = 5 [json_name = "geometries"];
+  // repeated .motionlab.protocol.GeometryImportResult geometries = 5;
   if (CheckHasBitForRepeated(cached_has_bits, 0x00000004U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_geometries_size());
@@ -32711,33 +34088,33 @@ PROTOBUF_NOINLINE void LoadProjectSuccess::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
-    // repeated .motionlab.protocol.BodyImportResult bodies = 2 [json_name = "bodies"];
+    // repeated .motionlab.protocol.BodyImportResult bodies = 2;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
       total_size += 1UL * this_._internal_bodies_size();
       for (const auto& msg : this_._internal_bodies()) {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
-    // repeated .motionlab.protocol.MissingAssetInfo missing_assets = 4 [json_name = "missingAssets"];
+    // repeated .motionlab.protocol.MissingAssetInfo missing_assets = 4;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
       total_size += 1UL * this_._internal_missing_assets_size();
       for (const auto& msg : this_._internal_missing_assets()) {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
-    // repeated .motionlab.protocol.GeometryImportResult geometries = 5 [json_name = "geometries"];
+    // repeated .motionlab.protocol.GeometryImportResult geometries = 5;
     if (CheckHasBitForRepeated(cached_has_bits, 0x00000004U)) {
       total_size += 1UL * this_._internal_geometries_size();
       for (const auto& msg : this_._internal_geometries()) {
         total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
       }
     }
-    // .motionlab.mechanism.Mechanism mechanism = 1 [json_name = "mechanism"];
+    // .motionlab.mechanism.Mechanism mechanism = 1;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.mechanism_);
     }
-    // .motionlab.mechanism.ProjectMetadata metadata = 3 [json_name = "metadata"];
+    // .motionlab.mechanism.ProjectMetadata metadata = 3;
     if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.metadata_);
@@ -32973,32 +34350,32 @@ MissingAssetInfo::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::MissingAssetInfo>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string reason = 4 [json_name = "reason"];
+    // string reason = 4;
     {::_pbi::TcParser::FastUS1,
      {34, 2, 0,
       PROTOBUF_FIELD_OFFSET(MissingAssetInfo, _impl_.reason_)}},
-    // string body_id = 1 [json_name = "bodyId"];
+    // string body_id = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(MissingAssetInfo, _impl_.body_id_)}},
-    // string body_name = 2 [json_name = "bodyName"];
+    // string body_name = 2;
     {::_pbi::TcParser::FastUS1,
      {18, 1, 0,
       PROTOBUF_FIELD_OFFSET(MissingAssetInfo, _impl_.body_name_)}},
-    // .motionlab.mechanism.AssetReference expected_asset = 3 [json_name = "expectedAsset"];
+    // .motionlab.mechanism.AssetReference expected_asset = 3;
     {::_pbi::TcParser::FastMtS1,
      {26, 3, 0,
       PROTOBUF_FIELD_OFFSET(MissingAssetInfo, _impl_.expected_asset_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string body_id = 1 [json_name = "bodyId"];
+    // string body_id = 1;
     {PROTOBUF_FIELD_OFFSET(MissingAssetInfo, _impl_.body_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string body_name = 2 [json_name = "bodyName"];
+    // string body_name = 2;
     {PROTOBUF_FIELD_OFFSET(MissingAssetInfo, _impl_.body_name_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .motionlab.mechanism.AssetReference expected_asset = 3 [json_name = "expectedAsset"];
+    // .motionlab.mechanism.AssetReference expected_asset = 3;
     {PROTOBUF_FIELD_OFFSET(MissingAssetInfo, _impl_.expected_asset_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string reason = 4 [json_name = "reason"];
+    // string reason = 4;
     {PROTOBUF_FIELD_OFFSET(MissingAssetInfo, _impl_.reason_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -33058,7 +34435,7 @@ PROTOBUF_NOINLINE void MissingAssetInfo::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string body_id = 1 [json_name = "bodyId"];
+  // string body_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_body_id().empty()) {
       const ::std::string& _s = this_._internal_body_id();
@@ -33068,7 +34445,7 @@ PROTOBUF_NOINLINE void MissingAssetInfo::Clear() {
     }
   }
 
-  // string body_name = 2 [json_name = "bodyName"];
+  // string body_name = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (!this_._internal_body_name().empty()) {
       const ::std::string& _s = this_._internal_body_name();
@@ -33078,14 +34455,14 @@ PROTOBUF_NOINLINE void MissingAssetInfo::Clear() {
     }
   }
 
-  // .motionlab.mechanism.AssetReference expected_asset = 3 [json_name = "expectedAsset"];
+  // .motionlab.mechanism.AssetReference expected_asset = 3;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.expected_asset_, this_._impl_.expected_asset_->GetCachedSize(), target,
         stream);
   }
 
-  // string reason = 4 [json_name = "reason"];
+  // string reason = 4;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (!this_._internal_reason().empty()) {
       const ::std::string& _s = this_._internal_reason();
@@ -33121,28 +34498,28 @@ PROTOBUF_NOINLINE void MissingAssetInfo::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
-    // string body_id = 1 [json_name = "bodyId"];
+    // string body_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_body_id().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_body_id());
       }
     }
-    // string body_name = 2 [json_name = "bodyName"];
+    // string body_name = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (!this_._internal_body_name().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_body_name());
       }
     }
-    // string reason = 4 [json_name = "reason"];
+    // string reason = 4;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (!this_._internal_reason().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_reason());
       }
     }
-    // .motionlab.mechanism.AssetReference expected_asset = 3 [json_name = "expectedAsset"];
+    // .motionlab.mechanism.AssetReference expected_asset = 3;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.expected_asset_);
@@ -33371,26 +34748,26 @@ RelocateAssetCommand::_table_ = {
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
-    // string body_id = 1 [json_name = "bodyId"];
+    // string body_id = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(RelocateAssetCommand, _impl_.body_id_)}},
-    // string new_file_path = 2 [json_name = "newFilePath"];
+    // string new_file_path = 2;
     {::_pbi::TcParser::FastUS1,
      {18, 1, 0,
       PROTOBUF_FIELD_OFFSET(RelocateAssetCommand, _impl_.new_file_path_)}},
-    // .motionlab.protocol.ImportOptions import_options = 3 [json_name = "importOptions"];
+    // .motionlab.protocol.ImportOptions import_options = 3;
     {::_pbi::TcParser::FastMtS1,
      {26, 2, 0,
       PROTOBUF_FIELD_OFFSET(RelocateAssetCommand, _impl_.import_options_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string body_id = 1 [json_name = "bodyId"];
+    // string body_id = 1;
     {PROTOBUF_FIELD_OFFSET(RelocateAssetCommand, _impl_.body_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string new_file_path = 2 [json_name = "newFilePath"];
+    // string new_file_path = 2;
     {PROTOBUF_FIELD_OFFSET(RelocateAssetCommand, _impl_.new_file_path_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .motionlab.protocol.ImportOptions import_options = 3 [json_name = "importOptions"];
+    // .motionlab.protocol.ImportOptions import_options = 3;
     {PROTOBUF_FIELD_OFFSET(RelocateAssetCommand, _impl_.import_options_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
   {{
@@ -33446,7 +34823,7 @@ PROTOBUF_NOINLINE void RelocateAssetCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string body_id = 1 [json_name = "bodyId"];
+  // string body_id = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_body_id().empty()) {
       const ::std::string& _s = this_._internal_body_id();
@@ -33456,7 +34833,7 @@ PROTOBUF_NOINLINE void RelocateAssetCommand::Clear() {
     }
   }
 
-  // string new_file_path = 2 [json_name = "newFilePath"];
+  // string new_file_path = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (!this_._internal_new_file_path().empty()) {
       const ::std::string& _s = this_._internal_new_file_path();
@@ -33466,7 +34843,7 @@ PROTOBUF_NOINLINE void RelocateAssetCommand::Clear() {
     }
   }
 
-  // .motionlab.protocol.ImportOptions import_options = 3 [json_name = "importOptions"];
+  // .motionlab.protocol.ImportOptions import_options = 3;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.import_options_, this_._impl_.import_options_->GetCachedSize(), target,
@@ -33499,21 +34876,21 @@ PROTOBUF_NOINLINE void RelocateAssetCommand::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
-    // string body_id = 1 [json_name = "bodyId"];
+    // string body_id = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_body_id().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_body_id());
       }
     }
-    // string new_file_path = 2 [json_name = "newFilePath"];
+    // string new_file_path = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (!this_._internal_new_file_path().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_new_file_path());
       }
     }
-    // .motionlab.protocol.ImportOptions import_options = 3 [json_name = "importOptions"];
+    // .motionlab.protocol.ImportOptions import_options = 3;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.import_options_);
@@ -33774,9 +35151,9 @@ RelocateAssetResult::_table_ = {
   }}, {{
     65535, 65535
   }}, {{
-    // .motionlab.protocol.BodyImportResult body = 1 [json_name = "body"];
+    // .motionlab.protocol.BodyImportResult body = 1;
     {PROTOBUF_FIELD_OFFSET(RelocateAssetResult, _impl_.result_.body_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(RelocateAssetResult, _impl_.result_.error_message_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   {{
@@ -33858,13 +35235,13 @@ PROTOBUF_NOINLINE void RelocateAssetResult::Clear() {
   (void)cached_has_bits;
 
   switch (this_.result_case()) {
-    // .motionlab.protocol.BodyImportResult body = 1 [json_name = "body"];
+    // .motionlab.protocol.BodyImportResult body = 1;
     case kBody: {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.result_.body_);
       break;
     }
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     case kErrorMessage: {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                       this_._internal_error_message());
@@ -34074,14 +35451,14 @@ NewProjectCommand::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::NewProjectCommand>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string project_name = 1 [json_name = "projectName"];
+    // string project_name = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 0, 0,
       PROTOBUF_FIELD_OFFSET(NewProjectCommand, _impl_.project_name_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string project_name = 1 [json_name = "projectName"];
+    // string project_name = 1;
     {PROTOBUF_FIELD_OFFSET(NewProjectCommand, _impl_.project_name_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
@@ -34125,7 +35502,7 @@ PROTOBUF_NOINLINE void NewProjectCommand::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // string project_name = 1 [json_name = "projectName"];
+  // string project_name = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_project_name().empty()) {
       const ::std::string& _s = this_._internal_project_name();
@@ -34159,7 +35536,7 @@ PROTOBUF_NOINLINE void NewProjectCommand::Clear() {
   (void)cached_has_bits;
 
    {
-    // string project_name = 1 [json_name = "projectName"];
+    // string project_name = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_project_name().empty()) {
@@ -34351,20 +35728,20 @@ NewProjectResult::_table_ = {
     ::_pbi::TcParser::GetTable<::motionlab::protocol::NewProjectResult>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {::_pbi::TcParser::FastUS1,
      {18, 0, 0,
       PROTOBUF_FIELD_OFFSET(NewProjectResult, _impl_.error_message_)}},
-    // bool success = 1 [json_name = "success"];
+    // bool success = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(NewProjectResult, _impl_.success_), 1>(),
      {8, 1, 0,
       PROTOBUF_FIELD_OFFSET(NewProjectResult, _impl_.success_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // bool success = 1 [json_name = "success"];
+    // bool success = 1;
     {PROTOBUF_FIELD_OFFSET(NewProjectResult, _impl_.success_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     {PROTOBUF_FIELD_OFFSET(NewProjectResult, _impl_.error_message_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
@@ -34409,7 +35786,7 @@ PROTOBUF_NOINLINE void NewProjectResult::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // bool success = 1 [json_name = "success"];
+  // bool success = 1;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (this_._internal_success() != 0) {
       target = stream->EnsureSpace(target);
@@ -34418,7 +35795,7 @@ PROTOBUF_NOINLINE void NewProjectResult::Clear() {
     }
   }
 
-  // string error_message = 2 [json_name = "errorMessage"];
+  // string error_message = 2;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_error_message().empty()) {
       const ::std::string& _s = this_._internal_error_message();
@@ -34454,14 +35831,14 @@ PROTOBUF_NOINLINE void NewProjectResult::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // string error_message = 2 [json_name = "errorMessage"];
+    // string error_message = 2;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       if (!this_._internal_error_message().empty()) {
         total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                         this_._internal_error_message());
       }
     }
-    // bool success = 1 [json_name = "success"];
+    // bool success = 1;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (this_._internal_success() != 0) {
         total_size += 2;
@@ -34526,6 +35903,779 @@ void NewProjectResult::InternalSwap(NewProjectResult* PROTOBUF_RESTRICT PROTOBUF
 }
 
 ::google::protobuf::Metadata NewProjectResult::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class PlaceAssetInSceneCommand::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<PlaceAssetInSceneCommand>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneCommand, _impl_._has_bits_);
+};
+
+void PlaceAssetInSceneCommand::clear_position() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.position_ != nullptr) _impl_.position_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+PlaceAssetInSceneCommand::PlaceAssetInSceneCommand(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PlaceAssetInSceneCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.PlaceAssetInSceneCommand)
+}
+PROTOBUF_NDEBUG_INLINE PlaceAssetInSceneCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::PlaceAssetInSceneCommand& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        asset_id_(arena, from.asset_id_) {}
+
+PlaceAssetInSceneCommand::PlaceAssetInSceneCommand(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const PlaceAssetInSceneCommand& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PlaceAssetInSceneCommand_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  PlaceAssetInSceneCommand* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.position_ = (CheckHasBit(cached_has_bits, 0x00000002U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.position_)
+                : nullptr;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.PlaceAssetInSceneCommand)
+}
+PROTOBUF_NDEBUG_INLINE PlaceAssetInSceneCommand::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        asset_id_(arena) {}
+
+inline void PlaceAssetInSceneCommand::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.position_ = {};
+}
+PlaceAssetInSceneCommand::~PlaceAssetInSceneCommand() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.PlaceAssetInSceneCommand)
+  SharedDtor(*this);
+}
+inline void PlaceAssetInSceneCommand::SharedDtor(MessageLite& self) {
+  PlaceAssetInSceneCommand& this_ = static_cast<PlaceAssetInSceneCommand&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.asset_id_.Destroy();
+  delete this_._impl_.position_;
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL PlaceAssetInSceneCommand::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) PlaceAssetInSceneCommand(arena);
+}
+constexpr auto PlaceAssetInSceneCommand::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(PlaceAssetInSceneCommand),
+                                            alignof(PlaceAssetInSceneCommand));
+}
+constexpr auto PlaceAssetInSceneCommand::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_PlaceAssetInSceneCommand_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &PlaceAssetInSceneCommand::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<PlaceAssetInSceneCommand>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &PlaceAssetInSceneCommand::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<PlaceAssetInSceneCommand>(), &PlaceAssetInSceneCommand::ByteSizeLong,
+              &PlaceAssetInSceneCommand::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneCommand, _impl_._cached_size_),
+          false,
+      },
+      &PlaceAssetInSceneCommand::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull PlaceAssetInSceneCommand_class_data_ =
+        PlaceAssetInSceneCommand::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+PlaceAssetInSceneCommand::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&PlaceAssetInSceneCommand_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(PlaceAssetInSceneCommand_class_data_.tc_table);
+  return PlaceAssetInSceneCommand_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 1, 60, 2>
+PlaceAssetInSceneCommand::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneCommand, _impl_._has_bits_),
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    PlaceAssetInSceneCommand_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::PlaceAssetInSceneCommand>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // .motionlab.mechanism.Vec3 position = 2;
+    {::_pbi::TcParser::FastMtS1,
+     {18, 1, 0,
+      PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneCommand, _impl_.position_)}},
+    // string asset_id = 1;
+    {::_pbi::TcParser::FastUS1,
+     {10, 0, 0,
+      PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneCommand, _impl_.asset_id_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // string asset_id = 1;
+    {PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneCommand, _impl_.asset_id_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // .motionlab.mechanism.Vec3 position = 2;
+    {PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneCommand, _impl_.position_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::mechanism::Vec3>()},
+  }},
+  {{
+    "\53\10\0\0\0\0\0\0"
+    "motionlab.protocol.PlaceAssetInSceneCommand"
+    "asset_id"
+  }},
+};
+PROTOBUF_NOINLINE void PlaceAssetInSceneCommand::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.PlaceAssetInSceneCommand)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _impl_.asset_id_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(_impl_.position_ != nullptr);
+      _impl_.position_->Clear();
+    }
+  }
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL PlaceAssetInSceneCommand::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const PlaceAssetInSceneCommand& this_ = static_cast<const PlaceAssetInSceneCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL PlaceAssetInSceneCommand::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const PlaceAssetInSceneCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.PlaceAssetInSceneCommand)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // string asset_id = 1;
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!this_._internal_asset_id().empty()) {
+      const ::std::string& _s = this_._internal_asset_id();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.PlaceAssetInSceneCommand.asset_id");
+      target = stream->WriteStringMaybeAliased(1, _s, target);
+    }
+  }
+
+  // .motionlab.mechanism.Vec3 position = 2;
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        2, *this_._impl_.position_, this_._impl_.position_->GetCachedSize(), target,
+        stream);
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.PlaceAssetInSceneCommand)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t PlaceAssetInSceneCommand::ByteSizeLong(const MessageLite& base) {
+  const PlaceAssetInSceneCommand& this_ = static_cast<const PlaceAssetInSceneCommand&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t PlaceAssetInSceneCommand::ByteSizeLong() const {
+  const PlaceAssetInSceneCommand& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.PlaceAssetInSceneCommand)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    // string asset_id = 1;
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!this_._internal_asset_id().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_asset_id());
+      }
+    }
+    // .motionlab.mechanism.Vec3 position = 2;
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.position_);
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void PlaceAssetInSceneCommand::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<PlaceAssetInSceneCommand*>(&to_msg);
+  auto& from = static_cast<const PlaceAssetInSceneCommand&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.PlaceAssetInSceneCommand)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!from._internal_asset_id().empty()) {
+        _this->_internal_set_asset_id(from._internal_asset_id());
+      } else {
+        if (_this->_impl_.asset_id_.IsDefault()) {
+          _this->_internal_set_asset_id("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      ABSL_DCHECK(from._impl_.position_ != nullptr);
+      if (_this->_impl_.position_ == nullptr) {
+        _this->_impl_.position_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.position_);
+      } else {
+        _this->_impl_.position_->MergeFrom(*from._impl_.position_);
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void PlaceAssetInSceneCommand::CopyFrom(const PlaceAssetInSceneCommand& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.PlaceAssetInSceneCommand)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void PlaceAssetInSceneCommand::InternalSwap(PlaceAssetInSceneCommand* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.asset_id_, &other->_impl_.asset_id_, arena);
+  swap(_impl_.position_, other->_impl_.position_);
+}
+
+::google::protobuf::Metadata PlaceAssetInSceneCommand::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class PlaceAssetInSceneResult::_Internal {
+ public:
+  using HasBits =
+      decltype(::std::declval<PlaceAssetInSceneResult>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_._has_bits_);
+};
+
+PlaceAssetInSceneResult::PlaceAssetInSceneResult(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PlaceAssetInSceneResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:motionlab.protocol.PlaceAssetInSceneResult)
+}
+PROTOBUF_NDEBUG_INLINE PlaceAssetInSceneResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::motionlab::protocol::PlaceAssetInSceneResult& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        geometries_{visibility, arena, from.geometries_},
+        bodies_{visibility, arena, from.bodies_},
+        error_message_(arena, from.error_message_),
+        asset_id_(arena, from.asset_id_) {}
+
+PlaceAssetInSceneResult::PlaceAssetInSceneResult(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const PlaceAssetInSceneResult& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, PlaceAssetInSceneResult_class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  PlaceAssetInSceneResult* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  _impl_.success_ = from._impl_.success_;
+
+  // @@protoc_insertion_point(copy_constructor:motionlab.protocol.PlaceAssetInSceneResult)
+}
+PROTOBUF_NDEBUG_INLINE PlaceAssetInSceneResult::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        geometries_{visibility, arena},
+        bodies_{visibility, arena},
+        error_message_(arena),
+        asset_id_(arena) {}
+
+inline void PlaceAssetInSceneResult::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.success_ = {};
+}
+PlaceAssetInSceneResult::~PlaceAssetInSceneResult() {
+  // @@protoc_insertion_point(destructor:motionlab.protocol.PlaceAssetInSceneResult)
+  SharedDtor(*this);
+}
+inline void PlaceAssetInSceneResult::SharedDtor(MessageLite& self) {
+  PlaceAssetInSceneResult& this_ = static_cast<PlaceAssetInSceneResult&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.error_message_.Destroy();
+  this_._impl_.asset_id_.Destroy();
+  this_._impl_.~Impl_();
+}
+
+inline void* PROTOBUF_NONNULL PlaceAssetInSceneResult::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) PlaceAssetInSceneResult(arena);
+}
+constexpr auto PlaceAssetInSceneResult::InternalNewImpl_() {
+  constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
+      PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_.geometries_) +
+          decltype(PlaceAssetInSceneResult::_impl_.geometries_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+      PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_.bodies_) +
+          decltype(PlaceAssetInSceneResult::_impl_.bodies_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+  });
+  if (arena_bits.has_value()) {
+    return ::google::protobuf::internal::MessageCreator::CopyInit(
+        sizeof(PlaceAssetInSceneResult), alignof(PlaceAssetInSceneResult), *arena_bits);
+  } else {
+    return ::google::protobuf::internal::MessageCreator(&PlaceAssetInSceneResult::PlacementNew_,
+                                 sizeof(PlaceAssetInSceneResult),
+                                 alignof(PlaceAssetInSceneResult));
+  }
+}
+constexpr auto PlaceAssetInSceneResult::InternalGenerateClassData_() {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &_PlaceAssetInSceneResult_default_instance_._instance,
+          &_table_.header,
+          nullptr,  // OnDemandRegisterArenaDtor
+          nullptr,  // IsInitialized
+          &PlaceAssetInSceneResult::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<PlaceAssetInSceneResult>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &PlaceAssetInSceneResult::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<PlaceAssetInSceneResult>(), &PlaceAssetInSceneResult::ByteSizeLong,
+              &PlaceAssetInSceneResult::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_._cached_size_),
+          false,
+      },
+      &PlaceAssetInSceneResult::kDescriptorMethods,
+      &descriptor_table_protocol_2ftransport_2eproto,
+      nullptr,  // tracker
+  };
+}
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull PlaceAssetInSceneResult_class_data_ =
+        PlaceAssetInSceneResult::InternalGenerateClassData_();
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+PlaceAssetInSceneResult::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&PlaceAssetInSceneResult_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(PlaceAssetInSceneResult_class_data_.tc_table);
+  return PlaceAssetInSceneResult_class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<3, 5, 2, 72, 2>
+PlaceAssetInSceneResult::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_._has_bits_),
+    0, // no _extensions_
+    5, 56,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967264,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    5,  // num_field_entries
+    2,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    PlaceAssetInSceneResult_class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::motionlab::protocol::PlaceAssetInSceneResult>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // bool success = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(PlaceAssetInSceneResult, _impl_.success_), 4>(),
+     {8, 4, 0,
+      PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_.success_)}},
+    // string error_message = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 2, 0,
+      PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_.error_message_)}},
+    // repeated .motionlab.protocol.GeometryImportResult geometries = 3;
+    {::_pbi::TcParser::FastMtR1,
+     {26, 0, 0,
+      PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_.geometries_)}},
+    // repeated .motionlab.protocol.BodyImportResult bodies = 4;
+    {::_pbi::TcParser::FastMtR1,
+     {34, 1, 1,
+      PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_.bodies_)}},
+    // string asset_id = 5;
+    {::_pbi::TcParser::FastUS1,
+     {42, 3, 0,
+      PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_.asset_id_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // bool success = 1;
+    {PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_.success_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
+    // string error_message = 2;
+    {PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_.error_message_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // repeated .motionlab.protocol.GeometryImportResult geometries = 3;
+    {PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_.geometries_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+    // repeated .motionlab.protocol.BodyImportResult bodies = 4;
+    {PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_.bodies_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string asset_id = 5;
+    {PROTOBUF_FIELD_OFFSET(PlaceAssetInSceneResult, _impl_.asset_id_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  {{
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::GeometryImportResult>()},
+      {::_pbi::TcParser::GetTable<::motionlab::protocol::BodyImportResult>()},
+  }},
+  {{
+    "\52\0\15\0\0\10\0\0"
+    "motionlab.protocol.PlaceAssetInSceneResult"
+    "error_message"
+    "asset_id"
+  }},
+};
+PROTOBUF_NOINLINE void PlaceAssetInSceneResult::Clear() {
+// @@protoc_insertion_point(message_clear_start:motionlab.protocol.PlaceAssetInSceneResult)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+      _impl_.geometries_.Clear();
+    }
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
+      _impl_.bodies_.Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      _impl_.error_message_.ClearNonDefaultToEmpty();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      _impl_.asset_id_.ClearNonDefaultToEmpty();
+    }
+  }
+  _impl_.success_ = false;
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL PlaceAssetInSceneResult::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const PlaceAssetInSceneResult& this_ = static_cast<const PlaceAssetInSceneResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL PlaceAssetInSceneResult::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const PlaceAssetInSceneResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:motionlab.protocol.PlaceAssetInSceneResult)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // bool success = 1;
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+    if (this_._internal_success() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteBoolToArray(
+          1, this_._internal_success(), target);
+    }
+  }
+
+  // string error_message = 2;
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (!this_._internal_error_message().empty()) {
+      const ::std::string& _s = this_._internal_error_message();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.PlaceAssetInSceneResult.error_message");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+    }
+  }
+
+  // repeated .motionlab.protocol.GeometryImportResult geometries = 3;
+  if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+    for (unsigned i = 0, n = static_cast<unsigned>(
+                             this_._internal_geometries_size());
+         i < n; i++) {
+      const auto& repfield = this_._internal_geometries().Get(i);
+      target =
+          ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+              3, repfield, repfield.GetCachedSize(),
+              target, stream);
+    }
+  }
+
+  // repeated .motionlab.protocol.BodyImportResult bodies = 4;
+  if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
+    for (unsigned i = 0, n = static_cast<unsigned>(
+                             this_._internal_bodies_size());
+         i < n; i++) {
+      const auto& repfield = this_._internal_bodies().Get(i);
+      target =
+          ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+              4, repfield, repfield.GetCachedSize(),
+              target, stream);
+    }
+  }
+
+  // string asset_id = 5;
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (!this_._internal_asset_id().empty()) {
+      const ::std::string& _s = this_._internal_asset_id();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "motionlab.protocol.PlaceAssetInSceneResult.asset_id");
+      target = stream->WriteStringMaybeAliased(5, _s, target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:motionlab.protocol.PlaceAssetInSceneResult)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t PlaceAssetInSceneResult::ByteSizeLong(const MessageLite& base) {
+  const PlaceAssetInSceneResult& this_ = static_cast<const PlaceAssetInSceneResult&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t PlaceAssetInSceneResult::ByteSizeLong() const {
+  const PlaceAssetInSceneResult& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:motionlab.protocol.PlaceAssetInSceneResult)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+    // repeated .motionlab.protocol.GeometryImportResult geometries = 3;
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+      total_size += 1UL * this_._internal_geometries_size();
+      for (const auto& msg : this_._internal_geometries()) {
+        total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
+      }
+    }
+    // repeated .motionlab.protocol.BodyImportResult bodies = 4;
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
+      total_size += 1UL * this_._internal_bodies_size();
+      for (const auto& msg : this_._internal_bodies()) {
+        total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
+      }
+    }
+    // string error_message = 2;
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (!this_._internal_error_message().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_error_message());
+      }
+    }
+    // string asset_id = 5;
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (!this_._internal_asset_id().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_asset_id());
+      }
+    }
+    // bool success = 1;
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (this_._internal_success() != 0) {
+        total_size += 2;
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void PlaceAssetInSceneResult::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                            const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this =
+      static_cast<PlaceAssetInSceneResult*>(&to_msg);
+  auto& from = static_cast<const PlaceAssetInSceneResult&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:motionlab.protocol.PlaceAssetInSceneResult)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000001U)) {
+      _this->_internal_mutable_geometries()->InternalMergeFromWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), arena,
+          from._internal_geometries());
+    }
+    if (CheckHasBitForRepeated(cached_has_bits, 0x00000002U)) {
+      _this->_internal_mutable_bodies()->InternalMergeFromWithArena(
+          ::google::protobuf::MessageLite::internal_visibility(), arena,
+          from._internal_bodies());
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      if (!from._internal_error_message().empty()) {
+        _this->_internal_set_error_message(from._internal_error_message());
+      } else {
+        if (_this->_impl_.error_message_.IsDefault()) {
+          _this->_internal_set_error_message("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+      if (!from._internal_asset_id().empty()) {
+        _this->_internal_set_asset_id(from._internal_asset_id());
+      } else {
+        if (_this->_impl_.asset_id_.IsDefault()) {
+          _this->_internal_set_asset_id("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
+      if (from._internal_success() != 0) {
+        _this->_impl_.success_ = from._impl_.success_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void PlaceAssetInSceneResult::CopyFrom(const PlaceAssetInSceneResult& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:motionlab.protocol.PlaceAssetInSceneResult)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void PlaceAssetInSceneResult::InternalSwap(PlaceAssetInSceneResult* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  _impl_.geometries_.InternalSwap(&other->_impl_.geometries_);
+  _impl_.bodies_.InternalSwap(&other->_impl_.bodies_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.error_message_, &other->_impl_.error_message_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.asset_id_, &other->_impl_.asset_id_, arena);
+  swap(_impl_.success_, other->_impl_.success_);
+}
+
+::google::protobuf::Metadata PlaceAssetInSceneResult::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // @@protoc_insertion_point(namespace_scope)

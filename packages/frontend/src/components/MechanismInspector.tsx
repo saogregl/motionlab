@@ -14,7 +14,7 @@ export function MechanismInspector() {
   const simState = useSimulationStore((s) => s.state);
   const structuredDiagnostics = useSimulationStore((s) => s.structuredDiagnostics);
 
-  const groundBody = [...bodies.values()].find((b) => b.isFixed);
+  const groundBody = [...bodies.values()].find((b) => b.motionType === 'fixed');
 
   return (
     <InspectorPanel entityName="Mechanism" entityType="Overview">

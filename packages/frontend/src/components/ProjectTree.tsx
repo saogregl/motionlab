@@ -22,6 +22,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { executeCommand } from '../commands/registry.js';
 import {
   getSceneGraph,
+  sendAttachGeometry,
+  sendCreateBody,
   sendDeleteBody,
   sendDeleteDatum,
   sendDeleteJoint,
@@ -561,6 +563,25 @@ export function ProjectTree() {
                 : undefined
             }
             focusDisabledReason={!focusTargetId ? 'Geometry is not attached to a body' : undefined}
+            onMakeBody={
+              isSimulating || geom?.parentBodyId
+                ? undefined
+                : () => {
+                    // Collect selected loose geometries; fall back to this one
+                    const currentSelection = useSelectionStore.getState().selectedIds;
+                    const mechState = useMechanismStore.getState();
+                    const looseGeomIds = [...currentSelection].filter((id) => {
+                      const g = mechState.geometries.get(id);
+                      return g && !g.parentBodyId;
+                    });
+                    const targetGeomIds = looseGeomIds.length > 0 ? looseGeomIds : [node.id];
+                    mechState.setPendingMakeBodyGeometries(targetGeomIds);
+                    sendCreateBody(`Body ${mechState.bodies.size + 1}`);
+                  }
+            }
+            makeBodyDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
+            bodyList={isSimulating ? undefined : [...bodies.values()].map((b) => ({ id: b.id, name: b.name }))}
+            onMoveToBody={isSimulating ? undefined : (bodyId) => sendAttachGeometry(node.id, bodyId)}
             onAttachToBody={isSimulating ? undefined : () => setAttachGeomId(node.id)}
             attachDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
             onDetachFromBody={

@@ -1,3 +1,6 @@
+import { InspectorPanel } from '@motionlab/ui';
+import { Layers } from 'lucide-react';
+
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
@@ -12,6 +15,9 @@ import { SimulationMetadataSection } from './SimulationMetadataSection.js';
 /**
  * Routes the right-panel inspector to the correct component
  * based on the type of the first selected entity.
+ *
+ * When multiple entities are selected, shows a summary placeholder
+ * with a type breakdown instead of a single entity inspector.
  */
 export function EntityInspector() {
   const selectedIds = useSelectionStore((s) => s.selectedIds);
@@ -28,6 +34,38 @@ export function EntityInspector() {
 
   if (!firstId) {
     return null;
+  }
+
+  // Multi-select: show a summary placeholder with type breakdown
+  if (selectedIds.size > 1) {
+    const counts: Record<string, number> = {};
+    for (const id of selectedIds) {
+      if (bodies.has(id)) counts['Body'] = (counts['Body'] ?? 0) + 1;
+      else if (geometries.has(id)) counts['Geometry'] = (counts['Geometry'] ?? 0) + 1;
+      else if (datums.has(id)) counts['Datum'] = (counts['Datum'] ?? 0) + 1;
+      else if (joints.has(id)) counts['Joint'] = (counts['Joint'] ?? 0) + 1;
+      else if (loads.has(id)) counts['Load'] = (counts['Load'] ?? 0) + 1;
+      else if (actuators.has(id)) counts['Actuator'] = (counts['Actuator'] ?? 0) + 1;
+    }
+    const pluralize = (word: string, n: number) => {
+      if (n === 1) return word;
+      if (word === 'Body') return 'Bodies';
+      if (word === 'Geometry') return 'Geometries';
+      return `${word}s`;
+    };
+    const breakdown = Object.entries(counts)
+      .map(([type, count]) => `${count} ${pluralize(type, count)}`)
+      .join(', ');
+    return (
+      <InspectorPanel
+        entityName={`${selectedIds.size} items selected`}
+        entityIcon={<Layers className="size-5" />}
+      >
+        <div className="ps-3 pe-3 pt-2">
+          <span className="text-2xs text-[var(--text-secondary)]">{breakdown}</span>
+        </div>
+      </InspectorPanel>
+    );
   }
 
   if (bodies.has(firstId)) {

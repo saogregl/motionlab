@@ -2,8 +2,10 @@ import type { SceneGraphManager, SpatialPickData } from '@motionlab/viewport';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
+  DETACHED_BODY_PREFIX,
   registerSceneGraph,
   sendCreateDatumFromFace,
+  sendUpdateBody,
   sendUpdateDatumPose,
 } from '../engine/connection.js';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
@@ -119,6 +121,19 @@ export function useViewportBridge() {
         );
       }
     }
+    // Initial sync: add detached geometries as synthetic body nodes
+    for (const geometry of geometries.values()) {
+      if (!geometry.parentBodyId) {
+        const syntheticId = `${DETACHED_BODY_PREFIX}${geometry.id}`;
+        const pose = geometry.localPose;
+        sceneGraph.upsertBody(syntheticId, geometry.name, convertPose(pose));
+        sceneGraph.addBodyGeometry(
+          syntheticId, geometry.id, geometry.name, geometry.meshData,
+          { position: [0, 0, 0], rotation: [0, 0, 0, 1] },
+          geometry.partIndex,
+        );
+      }
+    }
 
     // Initial sync: add any datums already in the store
     for (const datum of datums.values()) {
@@ -152,10 +167,19 @@ export function useViewportBridge() {
 
     // Wire gizmo drag-end to send update command and refresh dependent joint visuals
     sceneGraph.setGizmoOnDragEnd((event) => {
-      sendUpdateDatumPose(event.entityId, {
-        position: { x: event.position[0], y: event.position[1], z: event.position[2] },
-        orientation: { x: event.rotation[0], y: event.rotation[1], z: event.rotation[2], w: event.rotation[3] },
-      });
+      if (event.entityKind === 'datum') {
+        sendUpdateDatumPose(event.entityId, {
+          position: { x: event.position[0], y: event.position[1], z: event.position[2] },
+          orientation: { x: event.rotation[0], y: event.rotation[1], z: event.rotation[2], w: event.rotation[3] },
+        });
+      } else if (event.entityKind === 'body') {
+        sendUpdateBody(event.entityId, {
+          pose: {
+            position: { x: event.position[0], y: event.position[1], z: event.position[2] },
+            orientation: { x: event.rotation[0], y: event.rotation[1], z: event.rotation[2], w: event.rotation[3] },
+          },
+        });
+      }
       sceneGraph.refreshJointPositions();
     });
 
@@ -184,21 +208,42 @@ export function useViewportBridge() {
       const bodiesNeedingRebuild = new Set<string>();
       const geometriesByBody = groupGeometriesByBody(state.geometries);
 
+      const detachedGeomsToAdd = new Set<string>();
+      const detachedGeomsToRemove = new Set<string>();
+
       for (const [id, geometry] of state.geometries) {
         const previous = trackedGeometries.get(id);
         if (!previous) {
-          if (geometry.parentBodyId) bodiesNeedingRebuild.add(geometry.parentBodyId);
+          if (geometry.parentBodyId) {
+            bodiesNeedingRebuild.add(geometry.parentBodyId);
+          } else {
+            detachedGeomsToAdd.add(id);
+          }
           continue;
         }
         if (previous !== geometry) {
           if (previous.parentBodyId) bodiesNeedingRebuild.add(previous.parentBodyId);
           if (geometry.parentBodyId) bodiesNeedingRebuild.add(geometry.parentBodyId);
+          // Handle parent change: detached → parented or parented → detached
+          if (!previous.parentBodyId && geometry.parentBodyId) {
+            detachedGeomsToRemove.add(id);
+          } else if (previous.parentBodyId && !geometry.parentBodyId) {
+            detachedGeomsToAdd.add(id);
+          } else if (!geometry.parentBodyId) {
+            // Still detached but changed — rebuild
+            detachedGeomsToRemove.add(id);
+            detachedGeomsToAdd.add(id);
+          }
         }
       }
 
       for (const [id, geometry] of trackedGeometries) {
-        if (!state.geometries.has(id) && geometry.parentBodyId) {
-          bodiesNeedingRebuild.add(geometry.parentBodyId);
+        if (!state.geometries.has(id)) {
+          if (geometry.parentBodyId) {
+            bodiesNeedingRebuild.add(geometry.parentBodyId);
+          } else {
+            detachedGeomsToRemove.add(id);
+          }
         }
       }
 
@@ -254,6 +299,23 @@ export function useViewportBridge() {
         if (!currentBodyIds.has(id)) {
           sg.removeBody(id);
         }
+      }
+
+      // --- Detached geometry diff ---
+      for (const geomId of detachedGeomsToRemove) {
+        sg.removeBody(`${DETACHED_BODY_PREFIX}${geomId}`);
+      }
+      for (const geomId of detachedGeomsToAdd) {
+        const geometry = state.geometries.get(geomId);
+        if (!geometry) continue;
+        const syntheticId = `${DETACHED_BODY_PREFIX}${geomId}`;
+        const pose = geometry.localPose;
+        sg.upsertBody(syntheticId, geometry.name, convertPose(pose));
+        sg.addBodyGeometry(
+          syntheticId, geometry.id, geometry.name, geometry.meshData,
+          { position: [0, 0, 0], rotation: [0, 0, 0, 1] },
+          geometry.partIndex,
+        );
       }
 
       const hadBodies = trackedBodyIds.size > 0;
@@ -425,12 +487,12 @@ export function useViewportBridge() {
       const { bodies, geometries } = useMechanismStore.getState();
       sg.applySelection(resolveViewportEntityIds(state.selectedIds, bodies, geometries));
 
-      // Attach gizmo when a single datum is selected
+      // Attach gizmo when a single datum or body is selected
       const { gizmoMode } = useToolModeStore.getState();
       if (state.selectedIds.size === 1 && gizmoMode !== 'off') {
         const id = state.selectedIds.values().next().value as string;
-        const { datums } = useMechanismStore.getState();
-        if (datums.has(id)) {
+        const { datums, bodies } = useMechanismStore.getState();
+        if (datums.has(id) || bodies.has(id)) {
           sg.attachGizmo(id);
         } else {
           sg.detachGizmo();
@@ -463,8 +525,8 @@ export function useViewportBridge() {
       const { selectedIds } = useSelectionStore.getState();
       if (selectedIds.size === 1 && state.gizmoMode !== 'off') {
         const id = selectedIds.values().next().value as string;
-        const { datums } = useMechanismStore.getState();
-        if (datums.has(id)) {
+        const { datums, bodies } = useMechanismStore.getState();
+        if (datums.has(id) || bodies.has(id)) {
           sg.attachGizmo(id);
         }
       } else {
@@ -652,34 +714,40 @@ export function useViewportBridge() {
         return;
       }
 
+      // Resolve synthetic detached body IDs to actual geometry IDs
+      let resolvedEntityId = entityId;
+      if (entityId.startsWith(DETACHED_BODY_PREFIX)) {
+        resolvedEntityId = entityId.slice(DETACHED_BODY_PREFIX.length);
+      }
+
       // Check selection filter
       const filter = useSelectionStore.getState().selectionFilter;
       if (filter) {
         const { bodies, geometries, datums, joints, loads, actuators } = useMechanismStore.getState();
-        const entityType = bodies.has(entityId)
+        const entityType = bodies.has(resolvedEntityId)
           ? 'body'
-          : geometries.has(entityId)
+          : geometries.has(resolvedEntityId)
             ? 'geometry'
-            : datums.has(entityId)
+            : datums.has(resolvedEntityId)
               ? 'datum'
-              : joints.has(entityId)
+              : joints.has(resolvedEntityId)
                 ? 'joint'
-                : loads.has(entityId)
+                : loads.has(resolvedEntityId)
                   ? 'load'
-                  : actuators.has(entityId)
+                  : actuators.has(resolvedEntityId)
                     ? 'actuator'
                     : null;
         if (entityType && !(filter as Set<string>).has(entityType)) return;
       }
 
       if (modifiers.ctrl) {
-        useSelectionStore.getState().toggleSelect(entityId);
+        useSelectionStore.getState().toggleSelect(resolvedEntityId);
       } else if (modifiers.shift) {
         const { bodies, geometries, datums, joints, loads, actuators } = useMechanismStore.getState();
         const orderedIds = [...bodies.keys(), ...geometries.keys(), ...datums.keys(), ...joints.keys(), ...loads.keys(), ...actuators.keys()];
-        useSelectionStore.getState().selectRange(entityId, orderedIds);
+        useSelectionStore.getState().selectRange(resolvedEntityId, orderedIds);
       } else {
-        useSelectionStore.getState().select(entityId);
+        useSelectionStore.getState().select(resolvedEntityId);
       }
     },
     [],
@@ -690,7 +758,11 @@ export function useViewportBridge() {
       useSelectionStore.getState().setHovered(null);
       return;
     }
-    useSelectionStore.getState().setHovered(entityId);
+    // Resolve synthetic detached body IDs to actual geometry IDs
+    const resolved = entityId?.startsWith(DETACHED_BODY_PREFIX)
+      ? entityId.slice(DETACHED_BODY_PREFIX.length)
+      : entityId;
+    useSelectionStore.getState().setHovered(resolved);
   }, []);
 
   return { handleSceneReady, handlePick, handleHover, sceneGraphRef };

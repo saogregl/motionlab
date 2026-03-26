@@ -89,7 +89,9 @@
       "WebFetch(domain:doc.babylonjs.com)",
       "WebFetch(domain:r3f.docs.pmnd.rs)",
       "WebFetch(domain:www.utsubo.com)",
-      "WebFetch(domain:medium.com)"
+      "WebFetch(domain:medium.com)",
+      "WebFetch(domain:connectrpc.com)",
+      "Bash(xargs basename:*)"
     ]
   },
   "enabledPlugins": {

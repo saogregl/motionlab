@@ -1,17 +1,16 @@
 import {
-  CopyableId,
   InertiaMatrixDisplay,
   InspectorPanel,
   InspectorSection,
   PropertyRow,
-  QuatDisplay,
   Vec3Display,
   formatEngValue,
 } from '@motionlab/ui';
-import { Fingerprint, Grid3X3, Hexagon, Move3D, Scale } from 'lucide-react';
+import { Grid3X3, Hexagon, Scale } from 'lucide-react';
 
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
+import { IdentitySection, PoseSection } from './inspector/sections/index.js';
 
 export function GeometryInspector() {
   const selectedIds = useSelectionStore((s) => s.selectedIds);
@@ -34,24 +33,29 @@ export function GeometryInspector() {
       entityType="Geometry"
       entityIcon={<Hexagon className="size-5" />}
     >
-      <InspectorSection title="Identity" icon={<Fingerprint className="size-3.5" />}>
-        <PropertyRow label="Name">
-          <span className="text-2xs truncate">{geometry.name}</span>
-        </PropertyRow>
-        <PropertyRow label="Source File">
-          <span className="text-2xs truncate">
-            {geometry.sourceAssetRef.originalFilename || '\u2014'}
-          </span>
-        </PropertyRow>
-        <PropertyRow label="Parent Body">
-          <span className="text-2xs truncate">
-            {parentBody?.name || 'Unparented'}
-          </span>
-        </PropertyRow>
-        <PropertyRow label="Geometry ID">
-          <CopyableId value={geometry.id} />
-        </PropertyRow>
-      </InspectorSection>
+      <IdentitySection
+        entityId={geometry.id}
+        entityType="geometry"
+        name={geometry.name}
+        metadata={[
+          {
+            label: 'Source File',
+            value: (
+              <span className="text-2xs truncate">
+                {geometry.sourceAssetRef.originalFilename || '\u2014'}
+              </span>
+            ),
+          },
+          {
+            label: 'Parent Body',
+            value: (
+              <span className="text-2xs truncate">
+                {parentBody?.name || 'Unparented'}
+              </span>
+            ),
+          },
+        ]}
+      />
 
       <InspectorSection title="Computed Mass" icon={<Scale className="size-3.5" />}>
         <PropertyRow label="Mass" unit="kg" numeric>
@@ -70,14 +74,15 @@ export function GeometryInspector() {
           ixy={mp.ixy}
           ixz={mp.ixz}
           iyz={mp.iyz}
-          unit="kg m²"
+          unit="kg m\u00B2"
         />
       </InspectorSection>
 
-      <InspectorSection title="Local Pose" icon={<Move3D className="size-3.5" />}>
-        <Vec3Display label="Offset" value={geometry.localPose.position} unit="m" />
-        <QuatDisplay value={geometry.localPose.rotation} label="Rotation" />
-      </InspectorSection>
+      <PoseSection
+        title="Local Pose"
+        position={geometry.localPose.position}
+        rotation={geometry.localPose.rotation}
+      />
     </InspectorPanel>
   );
 }

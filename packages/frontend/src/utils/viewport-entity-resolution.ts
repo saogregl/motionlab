@@ -1,3 +1,4 @@
+import { DETACHED_BODY_PREFIX } from '../engine/connection.js';
 import type { BodyState, GeometryState } from '../stores/mechanism.js';
 
 export function resolveViewportEntityId(
@@ -9,8 +10,18 @@ export function resolveViewportEntityId(
     return null;
   }
 
+  // Resolve synthetic detached body IDs → geometry ID
+  if (entityId.startsWith(DETACHED_BODY_PREFIX)) {
+    const geomId = entityId.slice(DETACHED_BODY_PREFIX.length);
+    return geometries.has(geomId) ? entityId : null;
+  }
+
   const geometry = geometries.get(entityId);
   if (geometry) {
+    // Detached geometry → use its synthetic body ID
+    if (!geometry.parentBodyId) {
+      return `${DETACHED_BODY_PREFIX}${entityId}`;
+    }
     return geometry.parentBodyId;
   }
 

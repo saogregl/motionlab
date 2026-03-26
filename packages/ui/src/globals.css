@@ -91,9 +91,9 @@
   --panel-max-w: 420px;
   --panel-radius: 4px;
   --section-radius: 4px;
-  --bottom-dock-h: 240px;
-  --bottom-dock-min: 160px;
-  --bottom-dock-max: 400px;
+  --bottom-panel-h: 240px;
+  --bottom-panel-min: 160px;
+  --bottom-panel-max: 400px;
   --bottom-tabs-h: 28px;
   --statusbar-h: 24px;
 
@@ -319,18 +319,18 @@
   --inertia-diagonal-text: #66b3ff;
   --inspector-grid-border: #252626;
 
-  --border-default: rgba(37, 38, 38, 0.2);
-  --border-strong: rgba(172, 171, 171, 0.1);
+  --border-default: #3d3d3d;
+  --border-strong: #525252;
   --border-subtle: #333333;
-  --border-field: rgba(37, 38, 38, 0.2);
-  --border-field-hover: rgba(172, 171, 171, 0.1);
+  --border-field: #3d3d3d;
+  --border-field-hover: #525252;
   --border-field-focus: var(--accent-primary);
 
   --text-primary: #e7e5e5;
   --text-secondary: #acabab;
   --text-tertiary: #a8a8a8;
   --text-disabled: #5c5b5b;
-  --text-inverse: #161616;
+  --text-inverse: #ffffff;
 
   --accent-primary: #007aff;
   --accent-hover: #339dff;

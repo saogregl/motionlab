@@ -10,6 +10,7 @@ import {
   TransformControls,
 } from '@react-three/drei';
 
+import { useViewportInsets } from '@motionlab/ui';
 import { useEffect, useRef, useState } from 'react';
 import { ACESFilmicToneMapping, Object3D, OrthographicCamera } from 'three';
 
@@ -47,10 +48,6 @@ export interface ViewportProps {
   gridVisible?: boolean;
   /** Controls viewport background. Defaults to 'dark'. */
   theme?: ViewportTheme;
-  /** Pixel inset from right edge for panel-aware gizmo positioning */
-  rightPanelInset?: number;
-  /** Pixel inset from bottom edge for dock-aware gizmo positioning */
-  bottomDockInset?: number;
 }
 
 type SceneSetupProps = Omit<ViewportProps, 'className'>;
@@ -105,6 +102,18 @@ function GizmoBridge({
   );
 }
 
+function GizmoLayout({ theme }: { theme: ViewportTheme }) {
+  const insets = useViewportInsets();
+  return (
+    <GizmoHelper alignment="bottom-right" margin={[72 + insets.right, 72 + insets.bottom]}>
+      <GizmoViewport
+        axisColors={VIEWPORT_THEMES[theme].axisColors}
+        labelColor="white"
+      />
+    </GizmoHelper>
+  );
+}
+
 function SceneSetup({
   onSceneReady,
   onPick,
@@ -113,8 +122,6 @@ function SceneSetup({
   interactionMode,
   gridVisible = false,
   theme = 'dark',
-  rightPanelInset = 0,
-  bottomDockInset = 0,
 }: SceneSetupProps) {
   const scene = useThree((s) => s.scene);
   const camera = useThree((s) => s.camera);
@@ -251,17 +258,17 @@ function SceneSetup({
       )}
 
       {/* Orientation gizmo — click to snap camera */}
-      <GizmoHelper alignment="bottom-right" margin={[72 + rightPanelInset, 72 + bottomDockInset]}>
-        <GizmoViewport
-          axisColors={VIEWPORT_THEMES[theme].axisColors}
-          labelColor="white"
-        />
-      </GizmoHelper>
+      <GizmoLayout theme={theme} />
 
       <OrbitControls
         makeDefault
         enableDamping
         dampingFactor={0.08}
+        onChange={(e) => {
+          if (e?.target) {
+            sceneGraphRef.current?.setOrbitTarget(e.target.target);
+          }
+        }}
         onStart={() => {
           pickingRef.current?.setOrbitDragging(true);
         }}
@@ -317,8 +324,6 @@ export function Viewport({
   interactionMode,
   gridVisible,
   theme = 'dark',
-  rightPanelInset,
-  bottomDockInset,
 }: ViewportProps) {
   return (
     <div className={className} style={{ width: '100%', height: '100%' }}>
@@ -337,8 +342,6 @@ export function Viewport({
           interactionMode={interactionMode}
           gridVisible={gridVisible}
           theme={theme}
-          rightPanelInset={rightPanelInset}
-          bottomDockInset={bottomDockInset}
         />
       </Canvas>
     </div>

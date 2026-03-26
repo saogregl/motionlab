@@ -14,18 +14,26 @@ import { GroupHeaderRow, TreeRow } from '../primitives/tree-row';
 import { Button } from '../ui/button';
 import { TooltipProvider } from '../ui/tooltip';
 
+import { LayoutProvider } from '../../layout';
 import { AppShell } from './app-shell';
-import { BottomDock } from './bottom-dock';
+import { BottomPanel } from './bottom-panel';
 import { LeftPanel } from './left-panel';
 import { RightPanel } from './right-panel';
 import { TopBar } from './top-bar';
 import { ViewportHUD } from './viewport-hud';
 import { WorkspaceTabBar } from './workspace-tab-bar';
 
-const meta = {
+const meta: Meta = {
   title: 'Shell/AppShellWithTools',
   parameters: { layout: 'fullscreen' },
-} satisfies Meta;
+  decorators: [
+    (Story) => (
+      <LayoutProvider>
+        <Story />
+      </LayoutProvider>
+    ),
+  ],
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -297,8 +305,8 @@ function FullIntegrationDemo() {
             </InspectorPanel>
           </RightPanel>
         }
-        bottomDock={
-          <BottomDock
+        bottomPanel={
+          <BottomPanel
             tabs={[
               { id: 'timeline', label: 'Timeline' },
               { id: 'charts', label: 'Charts' },
@@ -335,7 +343,7 @@ function FullIntegrationDemo() {
                 </div>
               </div>
             )}
-          </BottomDock>
+          </BottomPanel>
         }
         tabBar={
           <WorkspaceTabBar

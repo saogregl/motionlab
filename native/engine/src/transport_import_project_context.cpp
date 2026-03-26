@@ -1,4 +1,5 @@
 #include "transport_import_project_context.h"
+#include "primitive_generator.h"
 
 namespace motionlab::transport_detail {
 
@@ -48,9 +49,18 @@ void ImportProjectContext::handle_import_asset(ix::WebSocket& ws,
             return;
         }
     }
+    auto import_mode = protocol::IMPORT_MODE_AUTO_BODY;
+    if (cmd.has_import_options()) {
+        import_mode = cmd.import_options().import_mode();
+    }
+    const bool visual_only = (import_mode == protocol::IMPORT_MODE_VISUAL_ONLY);
     const double length_scale = unit_scale_to_meters(unit_system);
 
     std::string cache_key = asset_cache_.compute_cache_key(file_path, density, tess_quality, unit_system);
+    // Differentiate cache entries by import mode
+    if (visual_only && !cache_key.empty()) {
+        cache_key += ":visual-only";
+    }
     if (!cache_key.empty()) {
         auto cached = asset_cache_.lookup(cache_key);
         if (cached.has_value()) {
@@ -61,8 +71,8 @@ void ImportProjectContext::handle_import_asset(ix::WebSocket& ws,
                     // V4 cache path
                     std::vector<std::string> body_ids;
                     for (const auto& geom : result.geometries()) {
-                        // Register body (deduplicated)
-                        if (!mechanism_state_.has_body(geom.body_id())) {
+                        // Register body (deduplicated) — skip for visual-only
+                        if (!visual_only && !geom.body_id().empty() && !mechanism_state_.has_body(geom.body_id())) {
                             double cb_pos[3] = {geom.pose().position().x(), geom.pose().position().y(), geom.pose().position().z()};
                             double cb_orient[4] = {geom.pose().orientation().w(), geom.pose().orientation().x(),
                                                    geom.pose().orientation().y(), geom.pose().orientation().z()};
@@ -80,22 +90,38 @@ void ImportProjectContext::handle_import_asset(ix::WebSocket& ws,
                                                      cb_com, cb_inertia);
                             body_ids.push_back(geom.body_id());
                         }
-                        // Register geometry
-                        double g_pos[3] = {0, 0, 0};
-                        double g_orient[4] = {1, 0, 0, 0};
+                        // Register geometry — for visual-only, use world pose and empty parent
+                        std::string parent_body_id = visual_only ? "" : geom.body_id();
+                        double g_pos[3], g_orient[4];
+                        if (visual_only) {
+                            g_pos[0] = geom.pose().position().x();
+                            g_pos[1] = geom.pose().position().y();
+                            g_pos[2] = geom.pose().position().z();
+                            g_orient[0] = geom.pose().orientation().w();
+                            g_orient[1] = geom.pose().orientation().x();
+                            g_orient[2] = geom.pose().orientation().y();
+                            g_orient[3] = geom.pose().orientation().z();
+                        } else {
+                            g_pos[0] = 0; g_pos[1] = 0; g_pos[2] = 0;
+                            g_orient[0] = 1; g_orient[1] = 0; g_orient[2] = 0; g_orient[3] = 0;
+                        }
                         mechanism_state_.add_geometry(geom.geometry_id(), geom.name(),
-                                                      geom.body_id(), g_pos, g_orient,
+                                                      parent_body_id, g_pos, g_orient,
                                                       geom.computed_mass_properties(),
                                                       geom.has_source_asset_ref() ? &geom.source_asset_ref() : nullptr);
                         geometry_import_results_[geom.geometry_id()] = geom;
                         geometry_length_scales_[geom.geometry_id()] = length_scale;
-                        body_geometry_map_[geom.body_id()].push_back(geom.geometry_id());
+                        if (!parent_body_id.empty()) {
+                            body_geometry_map_[parent_body_id].push_back(geom.geometry_id());
+                            body_length_scales_[parent_body_id] = length_scale;
+                        }
                         geometry_topology_keys_[geom.geometry_id()] = cache_key;
-                        body_length_scales_[geom.body_id()] = length_scale;
                     }
                     // Also populate body_import_results_ for backward compat
-                    for (const auto& body : result.bodies()) {
-                        body_import_results_[body.body_id()] = body;
+                    if (!visual_only) {
+                        for (const auto& body : result.bodies()) {
+                            body_import_results_[body.body_id()] = body;
+                        }
                     }
                     if (!body_ids.empty()) {
                         remember_topology_context(cache_key, file_path, unit_system,
@@ -148,6 +174,7 @@ void ImportProjectContext::handle_import_asset(ix::WebSocket& ws,
                 }
 
                 spdlog::info("Import cache hit: {} bodies from {}", result.bodies_size(), file_path);
+                result.set_asset_id(cache_key);
                 protocol::Event event;
                 event.set_sequence_id(sequence_id);
                 *event.mutable_import_asset_result() = std::move(result);
@@ -194,9 +221,11 @@ void ImportProjectContext::handle_import_asset(ix::WebSocket& ws,
 
     std::vector<std::string> imported_body_ids;
     for (const auto& body : import_result.bodies) {
-        std::string body_id = engine::generate_uuidv7();
+        std::string body_id = visual_only ? "" : engine::generate_uuidv7();
         std::string geometry_id = engine::generate_uuidv7();
-        imported_body_ids.push_back(body_id);
+        if (!visual_only) {
+            imported_body_ids.push_back(body_id);
+        }
 
         // Build asset reference
         mechanism::AssetReference asset_ref;
@@ -204,13 +233,15 @@ void ImportProjectContext::handle_import_asset(ix::WebSocket& ws,
         asset_ref.set_relative_path("");
         asset_ref.set_original_filename(original_filename);
 
-        // Register body in mechanism state
-        double body_orient[4] = {body.rotation[3], body.rotation[0], body.rotation[1], body.rotation[2]};
-        mechanism_state_.add_body(body_id, body.name,
-                                  body.translation.data(), body_orient,
-                                  body.mass_properties.mass,
-                                  body.mass_properties.center_of_mass.data(),
-                                  body.mass_properties.inertia.data());
+        if (!visual_only) {
+            // Register body in mechanism state
+            double body_orient[4] = {body.rotation[3], body.rotation[0], body.rotation[1], body.rotation[2]};
+            mechanism_state_.add_body(body_id, body.name,
+                                      body.translation.data(), body_orient,
+                                      body.mass_properties.mass,
+                                      body.mass_properties.center_of_mass.data(),
+                                      body.mass_properties.inertia.data());
+        }
 
         // Build mass properties proto for geometry
         mechanism::MassProperties geom_mass;
@@ -226,8 +257,16 @@ void ImportProjectContext::handle_import_asset(ix::WebSocket& ws,
         geom_mass.set_iyz(body.mass_properties.inertia[5]);
 
         // Register geometry in mechanism state
-        double g_pos[3] = {0, 0, 0};
-        double g_orient[4] = {1, 0, 0, 0};
+        // For visual-only: geometry gets world pose directly and no parent body
+        double g_pos[3], g_orient[4];
+        if (visual_only) {
+            g_pos[0] = body.translation[0]; g_pos[1] = body.translation[1]; g_pos[2] = body.translation[2];
+            g_orient[0] = body.rotation[3]; g_orient[1] = body.rotation[0];
+            g_orient[2] = body.rotation[1]; g_orient[3] = body.rotation[2];
+        } else {
+            g_pos[0] = 0; g_pos[1] = 0; g_pos[2] = 0;
+            g_orient[0] = 1; g_orient[1] = 0; g_orient[2] = 0; g_orient[3] = 0;
+        }
         mechanism_state_.add_geometry(geometry_id, body.name, body_id,
                                       g_pos, g_orient, geom_mass, &asset_ref,
                                       static_cast<uint32_t>(body.mesh.part_index.empty() ? 0 : body.mesh.part_index.back() + 1));
@@ -235,7 +274,7 @@ void ImportProjectContext::handle_import_asset(ix::WebSocket& ws,
         // Populate GeometryImportResult (v4 field)
         auto* gir = proto_result.add_geometries();
         gir->set_geometry_id(geometry_id);
-        gir->set_body_id(body_id);
+        gir->set_body_id(body_id);  // empty string for visual-only
         gir->set_name(body.name);
         auto* gir_mesh = gir->mutable_display_mesh();
         gir_mesh->mutable_vertices()->Assign(body.mesh.vertices.begin(), body.mesh.vertices.end());
@@ -253,24 +292,26 @@ void ImportProjectContext::handle_import_asset(ix::WebSocket& ws,
         gir_pose->mutable_orientation()->set_z(body.rotation[2]);
         *gir->mutable_source_asset_ref() = asset_ref;
 
-        // Also populate deprecated BodyImportResult for backward compat
-        auto* pb = proto_result.add_bodies();
-        pb->set_body_id(body_id);
-        pb->set_name(body.name);
-        *pb->mutable_display_mesh() = gir->display_mesh();
-        pb->mutable_part_index()->CopyFrom(gir->part_index());
-        *pb->mutable_mass_properties() = geom_mass;
-        *pb->mutable_pose() = gir->pose();
-        *pb->mutable_source_asset_ref() = asset_ref;
+        if (!visual_only) {
+            // Also populate deprecated BodyImportResult for backward compat
+            auto* pb = proto_result.add_bodies();
+            pb->set_body_id(body_id);
+            pb->set_name(body.name);
+            *pb->mutable_display_mesh() = gir->display_mesh();
+            pb->mutable_part_index()->CopyFrom(gir->part_index());
+            *pb->mutable_mass_properties() = geom_mass;
+            *pb->mutable_pose() = gir->pose();
+            *pb->mutable_source_asset_ref() = asset_ref;
 
-        body_import_results_[body_id] = *pb;
-        body_length_scales_[body_id] = length_scale;
+            body_import_results_[body_id] = *pb;
+            body_length_scales_[body_id] = length_scale;
+            body_geometry_map_[body_id].push_back(geometry_id);
+        }
         geometry_import_results_[geometry_id] = *gir;
         geometry_length_scales_[geometry_id] = length_scale;
-        body_geometry_map_[body_id].push_back(geometry_id);
         geometry_topology_keys_[geometry_id] = cache_key;
 
-        // Store B-Rep shape by geometry_id
+        // Store B-Rep shape by geometry_id (always, even for visual-only)
         if (body.brep_shape) {
             shape_registry_.store(geometry_id, *body.brep_shape);
         }
@@ -288,7 +329,11 @@ void ImportProjectContext::handle_import_asset(ix::WebSocket& ws,
     }
 
     if (import_result.success) {
-        spdlog::info("Imported {} bodies from {}", import_result.bodies.size(), file_path);
+        if (visual_only) {
+            spdlog::info("Imported {} geometries (visual-only) from {}", import_result.bodies.size(), file_path);
+        } else {
+            spdlog::info("Imported {} bodies from {}", import_result.bodies.size(), file_path);
+        }
     } else {
         spdlog::error("Import failed: {}", file_path);
         for (const auto& d : import_result.diagnostics) {
@@ -296,9 +341,330 @@ void ImportProjectContext::handle_import_asset(ix::WebSocket& ws,
         }
     }
 
+    if (!cache_key.empty()) {
+        proto_result.set_asset_id(cache_key);
+    }
+
     protocol::Event event;
     event.set_sequence_id(sequence_id);
     *event.mutable_import_asset_result() = std::move(proto_result);
+    send_event(ws, event);
+}
+
+void ImportProjectContext::handle_place_asset_in_scene(
+    ix::WebSocket& ws,
+    uint64_t sequence_id,
+    const protocol::PlaceAssetInSceneCommand& cmd,
+    const SendEventFn& send_event) {
+
+    const std::string& asset_id = cmd.asset_id();
+    spdlog::info("PlaceAssetInScene: asset_id={}", asset_id);
+
+    // 1. Look up cached ImportAssetResult
+    auto cached = asset_cache_.lookup(asset_id);
+    if (!cached.has_value()) {
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_place_asset_in_scene_result();
+        result->set_success(false);
+        result->set_error_message("Asset not found in cache. Re-import required.");
+        result->set_asset_id(asset_id);
+        send_event(ws, event);
+        return;
+    }
+
+    // 2. Parse the cached ImportAssetResult
+    protocol::ImportAssetResult cached_result;
+    if (!cached_result.ParseFromString(cached.value())) {
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_place_asset_in_scene_result();
+        result->set_success(false);
+        result->set_error_message("Failed to parse cached asset data. Re-import required.");
+        result->set_asset_id(asset_id);
+        send_event(ws, event);
+        return;
+    }
+
+    protocol::PlaceAssetInSceneResult place_result;
+    place_result.set_success(true);
+    place_result.set_asset_id(asset_id);
+
+    // Look up topology context for length_scale
+    double length_scale = 1.0;
+    auto topo_ctx_it = asset_topology_contexts_.find(asset_id);
+    if (topo_ctx_it != asset_topology_contexts_.end()) {
+        length_scale = unit_scale_to_meters(topo_ctx_it->second.unit_system);
+    }
+
+    if (cached_result.geometries_size() > 0) {
+        // ── V4 path: geometries present ──
+
+        // Compute centroid of original body positions (deduplicated by body_id)
+        std::unordered_map<std::string, const protocol::GeometryImportResult*> unique_bodies;
+        for (const auto& geom : cached_result.geometries()) {
+            if (unique_bodies.find(geom.body_id()) == unique_bodies.end()) {
+                unique_bodies[geom.body_id()] = &geom;
+            }
+        }
+
+        double cx = 0, cy = 0, cz = 0;
+        int body_count = 0;
+        for (const auto& [orig_body_id, geom_ptr] : unique_bodies) {
+            cx += geom_ptr->pose().position().x();
+            cy += geom_ptr->pose().position().y();
+            cz += geom_ptr->pose().position().z();
+            body_count++;
+        }
+        if (body_count > 0) {
+            cx /= body_count;
+            cy /= body_count;
+            cz /= body_count;
+        }
+
+        // Compute offset from centroid to requested position
+        double dx = 0, dy = 0, dz = 0;
+        if (cmd.has_position()) {
+            dx = cmd.position().x() - cx;
+            dy = cmd.position().y() - cy;
+            dz = cmd.position().z() - cz;
+        }
+
+        // Map from original body_id to fresh body_id (deduplication)
+        std::unordered_map<std::string, std::string> body_id_remap;
+        std::vector<std::string> new_body_ids;
+
+        for (const auto& geom : cached_result.geometries()) {
+            // Generate fresh body_id (deduplicated per original body_id)
+            std::string new_body_id;
+            auto remap_it = body_id_remap.find(geom.body_id());
+            if (remap_it == body_id_remap.end()) {
+                new_body_id = engine::generate_uuidv7();
+                body_id_remap[geom.body_id()] = new_body_id;
+                new_body_ids.push_back(new_body_id);
+
+                // Register body in mechanism_state (offset position)
+                double body_pos[3] = {
+                    geom.pose().position().x() + dx,
+                    geom.pose().position().y() + dy,
+                    geom.pose().position().z() + dz
+                };
+                double body_orient[4] = {
+                    geom.pose().orientation().w(),
+                    geom.pose().orientation().x(),
+                    geom.pose().orientation().y(),
+                    geom.pose().orientation().z()
+                };
+                double com[3] = {
+                    geom.computed_mass_properties().center_of_mass().x(),
+                    geom.computed_mass_properties().center_of_mass().y(),
+                    geom.computed_mass_properties().center_of_mass().z()
+                };
+                double inertia[6] = {
+                    geom.computed_mass_properties().ixx(),
+                    geom.computed_mass_properties().iyy(),
+                    geom.computed_mass_properties().izz(),
+                    geom.computed_mass_properties().ixy(),
+                    geom.computed_mass_properties().ixz(),
+                    geom.computed_mass_properties().iyz()
+                };
+                mechanism_state_.add_body(new_body_id, geom.name(),
+                                          body_pos, body_orient,
+                                          geom.computed_mass_properties().mass(),
+                                          com, inertia);
+                body_length_scales_[new_body_id] = length_scale;
+            } else {
+                new_body_id = remap_it->second;
+            }
+
+            // Generate fresh geometry_id
+            std::string new_geometry_id = engine::generate_uuidv7();
+
+            // Register geometry in mechanism_state
+            double g_pos[3] = {0, 0, 0};
+            double g_orient[4] = {1, 0, 0, 0};
+            mechanism_state_.add_geometry(new_geometry_id, geom.name(),
+                                          new_body_id, g_pos, g_orient,
+                                          geom.computed_mass_properties(),
+                                          geom.has_source_asset_ref() ? &geom.source_asset_ref() : nullptr);
+
+            // Build new GeometryImportResult with fresh IDs and offset position
+            auto* new_gir = place_result.add_geometries();
+            new_gir->set_geometry_id(new_geometry_id);
+            new_gir->set_body_id(new_body_id);
+            new_gir->set_name(geom.name());
+            *new_gir->mutable_display_mesh() = geom.display_mesh();
+            new_gir->mutable_part_index()->CopyFrom(geom.part_index());
+            *new_gir->mutable_computed_mass_properties() = geom.computed_mass_properties();
+            auto* new_pose = new_gir->mutable_pose();
+            new_pose->mutable_position()->set_x(geom.pose().position().x() + dx);
+            new_pose->mutable_position()->set_y(geom.pose().position().y() + dy);
+            new_pose->mutable_position()->set_z(geom.pose().position().z() + dz);
+            *new_pose->mutable_orientation() = geom.pose().orientation();
+            if (geom.has_source_asset_ref()) {
+                *new_gir->mutable_source_asset_ref() = geom.source_asset_ref();
+            }
+
+            // Populate tracking maps
+            geometry_import_results_[new_geometry_id] = *new_gir;
+            geometry_length_scales_[new_geometry_id] = length_scale;
+            body_geometry_map_[new_body_id].push_back(new_geometry_id);
+            geometry_topology_keys_[new_geometry_id] = asset_id;
+        }
+
+        // Build BodyImportResult entries for backward compat
+        for (const auto& body : cached_result.bodies()) {
+            auto remap_it = body_id_remap.find(body.body_id());
+            if (remap_it == body_id_remap.end()) continue;
+
+            auto* new_bir = place_result.add_bodies();
+            new_bir->set_body_id(remap_it->second);
+            new_bir->set_name(body.name());
+            *new_bir->mutable_display_mesh() = body.display_mesh();
+            new_bir->mutable_part_index()->CopyFrom(body.part_index());
+            *new_bir->mutable_mass_properties() = body.mass_properties();
+            auto* bir_pose = new_bir->mutable_pose();
+            bir_pose->mutable_position()->set_x(body.pose().position().x() + dx);
+            bir_pose->mutable_position()->set_y(body.pose().position().y() + dy);
+            bir_pose->mutable_position()->set_z(body.pose().position().z() + dz);
+            *bir_pose->mutable_orientation() = body.pose().orientation();
+            if (body.has_source_asset_ref()) {
+                *new_bir->mutable_source_asset_ref() = body.source_asset_ref();
+            }
+            body_import_results_[remap_it->second] = *new_bir;
+        }
+
+        // Remember topology context for the new bodies
+        if (!new_body_ids.empty() && topo_ctx_it != asset_topology_contexts_.end()) {
+            remember_topology_context(asset_id, topo_ctx_it->second.file_path,
+                                      topo_ctx_it->second.unit_system,
+                                      topo_ctx_it->second.density,
+                                      topo_ctx_it->second.tessellation_quality,
+                                      new_body_ids);
+        }
+
+    } else if (cached_result.bodies_size() > 0) {
+        // ── V3 fallback: only bodies, no geometries ──
+
+        // Compute centroid of original body positions
+        double cx = 0, cy = 0, cz = 0;
+        for (const auto& body : cached_result.bodies()) {
+            cx += body.pose().position().x();
+            cy += body.pose().position().y();
+            cz += body.pose().position().z();
+        }
+        int body_count = cached_result.bodies_size();
+        if (body_count > 0) {
+            cx /= body_count;
+            cy /= body_count;
+            cz /= body_count;
+        }
+
+        double dx = 0, dy = 0, dz = 0;
+        if (cmd.has_position()) {
+            dx = cmd.position().x() - cx;
+            dy = cmd.position().y() - cy;
+            dz = cmd.position().z() - cz;
+        }
+
+        std::vector<std::string> new_body_ids;
+
+        for (const auto& body : cached_result.bodies()) {
+            std::string new_body_id = engine::generate_uuidv7();
+            new_body_ids.push_back(new_body_id);
+
+            double body_pos[3] = {
+                body.pose().position().x() + dx,
+                body.pose().position().y() + dy,
+                body.pose().position().z() + dz
+            };
+            double body_orient[4] = {
+                body.pose().orientation().w(),
+                body.pose().orientation().x(),
+                body.pose().orientation().y(),
+                body.pose().orientation().z()
+            };
+            double com[3] = {
+                body.mass_properties().center_of_mass().x(),
+                body.mass_properties().center_of_mass().y(),
+                body.mass_properties().center_of_mass().z()
+            };
+            double inertia[6] = {
+                body.mass_properties().ixx(),
+                body.mass_properties().iyy(),
+                body.mass_properties().izz(),
+                body.mass_properties().ixy(),
+                body.mass_properties().ixz(),
+                body.mass_properties().iyz()
+            };
+            mechanism_state_.add_body(new_body_id, body.name(),
+                                      body_pos, body_orient,
+                                      body.mass_properties().mass(),
+                                      com, inertia);
+
+            // Create synthetic geometry for v3 body
+            std::string new_geometry_id = engine::generate_uuidv7();
+            double g_pos[3] = {0, 0, 0};
+            double g_orient[4] = {1, 0, 0, 0};
+            mechanism_state_.add_geometry(new_geometry_id, body.name(),
+                                          new_body_id, g_pos, g_orient,
+                                          body.mass_properties(),
+                                          body.has_source_asset_ref() ? &body.source_asset_ref() : nullptr);
+
+            // Build GeometryImportResult for the response
+            auto* new_gir = place_result.add_geometries();
+            new_gir->set_geometry_id(new_geometry_id);
+            new_gir->set_body_id(new_body_id);
+            new_gir->set_name(body.name());
+            *new_gir->mutable_display_mesh() = body.display_mesh();
+            new_gir->mutable_part_index()->CopyFrom(body.part_index());
+            *new_gir->mutable_computed_mass_properties() = body.mass_properties();
+            auto* new_pose = new_gir->mutable_pose();
+            new_pose->mutable_position()->set_x(body.pose().position().x() + dx);
+            new_pose->mutable_position()->set_y(body.pose().position().y() + dy);
+            new_pose->mutable_position()->set_z(body.pose().position().z() + dz);
+            *new_pose->mutable_orientation() = body.pose().orientation();
+            if (body.has_source_asset_ref()) {
+                *new_gir->mutable_source_asset_ref() = body.source_asset_ref();
+            }
+
+            // Build BodyImportResult for backward compat
+            auto* new_bir = place_result.add_bodies();
+            new_bir->set_body_id(new_body_id);
+            new_bir->set_name(body.name());
+            *new_bir->mutable_display_mesh() = body.display_mesh();
+            new_bir->mutable_part_index()->CopyFrom(body.part_index());
+            *new_bir->mutable_mass_properties() = body.mass_properties();
+            *new_bir->mutable_pose() = *new_pose;
+            if (body.has_source_asset_ref()) {
+                *new_bir->mutable_source_asset_ref() = body.source_asset_ref();
+            }
+
+            // Populate tracking maps
+            geometry_import_results_[new_geometry_id] = *new_gir;
+            geometry_length_scales_[new_geometry_id] = length_scale;
+            body_geometry_map_[new_body_id].push_back(new_geometry_id);
+            geometry_topology_keys_[new_geometry_id] = asset_id;
+            body_import_results_[new_body_id] = *new_bir;
+            body_length_scales_[new_body_id] = length_scale;
+        }
+
+        // Remember topology context for the new bodies
+        if (!new_body_ids.empty() && topo_ctx_it != asset_topology_contexts_.end()) {
+            remember_topology_context(asset_id, topo_ctx_it->second.file_path,
+                                      topo_ctx_it->second.unit_system,
+                                      topo_ctx_it->second.density,
+                                      topo_ctx_it->second.tessellation_quality,
+                                      new_body_ids);
+        }
+    }
+
+    spdlog::info("PlaceAssetInScene: placed {} geometries, {} bodies from asset_id={}",
+                 place_result.geometries_size(), place_result.bodies_size(), asset_id);
+
+    protocol::Event event;
+    event.set_sequence_id(sequence_id);
+    *event.mutable_place_asset_in_scene_result() = std::move(place_result);
     send_event(ws, event);
 }
 
@@ -561,6 +927,17 @@ void ImportProjectContext::handle_load_project(ix::WebSocket& ws,
             body_geometry_map_[geom.parent_body_id().id()].push_back(geom.id().id());
         }
         *success.add_geometries() = gir;
+
+        // Regenerate B-Rep for primitive geometries (no source file needed)
+        if (geom.has_primitive_source() &&
+            geom.primitive_source().shape() != mechanism::PRIMITIVE_SHAPE_UNSPECIFIED) {
+            auto prim = engine::generate_primitive(
+                geom.primitive_source().shape(),
+                geom.primitive_source().params());
+            if (prim.success && prim.brep_shape) {
+                shape_registry_.store(geom.id().id(), *prim.brep_shape);
+            }
+        }
     }
 
     // Populate body_import_results_ for backward compat and build BodyImportResult for LoadProjectSuccess
@@ -907,6 +1284,15 @@ double ImportProjectContext::body_length_scale(const std::string& body_id) const
 double ImportProjectContext::geometry_length_scale(const std::string& geometry_id) const {
     const auto it = geometry_length_scales_.find(geometry_id);
     return it != geometry_length_scales_.end() ? it->second : 1.0;
+}
+
+void ImportProjectContext::register_primitive_geometry(
+    const std::string& geometry_id,
+    const std::string& body_id,
+    const protocol::GeometryImportResult& gir) {
+    geometry_import_results_[geometry_id] = gir;
+    geometry_length_scales_[geometry_id] = 1.0;  // primitives are in meters
+    body_geometry_map_[body_id].push_back(geometry_id);
 }
 
 void ImportProjectContext::remove_body_data(const std::string& body_id) {

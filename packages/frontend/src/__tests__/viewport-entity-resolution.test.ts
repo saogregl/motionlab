@@ -24,6 +24,7 @@ function makeBody(id: string): BodyState {
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0, w: 1 },
     },
+    motionType: 'dynamic',
   };
 }
 
@@ -66,8 +67,8 @@ describe('viewport entity resolution', () => {
     expect(resolveViewportEntityId('geom-1', bodies, geometries)).toBe('body-1');
   });
 
-  it('drops unparented geometry ids', () => {
-    expect(resolveViewportEntityId('geom-2', bodies, geometries)).toBeNull();
+  it('maps unparented geometry ids to synthetic detached body ids', () => {
+    expect(resolveViewportEntityId('geom-2', bodies, geometries)).toBe('__detached_geom-2');
   });
 
   it('deduplicates resolved viewport selection ids', () => {

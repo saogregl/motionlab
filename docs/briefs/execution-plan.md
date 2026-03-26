@@ -1,189 +1,159 @@
-# Epics 11-20 — Parallel Execution Plan
-
-> **Created:** 2026-03-22
-> **Scope:** 31 prompts across 10 epics, organized into 5 waves
-> **Critical path:** 13.1 -> 13.2 -> 15.1 -> 15.2 -> 15.3 (body-geometry split -> joint creation)
-## Page Feedback: /
-**Viewport:** 1920×1080
-
-### 1. <App> <FloatingDelayGroup> <AppShell> <MainToolbar> pointer events
-**Location:** #root > .flex > .relative > .pointer-events-auto
-**Source:** @fs/home/saogregl/Dev/motionlab/packages/frontend/src/commands/use-commands.ts:31:2
-**React:** <App> <FloatingDelayGroup> <AppShell> <MainToolbar>
-**Feedback:** The same positioning logic should be applied to this toolbar, since it also depends on the left panel positioning.
-
-### 2. <EntityInspector> <JointInspector> <InspectorPanel> <ScrollArea> <ScrollAreaRoot> <ScrollAreaViewport> flex flex
-**Location:** .flex > .relative > .size-full > .flex
-**Source:** @fs/home/saogregl/Dev/motionlab/packages/frontend/src/components/JointInspector.tsx:30:16
-**React:** <EntityInspector> <JointInspector> <InspectorPanel> <ScrollArea> <ScrollAreaRoot> <ScrollAreaViewport>
-**Feedback:** This panel reaaally needs a review. It's very ugly, full of colors for no reason, the information architecture is non existent, icons are everywhere and they generate just noise... Give it a full review focused on making this surface simpler and calmer please.
-## Overview
-
-Each wave is a set of prompts that can execute simultaneously. A wave starts only after all its listed dependencies from prior waves have landed. Prompts within a wave have **zero dependencies on each other**.
-
-> 11.1 is done
-> 11.2 is done
-> 12.1 is done
-> 12.2 is done
-> 12.3 is done
-> 13.1 is done
-> 13.2 is done
-> 13.3 is done
-> 11.3 is done
-> 20.1 is done
-> 20.2 is done
-> 20.3 is done
-
+# Review Response — UX Gaps, Architecture, and Workflow Feedback
 
 ---
 
-## Wave 1 — Foundations
-## Page Feedback: /
-**Viewport:** 1920×1080
+## UX Gaps
 
-### 1. <App> <FloatingDelayGroup> <AppShell> <MainToolbar> pointer events
-**Location:** #root > .flex > .relative > .pointer-events-auto
-**Source:** @fs/home/saogregl/Dev/motionlab/packages/frontend/src/commands/use-commands.ts:31:2
-**React:** <App> <FloatingDelayGroup> <AppShell> <MainToolbar>
-**Feedback:** Why does this takes the entire viewport? Shouldn't it be just a three icon panel?
+### 1. No viewport placement workflow
 
-No inter-dependencies. All five can start immediately.
+**Agree — this is a real gap.**
 
-| Slot | Prompt | Title | Delivers | Est. Effort |
-|------|--------|-------|----------|-------------|
-| A | **11.1** | Selection Rendering Pipeline | Entity color scheme, HighlightLayer, `SelectionVisuals` API upgrade | Medium |
-| B | **12.1** | Command Registry & Action System | `CommandDef` registry, `useCommandsByCategory()`, CommandPalette rewire | Medium |
-| C | **13.1** | Body-Geometry Schema & Engine | `Geometry` proto message, `CreateBodyCommand`, `AttachGeometryCommand`, protocol v4, ADR-0013, migration | **Large** |
-| D | **19.1** | Visual Hierarchy & Density Overhaul | Token tightening, 24-28px rows, PropertyRow proportional grid, TreeRow density | Medium |
-| E | **20.1** | Welcome Screen, Title Bar & Dirty Tracking | `WelcomeScreen`, recent projects, title bar `ProjectName*`, dirty guards, `NewProjectCommand` | Medium |
+Default behavior should be: primitive spawns at the viewport center (camera focus point projected onto the ground plane or world origin if no ground plane exists). A transform gizmo activates immediately on creation so the user can reposition right away. Click-to-place (where the user clicks a point in the viewport and the entity spawns there) is a natural fast-follow but not required for the first pass — spawn-at-center + gizmo is sufficient to unblock scene building.
 
-**Max parallelism:** 5 agents
-**Bottleneck:** 13.1 is the largest and gates Wave 3. Start it first if staggering.
+For CAD placement, the behavior is the same: the asset is placed at the viewport focus point and the gizmo activates. The inline placement mode prompt (one object / movable assembly / reference) appears at the drop point.
 
----
+This should be added as a prerequisite section before any creation workflow is implemented.
 
-## Wave 2 — After Wave 1 lands
+### 2. No transform/manipulation story
 
-All Wave 1 blockers must be complete. Within this wave, all 10 prompts are independent.
+**Agree — this needs to be stated explicitly.**
 
-| Slot | Prompt   | Title                                        | Depends on                                 | Est. Effort |
-| ---- | -------- | -------------------------------------------- | ------------------------------------------ | ----------- |
-| A    | **11.2** | Selection Logic & Multi-Select               | 11.1 (SelectionVisuals API)                | Medium      |
-| B    | **11.3** | Selection Sync & Integration                 | 11.1 (highlight API, entity colors)        | Medium      |
-| C    | **12.2** | Main Toolbar Component                       | 12.1 (CommandRegistry, `executeCommand()`) | Medium      |
-| D    | **12.3** | Keyboard Shortcuts Manager                   | 12.1 (CommandDef shortcut field, registry) | Small       |
-| E    | **13.2** | Frontend Stores & Protocol Wiring            | 13.1 (Geometry proto, new commands)        | Medium      |
-| F    | **13.3** | Body & Geometry Inspector UI                 | 13.1 (protocol), 13.2 can be co-developed  | Medium      |
-| G    | **19.2** | Status Bar, Connection Chrome & Errors       | 19.1 (density tokens)                      | Medium      |
-| H    | **19.3** | Context Menus, Tooltips & Micro-interactions | 19.1 (density tokens)                      | Medium      |
-| I    | **20.2** | Auto-Save & Crash Recovery                   | 20.1 (dirty tracking, save infra)          | Medium      |
-| J    | **20.3** | Project Templates & Sample Mechanisms        | 20.1 (WelcomeScreen, template card slots)  | Small       |
+We should use drei PivotControls or a component heavily inspired by it... 
 
-**Max parallelism:** 10 agents
-**Note:** 13.3 benefits from 13.2 landing first (needs `GeometryState` in store), but can start with mock data and integrate later. If strict, treat 13.3 as Wave 2.5 after 13.2.
+### 3. Compilation behavior with loose geometries
+
+**Agree — this needs a clear decision.**
+
+Recommended behavior: compilation emits a **warning** (not an error). Loose visual-only geometries are excluded from the simulation model silently, with a diagnostic message like "N geometries are not attached to any body — they will be excluded from simulation." The diagnostics panel highlights them so the user can fix if desired.
+
+### 4. Asset re-instantiation assumes file availability
+
+**Agree — needs a fallback path.**
+
+"Place in Scene" should work from the already-parsed asset data in the asset library, not by re-importing the original file. The original file is only needed for re-import (updating to a newer version). If the asset is already registered in the library, all the data needed for instantiation (tessellation, assembly tree, solid properties) should already be cached.
+### 5. Auto-switch should handle compilation → diagnostics
+Now that I think about it, I don't think we should auto switch at all... Maybe just make the timeline and asset browser tabs in the bottom panel. Auto-switching is not very intuitive for humans.
+### 6. Import mode selection UX is underspecified
+
+**Agree — needs a concrete interaction.**
+The simplest approach that doesn't require reworking the import flow: the import mode prompt appears **after** file selection but **before** the import command is dispatched. This is a lightweight inline choice (not a full modal) — it can be a small popover or dropdown near the import button / file picker.
+If the current flow immediately dispatches the import command on file selection, the choice needs to be injected between file-pick and dispatch. The alternative — a persistent default mode toggle in the asset browser header — is also viable but less discoverable for first-time users.
+
+Pick one, state it, and note the other as a possible improvement.
 
 ---
 
-## Wave 3 — Viewport Authoring & Solver
+## Architecture Concerns
 
-Requires: Epic 11 complete (selection system), 13.2 landed (geometry store), 12.1 landed (commands).
+### 7. PrimitiveShape.BOX = 0 is a protobuf antipattern
 
-| Slot | Prompt   | Title                                  | Depends on                                                   | Est. Effort |
-| ---- | -------- | -------------------------------------- | ------------------------------------------------------------ | ----------- |
-| A    | **14.1** | Datum Creation Visual Guides & Preview | 13.2 (geometry entities in store), 11 (selection highlights) | Medium      |
-| B    | **15.1** | Viewport Joint Creation Mode           | 13.2 (body/datum model), 11 (selection for datum picking)    | **Large**   |
-| C    | **16.1** | Load Creation UI & Force Visualization | 13.2 (mechanism store), 12.1 (create force command)          | Medium      |
-| D    | **16.2** | Actuator Creation UI & Motor Vis       | 13.2 (mechanism store), 12.1 (create actuator command)       | Medium      |
-| E    | **17.1** | Solver Settings Schema & Engine        | Independent engine work (no frontend deps)                   | Medium      |
+**Agree — fix this.**
 
-**Max parallelism:** 5 agents
-**Note:** 17.1 has no dependency on Waves 1-2 and could technically run in Wave 1. It's placed here to manage scope — move it earlier if you have capacity.
+Standard protobuf practice: `PRIMITIVE_SHAPE_UNSPECIFIED = 0; BOX = 1; CYLINDER = 2; SPHERE = 3;`. This is a small change that prevents silent default-to-BOX bugs. Apply it before shipping.
 
----
+### 8. Collision config should be per-geometry, not per-body
 
-## Wave 4 — Refinement & Results
+**Agreed** - **a body is a parent entity that groups child geometry entities. Collision is per-geometry, aggregated at the body level at solve time.** Here's why.
+The pattern is consistent across all three representations:
 
-Requires respective Wave 3 blockers.
+**Visual:** per-geometry. Each child entity has its own visual mesh. The body composites them visually. Already in the spec.
+**Mass:** per-geometry, aggregated at body. Each child's solid properties are computed individually. The body sums mass, computes combined COM, and applies the parallel axis theorem for the combined inertia tensor. Already in the spec conceptually.
+**Collision:** per-geometry, aggregated at body. Each child entity can independently have (or not have) a collision component with its own shape and origin offset. At solve time, the body collects all child collision shapes and registers them on the Chrono body. This is what the reviewer is recommending, and it's the right call.
 
-| Slot | Prompt | Title | Depends on | Est. Effort |
-|------|--------|-------|------------|-------------|
-| A | **14.2** | Edge Topology & Edge-Based Datums | 14.1 (DatumPreviewManager) | **Large** |
-| B | **14.3** | Datum Inspector & Coordinate Display | 14.1 (preview system, surface class data) | Small |
-| C | **15.2** | DOF Visualization & Constraint Preview | 15.1 (JointCreationState, alignment analysis) | Medium |
-| D | **16.3** | Load & Actuator Inspectors + Integration | 16.1 + 16.2 (LoadState, ActuatorState in store) | Medium |
-| E | **17.2** | Solver Configuration UI & Presets | 17.1 (SimulationSettings proto) | Medium |
-| F | **17.3** | Pre-Simulation Validation & Diagnostics | 17.1 (CompilationDiagnostic message) | Medium |
-| G | **18.1** | Interactive Chart & Channel Browser | 17.1 (solver metadata in CompilationResult) | Medium |
+chrono::ChCollisionModel supports multiple shapes with the void 	AddShapes (std::shared_ptr< ChCollisionModel > model, const ChFrame<> &frame=ChFrame<>())
+### 9. SimulationValuesSection is the highest-ROI extraction
 
-**Max parallelism:** 7 agents
-**Note:** 14.2 (edge topology) is the largest prompt in this wave — it requires engine-side OCCT edge tessellation, new proto messages, and frontend edge picking. Consider starting it early.
+**Agree — this should be prioritized.**
+If there's ~50+ LoC duplicated across 4 inspectors with trace lookup, binary search, channel availability checks, and "awaiting data" states, extracting it into a shared component is the single biggest code quality win. The reviewer is right that "TracesSection" described as "output channel charts" doesn't match the actual pattern of inline formatted values.
 
----
+Rename to **SimulationValuesSection** and make it the first shared extraction in the inspector refactor. Scope: trace lookup by entity ID, nearest-sample binary search for the current playback time, channel availability checks, formatted value display with "awaiting data" fallback states.
 
-## Wave 5 — Final Polish
+### 10. PrimitiveParams is loosely typed
 
-Requires respective Wave 4 blockers.
+**Agree — use a discriminated union / oneof.**
 
-| Slot | Prompt | Title | Depends on | Est. Effort |
-|------|--------|-------|------------|-------------|
-| A | **15.3** | Joint Inspector Enhancement & Coordinates | 15.2 (DOF indicators, coordinate display) | Medium |
-| B | **18.2** | Spark-Line Mini-Charts in Inspector | 18.1 (trace store, per-channel stats) | Small |
-| C | **18.3** | Results Export & Session History | 18.1 (session run history, trace store) | Medium |
-| D | **19.4** | Dark Theme Refinement & Theming Audit | 19.1-3 + ideally all UI epics landed for full audit | Medium |
+A single flat message where width/height/depth/radius are all optional and only some apply per shape is fragile and invites bugs. Use a `oneof` (protobuf) or discriminated union (TypeScript) so each shape type only carries its relevant parameters.
 
-**Max parallelism:** 4 agents
-**Note:** 19.4 (dark theme audit) benefits from running truly last — after all UI components from Epics 11-18 exist. It can start earlier but will need a follow-up pass.
+This makes validation trivial and prevents nonsensical combinations like a sphere with a width and depth.
+
+### 11. KINEMATIC motion type has no defined behavior
+
+**Agree — defer it.**
+
+Ship with DYNAMIC and FIXED only. KINEMATIC means "body follows a prescribed trajectory, not computed by the solver" — that requires a trajectory/keyframe system or controller integration that doesn't exist yet. Adding a user-facing option that behaves identically to FIXED is confusing.
+
+Add KINEMATIC when there's an actual trajectory or controller system to drive it. The RigidBody component's motion type field should support adding it later without breaking changes.
 
 ---
 
-## Dependency Graph (ASCII)
+## Workflow Gaps
 
-```
-WAVE 1        11.1    12.1    13.1         19.1    20.1
-               │       │       │             │       │
-               ├───┐   ├───┐   ├─────┐       ├───┐   ├───┐
-WAVE 2        11.2 │  12.2 │  13.2  │      19.2 │  20.2 │
-              11.3 │  12.3 │  13.3  │      19.3 │  20.3 │
-               │   │       │   │    │           │       │
-               └───┤       │   │    │           │       │
-WAVE 3        14.1 │  15.1 │  16.1  │      17.1 │
-                   │       │  16.2  │       │   │
-                   │       │   │    │       │   │
-WAVE 4        14.2 │  15.2 │  16.3  │      17.2│  18.1
-              14.3 │       │        │      17.3│
-                   │   │   │        │          │   │
-WAVE 5             │  15.3 │        │      18.2│  18.3
-                   │       │        │          │
-                   └───────┴────────┴──────────┴── 19.4
-```
+### 12. No multi-selection story for "Make Body"
+
+**This is a prerequisite — confirm or build.**
+
+"Make Body" is fundamentally a multi-selection operation: select N geometries, group them into one body. If multi-selection in the tree and/or viewport isn't implemented, it must be before "Make Body" ships.
+
+The plan should state: multi-selection works via Shift+click (additive) and Ctrl/Cmd+click (toggle) in both the scene tree and the viewport. Marquee/box selection in the viewport is a nice-to-have but not required for the first pass.
+
+### 13. No geometry re-parenting UI
+
+**Agree this is needed — but it can ship as a fast-follow to "Make Body."**
+
+The most natural interaction is drag-and-drop in the scene tree: drag a geometry from one body to another, or from loose to a body. Context menu "Move to body → [body list]" is an alternative that doesn't require drag-and-drop infrastructure.
+
+If AttachGeometryCommand already exists in the protocol, the backend is ready — this is purely a UI task. Acknowledge the gap, note it as a complement to "Make Body," and schedule it in the same release or immediately after.
+
+### 14. No context menus beyond "Make Body"
+
+**Agree — acknowledge the gap and define a minimal set.**
+
+A useful first pass of context menus for scene entities:
+- **Body:** Rename, Delete, Add Geometry, Add Joint, Pin/Unpin
+- **Geometry:** Rename, Delete, Move to Body, Make Body (if loose)
+- **Joint:** Rename, Delete
+- **Loose geometry:** Make Body, Attach to Body, Delete
+
+This doesn't need to ship all at once, but the plan should acknowledge that context menus are the primary right-click interaction pattern and define at least the first batch.
+
+### 15. Primitive interaction with face-picking
+OCCT is a B-Rep kernel. Generating B-Rep for a box, cylinder, or sphere is one of the most basic things it does. There's no reason primitives should be tessellation-only second-class citizens when the backend literally specializes in parametric solid geometry.
+
+### 16. No performance consideration for asset browser
+
+**Acknowledged — add a scaling note.**
+
+For MVP, a simple grid is fine if the project has < 20-30 assets. For production, the asset browser should use virtualized scrolling and lazy thumbnail generation. Note this as a known scaling concern with a threshold: "current implementation is sufficient for projects with up to ~50 assets; virtualized scrolling will be needed beyond that."
 
 ---
 
-## Summary
+## Minor Issues
 
-| Metric | Value |
-|--------|-------|
-| Total prompts | 31 |
-| Total waves | 5 |
-| Max parallelism (single wave) | 10 (Wave 2) |
-| Critical path length | 5 waves |
-| Critical path | `13.1 -> 13.2 -> 15.1 -> 15.2 -> 15.3` |
-| Independent epics (can start anytime) | 17.1 (solver), 19.1 (density), 20.1 (welcome) |
-| Largest single prompt | 14.2 (edge topology — engine + proto + frontend) |
+**Bottom panel naming:** Agree — pick one name and apply everywhere. Recommend `bottomPanel` / `bottomPanelExpanded` / `bottomPanelActiveTab`. Do a find-and-replace pass to make it consistent.
 
-## Flexibility Notes
+**"Click or drag to create":** Agree — if drag-and-drop is out of scope, remove "or drag" from the copy. Don't promise UI that doesn't exist.
 
-- **17.1** (solver schema) has zero cross-dependencies — it can run in Wave 1 if you have capacity.
-- **19.x** (UI polish) prompts are all CSS/component-level with no protocol changes — safe to run alongside anything.
-- **20.x** (project management) is mostly Electron-side work — low conflict risk with viewport/protocol epics.
-- If 13.1 is delayed, Waves 3-5 slip but Waves 1-2 (selection, toolbar, polish, project mgmt) proceed unaffected.
-- 16.1 and 16.2 (loads + actuators) are explicitly parallel within Wave 3 — the protocol commands already exist in the engine.
+**TracesSection → SimulationValuesSection:** Agree — rename and clarify scope as discussed in point 9 above.
 
-## Risks
+**EntityInspector.tsx missing from files table:** Add it. If shared sections change the composition pattern, the inspector router needs updating too.
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| 13.1 takes longer than expected (protocol v4 migration) | Blocks all viewport authoring (Waves 3-5) | Start 13.1 first; keep scope tight (no mass visualization yet) |
-| 14.2 edge topology requires OCCT API changes | Could delay datum authoring | Make 14.2 a stretch goal; 14.1 (face-only) + 14.3 (inspector) deliver value without it |
-| Shortcut conflicts between 12.3 and existing ViewportOverlay | Broken keyboard handling | Run conflict audit before merging 12.3 |
-| 19.4 dark theme audit finds issues in components from other epics | Rework across multiple packages | Run 19.4 truly last; accept that it's an audit pass, not a blocker |
+
+--- 
+
+One last clarification: When importing files, they should go to the asset library first. That's the entire point of the "asset-first, scene-second" pattern.
+
+The import action registers the CAD file as an asset — parsed, tessellated, solid properties computed, assembly tree preserved. It sits in the library with a thumbnail and metadata. Nothing appears in the scene yet.
+
+This matters for a few reasons. The same asset can be instantiated multiple times — you import a wheel once, place it four times. Each placement is an independent entity (or entity hierarchy) in the scene with its own components, transform, and physics configuration. The asset is the template, the entities are the instances.
+
+---
+
+## Suggested Priority Adjustments — Response
+
+| Suggestion                                            | Response                                                             |
+| ----------------------------------------------------- | -------------------------------------------------------------------- |
+| Add viewport placement + transform gizmo prerequisite | **Agree.** This is Workstream 0. Nothing else works without it.      |
+| Promote collision to per-geometry before shipping     | **Agree.** Changing this post-ship is painful. Do it now.            |
+| Defer KINEMATIC until behavior is defined             | **Agree.** Ship DYNAMIC/FIXED only.                                  |
+| Add SimulationValuesSection to inspector refactor     | **Agree.** Highest-ROI shared extraction.                            |
+| Specify compilation behavior for loose geometries     | **Agree.** Warning + exclude, not error. Add to acceptance criteria. |

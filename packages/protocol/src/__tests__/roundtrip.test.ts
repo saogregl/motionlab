@@ -2285,6 +2285,26 @@ describe('Epic 13 command builder round-trips', () => {
     }
   });
 
+  it('createUpdateBodyCommand round-trips pose', () => {
+    const bytes = createUpdateBodyCommand('body-456', {
+      pose: {
+        position: { x: 1, y: 2, z: 3 },
+        orientation: { x: 0, y: 0, z: 0, w: 1 },
+      },
+    });
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('updateBody');
+    if (cmd.payload.case === 'updateBody') {
+      expect(cmd.payload.value.bodyId?.id).toBe('body-456');
+      expect(cmd.payload.value.pose?.position?.x).toBe(1);
+      expect(cmd.payload.value.pose?.position?.y).toBe(2);
+      expect(cmd.payload.value.pose?.position?.z).toBe(3);
+      expect(cmd.payload.value.pose?.orientation?.w).toBe(1);
+      expect(cmd.payload.value.isFixed).toBeUndefined();
+      expect(cmd.payload.value.name).toBeUndefined();
+    }
+  });
+
   it('createAttachGeometryCommand round-trips', () => {
     const bytes = createAttachGeometryCommand('geom-1', 'body-2', {
       position: { x: 1, y: 2, z: 3 },
@@ -2341,6 +2361,146 @@ describe('Epic 13 command builder round-trips', () => {
       expect(cmd.payload.value.bodyId?.id).toBe('body-1');
       expect(cmd.payload.value.massOverride).toBe(false);
       expect(cmd.payload.value.massProperties).toBeUndefined();
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Phase 3: CreatePrimitiveBody + ImportMode round-trips
+// ---------------------------------------------------------------------------
+import {
+  createCreatePrimitiveBodyCommand,
+  createImportAssetCommand,
+} from '../transport.js';
+import {
+  BoxParamsSchema,
+  GeometrySchema,
+  PrimitiveParamsSchema,
+  PrimitiveShape,
+  PrimitiveSourceSchema,
+} from '../generated/mechanism/mechanism_pb.js';
+import { ImportMode } from '../generated/protocol/transport_pb.js';
+
+describe('Phase 3: CreatePrimitiveBody command round-trips', () => {
+  it('createCreatePrimitiveBodyCommand with box params', () => {
+    const bytes = createCreatePrimitiveBodyCommand(
+      'box',
+      'TestBox',
+      { x: 1, y: 2, z: 3 },
+      { box: { width: 0.2, height: 0.3, depth: 0.4 } },
+      2000,
+    );
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('createPrimitiveBody');
+    if (cmd.payload.case === 'createPrimitiveBody') {
+      expect(cmd.payload.value.shape).toBe(PrimitiveShape.BOX);
+      expect(cmd.payload.value.name).toBe('TestBox');
+      expect(cmd.payload.value.position?.x).toBe(1);
+      expect(cmd.payload.value.position?.y).toBe(2);
+      expect(cmd.payload.value.position?.z).toBe(3);
+      expect(cmd.payload.value.density).toBe(2000);
+      expect(cmd.payload.value.params?.shapeParams.case).toBe('box');
+      if (cmd.payload.value.params?.shapeParams.case === 'box') {
+        expect(cmd.payload.value.params.shapeParams.value.width).toBe(0.2);
+        expect(cmd.payload.value.params.shapeParams.value.height).toBe(0.3);
+        expect(cmd.payload.value.params.shapeParams.value.depth).toBe(0.4);
+      }
+    }
+  });
+
+  it('createCreatePrimitiveBodyCommand with cylinder params', () => {
+    const bytes = createCreatePrimitiveBodyCommand(
+      'cylinder',
+      'TestCyl',
+      { x: 0, y: 0, z: 0 },
+      { cylinder: { radius: 0.05, height: 0.1 } },
+    );
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('createPrimitiveBody');
+    if (cmd.payload.case === 'createPrimitiveBody') {
+      expect(cmd.payload.value.shape).toBe(PrimitiveShape.CYLINDER);
+      expect(cmd.payload.value.params?.shapeParams.case).toBe('cylinder');
+      if (cmd.payload.value.params?.shapeParams.case === 'cylinder') {
+        expect(cmd.payload.value.params.shapeParams.value.radius).toBe(0.05);
+        expect(cmd.payload.value.params.shapeParams.value.height).toBe(0.1);
+      }
+    }
+  });
+
+  it('createCreatePrimitiveBodyCommand with sphere params', () => {
+    const bytes = createCreatePrimitiveBodyCommand(
+      'sphere',
+      'TestSphere',
+      { x: 0, y: 0, z: 0 },
+      { sphere: { radius: 0.1 } },
+    );
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('createPrimitiveBody');
+    if (cmd.payload.case === 'createPrimitiveBody') {
+      expect(cmd.payload.value.shape).toBe(PrimitiveShape.SPHERE);
+      expect(cmd.payload.value.params?.shapeParams.case).toBe('sphere');
+      if (cmd.payload.value.params?.shapeParams.case === 'sphere') {
+        expect(cmd.payload.value.params.shapeParams.value.radius).toBe(0.1);
+      }
+    }
+  });
+});
+
+describe('Phase 3: PrimitiveSource on Geometry round-trips', () => {
+  it('Geometry with primitive_source survives serialize/deserialize', () => {
+    const geom = create(GeometrySchema, {
+      id: create(ElementIdSchema, { id: 'geom-001' }),
+      name: 'Box1',
+      parentBodyId: create(ElementIdSchema, { id: 'body-001' }),
+      faceCount: 6,
+      primitiveSource: create(PrimitiveSourceSchema, {
+        shape: PrimitiveShape.BOX,
+        params: create(PrimitiveParamsSchema, {
+          shapeParams: {
+            case: 'box',
+            value: create(BoxParamsSchema, { width: 0.1, height: 0.2, depth: 0.3 }),
+          },
+        }),
+      }),
+    });
+
+    const bytes = toBinary(GeometrySchema, geom);
+    const restored = fromBinary(GeometrySchema, bytes);
+    expect(restored.primitiveSource?.shape).toBe(PrimitiveShape.BOX);
+    expect(restored.primitiveSource?.params?.shapeParams.case).toBe('box');
+    if (restored.primitiveSource?.params?.shapeParams.case === 'box') {
+      expect(restored.primitiveSource.params.shapeParams.value.width).toBe(0.1);
+      expect(restored.primitiveSource.params.shapeParams.value.height).toBe(0.2);
+      expect(restored.primitiveSource.params.shapeParams.value.depth).toBe(0.3);
+    }
+  });
+});
+
+describe('Phase 3: ImportMode on ImportOptions round-trips', () => {
+  it('ImportAssetCommand with importMode VISUAL_ONLY', () => {
+    const bytes = createImportAssetCommand('test.step', {
+      densityOverride: 1000,
+      tessellationQuality: 0.1,
+      unitSystem: 'millimeter',
+      importMode: 'visual-only',
+    });
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('importAsset');
+    if (cmd.payload.case === 'importAsset') {
+      expect(cmd.payload.value.importOptions?.importMode).toBe(ImportMode.VISUAL_ONLY);
+    }
+  });
+
+  it('ImportAssetCommand without importMode defaults to AUTO_BODY', () => {
+    const bytes = createImportAssetCommand('test.step', {
+      densityOverride: 1000,
+      tessellationQuality: 0.1,
+      unitSystem: 'millimeter',
+    });
+    const cmd = fromBinary(CommandSchema, bytes);
+    expect(cmd.payload.case).toBe('importAsset');
+    if (cmd.payload.case === 'importAsset') {
+      expect(cmd.payload.value.importOptions?.importMode).toBe(ImportMode.AUTO_BODY);
     }
   });
 });

@@ -60,6 +60,10 @@ enum ActuatorControlMode : int;
 extern const uint32_t ActuatorControlMode_internal_data_[];
 enum JointType : int;
 extern const uint32_t JointType_internal_data_[];
+enum MotionType : int;
+extern const uint32_t MotionType_internal_data_[];
+enum PrimitiveShape : int;
+extern const uint32_t PrimitiveShape_internal_data_[];
 enum ReferenceFrame : int;
 extern const uint32_t ReferenceFrame_internal_data_[];
 class Actuator;
@@ -78,6 +82,14 @@ class BodyDisplayData;
 struct BodyDisplayDataDefaultTypeInternal;
 extern BodyDisplayDataDefaultTypeInternal _BodyDisplayData_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull BodyDisplayData_class_data_;
+class BoxParams;
+struct BoxParamsDefaultTypeInternal;
+extern BoxParamsDefaultTypeInternal _BoxParams_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull BoxParams_class_data_;
+class CylinderParams;
+struct CylinderParamsDefaultTypeInternal;
+extern CylinderParamsDefaultTypeInternal _CylinderParams_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull CylinderParams_class_data_;
 class CylindricalJointConfig;
 struct CylindricalJointConfigDefaultTypeInternal;
 extern CylindricalJointConfigDefaultTypeInternal _CylindricalJointConfig_default_instance_;
@@ -154,6 +166,14 @@ class Pose;
 struct PoseDefaultTypeInternal;
 extern PoseDefaultTypeInternal _Pose_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull Pose_class_data_;
+class PrimitiveParams;
+struct PrimitiveParamsDefaultTypeInternal;
+extern PrimitiveParamsDefaultTypeInternal _PrimitiveParams_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull PrimitiveParams_class_data_;
+class PrimitiveSource;
+struct PrimitiveSourceDefaultTypeInternal;
+extern PrimitiveSourceDefaultTypeInternal _PrimitiveSource_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull PrimitiveSource_class_data_;
 class PrismaticJointConfig;
 struct PrismaticJointConfigDefaultTypeInternal;
 extern PrismaticJointConfigDefaultTypeInternal _PrismaticJointConfig_default_instance_;
@@ -186,6 +206,10 @@ class RevoluteMotorActuator;
 struct RevoluteMotorActuatorDefaultTypeInternal;
 extern RevoluteMotorActuatorDefaultTypeInternal _RevoluteMotorActuator_default_instance_;
 extern const ::google::protobuf::internal::ClassDataFull RevoluteMotorActuator_class_data_;
+class SphereParams;
+struct SphereParamsDefaultTypeInternal;
+extern SphereParamsDefaultTypeInternal _SphereParams_default_instance_;
+extern const ::google::protobuf::internal::ClassDataFull SphereParams_class_data_;
 class SphericalJointConfig;
 struct SphericalJointConfigDefaultTypeInternal;
 extern SphericalJointConfigDefaultTypeInternal _SphericalJointConfig_default_instance_;
@@ -209,6 +233,12 @@ template <>
 internal::EnumTraitsT<::motionlab::mechanism::JointType_internal_data_>
     internal::EnumTraitsImpl::value<::motionlab::mechanism::JointType>;
 template <>
+internal::EnumTraitsT<::motionlab::mechanism::MotionType_internal_data_>
+    internal::EnumTraitsImpl::value<::motionlab::mechanism::MotionType>;
+template <>
+internal::EnumTraitsT<::motionlab::mechanism::PrimitiveShape_internal_data_>
+    internal::EnumTraitsImpl::value<::motionlab::mechanism::PrimitiveShape>;
+template <>
 internal::EnumTraitsT<::motionlab::mechanism::ReferenceFrame_internal_data_>
     internal::EnumTraitsImpl::value<::motionlab::mechanism::ReferenceFrame>;
 }  // namespace protobuf
@@ -216,6 +246,44 @@ internal::EnumTraitsT<::motionlab::mechanism::ReferenceFrame_internal_data_>
 
 namespace motionlab {
 namespace mechanism {
+enum PrimitiveShape : int {
+  PRIMITIVE_SHAPE_UNSPECIFIED = 0,
+  PRIMITIVE_SHAPE_BOX = 1,
+  PRIMITIVE_SHAPE_CYLINDER = 2,
+  PRIMITIVE_SHAPE_SPHERE = 3,
+  PrimitiveShape_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      ::std::numeric_limits<::int32_t>::min(),
+  PrimitiveShape_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      ::std::numeric_limits<::int32_t>::max(),
+};
+
+extern const uint32_t PrimitiveShape_internal_data_[];
+inline constexpr PrimitiveShape PrimitiveShape_MIN =
+    static_cast<PrimitiveShape>(0);
+inline constexpr PrimitiveShape PrimitiveShape_MAX =
+    static_cast<PrimitiveShape>(3);
+inline bool PrimitiveShape_IsValid(int value) {
+  return 0 <= value && value <= 3;
+}
+inline constexpr int PrimitiveShape_ARRAYSIZE = 3 + 1;
+const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL PrimitiveShape_descriptor();
+template <typename T>
+const ::std::string& PrimitiveShape_Name(T value) {
+  static_assert(::std::is_same<T, PrimitiveShape>::value ||
+                    ::std::is_integral<T>::value,
+                "Incorrect type passed to PrimitiveShape_Name().");
+  return PrimitiveShape_Name(static_cast<PrimitiveShape>(value));
+}
+template <>
+inline const ::std::string& PrimitiveShape_Name(PrimitiveShape value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<PrimitiveShape_descriptor, 0, 3>(
+      static_cast<int>(value));
+}
+inline bool PrimitiveShape_Parse(
+    ::absl::string_view name, PrimitiveShape* PROTOBUF_NONNULL value) {
+  return ::google::protobuf::internal::ParseNamedEnum<PrimitiveShape>(PrimitiveShape_descriptor(), name,
+                                           value);
+}
 enum JointType : int {
   JOINT_TYPE_UNSPECIFIED = 0,
   JOINT_TYPE_REVOLUTE = 1,
@@ -259,6 +327,43 @@ inline const ::std::string& JointType_Name(JointType value) {
 inline bool JointType_Parse(
     ::absl::string_view name, JointType* PROTOBUF_NONNULL value) {
   return ::google::protobuf::internal::ParseNamedEnum<JointType>(JointType_descriptor(), name,
+                                           value);
+}
+enum MotionType : int {
+  MOTION_TYPE_UNSPECIFIED = 0,
+  MOTION_TYPE_DYNAMIC = 1,
+  MOTION_TYPE_FIXED = 2,
+  MotionType_INT_MIN_SENTINEL_DO_NOT_USE_ =
+      ::std::numeric_limits<::int32_t>::min(),
+  MotionType_INT_MAX_SENTINEL_DO_NOT_USE_ =
+      ::std::numeric_limits<::int32_t>::max(),
+};
+
+extern const uint32_t MotionType_internal_data_[];
+inline constexpr MotionType MotionType_MIN =
+    static_cast<MotionType>(0);
+inline constexpr MotionType MotionType_MAX =
+    static_cast<MotionType>(2);
+inline bool MotionType_IsValid(int value) {
+  return 0 <= value && value <= 2;
+}
+inline constexpr int MotionType_ARRAYSIZE = 2 + 1;
+const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL MotionType_descriptor();
+template <typename T>
+const ::std::string& MotionType_Name(T value) {
+  static_assert(::std::is_same<T, MotionType>::value ||
+                    ::std::is_integral<T>::value,
+                "Incorrect type passed to MotionType_Name().");
+  return MotionType_Name(static_cast<MotionType>(value));
+}
+template <>
+inline const ::std::string& MotionType_Name(MotionType value) {
+  return ::google::protobuf::internal::NameOfDenseEnum<MotionType_descriptor, 0, 2>(
+      static_cast<int>(value));
+}
+inline bool MotionType_Parse(
+    ::absl::string_view name, MotionType* PROTOBUF_NONNULL value) {
+  return ::google::protobuf::internal::ParseNamedEnum<MotionType>(MotionType_descriptor(), name,
                                            value);
 }
 enum ReferenceFrame : int {
@@ -488,7 +593,7 @@ class Vec3 final : public ::google::protobuf::Message
     kYFieldNumber = 2,
     kZFieldNumber = 3,
   };
-  // double x = 1 [json_name = "x"];
+  // double x = 1;
   void clear_x() ;
   double x() const;
   void set_x(double value);
@@ -498,7 +603,7 @@ class Vec3 final : public ::google::protobuf::Message
   void _internal_set_x(double value);
 
   public:
-  // double y = 2 [json_name = "y"];
+  // double y = 2;
   void clear_y() ;
   double y() const;
   void set_y(double value);
@@ -508,7 +613,7 @@ class Vec3 final : public ::google::protobuf::Message
   void _internal_set_y(double value);
 
   public:
-  // double z = 3 [json_name = "z"];
+  // double z = 3;
   void clear_z() ;
   double z() const;
   void set_z(double value);
@@ -610,7 +715,7 @@ class SphericalJointConfig final : public ::google::protobuf::internal::ZeroFiel
     return *reinterpret_cast<const SphericalJointConfig*>(
         &_SphericalJointConfig_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 15;
+  static constexpr int kIndexInFileMessages = 20;
   friend void swap(SphericalJointConfig& a, SphericalJointConfig& b) { a.Swap(&b); }
   inline void Swap(SphericalJointConfig* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -688,6 +793,196 @@ class SphericalJointConfig final : public ::google::protobuf::internal::ZeroFiel
 };
 
 extern const ::google::protobuf::internal::ClassDataFull SphericalJointConfig_class_data_;
+// -------------------------------------------------------------------
+
+class SphereParams final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.mechanism.SphereParams) */ {
+ public:
+  inline SphereParams() : SphereParams(nullptr) {}
+  ~SphereParams() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(SphereParams* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(SphereParams));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR SphereParams(::google::protobuf::internal::ConstantInitialized);
+
+  inline SphereParams(const SphereParams& from) : SphereParams(nullptr, from) {}
+  inline SphereParams(SphereParams&& from) noexcept
+      : SphereParams(nullptr, ::std::move(from)) {}
+  inline SphereParams& operator=(const SphereParams& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SphereParams& operator=(SphereParams&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const SphereParams& default_instance() {
+    return *reinterpret_cast<const SphereParams*>(
+        &_SphereParams_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 13;
+  friend void swap(SphereParams& a, SphereParams& b) { a.Swap(&b); }
+  inline void Swap(SphereParams* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SphereParams* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  SphereParams* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<SphereParams>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const SphereParams& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const SphereParams& from) { SphereParams::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(SphereParams* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.mechanism.SphereParams"; }
+
+  explicit SphereParams(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  SphereParams(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const SphereParams& from);
+  SphereParams(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, SphereParams&& from) noexcept
+      : SphereParams(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kRadiusFieldNumber = 1,
+  };
+  // double radius = 1;
+  void clear_radius() ;
+  double radius() const;
+  void set_radius(double value);
+
+  private:
+  double _internal_radius() const;
+  void _internal_set_radius(double value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.mechanism.SphereParams)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 1,
+                                   0, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const SphereParams& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    double radius_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_mechanism_2fmechanism_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull SphereParams_class_data_;
 // -------------------------------------------------------------------
 
 class Range final : public ::google::protobuf::Message
@@ -835,7 +1130,7 @@ class Range final : public ::google::protobuf::Message
     kLowerFieldNumber = 1,
     kUpperFieldNumber = 2,
   };
-  // double lower = 1 [json_name = "lower"];
+  // double lower = 1;
   void clear_lower() ;
   double lower() const;
   void set_lower(double value);
@@ -845,7 +1140,7 @@ class Range final : public ::google::protobuf::Message
   void _internal_set_lower(double value);
 
   public:
-  // double upper = 2 [json_name = "upper"];
+  // double upper = 2;
   void clear_upper() ;
   double upper() const;
   void set_upper(double value);
@@ -1039,7 +1334,7 @@ class Quat final : public ::google::protobuf::Message
     kYFieldNumber = 3,
     kZFieldNumber = 4,
   };
-  // double w = 1 [json_name = "w"];
+  // double w = 1;
   void clear_w() ;
   double w() const;
   void set_w(double value);
@@ -1049,7 +1344,7 @@ class Quat final : public ::google::protobuf::Message
   void _internal_set_w(double value);
 
   public:
-  // double x = 2 [json_name = "x"];
+  // double x = 2;
   void clear_x() ;
   double x() const;
   void set_x(double value);
@@ -1059,7 +1354,7 @@ class Quat final : public ::google::protobuf::Message
   void _internal_set_x(double value);
 
   public:
-  // double y = 3 [json_name = "y"];
+  // double y = 3;
   void clear_y() ;
   double y() const;
   void set_y(double value);
@@ -1069,7 +1364,7 @@ class Quat final : public ::google::protobuf::Message
   void _internal_set_y(double value);
 
   public:
-  // double z = 4 [json_name = "z"];
+  // double z = 4;
   void clear_z() ;
   double z() const;
   void set_z(double value);
@@ -1264,7 +1559,7 @@ class ProjectMetadata final : public ::google::protobuf::Message
     kCreatedAtFieldNumber = 2,
     kModifiedAtFieldNumber = 3,
   };
-  // string name = 1 [json_name = "name"];
+  // string name = 1;
   void clear_name() ;
   const ::std::string& name() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -1279,7 +1574,7 @@ class ProjectMetadata final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
 
   public:
-  // string created_at = 2 [json_name = "createdAt"];
+  // string created_at = 2;
   void clear_created_at() ;
   const ::std::string& created_at() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -1294,7 +1589,7 @@ class ProjectMetadata final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_created_at();
 
   public:
-  // string modified_at = 3 [json_name = "modifiedAt"];
+  // string modified_at = 3;
   void clear_modified_at() ;
   const ::std::string& modified_at() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -1401,7 +1696,7 @@ class PointPlaneJointConfig final : public ::google::protobuf::internal::ZeroFie
     return *reinterpret_cast<const PointPlaneJointConfig*>(
         &_PointPlaneJointConfig_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 21;
+  static constexpr int kIndexInFileMessages = 26;
   friend void swap(PointPlaneJointConfig& a, PointPlaneJointConfig& b) { a.Swap(&b); }
   inline void Swap(PointPlaneJointConfig* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -1535,7 +1830,7 @@ class PointLineJointConfig final : public ::google::protobuf::internal::ZeroFiel
     return *reinterpret_cast<const PointLineJointConfig*>(
         &_PointLineJointConfig_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 20;
+  static constexpr int kIndexInFileMessages = 25;
   friend void swap(PointLineJointConfig& a, PointLineJointConfig& b) { a.Swap(&b); }
   inline void Swap(PointLineJointConfig* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -1669,7 +1964,7 @@ class FixedJointConfig final : public ::google::protobuf::internal::ZeroFieldsBa
     return *reinterpret_cast<const FixedJointConfig*>(
         &_FixedJointConfig_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 14;
+  static constexpr int kIndexInFileMessages = 19;
   friend void swap(FixedJointConfig& a, FixedJointConfig& b) { a.Swap(&b); }
   inline void Swap(FixedJointConfig* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -1893,7 +2188,7 @@ class ElementId final : public ::google::protobuf::Message
   enum : int {
     kIdFieldNumber = 1,
   };
-  // string id = 1 [json_name = "id"];
+  // string id = 1;
   void clear_id() ;
   const ::std::string& id() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -2090,7 +2385,7 @@ class DisplayMesh final : public ::google::protobuf::Message
     kIndicesFieldNumber = 2,
     kNormalsFieldNumber = 3,
   };
-  // repeated float vertices = 1 [json_name = "vertices"];
+  // repeated float vertices = 1;
   int vertices_size() const;
   private:
   int _internal_vertices_size() const;
@@ -2108,7 +2403,7 @@ class DisplayMesh final : public ::google::protobuf::Message
   ::google::protobuf::RepeatedField<float>* PROTOBUF_NONNULL _internal_mutable_vertices();
 
   public:
-  // repeated uint32 indices = 2 [json_name = "indices"];
+  // repeated uint32 indices = 2;
   int indices_size() const;
   private:
   int _internal_indices_size() const;
@@ -2126,7 +2421,7 @@ class DisplayMesh final : public ::google::protobuf::Message
   ::google::protobuf::RepeatedField<::uint32_t>* PROTOBUF_NONNULL _internal_mutable_indices();
 
   public:
-  // repeated float normals = 3 [json_name = "normals"];
+  // repeated float normals = 3;
   int normals_size() const;
   private:
   int _internal_normals_size() const;
@@ -2181,6 +2476,422 @@ class DisplayMesh final : public ::google::protobuf::Message
 };
 
 extern const ::google::protobuf::internal::ClassDataFull DisplayMesh_class_data_;
+// -------------------------------------------------------------------
+
+class CylinderParams final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.mechanism.CylinderParams) */ {
+ public:
+  inline CylinderParams() : CylinderParams(nullptr) {}
+  ~CylinderParams() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(CylinderParams* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(CylinderParams));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR CylinderParams(::google::protobuf::internal::ConstantInitialized);
+
+  inline CylinderParams(const CylinderParams& from) : CylinderParams(nullptr, from) {}
+  inline CylinderParams(CylinderParams&& from) noexcept
+      : CylinderParams(nullptr, ::std::move(from)) {}
+  inline CylinderParams& operator=(const CylinderParams& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CylinderParams& operator=(CylinderParams&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CylinderParams& default_instance() {
+    return *reinterpret_cast<const CylinderParams*>(
+        &_CylinderParams_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 12;
+  friend void swap(CylinderParams& a, CylinderParams& b) { a.Swap(&b); }
+  inline void Swap(CylinderParams* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CylinderParams* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CylinderParams* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<CylinderParams>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const CylinderParams& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const CylinderParams& from) { CylinderParams::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(CylinderParams* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.mechanism.CylinderParams"; }
+
+  explicit CylinderParams(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  CylinderParams(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const CylinderParams& from);
+  CylinderParams(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, CylinderParams&& from) noexcept
+      : CylinderParams(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kRadiusFieldNumber = 1,
+    kHeightFieldNumber = 2,
+  };
+  // double radius = 1;
+  void clear_radius() ;
+  double radius() const;
+  void set_radius(double value);
+
+  private:
+  double _internal_radius() const;
+  void _internal_set_radius(double value);
+
+  public:
+  // double height = 2;
+  void clear_height() ;
+  double height() const;
+  void set_height(double value);
+
+  private:
+  double _internal_height() const;
+  void _internal_set_height(double value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.mechanism.CylinderParams)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<1, 2,
+                                   0, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const CylinderParams& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    double radius_;
+    double height_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_mechanism_2fmechanism_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull CylinderParams_class_data_;
+// -------------------------------------------------------------------
+
+class BoxParams final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.mechanism.BoxParams) */ {
+ public:
+  inline BoxParams() : BoxParams(nullptr) {}
+  ~BoxParams() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(BoxParams* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(BoxParams));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR BoxParams(::google::protobuf::internal::ConstantInitialized);
+
+  inline BoxParams(const BoxParams& from) : BoxParams(nullptr, from) {}
+  inline BoxParams(BoxParams&& from) noexcept
+      : BoxParams(nullptr, ::std::move(from)) {}
+  inline BoxParams& operator=(const BoxParams& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline BoxParams& operator=(BoxParams&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const BoxParams& default_instance() {
+    return *reinterpret_cast<const BoxParams*>(
+        &_BoxParams_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 11;
+  friend void swap(BoxParams& a, BoxParams& b) { a.Swap(&b); }
+  inline void Swap(BoxParams* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(BoxParams* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  BoxParams* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<BoxParams>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const BoxParams& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const BoxParams& from) { BoxParams::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(BoxParams* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.mechanism.BoxParams"; }
+
+  explicit BoxParams(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  BoxParams(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const BoxParams& from);
+  BoxParams(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, BoxParams&& from) noexcept
+      : BoxParams(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kWidthFieldNumber = 1,
+    kHeightFieldNumber = 2,
+    kDepthFieldNumber = 3,
+  };
+  // double width = 1;
+  void clear_width() ;
+  double width() const;
+  void set_width(double value);
+
+  private:
+  double _internal_width() const;
+  void _internal_set_width(double value);
+
+  public:
+  // double height = 2;
+  void clear_height() ;
+  double height() const;
+  void set_height(double value);
+
+  private:
+  double _internal_height() const;
+  void _internal_set_height(double value);
+
+  public:
+  // double depth = 3;
+  void clear_depth() ;
+  double depth() const;
+  void set_depth(double value);
+
+  private:
+  double _internal_depth() const;
+  void _internal_set_depth(double value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.mechanism.BoxParams)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<2, 3,
+                                   0, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const BoxParams& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    double width_;
+    double height_;
+    double depth_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_mechanism_2fmechanism_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull BoxParams_class_data_;
 // -------------------------------------------------------------------
 
 class AssetReference final : public ::google::protobuf::Message
@@ -2329,7 +3040,7 @@ class AssetReference final : public ::google::protobuf::Message
     kRelativePathFieldNumber = 2,
     kOriginalFilenameFieldNumber = 3,
   };
-  // string content_hash = 1 [json_name = "contentHash"];
+  // string content_hash = 1;
   void clear_content_hash() ;
   const ::std::string& content_hash() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -2344,7 +3055,7 @@ class AssetReference final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_content_hash();
 
   public:
-  // string relative_path = 2 [json_name = "relativePath"];
+  // string relative_path = 2;
   void clear_relative_path() ;
   const ::std::string& relative_path() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -2359,7 +3070,7 @@ class AssetReference final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_relative_path();
 
   public:
-  // string original_filename = 3 [json_name = "originalFilename"];
+  // string original_filename = 3;
   void clear_original_filename() ;
   const ::std::string& original_filename() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -2467,7 +3178,7 @@ class UniversalJointConfig final : public ::google::protobuf::Message
     return *reinterpret_cast<const UniversalJointConfig*>(
         &_UniversalJointConfig_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 18;
+  static constexpr int kIndexInFileMessages = 23;
   friend void swap(UniversalJointConfig& a, UniversalJointConfig& b) { a.Swap(&b); }
   inline void Swap(UniversalJointConfig* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -2557,7 +3268,7 @@ class UniversalJointConfig final : public ::google::protobuf::Message
     kRotationXLimitFieldNumber = 1,
     kRotationYLimitFieldNumber = 2,
   };
-  // .motionlab.mechanism.Range rotation_x_limit = 1 [json_name = "rotationXLimit"];
+  // .motionlab.mechanism.Range rotation_x_limit = 1;
   bool has_rotation_x_limit() const;
   void clear_rotation_x_limit() ;
   const ::motionlab::mechanism::Range& rotation_x_limit() const;
@@ -2572,7 +3283,7 @@ class UniversalJointConfig final : public ::google::protobuf::Message
   ::motionlab::mechanism::Range* PROTOBUF_NONNULL _internal_mutable_rotation_x_limit();
 
   public:
-  // .motionlab.mechanism.Range rotation_y_limit = 2 [json_name = "rotationYLimit"];
+  // .motionlab.mechanism.Range rotation_y_limit = 2;
   bool has_rotation_y_limit() const;
   void clear_rotation_y_limit() ;
   const ::motionlab::mechanism::Range& rotation_y_limit() const;
@@ -2679,7 +3390,7 @@ class RevoluteMotorActuator final : public ::google::protobuf::Message
     return *reinterpret_cast<const RevoluteMotorActuator*>(
         &_RevoluteMotorActuator_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 27;
+  static constexpr int kIndexInFileMessages = 32;
   friend void swap(RevoluteMotorActuator& a, RevoluteMotorActuator& b) { a.Swap(&b); }
   inline void Swap(RevoluteMotorActuator* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -2771,7 +3482,7 @@ class RevoluteMotorActuator final : public ::google::protobuf::Message
     kEffortLimitFieldNumber = 4,
     kControlModeFieldNumber = 2,
   };
-  // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+  // .motionlab.mechanism.ElementId joint_id = 1;
   bool has_joint_id() const;
   void clear_joint_id() ;
   const ::motionlab::mechanism::ElementId& joint_id() const;
@@ -2786,7 +3497,7 @@ class RevoluteMotorActuator final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_joint_id();
 
   public:
-  // double command_value = 3 [json_name = "commandValue"];
+  // double command_value = 3;
   void clear_command_value() ;
   double command_value() const;
   void set_command_value(double value);
@@ -2796,7 +3507,7 @@ class RevoluteMotorActuator final : public ::google::protobuf::Message
   void _internal_set_command_value(double value);
 
   public:
-  // optional double effort_limit = 4 [json_name = "effortLimit"];
+  // optional double effort_limit = 4;
   bool has_effort_limit() const;
   void clear_effort_limit() ;
   double effort_limit() const;
@@ -2807,7 +3518,7 @@ class RevoluteMotorActuator final : public ::google::protobuf::Message
   void _internal_set_effort_limit(double value);
 
   public:
-  // .motionlab.mechanism.ActuatorControlMode control_mode = 2 [json_name = "controlMode"];
+  // .motionlab.mechanism.ActuatorControlMode control_mode = 2;
   void clear_control_mode() ;
   ::motionlab::mechanism::ActuatorControlMode control_mode() const;
   void set_control_mode(::motionlab::mechanism::ActuatorControlMode value);
@@ -2911,7 +3622,7 @@ class RevoluteJointConfig final : public ::google::protobuf::Message
     return *reinterpret_cast<const RevoluteJointConfig*>(
         &_RevoluteJointConfig_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 12;
+  static constexpr int kIndexInFileMessages = 17;
   friend void swap(RevoluteJointConfig& a, RevoluteJointConfig& b) { a.Swap(&b); }
   inline void Swap(RevoluteJointConfig* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -3000,7 +3711,7 @@ class RevoluteJointConfig final : public ::google::protobuf::Message
   enum : int {
     kAngleLimitFieldNumber = 1,
   };
-  // .motionlab.mechanism.Range angle_limit = 1 [json_name = "angleLimit"];
+  // .motionlab.mechanism.Range angle_limit = 1;
   bool has_angle_limit() const;
   void clear_angle_limit() ;
   const ::motionlab::mechanism::Range& angle_limit() const;
@@ -3106,7 +3817,7 @@ class PrismaticMotorActuator final : public ::google::protobuf::Message
     return *reinterpret_cast<const PrismaticMotorActuator*>(
         &_PrismaticMotorActuator_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 28;
+  static constexpr int kIndexInFileMessages = 33;
   friend void swap(PrismaticMotorActuator& a, PrismaticMotorActuator& b) { a.Swap(&b); }
   inline void Swap(PrismaticMotorActuator* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -3198,7 +3909,7 @@ class PrismaticMotorActuator final : public ::google::protobuf::Message
     kEffortLimitFieldNumber = 4,
     kControlModeFieldNumber = 2,
   };
-  // .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+  // .motionlab.mechanism.ElementId joint_id = 1;
   bool has_joint_id() const;
   void clear_joint_id() ;
   const ::motionlab::mechanism::ElementId& joint_id() const;
@@ -3213,7 +3924,7 @@ class PrismaticMotorActuator final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_joint_id();
 
   public:
-  // double command_value = 3 [json_name = "commandValue"];
+  // double command_value = 3;
   void clear_command_value() ;
   double command_value() const;
   void set_command_value(double value);
@@ -3223,7 +3934,7 @@ class PrismaticMotorActuator final : public ::google::protobuf::Message
   void _internal_set_command_value(double value);
 
   public:
-  // optional double effort_limit = 4 [json_name = "effortLimit"];
+  // optional double effort_limit = 4;
   bool has_effort_limit() const;
   void clear_effort_limit() ;
   double effort_limit() const;
@@ -3234,7 +3945,7 @@ class PrismaticMotorActuator final : public ::google::protobuf::Message
   void _internal_set_effort_limit(double value);
 
   public:
-  // .motionlab.mechanism.ActuatorControlMode control_mode = 2 [json_name = "controlMode"];
+  // .motionlab.mechanism.ActuatorControlMode control_mode = 2;
   void clear_control_mode() ;
   ::motionlab::mechanism::ActuatorControlMode control_mode() const;
   void set_control_mode(::motionlab::mechanism::ActuatorControlMode value);
@@ -3338,7 +4049,7 @@ class PrismaticJointConfig final : public ::google::protobuf::Message
     return *reinterpret_cast<const PrismaticJointConfig*>(
         &_PrismaticJointConfig_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 13;
+  static constexpr int kIndexInFileMessages = 18;
   friend void swap(PrismaticJointConfig& a, PrismaticJointConfig& b) { a.Swap(&b); }
   inline void Swap(PrismaticJointConfig* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -3427,7 +4138,7 @@ class PrismaticJointConfig final : public ::google::protobuf::Message
   enum : int {
     kTranslationLimitFieldNumber = 1,
   };
-  // .motionlab.mechanism.Range translation_limit = 1 [json_name = "translationLimit"];
+  // .motionlab.mechanism.Range translation_limit = 1;
   bool has_translation_limit() const;
   void clear_translation_limit() ;
   const ::motionlab::mechanism::Range& translation_limit() const;
@@ -3476,6 +4187,264 @@ class PrismaticJointConfig final : public ::google::protobuf::Message
 };
 
 extern const ::google::protobuf::internal::ClassDataFull PrismaticJointConfig_class_data_;
+// -------------------------------------------------------------------
+
+class PrimitiveParams final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.mechanism.PrimitiveParams) */ {
+ public:
+  inline PrimitiveParams() : PrimitiveParams(nullptr) {}
+  ~PrimitiveParams() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(PrimitiveParams* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(PrimitiveParams));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR PrimitiveParams(::google::protobuf::internal::ConstantInitialized);
+
+  inline PrimitiveParams(const PrimitiveParams& from) : PrimitiveParams(nullptr, from) {}
+  inline PrimitiveParams(PrimitiveParams&& from) noexcept
+      : PrimitiveParams(nullptr, ::std::move(from)) {}
+  inline PrimitiveParams& operator=(const PrimitiveParams& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline PrimitiveParams& operator=(PrimitiveParams&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const PrimitiveParams& default_instance() {
+    return *reinterpret_cast<const PrimitiveParams*>(
+        &_PrimitiveParams_default_instance_);
+  }
+  enum ShapeParamsCase {
+    kBox = 1,
+    kCylinder = 2,
+    kSphere = 3,
+    SHAPE_PARAMS_NOT_SET = 0,
+  };
+  static constexpr int kIndexInFileMessages = 14;
+  friend void swap(PrimitiveParams& a, PrimitiveParams& b) { a.Swap(&b); }
+  inline void Swap(PrimitiveParams* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(PrimitiveParams* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  PrimitiveParams* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<PrimitiveParams>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const PrimitiveParams& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const PrimitiveParams& from) { PrimitiveParams::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(PrimitiveParams* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.mechanism.PrimitiveParams"; }
+
+  explicit PrimitiveParams(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  PrimitiveParams(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const PrimitiveParams& from);
+  PrimitiveParams(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, PrimitiveParams&& from) noexcept
+      : PrimitiveParams(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kBoxFieldNumber = 1,
+    kCylinderFieldNumber = 2,
+    kSphereFieldNumber = 3,
+  };
+  // .motionlab.mechanism.BoxParams box = 1;
+  bool has_box() const;
+  private:
+  bool _internal_has_box() const;
+
+  public:
+  void clear_box() ;
+  const ::motionlab::mechanism::BoxParams& box() const;
+  [[nodiscard]] ::motionlab::mechanism::BoxParams* PROTOBUF_NULLABLE release_box();
+  ::motionlab::mechanism::BoxParams* PROTOBUF_NONNULL mutable_box();
+  void set_allocated_box(::motionlab::mechanism::BoxParams* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_box(::motionlab::mechanism::BoxParams* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::BoxParams* PROTOBUF_NULLABLE unsafe_arena_release_box();
+
+  private:
+  const ::motionlab::mechanism::BoxParams& _internal_box() const;
+  ::motionlab::mechanism::BoxParams* PROTOBUF_NONNULL _internal_mutable_box();
+
+  public:
+  // .motionlab.mechanism.CylinderParams cylinder = 2;
+  bool has_cylinder() const;
+  private:
+  bool _internal_has_cylinder() const;
+
+  public:
+  void clear_cylinder() ;
+  const ::motionlab::mechanism::CylinderParams& cylinder() const;
+  [[nodiscard]] ::motionlab::mechanism::CylinderParams* PROTOBUF_NULLABLE release_cylinder();
+  ::motionlab::mechanism::CylinderParams* PROTOBUF_NONNULL mutable_cylinder();
+  void set_allocated_cylinder(::motionlab::mechanism::CylinderParams* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_cylinder(::motionlab::mechanism::CylinderParams* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::CylinderParams* PROTOBUF_NULLABLE unsafe_arena_release_cylinder();
+
+  private:
+  const ::motionlab::mechanism::CylinderParams& _internal_cylinder() const;
+  ::motionlab::mechanism::CylinderParams* PROTOBUF_NONNULL _internal_mutable_cylinder();
+
+  public:
+  // .motionlab.mechanism.SphereParams sphere = 3;
+  bool has_sphere() const;
+  private:
+  bool _internal_has_sphere() const;
+
+  public:
+  void clear_sphere() ;
+  const ::motionlab::mechanism::SphereParams& sphere() const;
+  [[nodiscard]] ::motionlab::mechanism::SphereParams* PROTOBUF_NULLABLE release_sphere();
+  ::motionlab::mechanism::SphereParams* PROTOBUF_NONNULL mutable_sphere();
+  void set_allocated_sphere(::motionlab::mechanism::SphereParams* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_sphere(::motionlab::mechanism::SphereParams* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::SphereParams* PROTOBUF_NULLABLE unsafe_arena_release_sphere();
+
+  private:
+  const ::motionlab::mechanism::SphereParams& _internal_sphere() const;
+  ::motionlab::mechanism::SphereParams* PROTOBUF_NONNULL _internal_mutable_sphere();
+
+  public:
+  void clear_shape_params();
+  ShapeParamsCase shape_params_case() const;
+  // @@protoc_insertion_point(class_scope:motionlab.mechanism.PrimitiveParams)
+ private:
+  class _Internal;
+  void set_has_box();
+  void set_has_cylinder();
+  void set_has_sphere();
+  inline bool has_shape_params() const;
+  inline void clear_has_shape_params();
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<0, 3,
+                                   3, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const PrimitiveParams& from_msg);
+    union ShapeParamsUnion {
+      constexpr ShapeParamsUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE box_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE cylinder_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE sphere_;
+    } shape_params_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_mechanism_2fmechanism_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull PrimitiveParams_class_data_;
 // -------------------------------------------------------------------
 
 class Pose final : public ::google::protobuf::Message
@@ -3623,7 +4592,7 @@ class Pose final : public ::google::protobuf::Message
     kPositionFieldNumber = 1,
     kOrientationFieldNumber = 2,
   };
-  // .motionlab.mechanism.Vec3 position = 1 [json_name = "position"];
+  // .motionlab.mechanism.Vec3 position = 1;
   bool has_position() const;
   void clear_position() ;
   const ::motionlab::mechanism::Vec3& position() const;
@@ -3638,7 +4607,7 @@ class Pose final : public ::google::protobuf::Message
   ::motionlab::mechanism::Vec3* PROTOBUF_NONNULL _internal_mutable_position();
 
   public:
-  // .motionlab.mechanism.Quat orientation = 2 [json_name = "orientation"];
+  // .motionlab.mechanism.Quat orientation = 2;
   bool has_orientation() const;
   void clear_orientation() ;
   const ::motionlab::mechanism::Quat& orientation() const;
@@ -3745,7 +4714,7 @@ class PointTorqueLoad final : public ::google::protobuf::Message
     return *reinterpret_cast<const PointTorqueLoad*>(
         &_PointTorqueLoad_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 24;
+  static constexpr int kIndexInFileMessages = 29;
   friend void swap(PointTorqueLoad& a, PointTorqueLoad& b) { a.Swap(&b); }
   inline void Swap(PointTorqueLoad* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -3836,7 +4805,7 @@ class PointTorqueLoad final : public ::google::protobuf::Message
     kVectorFieldNumber = 2,
     kReferenceFrameFieldNumber = 3,
   };
-  // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+  // .motionlab.mechanism.ElementId datum_id = 1;
   bool has_datum_id() const;
   void clear_datum_id() ;
   const ::motionlab::mechanism::ElementId& datum_id() const;
@@ -3851,7 +4820,7 @@ class PointTorqueLoad final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_datum_id();
 
   public:
-  // .motionlab.mechanism.Vec3 vector = 2 [json_name = "vector"];
+  // .motionlab.mechanism.Vec3 vector = 2;
   bool has_vector() const;
   void clear_vector() ;
   const ::motionlab::mechanism::Vec3& vector() const;
@@ -3866,7 +4835,7 @@ class PointTorqueLoad final : public ::google::protobuf::Message
   ::motionlab::mechanism::Vec3* PROTOBUF_NONNULL _internal_mutable_vector();
 
   public:
-  // .motionlab.mechanism.ReferenceFrame reference_frame = 3 [json_name = "referenceFrame"];
+  // .motionlab.mechanism.ReferenceFrame reference_frame = 3;
   void clear_reference_frame() ;
   ::motionlab::mechanism::ReferenceFrame reference_frame() const;
   void set_reference_frame(::motionlab::mechanism::ReferenceFrame value);
@@ -3969,7 +4938,7 @@ class PointForceLoad final : public ::google::protobuf::Message
     return *reinterpret_cast<const PointForceLoad*>(
         &_PointForceLoad_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 23;
+  static constexpr int kIndexInFileMessages = 28;
   friend void swap(PointForceLoad& a, PointForceLoad& b) { a.Swap(&b); }
   inline void Swap(PointForceLoad* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -4060,7 +5029,7 @@ class PointForceLoad final : public ::google::protobuf::Message
     kVectorFieldNumber = 2,
     kReferenceFrameFieldNumber = 3,
   };
-  // .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+  // .motionlab.mechanism.ElementId datum_id = 1;
   bool has_datum_id() const;
   void clear_datum_id() ;
   const ::motionlab::mechanism::ElementId& datum_id() const;
@@ -4075,7 +5044,7 @@ class PointForceLoad final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_datum_id();
 
   public:
-  // .motionlab.mechanism.Vec3 vector = 2 [json_name = "vector"];
+  // .motionlab.mechanism.Vec3 vector = 2;
   bool has_vector() const;
   void clear_vector() ;
   const ::motionlab::mechanism::Vec3& vector() const;
@@ -4090,7 +5059,7 @@ class PointForceLoad final : public ::google::protobuf::Message
   ::motionlab::mechanism::Vec3* PROTOBUF_NONNULL _internal_mutable_vector();
 
   public:
-  // .motionlab.mechanism.ReferenceFrame reference_frame = 3 [json_name = "referenceFrame"];
+  // .motionlab.mechanism.ReferenceFrame reference_frame = 3;
   void clear_reference_frame() ;
   ::motionlab::mechanism::ReferenceFrame reference_frame() const;
   void set_reference_frame(::motionlab::mechanism::ReferenceFrame value);
@@ -4193,7 +5162,7 @@ class PlanarJointConfig final : public ::google::protobuf::Message
     return *reinterpret_cast<const PlanarJointConfig*>(
         &_PlanarJointConfig_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 17;
+  static constexpr int kIndexInFileMessages = 22;
   friend void swap(PlanarJointConfig& a, PlanarJointConfig& b) { a.Swap(&b); }
   inline void Swap(PlanarJointConfig* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -4284,7 +5253,7 @@ class PlanarJointConfig final : public ::google::protobuf::Message
     kTranslationYLimitFieldNumber = 2,
     kRotationLimitFieldNumber = 3,
   };
-  // .motionlab.mechanism.Range translation_x_limit = 1 [json_name = "translationXLimit"];
+  // .motionlab.mechanism.Range translation_x_limit = 1;
   bool has_translation_x_limit() const;
   void clear_translation_x_limit() ;
   const ::motionlab::mechanism::Range& translation_x_limit() const;
@@ -4299,7 +5268,7 @@ class PlanarJointConfig final : public ::google::protobuf::Message
   ::motionlab::mechanism::Range* PROTOBUF_NONNULL _internal_mutable_translation_x_limit();
 
   public:
-  // .motionlab.mechanism.Range translation_y_limit = 2 [json_name = "translationYLimit"];
+  // .motionlab.mechanism.Range translation_y_limit = 2;
   bool has_translation_y_limit() const;
   void clear_translation_y_limit() ;
   const ::motionlab::mechanism::Range& translation_y_limit() const;
@@ -4314,7 +5283,7 @@ class PlanarJointConfig final : public ::google::protobuf::Message
   ::motionlab::mechanism::Range* PROTOBUF_NONNULL _internal_mutable_translation_y_limit();
 
   public:
-  // .motionlab.mechanism.Range rotation_limit = 3 [json_name = "rotationLimit"];
+  // .motionlab.mechanism.Range rotation_limit = 3;
   bool has_rotation_limit() const;
   void clear_rotation_limit() ;
   const ::motionlab::mechanism::Range& rotation_limit() const;
@@ -4518,7 +5487,7 @@ class MassProperties final : public ::google::protobuf::Message
     kIxzFieldNumber = 7,
     kIyzFieldNumber = 8,
   };
-  // .motionlab.mechanism.Vec3 center_of_mass = 2 [json_name = "centerOfMass"];
+  // .motionlab.mechanism.Vec3 center_of_mass = 2;
   bool has_center_of_mass() const;
   void clear_center_of_mass() ;
   const ::motionlab::mechanism::Vec3& center_of_mass() const;
@@ -4533,7 +5502,7 @@ class MassProperties final : public ::google::protobuf::Message
   ::motionlab::mechanism::Vec3* PROTOBUF_NONNULL _internal_mutable_center_of_mass();
 
   public:
-  // double mass = 1 [json_name = "mass"];
+  // double mass = 1;
   void clear_mass() ;
   double mass() const;
   void set_mass(double value);
@@ -4543,7 +5512,7 @@ class MassProperties final : public ::google::protobuf::Message
   void _internal_set_mass(double value);
 
   public:
-  // double ixx = 3 [json_name = "ixx"];
+  // double ixx = 3;
   void clear_ixx() ;
   double ixx() const;
   void set_ixx(double value);
@@ -4553,7 +5522,7 @@ class MassProperties final : public ::google::protobuf::Message
   void _internal_set_ixx(double value);
 
   public:
-  // double iyy = 4 [json_name = "iyy"];
+  // double iyy = 4;
   void clear_iyy() ;
   double iyy() const;
   void set_iyy(double value);
@@ -4563,7 +5532,7 @@ class MassProperties final : public ::google::protobuf::Message
   void _internal_set_iyy(double value);
 
   public:
-  // double izz = 5 [json_name = "izz"];
+  // double izz = 5;
   void clear_izz() ;
   double izz() const;
   void set_izz(double value);
@@ -4573,7 +5542,7 @@ class MassProperties final : public ::google::protobuf::Message
   void _internal_set_izz(double value);
 
   public:
-  // double ixy = 6 [json_name = "ixy"];
+  // double ixy = 6;
   void clear_ixy() ;
   double ixy() const;
   void set_ixy(double value);
@@ -4583,7 +5552,7 @@ class MassProperties final : public ::google::protobuf::Message
   void _internal_set_ixy(double value);
 
   public:
-  // double ixz = 7 [json_name = "ixz"];
+  // double ixz = 7;
   void clear_ixz() ;
   double ixz() const;
   void set_ixz(double value);
@@ -4593,7 +5562,7 @@ class MassProperties final : public ::google::protobuf::Message
   void _internal_set_ixz(double value);
 
   public:
-  // double iyz = 8 [json_name = "iyz"];
+  // double iyz = 8;
   void clear_iyz() ;
   double iyz() const;
   void set_iyz(double value);
@@ -4701,7 +5670,7 @@ class LinearSpringDamperLoad final : public ::google::protobuf::Message
     return *reinterpret_cast<const LinearSpringDamperLoad*>(
         &_LinearSpringDamperLoad_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 25;
+  static constexpr int kIndexInFileMessages = 30;
   friend void swap(LinearSpringDamperLoad& a, LinearSpringDamperLoad& b) { a.Swap(&b); }
   inline void Swap(LinearSpringDamperLoad* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -4794,7 +5763,7 @@ class LinearSpringDamperLoad final : public ::google::protobuf::Message
     kStiffnessFieldNumber = 4,
     kDampingFieldNumber = 5,
   };
-  // .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
+  // .motionlab.mechanism.ElementId parent_datum_id = 1;
   bool has_parent_datum_id() const;
   void clear_parent_datum_id() ;
   const ::motionlab::mechanism::ElementId& parent_datum_id() const;
@@ -4809,7 +5778,7 @@ class LinearSpringDamperLoad final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_parent_datum_id();
 
   public:
-  // .motionlab.mechanism.ElementId child_datum_id = 2 [json_name = "childDatumId"];
+  // .motionlab.mechanism.ElementId child_datum_id = 2;
   bool has_child_datum_id() const;
   void clear_child_datum_id() ;
   const ::motionlab::mechanism::ElementId& child_datum_id() const;
@@ -4824,7 +5793,7 @@ class LinearSpringDamperLoad final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_child_datum_id();
 
   public:
-  // double rest_length = 3 [json_name = "restLength"];
+  // double rest_length = 3;
   void clear_rest_length() ;
   double rest_length() const;
   void set_rest_length(double value);
@@ -4834,7 +5803,7 @@ class LinearSpringDamperLoad final : public ::google::protobuf::Message
   void _internal_set_rest_length(double value);
 
   public:
-  // double stiffness = 4 [json_name = "stiffness"];
+  // double stiffness = 4;
   void clear_stiffness() ;
   double stiffness() const;
   void set_stiffness(double value);
@@ -4844,7 +5813,7 @@ class LinearSpringDamperLoad final : public ::google::protobuf::Message
   void _internal_set_stiffness(double value);
 
   public:
-  // double damping = 5 [json_name = "damping"];
+  // double damping = 5;
   void clear_damping() ;
   double damping() const;
   void set_damping(double value);
@@ -4949,7 +5918,7 @@ class GeometryDisplayData final : public ::google::protobuf::Message
     return *reinterpret_cast<const GeometryDisplayData*>(
         &_GeometryDisplayData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 32;
+  static constexpr int kIndexInFileMessages = 37;
   friend void swap(GeometryDisplayData& a, GeometryDisplayData& b) { a.Swap(&b); }
   inline void Swap(GeometryDisplayData* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -5043,7 +6012,7 @@ class GeometryDisplayData final : public ::google::protobuf::Message
     kDensityFieldNumber = 4,
     kTessellationQualityFieldNumber = 5,
   };
-  // repeated uint32 part_index = 3 [json_name = "partIndex"];
+  // repeated uint32 part_index = 3;
   int part_index_size() const;
   private:
   int _internal_part_index_size() const;
@@ -5061,7 +6030,7 @@ class GeometryDisplayData final : public ::google::protobuf::Message
   ::google::protobuf::RepeatedField<::uint32_t>* PROTOBUF_NONNULL _internal_mutable_part_index();
 
   public:
-  // string geometry_id = 1 [json_name = "geometryId"];
+  // string geometry_id = 1;
   void clear_geometry_id() ;
   const ::std::string& geometry_id() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -5076,7 +6045,7 @@ class GeometryDisplayData final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_geometry_id();
 
   public:
-  // string unit_system = 6 [json_name = "unitSystem"];
+  // string unit_system = 6;
   void clear_unit_system() ;
   const ::std::string& unit_system() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -5091,7 +6060,7 @@ class GeometryDisplayData final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_unit_system();
 
   public:
-  // .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
+  // .motionlab.mechanism.DisplayMesh display_mesh = 2;
   bool has_display_mesh() const;
   void clear_display_mesh() ;
   const ::motionlab::mechanism::DisplayMesh& display_mesh() const;
@@ -5106,7 +6075,7 @@ class GeometryDisplayData final : public ::google::protobuf::Message
   ::motionlab::mechanism::DisplayMesh* PROTOBUF_NONNULL _internal_mutable_display_mesh();
 
   public:
-  // double density = 4 [json_name = "density"];
+  // double density = 4;
   void clear_density() ;
   double density() const;
   void set_density(double value);
@@ -5116,7 +6085,7 @@ class GeometryDisplayData final : public ::google::protobuf::Message
   void _internal_set_density(double value);
 
   public:
-  // double tessellation_quality = 5 [json_name = "tessellationQuality"];
+  // double tessellation_quality = 5;
   void clear_tessellation_quality() ;
   double tessellation_quality() const;
   void set_tessellation_quality(double value);
@@ -5223,7 +6192,7 @@ class DistanceJointConfig final : public ::google::protobuf::Message
     return *reinterpret_cast<const DistanceJointConfig*>(
         &_DistanceJointConfig_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 19;
+  static constexpr int kIndexInFileMessages = 24;
   friend void swap(DistanceJointConfig& a, DistanceJointConfig& b) { a.Swap(&b); }
   inline void Swap(DistanceJointConfig* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -5312,7 +6281,7 @@ class DistanceJointConfig final : public ::google::protobuf::Message
   enum : int {
     kDistanceLimitFieldNumber = 1,
   };
-  // .motionlab.mechanism.Range distance_limit = 1 [json_name = "distanceLimit"];
+  // .motionlab.mechanism.Range distance_limit = 1;
   bool has_distance_limit() const;
   void clear_distance_limit() ;
   const ::motionlab::mechanism::Range& distance_limit() const;
@@ -5418,7 +6387,7 @@ class CylindricalJointConfig final : public ::google::protobuf::Message
     return *reinterpret_cast<const CylindricalJointConfig*>(
         &_CylindricalJointConfig_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 16;
+  static constexpr int kIndexInFileMessages = 21;
   friend void swap(CylindricalJointConfig& a, CylindricalJointConfig& b) { a.Swap(&b); }
   inline void Swap(CylindricalJointConfig* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -5508,7 +6477,7 @@ class CylindricalJointConfig final : public ::google::protobuf::Message
     kTranslationLimitFieldNumber = 1,
     kRotationLimitFieldNumber = 2,
   };
-  // .motionlab.mechanism.Range translation_limit = 1 [json_name = "translationLimit"];
+  // .motionlab.mechanism.Range translation_limit = 1;
   bool has_translation_limit() const;
   void clear_translation_limit() ;
   const ::motionlab::mechanism::Range& translation_limit() const;
@@ -5523,7 +6492,7 @@ class CylindricalJointConfig final : public ::google::protobuf::Message
   ::motionlab::mechanism::Range* PROTOBUF_NONNULL _internal_mutable_translation_limit();
 
   public:
-  // .motionlab.mechanism.Range rotation_limit = 2 [json_name = "rotationLimit"];
+  // .motionlab.mechanism.Range rotation_limit = 2;
   bool has_rotation_limit() const;
   void clear_rotation_limit() ;
   const ::motionlab::mechanism::Range& rotation_limit() const;
@@ -5630,7 +6599,7 @@ class BodyDisplayData final : public ::google::protobuf::Message
     return *reinterpret_cast<const BodyDisplayData*>(
         &_BodyDisplayData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 31;
+  static constexpr int kIndexInFileMessages = 36;
   friend void swap(BodyDisplayData& a, BodyDisplayData& b) { a.Swap(&b); }
   inline void Swap(BodyDisplayData* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -5724,7 +6693,7 @@ class BodyDisplayData final : public ::google::protobuf::Message
     kDensityFieldNumber = 4,
     kTessellationQualityFieldNumber = 5,
   };
-  // repeated uint32 part_index = 3 [json_name = "partIndex"];
+  // repeated uint32 part_index = 3;
   int part_index_size() const;
   private:
   int _internal_part_index_size() const;
@@ -5742,7 +6711,7 @@ class BodyDisplayData final : public ::google::protobuf::Message
   ::google::protobuf::RepeatedField<::uint32_t>* PROTOBUF_NONNULL _internal_mutable_part_index();
 
   public:
-  // string body_id = 1 [json_name = "bodyId"];
+  // string body_id = 1;
   void clear_body_id() ;
   const ::std::string& body_id() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -5757,7 +6726,7 @@ class BodyDisplayData final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_body_id();
 
   public:
-  // string unit_system = 6 [json_name = "unitSystem"];
+  // string unit_system = 6;
   void clear_unit_system() ;
   const ::std::string& unit_system() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -5772,7 +6741,7 @@ class BodyDisplayData final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_unit_system();
 
   public:
-  // .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
+  // .motionlab.mechanism.DisplayMesh display_mesh = 2;
   bool has_display_mesh() const;
   void clear_display_mesh() ;
   const ::motionlab::mechanism::DisplayMesh& display_mesh() const;
@@ -5787,7 +6756,7 @@ class BodyDisplayData final : public ::google::protobuf::Message
   ::motionlab::mechanism::DisplayMesh* PROTOBUF_NONNULL _internal_mutable_display_mesh();
 
   public:
-  // double density = 4 [json_name = "density"];
+  // double density = 4;
   void clear_density() ;
   double density() const;
   void set_density(double value);
@@ -5797,7 +6766,7 @@ class BodyDisplayData final : public ::google::protobuf::Message
   void _internal_set_density(double value);
 
   public:
-  // double tessellation_quality = 5 [json_name = "tessellationQuality"];
+  // double tessellation_quality = 5;
   void clear_tessellation_quality() ;
   double tessellation_quality() const;
   void set_tessellation_quality(double value);
@@ -5847,6 +6816,213 @@ class BodyDisplayData final : public ::google::protobuf::Message
 };
 
 extern const ::google::protobuf::internal::ClassDataFull BodyDisplayData_class_data_;
+// -------------------------------------------------------------------
+
+class PrimitiveSource final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.mechanism.PrimitiveSource) */ {
+ public:
+  inline PrimitiveSource() : PrimitiveSource(nullptr) {}
+  ~PrimitiveSource() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(PrimitiveSource* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(PrimitiveSource));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR PrimitiveSource(::google::protobuf::internal::ConstantInitialized);
+
+  inline PrimitiveSource(const PrimitiveSource& from) : PrimitiveSource(nullptr, from) {}
+  inline PrimitiveSource(PrimitiveSource&& from) noexcept
+      : PrimitiveSource(nullptr, ::std::move(from)) {}
+  inline PrimitiveSource& operator=(const PrimitiveSource& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline PrimitiveSource& operator=(PrimitiveSource&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const PrimitiveSource& default_instance() {
+    return *reinterpret_cast<const PrimitiveSource*>(
+        &_PrimitiveSource_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 15;
+  friend void swap(PrimitiveSource& a, PrimitiveSource& b) { a.Swap(&b); }
+  inline void Swap(PrimitiveSource* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(PrimitiveSource* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  PrimitiveSource* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<PrimitiveSource>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const PrimitiveSource& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const PrimitiveSource& from) { PrimitiveSource::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(PrimitiveSource* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.mechanism.PrimitiveSource"; }
+
+  explicit PrimitiveSource(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  PrimitiveSource(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const PrimitiveSource& from);
+  PrimitiveSource(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, PrimitiveSource&& from) noexcept
+      : PrimitiveSource(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kParamsFieldNumber = 2,
+    kShapeFieldNumber = 1,
+  };
+  // .motionlab.mechanism.PrimitiveParams params = 2;
+  bool has_params() const;
+  void clear_params() ;
+  const ::motionlab::mechanism::PrimitiveParams& params() const;
+  [[nodiscard]] ::motionlab::mechanism::PrimitiveParams* PROTOBUF_NULLABLE release_params();
+  ::motionlab::mechanism::PrimitiveParams* PROTOBUF_NONNULL mutable_params();
+  void set_allocated_params(::motionlab::mechanism::PrimitiveParams* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_params(::motionlab::mechanism::PrimitiveParams* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::PrimitiveParams* PROTOBUF_NULLABLE unsafe_arena_release_params();
+
+  private:
+  const ::motionlab::mechanism::PrimitiveParams& _internal_params() const;
+  ::motionlab::mechanism::PrimitiveParams* PROTOBUF_NONNULL _internal_mutable_params();
+
+  public:
+  // .motionlab.mechanism.PrimitiveShape shape = 1;
+  void clear_shape() ;
+  ::motionlab::mechanism::PrimitiveShape shape() const;
+  void set_shape(::motionlab::mechanism::PrimitiveShape value);
+
+  private:
+  ::motionlab::mechanism::PrimitiveShape _internal_shape() const;
+  void _internal_set_shape(::motionlab::mechanism::PrimitiveShape value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.mechanism.PrimitiveSource)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<1, 2,
+                                   1, 0,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const PrimitiveSource& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::PrimitiveParams* PROTOBUF_NULLABLE params_;
+    int shape_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_mechanism_2fmechanism_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull PrimitiveSource_class_data_;
 // -------------------------------------------------------------------
 
 class Load final : public ::google::protobuf::Message
@@ -5910,7 +7086,7 @@ class Load final : public ::google::protobuf::Message
     kLinearSpringDamper = 5,
     CONFIG_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 26;
+  static constexpr int kIndexInFileMessages = 31;
   friend void swap(Load& a, Load& b) { a.Swap(&b); }
   inline void Swap(Load* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -6003,7 +7179,7 @@ class Load final : public ::google::protobuf::Message
     kPointTorqueFieldNumber = 4,
     kLinearSpringDamperFieldNumber = 5,
   };
-  // string name = 2 [json_name = "name"];
+  // string name = 2;
   void clear_name() ;
   const ::std::string& name() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -6018,7 +7194,7 @@ class Load final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
 
   public:
-  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+  // .motionlab.mechanism.ElementId id = 1;
   bool has_id() const;
   void clear_id() ;
   const ::motionlab::mechanism::ElementId& id() const;
@@ -6033,7 +7209,7 @@ class Load final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_id();
 
   public:
-  // .motionlab.mechanism.PointForceLoad point_force = 3 [json_name = "pointForce"];
+  // .motionlab.mechanism.PointForceLoad point_force = 3;
   bool has_point_force() const;
   private:
   bool _internal_has_point_force() const;
@@ -6052,7 +7228,7 @@ class Load final : public ::google::protobuf::Message
   ::motionlab::mechanism::PointForceLoad* PROTOBUF_NONNULL _internal_mutable_point_force();
 
   public:
-  // .motionlab.mechanism.PointTorqueLoad point_torque = 4 [json_name = "pointTorque"];
+  // .motionlab.mechanism.PointTorqueLoad point_torque = 4;
   bool has_point_torque() const;
   private:
   bool _internal_has_point_torque() const;
@@ -6071,7 +7247,7 @@ class Load final : public ::google::protobuf::Message
   ::motionlab::mechanism::PointTorqueLoad* PROTOBUF_NONNULL _internal_mutable_point_torque();
 
   public:
-  // .motionlab.mechanism.LinearSpringDamperLoad linear_spring_damper = 5 [json_name = "linearSpringDamper"];
+  // .motionlab.mechanism.LinearSpringDamperLoad linear_spring_damper = 5;
   bool has_linear_spring_damper() const;
   private:
   bool _internal_has_linear_spring_damper() const;
@@ -6210,7 +7386,7 @@ class Joint final : public ::google::protobuf::Message
     kPointPlane = 17,
     CONFIG_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 22;
+  static constexpr int kIndexInFileMessages = 27;
   friend void swap(Joint& a, Joint& b) { a.Swap(&b); }
   inline void Swap(Joint* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -6315,7 +7491,7 @@ class Joint final : public ::google::protobuf::Message
     kPointLineFieldNumber = 16,
     kPointPlaneFieldNumber = 17,
   };
-  // string name = 2 [json_name = "name"];
+  // string name = 2;
   void clear_name() ;
   const ::std::string& name() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -6330,7 +7506,7 @@ class Joint final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
 
   public:
-  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+  // .motionlab.mechanism.ElementId id = 1;
   bool has_id() const;
   void clear_id() ;
   const ::motionlab::mechanism::ElementId& id() const;
@@ -6345,7 +7521,7 @@ class Joint final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_id();
 
   public:
-  // .motionlab.mechanism.ElementId parent_datum_id = 4 [json_name = "parentDatumId"];
+  // .motionlab.mechanism.ElementId parent_datum_id = 4;
   bool has_parent_datum_id() const;
   void clear_parent_datum_id() ;
   const ::motionlab::mechanism::ElementId& parent_datum_id() const;
@@ -6360,7 +7536,7 @@ class Joint final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_parent_datum_id();
 
   public:
-  // .motionlab.mechanism.ElementId child_datum_id = 5 [json_name = "childDatumId"];
+  // .motionlab.mechanism.ElementId child_datum_id = 5;
   bool has_child_datum_id() const;
   void clear_child_datum_id() ;
   const ::motionlab::mechanism::ElementId& child_datum_id() const;
@@ -6375,7 +7551,7 @@ class Joint final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_child_datum_id();
 
   public:
-  // double lower_limit = 6 [json_name = "lowerLimit", deprecated = true];
+  // double lower_limit = 6 [deprecated = true];
   [[deprecated]]  void clear_lower_limit() ;
   [[deprecated]] double lower_limit() const;
   [[deprecated]] void set_lower_limit(double value);
@@ -6385,7 +7561,7 @@ class Joint final : public ::google::protobuf::Message
   void _internal_set_lower_limit(double value);
 
   public:
-  // double upper_limit = 7 [json_name = "upperLimit", deprecated = true];
+  // double upper_limit = 7 [deprecated = true];
   [[deprecated]]  void clear_upper_limit() ;
   [[deprecated]] double upper_limit() const;
   [[deprecated]] void set_upper_limit(double value);
@@ -6395,7 +7571,7 @@ class Joint final : public ::google::protobuf::Message
   void _internal_set_upper_limit(double value);
 
   public:
-  // .motionlab.mechanism.JointType type = 3 [json_name = "type"];
+  // .motionlab.mechanism.JointType type = 3;
   void clear_type() ;
   ::motionlab::mechanism::JointType type() const;
   void set_type(::motionlab::mechanism::JointType value);
@@ -6405,7 +7581,7 @@ class Joint final : public ::google::protobuf::Message
   void _internal_set_type(::motionlab::mechanism::JointType value);
 
   public:
-  // .motionlab.mechanism.RevoluteJointConfig revolute = 8 [json_name = "revolute"];
+  // .motionlab.mechanism.RevoluteJointConfig revolute = 8;
   bool has_revolute() const;
   private:
   bool _internal_has_revolute() const;
@@ -6424,7 +7600,7 @@ class Joint final : public ::google::protobuf::Message
   ::motionlab::mechanism::RevoluteJointConfig* PROTOBUF_NONNULL _internal_mutable_revolute();
 
   public:
-  // .motionlab.mechanism.PrismaticJointConfig prismatic = 9 [json_name = "prismatic"];
+  // .motionlab.mechanism.PrismaticJointConfig prismatic = 9;
   bool has_prismatic() const;
   private:
   bool _internal_has_prismatic() const;
@@ -6443,7 +7619,7 @@ class Joint final : public ::google::protobuf::Message
   ::motionlab::mechanism::PrismaticJointConfig* PROTOBUF_NONNULL _internal_mutable_prismatic();
 
   public:
-  // .motionlab.mechanism.FixedJointConfig fixed = 10 [json_name = "fixed"];
+  // .motionlab.mechanism.FixedJointConfig fixed = 10;
   bool has_fixed() const;
   private:
   bool _internal_has_fixed() const;
@@ -6462,7 +7638,7 @@ class Joint final : public ::google::protobuf::Message
   ::motionlab::mechanism::FixedJointConfig* PROTOBUF_NONNULL _internal_mutable_fixed();
 
   public:
-  // .motionlab.mechanism.SphericalJointConfig spherical = 11 [json_name = "spherical"];
+  // .motionlab.mechanism.SphericalJointConfig spherical = 11;
   bool has_spherical() const;
   private:
   bool _internal_has_spherical() const;
@@ -6481,7 +7657,7 @@ class Joint final : public ::google::protobuf::Message
   ::motionlab::mechanism::SphericalJointConfig* PROTOBUF_NONNULL _internal_mutable_spherical();
 
   public:
-  // .motionlab.mechanism.CylindricalJointConfig cylindrical = 12 [json_name = "cylindrical"];
+  // .motionlab.mechanism.CylindricalJointConfig cylindrical = 12;
   bool has_cylindrical() const;
   private:
   bool _internal_has_cylindrical() const;
@@ -6500,7 +7676,7 @@ class Joint final : public ::google::protobuf::Message
   ::motionlab::mechanism::CylindricalJointConfig* PROTOBUF_NONNULL _internal_mutable_cylindrical();
 
   public:
-  // .motionlab.mechanism.PlanarJointConfig planar = 13 [json_name = "planar"];
+  // .motionlab.mechanism.PlanarJointConfig planar = 13;
   bool has_planar() const;
   private:
   bool _internal_has_planar() const;
@@ -6519,7 +7695,7 @@ class Joint final : public ::google::protobuf::Message
   ::motionlab::mechanism::PlanarJointConfig* PROTOBUF_NONNULL _internal_mutable_planar();
 
   public:
-  // .motionlab.mechanism.UniversalJointConfig universal = 14 [json_name = "universal"];
+  // .motionlab.mechanism.UniversalJointConfig universal = 14;
   bool has_universal() const;
   private:
   bool _internal_has_universal() const;
@@ -6538,7 +7714,7 @@ class Joint final : public ::google::protobuf::Message
   ::motionlab::mechanism::UniversalJointConfig* PROTOBUF_NONNULL _internal_mutable_universal();
 
   public:
-  // .motionlab.mechanism.DistanceJointConfig distance = 15 [json_name = "distance"];
+  // .motionlab.mechanism.DistanceJointConfig distance = 15;
   bool has_distance() const;
   private:
   bool _internal_has_distance() const;
@@ -6557,7 +7733,7 @@ class Joint final : public ::google::protobuf::Message
   ::motionlab::mechanism::DistanceJointConfig* PROTOBUF_NONNULL _internal_mutable_distance();
 
   public:
-  // .motionlab.mechanism.PointLineJointConfig point_line = 16 [json_name = "pointLine"];
+  // .motionlab.mechanism.PointLineJointConfig point_line = 16;
   bool has_point_line() const;
   private:
   bool _internal_has_point_line() const;
@@ -6576,7 +7752,7 @@ class Joint final : public ::google::protobuf::Message
   ::motionlab::mechanism::PointLineJointConfig* PROTOBUF_NONNULL _internal_mutable_point_line();
 
   public:
-  // .motionlab.mechanism.PointPlaneJointConfig point_plane = 17 [json_name = "pointPlane"];
+  // .motionlab.mechanism.PointPlaneJointConfig point_plane = 17;
   bool has_point_plane() const;
   private:
   bool _internal_has_point_plane() const;
@@ -6666,315 +7842,6 @@ class Joint final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull Joint_class_data_;
 // -------------------------------------------------------------------
 
-class Geometry final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:motionlab.mechanism.Geometry) */ {
- public:
-  inline Geometry() : Geometry(nullptr) {}
-  ~Geometry() PROTOBUF_FINAL;
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(Geometry* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
-    SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(Geometry));
-  }
-#endif
-
-  template <typename = void>
-  explicit PROTOBUF_CONSTEXPR Geometry(::google::protobuf::internal::ConstantInitialized);
-
-  inline Geometry(const Geometry& from) : Geometry(nullptr, from) {}
-  inline Geometry(Geometry&& from) noexcept
-      : Geometry(nullptr, ::std::move(from)) {}
-  inline Geometry& operator=(const Geometry& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline Geometry& operator=(Geometry&& from) noexcept {
-    if (this == &from) return *this;
-    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const Geometry& default_instance() {
-    return *reinterpret_cast<const Geometry*>(
-        &_Geometry_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages = 10;
-  friend void swap(Geometry& a, Geometry& b) { a.Swap(&b); }
-  inline void Swap(Geometry* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(Geometry* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  Geometry* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<Geometry>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const Geometry& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const Geometry& from) { Geometry::MergeImpl(*this, from); }
-
-  private:
-  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
-                        const ::google::protobuf::MessageLite& from_msg);
-
-  public:
-  bool IsInitialized() const {
-    return true;
-  }
-  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
-  #if defined(PROTOBUF_CUSTOM_VTABLE)
-  private:
-  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
-  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
-
-  public:
-  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
-  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
-    return _InternalSerialize(*this, target, stream);
-  }
-  #else   // PROTOBUF_CUSTOM_VTABLE
-  ::size_t ByteSizeLong() const final;
-  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
-  #endif  // PROTOBUF_CUSTOM_VTABLE
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static void SharedDtor(MessageLite& self);
-  void InternalSwap(Geometry* PROTOBUF_NONNULL other);
- private:
-  template <typename T>
-  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "motionlab.mechanism.Geometry"; }
-
-  explicit Geometry(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  Geometry(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Geometry& from);
-  Geometry(
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, Geometry&& from) noexcept
-      : Geometry(arena) {
-    *this = ::std::move(from);
-  }
-  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
-  static void* PROTOBUF_NONNULL PlacementNew_(
-      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static constexpr auto InternalNewImpl_();
-
- public:
-  static constexpr auto InternalGenerateClassData_();
-
-  ::google::protobuf::Metadata GetMetadata() const;
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-  enum : int {
-    kNameFieldNumber = 2,
-    kIdFieldNumber = 1,
-    kParentBodyIdFieldNumber = 3,
-    kLocalPoseFieldNumber = 4,
-    kSourceAssetRefFieldNumber = 5,
-    kDisplayMeshFieldNumber = 6,
-    kComputedMassPropertiesFieldNumber = 7,
-    kFaceCountFieldNumber = 8,
-  };
-  // string name = 2 [json_name = "name"];
-  void clear_name() ;
-  const ::std::string& name() const;
-  template <typename Arg_ = const ::std::string&, typename... Args_>
-  void set_name(Arg_&& arg, Args_... args);
-  ::std::string* PROTOBUF_NONNULL mutable_name();
-  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_name();
-  void set_allocated_name(::std::string* PROTOBUF_NULLABLE value);
-
-  private:
-  const ::std::string& _internal_name() const;
-  PROTOBUF_ALWAYS_INLINE void _internal_set_name(const ::std::string& value);
-  ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
-
-  public:
-  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
-  bool has_id() const;
-  void clear_id() ;
-  const ::motionlab::mechanism::ElementId& id() const;
-  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_id();
-  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_id();
-  void set_allocated_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_id();
-
-  private:
-  const ::motionlab::mechanism::ElementId& _internal_id() const;
-  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_id();
-
-  public:
-  // .motionlab.mechanism.ElementId parent_body_id = 3 [json_name = "parentBodyId"];
-  bool has_parent_body_id() const;
-  void clear_parent_body_id() ;
-  const ::motionlab::mechanism::ElementId& parent_body_id() const;
-  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_parent_body_id();
-  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_parent_body_id();
-  void set_allocated_parent_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_parent_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_parent_body_id();
-
-  private:
-  const ::motionlab::mechanism::ElementId& _internal_parent_body_id() const;
-  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_parent_body_id();
-
-  public:
-  // .motionlab.mechanism.Pose local_pose = 4 [json_name = "localPose"];
-  bool has_local_pose() const;
-  void clear_local_pose() ;
-  const ::motionlab::mechanism::Pose& local_pose() const;
-  [[nodiscard]] ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE release_local_pose();
-  ::motionlab::mechanism::Pose* PROTOBUF_NONNULL mutable_local_pose();
-  void set_allocated_local_pose(::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_local_pose(::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE unsafe_arena_release_local_pose();
-
-  private:
-  const ::motionlab::mechanism::Pose& _internal_local_pose() const;
-  ::motionlab::mechanism::Pose* PROTOBUF_NONNULL _internal_mutable_local_pose();
-
-  public:
-  // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef"];
-  bool has_source_asset_ref() const;
-  void clear_source_asset_ref() ;
-  const ::motionlab::mechanism::AssetReference& source_asset_ref() const;
-  [[nodiscard]] ::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE release_source_asset_ref();
-  ::motionlab::mechanism::AssetReference* PROTOBUF_NONNULL mutable_source_asset_ref();
-  void set_allocated_source_asset_ref(::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_source_asset_ref(::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE unsafe_arena_release_source_asset_ref();
-
-  private:
-  const ::motionlab::mechanism::AssetReference& _internal_source_asset_ref() const;
-  ::motionlab::mechanism::AssetReference* PROTOBUF_NONNULL _internal_mutable_source_asset_ref();
-
-  public:
-  // .motionlab.mechanism.DisplayMesh display_mesh = 6 [json_name = "displayMesh"];
-  bool has_display_mesh() const;
-  void clear_display_mesh() ;
-  const ::motionlab::mechanism::DisplayMesh& display_mesh() const;
-  [[nodiscard]] ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE release_display_mesh();
-  ::motionlab::mechanism::DisplayMesh* PROTOBUF_NONNULL mutable_display_mesh();
-  void set_allocated_display_mesh(::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_display_mesh(::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE unsafe_arena_release_display_mesh();
-
-  private:
-  const ::motionlab::mechanism::DisplayMesh& _internal_display_mesh() const;
-  ::motionlab::mechanism::DisplayMesh* PROTOBUF_NONNULL _internal_mutable_display_mesh();
-
-  public:
-  // .motionlab.mechanism.MassProperties computed_mass_properties = 7 [json_name = "computedMassProperties"];
-  bool has_computed_mass_properties() const;
-  void clear_computed_mass_properties() ;
-  const ::motionlab::mechanism::MassProperties& computed_mass_properties() const;
-  [[nodiscard]] ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE release_computed_mass_properties();
-  ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL mutable_computed_mass_properties();
-  void set_allocated_computed_mass_properties(::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_computed_mass_properties(::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value);
-  ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE unsafe_arena_release_computed_mass_properties();
-
-  private:
-  const ::motionlab::mechanism::MassProperties& _internal_computed_mass_properties() const;
-  ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL _internal_mutable_computed_mass_properties();
-
-  public:
-  // uint32 face_count = 8 [json_name = "faceCount"];
-  void clear_face_count() ;
-  ::uint32_t face_count() const;
-  void set_face_count(::uint32_t value);
-
-  private:
-  ::uint32_t _internal_face_count() const;
-  void _internal_set_face_count(::uint32_t value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:motionlab.mechanism.Geometry)
- private:
-  class _Internal;
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<3, 8,
-                                   6, 49,
-                                   2>
-      _table_;
-
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-        const Geometry& from_msg);
-    ::google::protobuf::internal::HasBits<1> _has_bits_;
-    ::google::protobuf::internal::CachedSize _cached_size_;
-    ::google::protobuf::internal::ArenaStringPtr name_;
-    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE id_;
-    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE parent_body_id_;
-    ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE local_pose_;
-    ::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE source_asset_ref_;
-    ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE display_mesh_;
-    ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE computed_mass_properties_;
-    ::uint32_t face_count_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_mechanism_2fmechanism_2eproto;
-};
-
-extern const ::google::protobuf::internal::ClassDataFull Geometry_class_data_;
-// -------------------------------------------------------------------
-
 class Datum final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:motionlab.mechanism.Datum) */ {
  public:
@@ -7030,7 +7897,7 @@ class Datum final : public ::google::protobuf::Message
     return *reinterpret_cast<const Datum*>(
         &_Datum_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 11;
+  static constexpr int kIndexInFileMessages = 16;
   friend void swap(Datum& a, Datum& b) { a.Swap(&b); }
   inline void Swap(Datum* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -7122,7 +7989,7 @@ class Datum final : public ::google::protobuf::Message
     kParentBodyIdFieldNumber = 3,
     kLocalPoseFieldNumber = 4,
   };
-  // string name = 2 [json_name = "name"];
+  // string name = 2;
   void clear_name() ;
   const ::std::string& name() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -7137,7 +8004,7 @@ class Datum final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
 
   public:
-  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+  // .motionlab.mechanism.ElementId id = 1;
   bool has_id() const;
   void clear_id() ;
   const ::motionlab::mechanism::ElementId& id() const;
@@ -7152,7 +8019,7 @@ class Datum final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_id();
 
   public:
-  // .motionlab.mechanism.ElementId parent_body_id = 3 [json_name = "parentBodyId"];
+  // .motionlab.mechanism.ElementId parent_body_id = 3;
   bool has_parent_body_id() const;
   void clear_parent_body_id() ;
   const ::motionlab::mechanism::ElementId& parent_body_id() const;
@@ -7167,7 +8034,7 @@ class Datum final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_parent_body_id();
 
   public:
-  // .motionlab.mechanism.Pose local_pose = 4 [json_name = "localPose"];
+  // .motionlab.mechanism.Pose local_pose = 4;
   bool has_local_pose() const;
   void clear_local_pose() ;
   const ::motionlab::mechanism::Pose& local_pose() const;
@@ -7370,8 +8237,9 @@ class Body final : public ::google::protobuf::Message
     kSourceAssetRefFieldNumber = 5,
     kIsFixedFieldNumber = 6,
     kMassOverrideFieldNumber = 7,
+    kMotionTypeFieldNumber = 8,
   };
-  // string name = 2 [json_name = "name"];
+  // string name = 2;
   void clear_name() ;
   const ::std::string& name() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -7386,7 +8254,7 @@ class Body final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
 
   public:
-  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+  // .motionlab.mechanism.ElementId id = 1;
   bool has_id() const;
   void clear_id() ;
   const ::motionlab::mechanism::ElementId& id() const;
@@ -7401,7 +8269,7 @@ class Body final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_id();
 
   public:
-  // .motionlab.mechanism.Pose pose = 3 [json_name = "pose"];
+  // .motionlab.mechanism.Pose pose = 3;
   bool has_pose() const;
   void clear_pose() ;
   const ::motionlab::mechanism::Pose& pose() const;
@@ -7416,7 +8284,7 @@ class Body final : public ::google::protobuf::Message
   ::motionlab::mechanism::Pose* PROTOBUF_NONNULL _internal_mutable_pose();
 
   public:
-  // .motionlab.mechanism.MassProperties mass_properties = 4 [json_name = "massProperties"];
+  // .motionlab.mechanism.MassProperties mass_properties = 4;
   bool has_mass_properties() const;
   void clear_mass_properties() ;
   const ::motionlab::mechanism::MassProperties& mass_properties() const;
@@ -7431,7 +8299,7 @@ class Body final : public ::google::protobuf::Message
   ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL _internal_mutable_mass_properties();
 
   public:
-  // .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef", deprecated = true];
+  // .motionlab.mechanism.AssetReference source_asset_ref = 5 [deprecated = true];
   [[deprecated]]  bool has_source_asset_ref() const;
   [[deprecated]]  void clear_source_asset_ref() ;
   [[deprecated]] const ::motionlab::mechanism::AssetReference& source_asset_ref() const;
@@ -7446,17 +8314,17 @@ class Body final : public ::google::protobuf::Message
   ::motionlab::mechanism::AssetReference* PROTOBUF_NONNULL _internal_mutable_source_asset_ref();
 
   public:
-  // bool is_fixed = 6 [json_name = "isFixed"];
-  void clear_is_fixed() ;
-  bool is_fixed() const;
-  void set_is_fixed(bool value);
+  // bool is_fixed = 6 [deprecated = true];
+  [[deprecated]]  void clear_is_fixed() ;
+  [[deprecated]] bool is_fixed() const;
+  [[deprecated]] void set_is_fixed(bool value);
 
   private:
   bool _internal_is_fixed() const;
   void _internal_set_is_fixed(bool value);
 
   public:
-  // bool mass_override = 7 [json_name = "massOverride"];
+  // bool mass_override = 7;
   void clear_mass_override() ;
   bool mass_override() const;
   void set_mass_override(bool value);
@@ -7466,12 +8334,22 @@ class Body final : public ::google::protobuf::Message
   void _internal_set_mass_override(bool value);
 
   public:
+  // .motionlab.mechanism.MotionType motion_type = 8;
+  void clear_motion_type() ;
+  ::motionlab::mechanism::MotionType motion_type() const;
+  void set_motion_type(::motionlab::mechanism::MotionType value);
+
+  private:
+  ::motionlab::mechanism::MotionType _internal_motion_type() const;
+  void _internal_set_motion_type(::motionlab::mechanism::MotionType value);
+
+  public:
   // @@protoc_insertion_point(class_scope:motionlab.mechanism.Body)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<3, 7,
-                                   4, 37,
+  static const ::google::protobuf::internal::TcParseTable<3, 8,
+                                   4, 45,
                                    2>
       _table_;
 
@@ -7499,6 +8377,7 @@ class Body final : public ::google::protobuf::Message
     ::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE source_asset_ref_;
     bool is_fixed_;
     bool mass_override_;
+    int motion_type_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -7568,7 +8447,7 @@ class Actuator final : public ::google::protobuf::Message
     kPrismaticMotor = 4,
     CONFIG_NOT_SET = 0,
   };
-  static constexpr int kIndexInFileMessages = 29;
+  static constexpr int kIndexInFileMessages = 34;
   friend void swap(Actuator& a, Actuator& b) { a.Swap(&b); }
   inline void Swap(Actuator* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -7660,7 +8539,7 @@ class Actuator final : public ::google::protobuf::Message
     kRevoluteMotorFieldNumber = 3,
     kPrismaticMotorFieldNumber = 4,
   };
-  // string name = 2 [json_name = "name"];
+  // string name = 2;
   void clear_name() ;
   const ::std::string& name() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -7675,7 +8554,7 @@ class Actuator final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
 
   public:
-  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+  // .motionlab.mechanism.ElementId id = 1;
   bool has_id() const;
   void clear_id() ;
   const ::motionlab::mechanism::ElementId& id() const;
@@ -7690,7 +8569,7 @@ class Actuator final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_id();
 
   public:
-  // .motionlab.mechanism.RevoluteMotorActuator revolute_motor = 3 [json_name = "revoluteMotor"];
+  // .motionlab.mechanism.RevoluteMotorActuator revolute_motor = 3;
   bool has_revolute_motor() const;
   private:
   bool _internal_has_revolute_motor() const;
@@ -7709,7 +8588,7 @@ class Actuator final : public ::google::protobuf::Message
   ::motionlab::mechanism::RevoluteMotorActuator* PROTOBUF_NONNULL _internal_mutable_revolute_motor();
 
   public:
-  // .motionlab.mechanism.PrismaticMotorActuator prismatic_motor = 4 [json_name = "prismaticMotor"];
+  // .motionlab.mechanism.PrismaticMotorActuator prismatic_motor = 4;
   bool has_prismatic_motor() const;
   private:
   bool _internal_has_prismatic_motor() const;
@@ -7778,6 +8657,332 @@ class Actuator final : public ::google::protobuf::Message
 extern const ::google::protobuf::internal::ClassDataFull Actuator_class_data_;
 // -------------------------------------------------------------------
 
+class Geometry final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.mechanism.Geometry) */ {
+ public:
+  inline Geometry() : Geometry(nullptr) {}
+  ~Geometry() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(Geometry* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(Geometry));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR Geometry(::google::protobuf::internal::ConstantInitialized);
+
+  inline Geometry(const Geometry& from) : Geometry(nullptr, from) {}
+  inline Geometry(Geometry&& from) noexcept
+      : Geometry(nullptr, ::std::move(from)) {}
+  inline Geometry& operator=(const Geometry& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Geometry& operator=(Geometry&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const Geometry& default_instance() {
+    return *reinterpret_cast<const Geometry*>(
+        &_Geometry_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 10;
+  friend void swap(Geometry& a, Geometry& b) { a.Swap(&b); }
+  inline void Swap(Geometry* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Geometry* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  Geometry* PROTOBUF_NONNULL New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<Geometry>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const Geometry& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const Geometry& from) { Geometry::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(Geometry* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.mechanism.Geometry"; }
+
+  explicit Geometry(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  Geometry(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Geometry& from);
+  Geometry(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, Geometry&& from) noexcept
+      : Geometry(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_();
+
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kNameFieldNumber = 2,
+    kIdFieldNumber = 1,
+    kParentBodyIdFieldNumber = 3,
+    kLocalPoseFieldNumber = 4,
+    kSourceAssetRefFieldNumber = 5,
+    kDisplayMeshFieldNumber = 6,
+    kComputedMassPropertiesFieldNumber = 7,
+    kPrimitiveSourceFieldNumber = 9,
+    kFaceCountFieldNumber = 8,
+  };
+  // string name = 2;
+  void clear_name() ;
+  const ::std::string& name() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_name(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_name();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_name();
+  void set_allocated_name(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_name() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_name(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
+
+  public:
+  // .motionlab.mechanism.ElementId id = 1;
+  bool has_id() const;
+  void clear_id() ;
+  const ::motionlab::mechanism::ElementId& id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_id();
+  void set_allocated_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_id();
+
+  public:
+  // .motionlab.mechanism.ElementId parent_body_id = 3;
+  bool has_parent_body_id() const;
+  void clear_parent_body_id() ;
+  const ::motionlab::mechanism::ElementId& parent_body_id() const;
+  [[nodiscard]] ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE release_parent_body_id();
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL mutable_parent_body_id();
+  void set_allocated_parent_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_parent_body_id(::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE unsafe_arena_release_parent_body_id();
+
+  private:
+  const ::motionlab::mechanism::ElementId& _internal_parent_body_id() const;
+  ::motionlab::mechanism::ElementId* PROTOBUF_NONNULL _internal_mutable_parent_body_id();
+
+  public:
+  // .motionlab.mechanism.Pose local_pose = 4;
+  bool has_local_pose() const;
+  void clear_local_pose() ;
+  const ::motionlab::mechanism::Pose& local_pose() const;
+  [[nodiscard]] ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE release_local_pose();
+  ::motionlab::mechanism::Pose* PROTOBUF_NONNULL mutable_local_pose();
+  void set_allocated_local_pose(::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_local_pose(::motionlab::mechanism::Pose* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE unsafe_arena_release_local_pose();
+
+  private:
+  const ::motionlab::mechanism::Pose& _internal_local_pose() const;
+  ::motionlab::mechanism::Pose* PROTOBUF_NONNULL _internal_mutable_local_pose();
+
+  public:
+  // .motionlab.mechanism.AssetReference source_asset_ref = 5;
+  bool has_source_asset_ref() const;
+  void clear_source_asset_ref() ;
+  const ::motionlab::mechanism::AssetReference& source_asset_ref() const;
+  [[nodiscard]] ::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE release_source_asset_ref();
+  ::motionlab::mechanism::AssetReference* PROTOBUF_NONNULL mutable_source_asset_ref();
+  void set_allocated_source_asset_ref(::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_source_asset_ref(::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE unsafe_arena_release_source_asset_ref();
+
+  private:
+  const ::motionlab::mechanism::AssetReference& _internal_source_asset_ref() const;
+  ::motionlab::mechanism::AssetReference* PROTOBUF_NONNULL _internal_mutable_source_asset_ref();
+
+  public:
+  // .motionlab.mechanism.DisplayMesh display_mesh = 6;
+  bool has_display_mesh() const;
+  void clear_display_mesh() ;
+  const ::motionlab::mechanism::DisplayMesh& display_mesh() const;
+  [[nodiscard]] ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE release_display_mesh();
+  ::motionlab::mechanism::DisplayMesh* PROTOBUF_NONNULL mutable_display_mesh();
+  void set_allocated_display_mesh(::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_display_mesh(::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE unsafe_arena_release_display_mesh();
+
+  private:
+  const ::motionlab::mechanism::DisplayMesh& _internal_display_mesh() const;
+  ::motionlab::mechanism::DisplayMesh* PROTOBUF_NONNULL _internal_mutable_display_mesh();
+
+  public:
+  // .motionlab.mechanism.MassProperties computed_mass_properties = 7;
+  bool has_computed_mass_properties() const;
+  void clear_computed_mass_properties() ;
+  const ::motionlab::mechanism::MassProperties& computed_mass_properties() const;
+  [[nodiscard]] ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE release_computed_mass_properties();
+  ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL mutable_computed_mass_properties();
+  void set_allocated_computed_mass_properties(::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_computed_mass_properties(::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE unsafe_arena_release_computed_mass_properties();
+
+  private:
+  const ::motionlab::mechanism::MassProperties& _internal_computed_mass_properties() const;
+  ::motionlab::mechanism::MassProperties* PROTOBUF_NONNULL _internal_mutable_computed_mass_properties();
+
+  public:
+  // .motionlab.mechanism.PrimitiveSource primitive_source = 9;
+  bool has_primitive_source() const;
+  void clear_primitive_source() ;
+  const ::motionlab::mechanism::PrimitiveSource& primitive_source() const;
+  [[nodiscard]] ::motionlab::mechanism::PrimitiveSource* PROTOBUF_NULLABLE release_primitive_source();
+  ::motionlab::mechanism::PrimitiveSource* PROTOBUF_NONNULL mutable_primitive_source();
+  void set_allocated_primitive_source(::motionlab::mechanism::PrimitiveSource* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_primitive_source(::motionlab::mechanism::PrimitiveSource* PROTOBUF_NULLABLE value);
+  ::motionlab::mechanism::PrimitiveSource* PROTOBUF_NULLABLE unsafe_arena_release_primitive_source();
+
+  private:
+  const ::motionlab::mechanism::PrimitiveSource& _internal_primitive_source() const;
+  ::motionlab::mechanism::PrimitiveSource* PROTOBUF_NONNULL _internal_mutable_primitive_source();
+
+  public:
+  // uint32 face_count = 8;
+  void clear_face_count() ;
+  ::uint32_t face_count() const;
+  void set_face_count(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_face_count() const;
+  void _internal_set_face_count(::uint32_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.mechanism.Geometry)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<4, 9,
+                                   7, 49,
+                                   2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const Geometry& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr name_;
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE id_;
+    ::motionlab::mechanism::ElementId* PROTOBUF_NULLABLE parent_body_id_;
+    ::motionlab::mechanism::Pose* PROTOBUF_NULLABLE local_pose_;
+    ::motionlab::mechanism::AssetReference* PROTOBUF_NULLABLE source_asset_ref_;
+    ::motionlab::mechanism::DisplayMesh* PROTOBUF_NULLABLE display_mesh_;
+    ::motionlab::mechanism::MassProperties* PROTOBUF_NULLABLE computed_mass_properties_;
+    ::motionlab::mechanism::PrimitiveSource* PROTOBUF_NULLABLE primitive_source_;
+    ::uint32_t face_count_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_mechanism_2fmechanism_2eproto;
+};
+
+extern const ::google::protobuf::internal::ClassDataFull Geometry_class_data_;
+// -------------------------------------------------------------------
+
 class Mechanism final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:motionlab.mechanism.Mechanism) */ {
  public:
@@ -7833,7 +9038,7 @@ class Mechanism final : public ::google::protobuf::Message
     return *reinterpret_cast<const Mechanism*>(
         &_Mechanism_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 30;
+  static constexpr int kIndexInFileMessages = 35;
   friend void swap(Mechanism& a, Mechanism& b) { a.Swap(&b); }
   inline void Swap(Mechanism* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -7929,7 +9134,7 @@ class Mechanism final : public ::google::protobuf::Message
     kNameFieldNumber = 2,
     kIdFieldNumber = 1,
   };
-  // repeated .motionlab.mechanism.Body bodies = 3 [json_name = "bodies"];
+  // repeated .motionlab.mechanism.Body bodies = 3;
   int bodies_size() const;
   private:
   int _internal_bodies_size() const;
@@ -7946,7 +9151,7 @@ class Mechanism final : public ::google::protobuf::Message
   const ::motionlab::mechanism::Body& bodies(int index) const;
   ::motionlab::mechanism::Body* PROTOBUF_NONNULL add_bodies();
   const ::google::protobuf::RepeatedPtrField<::motionlab::mechanism::Body>& bodies() const;
-  // repeated .motionlab.mechanism.Datum datums = 4 [json_name = "datums"];
+  // repeated .motionlab.mechanism.Datum datums = 4;
   int datums_size() const;
   private:
   int _internal_datums_size() const;
@@ -7963,7 +9168,7 @@ class Mechanism final : public ::google::protobuf::Message
   const ::motionlab::mechanism::Datum& datums(int index) const;
   ::motionlab::mechanism::Datum* PROTOBUF_NONNULL add_datums();
   const ::google::protobuf::RepeatedPtrField<::motionlab::mechanism::Datum>& datums() const;
-  // repeated .motionlab.mechanism.Joint joints = 5 [json_name = "joints"];
+  // repeated .motionlab.mechanism.Joint joints = 5;
   int joints_size() const;
   private:
   int _internal_joints_size() const;
@@ -7980,7 +9185,7 @@ class Mechanism final : public ::google::protobuf::Message
   const ::motionlab::mechanism::Joint& joints(int index) const;
   ::motionlab::mechanism::Joint* PROTOBUF_NONNULL add_joints();
   const ::google::protobuf::RepeatedPtrField<::motionlab::mechanism::Joint>& joints() const;
-  // repeated .motionlab.mechanism.Load loads = 6 [json_name = "loads"];
+  // repeated .motionlab.mechanism.Load loads = 6;
   int loads_size() const;
   private:
   int _internal_loads_size() const;
@@ -7997,7 +9202,7 @@ class Mechanism final : public ::google::protobuf::Message
   const ::motionlab::mechanism::Load& loads(int index) const;
   ::motionlab::mechanism::Load* PROTOBUF_NONNULL add_loads();
   const ::google::protobuf::RepeatedPtrField<::motionlab::mechanism::Load>& loads() const;
-  // repeated .motionlab.mechanism.Actuator actuators = 7 [json_name = "actuators"];
+  // repeated .motionlab.mechanism.Actuator actuators = 7;
   int actuators_size() const;
   private:
   int _internal_actuators_size() const;
@@ -8014,7 +9219,7 @@ class Mechanism final : public ::google::protobuf::Message
   const ::motionlab::mechanism::Actuator& actuators(int index) const;
   ::motionlab::mechanism::Actuator* PROTOBUF_NONNULL add_actuators();
   const ::google::protobuf::RepeatedPtrField<::motionlab::mechanism::Actuator>& actuators() const;
-  // repeated .motionlab.mechanism.Geometry geometries = 8 [json_name = "geometries"];
+  // repeated .motionlab.mechanism.Geometry geometries = 8;
   int geometries_size() const;
   private:
   int _internal_geometries_size() const;
@@ -8031,7 +9236,7 @@ class Mechanism final : public ::google::protobuf::Message
   const ::motionlab::mechanism::Geometry& geometries(int index) const;
   ::motionlab::mechanism::Geometry* PROTOBUF_NONNULL add_geometries();
   const ::google::protobuf::RepeatedPtrField<::motionlab::mechanism::Geometry>& geometries() const;
-  // string name = 2 [json_name = "name"];
+  // string name = 2;
   void clear_name() ;
   const ::std::string& name() const;
   template <typename Arg_ = const ::std::string&, typename... Args_>
@@ -8046,7 +9251,7 @@ class Mechanism final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_name();
 
   public:
-  // .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+  // .motionlab.mechanism.ElementId id = 1;
   bool has_id() const;
   void clear_id() ;
   const ::motionlab::mechanism::ElementId& id() const;
@@ -8159,7 +9364,7 @@ class ProjectFile final : public ::google::protobuf::Message
     return *reinterpret_cast<const ProjectFile*>(
         &_ProjectFile_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 33;
+  static constexpr int kIndexInFileMessages = 38;
   friend void swap(ProjectFile& a, ProjectFile& b) { a.Swap(&b); }
   inline void Swap(ProjectFile* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -8252,7 +9457,7 @@ class ProjectFile final : public ::google::protobuf::Message
     kMechanismFieldNumber = 3,
     kVersionFieldNumber = 1,
   };
-  // repeated .motionlab.mechanism.BodyDisplayData body_display_data = 4 [json_name = "bodyDisplayData"];
+  // repeated .motionlab.mechanism.BodyDisplayData body_display_data = 4;
   int body_display_data_size() const;
   private:
   int _internal_body_display_data_size() const;
@@ -8269,7 +9474,7 @@ class ProjectFile final : public ::google::protobuf::Message
   const ::motionlab::mechanism::BodyDisplayData& body_display_data(int index) const;
   ::motionlab::mechanism::BodyDisplayData* PROTOBUF_NONNULL add_body_display_data();
   const ::google::protobuf::RepeatedPtrField<::motionlab::mechanism::BodyDisplayData>& body_display_data() const;
-  // repeated .motionlab.mechanism.GeometryDisplayData geometry_display_data = 5 [json_name = "geometryDisplayData"];
+  // repeated .motionlab.mechanism.GeometryDisplayData geometry_display_data = 5;
   int geometry_display_data_size() const;
   private:
   int _internal_geometry_display_data_size() const;
@@ -8286,7 +9491,7 @@ class ProjectFile final : public ::google::protobuf::Message
   const ::motionlab::mechanism::GeometryDisplayData& geometry_display_data(int index) const;
   ::motionlab::mechanism::GeometryDisplayData* PROTOBUF_NONNULL add_geometry_display_data();
   const ::google::protobuf::RepeatedPtrField<::motionlab::mechanism::GeometryDisplayData>& geometry_display_data() const;
-  // .motionlab.mechanism.ProjectMetadata metadata = 2 [json_name = "metadata"];
+  // .motionlab.mechanism.ProjectMetadata metadata = 2;
   bool has_metadata() const;
   void clear_metadata() ;
   const ::motionlab::mechanism::ProjectMetadata& metadata() const;
@@ -8301,7 +9506,7 @@ class ProjectFile final : public ::google::protobuf::Message
   ::motionlab::mechanism::ProjectMetadata* PROTOBUF_NONNULL _internal_mutable_metadata();
 
   public:
-  // .motionlab.mechanism.Mechanism mechanism = 3 [json_name = "mechanism"];
+  // .motionlab.mechanism.Mechanism mechanism = 3;
   bool has_mechanism() const;
   void clear_mechanism() ;
   const ::motionlab::mechanism::Mechanism& mechanism() const;
@@ -8316,7 +9521,7 @@ class ProjectFile final : public ::google::protobuf::Message
   ::motionlab::mechanism::Mechanism* PROTOBUF_NONNULL _internal_mutable_mechanism();
 
   public:
-  // uint32 version = 1 [json_name = "version"];
+  // uint32 version = 1;
   void clear_version() ;
   ::uint32_t version() const;
   void set_version(::uint32_t value);
@@ -8381,7 +9586,7 @@ extern const ::google::protobuf::internal::ClassDataFull ProjectFile_class_data_
 
 // ElementId
 
-// string id = 1 [json_name = "id"];
+// string id = 1;
 inline void ElementId::clear_id() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.id_.ClearToEmpty();
@@ -8450,7 +9655,7 @@ inline void ElementId::set_allocated_id(::std::string* PROTOBUF_NULLABLE value) 
 
 // ProjectMetadata
 
-// string name = 1 [json_name = "name"];
+// string name = 1;
 inline void ProjectMetadata::clear_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.name_.ClearToEmpty();
@@ -8515,7 +9720,7 @@ inline void ProjectMetadata::set_allocated_name(::std::string* PROTOBUF_NULLABLE
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.ProjectMetadata.name)
 }
 
-// string created_at = 2 [json_name = "createdAt"];
+// string created_at = 2;
 inline void ProjectMetadata::clear_created_at() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.created_at_.ClearToEmpty();
@@ -8580,7 +9785,7 @@ inline void ProjectMetadata::set_allocated_created_at(::std::string* PROTOBUF_NU
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.ProjectMetadata.created_at)
 }
 
-// string modified_at = 3 [json_name = "modifiedAt"];
+// string modified_at = 3;
 inline void ProjectMetadata::clear_modified_at() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.modified_at_.ClearToEmpty();
@@ -8649,7 +9854,7 @@ inline void ProjectMetadata::set_allocated_modified_at(::std::string* PROTOBUF_N
 
 // AssetReference
 
-// string content_hash = 1 [json_name = "contentHash"];
+// string content_hash = 1;
 inline void AssetReference::clear_content_hash() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.content_hash_.ClearToEmpty();
@@ -8714,7 +9919,7 @@ inline void AssetReference::set_allocated_content_hash(::std::string* PROTOBUF_N
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.AssetReference.content_hash)
 }
 
-// string relative_path = 2 [json_name = "relativePath"];
+// string relative_path = 2;
 inline void AssetReference::clear_relative_path() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.relative_path_.ClearToEmpty();
@@ -8779,7 +9984,7 @@ inline void AssetReference::set_allocated_relative_path(::std::string* PROTOBUF_
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.AssetReference.relative_path)
 }
 
-// string original_filename = 3 [json_name = "originalFilename"];
+// string original_filename = 3;
 inline void AssetReference::clear_original_filename() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.original_filename_.ClearToEmpty();
@@ -8848,7 +10053,7 @@ inline void AssetReference::set_allocated_original_filename(::std::string* PROTO
 
 // Vec3
 
-// double x = 1 [json_name = "x"];
+// double x = 1;
 inline void Vec3::clear_x() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.x_ = 0;
@@ -8873,7 +10078,7 @@ inline void Vec3::_internal_set_x(double value) {
   _impl_.x_ = value;
 }
 
-// double y = 2 [json_name = "y"];
+// double y = 2;
 inline void Vec3::clear_y() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.y_ = 0;
@@ -8898,7 +10103,7 @@ inline void Vec3::_internal_set_y(double value) {
   _impl_.y_ = value;
 }
 
-// double z = 3 [json_name = "z"];
+// double z = 3;
 inline void Vec3::clear_z() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.z_ = 0;
@@ -8927,7 +10132,7 @@ inline void Vec3::_internal_set_z(double value) {
 
 // Quat
 
-// double w = 1 [json_name = "w"];
+// double w = 1;
 inline void Quat::clear_w() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.w_ = 0;
@@ -8952,7 +10157,7 @@ inline void Quat::_internal_set_w(double value) {
   _impl_.w_ = value;
 }
 
-// double x = 2 [json_name = "x"];
+// double x = 2;
 inline void Quat::clear_x() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.x_ = 0;
@@ -8977,7 +10182,7 @@ inline void Quat::_internal_set_x(double value) {
   _impl_.x_ = value;
 }
 
-// double y = 3 [json_name = "y"];
+// double y = 3;
 inline void Quat::clear_y() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.y_ = 0;
@@ -9002,7 +10207,7 @@ inline void Quat::_internal_set_y(double value) {
   _impl_.y_ = value;
 }
 
-// double z = 4 [json_name = "z"];
+// double z = 4;
 inline void Quat::clear_z() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.z_ = 0;
@@ -9031,7 +10236,7 @@ inline void Quat::_internal_set_z(double value) {
 
 // Pose
 
-// .motionlab.mechanism.Vec3 position = 1 [json_name = "position"];
+// .motionlab.mechanism.Vec3 position = 1;
 inline bool Pose::has_position() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.position_ != nullptr);
@@ -9130,7 +10335,7 @@ inline void Pose::set_allocated_position(::motionlab::mechanism::Vec3* PROTOBUF_
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Pose.position)
 }
 
-// .motionlab.mechanism.Quat orientation = 2 [json_name = "orientation"];
+// .motionlab.mechanism.Quat orientation = 2;
 inline bool Pose::has_orientation() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.orientation_ != nullptr);
@@ -9233,7 +10438,7 @@ inline void Pose::set_allocated_orientation(::motionlab::mechanism::Quat* PROTOB
 
 // Range
 
-// double lower = 1 [json_name = "lower"];
+// double lower = 1;
 inline void Range::clear_lower() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.lower_ = 0;
@@ -9258,7 +10463,7 @@ inline void Range::_internal_set_lower(double value) {
   _impl_.lower_ = value;
 }
 
-// double upper = 2 [json_name = "upper"];
+// double upper = 2;
 inline void Range::clear_upper() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.upper_ = 0;
@@ -9287,7 +10492,7 @@ inline void Range::_internal_set_upper(double value) {
 
 // MassProperties
 
-// double mass = 1 [json_name = "mass"];
+// double mass = 1;
 inline void MassProperties::clear_mass() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.mass_ = 0;
@@ -9312,7 +10517,7 @@ inline void MassProperties::_internal_set_mass(double value) {
   _impl_.mass_ = value;
 }
 
-// .motionlab.mechanism.Vec3 center_of_mass = 2 [json_name = "centerOfMass"];
+// .motionlab.mechanism.Vec3 center_of_mass = 2;
 inline bool MassProperties::has_center_of_mass() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.center_of_mass_ != nullptr);
@@ -9411,7 +10616,7 @@ inline void MassProperties::set_allocated_center_of_mass(::motionlab::mechanism:
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.MassProperties.center_of_mass)
 }
 
-// double ixx = 3 [json_name = "ixx"];
+// double ixx = 3;
 inline void MassProperties::clear_ixx() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.ixx_ = 0;
@@ -9436,7 +10641,7 @@ inline void MassProperties::_internal_set_ixx(double value) {
   _impl_.ixx_ = value;
 }
 
-// double iyy = 4 [json_name = "iyy"];
+// double iyy = 4;
 inline void MassProperties::clear_iyy() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.iyy_ = 0;
@@ -9461,7 +10666,7 @@ inline void MassProperties::_internal_set_iyy(double value) {
   _impl_.iyy_ = value;
 }
 
-// double izz = 5 [json_name = "izz"];
+// double izz = 5;
 inline void MassProperties::clear_izz() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.izz_ = 0;
@@ -9486,7 +10691,7 @@ inline void MassProperties::_internal_set_izz(double value) {
   _impl_.izz_ = value;
 }
 
-// double ixy = 6 [json_name = "ixy"];
+// double ixy = 6;
 inline void MassProperties::clear_ixy() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.ixy_ = 0;
@@ -9511,7 +10716,7 @@ inline void MassProperties::_internal_set_ixy(double value) {
   _impl_.ixy_ = value;
 }
 
-// double ixz = 7 [json_name = "ixz"];
+// double ixz = 7;
 inline void MassProperties::clear_ixz() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.ixz_ = 0;
@@ -9536,7 +10741,7 @@ inline void MassProperties::_internal_set_ixz(double value) {
   _impl_.ixz_ = value;
 }
 
-// double iyz = 8 [json_name = "iyz"];
+// double iyz = 8;
 inline void MassProperties::clear_iyz() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.iyz_ = 0;
@@ -9565,7 +10770,7 @@ inline void MassProperties::_internal_set_iyz(double value) {
 
 // DisplayMesh
 
-// repeated float vertices = 1 [json_name = "vertices"];
+// repeated float vertices = 1;
 inline int DisplayMesh::_internal_vertices_size() const {
   return _internal_vertices().size();
 }
@@ -9615,7 +10820,7 @@ DisplayMesh::_internal_mutable_vertices() {
   return &_impl_.vertices_;
 }
 
-// repeated uint32 indices = 2 [json_name = "indices"];
+// repeated uint32 indices = 2;
 inline int DisplayMesh::_internal_indices_size() const {
   return _internal_indices().size();
 }
@@ -9665,7 +10870,7 @@ DisplayMesh::_internal_mutable_indices() {
   return &_impl_.indices_;
 }
 
-// repeated float normals = 3 [json_name = "normals"];
+// repeated float normals = 3;
 inline int DisplayMesh::_internal_normals_size() const {
   return _internal_normals().size();
 }
@@ -9719,7 +10924,7 @@ DisplayMesh::_internal_mutable_normals() {
 
 // Body
 
-// .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+// .motionlab.mechanism.ElementId id = 1;
 inline bool Body::has_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.id_ != nullptr);
@@ -9818,7 +11023,7 @@ inline void Body::set_allocated_id(::motionlab::mechanism::ElementId* PROTOBUF_N
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Body.id)
 }
 
-// string name = 2 [json_name = "name"];
+// string name = 2;
 inline void Body::clear_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.name_.ClearToEmpty();
@@ -9883,7 +11088,7 @@ inline void Body::set_allocated_name(::std::string* PROTOBUF_NULLABLE value) {
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Body.name)
 }
 
-// .motionlab.mechanism.Pose pose = 3 [json_name = "pose"];
+// .motionlab.mechanism.Pose pose = 3;
 inline bool Body::has_pose() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
   PROTOBUF_ASSUME(!value || _impl_.pose_ != nullptr);
@@ -9982,7 +11187,7 @@ inline void Body::set_allocated_pose(::motionlab::mechanism::Pose* PROTOBUF_NULL
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Body.pose)
 }
 
-// .motionlab.mechanism.MassProperties mass_properties = 4 [json_name = "massProperties"];
+// .motionlab.mechanism.MassProperties mass_properties = 4;
 inline bool Body::has_mass_properties() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
   PROTOBUF_ASSUME(!value || _impl_.mass_properties_ != nullptr);
@@ -10081,7 +11286,7 @@ inline void Body::set_allocated_mass_properties(::motionlab::mechanism::MassProp
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Body.mass_properties)
 }
 
-// .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef", deprecated = true];
+// .motionlab.mechanism.AssetReference source_asset_ref = 5 [deprecated = true];
 inline bool Body::has_source_asset_ref() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000010U);
   PROTOBUF_ASSUME(!value || _impl_.source_asset_ref_ != nullptr);
@@ -10180,7 +11385,7 @@ inline void Body::set_allocated_source_asset_ref(::motionlab::mechanism::AssetRe
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Body.source_asset_ref)
 }
 
-// bool is_fixed = 6 [json_name = "isFixed"];
+// bool is_fixed = 6 [deprecated = true];
 inline void Body::clear_is_fixed() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.is_fixed_ = false;
@@ -10205,7 +11410,7 @@ inline void Body::_internal_set_is_fixed(bool value) {
   _impl_.is_fixed_ = value;
 }
 
-// bool mass_override = 7 [json_name = "massOverride"];
+// bool mass_override = 7;
 inline void Body::clear_mass_override() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.mass_override_ = false;
@@ -10230,11 +11435,36 @@ inline void Body::_internal_set_mass_override(bool value) {
   _impl_.mass_override_ = value;
 }
 
+// .motionlab.mechanism.MotionType motion_type = 8;
+inline void Body::clear_motion_type() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.motion_type_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000080U);
+}
+inline ::motionlab::mechanism::MotionType Body::motion_type() const {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.Body.motion_type)
+  return _internal_motion_type();
+}
+inline void Body::set_motion_type(::motionlab::mechanism::MotionType value) {
+  _internal_set_motion_type(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000080U);
+  // @@protoc_insertion_point(field_set:motionlab.mechanism.Body.motion_type)
+}
+inline ::motionlab::mechanism::MotionType Body::_internal_motion_type() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::motionlab::mechanism::MotionType>(_impl_.motion_type_);
+}
+inline void Body::_internal_set_motion_type(::motionlab::mechanism::MotionType value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.motion_type_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // Geometry
 
-// .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+// .motionlab.mechanism.ElementId id = 1;
 inline bool Geometry::has_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.id_ != nullptr);
@@ -10333,7 +11563,7 @@ inline void Geometry::set_allocated_id(::motionlab::mechanism::ElementId* PROTOB
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Geometry.id)
 }
 
-// string name = 2 [json_name = "name"];
+// string name = 2;
 inline void Geometry::clear_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.name_.ClearToEmpty();
@@ -10398,7 +11628,7 @@ inline void Geometry::set_allocated_name(::std::string* PROTOBUF_NULLABLE value)
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Geometry.name)
 }
 
-// .motionlab.mechanism.ElementId parent_body_id = 3 [json_name = "parentBodyId"];
+// .motionlab.mechanism.ElementId parent_body_id = 3;
 inline bool Geometry::has_parent_body_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
   PROTOBUF_ASSUME(!value || _impl_.parent_body_id_ != nullptr);
@@ -10497,7 +11727,7 @@ inline void Geometry::set_allocated_parent_body_id(::motionlab::mechanism::Eleme
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Geometry.parent_body_id)
 }
 
-// .motionlab.mechanism.Pose local_pose = 4 [json_name = "localPose"];
+// .motionlab.mechanism.Pose local_pose = 4;
 inline bool Geometry::has_local_pose() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
   PROTOBUF_ASSUME(!value || _impl_.local_pose_ != nullptr);
@@ -10596,7 +11826,7 @@ inline void Geometry::set_allocated_local_pose(::motionlab::mechanism::Pose* PRO
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Geometry.local_pose)
 }
 
-// .motionlab.mechanism.AssetReference source_asset_ref = 5 [json_name = "sourceAssetRef"];
+// .motionlab.mechanism.AssetReference source_asset_ref = 5;
 inline bool Geometry::has_source_asset_ref() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000010U);
   PROTOBUF_ASSUME(!value || _impl_.source_asset_ref_ != nullptr);
@@ -10695,7 +11925,7 @@ inline void Geometry::set_allocated_source_asset_ref(::motionlab::mechanism::Ass
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Geometry.source_asset_ref)
 }
 
-// .motionlab.mechanism.DisplayMesh display_mesh = 6 [json_name = "displayMesh"];
+// .motionlab.mechanism.DisplayMesh display_mesh = 6;
 inline bool Geometry::has_display_mesh() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000020U);
   PROTOBUF_ASSUME(!value || _impl_.display_mesh_ != nullptr);
@@ -10794,7 +12024,7 @@ inline void Geometry::set_allocated_display_mesh(::motionlab::mechanism::Display
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Geometry.display_mesh)
 }
 
-// .motionlab.mechanism.MassProperties computed_mass_properties = 7 [json_name = "computedMassProperties"];
+// .motionlab.mechanism.MassProperties computed_mass_properties = 7;
 inline bool Geometry::has_computed_mass_properties() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000040U);
   PROTOBUF_ASSUME(!value || _impl_.computed_mass_properties_ != nullptr);
@@ -10893,12 +12123,12 @@ inline void Geometry::set_allocated_computed_mass_properties(::motionlab::mechan
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Geometry.computed_mass_properties)
 }
 
-// uint32 face_count = 8 [json_name = "faceCount"];
+// uint32 face_count = 8;
 inline void Geometry::clear_face_count() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.face_count_ = 0u;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000080U);
+                  0x00000100U);
 }
 inline ::uint32_t Geometry::face_count() const {
   // @@protoc_insertion_point(field_get:motionlab.mechanism.Geometry.face_count)
@@ -10906,7 +12136,7 @@ inline ::uint32_t Geometry::face_count() const {
 }
 inline void Geometry::set_face_count(::uint32_t value) {
   _internal_set_face_count(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000080U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000100U);
   // @@protoc_insertion_point(field_set:motionlab.mechanism.Geometry.face_count)
 }
 inline ::uint32_t Geometry::_internal_face_count() const {
@@ -10918,11 +12148,659 @@ inline void Geometry::_internal_set_face_count(::uint32_t value) {
   _impl_.face_count_ = value;
 }
 
+// .motionlab.mechanism.PrimitiveSource primitive_source = 9;
+inline bool Geometry::has_primitive_source() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000080U);
+  PROTOBUF_ASSUME(!value || _impl_.primitive_source_ != nullptr);
+  return value;
+}
+inline void Geometry::clear_primitive_source() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.primitive_source_ != nullptr) _impl_.primitive_source_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000080U);
+}
+inline const ::motionlab::mechanism::PrimitiveSource& Geometry::_internal_primitive_source() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::PrimitiveSource* p = _impl_.primitive_source_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::PrimitiveSource&>(::motionlab::mechanism::_PrimitiveSource_default_instance_);
+}
+inline const ::motionlab::mechanism::PrimitiveSource& Geometry::primitive_source() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.Geometry.primitive_source)
+  return _internal_primitive_source();
+}
+inline void Geometry::unsafe_arena_set_allocated_primitive_source(
+    ::motionlab::mechanism::PrimitiveSource* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.primitive_source_);
+  }
+  _impl_.primitive_source_ = reinterpret_cast<::motionlab::mechanism::PrimitiveSource*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000080U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000080U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.mechanism.Geometry.primitive_source)
+}
+inline ::motionlab::mechanism::PrimitiveSource* PROTOBUF_NULLABLE Geometry::release_primitive_source() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000080U);
+  ::motionlab::mechanism::PrimitiveSource* released = _impl_.primitive_source_;
+  _impl_.primitive_source_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::PrimitiveSource* PROTOBUF_NULLABLE Geometry::unsafe_arena_release_primitive_source() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.mechanism.Geometry.primitive_source)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000080U);
+  ::motionlab::mechanism::PrimitiveSource* temp = _impl_.primitive_source_;
+  _impl_.primitive_source_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::PrimitiveSource* PROTOBUF_NONNULL Geometry::_internal_mutable_primitive_source() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.primitive_source_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::PrimitiveSource>(GetArena());
+    _impl_.primitive_source_ = reinterpret_cast<::motionlab::mechanism::PrimitiveSource*>(p);
+  }
+  return _impl_.primitive_source_;
+}
+inline ::motionlab::mechanism::PrimitiveSource* PROTOBUF_NONNULL Geometry::mutable_primitive_source()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000080U);
+  ::motionlab::mechanism::PrimitiveSource* _msg = _internal_mutable_primitive_source();
+  // @@protoc_insertion_point(field_mutable:motionlab.mechanism.Geometry.primitive_source)
+  return _msg;
+}
+inline void Geometry::set_allocated_primitive_source(::motionlab::mechanism::PrimitiveSource* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.primitive_source_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = value->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000080U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000080U);
+  }
+
+  _impl_.primitive_source_ = reinterpret_cast<::motionlab::mechanism::PrimitiveSource*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Geometry.primitive_source)
+}
+
+// -------------------------------------------------------------------
+
+// BoxParams
+
+// double width = 1;
+inline void BoxParams::clear_width() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.width_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline double BoxParams::width() const {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.BoxParams.width)
+  return _internal_width();
+}
+inline void BoxParams::set_width(double value) {
+  _internal_set_width(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_set:motionlab.mechanism.BoxParams.width)
+}
+inline double BoxParams::_internal_width() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.width_;
+}
+inline void BoxParams::_internal_set_width(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.width_ = value;
+}
+
+// double height = 2;
+inline void BoxParams::clear_height() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.height_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline double BoxParams::height() const {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.BoxParams.height)
+  return _internal_height();
+}
+inline void BoxParams::set_height(double value) {
+  _internal_set_height(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_set:motionlab.mechanism.BoxParams.height)
+}
+inline double BoxParams::_internal_height() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.height_;
+}
+inline void BoxParams::_internal_set_height(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.height_ = value;
+}
+
+// double depth = 3;
+inline void BoxParams::clear_depth() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.depth_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline double BoxParams::depth() const {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.BoxParams.depth)
+  return _internal_depth();
+}
+inline void BoxParams::set_depth(double value) {
+  _internal_set_depth(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_set:motionlab.mechanism.BoxParams.depth)
+}
+inline double BoxParams::_internal_depth() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.depth_;
+}
+inline void BoxParams::_internal_set_depth(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.depth_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// CylinderParams
+
+// double radius = 1;
+inline void CylinderParams::clear_radius() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.radius_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline double CylinderParams::radius() const {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.CylinderParams.radius)
+  return _internal_radius();
+}
+inline void CylinderParams::set_radius(double value) {
+  _internal_set_radius(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_set:motionlab.mechanism.CylinderParams.radius)
+}
+inline double CylinderParams::_internal_radius() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.radius_;
+}
+inline void CylinderParams::_internal_set_radius(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.radius_ = value;
+}
+
+// double height = 2;
+inline void CylinderParams::clear_height() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.height_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline double CylinderParams::height() const {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.CylinderParams.height)
+  return _internal_height();
+}
+inline void CylinderParams::set_height(double value) {
+  _internal_set_height(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_set:motionlab.mechanism.CylinderParams.height)
+}
+inline double CylinderParams::_internal_height() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.height_;
+}
+inline void CylinderParams::_internal_set_height(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.height_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SphereParams
+
+// double radius = 1;
+inline void SphereParams::clear_radius() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.radius_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline double SphereParams::radius() const {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.SphereParams.radius)
+  return _internal_radius();
+}
+inline void SphereParams::set_radius(double value) {
+  _internal_set_radius(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_set:motionlab.mechanism.SphereParams.radius)
+}
+inline double SphereParams::_internal_radius() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.radius_;
+}
+inline void SphereParams::_internal_set_radius(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.radius_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// PrimitiveParams
+
+// .motionlab.mechanism.BoxParams box = 1;
+inline bool PrimitiveParams::has_box() const {
+  return shape_params_case() == kBox;
+}
+inline bool PrimitiveParams::_internal_has_box() const {
+  return shape_params_case() == kBox;
+}
+inline void PrimitiveParams::set_has_box() {
+  _impl_._oneof_case_[0] = kBox;
+}
+inline void PrimitiveParams::clear_box() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (shape_params_case() == kBox) {
+    if (GetArena() == nullptr) {
+      delete _impl_.shape_params_.box_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.shape_params_.box_);
+    }
+    clear_has_shape_params();
+  }
+}
+inline ::motionlab::mechanism::BoxParams* PROTOBUF_NULLABLE PrimitiveParams::release_box() {
+  // @@protoc_insertion_point(field_release:motionlab.mechanism.PrimitiveParams.box)
+  if (shape_params_case() == kBox) {
+    clear_has_shape_params();
+    auto* temp = reinterpret_cast<::motionlab::mechanism::BoxParams*>(_impl_.shape_params_.box_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.shape_params_.box_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::BoxParams& PrimitiveParams::_internal_box() const {
+  return shape_params_case() == kBox ? static_cast<const ::motionlab::mechanism::BoxParams&>(*reinterpret_cast<::motionlab::mechanism::BoxParams*>(_impl_.shape_params_.box_))
+                     : reinterpret_cast<const ::motionlab::mechanism::BoxParams&>(::motionlab::mechanism::_BoxParams_default_instance_);
+}
+inline const ::motionlab::mechanism::BoxParams& PrimitiveParams::box() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.PrimitiveParams.box)
+  return _internal_box();
+}
+inline ::motionlab::mechanism::BoxParams* PROTOBUF_NULLABLE PrimitiveParams::unsafe_arena_release_box() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.mechanism.PrimitiveParams.box)
+  if (shape_params_case() == kBox) {
+    clear_has_shape_params();
+    auto* temp = reinterpret_cast<::motionlab::mechanism::BoxParams*>(_impl_.shape_params_.box_);
+    _impl_.shape_params_.box_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void PrimitiveParams::unsafe_arena_set_allocated_box(
+    ::motionlab::mechanism::BoxParams* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_shape_params();
+  if (value) {
+    set_has_box();
+    _impl_.shape_params_.box_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.mechanism.PrimitiveParams.box)
+}
+inline ::motionlab::mechanism::BoxParams* PROTOBUF_NONNULL PrimitiveParams::_internal_mutable_box() {
+  if (shape_params_case() != kBox) {
+    clear_shape_params();
+    set_has_box();
+    _impl_.shape_params_.box_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::BoxParams>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::mechanism::BoxParams*>(_impl_.shape_params_.box_);
+}
+inline ::motionlab::mechanism::BoxParams* PROTOBUF_NONNULL PrimitiveParams::mutable_box()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::BoxParams* _msg = _internal_mutable_box();
+  // @@protoc_insertion_point(field_mutable:motionlab.mechanism.PrimitiveParams.box)
+  return _msg;
+}
+
+// .motionlab.mechanism.CylinderParams cylinder = 2;
+inline bool PrimitiveParams::has_cylinder() const {
+  return shape_params_case() == kCylinder;
+}
+inline bool PrimitiveParams::_internal_has_cylinder() const {
+  return shape_params_case() == kCylinder;
+}
+inline void PrimitiveParams::set_has_cylinder() {
+  _impl_._oneof_case_[0] = kCylinder;
+}
+inline void PrimitiveParams::clear_cylinder() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (shape_params_case() == kCylinder) {
+    if (GetArena() == nullptr) {
+      delete _impl_.shape_params_.cylinder_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.shape_params_.cylinder_);
+    }
+    clear_has_shape_params();
+  }
+}
+inline ::motionlab::mechanism::CylinderParams* PROTOBUF_NULLABLE PrimitiveParams::release_cylinder() {
+  // @@protoc_insertion_point(field_release:motionlab.mechanism.PrimitiveParams.cylinder)
+  if (shape_params_case() == kCylinder) {
+    clear_has_shape_params();
+    auto* temp = reinterpret_cast<::motionlab::mechanism::CylinderParams*>(_impl_.shape_params_.cylinder_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.shape_params_.cylinder_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::CylinderParams& PrimitiveParams::_internal_cylinder() const {
+  return shape_params_case() == kCylinder ? static_cast<const ::motionlab::mechanism::CylinderParams&>(*reinterpret_cast<::motionlab::mechanism::CylinderParams*>(_impl_.shape_params_.cylinder_))
+                     : reinterpret_cast<const ::motionlab::mechanism::CylinderParams&>(::motionlab::mechanism::_CylinderParams_default_instance_);
+}
+inline const ::motionlab::mechanism::CylinderParams& PrimitiveParams::cylinder() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.PrimitiveParams.cylinder)
+  return _internal_cylinder();
+}
+inline ::motionlab::mechanism::CylinderParams* PROTOBUF_NULLABLE PrimitiveParams::unsafe_arena_release_cylinder() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.mechanism.PrimitiveParams.cylinder)
+  if (shape_params_case() == kCylinder) {
+    clear_has_shape_params();
+    auto* temp = reinterpret_cast<::motionlab::mechanism::CylinderParams*>(_impl_.shape_params_.cylinder_);
+    _impl_.shape_params_.cylinder_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void PrimitiveParams::unsafe_arena_set_allocated_cylinder(
+    ::motionlab::mechanism::CylinderParams* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_shape_params();
+  if (value) {
+    set_has_cylinder();
+    _impl_.shape_params_.cylinder_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.mechanism.PrimitiveParams.cylinder)
+}
+inline ::motionlab::mechanism::CylinderParams* PROTOBUF_NONNULL PrimitiveParams::_internal_mutable_cylinder() {
+  if (shape_params_case() != kCylinder) {
+    clear_shape_params();
+    set_has_cylinder();
+    _impl_.shape_params_.cylinder_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::CylinderParams>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::mechanism::CylinderParams*>(_impl_.shape_params_.cylinder_);
+}
+inline ::motionlab::mechanism::CylinderParams* PROTOBUF_NONNULL PrimitiveParams::mutable_cylinder()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::CylinderParams* _msg = _internal_mutable_cylinder();
+  // @@protoc_insertion_point(field_mutable:motionlab.mechanism.PrimitiveParams.cylinder)
+  return _msg;
+}
+
+// .motionlab.mechanism.SphereParams sphere = 3;
+inline bool PrimitiveParams::has_sphere() const {
+  return shape_params_case() == kSphere;
+}
+inline bool PrimitiveParams::_internal_has_sphere() const {
+  return shape_params_case() == kSphere;
+}
+inline void PrimitiveParams::set_has_sphere() {
+  _impl_._oneof_case_[0] = kSphere;
+}
+inline void PrimitiveParams::clear_sphere() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (shape_params_case() == kSphere) {
+    if (GetArena() == nullptr) {
+      delete _impl_.shape_params_.sphere_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.shape_params_.sphere_);
+    }
+    clear_has_shape_params();
+  }
+}
+inline ::motionlab::mechanism::SphereParams* PROTOBUF_NULLABLE PrimitiveParams::release_sphere() {
+  // @@protoc_insertion_point(field_release:motionlab.mechanism.PrimitiveParams.sphere)
+  if (shape_params_case() == kSphere) {
+    clear_has_shape_params();
+    auto* temp = reinterpret_cast<::motionlab::mechanism::SphereParams*>(_impl_.shape_params_.sphere_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.shape_params_.sphere_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::motionlab::mechanism::SphereParams& PrimitiveParams::_internal_sphere() const {
+  return shape_params_case() == kSphere ? static_cast<const ::motionlab::mechanism::SphereParams&>(*reinterpret_cast<::motionlab::mechanism::SphereParams*>(_impl_.shape_params_.sphere_))
+                     : reinterpret_cast<const ::motionlab::mechanism::SphereParams&>(::motionlab::mechanism::_SphereParams_default_instance_);
+}
+inline const ::motionlab::mechanism::SphereParams& PrimitiveParams::sphere() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.PrimitiveParams.sphere)
+  return _internal_sphere();
+}
+inline ::motionlab::mechanism::SphereParams* PROTOBUF_NULLABLE PrimitiveParams::unsafe_arena_release_sphere() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:motionlab.mechanism.PrimitiveParams.sphere)
+  if (shape_params_case() == kSphere) {
+    clear_has_shape_params();
+    auto* temp = reinterpret_cast<::motionlab::mechanism::SphereParams*>(_impl_.shape_params_.sphere_);
+    _impl_.shape_params_.sphere_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void PrimitiveParams::unsafe_arena_set_allocated_sphere(
+    ::motionlab::mechanism::SphereParams* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_shape_params();
+  if (value) {
+    set_has_sphere();
+    _impl_.shape_params_.sphere_ = reinterpret_cast<::google::protobuf::Message*>(value);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.mechanism.PrimitiveParams.sphere)
+}
+inline ::motionlab::mechanism::SphereParams* PROTOBUF_NONNULL PrimitiveParams::_internal_mutable_sphere() {
+  if (shape_params_case() != kSphere) {
+    clear_shape_params();
+    set_has_sphere();
+    _impl_.shape_params_.sphere_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::SphereParams>(GetArena()));
+  }
+  return reinterpret_cast<::motionlab::mechanism::SphereParams*>(_impl_.shape_params_.sphere_);
+}
+inline ::motionlab::mechanism::SphereParams* PROTOBUF_NONNULL PrimitiveParams::mutable_sphere()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::motionlab::mechanism::SphereParams* _msg = _internal_mutable_sphere();
+  // @@protoc_insertion_point(field_mutable:motionlab.mechanism.PrimitiveParams.sphere)
+  return _msg;
+}
+
+inline bool PrimitiveParams::has_shape_params() const {
+  return shape_params_case() != SHAPE_PARAMS_NOT_SET;
+}
+inline void PrimitiveParams::clear_has_shape_params() {
+  _impl_._oneof_case_[0] = SHAPE_PARAMS_NOT_SET;
+}
+inline PrimitiveParams::ShapeParamsCase PrimitiveParams::shape_params_case() const {
+  return PrimitiveParams::ShapeParamsCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// PrimitiveSource
+
+// .motionlab.mechanism.PrimitiveShape shape = 1;
+inline void PrimitiveSource::clear_shape() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.shape_ = 0;
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline ::motionlab::mechanism::PrimitiveShape PrimitiveSource::shape() const {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.PrimitiveSource.shape)
+  return _internal_shape();
+}
+inline void PrimitiveSource::set_shape(::motionlab::mechanism::PrimitiveShape value) {
+  _internal_set_shape(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_set:motionlab.mechanism.PrimitiveSource.shape)
+}
+inline ::motionlab::mechanism::PrimitiveShape PrimitiveSource::_internal_shape() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return static_cast<::motionlab::mechanism::PrimitiveShape>(_impl_.shape_);
+}
+inline void PrimitiveSource::_internal_set_shape(::motionlab::mechanism::PrimitiveShape value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.shape_ = value;
+}
+
+// .motionlab.mechanism.PrimitiveParams params = 2;
+inline bool PrimitiveSource::has_params() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.params_ != nullptr);
+  return value;
+}
+inline void PrimitiveSource::clear_params() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.params_ != nullptr) _impl_.params_->Clear();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000001U);
+}
+inline const ::motionlab::mechanism::PrimitiveParams& PrimitiveSource::_internal_params() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::PrimitiveParams* p = _impl_.params_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::PrimitiveParams&>(::motionlab::mechanism::_PrimitiveParams_default_instance_);
+}
+inline const ::motionlab::mechanism::PrimitiveParams& PrimitiveSource::params() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.mechanism.PrimitiveSource.params)
+  return _internal_params();
+}
+inline void PrimitiveSource::unsafe_arena_set_allocated_params(
+    ::motionlab::mechanism::PrimitiveParams* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.params_);
+  }
+  _impl_.params_ = reinterpret_cast<::motionlab::mechanism::PrimitiveParams*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.mechanism.PrimitiveSource.params)
+}
+inline ::motionlab::mechanism::PrimitiveParams* PROTOBUF_NULLABLE PrimitiveSource::release_params() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::PrimitiveParams* released = _impl_.params_;
+  _impl_.params_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::PrimitiveParams* PROTOBUF_NULLABLE PrimitiveSource::unsafe_arena_release_params() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.mechanism.PrimitiveSource.params)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::PrimitiveParams* temp = _impl_.params_;
+  _impl_.params_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::PrimitiveParams* PROTOBUF_NONNULL PrimitiveSource::_internal_mutable_params() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.params_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::PrimitiveParams>(GetArena());
+    _impl_.params_ = reinterpret_cast<::motionlab::mechanism::PrimitiveParams*>(p);
+  }
+  return _impl_.params_;
+}
+inline ::motionlab::mechanism::PrimitiveParams* PROTOBUF_NONNULL PrimitiveSource::mutable_params()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::motionlab::mechanism::PrimitiveParams* _msg = _internal_mutable_params();
+  // @@protoc_insertion_point(field_mutable:motionlab.mechanism.PrimitiveSource.params)
+  return _msg;
+}
+inline void PrimitiveSource::set_allocated_params(::motionlab::mechanism::PrimitiveParams* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.params_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = value->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.params_ = reinterpret_cast<::motionlab::mechanism::PrimitiveParams*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.PrimitiveSource.params)
+}
+
 // -------------------------------------------------------------------
 
 // Datum
 
-// .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+// .motionlab.mechanism.ElementId id = 1;
 inline bool Datum::has_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.id_ != nullptr);
@@ -11021,7 +12899,7 @@ inline void Datum::set_allocated_id(::motionlab::mechanism::ElementId* PROTOBUF_
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Datum.id)
 }
 
-// string name = 2 [json_name = "name"];
+// string name = 2;
 inline void Datum::clear_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.name_.ClearToEmpty();
@@ -11086,7 +12964,7 @@ inline void Datum::set_allocated_name(::std::string* PROTOBUF_NULLABLE value) {
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Datum.name)
 }
 
-// .motionlab.mechanism.ElementId parent_body_id = 3 [json_name = "parentBodyId"];
+// .motionlab.mechanism.ElementId parent_body_id = 3;
 inline bool Datum::has_parent_body_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
   PROTOBUF_ASSUME(!value || _impl_.parent_body_id_ != nullptr);
@@ -11185,7 +13063,7 @@ inline void Datum::set_allocated_parent_body_id(::motionlab::mechanism::ElementI
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Datum.parent_body_id)
 }
 
-// .motionlab.mechanism.Pose local_pose = 4 [json_name = "localPose"];
+// .motionlab.mechanism.Pose local_pose = 4;
 inline bool Datum::has_local_pose() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
   PROTOBUF_ASSUME(!value || _impl_.local_pose_ != nullptr);
@@ -11288,7 +13166,7 @@ inline void Datum::set_allocated_local_pose(::motionlab::mechanism::Pose* PROTOB
 
 // RevoluteJointConfig
 
-// .motionlab.mechanism.Range angle_limit = 1 [json_name = "angleLimit"];
+// .motionlab.mechanism.Range angle_limit = 1;
 inline bool RevoluteJointConfig::has_angle_limit() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.angle_limit_ != nullptr);
@@ -11391,7 +13269,7 @@ inline void RevoluteJointConfig::set_allocated_angle_limit(::motionlab::mechanis
 
 // PrismaticJointConfig
 
-// .motionlab.mechanism.Range translation_limit = 1 [json_name = "translationLimit"];
+// .motionlab.mechanism.Range translation_limit = 1;
 inline bool PrismaticJointConfig::has_translation_limit() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.translation_limit_ != nullptr);
@@ -11502,7 +13380,7 @@ inline void PrismaticJointConfig::set_allocated_translation_limit(::motionlab::m
 
 // CylindricalJointConfig
 
-// .motionlab.mechanism.Range translation_limit = 1 [json_name = "translationLimit"];
+// .motionlab.mechanism.Range translation_limit = 1;
 inline bool CylindricalJointConfig::has_translation_limit() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.translation_limit_ != nullptr);
@@ -11601,7 +13479,7 @@ inline void CylindricalJointConfig::set_allocated_translation_limit(::motionlab:
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.CylindricalJointConfig.translation_limit)
 }
 
-// .motionlab.mechanism.Range rotation_limit = 2 [json_name = "rotationLimit"];
+// .motionlab.mechanism.Range rotation_limit = 2;
 inline bool CylindricalJointConfig::has_rotation_limit() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.rotation_limit_ != nullptr);
@@ -11704,7 +13582,7 @@ inline void CylindricalJointConfig::set_allocated_rotation_limit(::motionlab::me
 
 // PlanarJointConfig
 
-// .motionlab.mechanism.Range translation_x_limit = 1 [json_name = "translationXLimit"];
+// .motionlab.mechanism.Range translation_x_limit = 1;
 inline bool PlanarJointConfig::has_translation_x_limit() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.translation_x_limit_ != nullptr);
@@ -11803,7 +13681,7 @@ inline void PlanarJointConfig::set_allocated_translation_x_limit(::motionlab::me
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.PlanarJointConfig.translation_x_limit)
 }
 
-// .motionlab.mechanism.Range translation_y_limit = 2 [json_name = "translationYLimit"];
+// .motionlab.mechanism.Range translation_y_limit = 2;
 inline bool PlanarJointConfig::has_translation_y_limit() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.translation_y_limit_ != nullptr);
@@ -11902,7 +13780,7 @@ inline void PlanarJointConfig::set_allocated_translation_y_limit(::motionlab::me
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.PlanarJointConfig.translation_y_limit)
 }
 
-// .motionlab.mechanism.Range rotation_limit = 3 [json_name = "rotationLimit"];
+// .motionlab.mechanism.Range rotation_limit = 3;
 inline bool PlanarJointConfig::has_rotation_limit() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
   PROTOBUF_ASSUME(!value || _impl_.rotation_limit_ != nullptr);
@@ -12005,7 +13883,7 @@ inline void PlanarJointConfig::set_allocated_rotation_limit(::motionlab::mechani
 
 // UniversalJointConfig
 
-// .motionlab.mechanism.Range rotation_x_limit = 1 [json_name = "rotationXLimit"];
+// .motionlab.mechanism.Range rotation_x_limit = 1;
 inline bool UniversalJointConfig::has_rotation_x_limit() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.rotation_x_limit_ != nullptr);
@@ -12104,7 +13982,7 @@ inline void UniversalJointConfig::set_allocated_rotation_x_limit(::motionlab::me
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.UniversalJointConfig.rotation_x_limit)
 }
 
-// .motionlab.mechanism.Range rotation_y_limit = 2 [json_name = "rotationYLimit"];
+// .motionlab.mechanism.Range rotation_y_limit = 2;
 inline bool UniversalJointConfig::has_rotation_y_limit() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.rotation_y_limit_ != nullptr);
@@ -12207,7 +14085,7 @@ inline void UniversalJointConfig::set_allocated_rotation_y_limit(::motionlab::me
 
 // DistanceJointConfig
 
-// .motionlab.mechanism.Range distance_limit = 1 [json_name = "distanceLimit"];
+// .motionlab.mechanism.Range distance_limit = 1;
 inline bool DistanceJointConfig::has_distance_limit() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.distance_limit_ != nullptr);
@@ -12318,7 +14196,7 @@ inline void DistanceJointConfig::set_allocated_distance_limit(::motionlab::mecha
 
 // Joint
 
-// .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+// .motionlab.mechanism.ElementId id = 1;
 inline bool Joint::has_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.id_ != nullptr);
@@ -12417,7 +14295,7 @@ inline void Joint::set_allocated_id(::motionlab::mechanism::ElementId* PROTOBUF_
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.id)
 }
 
-// string name = 2 [json_name = "name"];
+// string name = 2;
 inline void Joint::clear_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.name_.ClearToEmpty();
@@ -12482,7 +14360,7 @@ inline void Joint::set_allocated_name(::std::string* PROTOBUF_NULLABLE value) {
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.name)
 }
 
-// .motionlab.mechanism.JointType type = 3 [json_name = "type"];
+// .motionlab.mechanism.JointType type = 3;
 inline void Joint::clear_type() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.type_ = 0;
@@ -12507,7 +14385,7 @@ inline void Joint::_internal_set_type(::motionlab::mechanism::JointType value) {
   _impl_.type_ = value;
 }
 
-// .motionlab.mechanism.ElementId parent_datum_id = 4 [json_name = "parentDatumId"];
+// .motionlab.mechanism.ElementId parent_datum_id = 4;
 inline bool Joint::has_parent_datum_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
   PROTOBUF_ASSUME(!value || _impl_.parent_datum_id_ != nullptr);
@@ -12606,7 +14484,7 @@ inline void Joint::set_allocated_parent_datum_id(::motionlab::mechanism::Element
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.parent_datum_id)
 }
 
-// .motionlab.mechanism.ElementId child_datum_id = 5 [json_name = "childDatumId"];
+// .motionlab.mechanism.ElementId child_datum_id = 5;
 inline bool Joint::has_child_datum_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
   PROTOBUF_ASSUME(!value || _impl_.child_datum_id_ != nullptr);
@@ -12705,7 +14583,7 @@ inline void Joint::set_allocated_child_datum_id(::motionlab::mechanism::ElementI
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Joint.child_datum_id)
 }
 
-// double lower_limit = 6 [json_name = "lowerLimit", deprecated = true];
+// double lower_limit = 6 [deprecated = true];
 inline void Joint::clear_lower_limit() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.lower_limit_ = 0;
@@ -12730,7 +14608,7 @@ inline void Joint::_internal_set_lower_limit(double value) {
   _impl_.lower_limit_ = value;
 }
 
-// double upper_limit = 7 [json_name = "upperLimit", deprecated = true];
+// double upper_limit = 7 [deprecated = true];
 inline void Joint::clear_upper_limit() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.upper_limit_ = 0;
@@ -12755,7 +14633,7 @@ inline void Joint::_internal_set_upper_limit(double value) {
   _impl_.upper_limit_ = value;
 }
 
-// .motionlab.mechanism.RevoluteJointConfig revolute = 8 [json_name = "revolute"];
+// .motionlab.mechanism.RevoluteJointConfig revolute = 8;
 inline bool Joint::has_revolute() const {
   return config_case() == kRevolute;
 }
@@ -12837,7 +14715,7 @@ inline ::motionlab::mechanism::RevoluteJointConfig* PROTOBUF_NONNULL Joint::muta
   return _msg;
 }
 
-// .motionlab.mechanism.PrismaticJointConfig prismatic = 9 [json_name = "prismatic"];
+// .motionlab.mechanism.PrismaticJointConfig prismatic = 9;
 inline bool Joint::has_prismatic() const {
   return config_case() == kPrismatic;
 }
@@ -12919,7 +14797,7 @@ inline ::motionlab::mechanism::PrismaticJointConfig* PROTOBUF_NONNULL Joint::mut
   return _msg;
 }
 
-// .motionlab.mechanism.FixedJointConfig fixed = 10 [json_name = "fixed"];
+// .motionlab.mechanism.FixedJointConfig fixed = 10;
 inline bool Joint::has_fixed() const {
   return config_case() == kFixed;
 }
@@ -13001,7 +14879,7 @@ inline ::motionlab::mechanism::FixedJointConfig* PROTOBUF_NONNULL Joint::mutable
   return _msg;
 }
 
-// .motionlab.mechanism.SphericalJointConfig spherical = 11 [json_name = "spherical"];
+// .motionlab.mechanism.SphericalJointConfig spherical = 11;
 inline bool Joint::has_spherical() const {
   return config_case() == kSpherical;
 }
@@ -13083,7 +14961,7 @@ inline ::motionlab::mechanism::SphericalJointConfig* PROTOBUF_NONNULL Joint::mut
   return _msg;
 }
 
-// .motionlab.mechanism.CylindricalJointConfig cylindrical = 12 [json_name = "cylindrical"];
+// .motionlab.mechanism.CylindricalJointConfig cylindrical = 12;
 inline bool Joint::has_cylindrical() const {
   return config_case() == kCylindrical;
 }
@@ -13165,7 +15043,7 @@ inline ::motionlab::mechanism::CylindricalJointConfig* PROTOBUF_NONNULL Joint::m
   return _msg;
 }
 
-// .motionlab.mechanism.PlanarJointConfig planar = 13 [json_name = "planar"];
+// .motionlab.mechanism.PlanarJointConfig planar = 13;
 inline bool Joint::has_planar() const {
   return config_case() == kPlanar;
 }
@@ -13247,7 +15125,7 @@ inline ::motionlab::mechanism::PlanarJointConfig* PROTOBUF_NONNULL Joint::mutabl
   return _msg;
 }
 
-// .motionlab.mechanism.UniversalJointConfig universal = 14 [json_name = "universal"];
+// .motionlab.mechanism.UniversalJointConfig universal = 14;
 inline bool Joint::has_universal() const {
   return config_case() == kUniversal;
 }
@@ -13329,7 +15207,7 @@ inline ::motionlab::mechanism::UniversalJointConfig* PROTOBUF_NONNULL Joint::mut
   return _msg;
 }
 
-// .motionlab.mechanism.DistanceJointConfig distance = 15 [json_name = "distance"];
+// .motionlab.mechanism.DistanceJointConfig distance = 15;
 inline bool Joint::has_distance() const {
   return config_case() == kDistance;
 }
@@ -13411,7 +15289,7 @@ inline ::motionlab::mechanism::DistanceJointConfig* PROTOBUF_NONNULL Joint::muta
   return _msg;
 }
 
-// .motionlab.mechanism.PointLineJointConfig point_line = 16 [json_name = "pointLine"];
+// .motionlab.mechanism.PointLineJointConfig point_line = 16;
 inline bool Joint::has_point_line() const {
   return config_case() == kPointLine;
 }
@@ -13493,7 +15371,7 @@ inline ::motionlab::mechanism::PointLineJointConfig* PROTOBUF_NONNULL Joint::mut
   return _msg;
 }
 
-// .motionlab.mechanism.PointPlaneJointConfig point_plane = 17 [json_name = "pointPlane"];
+// .motionlab.mechanism.PointPlaneJointConfig point_plane = 17;
 inline bool Joint::has_point_plane() const {
   return config_case() == kPointPlane;
 }
@@ -13588,7 +15466,7 @@ inline Joint::ConfigCase Joint::config_case() const {
 
 // PointForceLoad
 
-// .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+// .motionlab.mechanism.ElementId datum_id = 1;
 inline bool PointForceLoad::has_datum_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.datum_id_ != nullptr);
@@ -13687,7 +15565,7 @@ inline void PointForceLoad::set_allocated_datum_id(::motionlab::mechanism::Eleme
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.PointForceLoad.datum_id)
 }
 
-// .motionlab.mechanism.Vec3 vector = 2 [json_name = "vector"];
+// .motionlab.mechanism.Vec3 vector = 2;
 inline bool PointForceLoad::has_vector() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.vector_ != nullptr);
@@ -13786,7 +15664,7 @@ inline void PointForceLoad::set_allocated_vector(::motionlab::mechanism::Vec3* P
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.PointForceLoad.vector)
 }
 
-// .motionlab.mechanism.ReferenceFrame reference_frame = 3 [json_name = "referenceFrame"];
+// .motionlab.mechanism.ReferenceFrame reference_frame = 3;
 inline void PointForceLoad::clear_reference_frame() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.reference_frame_ = 0;
@@ -13815,7 +15693,7 @@ inline void PointForceLoad::_internal_set_reference_frame(::motionlab::mechanism
 
 // PointTorqueLoad
 
-// .motionlab.mechanism.ElementId datum_id = 1 [json_name = "datumId"];
+// .motionlab.mechanism.ElementId datum_id = 1;
 inline bool PointTorqueLoad::has_datum_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.datum_id_ != nullptr);
@@ -13914,7 +15792,7 @@ inline void PointTorqueLoad::set_allocated_datum_id(::motionlab::mechanism::Elem
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.PointTorqueLoad.datum_id)
 }
 
-// .motionlab.mechanism.Vec3 vector = 2 [json_name = "vector"];
+// .motionlab.mechanism.Vec3 vector = 2;
 inline bool PointTorqueLoad::has_vector() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.vector_ != nullptr);
@@ -14013,7 +15891,7 @@ inline void PointTorqueLoad::set_allocated_vector(::motionlab::mechanism::Vec3* 
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.PointTorqueLoad.vector)
 }
 
-// .motionlab.mechanism.ReferenceFrame reference_frame = 3 [json_name = "referenceFrame"];
+// .motionlab.mechanism.ReferenceFrame reference_frame = 3;
 inline void PointTorqueLoad::clear_reference_frame() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.reference_frame_ = 0;
@@ -14042,7 +15920,7 @@ inline void PointTorqueLoad::_internal_set_reference_frame(::motionlab::mechanis
 
 // LinearSpringDamperLoad
 
-// .motionlab.mechanism.ElementId parent_datum_id = 1 [json_name = "parentDatumId"];
+// .motionlab.mechanism.ElementId parent_datum_id = 1;
 inline bool LinearSpringDamperLoad::has_parent_datum_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.parent_datum_id_ != nullptr);
@@ -14141,7 +16019,7 @@ inline void LinearSpringDamperLoad::set_allocated_parent_datum_id(::motionlab::m
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.LinearSpringDamperLoad.parent_datum_id)
 }
 
-// .motionlab.mechanism.ElementId child_datum_id = 2 [json_name = "childDatumId"];
+// .motionlab.mechanism.ElementId child_datum_id = 2;
 inline bool LinearSpringDamperLoad::has_child_datum_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.child_datum_id_ != nullptr);
@@ -14240,7 +16118,7 @@ inline void LinearSpringDamperLoad::set_allocated_child_datum_id(::motionlab::me
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.LinearSpringDamperLoad.child_datum_id)
 }
 
-// double rest_length = 3 [json_name = "restLength"];
+// double rest_length = 3;
 inline void LinearSpringDamperLoad::clear_rest_length() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.rest_length_ = 0;
@@ -14265,7 +16143,7 @@ inline void LinearSpringDamperLoad::_internal_set_rest_length(double value) {
   _impl_.rest_length_ = value;
 }
 
-// double stiffness = 4 [json_name = "stiffness"];
+// double stiffness = 4;
 inline void LinearSpringDamperLoad::clear_stiffness() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.stiffness_ = 0;
@@ -14290,7 +16168,7 @@ inline void LinearSpringDamperLoad::_internal_set_stiffness(double value) {
   _impl_.stiffness_ = value;
 }
 
-// double damping = 5 [json_name = "damping"];
+// double damping = 5;
 inline void LinearSpringDamperLoad::clear_damping() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.damping_ = 0;
@@ -14319,7 +16197,7 @@ inline void LinearSpringDamperLoad::_internal_set_damping(double value) {
 
 // Load
 
-// .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+// .motionlab.mechanism.ElementId id = 1;
 inline bool Load::has_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.id_ != nullptr);
@@ -14418,7 +16296,7 @@ inline void Load::set_allocated_id(::motionlab::mechanism::ElementId* PROTOBUF_N
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Load.id)
 }
 
-// string name = 2 [json_name = "name"];
+// string name = 2;
 inline void Load::clear_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.name_.ClearToEmpty();
@@ -14483,7 +16361,7 @@ inline void Load::set_allocated_name(::std::string* PROTOBUF_NULLABLE value) {
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Load.name)
 }
 
-// .motionlab.mechanism.PointForceLoad point_force = 3 [json_name = "pointForce"];
+// .motionlab.mechanism.PointForceLoad point_force = 3;
 inline bool Load::has_point_force() const {
   return config_case() == kPointForce;
 }
@@ -14565,7 +16443,7 @@ inline ::motionlab::mechanism::PointForceLoad* PROTOBUF_NONNULL Load::mutable_po
   return _msg;
 }
 
-// .motionlab.mechanism.PointTorqueLoad point_torque = 4 [json_name = "pointTorque"];
+// .motionlab.mechanism.PointTorqueLoad point_torque = 4;
 inline bool Load::has_point_torque() const {
   return config_case() == kPointTorque;
 }
@@ -14647,7 +16525,7 @@ inline ::motionlab::mechanism::PointTorqueLoad* PROTOBUF_NONNULL Load::mutable_p
   return _msg;
 }
 
-// .motionlab.mechanism.LinearSpringDamperLoad linear_spring_damper = 5 [json_name = "linearSpringDamper"];
+// .motionlab.mechanism.LinearSpringDamperLoad linear_spring_damper = 5;
 inline bool Load::has_linear_spring_damper() const {
   return config_case() == kLinearSpringDamper;
 }
@@ -14742,7 +16620,7 @@ inline Load::ConfigCase Load::config_case() const {
 
 // RevoluteMotorActuator
 
-// .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+// .motionlab.mechanism.ElementId joint_id = 1;
 inline bool RevoluteMotorActuator::has_joint_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.joint_id_ != nullptr);
@@ -14841,7 +16719,7 @@ inline void RevoluteMotorActuator::set_allocated_joint_id(::motionlab::mechanism
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.RevoluteMotorActuator.joint_id)
 }
 
-// .motionlab.mechanism.ActuatorControlMode control_mode = 2 [json_name = "controlMode"];
+// .motionlab.mechanism.ActuatorControlMode control_mode = 2;
 inline void RevoluteMotorActuator::clear_control_mode() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.control_mode_ = 0;
@@ -14866,7 +16744,7 @@ inline void RevoluteMotorActuator::_internal_set_control_mode(::motionlab::mecha
   _impl_.control_mode_ = value;
 }
 
-// double command_value = 3 [json_name = "commandValue"];
+// double command_value = 3;
 inline void RevoluteMotorActuator::clear_command_value() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.command_value_ = 0;
@@ -14891,7 +16769,7 @@ inline void RevoluteMotorActuator::_internal_set_command_value(double value) {
   _impl_.command_value_ = value;
 }
 
-// optional double effort_limit = 4 [json_name = "effortLimit"];
+// optional double effort_limit = 4;
 inline bool RevoluteMotorActuator::has_effort_limit() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
   return value;
@@ -14924,7 +16802,7 @@ inline void RevoluteMotorActuator::_internal_set_effort_limit(double value) {
 
 // PrismaticMotorActuator
 
-// .motionlab.mechanism.ElementId joint_id = 1 [json_name = "jointId"];
+// .motionlab.mechanism.ElementId joint_id = 1;
 inline bool PrismaticMotorActuator::has_joint_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.joint_id_ != nullptr);
@@ -15023,7 +16901,7 @@ inline void PrismaticMotorActuator::set_allocated_joint_id(::motionlab::mechanis
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.PrismaticMotorActuator.joint_id)
 }
 
-// .motionlab.mechanism.ActuatorControlMode control_mode = 2 [json_name = "controlMode"];
+// .motionlab.mechanism.ActuatorControlMode control_mode = 2;
 inline void PrismaticMotorActuator::clear_control_mode() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.control_mode_ = 0;
@@ -15048,7 +16926,7 @@ inline void PrismaticMotorActuator::_internal_set_control_mode(::motionlab::mech
   _impl_.control_mode_ = value;
 }
 
-// double command_value = 3 [json_name = "commandValue"];
+// double command_value = 3;
 inline void PrismaticMotorActuator::clear_command_value() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.command_value_ = 0;
@@ -15073,7 +16951,7 @@ inline void PrismaticMotorActuator::_internal_set_command_value(double value) {
   _impl_.command_value_ = value;
 }
 
-// optional double effort_limit = 4 [json_name = "effortLimit"];
+// optional double effort_limit = 4;
 inline bool PrismaticMotorActuator::has_effort_limit() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
   return value;
@@ -15106,7 +16984,7 @@ inline void PrismaticMotorActuator::_internal_set_effort_limit(double value) {
 
 // Actuator
 
-// .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+// .motionlab.mechanism.ElementId id = 1;
 inline bool Actuator::has_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.id_ != nullptr);
@@ -15205,7 +17083,7 @@ inline void Actuator::set_allocated_id(::motionlab::mechanism::ElementId* PROTOB
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Actuator.id)
 }
 
-// string name = 2 [json_name = "name"];
+// string name = 2;
 inline void Actuator::clear_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.name_.ClearToEmpty();
@@ -15270,7 +17148,7 @@ inline void Actuator::set_allocated_name(::std::string* PROTOBUF_NULLABLE value)
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Actuator.name)
 }
 
-// .motionlab.mechanism.RevoluteMotorActuator revolute_motor = 3 [json_name = "revoluteMotor"];
+// .motionlab.mechanism.RevoluteMotorActuator revolute_motor = 3;
 inline bool Actuator::has_revolute_motor() const {
   return config_case() == kRevoluteMotor;
 }
@@ -15352,7 +17230,7 @@ inline ::motionlab::mechanism::RevoluteMotorActuator* PROTOBUF_NONNULL Actuator:
   return _msg;
 }
 
-// .motionlab.mechanism.PrismaticMotorActuator prismatic_motor = 4 [json_name = "prismaticMotor"];
+// .motionlab.mechanism.PrismaticMotorActuator prismatic_motor = 4;
 inline bool Actuator::has_prismatic_motor() const {
   return config_case() == kPrismaticMotor;
 }
@@ -15447,7 +17325,7 @@ inline Actuator::ConfigCase Actuator::config_case() const {
 
 // Mechanism
 
-// .motionlab.mechanism.ElementId id = 1 [json_name = "id"];
+// .motionlab.mechanism.ElementId id = 1;
 inline bool Mechanism::has_id() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000080U);
   PROTOBUF_ASSUME(!value || _impl_.id_ != nullptr);
@@ -15546,7 +17424,7 @@ inline void Mechanism::set_allocated_id(::motionlab::mechanism::ElementId* PROTO
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Mechanism.id)
 }
 
-// string name = 2 [json_name = "name"];
+// string name = 2;
 inline void Mechanism::clear_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.name_.ClearToEmpty();
@@ -15611,7 +17489,7 @@ inline void Mechanism::set_allocated_name(::std::string* PROTOBUF_NULLABLE value
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.Mechanism.name)
 }
 
-// repeated .motionlab.mechanism.Body bodies = 3 [json_name = "bodies"];
+// repeated .motionlab.mechanism.Body bodies = 3;
 inline int Mechanism::_internal_bodies_size() const {
   return _internal_bodies().size();
 }
@@ -15667,7 +17545,7 @@ Mechanism::_internal_mutable_bodies() {
   return &_impl_.bodies_;
 }
 
-// repeated .motionlab.mechanism.Datum datums = 4 [json_name = "datums"];
+// repeated .motionlab.mechanism.Datum datums = 4;
 inline int Mechanism::_internal_datums_size() const {
   return _internal_datums().size();
 }
@@ -15723,7 +17601,7 @@ Mechanism::_internal_mutable_datums() {
   return &_impl_.datums_;
 }
 
-// repeated .motionlab.mechanism.Joint joints = 5 [json_name = "joints"];
+// repeated .motionlab.mechanism.Joint joints = 5;
 inline int Mechanism::_internal_joints_size() const {
   return _internal_joints().size();
 }
@@ -15779,7 +17657,7 @@ Mechanism::_internal_mutable_joints() {
   return &_impl_.joints_;
 }
 
-// repeated .motionlab.mechanism.Load loads = 6 [json_name = "loads"];
+// repeated .motionlab.mechanism.Load loads = 6;
 inline int Mechanism::_internal_loads_size() const {
   return _internal_loads().size();
 }
@@ -15835,7 +17713,7 @@ Mechanism::_internal_mutable_loads() {
   return &_impl_.loads_;
 }
 
-// repeated .motionlab.mechanism.Actuator actuators = 7 [json_name = "actuators"];
+// repeated .motionlab.mechanism.Actuator actuators = 7;
 inline int Mechanism::_internal_actuators_size() const {
   return _internal_actuators().size();
 }
@@ -15891,7 +17769,7 @@ Mechanism::_internal_mutable_actuators() {
   return &_impl_.actuators_;
 }
 
-// repeated .motionlab.mechanism.Geometry geometries = 8 [json_name = "geometries"];
+// repeated .motionlab.mechanism.Geometry geometries = 8;
 inline int Mechanism::_internal_geometries_size() const {
   return _internal_geometries().size();
 }
@@ -15951,7 +17829,7 @@ Mechanism::_internal_mutable_geometries() {
 
 // BodyDisplayData
 
-// string body_id = 1 [json_name = "bodyId"];
+// string body_id = 1;
 inline void BodyDisplayData::clear_body_id() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.body_id_.ClearToEmpty();
@@ -16016,7 +17894,7 @@ inline void BodyDisplayData::set_allocated_body_id(::std::string* PROTOBUF_NULLA
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.BodyDisplayData.body_id)
 }
 
-// .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
+// .motionlab.mechanism.DisplayMesh display_mesh = 2;
 inline bool BodyDisplayData::has_display_mesh() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
   PROTOBUF_ASSUME(!value || _impl_.display_mesh_ != nullptr);
@@ -16115,7 +17993,7 @@ inline void BodyDisplayData::set_allocated_display_mesh(::motionlab::mechanism::
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.BodyDisplayData.display_mesh)
 }
 
-// repeated uint32 part_index = 3 [json_name = "partIndex"];
+// repeated uint32 part_index = 3;
 inline int BodyDisplayData::_internal_part_index_size() const {
   return _internal_part_index().size();
 }
@@ -16165,7 +18043,7 @@ BodyDisplayData::_internal_mutable_part_index() {
   return &_impl_.part_index_;
 }
 
-// double density = 4 [json_name = "density"];
+// double density = 4;
 inline void BodyDisplayData::clear_density() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.density_ = 0;
@@ -16190,7 +18068,7 @@ inline void BodyDisplayData::_internal_set_density(double value) {
   _impl_.density_ = value;
 }
 
-// double tessellation_quality = 5 [json_name = "tessellationQuality"];
+// double tessellation_quality = 5;
 inline void BodyDisplayData::clear_tessellation_quality() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.tessellation_quality_ = 0;
@@ -16215,7 +18093,7 @@ inline void BodyDisplayData::_internal_set_tessellation_quality(double value) {
   _impl_.tessellation_quality_ = value;
 }
 
-// string unit_system = 6 [json_name = "unitSystem"];
+// string unit_system = 6;
 inline void BodyDisplayData::clear_unit_system() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.unit_system_.ClearToEmpty();
@@ -16284,7 +18162,7 @@ inline void BodyDisplayData::set_allocated_unit_system(::std::string* PROTOBUF_N
 
 // GeometryDisplayData
 
-// string geometry_id = 1 [json_name = "geometryId"];
+// string geometry_id = 1;
 inline void GeometryDisplayData::clear_geometry_id() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.geometry_id_.ClearToEmpty();
@@ -16349,7 +18227,7 @@ inline void GeometryDisplayData::set_allocated_geometry_id(::std::string* PROTOB
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.GeometryDisplayData.geometry_id)
 }
 
-// .motionlab.mechanism.DisplayMesh display_mesh = 2 [json_name = "displayMesh"];
+// .motionlab.mechanism.DisplayMesh display_mesh = 2;
 inline bool GeometryDisplayData::has_display_mesh() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
   PROTOBUF_ASSUME(!value || _impl_.display_mesh_ != nullptr);
@@ -16448,7 +18326,7 @@ inline void GeometryDisplayData::set_allocated_display_mesh(::motionlab::mechani
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.GeometryDisplayData.display_mesh)
 }
 
-// repeated uint32 part_index = 3 [json_name = "partIndex"];
+// repeated uint32 part_index = 3;
 inline int GeometryDisplayData::_internal_part_index_size() const {
   return _internal_part_index().size();
 }
@@ -16498,7 +18376,7 @@ GeometryDisplayData::_internal_mutable_part_index() {
   return &_impl_.part_index_;
 }
 
-// double density = 4 [json_name = "density"];
+// double density = 4;
 inline void GeometryDisplayData::clear_density() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.density_ = 0;
@@ -16523,7 +18401,7 @@ inline void GeometryDisplayData::_internal_set_density(double value) {
   _impl_.density_ = value;
 }
 
-// double tessellation_quality = 5 [json_name = "tessellationQuality"];
+// double tessellation_quality = 5;
 inline void GeometryDisplayData::clear_tessellation_quality() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.tessellation_quality_ = 0;
@@ -16548,7 +18426,7 @@ inline void GeometryDisplayData::_internal_set_tessellation_quality(double value
   _impl_.tessellation_quality_ = value;
 }
 
-// string unit_system = 6 [json_name = "unitSystem"];
+// string unit_system = 6;
 inline void GeometryDisplayData::clear_unit_system() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.unit_system_.ClearToEmpty();
@@ -16617,7 +18495,7 @@ inline void GeometryDisplayData::set_allocated_unit_system(::std::string* PROTOB
 
 // ProjectFile
 
-// uint32 version = 1 [json_name = "version"];
+// uint32 version = 1;
 inline void ProjectFile::clear_version() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.version_ = 0u;
@@ -16642,7 +18520,7 @@ inline void ProjectFile::_internal_set_version(::uint32_t value) {
   _impl_.version_ = value;
 }
 
-// .motionlab.mechanism.ProjectMetadata metadata = 2 [json_name = "metadata"];
+// .motionlab.mechanism.ProjectMetadata metadata = 2;
 inline bool ProjectFile::has_metadata() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
   PROTOBUF_ASSUME(!value || _impl_.metadata_ != nullptr);
@@ -16741,7 +18619,7 @@ inline void ProjectFile::set_allocated_metadata(::motionlab::mechanism::ProjectM
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.ProjectFile.metadata)
 }
 
-// .motionlab.mechanism.Mechanism mechanism = 3 [json_name = "mechanism"];
+// .motionlab.mechanism.Mechanism mechanism = 3;
 inline bool ProjectFile::has_mechanism() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
   PROTOBUF_ASSUME(!value || _impl_.mechanism_ != nullptr);
@@ -16840,7 +18718,7 @@ inline void ProjectFile::set_allocated_mechanism(::motionlab::mechanism::Mechani
   // @@protoc_insertion_point(field_set_allocated:motionlab.mechanism.ProjectFile.mechanism)
 }
 
-// repeated .motionlab.mechanism.BodyDisplayData body_display_data = 4 [json_name = "bodyDisplayData"];
+// repeated .motionlab.mechanism.BodyDisplayData body_display_data = 4;
 inline int ProjectFile::_internal_body_display_data_size() const {
   return _internal_body_display_data().size();
 }
@@ -16896,7 +18774,7 @@ ProjectFile::_internal_mutable_body_display_data() {
   return &_impl_.body_display_data_;
 }
 
-// repeated .motionlab.mechanism.GeometryDisplayData geometry_display_data = 5 [json_name = "geometryDisplayData"];
+// repeated .motionlab.mechanism.GeometryDisplayData geometry_display_data = 5;
 inline int ProjectFile::_internal_geometry_display_data_size() const {
   return _internal_geometry_display_data().size();
 }
@@ -16965,10 +18843,22 @@ namespace google {
 namespace protobuf {
 
 template <>
+struct is_proto_enum<::motionlab::mechanism::PrimitiveShape> : std::true_type {};
+template <>
+inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::motionlab::mechanism::PrimitiveShape>() {
+  return ::motionlab::mechanism::PrimitiveShape_descriptor();
+}
+template <>
 struct is_proto_enum<::motionlab::mechanism::JointType> : std::true_type {};
 template <>
 inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::motionlab::mechanism::JointType>() {
   return ::motionlab::mechanism::JointType_descriptor();
+}
+template <>
+struct is_proto_enum<::motionlab::mechanism::MotionType> : std::true_type {};
+template <>
+inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::motionlab::mechanism::MotionType>() {
+  return ::motionlab::mechanism::MotionType_descriptor();
 }
 template <>
 struct is_proto_enum<::motionlab::mechanism::ReferenceFrame> : std::true_type {};
