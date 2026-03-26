@@ -4,7 +4,7 @@ import { Crosshair } from 'lucide-react';
 import { sendRenameDatum } from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSimulationStore } from '../stores/simulation.js';
-import { IdentitySection, PoseSection } from './inspector/sections/index.js';
+import { AxisPresetBar, IdentitySection, PoseSection } from './inspector/sections/index.js';
 
 export function DatumInspector({ datumId }: { datumId: string }) {
   const datum = useMechanismStore((s) => s.datums.get(datumId));
@@ -46,6 +46,8 @@ export function DatumInspector({ datumId }: { datumId: string }) {
         position={localPose.position}
         rotation={localPose.rotation}
       />
+
+      <AxisPresetBar datumId={datumId} disabled={isSimulating} />
     </InspectorPanel>
   );
 }

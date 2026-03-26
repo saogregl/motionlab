@@ -48,17 +48,20 @@ function JointCreationStatus() {
   const parentDatum = useMechanismStore((s) =>
     parentDatumId ? s.datums.get(parentDatumId) : undefined,
   );
+  const parentBody = useMechanismStore((s) =>
+    parentDatum ? s.bodies.get(parentDatum.parentBodyId) : undefined,
+  );
   const message = useAuthoringStatusStore((s) => s.message);
 
   const statusClass = 'rounded-md bg-background/80 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur-sm';
 
   if (creatingDatum) {
-    return <div className={statusClass}>Creating datum...</div>;
+    return <div className={statusClass}>Setting joint anchor...</div>;
   }
   if (step === 'pick-parent') {
     return (
       <div className="flex flex-col gap-1">
-        <div className={statusClass}>Click a datum or face to set as parent</div>
+        <div className={statusClass}>Click a surface on the first body</div>
         {message ? <div className={statusClass}>{message}</div> : null}
       </div>
     );
@@ -67,7 +70,7 @@ function JointCreationStatus() {
     return (
       <div className="flex flex-col gap-1">
         <div className={statusClass}>
-          Parent: {parentDatum?.name ?? '?'}. Click a datum or face on another body
+          {parentBody?.name ?? parentDatum?.name ?? 'Body A'} selected. Click a surface on the second body
         </div>
         {message ? <div className={statusClass}>{message}</div> : null}
       </div>
@@ -179,7 +182,7 @@ function JointCreationDatumLabel({ sceneGraph }: { sceneGraph: SceneGraphManager
       offset={{ x: 0, y: -8 }}
     >
       <div className="rounded bg-background/90 px-2 py-0.5 text-[10px] text-muted-foreground backdrop-blur-sm whitespace-nowrap border border-[var(--success)]/40">
-        Parent: {parentDatum?.name ?? '?'} (on {parentBody?.name ?? '?'})
+        Anchor on {parentBody?.name ?? parentDatum?.name ?? '?'}
       </div>
     </WorldSpaceOverlay>
   );
@@ -230,6 +233,7 @@ export function ViewportOverlay() {
 
         // Show connector preview line when both datums selected
         if (state.step === 'select-type' && state.childDatumId) {
+          sg.clearProvisionalJointPreview();
           sg.showJointPreviewLine(state.parentDatumId, state.childDatumId, state.alignment);
 
           // Show DOF indicator for auto-selected type on step entry
@@ -290,6 +294,7 @@ export function ViewportOverlay() {
         sg.clearJointCreationHighlights();
         sg.clearJointPreviewLine();
         sg.clearJointTypePreview();
+        sg.clearProvisionalJointPreview();
       }
 
       // Re-dim when going back from select-type to pick-child (ESC undo)
@@ -354,7 +359,7 @@ export function ViewportOverlay() {
   }, [sceneGraph, sceneGraphRef]);
 
   useEffect(() => {
-    if (activeMode !== 'create-datum') {
+    if (activeMode !== 'create-datum' && activeMode !== 'create-joint') {
       useAuthoringStatusStore.getState().clearMessage();
       return;
     }
@@ -365,6 +370,29 @@ export function ViewportOverlay() {
     if (activeMode === 'create-load') return;
     sceneGraphRef.current?.clearLoadPreview();
   }, [activeMode, sceneGraphRef]);
+
+  // Provisional connector preview: show dashed line from parent datum to cursor during pick-child
+  const jointStep = useJointCreationStore((s) => s.step);
+  const parentDatumId = useJointCreationStore((s) => s.parentDatumId);
+
+  useEffect(() => {
+    const sg = sceneGraphRef.current;
+    if (!sg) return;
+
+    if (activeMode !== 'create-joint' || jointStep !== 'pick-child' || !parentDatumId) {
+      sg.clearProvisionalJointPreview();
+      return;
+    }
+
+    if (hoveredFace) {
+      const previewPos = sg.getDatumPreviewPosition();
+      if (previewPos) {
+        sg.showProvisionalJointPreview(parentDatumId, previewPos);
+      }
+    } else {
+      sg.clearProvisionalJointPreview();
+    }
+  }, [activeMode, jointStep, parentDatumId, hoveredFace, sceneGraphRef]);
 
   const cursorMode = activeMode === 'create-datum' || activeMode === 'create-joint' || activeMode === 'create-load';
 
@@ -383,8 +411,8 @@ export function ViewportOverlay() {
           interactionMode={activeMode}
           theme={theme}
         />
-        {activeMode === 'create-datum' && (
-          <FaceTooltip containerRef={viewportContainerRef} hoveredFace={hoveredFace} />
+        {(activeMode === 'create-datum' || activeMode === 'create-joint') && (
+          <FaceTooltip containerRef={viewportContainerRef} hoveredFace={hoveredFace} mode={activeMode} />
         )}
         <ViewportHUD
           topCenter={

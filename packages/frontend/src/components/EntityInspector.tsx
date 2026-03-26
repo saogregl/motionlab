@@ -1,9 +1,10 @@
-import { InspectorPanel } from '@motionlab/ui';
-import { Layers } from 'lucide-react';
+import { Button, InspectorPanel } from '@motionlab/ui';
+import { GitBranchPlus, Layers } from 'lucide-react';
 
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
+import { executeMakeBody } from '../utils/body-merge.js';
 import { ActuatorInspector } from './ActuatorInspector.js';
 import { BodyInspector } from './BodyInspector.js';
 import { DatumInspector } from './DatumInspector.js';
@@ -56,6 +57,10 @@ export function EntityInspector() {
     const breakdown = Object.entries(counts)
       .map(([type, count]) => `${count} ${pluralize(type, count)}`)
       .join(', ');
+    const isSimulating = simState === 'running' || simState === 'paused';
+    const canMakeBody = !isSimulating &&
+      [...selectedIds].some((id) => geometries.has(id) || bodies.has(id));
+
     return (
       <InspectorPanel
         entityName={`${selectedIds.size} items selected`}
@@ -63,6 +68,17 @@ export function EntityInspector() {
       >
         <div className="ps-3 pe-3 pt-2">
           <span className="text-2xs text-[var(--text-secondary)]">{breakdown}</span>
+          {canMakeBody && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full mt-2"
+              onClick={() => executeMakeBody(selectedIds)}
+            >
+              <GitBranchPlus className="size-3.5 mr-1" />
+              Make Body
+            </Button>
+          )}
         </div>
       </InspectorPanel>
     );

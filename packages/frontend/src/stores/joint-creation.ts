@@ -5,10 +5,16 @@ import type { AlignmentKind, DatumAlignment } from '../utils/datum-alignment.js'
 
 export type JointCreationStep = 'idle' | 'pick-parent' | 'pick-child' | 'select-type' | 'configure';
 
+export type SurfaceClassId = 'planar' | 'cylindrical' | 'conical' | 'spherical' | 'toroidal' | 'other';
+
 export interface JointCreationState {
   step: JointCreationStep;
   parentDatumId: string | null;
   childDatumId: string | null;
+  /** Surface class of the face used to create the parent datum (if face-created). */
+  parentSurfaceClass: SurfaceClassId | null;
+  /** Surface class of the face used to create the child datum (if face-created). */
+  childSurfaceClass: SurfaceClassId | null;
   /** Pre-selected joint type from toolbar/command (e.g. 'revolute'). */
   preselectedJointType: string | null;
   /** Currently hovered type in the type selector (for preview). */
@@ -27,8 +33,8 @@ export interface JointCreationState {
   editingJointId: string | null;
 
   startCreation: () => void;
-  setParentDatum: (id: string) => void;
-  setChildDatum: (id: string, alignment?: DatumAlignment) => void;
+  setParentDatum: (id: string, surfaceClass?: SurfaceClassId | null) => void;
+  setChildDatum: (id: string, alignment?: DatumAlignment, surfaceClass?: SurfaceClassId | null) => void;
   setPreselectedJointType: (type: string | null) => void;
   setPreviewJointType: (type: JointTypeId | null) => void;
   selectJointType: (type: JointTypeId) => void;
@@ -47,6 +53,8 @@ const initialState = {
   step: 'idle' as JointCreationStep,
   parentDatumId: null as string | null,
   childDatumId: null as string | null,
+  parentSurfaceClass: null as SurfaceClassId | null,
+  childSurfaceClass: null as SurfaceClassId | null,
   preselectedJointType: null as string | null,
   previewJointType: null as JointTypeId | null,
   selectedJointType: null as JointTypeId | null,
@@ -65,6 +73,8 @@ export const useJointCreationStore = create<JointCreationState>()((set, get) => 
       step: 'pick-parent',
       parentDatumId: null,
       childDatumId: null,
+      parentSurfaceClass: null,
+      childSurfaceClass: null,
       previewJointType: null,
       selectedJointType: null,
       recommendedTypes: [],
@@ -74,9 +84,9 @@ export const useJointCreationStore = create<JointCreationState>()((set, get) => 
       editingJointId: null,
     }),
 
-  setParentDatum: (id) => set({ step: 'pick-child', parentDatumId: id }),
+  setParentDatum: (id, surfaceClass?) => set({ step: 'pick-child', parentDatumId: id, parentSurfaceClass: surfaceClass ?? null }),
 
-  setChildDatum: (id, alignment?) => {
+  setChildDatum: (id, alignment?, surfaceClass?) => {
     const { preselectedJointType } = get();
     const recommendedTypes = alignment?.recommendedTypes ?? [];
     const alignmentKind = alignment?.kind ?? null;
@@ -86,6 +96,7 @@ export const useJointCreationStore = create<JointCreationState>()((set, get) => 
     set({
       step: 'select-type',
       childDatumId: id,
+      childSurfaceClass: surfaceClass ?? null,
       recommendedTypes,
       alignmentKind,
       alignment: alignment ?? null,
@@ -110,6 +121,7 @@ export const useJointCreationStore = create<JointCreationState>()((set, get) => 
         set({
           step: 'pick-child',
           childDatumId: null,
+          childSurfaceClass: null,
           recommendedTypes: [],
           alignmentKind: null,
           alignment: null,
@@ -119,7 +131,7 @@ export const useJointCreationStore = create<JointCreationState>()((set, get) => 
         break;
       case 'pick-child':
         // Back to pick-parent: clear parent
-        set({ step: 'pick-parent', parentDatumId: null });
+        set({ step: 'pick-parent', parentDatumId: null, parentSurfaceClass: null });
         break;
       default:
         // pick-parent or idle: no-op (edit.cancel handles exiting mode)
@@ -132,6 +144,8 @@ export const useJointCreationStore = create<JointCreationState>()((set, get) => 
       step: 'pick-parent',
       parentDatumId: null,
       childDatumId: null,
+      parentSurfaceClass: null,
+      childSurfaceClass: null,
       previewJointType: null,
       selectedJointType: null,
       recommendedTypes: [],

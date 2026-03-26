@@ -28,6 +28,7 @@ export type {
   DatumContextMenuProps,
   GeometryContextMenuProps,
   JointContextMenuProps,
+  MultiSelectContextMenuProps,
 } from './components/primitives/context-menus';
 export {
   BodyContextMenu,
@@ -38,6 +39,8 @@ export {
   GeometryContextMenuItems,
   JointContextMenu,
   JointContextMenuItems,
+  MultiSelectContextMenu,
+  MultiSelectContextMenuItems,
 } from './components/primitives/context-menus';
 export type { DensityToggleProps } from './components/primitives/density-toggle';
 export { DensityToggle } from './components/primitives/density-toggle';

@@ -77,6 +77,8 @@ import { useToolModeStore } from '../stores/tool-mode.js';
 import { useToastStore } from '../stores/toast.js';
 import { type StoreSample, addSamplesBatched, useTraceStore } from '../stores/traces.js';
 import { analyzeDatumAlignment, computeDatumWorldPose } from '../utils/datum-alignment.js';
+import { commitJointCreation } from '../utils/joint-commit.js';
+import { shouldAutoCommit } from '../utils/joint-frame-inference.js';
 
 // ---------------------------------------------------------------------------
 // Proto extraction helpers — reduce duplication across import/load/relocate
@@ -1084,6 +1086,47 @@ export function connect(set: SetState, _get: GetState) {
                 },
               });
               useSimulationStore.getState().setNeedsCompile(true);
+
+              // If joint creation is waiting for this datum (primitive fallback path),
+              // advance the state machine the same way createDatumFromFaceResult does.
+              const jcs = useJointCreationStore.getState();
+              if (jcs.creatingDatum) {
+                const newDatumId = d.id?.id ?? '';
+                if (jcs.step === 'pick-parent') {
+                  jcs.setParentDatum(newDatumId);
+                } else if (jcs.step === 'pick-child') {
+                  const parentDatum = jcs.parentDatumId
+                    ? mechStore.datums.get(jcs.parentDatumId)
+                    : undefined;
+                  const childDatum = mechStore.datums.get(newDatumId);
+                  if (parentDatum && childDatum) {
+                    const parentBody = mechStore.bodies.get(parentDatum.parentBodyId);
+                    const childBody = mechStore.bodies.get(childDatum.parentBodyId);
+                    if (parentBody && childBody) {
+                      const alignment = analyzeDatumAlignment(
+                        computeDatumWorldPose(parentBody.pose, parentDatum.localPose),
+                        computeDatumWorldPose(childBody.pose, childDatum.localPose),
+                      );
+                      jcs.setChildDatum(newDatumId, alignment);
+                    } else {
+                      jcs.setChildDatum(newDatumId);
+                    }
+                  }
+                }
+                jcs.setCreatingDatum(false);
+              }
+
+              // Also advance load creation if waiting
+              const lcs = useLoadCreationStore.getState();
+              if (lcs.creatingDatum) {
+                const newDatumId = d.id?.id ?? '';
+                if (lcs.step === 'pick-datum') {
+                  lcs.setDatum(newDatumId);
+                } else if (lcs.step === 'pick-second-datum') {
+                  lcs.setSecondDatum(newDatumId);
+                }
+                lcs.setCreatingDatum(false);
+              }
             } else if (result.result.case === 'errorMessage') {
               console.error('[datum] create failed:', result.result.value);
             }
@@ -1124,8 +1167,9 @@ export function connect(set: SetState, _get: GetState) {
               const jcs = useJointCreationStore.getState();
               if (jcs.creatingDatum) {
                 const newDatumId = d.id?.id ?? '';
+                const surfaceClass = mapSurfaceClass(success.surfaceClass) ?? null;
                 if (jcs.step === 'pick-parent') {
-                  jcs.setParentDatum(newDatumId);
+                  jcs.setParentDatum(newDatumId, surfaceClass);
                 } else if (jcs.step === 'pick-child') {
                   const parentDatum = jcs.parentDatumId
                     ? mechStore.datums.get(jcs.parentDatumId)
@@ -1139,13 +1183,35 @@ export function connect(set: SetState, _get: GetState) {
                         computeDatumWorldPose(parentBody.pose, parentDatum.localPose),
                         computeDatumWorldPose(childBody.pose, childDatum.localPose),
                       );
-                      jcs.setChildDatum(newDatumId, alignment);
+                      jcs.setChildDatum(newDatumId, alignment, surfaceClass);
                     } else {
-                      jcs.setChildDatum(newDatumId);
+                      jcs.setChildDatum(newDatumId, undefined, surfaceClass);
                     }
                   }
                 }
                 jcs.setCreatingDatum(false);
+
+                // Auto-commit: if both datums are from high-confidence face picks
+                // and alignment supports it, skip the type selector and create the joint.
+                const updatedJcs = useJointCreationStore.getState();
+                if (
+                  updatedJcs.step === 'select-type' &&
+                  updatedJcs.parentDatumId &&
+                  updatedJcs.childDatumId
+                ) {
+                  const autoResult = shouldAutoCommit(
+                    updatedJcs.parentSurfaceClass,
+                    updatedJcs.childSurfaceClass,
+                    updatedJcs.alignmentKind,
+                  );
+                  if (autoResult.autoCommit && autoResult.jointType) {
+                    commitJointCreation(
+                      updatedJcs.parentDatumId,
+                      updatedJcs.childDatumId,
+                      autoResult.jointType,
+                    );
+                  }
+                }
               }
 
               const lcs = useLoadCreationStore.getState();
@@ -1857,16 +1923,51 @@ export function connect(set: SetState, _get: GetState) {
 
               // Check for pending "Make Body" geometry attachments
               const pendingGeoms = mechStore.pendingMakeBodyGeometries;
+              const pendingOpts = mechStore.pendingMakeBodyOptions;
               if (pendingGeoms && pendingGeoms.length > 0) {
                 mechStore.setPendingMakeBodyGeometries(null);
+                mechStore.setPendingMakeBodyOptions(null);
                 for (const geomId of pendingGeoms) {
                   sendAttachGeometry(geomId, bodyId);
                 }
+
+                // Dissolve old bodies that are now empty
+                if (pendingOpts?.bodiesToDissolve) {
+                  for (const oldBodyId of pendingOpts.bodiesToDissolve) {
+                    // Check if old body still has geometries not being moved
+                    const remaining = [...mechStore.geometries.values()].filter(
+                      (g) => g.parentBodyId === oldBodyId && !pendingGeoms.includes(g.id),
+                    );
+                    const hasDatums = [...mechStore.datums.values()].some((d) => d.parentBodyId === oldBodyId);
+                    const bodyDatumIds = new Set(
+                      [...mechStore.datums.values()].filter((d) => d.parentBodyId === oldBodyId).map((d) => d.id),
+                    );
+                    const hasJoints = [...mechStore.joints.values()].some(
+                      (j) => bodyDatumIds.has(j.parentDatumId) || bodyDatumIds.has(j.childDatumId),
+                    );
+                    if (remaining.length === 0 && !hasDatums && !hasJoints) {
+                      sendDeleteBody(oldBodyId);
+                    } else if (remaining.length === 0) {
+                      useToastStore.getState().addToast({
+                        variant: 'warning',
+                        title: 'Empty body',
+                        description: `${mechStore.bodies.get(oldBodyId)?.name ?? 'Body'} has no geometries but still has datums or joints`,
+                        duration: 5000,
+                      });
+                    }
+                  }
+                }
+
+                // Trigger inline rename in the project tree
+                if (pendingOpts?.shouldActivateRename) {
+                  mechStore.setPendingRenameEntityId(bodyId);
+                }
+
                 useSelectionStore.getState().select(bodyId);
                 useToastStore.getState().addToast({
                   variant: 'success',
                   title: 'Body created',
-                  description: `${b.name} — attaching ${pendingGeoms.length} ${pendingGeoms.length === 1 ? 'geometry' : 'geometries'}`,
+                  description: `${b.name} — ${pendingGeoms.length} ${pendingGeoms.length === 1 ? 'geometry' : 'geometries'}`,
                   duration: 3000,
                 });
               } else {

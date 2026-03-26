@@ -514,8 +514,8 @@ export class PickingManager {
     const { entityId } = this.resolveHit(hit);
     this.updateEntityHover(entityId);
 
-    // Face-level hover only in create-datum mode
-    if (this.interactionMode === 'create-datum') {
+    // Face-level hover in create-datum and create-joint modes
+    if (this.interactionMode === 'create-datum' || this.interactionMode === 'create-joint') {
       this.updateFaceHoverFromHit(hit, entityId);
     } else {
       this.updateFaceHover(null, null, null, null);

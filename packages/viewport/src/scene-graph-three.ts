@@ -400,6 +400,7 @@ export class SceneGraphManager {
   private readonly activeDofIndicators = new Map<string, DofIndicatorResult>();
   private readonly activeLimitVisuals = new Map<string, import('./rendering/limit-visuals-three.js').LimitVisual>();
   private readonly jointSelectionOverlays = new Map<string, Group>();
+  private readonly provisionalPreviewRoot = new Group();
   private _dofPreviewIndicator: DofIndicatorResult | null = null;
   private readonly jointLineStart = new Vector3();
   private readonly jointLineEnd = new Vector3();
@@ -458,6 +459,11 @@ export class SceneGraphManager {
     this.jointPreviewRoot.visible = false;
     setObjectLayerRecursive(this.jointPreviewRoot, VIEWPORT_PICK_LAYER);
     this._scene.add(this.jointPreviewRoot);
+
+    this.provisionalPreviewRoot.name = 'provisional_joint_preview';
+    this.provisionalPreviewRoot.visible = false;
+    setObjectLayerRecursive(this.provisionalPreviewRoot, VIEWPORT_PICK_LAYER);
+    this._scene.add(this.provisionalPreviewRoot);
 
     this.dofPreviewRoot.name = 'dof_preview';
     this.dofPreviewRoot.visible = false;
@@ -1283,6 +1289,8 @@ export class SceneGraphManager {
     disposeObject3D(this.datumPreviewRoot);
     this._scene.remove(this.jointPreviewRoot);
     disposeObject3D(this.jointPreviewRoot);
+    this._scene.remove(this.provisionalPreviewRoot);
+    disposeObject3D(this.provisionalPreviewRoot);
     this._scene.remove(this.dofPreviewRoot);
     disposeObject3D(this.dofPreviewRoot);
   }
@@ -2322,6 +2330,13 @@ export class SceneGraphManager {
     this.requestRender();
   }
 
+  /** Return the current datum preview world position, or null if not visible. */
+  getDatumPreviewPosition(): { x: number; y: number; z: number } | null {
+    if (!this.datumPreviewRoot.visible) return null;
+    const p = this.datumPreviewRoot.position;
+    return { x: p.x, y: p.y, z: p.z };
+  }
+
   clearDatumPreview(): void {
     // Revert body ownership indicator
     if (this._datumPreviewBodyId) {
@@ -2508,6 +2523,58 @@ export class SceneGraphManager {
       disposeObject3D(child);
     }
     this.jointPreviewRoot.visible = false;
+    this.requestRender();
+  }
+
+  /**
+   * Show a provisional connector preview from the parent datum to a cursor
+   * world position during the pick-child step. Renders a dashed line + a
+   * small sphere at the cursor end.
+   */
+  showProvisionalJointPreview(
+    parentDatumId: string,
+    cursorWorldPos: { x: number; y: number; z: number },
+  ): void {
+    const parent = this.entities.get(parentDatumId);
+    if (!parent) return;
+
+    this.clearProvisionalJointPreview();
+
+    const start = new Vector3();
+    parent.rootNode.getWorldPosition(start);
+    const end = new Vector3(cursorWorldPos.x, cursorWorldPos.y, cursorWorldPos.z);
+
+    const line = createFatLine([start, end], {
+      color: ACCENT,
+      lineWidth: 2,
+      transparent: true,
+      opacity: 0.4,
+      dashed: true,
+      dashSize: 0.015,
+      gapSize: 0.01,
+    });
+    this.provisionalPreviewRoot.add(line);
+
+    // Small sphere at cursor position
+    const sphere = new Mesh(
+      new SphereGeometry(0.008, 12, 12),
+      new MeshBasicMaterial({ color: ACCENT.getHex(), transparent: true, opacity: 0.6 }),
+    );
+    sphere.position.copy(end);
+    this.provisionalPreviewRoot.add(sphere);
+
+    this.provisionalPreviewRoot.visible = true;
+    setObjectLayerRecursive(this.provisionalPreviewRoot, VIEWPORT_PICK_LAYER);
+    this.requestRender();
+  }
+
+  clearProvisionalJointPreview(): void {
+    while (this.provisionalPreviewRoot.children.length > 0) {
+      const child = this.provisionalPreviewRoot.children[0];
+      this.provisionalPreviewRoot.remove(child);
+      disposeObject3D(child);
+    }
+    this.provisionalPreviewRoot.visible = false;
     this.requestRender();
   }
 

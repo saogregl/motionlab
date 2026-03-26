@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   DETACHED_BODY_PREFIX,
   registerSceneGraph,
+  sendCreateDatum,
   sendCreateDatumFromFace,
   sendUpdateBody,
   sendUpdateDatumPose,
@@ -24,6 +25,62 @@ import {
   resolveViewportEntityId,
   resolveViewportEntityIds,
 } from '../utils/viewport-entity-resolution.js';
+
+/**
+ * Compute a body-local datum pose from a world-space hit point and normal.
+ * The datum Z-axis is aligned to the world normal; the position is converted
+ * to body-local using the body's world matrix inverse.
+ */
+function localPoseFromSpatial(spatial: SpatialPickData): {
+  position: { x: number; y: number; z: number };
+  orientation: { x: number; y: number; z: number; w: number };
+} {
+  const wp = spatial.worldPoint;
+  const wn = spatial.worldNormal;
+
+  // Invert body world matrix to get local position
+  // bodyWorldMatrix is a column-major Float32Array (4x4)
+  const m = spatial.bodyWorldMatrix;
+  // Simple inversion for rigid transforms: transpose rotation, negate translated position
+  // m = [r00 r10 r20 0 | r01 r11 r21 0 | r02 r12 r22 0 | tx ty tz 1] (column-major)
+  const r00 = m[0], r01 = m[4], r02 = m[8];
+  const r10 = m[1], r11 = m[5], r12 = m[9];
+  const r20 = m[2], r21 = m[6], r22 = m[10];
+  const tx = m[12], ty = m[13], tz = m[14];
+
+  // Local position = R^T * (worldPoint - translation)
+  const dx = wp.x - tx, dy = wp.y - ty, dz = wp.z - tz;
+  const localPos = {
+    x: r00 * dx + r10 * dy + r20 * dz,
+    y: r01 * dx + r11 * dy + r21 * dz,
+    z: r02 * dx + r12 * dy + r22 * dz,
+  };
+
+  // Compute quaternion that rotates [0,0,1] to the world normal direction,
+  // then transform to body-local frame
+  const nx = wn.x, ny = wn.y, nz = wn.z;
+  // Transform normal to body-local
+  const localNx = r00 * nx + r10 * ny + r20 * nz;
+  const localNy = r01 * nx + r11 * ny + r21 * nz;
+  const localNz = r02 * nx + r12 * ny + r22 * nz;
+
+  // Shortest arc quaternion from [0,0,1] to localNormal
+  const dot = localNz; // dot([0,0,1], localNormal)
+  if (dot > 0.9999) {
+    return { position: localPos, orientation: { x: 0, y: 0, z: 0, w: 1 } };
+  }
+  if (dot < -0.9999) {
+    return { position: localPos, orientation: { x: 1, y: 0, z: 0, w: 0 } };
+  }
+  // cross([0,0,1], localNormal) = [-localNy, localNx, 0]
+  const cx = -localNy, cy = localNx, cz = 0;
+  const w = 1 + dot;
+  const len = Math.sqrt(cx * cx + cy * cy + cz * cz + w * w);
+  return {
+    position: localPos,
+    orientation: { x: cx / len, y: cy / len, z: cz / len, w: w / len },
+  };
+}
 
 /** Convert {x,y,z} pose format to [x,y,z] tuple format used by SceneGraphManager. */
 function convertPose(pose: BodyPose) {
@@ -629,7 +686,7 @@ export function useViewportBridge() {
 
             if (parentDatum.parentBodyId === childDatum.parentBodyId) {
               useAuthoringStatusStore.getState().setMessage(
-                'Cannot create joint: parent and child datums must be on different bodies',
+                'Both surfaces are on the same body — pick a surface on a different body',
               );
               return;
             }
@@ -652,15 +709,37 @@ export function useViewportBridge() {
                 : undefined;
               if (parentDatum && parentDatum.parentBodyId === resolution.bodyId) {
                 useAuthoringStatusStore.getState().setMessage(
-                  'Cannot create joint: parent and child datums must be on different bodies',
+                  'Both surfaces are on the same body — pick a surface on a different body',
                 );
                 return;
               }
             }
             creationState.setCreatingDatum(true);
-            useAuthoringStatusStore.getState().setMessage('Creating datum...');
+            useAuthoringStatusStore.getState().setMessage('Setting joint anchor...');
             const name = nextDatumName(datums);
             sendCreateDatumFromFace(resolution.geometryId, resolution.faceIndex, name);
+          } else if (resolution.kind === 'error' && spatial?.bodyId && spatial.worldPoint) {
+            // Primitive fallback: no B-Rep face data, but we have a hit point.
+            // Create a datum at the hit location using the surface normal as Z-axis.
+            const bodyId = spatial.bodyId;
+
+            if (creationState.step === 'pick-child') {
+              const parentDatum = creationState.parentDatumId
+                ? datums.get(creationState.parentDatumId)
+                : undefined;
+              if (parentDatum && parentDatum.parentBodyId === bodyId) {
+                useAuthoringStatusStore.getState().setMessage(
+                  'Both surfaces are on the same body — pick a surface on a different body',
+                );
+                return;
+              }
+            }
+
+            creationState.setCreatingDatum(true);
+            useAuthoringStatusStore.getState().setMessage('Setting joint anchor...');
+            const name = nextDatumName(datums);
+            const localPose = localPoseFromSpatial(spatial);
+            sendCreateDatum(bodyId, name, localPose);
           }
         }
 
@@ -754,7 +833,8 @@ export function useViewportBridge() {
   );
 
   const handleHover = useCallback((entityId: string | null) => {
-    if (useToolModeStore.getState().activeMode === 'create-datum') {
+    const mode = useToolModeStore.getState().activeMode;
+    if (mode === 'create-datum' || mode === 'create-joint') {
       useSelectionStore.getState().setHovered(null);
       return;
     }

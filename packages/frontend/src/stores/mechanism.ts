@@ -155,6 +155,18 @@ export interface MechanismState {
   // Pending "Make Body" workflow — geometry IDs to attach after body creation
   pendingMakeBodyGeometries: string[] | null;
   setPendingMakeBodyGeometries: (ids: string[] | null) => void;
+
+  // Extended options for the Make Body workflow (dissolve old bodies, trigger rename)
+  pendingMakeBodyOptions: {
+    name: string;
+    bodiesToDissolve: string[];
+    shouldActivateRename: boolean;
+  } | null;
+  setPendingMakeBodyOptions: (opts: MechanismState['pendingMakeBodyOptions']) => void;
+
+  // Trigger inline rename on a newly created entity
+  pendingRenameEntityId: string | null;
+  setPendingRenameEntityId: (id: string | null) => void;
 }
 
 export const useMechanismStore = create<MechanismState>()((set) => ({
@@ -171,6 +183,10 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
   isDirty: false,
   pendingMakeBodyGeometries: null,
   setPendingMakeBodyGeometries: (ids) => set({ pendingMakeBodyGeometries: ids }),
+  pendingMakeBodyOptions: null,
+  setPendingMakeBodyOptions: (opts) => set({ pendingMakeBodyOptions: opts }),
+  pendingRenameEntityId: null,
+  setPendingRenameEntityId: (id) => set({ pendingRenameEntityId: id }),
 
   addBodies: (bodies) =>
     set((state) => {
@@ -354,6 +370,9 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       loads: new Map<string, LoadState>(),
       actuators: new Map<string, ActuatorState>(),
       importError: null,
+      pendingMakeBodyGeometries: null,
+      pendingMakeBodyOptions: null,
+      pendingRenameEntityId: null,
     }),
 
   resetProject: () =>
@@ -368,6 +387,9 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       projectName: 'Untitled',
       projectFilePath: null,
       isDirty: false,
+      pendingMakeBodyGeometries: null,
+      pendingMakeBodyOptions: null,
+      pendingRenameEntityId: null,
     }),
 
   setImporting: (v) => set({ importing: v }),

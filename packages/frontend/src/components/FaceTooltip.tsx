@@ -7,19 +7,27 @@ interface FaceTooltipProps {
   containerRef: React.RefObject<HTMLDivElement | null>;
   /** Current hovered face info from the picking system. */
   hoveredFace: { bodyId: string; faceIndex: number; previewType?: DatumPreviewType } | null;
+  /** Active tool mode — affects label wording. */
+  mode?: 'create-datum' | 'create-joint';
 }
 
-const PREVIEW_TYPE_LABELS: Record<DatumPreviewType, string> = {
+const DATUM_LABELS: Record<DatumPreviewType, string> = {
   plane: 'Plane',
   axis: 'Axis',
   point: 'Point',
+};
+
+const JOINT_LABELS: Record<DatumPreviewType, string> = {
+  plane: 'Joint plane',
+  axis: 'Revolute axis',
+  point: 'Joint point',
 };
 
 /**
  * Floating tooltip that follows the cursor and shows the hovered face index
  * and estimated surface type during create-datum mode.
  */
-export function FaceTooltip({ containerRef, hoveredFace }: FaceTooltipProps) {
+export function FaceTooltip({ containerRef, hoveredFace, mode = 'create-datum' }: FaceTooltipProps) {
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const rafRef = useRef(0);
 
@@ -44,8 +52,9 @@ export function FaceTooltip({ containerRef, hoveredFace }: FaceTooltipProps) {
 
   if (!hoveredFace) return null;
 
+  const labels = mode === 'create-joint' ? JOINT_LABELS : DATUM_LABELS;
   const label = hoveredFace.previewType
-    ? `${PREVIEW_TYPE_LABELS[hoveredFace.previewType]} (Face ${hoveredFace.faceIndex})`
+    ? `${labels[hoveredFace.previewType]} (Face ${hoveredFace.faceIndex})`
     : `Face ${hoveredFace.faceIndex}`;
 
   return (

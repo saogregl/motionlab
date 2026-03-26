@@ -20,6 +20,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { sendDeleteActuator, sendUpdateJoint } from '../engine/connection.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useMechanismStore } from '../stores/mechanism.js';
+import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { useTraceStore } from '../stores/traces.js';
 import { useToastStore } from '../stores/toast.js';
@@ -96,6 +97,15 @@ export function JointInspector({ jointId }: { jointId: string }) {
       .getState()
       .editExisting(jointId, joint.parentDatumId, joint.childDatumId, joint.type);
   }, [joint, jointId, isSimulating]);
+
+  const handleEditAnchor = useCallback(
+    (datumId: string) => {
+      if (isSimulating) return;
+      useSelectionStore.getState().select(datumId);
+      useToolModeStore.getState().setGizmoMode('translate');
+    },
+    [isSimulating],
+  );
 
   // Compute poses for coordinate frame display
   const parentDatumPose = useMemo(() => {
@@ -236,6 +246,28 @@ export function JointInspector({ jointId }: { jointId: string }) {
             Edit Joint
           </Button>
         </div>
+        {joint && (
+          <div className="flex gap-1 px-1.5 pt-0.5 pb-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={isSimulating}
+              onClick={() => handleEditAnchor(joint.parentDatumId)}
+              className="flex-1 text-[10px]"
+            >
+              Move Anchor A
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={isSimulating}
+              onClick={() => handleEditAnchor(joint.childDatumId)}
+              className="flex-1 text-[10px]"
+            >
+              Move Anchor B
+            </Button>
+          </div>
+        )}
       </InspectorSection>
 
       {/* Coordinate frame display */}

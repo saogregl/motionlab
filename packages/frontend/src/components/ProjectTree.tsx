@@ -10,6 +10,7 @@ import {
   GroupHeaderRow,
   InlineEditableName,
   JointContextMenu,
+  MultiSelectContextMenu,
   type TreeNode,
   TreeRow,
   type TreeRowRenderProps,
@@ -23,7 +24,6 @@ import { executeCommand } from '../commands/registry.js';
 import {
   getSceneGraph,
   sendAttachGeometry,
-  sendCreateBody,
   sendDeleteBody,
   sendDeleteDatum,
   sendDeleteGeometry,
@@ -48,6 +48,7 @@ import { useSimulationStore } from '../stores/simulation.js';
 import { useToastStore } from '../stores/toast.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
 import { useVisibilityStore } from '../stores/visibility.js';
+import { executeMakeBody, executeSplitBody } from '../utils/body-merge.js';
 import {
   resolveViewportEntityId,
   resolveViewportEntityIds,
@@ -307,6 +308,16 @@ export function ProjectTree() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- expandedIds excluded to avoid loops
   }, [selectedIds, nodes]);
 
+  // ── Auto-activate inline rename after merge ──
+
+  const pendingRenameEntityId = useMechanismStore((s) => s.pendingRenameEntityId);
+  useEffect(() => {
+    if (pendingRenameEntityId) {
+      setEditingId(pendingRenameEntityId);
+      useMechanismStore.getState().setPendingRenameEntityId(null);
+    }
+  }, [pendingRenameEntityId]);
+
   // ── Selection (filter out structural IDs) ──
 
   const handleSelectionChange = useCallback(
@@ -473,6 +484,84 @@ export function ProjectTree() {
         />
       );
 
+      // Multi-selection context menu — overrides per-entity menus
+      if (selectedIds.size > 1 && selectedIds.has(node.id) && !isStructuralId(node.id)) {
+        const counts: Record<string, number> = {};
+        for (const sid of selectedIds) {
+          if (bodies.has(sid)) counts['Body'] = (counts['Body'] ?? 0) + 1;
+          else if (geometries.has(sid)) counts['Geometry'] = (counts['Geometry'] ?? 0) + 1;
+          else if (datums.has(sid)) counts['Datum'] = (counts['Datum'] ?? 0) + 1;
+          else if (joints.has(sid)) counts['Joint'] = (counts['Joint'] ?? 0) + 1;
+          else if (loads.has(sid)) counts['Load'] = (counts['Load'] ?? 0) + 1;
+          else if (actuators.has(sid)) counts['Actuator'] = (counts['Actuator'] ?? 0) + 1;
+        }
+        const pluralize = (w: string, n: number) => {
+          if (n === 1) return w;
+          if (w === 'Body') return 'Bodies';
+          if (w === 'Geometry') return 'Geometries';
+          return `${w}s`;
+        };
+        const summary = Object.entries(counts)
+          .map(([type, count]) => `${count} ${pluralize(type, count)}`)
+          .join(', ');
+
+        const canMakeBody = !isSimulating &&
+          [...selectedIds].some((id) => geometries.has(id) || bodies.has(id));
+
+        // Split: enabled when all selected items are child geometries of the same body
+        // and the body has other children not in the selection
+        let splitSourceBodyId: string | null = null;
+        const selectedGeomIds = [...selectedIds].filter((id) => geometries.has(id));
+        if (selectedGeomIds.length > 0 && selectedGeomIds.length === selectedIds.size) {
+          const parentIds = new Set(
+            selectedGeomIds.map((id) => geometries.get(id)?.parentBodyId).filter(Boolean),
+          );
+          if (parentIds.size === 1) {
+            const parentId = [...parentIds][0]!;
+            const totalChildren = [...geometries.values()].filter(
+              (g) => g.parentBodyId === parentId,
+            ).length;
+            if (selectedGeomIds.length < totalChildren) {
+              splitSourceBodyId = parentId;
+            }
+          }
+        }
+
+        return (
+          <MultiSelectContextMenu
+            selectionSummary={summary}
+            onMakeBody={canMakeBody ? () => executeMakeBody(selectedIds) : undefined}
+            makeBodyDisabledReason={
+              isSimulating ? 'Not available during simulation' : !canMakeBody ? 'Select geometries or bodies' : undefined
+            }
+            onSplitFromBody={
+              splitSourceBodyId && !isSimulating
+                ? () => executeSplitBody(new Set(selectedGeomIds), splitSourceBodyId!)
+                : undefined
+            }
+            splitFromBodyDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
+            onDelete={
+              isSimulating
+                ? undefined
+                : () => {
+                    for (const id of selectedIds) {
+                      if (joints.has(id)) sendDeleteJoint(id);
+                      else if (datums.has(id)) sendDeleteDatum(id);
+                      else if (loads.has(id)) sendDeleteLoad(id);
+                      else if (actuators.has(id)) sendDeleteActuator(id);
+                      else if (geometries.has(id)) sendDeleteGeometry(id);
+                      else if (bodies.has(id)) sendDeleteBody(id);
+                    }
+                    useSelectionStore.getState().clearSelection();
+                  }
+            }
+            deleteDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
+          >
+            {row}
+          </MultiSelectContextMenu>
+        );
+      }
+
       // Wrap in appropriate context menu
       if (nodeType === 'body') {
         const allBodyIds = [...bodies.keys()];
@@ -573,16 +662,12 @@ export function ProjectTree() {
               isSimulating || geom?.parentBodyId
                 ? undefined
                 : () => {
-                    // Collect selected loose geometries; fall back to this one
                     const currentSelection = useSelectionStore.getState().selectedIds;
-                    const mechState = useMechanismStore.getState();
-                    const looseGeomIds = [...currentSelection].filter((id) => {
-                      const g = mechState.geometries.get(id);
-                      return g && !g.parentBodyId;
-                    });
-                    const targetGeomIds = looseGeomIds.length > 0 ? looseGeomIds : [node.id];
-                    mechState.setPendingMakeBodyGeometries(targetGeomIds);
-                    sendCreateBody(`Body ${mechState.bodies.size + 1}`);
+                    // If multiple items are selected, use the full selection; otherwise just this geometry
+                    const ids = currentSelection.size > 0 && currentSelection.has(node.id)
+                      ? currentSelection
+                      : new Set([node.id]);
+                    executeMakeBody(ids);
                   }
             }
             makeBodyDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
@@ -837,7 +922,7 @@ export function ProjectTree() {
 
       return row;
     },
-    [editingId, isSimulating, handleRenameCommit, hiddenIds, bodies, geometries, datums, joints, loads, actuators, setSelection, connectionIndex],
+    [editingId, isSimulating, handleRenameCommit, hiddenIds, bodies, geometries, datums, joints, loads, actuators, setSelection, connectionIndex, selectedIds],
   );
 
   // ── Empty state ──

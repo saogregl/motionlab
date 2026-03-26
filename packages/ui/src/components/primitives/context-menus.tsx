@@ -438,5 +438,65 @@ function GeometryContextMenu({ children, ...rest }: GeometryContextMenuProps) {
   );
 }
 
-export { BodyContextMenu, BodyContextMenuItems, JointContextMenu, JointContextMenuItems, DatumContextMenu, DatumContextMenuItems, GeometryContextMenu, GeometryContextMenuItems };
-export type { BodyContextMenuProps, JointContextMenuProps, DatumContextMenuProps, GeometryContextMenuProps };
+/* ── MultiSelectContextMenu ── */
+
+import { GitBranchPlus, Scissors } from 'lucide-react';
+
+interface MultiSelectContextMenuProps {
+  children: ReactNode;
+  selectionSummary: string;
+  onMakeBody?: () => void;
+  makeBodyDisabledReason?: string;
+  onSplitFromBody?: () => void;
+  splitFromBodyDisabledReason?: string;
+  onDelete?: () => void;
+  deleteDisabledReason?: string;
+}
+
+function MultiSelectContextMenuItems({
+  selectionSummary,
+  onMakeBody,
+  makeBodyDisabledReason,
+  onSplitFromBody,
+  splitFromBodyDisabledReason,
+  onDelete,
+  deleteDisabledReason,
+}: Omit<MultiSelectContextMenuProps, 'children'>) {
+  return (
+    <>
+      <div className="px-3 py-1.5 text-2xs text-text-tertiary">{selectionSummary}</div>
+      <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} onSelect={onMakeBody} disabled={!onMakeBody} title={!onMakeBody ? makeBodyDisabledReason : undefined}>
+        <GitBranchPlus className={iconCls} />
+        Make Body
+        <ContextMenuShortcut>Ctrl+G</ContextMenuShortcut>
+      </ContextMenuItem>
+      {onSplitFromBody !== undefined && (
+        <ContextMenuItem className={itemCls} onSelect={onSplitFromBody} disabled={!onSplitFromBody} title={!onSplitFromBody ? splitFromBodyDisabledReason : undefined}>
+          <Scissors className={iconCls} />
+          Split from Body
+        </ContextMenuItem>
+      )}
+      <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} variant="destructive" onSelect={onDelete} disabled={!onDelete} title={!onDelete ? deleteDisabledReason : undefined}>
+        <Trash2 className={iconCls} />
+        Delete
+        <ContextMenuShortcut>Del</ContextMenuShortcut>
+      </ContextMenuItem>
+    </>
+  );
+}
+
+function MultiSelectContextMenu({ children, ...rest }: MultiSelectContextMenuProps) {
+  return (
+    <ContextMenu>
+      <ContextMenuTrigger>{children}</ContextMenuTrigger>
+      <ContextMenuContent className="w-[220px]">
+        <MultiSelectContextMenuItems {...rest} />
+      </ContextMenuContent>
+    </ContextMenu>
+  );
+}
+
+export { BodyContextMenu, BodyContextMenuItems, JointContextMenu, JointContextMenuItems, DatumContextMenu, DatumContextMenuItems, GeometryContextMenu, GeometryContextMenuItems, MultiSelectContextMenu, MultiSelectContextMenuItems };
+export type { BodyContextMenuProps, JointContextMenuProps, DatumContextMenuProps, GeometryContextMenuProps, MultiSelectContextMenuProps };

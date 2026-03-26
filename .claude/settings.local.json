@@ -91,7 +91,8 @@
       "WebFetch(domain:www.utsubo.com)",
       "WebFetch(domain:medium.com)",
       "WebFetch(domain:connectrpc.com)",
-      "Bash(xargs basename:*)"
+      "Bash(xargs basename:*)",
+      "Bash(find /c/Dev/motionlab/packages/frontend/src -type f \\\\\\(-name *command* -o -name *undo* -o -name *history* \\\\\\))"
     ]
   },
   "enabledPlugins": {

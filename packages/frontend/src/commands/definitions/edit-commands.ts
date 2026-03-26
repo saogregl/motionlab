@@ -1,4 +1,4 @@
-import { BoxSelect, Redo2, Trash2, Undo2, X } from 'lucide-react';
+import { Box, BoxSelect, Redo2, Trash2, Undo2, X } from 'lucide-react';
 
 import { sendDeleteActuator, sendDeleteDatum, sendDeleteJoint, sendDeleteLoad } from '../../engine/connection.js';
 import { useAuthoringStatusStore } from '../../stores/authoring-status.js';
@@ -8,6 +8,7 @@ import { useMechanismStore } from '../../stores/mechanism.js';
 import { useSelectionStore } from '../../stores/selection.js';
 import { useSimulationStore } from '../../stores/simulation.js';
 import { useToolModeStore } from '../../stores/tool-mode.js';
+import { executeMakeBody } from '../../utils/body-merge.js';
 import type { CommandDef } from '../types.js';
 
 export function createEditCommands(): CommandDef[] {
@@ -81,6 +82,23 @@ export function createEditCommands(): CommandDef[] {
         const { bodies, datums, joints, loads, actuators } = useMechanismStore.getState();
         const allIds = [...bodies.keys(), ...datums.keys(), ...joints.keys(), ...loads.keys(), ...actuators.keys()];
         useSelectionStore.getState().selectAll(allIds);
+      },
+    },
+    {
+      id: 'edit.make-body',
+      label: 'Make Body',
+      icon: Box,
+      category: 'edit',
+      shortcut: 'Ctrl+G',
+      enabled: () => {
+        if (!notSimulating()) return false;
+        const { selectedIds } = useSelectionStore.getState();
+        if (selectedIds.size === 0) return false;
+        const mech = useMechanismStore.getState();
+        return [...selectedIds].some((id) => mech.geometries.has(id) || mech.bodies.has(id));
+      },
+      execute: () => {
+        executeMakeBody(useSelectionStore.getState().selectedIds);
       },
     },
     {
