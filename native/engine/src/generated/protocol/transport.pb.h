@@ -175,6 +175,9 @@ extern EngineStatusDefaultTypeInternal _EngineStatus_default_instance_;
 class Event;
 struct EventDefaultTypeInternal;
 extern EventDefaultTypeInternal _Event_default_instance_;
+class FaceGeometryMetadata;
+struct FaceGeometryMetadataDefaultTypeInternal;
+extern FaceGeometryMetadataDefaultTypeInternal _FaceGeometryMetadata_default_instance_;
 class GeometryImportResult;
 struct GeometryImportResultDefaultTypeInternal;
 extern GeometryImportResultDefaultTypeInternal _GeometryImportResult_default_instance_;
@@ -728,7 +731,7 @@ class SolverSettings final : public ::google::protobuf::Message
     return reinterpret_cast<const SolverSettings*>(
         &_SolverSettings_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 67;
+  static constexpr int kIndexInFileMessages = 68;
   friend void swap(SolverSettings& a, SolverSettings& b) { a.Swap(&b); }
   inline void Swap(SolverSettings* other) {
     if (other == this) return;
@@ -954,7 +957,7 @@ class SimulationStateEvent final : public ::google::protobuf::Message
     return reinterpret_cast<const SimulationStateEvent*>(
         &_SimulationStateEvent_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 74;
+  static constexpr int kIndexInFileMessages = 75;
   friend void swap(SimulationStateEvent& a, SimulationStateEvent& b) { a.Swap(&b); }
   inline void Swap(SimulationStateEvent* other) {
     if (other == this) return;
@@ -1168,7 +1171,7 @@ class SimulationControlCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const SimulationControlCommand*>(
         &_SimulationControlCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 72;
+  static constexpr int kIndexInFileMessages = 73;
   friend void swap(SimulationControlCommand& a, SimulationControlCommand& b) { a.Swap(&b); }
   inline void Swap(SimulationControlCommand* other) {
     if (other == this) return;
@@ -1358,7 +1361,7 @@ class ScrubCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const ScrubCommand*>(
         &_ScrubCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 81;
+  static constexpr int kIndexInFileMessages = 82;
   friend void swap(ScrubCommand& a, ScrubCommand& b) { a.Swap(&b); }
   inline void Swap(ScrubCommand* other) {
     if (other == this) return;
@@ -1553,7 +1556,7 @@ class SaveProjectResult final : public ::google::protobuf::Message
     return reinterpret_cast<const SaveProjectResult*>(
         &_SaveProjectResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 83;
+  static constexpr int kIndexInFileMessages = 84;
   friend void swap(SaveProjectResult& a, SaveProjectResult& b) { a.Swap(&b); }
   inline void Swap(SaveProjectResult* other) {
     if (other == this) return;
@@ -1780,7 +1783,7 @@ class SaveProjectCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const SaveProjectCommand*>(
         &_SaveProjectCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 82;
+  static constexpr int kIndexInFileMessages = 83;
   friend void swap(SaveProjectCommand& a, SaveProjectCommand& b) { a.Swap(&b); }
   inline void Swap(SaveProjectCommand* other) {
     if (other == this) return;
@@ -2564,7 +2567,7 @@ class OutputChannelDescriptor final : public ::google::protobuf::Message
     return reinterpret_cast<const OutputChannelDescriptor*>(
         &_OutputChannelDescriptor_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 78;
+  static constexpr int kIndexInFileMessages = 79;
   friend void swap(OutputChannelDescriptor& a, OutputChannelDescriptor& b) { a.Swap(&b); }
   inline void Swap(OutputChannelDescriptor* other) {
     if (other == this) return;
@@ -2808,7 +2811,7 @@ class NewProjectResult final : public ::google::protobuf::Message
     return reinterpret_cast<const NewProjectResult*>(
         &_NewProjectResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 91;
+  static constexpr int kIndexInFileMessages = 92;
   friend void swap(NewProjectResult& a, NewProjectResult& b) { a.Swap(&b); }
   inline void Swap(NewProjectResult* other) {
     if (other == this) return;
@@ -3016,7 +3019,7 @@ class NewProjectCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const NewProjectCommand*>(
         &_NewProjectCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 90;
+  static constexpr int kIndexInFileMessages = 91;
   friend void swap(NewProjectCommand& a, NewProjectCommand& b) { a.Swap(&b); }
   inline void Swap(NewProjectCommand* other) {
     if (other == this) return;
@@ -3212,7 +3215,7 @@ class LoadProjectCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const LoadProjectCommand*>(
         &_LoadProjectCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 84;
+  static constexpr int kIndexInFileMessages = 85;
   friend void swap(LoadProjectCommand& a, LoadProjectCommand& b) { a.Swap(&b); }
   inline void Swap(LoadProjectCommand* other) {
     if (other == this) return;
@@ -3871,7 +3874,7 @@ class ContactSettings final : public ::google::protobuf::Message
     return reinterpret_cast<const ContactSettings*>(
         &_ContactSettings_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 68;
+  static constexpr int kIndexInFileMessages = 69;
   friend void swap(ContactSettings& a, ContactSettings& b) { a.Swap(&b); }
   inline void Swap(ContactSettings* other) {
     if (other == this) return;
@@ -4109,7 +4112,7 @@ class CompilationDiagnostic final : public ::google::protobuf::Message
     return reinterpret_cast<const CompilationDiagnostic*>(
         &_CompilationDiagnostic_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 69;
+  static constexpr int kIndexInFileMessages = 70;
   friend void swap(CompilationDiagnostic& a, CompilationDiagnostic& b) { a.Swap(&b); }
   inline void Swap(CompilationDiagnostic* other) {
     if (other == this) return;
@@ -4382,7 +4385,7 @@ class TimeSample final : public ::google::protobuf::Message
     return reinterpret_cast<const TimeSample*>(
         &_TimeSample_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 79;
+  static constexpr int kIndexInFileMessages = 80;
   friend void swap(TimeSample& a, TimeSample& b) { a.Swap(&b); }
   inline void Swap(TimeSample* other) {
     if (other == this) return;
@@ -4617,7 +4620,7 @@ class SimulationSettings final : public ::google::protobuf::Message
     return reinterpret_cast<const SimulationSettings*>(
         &_SimulationSettings_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 70;
+  static constexpr int kIndexInFileMessages = 71;
   friend void swap(SimulationSettings& a, SimulationSettings& b) { a.Swap(&b); }
   inline void Swap(SimulationSettings* other) {
     if (other == this) return;
@@ -4871,7 +4874,7 @@ class RenameGeometryCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const RenameGeometryCommand*>(
         &_RenameGeometryCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 37;
+  static constexpr int kIndexInFileMessages = 38;
   friend void swap(RenameGeometryCommand& a, RenameGeometryCommand& b) { a.Swap(&b); }
   inline void Swap(RenameGeometryCommand* other) {
     if (other == this) return;
@@ -5299,7 +5302,7 @@ class RelocateAssetCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const RelocateAssetCommand*>(
         &_RelocateAssetCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 88;
+  static constexpr int kIndexInFileMessages = 89;
   friend void swap(RelocateAssetCommand& a, RelocateAssetCommand& b) { a.Swap(&b); }
   inline void Swap(RelocateAssetCommand* other) {
     if (other == this) return;
@@ -5531,7 +5534,7 @@ class PlaceAssetInSceneCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const PlaceAssetInSceneCommand*>(
         &_PlaceAssetInSceneCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 92;
+  static constexpr int kIndexInFileMessages = 93;
   friend void swap(PlaceAssetInSceneCommand& a, PlaceAssetInSceneCommand& b) { a.Swap(&b); }
   inline void Swap(PlaceAssetInSceneCommand* other) {
     if (other == this) return;
@@ -5745,7 +5748,7 @@ class MissingAssetInfo final : public ::google::protobuf::Message
     return reinterpret_cast<const MissingAssetInfo*>(
         &_MissingAssetInfo_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 87;
+  static constexpr int kIndexInFileMessages = 88;
   friend void swap(MissingAssetInfo& a, MissingAssetInfo& b) { a.Swap(&b); }
   inline void Swap(MissingAssetInfo* other) {
     if (other == this) return;
@@ -5995,7 +5998,7 @@ class JointStateData final : public ::google::protobuf::Message
     return reinterpret_cast<const JointStateData*>(
         &_JointStateData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 76;
+  static constexpr int kIndexInFileMessages = 77;
   friend void swap(JointStateData& a, JointStateData& b) { a.Swap(&b); }
   inline void Swap(JointStateData* other) {
     if (other == this) return;
@@ -6845,6 +6848,258 @@ class Handshake final : public ::google::protobuf::Message
 };
 // -------------------------------------------------------------------
 
+class FaceGeometryMetadata final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:motionlab.protocol.FaceGeometryMetadata) */ {
+ public:
+  inline FaceGeometryMetadata() : FaceGeometryMetadata(nullptr) {}
+  ~FaceGeometryMetadata() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(FaceGeometryMetadata* msg, std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(FaceGeometryMetadata));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR FaceGeometryMetadata(
+      ::google::protobuf::internal::ConstantInitialized);
+
+  inline FaceGeometryMetadata(const FaceGeometryMetadata& from) : FaceGeometryMetadata(nullptr, from) {}
+  inline FaceGeometryMetadata(FaceGeometryMetadata&& from) noexcept
+      : FaceGeometryMetadata(nullptr, std::move(from)) {}
+  inline FaceGeometryMetadata& operator=(const FaceGeometryMetadata& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline FaceGeometryMetadata& operator=(FaceGeometryMetadata&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const FaceGeometryMetadata& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const FaceGeometryMetadata* internal_default_instance() {
+    return reinterpret_cast<const FaceGeometryMetadata*>(
+        &_FaceGeometryMetadata_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 17;
+  friend void swap(FaceGeometryMetadata& a, FaceGeometryMetadata& b) { a.Swap(&b); }
+  inline void Swap(FaceGeometryMetadata* other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(FaceGeometryMetadata* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  FaceGeometryMetadata* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<FaceGeometryMetadata>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const FaceGeometryMetadata& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const FaceGeometryMetadata& from) { FaceGeometryMetadata::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(
+      ::google::protobuf::MessageLite& to_msg,
+      const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* _InternalSerialize(
+      const MessageLite& msg, ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(FaceGeometryMetadata* other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(
+      ::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "motionlab.protocol.FaceGeometryMetadata"; }
+
+ protected:
+  explicit FaceGeometryMetadata(::google::protobuf::Arena* arena);
+  FaceGeometryMetadata(::google::protobuf::Arena* arena, const FaceGeometryMetadata& from);
+  FaceGeometryMetadata(::google::protobuf::Arena* arena, FaceGeometryMetadata&& from) noexcept
+      : FaceGeometryMetadata(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
+
+ public:
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kAxisDirectionFieldNumber = 1,
+    kNormalFieldNumber = 2,
+    kRadiusFieldNumber = 3,
+    kSecondaryRadiusFieldNumber = 4,
+    kSemiAngleFieldNumber = 5,
+  };
+  // optional .motionlab.mechanism.Vec3 axis_direction = 1 [json_name = "axisDirection"];
+  bool has_axis_direction() const;
+  void clear_axis_direction() ;
+  const ::motionlab::mechanism::Vec3& axis_direction() const;
+  PROTOBUF_NODISCARD ::motionlab::mechanism::Vec3* release_axis_direction();
+  ::motionlab::mechanism::Vec3* mutable_axis_direction();
+  void set_allocated_axis_direction(::motionlab::mechanism::Vec3* value);
+  void unsafe_arena_set_allocated_axis_direction(::motionlab::mechanism::Vec3* value);
+  ::motionlab::mechanism::Vec3* unsafe_arena_release_axis_direction();
+
+  private:
+  const ::motionlab::mechanism::Vec3& _internal_axis_direction() const;
+  ::motionlab::mechanism::Vec3* _internal_mutable_axis_direction();
+
+  public:
+  // optional .motionlab.mechanism.Vec3 normal = 2 [json_name = "normal"];
+  bool has_normal() const;
+  void clear_normal() ;
+  const ::motionlab::mechanism::Vec3& normal() const;
+  PROTOBUF_NODISCARD ::motionlab::mechanism::Vec3* release_normal();
+  ::motionlab::mechanism::Vec3* mutable_normal();
+  void set_allocated_normal(::motionlab::mechanism::Vec3* value);
+  void unsafe_arena_set_allocated_normal(::motionlab::mechanism::Vec3* value);
+  ::motionlab::mechanism::Vec3* unsafe_arena_release_normal();
+
+  private:
+  const ::motionlab::mechanism::Vec3& _internal_normal() const;
+  ::motionlab::mechanism::Vec3* _internal_mutable_normal();
+
+  public:
+  // optional double radius = 3 [json_name = "radius"];
+  bool has_radius() const;
+  void clear_radius() ;
+  double radius() const;
+  void set_radius(double value);
+
+  private:
+  double _internal_radius() const;
+  void _internal_set_radius(double value);
+
+  public:
+  // optional double secondary_radius = 4 [json_name = "secondaryRadius"];
+  bool has_secondary_radius() const;
+  void clear_secondary_radius() ;
+  double secondary_radius() const;
+  void set_secondary_radius(double value);
+
+  private:
+  double _internal_secondary_radius() const;
+  void _internal_set_secondary_radius(double value);
+
+  public:
+  // optional double semi_angle = 5 [json_name = "semiAngle"];
+  bool has_semi_angle() const;
+  void clear_semi_angle() ;
+  double semi_angle() const;
+  void set_semi_angle(double value);
+
+  private:
+  double _internal_semi_angle() const;
+  void _internal_set_semi_angle(double value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:motionlab.protocol.FaceGeometryMetadata)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      3, 5, 2,
+      0, 2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(
+        ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena);
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena, const Impl_& from,
+                          const FaceGeometryMetadata& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::motionlab::mechanism::Vec3* axis_direction_;
+    ::motionlab::mechanism::Vec3* normal_;
+    double radius_;
+    double secondary_radius_;
+    double semi_angle_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_protocol_2ftransport_2eproto;
+};
+// -------------------------------------------------------------------
+
 class DetachGeometryCommand final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:motionlab.protocol.DetachGeometryCommand) */ {
  public:
@@ -6904,7 +7159,7 @@ class DetachGeometryCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const DetachGeometryCommand*>(
         &_DetachGeometryCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 33;
+  static constexpr int kIndexInFileMessages = 34;
   friend void swap(DetachGeometryCommand& a, DetachGeometryCommand& b) { a.Swap(&b); }
   inline void Swap(DetachGeometryCommand* other) {
     if (other == this) return;
@@ -7105,7 +7360,7 @@ class DeleteLoadResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteLoadResult*>(
         &_DeleteLoadResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 60;
+  static constexpr int kIndexInFileMessages = 61;
   friend void swap(DeleteLoadResult& a, DeleteLoadResult& b) { a.Swap(&b); }
   inline void Swap(DeleteLoadResult* other) {
     if (other == this) return;
@@ -7334,7 +7589,7 @@ class DeleteLoadCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteLoadCommand*>(
         &_DeleteLoadCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 57;
+  static constexpr int kIndexInFileMessages = 58;
   friend void swap(DeleteLoadCommand& a, DeleteLoadCommand& b) { a.Swap(&b); }
   inline void Swap(DeleteLoadCommand* other) {
     if (other == this) return;
@@ -7535,7 +7790,7 @@ class DeleteJointResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteJointResult*>(
         &_DeleteJointResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 54;
+  static constexpr int kIndexInFileMessages = 55;
   friend void swap(DeleteJointResult& a, DeleteJointResult& b) { a.Swap(&b); }
   inline void Swap(DeleteJointResult* other) {
     if (other == this) return;
@@ -7764,7 +8019,7 @@ class DeleteJointCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteJointCommand*>(
         &_DeleteJointCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 51;
+  static constexpr int kIndexInFileMessages = 52;
   friend void swap(DeleteJointCommand& a, DeleteJointCommand& b) { a.Swap(&b); }
   inline void Swap(DeleteJointCommand* other) {
     if (other == this) return;
@@ -7965,7 +8220,7 @@ class DeleteGeometryResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteGeometryResult*>(
         &_DeleteGeometryResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 36;
+  static constexpr int kIndexInFileMessages = 37;
   friend void swap(DeleteGeometryResult& a, DeleteGeometryResult& b) { a.Swap(&b); }
   inline void Swap(DeleteGeometryResult* other) {
     if (other == this) return;
@@ -8194,7 +8449,7 @@ class DeleteGeometryCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteGeometryCommand*>(
         &_DeleteGeometryCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 35;
+  static constexpr int kIndexInFileMessages = 36;
   friend void swap(DeleteGeometryCommand& a, DeleteGeometryCommand& b) { a.Swap(&b); }
   inline void Swap(DeleteGeometryCommand* other) {
     if (other == this) return;
@@ -8395,7 +8650,7 @@ class DeleteDatumResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteDatumResult*>(
         &_DeleteDatumResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 21;
+  static constexpr int kIndexInFileMessages = 22;
   friend void swap(DeleteDatumResult& a, DeleteDatumResult& b) { a.Swap(&b); }
   inline void Swap(DeleteDatumResult* other) {
     if (other == this) return;
@@ -8825,7 +9080,7 @@ class DeleteBodyResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteBodyResult*>(
         &_DeleteBodyResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 30;
+  static constexpr int kIndexInFileMessages = 31;
   friend void swap(DeleteBodyResult& a, DeleteBodyResult& b) { a.Swap(&b); }
   inline void Swap(DeleteBodyResult* other) {
     if (other == this) return;
@@ -9054,7 +9309,7 @@ class DeleteBodyCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteBodyCommand*>(
         &_DeleteBodyCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 29;
+  static constexpr int kIndexInFileMessages = 30;
   friend void swap(DeleteBodyCommand& a, DeleteBodyCommand& b) { a.Swap(&b); }
   inline void Swap(DeleteBodyCommand* other) {
     if (other == this) return;
@@ -9255,7 +9510,7 @@ class DeleteActuatorResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteActuatorResult*>(
         &_DeleteActuatorResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 66;
+  static constexpr int kIndexInFileMessages = 67;
   friend void swap(DeleteActuatorResult& a, DeleteActuatorResult& b) { a.Swap(&b); }
   inline void Swap(DeleteActuatorResult* other) {
     if (other == this) return;
@@ -9484,7 +9739,7 @@ class DeleteActuatorCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const DeleteActuatorCommand*>(
         &_DeleteActuatorCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 63;
+  static constexpr int kIndexInFileMessages = 64;
   friend void swap(DeleteActuatorCommand& a, DeleteActuatorCommand& b) { a.Swap(&b); }
   inline void Swap(DeleteActuatorCommand* other) {
     if (other == this) return;
@@ -9680,7 +9935,7 @@ class CreateDatumFromFaceCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateDatumFromFaceCommand*>(
         &_CreateDatumFromFaceCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 17;
+  static constexpr int kIndexInFileMessages = 18;
   friend void swap(CreateDatumFromFaceCommand& a, CreateDatumFromFaceCommand& b) { a.Swap(&b); }
   inline void Swap(CreateDatumFromFaceCommand* other) {
     if (other == this) return;
@@ -9906,7 +10161,7 @@ class CompilationResultEvent final : public ::google::protobuf::Message
     return reinterpret_cast<const CompilationResultEvent*>(
         &_CompilationResultEvent_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 73;
+  static constexpr int kIndexInFileMessages = 74;
   friend void swap(CompilationResultEvent& a, CompilationResultEvent& b) { a.Swap(&b); }
   inline void Swap(CompilationResultEvent* other) {
     if (other == this) return;
@@ -10176,7 +10431,7 @@ class BodyPoseData final : public ::google::protobuf::Message
     return reinterpret_cast<const BodyPoseData*>(
         &_BodyPoseData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 75;
+  static constexpr int kIndexInFileMessages = 76;
   friend void swap(BodyPoseData& a, BodyPoseData& b) { a.Swap(&b); }
   inline void Swap(BodyPoseData* other) {
     if (other == this) return;
@@ -10407,7 +10662,7 @@ class UpdatePrimitiveCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdatePrimitiveCommand*>(
         &_UpdatePrimitiveCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 43;
+  static constexpr int kIndexInFileMessages = 44;
   friend void swap(UpdatePrimitiveCommand& a, UpdatePrimitiveCommand& b) { a.Swap(&b); }
   inline void Swap(UpdatePrimitiveCommand* other) {
     if (other == this) return;
@@ -10632,7 +10887,7 @@ class UpdateMassPropertiesCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateMassPropertiesCommand*>(
         &_UpdateMassPropertiesCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 39;
+  static constexpr int kIndexInFileMessages = 40;
   friend void swap(UpdateMassPropertiesCommand& a, UpdateMassPropertiesCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateMassPropertiesCommand* other) {
     if (other == this) return;
@@ -10857,7 +11112,7 @@ class UpdateDatumPoseCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateDatumPoseCommand*>(
         &_UpdateDatumPoseCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 23;
+  static constexpr int kIndexInFileMessages = 24;
   friend void swap(UpdateDatumPoseCommand& a, UpdateDatumPoseCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateDatumPoseCommand* other) {
     if (other == this) return;
@@ -11070,7 +11325,7 @@ class UpdateCollisionConfigCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateCollisionConfigCommand*>(
         &_UpdateCollisionConfigCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 46;
+  static constexpr int kIndexInFileMessages = 47;
   friend void swap(UpdateCollisionConfigCommand& a, UpdateCollisionConfigCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateCollisionConfigCommand* other) {
     if (other == this) return;
@@ -11283,7 +11538,7 @@ class UpdateBodyCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateBodyCommand*>(
         &_UpdateBodyCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 25;
+  static constexpr int kIndexInFileMessages = 26;
   friend void swap(UpdateBodyCommand& a, UpdateBodyCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateBodyCommand* other) {
     if (other == this) return;
@@ -11541,7 +11796,7 @@ class SimulationTrace final : public ::google::protobuf::Message
     return reinterpret_cast<const SimulationTrace*>(
         &_SimulationTrace_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 80;
+  static constexpr int kIndexInFileMessages = 81;
   friend void swap(SimulationTrace& a, SimulationTrace& b) { a.Swap(&b); }
   inline void Swap(SimulationTrace* other) {
     if (other == this) return;
@@ -11756,7 +12011,7 @@ class SimulationFrame final : public ::google::protobuf::Message
     return reinterpret_cast<const SimulationFrame*>(
         &_SimulationFrame_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 77;
+  static constexpr int kIndexInFileMessages = 78;
   friend void swap(SimulationFrame& a, SimulationFrame& b) { a.Swap(&b); }
   inline void Swap(SimulationFrame* other) {
     if (other == this) return;
@@ -11996,7 +12251,7 @@ class CreatePrimitiveBodyCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const CreatePrimitiveBodyCommand*>(
         &_CreatePrimitiveBodyCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 41;
+  static constexpr int kIndexInFileMessages = 42;
   friend void swap(CreatePrimitiveBodyCommand& a, CreatePrimitiveBodyCommand& b) { a.Swap(&b); }
   inline void Swap(CreatePrimitiveBodyCommand* other) {
     if (other == this) return;
@@ -12482,7 +12737,7 @@ class CreateBodyCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateBodyCommand*>(
         &_CreateBodyCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 27;
+  static constexpr int kIndexInFileMessages = 28;
   friend void swap(CreateBodyCommand& a, CreateBodyCommand& b) { a.Swap(&b); }
   inline void Swap(CreateBodyCommand* other) {
     if (other == this) return;
@@ -12737,7 +12992,7 @@ class CompileMechanismCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const CompileMechanismCommand*>(
         &_CompileMechanismCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 71;
+  static constexpr int kIndexInFileMessages = 72;
   friend void swap(CompileMechanismCommand& a, CompileMechanismCommand& b) { a.Swap(&b); }
   inline void Swap(CompileMechanismCommand* other) {
     if (other == this) return;
@@ -13237,7 +13492,7 @@ class AttachGeometryCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const AttachGeometryCommand*>(
         &_AttachGeometryCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 31;
+  static constexpr int kIndexInFileMessages = 32;
   friend void swap(AttachGeometryCommand& a, AttachGeometryCommand& b) { a.Swap(&b); }
   inline void Swap(AttachGeometryCommand* other) {
     if (other == this) return;
@@ -13472,7 +13727,7 @@ class UpdateMassPropertiesResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateMassPropertiesResult*>(
         &_UpdateMassPropertiesResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 40;
+  static constexpr int kIndexInFileMessages = 41;
   friend void swap(UpdateMassPropertiesResult& a, UpdateMassPropertiesResult& b) { a.Swap(&b); }
   inline void Swap(UpdateMassPropertiesResult* other) {
     if (other == this) return;
@@ -13706,7 +13961,7 @@ class UpdateLoadResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateLoadResult*>(
         &_UpdateLoadResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 59;
+  static constexpr int kIndexInFileMessages = 60;
   friend void swap(UpdateLoadResult& a, UpdateLoadResult& b) { a.Swap(&b); }
   inline void Swap(UpdateLoadResult* other) {
     if (other == this) return;
@@ -13935,7 +14190,7 @@ class UpdateLoadCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateLoadCommand*>(
         &_UpdateLoadCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 56;
+  static constexpr int kIndexInFileMessages = 57;
   friend void swap(UpdateLoadCommand& a, UpdateLoadCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateLoadCommand* other) {
     if (other == this) return;
@@ -14136,7 +14391,7 @@ class UpdateJointResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateJointResult*>(
         &_UpdateJointResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 53;
+  static constexpr int kIndexInFileMessages = 54;
   friend void swap(UpdateJointResult& a, UpdateJointResult& b) { a.Swap(&b); }
   inline void Swap(UpdateJointResult* other) {
     if (other == this) return;
@@ -14365,7 +14620,7 @@ class UpdateJointCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateJointCommand*>(
         &_UpdateJointCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 50;
+  static constexpr int kIndexInFileMessages = 51;
   friend void swap(UpdateJointCommand& a, UpdateJointCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateJointCommand* other) {
     if (other == this) return;
@@ -14566,7 +14821,7 @@ class UpdateDatumPoseResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateDatumPoseResult*>(
         &_UpdateDatumPoseResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 24;
+  static constexpr int kIndexInFileMessages = 25;
   friend void swap(UpdateDatumPoseResult& a, UpdateDatumPoseResult& b) { a.Swap(&b); }
   inline void Swap(UpdateDatumPoseResult* other) {
     if (other == this) return;
@@ -14800,7 +15055,7 @@ class UpdateBodyResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateBodyResult*>(
         &_UpdateBodyResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 26;
+  static constexpr int kIndexInFileMessages = 27;
   friend void swap(UpdateBodyResult& a, UpdateBodyResult& b) { a.Swap(&b); }
   inline void Swap(UpdateBodyResult* other) {
     if (other == this) return;
@@ -15034,7 +15289,7 @@ class UpdateActuatorResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateActuatorResult*>(
         &_UpdateActuatorResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 65;
+  static constexpr int kIndexInFileMessages = 66;
   friend void swap(UpdateActuatorResult& a, UpdateActuatorResult& b) { a.Swap(&b); }
   inline void Swap(UpdateActuatorResult* other) {
     if (other == this) return;
@@ -15263,7 +15518,7 @@ class UpdateActuatorCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateActuatorCommand*>(
         &_UpdateActuatorCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 62;
+  static constexpr int kIndexInFileMessages = 63;
   friend void swap(UpdateActuatorCommand& a, UpdateActuatorCommand& b) { a.Swap(&b); }
   inline void Swap(UpdateActuatorCommand* other) {
     if (other == this) return;
@@ -15464,7 +15719,7 @@ class RenameDatumResult final : public ::google::protobuf::Message
     return reinterpret_cast<const RenameDatumResult*>(
         &_RenameDatumResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 22;
+  static constexpr int kIndexInFileMessages = 23;
   friend void swap(RenameDatumResult& a, RenameDatumResult& b) { a.Swap(&b); }
   inline void Swap(RenameDatumResult* other) {
     if (other == this) return;
@@ -15698,7 +15953,7 @@ class RelocateAssetResult final : public ::google::protobuf::Message
     return reinterpret_cast<const RelocateAssetResult*>(
         &_RelocateAssetResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 89;
+  static constexpr int kIndexInFileMessages = 90;
   friend void swap(RelocateAssetResult& a, RelocateAssetResult& b) { a.Swap(&b); }
   inline void Swap(RelocateAssetResult* other) {
     if (other == this) return;
@@ -16283,7 +16538,7 @@ class CreateLoadResult final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateLoadResult*>(
         &_CreateLoadResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 58;
+  static constexpr int kIndexInFileMessages = 59;
   friend void swap(CreateLoadResult& a, CreateLoadResult& b) { a.Swap(&b); }
   inline void Swap(CreateLoadResult* other) {
     if (other == this) return;
@@ -16512,7 +16767,7 @@ class CreateLoadCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateLoadCommand*>(
         &_CreateLoadCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 55;
+  static constexpr int kIndexInFileMessages = 56;
   friend void swap(CreateLoadCommand& a, CreateLoadCommand& b) { a.Swap(&b); }
   inline void Swap(CreateLoadCommand* other) {
     if (other == this) return;
@@ -16713,7 +16968,7 @@ class CreateJointResult final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateJointResult*>(
         &_CreateJointResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 52;
+  static constexpr int kIndexInFileMessages = 53;
   friend void swap(CreateJointResult& a, CreateJointResult& b) { a.Swap(&b); }
   inline void Swap(CreateJointResult* other) {
     if (other == this) return;
@@ -16942,7 +17197,7 @@ class CreateJointCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateJointCommand*>(
         &_CreateJointCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 49;
+  static constexpr int kIndexInFileMessages = 50;
   friend void swap(CreateJointCommand& a, CreateJointCommand& b) { a.Swap(&b); }
   inline void Swap(CreateJointCommand* other) {
     if (other == this) return;
@@ -17143,7 +17398,7 @@ class CreateDatumResult final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateDatumResult*>(
         &_CreateDatumResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 19;
+  static constexpr int kIndexInFileMessages = 20;
   friend void swap(CreateDatumResult& a, CreateDatumResult& b) { a.Swap(&b); }
   inline void Swap(CreateDatumResult* other) {
     if (other == this) return;
@@ -17372,7 +17627,7 @@ class CreateDatumFromFaceSuccess final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateDatumFromFaceSuccess*>(
         &_CreateDatumFromFaceSuccess_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 18;
+  static constexpr int kIndexInFileMessages = 19;
   friend void swap(CreateDatumFromFaceSuccess& a, CreateDatumFromFaceSuccess& b) { a.Swap(&b); }
   inline void Swap(CreateDatumFromFaceSuccess* other) {
     if (other == this) return;
@@ -17461,6 +17716,7 @@ class CreateDatumFromFaceSuccess final : public ::google::protobuf::Message
   enum : int {
     kDatumFieldNumber = 1,
     kGeometryIdFieldNumber = 4,
+    kFaceGeometryFieldNumber = 5,
     kFaceIndexFieldNumber = 2,
     kSurfaceClassFieldNumber = 3,
   };
@@ -17494,6 +17750,21 @@ class CreateDatumFromFaceSuccess final : public ::google::protobuf::Message
   ::motionlab::mechanism::ElementId* _internal_mutable_geometry_id();
 
   public:
+  // .motionlab.protocol.FaceGeometryMetadata face_geometry = 5 [json_name = "faceGeometry"];
+  bool has_face_geometry() const;
+  void clear_face_geometry() ;
+  const ::motionlab::protocol::FaceGeometryMetadata& face_geometry() const;
+  PROTOBUF_NODISCARD ::motionlab::protocol::FaceGeometryMetadata* release_face_geometry();
+  ::motionlab::protocol::FaceGeometryMetadata* mutable_face_geometry();
+  void set_allocated_face_geometry(::motionlab::protocol::FaceGeometryMetadata* value);
+  void unsafe_arena_set_allocated_face_geometry(::motionlab::protocol::FaceGeometryMetadata* value);
+  ::motionlab::protocol::FaceGeometryMetadata* unsafe_arena_release_face_geometry();
+
+  private:
+  const ::motionlab::protocol::FaceGeometryMetadata& _internal_face_geometry() const;
+  ::motionlab::protocol::FaceGeometryMetadata* _internal_mutable_face_geometry();
+
+  public:
   // uint32 face_index = 2 [json_name = "faceIndex"];
   void clear_face_index() ;
   ::uint32_t face_index() const;
@@ -17519,7 +17790,7 @@ class CreateDatumFromFaceSuccess final : public ::google::protobuf::Message
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      2, 4, 2,
+      3, 5, 3,
       0, 2>
       _table_;
 
@@ -17541,6 +17812,7 @@ class CreateDatumFromFaceSuccess final : public ::google::protobuf::Message
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::motionlab::mechanism::Datum* datum_;
     ::motionlab::mechanism::ElementId* geometry_id_;
+    ::motionlab::protocol::FaceGeometryMetadata* face_geometry_;
     ::uint32_t face_index_;
     int surface_class_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -17614,7 +17886,7 @@ class CreateBodyResult final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateBodyResult*>(
         &_CreateBodyResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 28;
+  static constexpr int kIndexInFileMessages = 29;
   friend void swap(CreateBodyResult& a, CreateBodyResult& b) { a.Swap(&b); }
   inline void Swap(CreateBodyResult* other) {
     if (other == this) return;
@@ -17848,7 +18120,7 @@ class CreateActuatorResult final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateActuatorResult*>(
         &_CreateActuatorResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 64;
+  static constexpr int kIndexInFileMessages = 65;
   friend void swap(CreateActuatorResult& a, CreateActuatorResult& b) { a.Swap(&b); }
   inline void Swap(CreateActuatorResult* other) {
     if (other == this) return;
@@ -18077,7 +18349,7 @@ class CreateActuatorCommand final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateActuatorCommand*>(
         &_CreateActuatorCommand_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 61;
+  static constexpr int kIndexInFileMessages = 62;
   friend void swap(CreateActuatorCommand& a, CreateActuatorCommand& b) { a.Swap(&b); }
   inline void Swap(CreateActuatorCommand* other) {
     if (other == this) return;
@@ -18273,7 +18545,7 @@ class UpdatePrimitiveSuccess final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdatePrimitiveSuccess*>(
         &_UpdatePrimitiveSuccess_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 45;
+  static constexpr int kIndexInFileMessages = 46;
   friend void swap(UpdatePrimitiveSuccess& a, UpdatePrimitiveSuccess& b) { a.Swap(&b); }
   inline void Swap(UpdatePrimitiveSuccess* other) {
     if (other == this) return;
@@ -18536,7 +18808,7 @@ class UpdateCollisionConfigSuccess final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateCollisionConfigSuccess*>(
         &_UpdateCollisionConfigSuccess_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 48;
+  static constexpr int kIndexInFileMessages = 49;
   friend void swap(UpdateCollisionConfigSuccess& a, UpdateCollisionConfigSuccess& b) { a.Swap(&b); }
   inline void Swap(UpdateCollisionConfigSuccess* other) {
     if (other == this) return;
@@ -18754,7 +19026,7 @@ class RenameGeometryResult final : public ::google::protobuf::Message
     return reinterpret_cast<const RenameGeometryResult*>(
         &_RenameGeometryResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 38;
+  static constexpr int kIndexInFileMessages = 39;
   friend void swap(RenameGeometryResult& a, RenameGeometryResult& b) { a.Swap(&b); }
   inline void Swap(RenameGeometryResult* other) {
     if (other == this) return;
@@ -18983,7 +19255,7 @@ class PlaceAssetInSceneResult final : public ::google::protobuf::Message
     return reinterpret_cast<const PlaceAssetInSceneResult*>(
         &_PlaceAssetInSceneResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 93;
+  static constexpr int kIndexInFileMessages = 94;
   friend void swap(PlaceAssetInSceneResult& a, PlaceAssetInSceneResult& b) { a.Swap(&b); }
   inline void Swap(PlaceAssetInSceneResult* other) {
     if (other == this) return;
@@ -19540,7 +19812,7 @@ class DetachGeometryResult final : public ::google::protobuf::Message
     return reinterpret_cast<const DetachGeometryResult*>(
         &_DetachGeometryResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 34;
+  static constexpr int kIndexInFileMessages = 35;
   friend void swap(DetachGeometryResult& a, DetachGeometryResult& b) { a.Swap(&b); }
   inline void Swap(DetachGeometryResult* other) {
     if (other == this) return;
@@ -19809,7 +20081,7 @@ class CreatePrimitiveBodyResult final : public ::google::protobuf::Message
     return reinterpret_cast<const CreatePrimitiveBodyResult*>(
         &_CreatePrimitiveBodyResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 42;
+  static constexpr int kIndexInFileMessages = 43;
   friend void swap(CreatePrimitiveBodyResult& a, CreatePrimitiveBodyResult& b) { a.Swap(&b); }
   inline void Swap(CreatePrimitiveBodyResult* other) {
     if (other == this) return;
@@ -20061,7 +20333,7 @@ class CreateDatumFromFaceResult final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateDatumFromFaceResult*>(
         &_CreateDatumFromFaceResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 20;
+  static constexpr int kIndexInFileMessages = 21;
   friend void swap(CreateDatumFromFaceResult& a, CreateDatumFromFaceResult& b) { a.Swap(&b); }
   inline void Swap(CreateDatumFromFaceResult* other) {
     if (other == this) return;
@@ -21325,7 +21597,7 @@ class AttachGeometryResult final : public ::google::protobuf::Message
     return reinterpret_cast<const AttachGeometryResult*>(
         &_AttachGeometryResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 32;
+  static constexpr int kIndexInFileMessages = 33;
   friend void swap(AttachGeometryResult& a, AttachGeometryResult& b) { a.Swap(&b); }
   inline void Swap(AttachGeometryResult* other) {
     if (other == this) return;
@@ -21594,7 +21866,7 @@ class UpdatePrimitiveResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdatePrimitiveResult*>(
         &_UpdatePrimitiveResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 44;
+  static constexpr int kIndexInFileMessages = 45;
   friend void swap(UpdatePrimitiveResult& a, UpdatePrimitiveResult& b) { a.Swap(&b); }
   inline void Swap(UpdatePrimitiveResult* other) {
     if (other == this) return;
@@ -21828,7 +22100,7 @@ class UpdateCollisionConfigResult final : public ::google::protobuf::Message
     return reinterpret_cast<const UpdateCollisionConfigResult*>(
         &_UpdateCollisionConfigResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 47;
+  static constexpr int kIndexInFileMessages = 48;
   friend void swap(UpdateCollisionConfigResult& a, UpdateCollisionConfigResult& b) { a.Swap(&b); }
   inline void Swap(UpdateCollisionConfigResult* other) {
     if (other == this) return;
@@ -22253,7 +22525,7 @@ class LoadProjectSuccess final : public ::google::protobuf::Message
     return reinterpret_cast<const LoadProjectSuccess*>(
         &_LoadProjectSuccess_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 86;
+  static constexpr int kIndexInFileMessages = 87;
   friend void swap(LoadProjectSuccess& a, LoadProjectSuccess& b) { a.Swap(&b); }
   inline void Swap(LoadProjectSuccess* other) {
     if (other == this) return;
@@ -22528,7 +22800,7 @@ class LoadProjectResult final : public ::google::protobuf::Message
     return reinterpret_cast<const LoadProjectResult*>(
         &_LoadProjectResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 85;
+  static constexpr int kIndexInFileMessages = 86;
   friend void swap(LoadProjectResult& a, LoadProjectResult& b) { a.Swap(&b); }
   inline void Swap(LoadProjectResult* other) {
     if (other == this) return;
@@ -32619,6 +32891,276 @@ inline void RenameDatumCommand::set_allocated_name(std::string* value) {
 
 // -------------------------------------------------------------------
 
+// FaceGeometryMetadata
+
+// optional .motionlab.mechanism.Vec3 axis_direction = 1 [json_name = "axisDirection"];
+inline bool FaceGeometryMetadata::has_axis_direction() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000001u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.axis_direction_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Vec3& FaceGeometryMetadata::_internal_axis_direction() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Vec3* p = _impl_.axis_direction_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Vec3&>(::motionlab::mechanism::_Vec3_default_instance_);
+}
+inline const ::motionlab::mechanism::Vec3& FaceGeometryMetadata::axis_direction() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.FaceGeometryMetadata.axis_direction)
+  return _internal_axis_direction();
+}
+inline void FaceGeometryMetadata::unsafe_arena_set_allocated_axis_direction(::motionlab::mechanism::Vec3* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.axis_direction_);
+  }
+  _impl_.axis_direction_ = reinterpret_cast<::motionlab::mechanism::Vec3*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000001u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000001u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.FaceGeometryMetadata.axis_direction)
+}
+inline ::motionlab::mechanism::Vec3* FaceGeometryMetadata::release_axis_direction() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000001u;
+  ::motionlab::mechanism::Vec3* released = _impl_.axis_direction_;
+  _impl_.axis_direction_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Vec3* FaceGeometryMetadata::unsafe_arena_release_axis_direction() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.FaceGeometryMetadata.axis_direction)
+
+  _impl_._has_bits_[0] &= ~0x00000001u;
+  ::motionlab::mechanism::Vec3* temp = _impl_.axis_direction_;
+  _impl_.axis_direction_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Vec3* FaceGeometryMetadata::_internal_mutable_axis_direction() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.axis_direction_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Vec3>(GetArena());
+    _impl_.axis_direction_ = reinterpret_cast<::motionlab::mechanism::Vec3*>(p);
+  }
+  return _impl_.axis_direction_;
+}
+inline ::motionlab::mechanism::Vec3* FaceGeometryMetadata::mutable_axis_direction() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000001u;
+  ::motionlab::mechanism::Vec3* _msg = _internal_mutable_axis_direction();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.FaceGeometryMetadata.axis_direction)
+  return _msg;
+}
+inline void FaceGeometryMetadata::set_allocated_axis_direction(::motionlab::mechanism::Vec3* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.axis_direction_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000001u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000001u;
+  }
+
+  _impl_.axis_direction_ = reinterpret_cast<::motionlab::mechanism::Vec3*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.FaceGeometryMetadata.axis_direction)
+}
+
+// optional .motionlab.mechanism.Vec3 normal = 2 [json_name = "normal"];
+inline bool FaceGeometryMetadata::has_normal() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000002u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.normal_ != nullptr);
+  return value;
+}
+inline const ::motionlab::mechanism::Vec3& FaceGeometryMetadata::_internal_normal() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::mechanism::Vec3* p = _impl_.normal_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::mechanism::Vec3&>(::motionlab::mechanism::_Vec3_default_instance_);
+}
+inline const ::motionlab::mechanism::Vec3& FaceGeometryMetadata::normal() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.FaceGeometryMetadata.normal)
+  return _internal_normal();
+}
+inline void FaceGeometryMetadata::unsafe_arena_set_allocated_normal(::motionlab::mechanism::Vec3* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.normal_);
+  }
+  _impl_.normal_ = reinterpret_cast<::motionlab::mechanism::Vec3*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000002u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000002u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.FaceGeometryMetadata.normal)
+}
+inline ::motionlab::mechanism::Vec3* FaceGeometryMetadata::release_normal() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000002u;
+  ::motionlab::mechanism::Vec3* released = _impl_.normal_;
+  _impl_.normal_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::mechanism::Vec3* FaceGeometryMetadata::unsafe_arena_release_normal() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.FaceGeometryMetadata.normal)
+
+  _impl_._has_bits_[0] &= ~0x00000002u;
+  ::motionlab::mechanism::Vec3* temp = _impl_.normal_;
+  _impl_.normal_ = nullptr;
+  return temp;
+}
+inline ::motionlab::mechanism::Vec3* FaceGeometryMetadata::_internal_mutable_normal() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.normal_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::mechanism::Vec3>(GetArena());
+    _impl_.normal_ = reinterpret_cast<::motionlab::mechanism::Vec3*>(p);
+  }
+  return _impl_.normal_;
+}
+inline ::motionlab::mechanism::Vec3* FaceGeometryMetadata::mutable_normal() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000002u;
+  ::motionlab::mechanism::Vec3* _msg = _internal_mutable_normal();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.FaceGeometryMetadata.normal)
+  return _msg;
+}
+inline void FaceGeometryMetadata::set_allocated_normal(::motionlab::mechanism::Vec3* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.normal_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000002u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000002u;
+  }
+
+  _impl_.normal_ = reinterpret_cast<::motionlab::mechanism::Vec3*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.FaceGeometryMetadata.normal)
+}
+
+// optional double radius = 3 [json_name = "radius"];
+inline bool FaceGeometryMetadata::has_radius() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000004u) != 0;
+  return value;
+}
+inline void FaceGeometryMetadata::clear_radius() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.radius_ = 0;
+  _impl_._has_bits_[0] &= ~0x00000004u;
+}
+inline double FaceGeometryMetadata::radius() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.FaceGeometryMetadata.radius)
+  return _internal_radius();
+}
+inline void FaceGeometryMetadata::set_radius(double value) {
+  _internal_set_radius(value);
+  _impl_._has_bits_[0] |= 0x00000004u;
+  // @@protoc_insertion_point(field_set:motionlab.protocol.FaceGeometryMetadata.radius)
+}
+inline double FaceGeometryMetadata::_internal_radius() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.radius_;
+}
+inline void FaceGeometryMetadata::_internal_set_radius(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.radius_ = value;
+}
+
+// optional double secondary_radius = 4 [json_name = "secondaryRadius"];
+inline bool FaceGeometryMetadata::has_secondary_radius() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000008u) != 0;
+  return value;
+}
+inline void FaceGeometryMetadata::clear_secondary_radius() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.secondary_radius_ = 0;
+  _impl_._has_bits_[0] &= ~0x00000008u;
+}
+inline double FaceGeometryMetadata::secondary_radius() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.FaceGeometryMetadata.secondary_radius)
+  return _internal_secondary_radius();
+}
+inline void FaceGeometryMetadata::set_secondary_radius(double value) {
+  _internal_set_secondary_radius(value);
+  _impl_._has_bits_[0] |= 0x00000008u;
+  // @@protoc_insertion_point(field_set:motionlab.protocol.FaceGeometryMetadata.secondary_radius)
+}
+inline double FaceGeometryMetadata::_internal_secondary_radius() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.secondary_radius_;
+}
+inline void FaceGeometryMetadata::_internal_set_secondary_radius(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.secondary_radius_ = value;
+}
+
+// optional double semi_angle = 5 [json_name = "semiAngle"];
+inline bool FaceGeometryMetadata::has_semi_angle() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000010u) != 0;
+  return value;
+}
+inline void FaceGeometryMetadata::clear_semi_angle() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.semi_angle_ = 0;
+  _impl_._has_bits_[0] &= ~0x00000010u;
+}
+inline double FaceGeometryMetadata::semi_angle() const {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.FaceGeometryMetadata.semi_angle)
+  return _internal_semi_angle();
+}
+inline void FaceGeometryMetadata::set_semi_angle(double value) {
+  _internal_set_semi_angle(value);
+  _impl_._has_bits_[0] |= 0x00000010u;
+  // @@protoc_insertion_point(field_set:motionlab.protocol.FaceGeometryMetadata.semi_angle)
+}
+inline double FaceGeometryMetadata::_internal_semi_angle() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.semi_angle_;
+}
+inline void FaceGeometryMetadata::_internal_set_semi_angle(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.semi_angle_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // CreateDatumFromFaceCommand
 
 // .motionlab.mechanism.ElementId geometry_id = 1 [json_name = "geometryId"];
@@ -33010,6 +33552,102 @@ inline void CreateDatumFromFaceSuccess::set_allocated_geometry_id(::motionlab::m
 
   _impl_.geometry_id_ = reinterpret_cast<::motionlab::mechanism::ElementId*>(value);
   // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateDatumFromFaceSuccess.geometry_id)
+}
+
+// .motionlab.protocol.FaceGeometryMetadata face_geometry = 5 [json_name = "faceGeometry"];
+inline bool CreateDatumFromFaceSuccess::has_face_geometry() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000004u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.face_geometry_ != nullptr);
+  return value;
+}
+inline void CreateDatumFromFaceSuccess::clear_face_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.face_geometry_ != nullptr) _impl_.face_geometry_->Clear();
+  _impl_._has_bits_[0] &= ~0x00000004u;
+}
+inline const ::motionlab::protocol::FaceGeometryMetadata& CreateDatumFromFaceSuccess::_internal_face_geometry() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::motionlab::protocol::FaceGeometryMetadata* p = _impl_.face_geometry_;
+  return p != nullptr ? *p : reinterpret_cast<const ::motionlab::protocol::FaceGeometryMetadata&>(::motionlab::protocol::_FaceGeometryMetadata_default_instance_);
+}
+inline const ::motionlab::protocol::FaceGeometryMetadata& CreateDatumFromFaceSuccess::face_geometry() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:motionlab.protocol.CreateDatumFromFaceSuccess.face_geometry)
+  return _internal_face_geometry();
+}
+inline void CreateDatumFromFaceSuccess::unsafe_arena_set_allocated_face_geometry(::motionlab::protocol::FaceGeometryMetadata* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.face_geometry_);
+  }
+  _impl_.face_geometry_ = reinterpret_cast<::motionlab::protocol::FaceGeometryMetadata*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000004u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000004u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:motionlab.protocol.CreateDatumFromFaceSuccess.face_geometry)
+}
+inline ::motionlab::protocol::FaceGeometryMetadata* CreateDatumFromFaceSuccess::release_face_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000004u;
+  ::motionlab::protocol::FaceGeometryMetadata* released = _impl_.face_geometry_;
+  _impl_.face_geometry_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::motionlab::protocol::FaceGeometryMetadata* CreateDatumFromFaceSuccess::unsafe_arena_release_face_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:motionlab.protocol.CreateDatumFromFaceSuccess.face_geometry)
+
+  _impl_._has_bits_[0] &= ~0x00000004u;
+  ::motionlab::protocol::FaceGeometryMetadata* temp = _impl_.face_geometry_;
+  _impl_.face_geometry_ = nullptr;
+  return temp;
+}
+inline ::motionlab::protocol::FaceGeometryMetadata* CreateDatumFromFaceSuccess::_internal_mutable_face_geometry() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.face_geometry_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::motionlab::protocol::FaceGeometryMetadata>(GetArena());
+    _impl_.face_geometry_ = reinterpret_cast<::motionlab::protocol::FaceGeometryMetadata*>(p);
+  }
+  return _impl_.face_geometry_;
+}
+inline ::motionlab::protocol::FaceGeometryMetadata* CreateDatumFromFaceSuccess::mutable_face_geometry() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000004u;
+  ::motionlab::protocol::FaceGeometryMetadata* _msg = _internal_mutable_face_geometry();
+  // @@protoc_insertion_point(field_mutable:motionlab.protocol.CreateDatumFromFaceSuccess.face_geometry)
+  return _msg;
+}
+inline void CreateDatumFromFaceSuccess::set_allocated_face_geometry(::motionlab::protocol::FaceGeometryMetadata* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete (_impl_.face_geometry_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = (value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000004u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000004u;
+  }
+
+  _impl_.face_geometry_ = reinterpret_cast<::motionlab::protocol::FaceGeometryMetadata*>(value);
+  // @@protoc_insertion_point(field_set_allocated:motionlab.protocol.CreateDatumFromFaceSuccess.face_geometry)
 }
 
 // -------------------------------------------------------------------

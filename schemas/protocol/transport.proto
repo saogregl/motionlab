@@ -222,6 +222,21 @@ enum FaceSurfaceClass {
   FACE_SURFACE_CLASS_TOROIDAL = 6;
 }
 
+// Enriched geometry metadata extracted from the B-Rep face surface.
+// Fields are populated based on surface class:
+//   PLANAR:      normal
+//   CYLINDRICAL: axis_direction, radius
+//   CONICAL:     axis_direction, radius, semi_angle
+//   SPHERICAL:   radius
+//   TOROIDAL:    axis_direction, radius, secondary_radius
+message FaceGeometryMetadata {
+  optional motionlab.mechanism.Vec3 axis_direction = 1;
+  optional motionlab.mechanism.Vec3 normal = 2;
+  optional double radius = 3;
+  optional double secondary_radius = 4;
+  optional double semi_angle = 5;
+}
+
 message CreateDatumFromFaceCommand {
   motionlab.mechanism.ElementId geometry_id = 1;
   uint32 face_index = 2;
@@ -233,6 +248,7 @@ message CreateDatumFromFaceSuccess {
   uint32 face_index = 2;
   FaceSurfaceClass surface_class = 3;
   motionlab.mechanism.ElementId geometry_id = 4;
+  FaceGeometryMetadata face_geometry = 5;
 }
 
 message CreateDatumResult {

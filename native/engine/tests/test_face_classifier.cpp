@@ -60,6 +60,13 @@ int main() {
         assert(pose.has_value());
         assert(pose->surface_class == FaceDatumSurfaceClass::Planar);
         assert_unit_quaternion(pose->orientation);
+        assert(pose->normal.has_value());
+        // Normal should be a unit vector
+        const auto& n = *pose->normal;
+        double nlen = std::sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
+        assert(std::abs(nlen - 1.0) < 1e-6);
+        assert(!pose->axis_direction.has_value());
+        assert(!pose->radius.has_value());
     }
 
     {
@@ -70,6 +77,12 @@ int main() {
         assert(std::abs(pose->position[0]) < 1e-6);
         assert(std::abs(pose->position[1]) < 1e-6);
         assert_unit_quaternion(pose->orientation);
+        assert(pose->axis_direction.has_value());
+        assert(pose->radius.has_value());
+        assert(std::abs(*pose->radius - 5.0) < 1e-6);
+        // Default cylinder axis is Z
+        assert(std::abs((*pose->axis_direction)[2] - 1.0) < 1e-6);
+        assert(!pose->normal.has_value());
     }
 
     {
@@ -78,6 +91,11 @@ int main() {
         assert(pose.has_value());
         assert(pose->surface_class == FaceDatumSurfaceClass::Conical);
         assert_unit_quaternion(pose->orientation);
+        assert(pose->axis_direction.has_value());
+        assert(pose->radius.has_value());
+        assert(pose->semi_angle.has_value());
+        // Default cone axis is Z
+        assert(std::abs((*pose->axis_direction)[2] - 1.0) < 1e-6);
     }
 
     {
@@ -89,6 +107,9 @@ int main() {
         assert(std::abs(pose->position[1]) < 1e-6);
         assert(std::abs(pose->position[2]) < 1e-6);
         assert(std::abs(pose->orientation[0] - 1.0) < 1e-6);
+        assert(pose->radius.has_value());
+        assert(std::abs(*pose->radius - 12.0) < 1e-6);
+        assert(!pose->axis_direction.has_value());
     }
 
     {
@@ -100,6 +121,13 @@ int main() {
         assert(std::abs(pose->position[1]) < 1e-6);
         assert(std::abs(pose->position[2]) < 1e-6);
         assert_unit_quaternion(pose->orientation);
+        assert(pose->axis_direction.has_value());
+        assert(pose->radius.has_value());
+        assert(pose->secondary_radius.has_value());
+        assert(std::abs(*pose->radius - 20.0) < 1e-6);
+        assert(std::abs(*pose->secondary_radius - 4.0) < 1e-6);
+        // Default torus axis is Z
+        assert(std::abs((*pose->axis_direction)[2] - 1.0) < 1e-6);
     }
 
     {

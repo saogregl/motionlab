@@ -174,6 +174,7 @@ std::optional<FaceDatumPose> classify_face_for_datum(const TopoDS_Shape& body_sh
             const auto orientation = quaternion_from_z(normal);
             std::copy(orientation.begin(), orientation.end(), result.orientation);
             result.surface_class = FaceDatumSurfaceClass::Planar;
+            result.normal = {normal.X(), normal.Y(), normal.Z()};
             return result;
         }
 
@@ -189,15 +190,21 @@ std::optional<FaceDatumPose> classify_face_for_datum(const TopoDS_Shape& body_sh
             const auto orientation = quaternion_from_z(axis_dir);
             std::copy(orientation.begin(), orientation.end(), result.orientation);
             result.surface_class = FaceDatumSurfaceClass::Cylindrical;
+            result.axis_direction = {axis_dir.X(), axis_dir.Y(), axis_dir.Z()};
+            result.radius = cylinder.Radius();
             return result;
         }
 
         case GeomAbs_Cone: {
             const gp_Cone cone = surface.Cone();
             set_position(result.position, cone.Apex());
-            const auto orientation = quaternion_from_z(cone.Axis().Direction());
+            const gp_Dir cone_dir = cone.Axis().Direction();
+            const auto orientation = quaternion_from_z(cone_dir);
             std::copy(orientation.begin(), orientation.end(), result.orientation);
             result.surface_class = FaceDatumSurfaceClass::Conical;
+            result.axis_direction = {cone_dir.X(), cone_dir.Y(), cone_dir.Z()};
+            result.radius = cone.RefRadius();
+            result.semi_angle = cone.SemiAngle();
             return result;
         }
 
@@ -205,15 +212,20 @@ std::optional<FaceDatumPose> classify_face_for_datum(const TopoDS_Shape& body_sh
             const gp_Sphere sphere = surface.Sphere();
             set_position(result.position, sphere.Location());
             result.surface_class = FaceDatumSurfaceClass::Spherical;
+            result.radius = sphere.Radius();
             return result;
         }
 
         case GeomAbs_Torus: {
             const gp_Torus torus = surface.Torus();
             set_position(result.position, torus.Location());
-            const auto orientation = quaternion_from_z(torus.Axis().Direction());
+            const gp_Dir torus_dir = torus.Axis().Direction();
+            const auto orientation = quaternion_from_z(torus_dir);
             std::copy(orientation.begin(), orientation.end(), result.orientation);
             result.surface_class = FaceDatumSurfaceClass::Toroidal;
+            result.axis_direction = {torus_dir.X(), torus_dir.Y(), torus_dir.Z()};
+            result.radius = torus.MajorRadius();
+            result.secondary_radius = torus.MinorRadius();
             return result;
         }
 

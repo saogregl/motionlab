@@ -92,7 +92,9 @@
       "WebFetch(domain:medium.com)",
       "WebFetch(domain:connectrpc.com)",
       "Bash(xargs basename:*)",
-      "Bash(find /c/Dev/motionlab/packages/frontend/src -type f \\\\\\(-name *command* -o -name *undo* -o -name *history* \\\\\\))"
+      "Bash(find /c/Dev/motionlab/packages/frontend/src -type f \\\\\\(-name *command* -o -name *undo* -o -name *history* \\\\\\))",
+      "Bash(/tmp/occt_check.txt:*)",
+      "Read(//tmp/**)"
     ]
   },
   "enabledPlugins": {

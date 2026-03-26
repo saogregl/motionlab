@@ -568,6 +568,31 @@ struct TransportServer::Impl {
         success->set_face_index(cmd.face_index());
         success->set_surface_class(to_proto_surface_class(face_pose->surface_class));
         success->mutable_geometry_id()->set_id(geometry_id);
+
+        // Populate enriched face geometry metadata
+        auto* fg = success->mutable_face_geometry();
+        if (face_pose->axis_direction.has_value()) {
+            auto* ad = fg->mutable_axis_direction();
+            ad->set_x((*face_pose->axis_direction)[0]);
+            ad->set_y((*face_pose->axis_direction)[1]);
+            ad->set_z((*face_pose->axis_direction)[2]);
+        }
+        if (face_pose->normal.has_value()) {
+            auto* n = fg->mutable_normal();
+            n->set_x((*face_pose->normal)[0]);
+            n->set_y((*face_pose->normal)[1]);
+            n->set_z((*face_pose->normal)[2]);
+        }
+        if (face_pose->radius.has_value()) {
+            fg->set_radius(*face_pose->radius * length_scale);
+        }
+        if (face_pose->secondary_radius.has_value()) {
+            fg->set_secondary_radius(*face_pose->secondary_radius * length_scale);
+        }
+        if (face_pose->semi_angle.has_value()) {
+            fg->set_semi_angle(*face_pose->semi_angle);
+        }
+
         send_event(ws, event);
     }
 

@@ -58,12 +58,21 @@ export interface GeometryState {
   };
 }
 
+export interface FaceGeometryInfo {
+  axisDirection?: { x: number; y: number; z: number };
+  normal?: { x: number; y: number; z: number };
+  radius?: number;
+  secondaryRadius?: number;
+  semiAngle?: number;
+}
+
 export interface DatumState {
   id: string;
   name: string;
   parentBodyId: string;
   localPose: BodyPose;
   surfaceClass?: 'planar' | 'cylindrical' | 'conical' | 'spherical' | 'toroidal' | 'other';
+  faceGeometry?: FaceGeometryInfo;
 }
 
 export type JointTypeId = 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar' | 'universal' | 'distance' | 'point-line' | 'point-plane';

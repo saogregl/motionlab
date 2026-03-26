@@ -58,7 +58,7 @@ import {
   type PrismaticMotorActuator,
   DiagnosticSeverity,
 } from '@motionlab/protocol';
-import type { ElementId, Joint, MissingAssetInfo } from '@motionlab/protocol';
+import type { CreateDatumFromFaceSuccess, ElementId, Joint, MissingAssetInfo } from '@motionlab/protocol';
 import type { SceneGraphManager } from '@motionlab/viewport';
 import { useAssetLibraryStore } from '../stores/asset-library.js';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
@@ -67,7 +67,7 @@ import type { EngineConnectionState } from '../stores/engine-connection.js';
 import { useImportFlowStore } from '../stores/import-flow.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useLoadCreationStore } from '../stores/load-creation.js';
-import type { ActuatorState, ActuatorTypeId, ControlModeId, BodyMassProperties, BodyPose, BodyState, DatumState, GeometryState, JointTypeId, LoadState, LoadTypeId, ReferenceFrameId, MeshData } from '../stores/mechanism.js';
+import type { ActuatorState, ActuatorTypeId, ControlModeId, BodyMassProperties, BodyPose, BodyState, DatumState, FaceGeometryInfo, GeometryState, JointTypeId, LoadState, LoadTypeId, ReferenceFrameId, MeshData } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { type ChannelDescriptor, type StructuredDiagnostic, useSimulationStore } from '../stores/simulation.js';
@@ -1158,6 +1158,7 @@ export function connect(set: SetState, _get: GetState) {
                   },
                 },
                 surfaceClass: mapSurfaceClass(success.surfaceClass),
+                faceGeometry: mapFaceGeometry(success.faceGeometry),
               });
               statusStore.setMessage(
                 `Created datum from ${surfaceClassToLabel(success.surfaceClass)} face`,
@@ -2580,6 +2581,23 @@ function mapSurfaceClass(sc: FaceSurfaceClass): DatumState['surfaceClass'] {
     case FaceSurfaceClass.TOROIDAL: return 'toroidal';
     default: return 'other';
   }
+}
+
+function mapFaceGeometry(
+  fg: CreateDatumFromFaceSuccess['faceGeometry'],
+): FaceGeometryInfo | undefined {
+  if (!fg) return undefined;
+  const result: FaceGeometryInfo = {};
+  if (fg.axisDirection) {
+    result.axisDirection = { x: fg.axisDirection.x, y: fg.axisDirection.y, z: fg.axisDirection.z };
+  }
+  if (fg.normal) {
+    result.normal = { x: fg.normal.x, y: fg.normal.y, z: fg.normal.z };
+  }
+  if (fg.radius !== undefined) result.radius = fg.radius;
+  if (fg.secondaryRadius !== undefined) result.secondaryRadius = fg.secondaryRadius;
+  if (fg.semiAngle !== undefined) result.semiAngle = fg.semiAngle;
+  return Object.keys(result).length > 0 ? result : undefined;
 }
 
 function surfaceClassToLabel(surfaceClass: FaceSurfaceClass): string {

@@ -1,4 +1,4 @@
-import type { JointTypeId } from '../stores/mechanism.js';
+import type { JointTypeId, FaceGeometryInfo } from '../stores/mechanism.js';
 import type { DatumPreviewType } from '@motionlab/viewport';
 
 export type InferenceConfidence = 'high' | 'medium' | 'low';
@@ -25,9 +25,11 @@ export interface JointFrameProposal {
 export function inferJointFrame(
   surfaceClass: 'planar' | 'cylindrical' | 'conical' | 'spherical' | 'toroidal' | 'other' | undefined,
   previewType: DatumPreviewType | undefined,
+  faceGeometry?: FaceGeometryInfo,
 ): JointFrameProposal {
   // Prefer engine surface class (from B-Rep) when available
   if (surfaceClass) {
+    const hasExactGeometry = !!faceGeometry;
     switch (surfaceClass) {
       case 'cylindrical':
         return {
@@ -38,25 +40,25 @@ export function inferJointFrame(
       case 'planar':
         return {
           recommendedTypes: ['fixed', 'planar'],
-          confidence: 'medium',
+          confidence: hasExactGeometry ? 'high' : 'medium',
           label: 'Joint plane',
         };
       case 'spherical':
         return {
           recommendedTypes: ['spherical', 'revolute', 'fixed'],
-          confidence: 'medium',
+          confidence: hasExactGeometry ? 'high' : 'medium',
           label: 'Joint point',
         };
       case 'conical':
         return {
           recommendedTypes: ['revolute', 'cylindrical'],
-          confidence: 'medium',
+          confidence: hasExactGeometry ? 'high' : 'medium',
           label: 'Revolute axis',
         };
       case 'toroidal':
         return {
           recommendedTypes: ['revolute'],
-          confidence: 'medium',
+          confidence: hasExactGeometry ? 'high' : 'medium',
           label: 'Revolute axis',
         };
       case 'other':
