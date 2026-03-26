@@ -380,6 +380,14 @@ struct TransportServer::Impl {
                 if (!authenticated) break;
                 enqueue_command(cmd.sequence_id(), cmd.create_primitive_body(), &Impl::handle_create_primitive_body);
                 break;
+            case protocol::Command::kUpdatePrimitive:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.update_primitive(), &Impl::handle_update_primitive);
+                break;
+            case protocol::Command::kUpdateCollisionConfig:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.update_collision_config(), &Impl::handle_update_collision_config);
+                break;
             case protocol::Command::kPlaceAssetInScene:
                 if (!authenticated) break;
                 enqueue_command(cmd.sequence_id(), cmd.place_asset_in_scene(), &Impl::handle_place_asset_in_scene);
@@ -927,6 +935,10 @@ struct TransportServer::Impl {
         gir_pose->mutable_position()->set_z(pos[2]);
         gir_pose->mutable_orientation()->set_w(1.0);
 
+        // Populate primitive source and face count on the response
+        *gir->mutable_primitive_source() = prim_source;
+        gir->set_face_count(prim.face_count);
+
         // Populate body proto in the result
         auto body_proto = mechanism_state.build_body_proto(body_id);
         if (body_proto.has_value()) {
@@ -938,6 +950,195 @@ struct TransportServer::Impl {
 
         spdlog::info("Created primitive body '{}' (body={}, geom={}, shape={})",
                      name, body_id, geometry_id, static_cast<int>(cmd.shape()));
+        send_event(ws, event);
+    }
+
+    // ──────────────────────────────────────────────
+    // Update primitive dimensions (Scene Building C4)
+    // ──────────────────────────────────────────────
+
+    void handle_update_primitive(ix::WebSocket& ws, uint64_t sequence_id,
+                                  const protocol::UpdatePrimitiveCommand& cmd) {
+        std::string geom_id = cmd.has_geometry_id() ? cmd.geometry_id().id() : "";
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_update_primitive_result();
+
+        const auto* existing = mechanism_state.get_geometry(geom_id);
+        if (!existing) {
+            result->set_error_message("Geometry not found: " + geom_id);
+            send_event(ws, event);
+            return;
+        }
+        if (!existing->has_primitive_source()) {
+            result->set_error_message("Geometry is not a primitive: " + geom_id);
+            send_event(ws, event);
+            return;
+        }
+
+        // Use existing density or command override
+        double density = cmd.density() > 0 ? cmd.density() : 1000.0;
+        auto shape = existing->primitive_source().shape();
+
+        auto prim = engine::generate_primitive(shape, cmd.params(), density);
+        if (!prim.success) {
+            result->set_error_message(prim.error_message);
+            send_event(ws, event);
+            return;
+        }
+
+        // Build updated mass and source protos
+        mechanism::MassProperties geom_mass;
+        geom_mass.set_mass(prim.mass_properties.mass);
+        geom_mass.mutable_center_of_mass()->set_x(prim.mass_properties.center_of_mass[0]);
+        geom_mass.mutable_center_of_mass()->set_y(prim.mass_properties.center_of_mass[1]);
+        geom_mass.mutable_center_of_mass()->set_z(prim.mass_properties.center_of_mass[2]);
+        geom_mass.set_ixx(prim.mass_properties.inertia[0]);
+        geom_mass.set_iyy(prim.mass_properties.inertia[1]);
+        geom_mass.set_izz(prim.mass_properties.inertia[2]);
+        geom_mass.set_ixy(prim.mass_properties.inertia[3]);
+        geom_mass.set_ixz(prim.mass_properties.inertia[4]);
+        geom_mass.set_iyz(prim.mass_properties.inertia[5]);
+
+        mechanism::PrimitiveSource prim_source;
+        prim_source.set_shape(shape);
+        *prim_source.mutable_params() = cmd.params();
+
+        auto geom_result = mechanism_state.update_geometry_primitive(
+            geom_id, geom_mass, prim.face_count, prim_source);
+        if (!geom_result.entry.has_value()) {
+            result->set_error_message(geom_result.error);
+            send_event(ws, event);
+            return;
+        }
+
+        // Replace B-Rep in shape registry
+        if (prim.brep_shape) {
+            shape_registry.store(geom_id, *prim.brep_shape);
+        }
+
+        // Build success response
+        auto* success = result->mutable_success();
+        *success->mutable_geometry() = geom_result.entry.value();
+        auto* dm = success->mutable_display_mesh();
+        dm->mutable_vertices()->Assign(prim.mesh.vertices.begin(), prim.mesh.vertices.end());
+        dm->mutable_indices()->Assign(prim.mesh.indices.begin(), prim.mesh.indices.end());
+        dm->mutable_normals()->Assign(prim.mesh.normals.begin(), prim.mesh.normals.end());
+        success->mutable_part_index()->Assign(prim.mesh.part_index.begin(), prim.mesh.part_index.end());
+        success->set_face_count(prim.face_count);
+
+        // Return updated parent body with recomputed aggregate mass
+        std::string parent_id = existing->parent_body_id().id();
+        if (!parent_id.empty()) {
+            auto body_proto = mechanism_state.build_body_proto(parent_id);
+            if (body_proto.has_value()) {
+                *success->mutable_parent_body() = std::move(body_proto.value());
+            }
+        }
+
+        spdlog::info("Updated primitive geometry '{}' (geom={}, shape={})",
+                     existing->name(), geom_id, static_cast<int>(shape));
+        send_event(ws, event);
+    }
+
+    // ──────────────────────────────────────────────
+    // Collision config authoring (Scene Building E1)
+    // ──────────────────────────────────────────────
+
+    void handle_update_collision_config(ix::WebSocket& ws, uint64_t sequence_id,
+                                         const protocol::UpdateCollisionConfigCommand& cmd) {
+        std::string geom_id = cmd.has_geometry_id() ? cmd.geometry_id().id() : "";
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_update_collision_config_result();
+
+        const auto* existing = mechanism_state.get_geometry(geom_id);
+        if (!existing) {
+            result->set_error_message("Geometry not found: " + geom_id);
+            send_event(ws, event);
+            return;
+        }
+
+        mechanism::CollisionConfig resolved = cmd.collision_config();
+
+        // Auto-fit: compute dimensions from B-Rep bounding box when values are zero
+        if (resolved.shape_type() != mechanism::COLLISION_SHAPE_TYPE_NONE) {
+            bool needs_autofit = false;
+            switch (resolved.shape_type()) {
+                case mechanism::COLLISION_SHAPE_TYPE_BOX:
+                    needs_autofit = resolved.half_extents().x() <= 0 &&
+                                    resolved.half_extents().y() <= 0 &&
+                                    resolved.half_extents().z() <= 0;
+                    break;
+                case mechanism::COLLISION_SHAPE_TYPE_SPHERE:
+                    needs_autofit = resolved.radius() <= 0;
+                    break;
+                case mechanism::COLLISION_SHAPE_TYPE_CYLINDER:
+                    needs_autofit = resolved.radius() <= 0 && resolved.height() <= 0;
+                    break;
+                default:
+                    break;
+            }
+
+            if (needs_autofit) {
+                // Compute bounding box from display mesh vertices
+                const auto& mesh = existing->display_mesh();
+                double min_x = 1e30, min_y = 1e30, min_z = 1e30;
+                double max_x = -1e30, max_y = -1e30, max_z = -1e30;
+                for (int i = 0; i + 2 < mesh.vertices_size(); i += 3) {
+                    double vx = mesh.vertices(i);
+                    double vy = mesh.vertices(i + 1);
+                    double vz = mesh.vertices(i + 2);
+                    min_x = std::min(min_x, vx); max_x = std::max(max_x, vx);
+                    min_y = std::min(min_y, vy); max_y = std::max(max_y, vy);
+                    min_z = std::min(min_z, vz); max_z = std::max(max_z, vz);
+                }
+                double hx = (max_x - min_x) * 0.5;
+                double hy = (max_y - min_y) * 0.5;
+                double hz = (max_z - min_z) * 0.5;
+                double cx = (max_x + min_x) * 0.5;
+                double cy = (max_y + min_y) * 0.5;
+                double cz = (max_z + min_z) * 0.5;
+
+                switch (resolved.shape_type()) {
+                    case mechanism::COLLISION_SHAPE_TYPE_BOX:
+                        resolved.mutable_half_extents()->set_x(hx);
+                        resolved.mutable_half_extents()->set_y(hy);
+                        resolved.mutable_half_extents()->set_z(hz);
+                        break;
+                    case mechanism::COLLISION_SHAPE_TYPE_SPHERE:
+                        resolved.set_radius(std::max({hx, hy, hz}));
+                        break;
+                    case mechanism::COLLISION_SHAPE_TYPE_CYLINDER:
+                        resolved.set_radius(std::max(hx, hz));
+                        resolved.set_height(hy * 2.0);
+                        break;
+                    default:
+                        break;
+                }
+
+                // Center offset at bounding box center
+                resolved.mutable_offset()->set_x(cx);
+                resolved.mutable_offset()->set_y(cy);
+                resolved.mutable_offset()->set_z(cz);
+            }
+        }
+
+        auto geom_result = mechanism_state.update_geometry_collision_config(geom_id, resolved);
+        if (!geom_result.entry.has_value()) {
+            result->set_error_message(geom_result.error);
+            send_event(ws, event);
+            return;
+        }
+
+        auto* success = result->mutable_success();
+        *success->mutable_geometry() = geom_result.entry.value();
+        *success->mutable_resolved_config() = resolved;
+
+        spdlog::info("Updated collision config for geometry '{}' (geom={}, shape={})",
+                     existing->name(), geom_id, static_cast<int>(resolved.shape_type()));
         send_event(ws, event);
     }
 

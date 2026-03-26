@@ -2,6 +2,8 @@ import { create, fromBinary, toBinary, toJsonString } from '@bufbuild/protobuf';
 import {
   ActuatorSchema,
   BoxParamsSchema,
+  CollisionConfigSchema,
+  CollisionShapeType,
   CylinderParamsSchema,
   ElementIdSchema,
   JointSchema,
@@ -31,6 +33,7 @@ import {
   DeleteDatumCommandSchema,
   DeleteActuatorCommandSchema,
   DeleteBodyCommandSchema,
+  DeleteGeometryCommandSchema,
   DeleteJointCommandSchema,
   DeleteLoadCommandSchema,
   DetachGeometryCommandSchema,
@@ -47,6 +50,7 @@ import {
   RelocateAssetCommandSchema,
   ProtocolVersionSchema,
   RenameDatumCommandSchema,
+  RenameGeometryCommandSchema,
   SaveProjectCommandSchema,
   ScrubCommandSchema,
   SimulationControlCommandSchema,
@@ -63,7 +67,9 @@ import {
   UpdateDatumPoseCommandSchema,
   UpdateJointCommandSchema,
   UpdateLoadCommandSchema,
+  UpdateCollisionConfigCommandSchema,
   UpdateMassPropertiesCommandSchema,
+  UpdatePrimitiveCommandSchema,
 } from './generated/protocol/transport_pb.js';
 import { PROTOCOL_NAME, PROTOCOL_VERSION } from './version.js';
 
@@ -925,6 +931,43 @@ export function createDetachGeometryCommand(
 }
 
 /**
+ * Creates a binary-encoded Command envelope containing a DeleteGeometry payload.
+ */
+export function createDeleteGeometryCommand(geometryId: string, sequenceId?: bigint): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'deleteGeometry',
+      value: create(DeleteGeometryCommandSchema, {
+        geometryId: create(ElementIdSchema, { id: geometryId }),
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a RenameGeometry payload.
+ */
+export function createRenameGeometryCommand(
+  geometryId: string,
+  name: string,
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'renameGeometry',
+      value: create(RenameGeometryCommandSchema, {
+        geometryId: create(ElementIdSchema, { id: geometryId }),
+        name,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
  * Creates a binary-encoded Command envelope containing an UpdateMassProperties payload.
  */
 export function createUpdateMassPropertiesCommand(
@@ -1005,6 +1048,88 @@ export function createCreatePrimitiveBodyCommand(
         position: create(Vec3Schema, position),
         params: protoParams,
         density: density ?? 0,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing an UpdatePrimitive payload.
+ */
+export function createUpdatePrimitiveCommand(
+  geometryId: string,
+  params: PrimitiveParamsInput,
+  density?: number,
+  sequenceId?: bigint,
+): Uint8Array {
+  const protoParams = create(PrimitiveParamsSchema, {
+    shapeParams: params.box
+      ? { case: 'box' as const, value: create(BoxParamsSchema, params.box) }
+      : params.cylinder
+        ? { case: 'cylinder' as const, value: create(CylinderParamsSchema, params.cylinder) }
+        : params.sphere
+          ? { case: 'sphere' as const, value: create(SphereParamsSchema, params.sphere) }
+          : { case: undefined, value: undefined },
+  });
+
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'updatePrimitive',
+      value: create(UpdatePrimitiveCommandSchema, {
+        geometryId: create(ElementIdSchema, { id: geometryId }),
+        params: protoParams,
+        density: density ?? 0,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+// Collision config types
+
+export type CollisionShapeTypeId = 'none' | 'box' | 'sphere' | 'cylinder' | 'convex-hull';
+
+export interface CollisionConfigInput {
+  shapeType: CollisionShapeTypeId;
+  halfExtents?: { x: number; y: number; z: number };
+  radius?: number;
+  height?: number;
+  offset?: { x: number; y: number; z: number };
+}
+
+function mapCollisionShapeType(type: CollisionShapeTypeId): CollisionShapeType {
+  switch (type) {
+    case 'none': return CollisionShapeType.NONE;
+    case 'box': return CollisionShapeType.BOX;
+    case 'sphere': return CollisionShapeType.SPHERE;
+    case 'cylinder': return CollisionShapeType.CYLINDER;
+    case 'convex-hull': return CollisionShapeType.CONVEX_HULL;
+  }
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing an UpdateCollisionConfig payload.
+ */
+export function createUpdateCollisionConfigCommand(
+  geometryId: string,
+  config: CollisionConfigInput,
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'updateCollisionConfig',
+      value: create(UpdateCollisionConfigCommandSchema, {
+        geometryId: create(ElementIdSchema, { id: geometryId }),
+        collisionConfig: create(CollisionConfigSchema, {
+          shapeType: mapCollisionShapeType(config.shapeType),
+          halfExtents: config.halfExtents ? create(Vec3Schema, config.halfExtents) : undefined,
+          radius: config.radius ?? 0,
+          height: config.height ?? 0,
+          offset: config.offset ? create(Vec3Schema, config.offset) : undefined,
+        }),
       }),
     },
   });

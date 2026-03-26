@@ -270,6 +270,37 @@ bool MechanismState::remove_geometry(const std::string& geometry_id) {
     return true;
 }
 
+MechanismState::GeometryResult MechanismState::update_geometry_primitive(
+    const std::string& geometry_id,
+    const mech::MassProperties& computed_mass,
+    uint32_t face_count,
+    const mech::PrimitiveSource& primitive_source) {
+    auto it = geometries_.find(geometry_id);
+    if (it == geometries_.end()) {
+        return {{}, "Geometry not found: " + geometry_id};
+    }
+    *it->second.mutable_computed_mass_properties() = computed_mass;
+    *it->second.mutable_primitive_source() = primitive_source;
+    it->second.set_face_count(face_count);
+
+    std::string parent_id = it->second.parent_body_id().id();
+    if (!parent_id.empty()) {
+        update_body_aggregate_mass(parent_id);
+    }
+    return {it->second, {}};
+}
+
+MechanismState::GeometryResult MechanismState::update_geometry_collision_config(
+    const std::string& geometry_id,
+    const mech::CollisionConfig& collision_config) {
+    auto it = geometries_.find(geometry_id);
+    if (it == geometries_.end()) {
+        return {{}, "Geometry not found: " + geometry_id};
+    }
+    *it->second.mutable_collision_config() = collision_config;
+    return {it->second, {}};
+}
+
 const MechanismState::GeometryEntry* MechanismState::get_geometry(const std::string& id) const {
     auto it = geometries_.find(id);
     return it == geometries_.end() ? nullptr : &it->second;

@@ -26,11 +26,13 @@ import {
   sendCreateBody,
   sendDeleteBody,
   sendDeleteDatum,
+  sendDeleteGeometry,
   sendDeleteJoint,
   sendDeleteActuator,
   sendDeleteLoad,
   sendDetachGeometry,
   sendRenameDatum,
+  sendRenameGeometry,
   sendUpdateActuator,
   sendUpdateBody,
   sendUpdateJoint,
@@ -336,10 +338,12 @@ export function ProjectTree() {
   const handleDelete = useCallback(
     (ids: Set<string>) => {
       if (isSimulating) return;
-      const { bodies: bm, datums: dm, joints: jm, loads: lm, actuators: am } = useMechanismStore.getState();
+      const { bodies: bm, geometries: gm, datums: dm, joints: jm, loads: lm, actuators: am } = useMechanismStore.getState();
       for (const id of ids) {
         if (bm.has(id)) {
           sendDeleteBody(id);
+        } else if (gm.has(id)) {
+          sendDeleteGeometry(id);
         } else if (dm.has(id)) {
           sendDeleteDatum(id);
         } else if (jm.has(id)) {
@@ -357,9 +361,11 @@ export function ProjectTree() {
   // ── Rename commit ──
 
   const handleRenameCommit = useCallback((id: string, newName: string) => {
-    const { bodies: bm, datums: dm, joints: jm, loads: lm, actuators: am } = useMechanismStore.getState();
+    const { bodies: bm, geometries: gm, datums: dm, joints: jm, loads: lm, actuators: am } = useMechanismStore.getState();
     if (bm.has(id)) {
       sendUpdateBody(id, { name: newName });
+    } else if (gm.has(id)) {
+      sendRenameGeometry(id, newName);
     } else if (dm.has(id)) {
       sendRenameDatum(id, newName);
     } else if (jm.has(id)) {
@@ -596,7 +602,11 @@ export function ProjectTree() {
                   ? 'Geometry is not attached to a body'
                   : undefined
             }
+            onRename={isSimulating ? undefined : () => setEditingId(node.id)}
+            renameDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
             onProperties={() => useSelectionStore.getState().select(node.id)}
+            onDelete={isSimulating ? undefined : () => sendDeleteGeometry(node.id)}
+            deleteDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
           >
             {row}
           </GeometryContextMenu>

@@ -67,6 +67,18 @@ public:
     const GeometryEntry* get_geometry(const std::string& id) const;
     size_t geometry_count() const;
 
+    // Update primitive geometry (regenerated B-Rep with new params)
+    GeometryResult update_geometry_primitive(
+        const std::string& geometry_id,
+        const motionlab::mechanism::MassProperties& computed_mass,
+        uint32_t face_count,
+        const motionlab::mechanism::PrimitiveSource& primitive_source);
+
+    // Update collision config on a geometry
+    GeometryResult update_geometry_collision_config(
+        const std::string& geometry_id,
+        const motionlab::mechanism::CollisionConfig& collision_config);
+
     // Geometry attachment
     GeometryResult attach_geometry(const std::string& geometry_id,
                                    const std::string& body_id,

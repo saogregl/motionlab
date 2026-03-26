@@ -12,3 +12,9 @@ export type {
 
 export { MassSection } from './MassSection.js';
 export type { MassSectionProps, MassProperties } from './MassSection.js';
+
+export { PrimitiveParamsSection } from './PrimitiveParamsSection.js';
+export type { PrimitiveParamsSectionProps } from './PrimitiveParamsSection.js';
+
+export { CollisionSection } from './CollisionSection.js';
+export type { CollisionSectionProps } from './CollisionSection.js';

@@ -339,7 +339,11 @@ interface GeometryContextMenuProps {
   attachDisabledReason?: string;
   onDetachFromBody?: () => void;
   detachDisabledReason?: string;
+  onRename?: () => void;
+  renameDisabledReason?: string;
   onProperties?: () => void;
+  onDelete?: () => void;
+  deleteDisabledReason?: string;
 }
 
 function GeometryContextMenuItems({
@@ -355,7 +359,11 @@ function GeometryContextMenuItems({
   attachDisabledReason,
   onDetachFromBody,
   detachDisabledReason,
+  onRename,
+  renameDisabledReason,
   onProperties,
+  onDelete,
+  deleteDisabledReason,
 }: Omit<GeometryContextMenuProps, 'children'>) {
   return (
     <>
@@ -400,9 +408,20 @@ function GeometryContextMenuItems({
         Detach from Body
       </ContextMenuItem>
       <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} onSelect={onRename} disabled={!onRename} title={!onRename ? renameDisabledReason : undefined}>
+        <Pencil className={iconCls} />
+        Rename
+        <ContextMenuShortcut>F2</ContextMenuShortcut>
+      </ContextMenuItem>
       <ContextMenuItem className={itemCls} onSelect={onProperties}>
         <Settings2 className={iconCls} />
         Properties
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem className={itemCls} variant="destructive" onSelect={onDelete} disabled={!onDelete} title={!onDelete ? deleteDisabledReason : undefined}>
+        <Trash2 className={iconCls} />
+        Delete
+        <ContextMenuShortcut>Del</ContextMenuShortcut>
       </ContextMenuItem>
     </>
   );

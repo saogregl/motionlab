@@ -49,6 +49,13 @@ export interface GeometryState {
       sphere?: { radius: number };
     };
   };
+  collisionConfig?: {
+    shapeType: 'none' | 'box' | 'sphere' | 'cylinder' | 'convex-hull';
+    halfExtents: { x: number; y: number; z: number };
+    radius: number;
+    height: number;
+    offset: { x: number; y: number; z: number };
+  };
 }
 
 export interface DatumState {

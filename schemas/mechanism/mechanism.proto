@@ -103,6 +103,7 @@ message Geometry {
   MassProperties computed_mass_properties = 7;  // from CAD via BRepGProp
   uint32 face_count = 8;            // number of B-Rep faces (for face-aware picking)
   PrimitiveSource primitive_source = 9;  // set when geometry was created from a primitive
+  CollisionConfig collision_config = 10; // per-geometry collision shape configuration
 }
 
 // Primitive shape types for parametric geometry creation
@@ -141,6 +142,26 @@ message PrimitiveParams {
 message PrimitiveSource {
   PrimitiveShape shape = 1;
   PrimitiveParams params = 2;
+}
+
+// Collision shape type for per-geometry collision detection
+enum CollisionShapeType {
+  COLLISION_SHAPE_TYPE_NONE = 0;
+  COLLISION_SHAPE_TYPE_BOX = 1;
+  COLLISION_SHAPE_TYPE_SPHERE = 2;
+  COLLISION_SHAPE_TYPE_CYLINDER = 3;
+  COLLISION_SHAPE_TYPE_CONVEX_HULL = 4;  // reserved for future
+}
+
+// Per-geometry collision configuration.
+// When shape_type != NONE, a collision primitive is generated at compile time.
+// Dimensions of zero trigger auto-fit from the geometry bounding box.
+message CollisionConfig {
+  CollisionShapeType shape_type = 1;
+  Vec3 half_extents = 2;    // box half-size (x,y,z)
+  double radius = 3;        // sphere/cylinder radius
+  double height = 4;        // cylinder height
+  Vec3 offset = 5;          // offset from geometry local_pose origin
 }
 
 // Datum frame anchored to a body

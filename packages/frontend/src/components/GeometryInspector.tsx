@@ -8,14 +8,23 @@ import {
 } from '@motionlab/ui';
 import { Grid3X3, Hexagon, Scale } from 'lucide-react';
 
+import { sendUpdateCollisionConfig, sendUpdatePrimitive } from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
-import { IdentitySection, PoseSection } from './inspector/sections/index.js';
+import { useSimulationStore } from '../stores/simulation.js';
+import {
+  CollisionSection,
+  IdentitySection,
+  PoseSection,
+  PrimitiveParamsSection,
+} from './inspector/sections/index.js';
 
 export function GeometryInspector() {
   const selectedIds = useSelectionStore((s) => s.selectedIds);
   const geometries = useMechanismStore((s) => s.geometries);
   const bodies = useMechanismStore((s) => s.bodies);
+  const simState = useSimulationStore((s) => s.state);
+  const isSimulating = simState === 'running' || simState === 'paused';
 
   const firstId = selectedIds.values().next().value as string | undefined;
   const geometry = firstId ? geometries.get(firstId) : undefined;
@@ -39,10 +48,12 @@ export function GeometryInspector() {
         name={geometry.name}
         metadata={[
           {
-            label: 'Source File',
+            label: 'Source',
             value: (
               <span className="text-2xs truncate">
-                {geometry.sourceAssetRef.originalFilename || '\u2014'}
+                {geometry.primitiveSource
+                  ? `Primitive (${geometry.primitiveSource.shape})`
+                  : geometry.sourceAssetRef.originalFilename || '\u2014'}
               </span>
             ),
           },
@@ -56,6 +67,18 @@ export function GeometryInspector() {
           },
         ]}
       />
+
+      {geometry.primitiveSource && (
+        <PrimitiveParamsSection
+          geometryId={geometry.id}
+          shape={geometry.primitiveSource.shape}
+          params={geometry.primitiveSource.params}
+          isSimulating={isSimulating}
+          onParamsChange={(params) => {
+            sendUpdatePrimitive(geometry.id, params);
+          }}
+        />
+      )}
 
       <InspectorSection title="Computed Mass" icon={<Scale className="size-3.5" />}>
         <PropertyRow label="Mass" unit="kg" numeric>
@@ -82,6 +105,15 @@ export function GeometryInspector() {
         title="Local Pose"
         position={geometry.localPose.position}
         rotation={geometry.localPose.rotation}
+      />
+
+      <CollisionSection
+        geometryId={geometry.id}
+        collisionConfig={geometry.collisionConfig}
+        isSimulating={isSimulating}
+        onConfigChange={(config) => {
+          sendUpdateCollisionConfig(geometry.id, config);
+        }}
       />
     </InspectorPanel>
   );

@@ -5,6 +5,7 @@ import {
   createCreateDatumFromFaceCommand,
   createCreateJointCommand,
   createDeleteDatumCommand,
+  createDeleteGeometryCommand,
   createDeleteJointCommand,
   createCreateActuatorCommand,
   createUpdateActuatorCommand,
@@ -20,6 +21,7 @@ import {
   createNewProjectCommand,
   createRelocateAssetCommand,
   createRenameDatumCommand,
+  createRenameGeometryCommand,
   createUpdateDatumPoseCommand,
   createSaveProjectCommand,
   createScrubCommand,
@@ -31,6 +33,10 @@ import {
   createUpdateBodyCommand,
   createUpdateJointCommand,
   createUpdateMassPropertiesCommand,
+  createUpdatePrimitiveCommand,
+  createUpdateCollisionConfigCommand,
+  type CollisionConfigInput,
+  type PrimitiveParamsInput,
   type SimulationSettingsInput,
   engineStateToString,
   eventToDebugJson,
@@ -129,6 +135,53 @@ function extractAssetRef(
   return {
     contentHash: ref?.contentHash ?? '',
     originalFilename: ref?.originalFilename ?? '',
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- proto types are complex; extract values by key
+function extractPrimitiveSource(
+  ps: any,
+): GeometryState['primitiveSource'] | undefined {
+  if (!ps || !ps.shape) return undefined;
+  const shapeMap: Record<number, 'box' | 'cylinder' | 'sphere'> = {
+    1: 'box',
+    2: 'cylinder',
+    3: 'sphere',
+  };
+  const shape = shapeMap[ps.shape as number];
+  if (!shape) return undefined;
+  const p = ps.params?.shapeParams;
+  const params: NonNullable<GeometryState['primitiveSource']>['params'] = {};
+  if (p?.case === 'box') {
+    params.box = { width: p.value.width ?? 0, height: p.value.height ?? 0, depth: p.value.depth ?? 0 };
+  } else if (p?.case === 'cylinder') {
+    params.cylinder = { radius: p.value.radius ?? 0, height: p.value.height ?? 0 };
+  } else if (p?.case === 'sphere') {
+    params.sphere = { radius: p.value.radius ?? 0 };
+  }
+  return { shape, params };
+}
+
+type CollisionConfigState = GeometryState['collisionConfig'];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- proto types are complex; extract values by key
+function extractCollisionConfig(
+  cc: any,
+): CollisionConfigState {
+  if (!cc || !cc.shapeType) return undefined;
+  const typeMap: Record<number, NonNullable<CollisionConfigState>['shapeType']> = {
+    0: 'none',
+    1: 'box',
+    2: 'sphere',
+    3: 'cylinder',
+    4: 'convex-hull',
+  };
+  return {
+    shapeType: typeMap[cc.shapeType as number] ?? 'none',
+    halfExtents: { x: cc.halfExtents?.x ?? 0, y: cc.halfExtents?.y ?? 0, z: cc.halfExtents?.z ?? 0 },
+    radius: cc.radius ?? 0,
+    height: cc.height ?? 0,
+    offset: { x: cc.offset?.x ?? 0, y: cc.offset?.y ?? 0, z: cc.offset?.z ?? 0 },
   };
 }
 
@@ -505,6 +558,9 @@ export function onMissingAssets(cb: ((assets: MissingAssetInfo[]) => void) | nul
 // ---------------------------------------------------------------------------
 
 let relocateAssetCallback: ((bodyId: string, success: boolean, errorMessage?: string) => void) | null = null;
+
+/** Pending primitive source info — set before sending, consumed by result handler. */
+let pendingPrimitiveSource: GeometryState['primitiveSource'] | null = null;
 
 /** When true, the next save will force a "Save As" dialog instead of silent save. */
 let forceSaveAsNextSave = false;
@@ -895,6 +951,12 @@ export function connect(set: SetState, _get: GetState) {
                 massOverride: bodyProto?.massOverride ?? false,
               };
 
+              // Prefer proto-sourced primitiveSource; fall back to pending client-side source
+              const primSource = g.primitiveSource
+                ? extractPrimitiveSource(g.primitiveSource)
+                : pendingPrimitiveSource ?? undefined;
+              pendingPrimitiveSource = null;
+
               const geometry: GeometryState = {
                 id: g.geometryId,
                 name: g.name,
@@ -904,6 +966,7 @@ export function connect(set: SetState, _get: GetState) {
                 partIndex: g.partIndex.length > 0 ? new Uint32Array(g.partIndex) : undefined,
                 computedMassProperties: extractMassProperties(g.computedMassProperties),
                 sourceAssetRef: { contentHash: '', originalFilename: '' },
+                primitiveSource: primSource,
               };
 
               const mechStore = useMechanismStore.getState();
@@ -922,9 +985,76 @@ export function connect(set: SetState, _get: GetState) {
                 duration: 3000,
               });
             } else if (result.result.case === 'errorMessage') {
+              pendingPrimitiveSource = null;
               useToastStore.getState().addToast({
                 variant: 'error',
                 title: 'Primitive creation failed',
+                description: result.result.value,
+              });
+            }
+            break;
+          }
+          case 'updatePrimitiveResult': {
+            const result = evt.payload.value;
+            if (result.result.case === 'success') {
+              const s = result.result.value;
+              const geomProto = s.geometry;
+              const geomId = geomProto?.id?.id ?? '';
+              const mechStore = useMechanismStore.getState();
+
+              mechStore.updateGeometry(geomId, {
+                meshData: extractMeshData(s.displayMesh),
+                computedMassProperties: extractMassProperties(geomProto?.computedMassProperties),
+                primitiveSource: extractPrimitiveSource(geomProto?.primitiveSource),
+              });
+
+              // Update parent body with recomputed aggregate mass
+              if (s.parentBody) {
+                const bodyId = s.parentBody.id?.id ?? '';
+                if (bodyId) {
+                  mechStore.updateBodyMass(
+                    bodyId,
+                    extractMassProperties(s.parentBody.massProperties),
+                    s.parentBody.massOverride ?? false,
+                  );
+                }
+              }
+
+              // Replace mesh in scene graph
+              if (sceneGraphManager && geomProto) {
+                const bodyId = geomProto.parentBodyId?.id ?? '';
+                const partIndex = s.partIndex.length > 0 ? new Uint32Array(s.partIndex) : undefined;
+                sceneGraphManager.addBodyGeometry(
+                  bodyId, geomId, geomProto.name ?? '',
+                  extractMeshData(s.displayMesh),
+                  { position: [0, 0, 0], rotation: [0, 0, 0, 1] },
+                  partIndex,
+                );
+              }
+
+              useSimulationStore.getState().setNeedsCompile(true);
+            } else if (result.result.case === 'errorMessage') {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Primitive update failed',
+                description: result.result.value,
+              });
+            }
+            break;
+          }
+          case 'updateCollisionConfigResult': {
+            const result = evt.payload.value;
+            if (result.result.case === 'success') {
+              const s = result.result.value;
+              const geomId = s.geometry?.id?.id ?? '';
+              useMechanismStore.getState().updateGeometry(geomId, {
+                collisionConfig: extractCollisionConfig(s.resolvedConfig),
+              });
+              useSimulationStore.getState().setNeedsCompile(true);
+            } else if (result.result.case === 'errorMessage') {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Collision config update failed',
                 description: result.result.value,
               });
             }
@@ -1547,6 +1677,10 @@ export function connect(set: SetState, _get: GetState) {
                     sourceAssetRef: extractAssetRef(
                       geometryImport?.sourceAssetRef ?? g.sourceAssetRef,
                     ),
+                    primitiveSource: extractPrimitiveSource(
+                      geometryImport?.primitiveSource ?? g.primitiveSource,
+                    ),
+                    collisionConfig: extractCollisionConfig(g.collisionConfig),
                   });
                 }
               } else if (success.bodies.length > 0) {
@@ -1893,6 +2027,57 @@ export function connect(set: SetState, _get: GetState) {
             }
             break;
           }
+          // TODO: Engine-side handlers for deleteGeometry and renameGeometry are not yet implemented.
+          // Once the native engine handles these commands, these result handlers will process the responses.
+          case 'deleteGeometryResult': {
+            const result = evt.payload.value;
+            if (result.result.case === 'deletedId') {
+              const geomId = result.result.value.id;
+              const mechStore = useMechanismStore.getState();
+              const geom = mechStore.geometries.get(geomId);
+              const parentBodyId = geom?.parentBodyId ?? null;
+
+              mechStore.removeGeometry(geomId);
+
+              // Rebuild parent body's scene graph mesh if geometry was attached
+              if (sceneGraphManager && parentBodyId) {
+                sceneGraphManager.removeBody(parentBodyId);
+                const updatedStore = useMechanismStore.getState();
+                const parentBody = updatedStore.bodies.get(parentBodyId);
+                if (parentBody) {
+                  const bodyGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === parentBodyId);
+                  addBodyToSceneGraph(sceneGraphManager, parentBody, bodyGeoms);
+                }
+              } else if (sceneGraphManager) {
+                // Remove detached geometry from viewport
+                sceneGraphManager.removeBody(geomId);
+              }
+
+              useSimulationStore.getState().setNeedsCompile(true);
+            } else if (result.result.case === 'errorMessage') {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Delete geometry failed',
+                description: result.result.value,
+              });
+            }
+            break;
+          }
+          case 'renameGeometryResult': {
+            const result = evt.payload.value;
+            if (result.result.case === 'geometry') {
+              const g = result.result.value;
+              const geomId = g.id?.id ?? '';
+              useMechanismStore.getState().updateGeometry(geomId, { name: g.name });
+            } else if (result.result.case === 'errorMessage') {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Rename geometry failed',
+                description: result.result.value,
+              });
+            }
+            break;
+          }
           case 'updateMassPropertiesResult': {
             const result = evt.payload.value;
             if (result.result.case === 'body') {
@@ -1984,7 +2169,25 @@ export function sendCreatePrimitiveBody(
   density?: number,
 ): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  pendingPrimitiveSource = { shape, params };
   ws.send(createCreatePrimitiveBodyCommand(shape, name, position, params, density));
+}
+
+export function sendUpdatePrimitive(
+  geometryId: string,
+  params: PrimitiveParamsInput,
+  density?: number,
+): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createUpdatePrimitiveCommand(geometryId, params, density));
+}
+
+export function sendUpdateCollisionConfig(
+  geometryId: string,
+  config: CollisionConfigInput,
+): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createUpdateCollisionConfigCommand(geometryId, config));
 }
 
 export function sendCreateDatum(
@@ -2118,6 +2321,16 @@ export function sendAttachGeometry(geometryId: string, targetBodyId: string): vo
 export function sendDetachGeometry(geometryId: string): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
   ws.send(createDetachGeometryCommand(geometryId));
+}
+
+export function sendDeleteGeometry(geometryId: string): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createDeleteGeometryCommand(geometryId));
+}
+
+export function sendRenameGeometry(geometryId: string, newName: string): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(createRenameGeometryCommand(geometryId, newName));
 }
 
 export function sendUpdateMassProperties(

@@ -46,6 +46,10 @@ message Command {
     DetachGeometryCommand detach_geometry = 53;
     UpdateMassPropertiesCommand update_mass_properties = 54;
     CreatePrimitiveBodyCommand create_primitive_body = 55;
+    DeleteGeometryCommand delete_geometry = 56;
+    RenameGeometryCommand rename_geometry = 57;
+    UpdatePrimitiveCommand update_primitive = 58;
+    UpdateCollisionConfigCommand update_collision_config = 59;
     PlaceAssetInSceneCommand place_asset_in_scene = 60;
     CompileMechanismCommand compile_mechanism = 30;
     SimulationControlCommand simulation_control = 31;
@@ -87,6 +91,10 @@ message Event {
     DetachGeometryResult detach_geometry_result = 53;
     UpdateMassPropertiesResult update_mass_properties_result = 54;
     CreatePrimitiveBodyResult create_primitive_body_result = 55;
+    DeleteGeometryResult delete_geometry_result = 56;
+    RenameGeometryResult rename_geometry_result = 57;
+    UpdatePrimitiveResult update_primitive_result = 58;
+    UpdateCollisionConfigResult update_collision_config_result = 59;
     PlaceAssetInSceneResult place_asset_in_scene_result = 60;
     CompilationResultEvent compilation_result = 30;
     SimulationStateEvent simulation_state = 31;
@@ -169,6 +177,8 @@ message GeometryImportResult {
   motionlab.mechanism.Pose pose = 6;
   motionlab.mechanism.AssetReference source_asset_ref = 7;
   repeated uint32 part_index = 8;
+  uint32 face_count = 9;
+  motionlab.mechanism.PrimitiveSource primitive_source = 10;
 }
 
 message ImportAssetResult {
@@ -344,6 +354,31 @@ message DetachGeometryResult {
   motionlab.mechanism.Body former_parent_body = 4;
 }
 
+// Delete a geometry from the mechanism
+message DeleteGeometryCommand {
+  motionlab.mechanism.ElementId geometry_id = 1;
+}
+
+message DeleteGeometryResult {
+  oneof result {
+    motionlab.mechanism.ElementId deleted_id = 1;
+    string error_message = 2;
+  }
+}
+
+// Rename a geometry
+message RenameGeometryCommand {
+  motionlab.mechanism.ElementId geometry_id = 1;
+  string name = 2;
+}
+
+message RenameGeometryResult {
+  oneof result {
+    motionlab.mechanism.Geometry geometry = 1;
+    string error_message = 2;
+  }
+}
+
 // Update body mass properties (set override or revert to computed)
 message UpdateMassPropertiesCommand {
   motionlab.mechanism.ElementId body_id = 1;
@@ -379,6 +414,52 @@ message CreatePrimitiveBodyResult {
     string error_message = 2;
   }
   motionlab.mechanism.Body body = 3;  // the created body with effective mass properties
+}
+
+// Update dimensions of an existing primitive geometry.
+// Engine regenerates B-Rep, re-tessellates, recomputes mass, updates shape registry.
+message UpdatePrimitiveCommand {
+  motionlab.mechanism.ElementId geometry_id = 1;
+  motionlab.mechanism.PrimitiveParams params = 2;
+  double density = 3;    // kg/m³, 0 = keep current density
+}
+
+message UpdatePrimitiveResult {
+  oneof result {
+    UpdatePrimitiveSuccess success = 1;
+    string error_message = 2;
+  }
+}
+
+message UpdatePrimitiveSuccess {
+  motionlab.mechanism.Geometry geometry = 1;        // updated geometry with new primitive_source
+  motionlab.mechanism.DisplayMesh display_mesh = 2; // new tessellated mesh
+  motionlab.mechanism.Body parent_body = 3;         // body with recomputed aggregate mass
+  repeated uint32 part_index = 4;                    // face-aware picking indices
+  uint32 face_count = 5;
+}
+
+// ──────────────────────────────────────────────
+// Collision authoring (Scene Building E1)
+// ──────────────────────────────────────────────
+
+// Set or modify the collision configuration for a geometry.
+// Engine computes auto-fit dimensions when shape dimensions are zero.
+message UpdateCollisionConfigCommand {
+  motionlab.mechanism.ElementId geometry_id = 1;
+  motionlab.mechanism.CollisionConfig collision_config = 2;
+}
+
+message UpdateCollisionConfigResult {
+  oneof result {
+    UpdateCollisionConfigSuccess success = 1;
+    string error_message = 2;
+  }
+}
+
+message UpdateCollisionConfigSuccess {
+  motionlab.mechanism.Geometry geometry = 1;                       // updated geometry with collision_config
+  motionlab.mechanism.CollisionConfig resolved_config = 2;  // with auto-fit dimensions filled in
 }
 
 // Joint CRUD — Command→Result pattern with oneof success/error

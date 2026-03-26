@@ -5,9 +5,11 @@
 import {
   ArrowHelper,
   Box3,
+  BoxGeometry,
   BufferAttribute,
   BufferGeometry,
   Color,
+  CylinderGeometry,
   DynamicDrawUsage,
   EdgesGeometry,
   Group,
@@ -150,6 +152,7 @@ type BodyGeometryRenderState = {
   facePreviewCache: Map<number, FacePreviewData>;
   faceVertexIndicesCache: Map<number, Uint32Array>;
   edgeLines?: LineSegments;
+  collisionWireframe?: Mesh;
   bvhState: BodyBvhState;
   bvhBuildToken: number;
 };
@@ -2907,5 +2910,98 @@ export class SceneGraphManager {
       midpoint.clone().addScaledVector(axis, -halfLength),
       midpoint.clone().addScaledVector(axis, halfLength),
     ];
+  }
+
+  // ──────────────────────────────────────────────
+  // Collision wireframe overlay (Scene Building E3)
+  // ──────────────────────────────────────────────
+
+  private static COLLISION_WIREFRAME_MATERIAL = new MeshBasicMaterial({
+    color: 0x00ff88,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.3,
+    depthWrite: false,
+  });
+
+  updateCollisionWireframe(
+    bodyId: string,
+    geometryId: string,
+    config: {
+      shapeType: 'none' | 'box' | 'sphere' | 'cylinder' | 'convex-hull';
+      halfExtents?: { x: number; y: number; z: number };
+      radius?: number;
+      height?: number;
+      offset?: { x: number; y: number; z: number };
+    } | undefined,
+  ): void {
+    this.batchMutation(() => {
+      const entity = this.entities.get(bodyId);
+      if (!this.isBodyEntity(entity)) return;
+      const geometryState = this.getBodyGeometryState(entity, geometryId);
+      if (!geometryState) return;
+
+      // Remove existing wireframe
+      if (geometryState.collisionWireframe) {
+        geometryState.rootNode.remove(geometryState.collisionWireframe);
+        geometryState.collisionWireframe.geometry.dispose();
+        geometryState.collisionWireframe = undefined;
+      }
+
+      if (!config || config.shapeType === 'none') return;
+
+      let wireGeometry: BufferGeometry | undefined;
+      switch (config.shapeType) {
+        case 'box': {
+          const hx = config.halfExtents?.x ?? 0;
+          const hy = config.halfExtents?.y ?? 0;
+          const hz = config.halfExtents?.z ?? 0;
+          if (hx > 0 && hy > 0 && hz > 0) {
+            wireGeometry = new BoxGeometry(hx * 2, hy * 2, hz * 2);
+          }
+          break;
+        }
+        case 'sphere': {
+          const r = config.radius ?? 0;
+          if (r > 0) {
+            wireGeometry = new SphereGeometry(r, 16, 12);
+          }
+          break;
+        }
+        case 'cylinder': {
+          const r = config.radius ?? 0;
+          const h = config.height ?? 0;
+          if (r > 0 && h > 0) {
+            wireGeometry = new CylinderGeometry(r, r, h, 16);
+          }
+          break;
+        }
+      }
+
+      if (!wireGeometry) return;
+
+      const wireMesh = new Mesh(wireGeometry, SceneGraphManager.COLLISION_WIREFRAME_MATERIAL);
+      wireMesh.renderOrder = 2;
+
+      if (config.offset) {
+        wireMesh.position.set(config.offset.x, config.offset.y, config.offset.z);
+      }
+
+      geometryState.rootNode.add(wireMesh);
+      geometryState.collisionWireframe = wireMesh;
+    });
+  }
+
+  setCollisionWireframeVisibility(visible: boolean): void {
+    this.batchMutation(() => {
+      for (const entity of this.entities.values()) {
+        if (!this.isBodyEntity(entity)) continue;
+        for (const geometryState of entity.meta.geometries.values()) {
+          if (geometryState.collisionWireframe) {
+            geometryState.collisionWireframe.visible = visible;
+          }
+        }
+      }
+    });
   }
 }

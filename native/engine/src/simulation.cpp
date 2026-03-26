@@ -24,6 +24,9 @@
 #include "chrono/physics/ChLinkUniversal.h"
 #include "chrono/physics/ChContactMaterialNSC.h"
 #include "chrono/physics/ChSystemNSC.h"
+#include "chrono/collision/ChCollisionShapeBox.h"
+#include "chrono/collision/ChCollisionShapeSphere.h"
+#include "chrono/collision/ChCollisionShapeCylinder.h"
 #include "chrono/solver/ChSolverPSOR.h"
 #include "chrono/solver/ChSolverBB.h"
 #include "chrono/solver/ChSolverAPGD.h"
@@ -646,7 +649,70 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
         impl_->initial_poses[id] = initial;
     }
 
-    if (!config.contact.enable_contact) {
+    // --- Collision shapes (per-geometry, aggregated per-body) ---
+    if (config.contact.enable_contact) {
+        int collision_shape_count = 0;
+        for (const auto& geom : mechanism.geometries()) {
+            if (!geom.has_collision_config() ||
+                geom.collision_config().shape_type() == mech::COLLISION_SHAPE_TYPE_NONE) {
+                continue;
+            }
+
+            const std::string body_id = geom.parent_body_id().id();
+            auto body_it = impl_->body_map.find(body_id);
+            if (body_it == impl_->body_map.end()) continue;
+
+            auto ch_body = body_it->second;
+            ch_body->EnableCollision(true);
+
+            const auto& cc = geom.collision_config();
+            const auto& lp = geom.local_pose();
+
+            // Shape frame = geometry local_pose + collision offset
+            ChVector3d shape_pos(
+                lp.position().x() + cc.offset().x(),
+                lp.position().y() + cc.offset().y(),
+                lp.position().z() + cc.offset().z());
+            ChQuaterniond shape_rot(
+                lp.orientation().w(), lp.orientation().x(),
+                lp.orientation().y(), lp.orientation().z());
+
+            switch (cc.shape_type()) {
+                case mech::COLLISION_SHAPE_TYPE_BOX: {
+                    ch_body->AddCollisionShape(
+                        chrono_types::make_shared<ChCollisionShapeBox>(
+                            impl_->contact_material,
+                            cc.half_extents().x() * 2.0,
+                            cc.half_extents().y() * 2.0,
+                            cc.half_extents().z() * 2.0),
+                        ChFrame<>(shape_pos, shape_rot));
+                    ++collision_shape_count;
+                    break;
+                }
+                case mech::COLLISION_SHAPE_TYPE_SPHERE: {
+                    ch_body->AddCollisionShape(
+                        chrono_types::make_shared<ChCollisionShapeSphere>(
+                            impl_->contact_material, cc.radius()),
+                        ChFrame<>(shape_pos, shape_rot));
+                    ++collision_shape_count;
+                    break;
+                }
+                case mech::COLLISION_SHAPE_TYPE_CYLINDER: {
+                    ch_body->AddCollisionShape(
+                        chrono_types::make_shared<ChCollisionShapeCylinder>(
+                            impl_->contact_material, cc.radius(), cc.height()),
+                        ChFrame<>(shape_pos, shape_rot));
+                    ++collision_shape_count;
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+        if (collision_shape_count > 0) {
+            spdlog::info("Registered {} collision shape(s) from geometry configs", collision_shape_count);
+        }
+    } else {
         for (auto& [id, body] : impl_->body_map) {
             body->EnableCollision(false);
         }
