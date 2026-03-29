@@ -20,8 +20,8 @@ Transport execution is split in two parts:
 - cached import results rebuild authored body data immediately, while native topology is loaded lazily when a face-aware authoring command needs it
 
 Message types (proto envelopes):
-- `Command` (frontend → engine): oneof payload — `Handshake`, `Ping`, `ImportAssetCommand`, `CreateDatumCommand`, `DeleteDatumCommand`, `RenameDatumCommand`, `CreateDatumFromFaceCommand`, `UpdateBodyCommand`, `UpdateDatumPoseCommand`, `CreateJointCommand`, `UpdateJointCommand`, `DeleteJointCommand`, `CreateLoadCommand`, `UpdateLoadCommand`, `DeleteLoadCommand`, `CreateActuatorCommand`, `UpdateActuatorCommand`, `DeleteActuatorCommand`, `CreateBodyCommand`, `DeleteBodyCommand`, `AttachGeometryCommand`, `DetachGeometryCommand`, `UpdateMassPropertiesCommand`, `CompileMechanismCommand`, `SimulationControlCommand`, `ScrubCommand`, `SaveProjectCommand`, `LoadProjectCommand`, `RelocateAssetCommand`
-- `Event` (engine → frontend): oneof payload — `HandshakeAck`, `Pong`, `EngineStatus`, `ImportAssetResult`, `MechanismSnapshot`, `CreateDatumResult`, `DeleteDatumResult`, `RenameDatumResult`, `CreateDatumFromFaceResult`, `UpdateBodyResult`, `UpdateDatumPoseResult`, `CreateJointResult`, `UpdateJointResult`, `DeleteJointResult`, `CreateLoadResult`, `UpdateLoadResult`, `DeleteLoadResult`, `CreateActuatorResult`, `UpdateActuatorResult`, `DeleteActuatorResult`, `CreateBodyResult`, `DeleteBodyResult`, `AttachGeometryResult`, `DetachGeometryResult`, `UpdateMassPropertiesResult`, `CompilationResultEvent`, `SimulationStateEvent`, `SimulationFrame`, `SimulationTrace`, `SaveProjectResult`, `LoadProjectResult`, `RelocateAssetResult`
+- `Command` (frontend → engine): oneof payload — `Handshake`, `Ping`, `ImportAssetCommand`, `CreateDatumCommand`, `DeleteDatumCommand`, `RenameDatumCommand`, `CreateDatumFromFaceCommand`, `UpdateBodyCommand`, `UpdateDatumPoseCommand`, `CreateJointCommand`, `UpdateJointCommand`, `DeleteJointCommand`, `CreateLoadCommand`, `UpdateLoadCommand`, `DeleteLoadCommand`, `CreateActuatorCommand`, `UpdateActuatorCommand`, `DeleteActuatorCommand`, `CreateBodyCommand`, `DeleteBodyCommand`, `AttachGeometryCommand`, `DetachGeometryCommand`, `UpdateGeometryPoseCommand`, `UpdatePrimitiveCommand`, `MakeCompoundBodyCommand`, `SplitBodyCommand`, `ReparentGeometryCommand`, `UpdateMassPropertiesCommand`, `CompileMechanismCommand`, `SimulationControlCommand`, `ScrubCommand`, `SaveProjectCommand`, `LoadProjectCommand`, `RelocateAssetCommand`
+- `Event` (engine → frontend): oneof payload — `HandshakeAck`, `Pong`, `EngineStatus`, `ImportAssetResult`, `MechanismSnapshot`, `CreateDatumResult`, `DeleteDatumResult`, `RenameDatumResult`, `CreateDatumFromFaceResult`, `UpdateBodyResult`, `UpdateDatumPoseResult`, `CreateJointResult`, `UpdateJointResult`, `DeleteJointResult`, `CreateLoadResult`, `UpdateLoadResult`, `DeleteLoadResult`, `CreateActuatorResult`, `UpdateActuatorResult`, `DeleteActuatorResult`, `CreateBodyResult`, `DeleteBodyResult`, `AttachGeometryResult`, `DetachGeometryResult`, `UpdateGeometryPoseResult`, `UpdatePrimitiveResult`, `MakeCompoundBodyResult`, `SplitBodyResult`, `ReparentGeometryResult`, `UpdateMassPropertiesResult`, `CompilationResultEvent`, `SimulationStateEvent`, `SimulationFrame`, `SimulationTrace`, `SaveProjectResult`, `LoadProjectResult`, `RelocateAssetResult`
 
 Key messages:
 - `Handshake`: carries `ProtocolVersion` (name + version) and session token
@@ -33,8 +33,11 @@ Key messages:
 - `ImportAssetResult.GeometryImportResult.part_index`: per-face triangle counts used by the viewport to map raycast triangle hits back to B-Rep face indices for one geometry
 - `CreateDatumFromFaceCommand`: requests datum creation from a picked `geometry_id + face_index`
 - `CreateDatumFromFaceResult`: returns the created datum plus `geometry_id`, `face_index`, and backend-agnostic `FaceSurfaceClass` (`PLANAR`, `CYLINDRICAL`, `CONICAL`, `SPHERICAL`, `TOROIDAL`, `OTHER`)
+- `motionlab.mechanism.Datum`: may carry optional face provenance for face-authored datums via `source_geometry_id`, `source_face_index`, `source_geometry_local_pose`, `surface_class`, and `face_geometry`
 - `CreateBodyCommand` / `DeleteBodyCommand`: create empty physical bodies and remove bodies with their dependent authored entities
 - `AttachGeometryCommand` / `DetachGeometryCommand`: reparent imported geometry without re-importing CAD
+- `UpdateGeometryPoseCommand`, `AttachGeometryCommand`, `SplitBodyCommand`, `ReparentGeometryCommand`, `MakeCompoundBodyCommand`, and `UpdatePrimitiveCommand` may return `updated_datums` when datum parentage or local pose changes as a side effect of a geometry mutation
+- `DetachGeometryCommand`: fails if the target geometry still owns face-linked datums
 - `UpdateMassPropertiesCommand`: toggles `mass_override` and updates user-authored body mass properties
 - `UpdateBodyCommand`: body-level authored updates such as `is_fixed` and `name`
 - `UpdateDatumPoseCommand`: updates an authored datum local pose and returns the updated datum
@@ -45,6 +48,8 @@ Key messages:
 Protocol constants: `PROTOCOL_NAME = "motionlab"`, `PROTOCOL_VERSION = 5` (defined in `packages/protocol/src/version.ts`).
 
 Binary helpers in `packages/protocol/src/transport.ts`: `createHandshakeCommand`, `createPingCommand`, `createCompileMechanismCommand`, `createSimulationControlCommand`, `createScrubCommand`, `parseEvent`, `engineStateToString`.
+
+See [ADR-0017](../decisions/ADR-0017-datum-face-provenance.md).
 
 ### Simulation Lifecycle (Epic 7.2)
 

@@ -53,8 +53,22 @@ export const ENTITY_COLORS: Record<string, Color> = {
 export const JOINT_CYLINDRICAL = new Color(0, 0.81, 0.82); // cyan (same as prismatic)
 export const JOINT_UNIVERSAL = new Color(0.6, 0.3, 0.8); // purple variant
 
-// ── Joint anchor (unified steel blue for all types) ──
+// ── Joint anchor (fallback) ──
 export const JOINT_STEEL_BLUE = new Color(0.44, 0.59, 0.78); // #708fb7
+
+/** Per-type joint anchor/line color lookup. Falls back to JOINT_STEEL_BLUE. */
+export const JOINT_TYPE_COLORS: Record<string, Color> = {
+  revolute: JOINT_REVOLUTE,
+  prismatic: JOINT_PRISMATIC,
+  fixed: JOINT_FIXED,
+  spherical: JOINT_SPHERICAL,
+  cylindrical: JOINT_CYLINDRICAL,
+  planar: JOINT_PLANAR,
+  universal: JOINT_UNIVERSAL,
+  distance: JOINT_STEEL_BLUE,
+  'point-line': JOINT_STEEL_BLUE,
+  'point-plane': JOINT_STEEL_BLUE,
+};
 
 // ── DOF semantic colors ──
 export const DOF_FREE = new Color(0.2, 0.85, 0.3); // green
@@ -63,6 +77,9 @@ export const DOF_LOCKED = new Color(0.85, 0.2, 0.2); // red
 // ── Load/actuator colors (Epic 16 — future use) ──
 export const SPRING_NEUTRAL = new Color(0.29, 0.87, 0.5); // #4ade80 green
 export const MOTOR_INDICATOR = new Color(0.96, 0.62, 0.04); // #f59e0b amber
+
+// ── Center-of-mass indicator ──
+export const COM_INDICATOR = new Color(1, 0.85, 0.1); // warm yellow
 
 // ── Datum preview (Epic 14) ──
 export const PREVIEW_OWNERSHIP_EDGE = { color: new Color(0.8, 0.5, 0.2), alpha: 0.5 };

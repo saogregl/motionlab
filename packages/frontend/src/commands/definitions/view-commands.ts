@@ -3,8 +3,10 @@ import {
   Eye,
   EyeOff,
   Fullscreen,
+  Globe,
   Grid3x3,
   Hammer,
+  Hexagon,
   Maximize,
   MousePointer2,
   Move,
@@ -12,6 +14,7 @@ import {
   PanelRight,
   RotateCw,
   Square,
+  Target,
   X,
 } from 'lucide-react';
 
@@ -156,6 +159,18 @@ export function createViewCommands(): CommandDef[] {
       execute: () => useToolModeStore.getState().setGizmoMode('off'),
     },
     {
+      id: 'view.gizmo-toggle-space',
+      label: 'Toggle Local/World',
+      icon: Globe,
+      category: 'view',
+      shortcut: 'X',
+      enabled: () => useUILayoutStore.getState().activeWorkspace === 'build',
+      execute: () => {
+        const s = useToolModeStore.getState();
+        s.setGizmoSpace(s.gizmoSpace === 'world' ? 'local' : 'world');
+      },
+    },
+    {
       id: 'view.toggle-visibility',
       label: 'Toggle Selected Visibility',
       icon: EyeOff,
@@ -217,6 +232,22 @@ export function createViewCommands(): CommandDef[] {
       category: 'view',
       shortcut: 'Ctrl+2',
       execute: () => useUILayoutStore.getState().setActiveWorkspace('results'),
+    },
+    {
+      id: 'view.toggle-collision-wireframes',
+      label: 'Toggle Collision Shapes',
+      icon: Hexagon,
+      category: 'view',
+      shortcut: 'C',
+      execute: () => getSceneGraph()?.toggleCollisionWireframes(),
+    },
+    {
+      id: 'view.toggle-com',
+      label: 'Toggle Center of Mass',
+      icon: Target,
+      category: 'view',
+      shortcut: 'M',
+      execute: () => getSceneGraph()?.toggleCom(),
     },
   ];
 }

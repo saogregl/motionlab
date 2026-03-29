@@ -83,6 +83,15 @@ export type {
   UpdateJointResult,
   UpdateLoadCommand,
   UpdateLoadResult,
+  MakeCompoundBodyCommand,
+  MakeCompoundBodyResult,
+  MakeCompoundBodySuccess,
+  SplitBodyCommand,
+  SplitBodyResult,
+  SplitBodySuccess,
+  ReparentGeometryCommand,
+  ReparentGeometryResult,
+  ReparentGeometrySuccess,
 } from './generated/protocol/transport_pb.js';
 export {
   ChannelDataType,
@@ -101,6 +110,7 @@ export {
 } from './generated/protocol/transport_pb.js';
 // Binary transport helpers
 export {
+  commandToDebugJson,
   createAnalyzeFacePairCommand,
   createAttachGeometryCommand,
   createCreateActuatorCommand,
@@ -128,6 +138,7 @@ export {
   createRenameDatumCommand,
   createRenameGeometryCommand,
   createUpdateDatumPoseCommand,
+  createUpdateGeometryPoseCommand,
   createUpdateMassPropertiesCommand,
   createUpdatePrimitiveCommand,
   createUpdateCollisionConfigCommand,
@@ -138,11 +149,15 @@ export {
   createUpdateBodyCommand,
   createUpdateJointCommand,
   createUpdateLoadCommand,
+  createMakeCompoundBodyCommand,
+  createSplitBodyCommand,
+  createReparentGeometryCommand,
   engineStateToString,
   eventToDebugJson,
   mapFacePairAlignment,
   mapJointType,
   mapMotionType,
+  parseCommand,
   parseEvent,
   toProtoJointType,
   toProtoMotionType,

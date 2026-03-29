@@ -1,10 +1,10 @@
 import { InspectorPanel } from '@motionlab/ui';
 import { Crosshair } from 'lucide-react';
 
-import { sendRenameDatum } from '../engine/connection.js';
+import { sendRenameDatum, sendUpdateDatumPose } from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSimulationStore } from '../stores/simulation.js';
-import { AxisPresetBar, IdentitySection, PoseSection } from './inspector/sections/index.js';
+import { AxisPresetBar, IdentitySection, TransformSection } from './inspector/sections/index.js';
 
 export function DatumInspector({ datumId }: { datumId: string }) {
   const datum = useMechanismStore((s) => s.datums.get(datumId));
@@ -25,6 +25,16 @@ export function DatumInspector({ datumId }: { datumId: string }) {
       entityType="Datum"
       entityIcon={<Crosshair className="size-5" />}
     >
+      <TransformSection
+        frameLabel={`(relative to ${parentBody?.name ?? 'body'})`}
+        position={localPose.position}
+        rotation={localPose.rotation}
+        disabled={isSimulating}
+        onTransformChange={(pose) => sendUpdateDatumPose(datumId, pose)}
+      />
+
+      <AxisPresetBar datumId={datumId} disabled={isSimulating} />
+
       <IdentitySection
         entityId={datumId}
         entityType="datum"
@@ -40,14 +50,6 @@ export function DatumInspector({ datumId }: { datumId: string }) {
         ]}
         disabled={isSimulating}
       />
-
-      <PoseSection
-        title="Local Pose"
-        position={localPose.position}
-        rotation={localPose.rotation}
-      />
-
-      <AxisPresetBar datumId={datumId} disabled={isSimulating} />
     </InspectorPanel>
   );
 }

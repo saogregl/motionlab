@@ -1,5 +1,6 @@
 #include "cad_import.h"
 
+#include <spdlog/spdlog.h>
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -310,6 +311,19 @@ static void collect_bodies(const Handle(XCAFDoc_ShapeTool)& shape_tool,
             body_counter++;
             BodyResult body;
             body.name = get_label_name(label, body_counter);
+
+            // Diagnostic: check if solid carries its own Location within the compound
+            TopLoc_Location solid_loc = solid.Location();
+            if (!solid_loc.IsIdentity()) {
+                std::array<double, 3> sol_t;
+                std::array<double, 4> sol_r;
+                extract_location(solid_loc, sol_t, sol_r);
+                spdlog::warn("[cad-import] Solid '{}' has non-identity Location within compound: "
+                             "translation=[{:.6f}, {:.6f}, {:.6f}]. This may cause position mismatch "
+                             "between mesh vertices and body pose.",
+                             body.name, sol_t[0], sol_t[1], sol_t[2]);
+            }
+
             extract_location(parent_loc, body.translation, body.rotation);
             body.brep_shape = std::make_shared<TopoDS_Shape>(solid);
             if (build_mesh) {

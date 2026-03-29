@@ -1,22 +1,26 @@
 import {
+  formatEngValue,
   InertiaMatrixDisplay,
   InspectorPanel,
   InspectorSection,
   PropertyRow,
   Vec3Display,
-  formatEngValue,
 } from '@motionlab/ui';
 import { Grid3X3, Hexagon, Scale } from 'lucide-react';
 
-import { sendUpdateCollisionConfig, sendUpdatePrimitive } from '../engine/connection.js';
+import {
+  sendUpdateCollisionConfig,
+  sendUpdateGeometryPose,
+  sendUpdatePrimitive,
+} from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import {
   CollisionSection,
   IdentitySection,
-  PoseSection,
   PrimitiveParamsSection,
+  TransformSection,
 } from './inspector/sections/index.js';
 
 export function GeometryInspector() {
@@ -31,9 +35,7 @@ export function GeometryInspector() {
 
   if (!geometry) return <InspectorPanel />;
 
-  const parentBody = geometry.parentBodyId
-    ? bodies.get(geometry.parentBodyId)
-    : undefined;
+  const parentBody = geometry.parentBodyId ? bodies.get(geometry.parentBodyId) : undefined;
   const mp = geometry.computedMassProperties;
 
   return (
@@ -42,6 +44,14 @@ export function GeometryInspector() {
       entityType="Geometry"
       entityIcon={<Hexagon className="size-5" />}
     >
+      <TransformSection
+        frameLabel={`(relative to ${parentBody?.name ?? 'body'})`}
+        position={geometry.localPose.position}
+        rotation={geometry.localPose.rotation}
+        disabled={isSimulating}
+        onTransformChange={(pose) => sendUpdateGeometryPose(geometry.id, pose)}
+      />
+
       <IdentitySection
         entityId={geometry.id}
         entityType="geometry"
@@ -59,11 +69,7 @@ export function GeometryInspector() {
           },
           {
             label: 'Parent Body',
-            value: (
-              <span className="text-2xs truncate">
-                {parentBody?.name || 'Unparented'}
-              </span>
-            ),
+            value: <span className="text-2xs truncate">{parentBody?.name || 'Unparented'}</span>,
           },
         ]}
       />
@@ -80,33 +86,6 @@ export function GeometryInspector() {
         />
       )}
 
-      <InspectorSection title="Computed Mass" icon={<Scale className="size-3.5" />}>
-        <PropertyRow label="Mass" unit="kg" numeric>
-          <span className="font-[family-name:var(--font-mono)] tabular-nums">
-            {formatEngValue(mp.mass)}
-          </span>
-        </PropertyRow>
-        <Vec3Display label="Center of Mass" value={mp.centerOfMass} unit="m" />
-      </InspectorSection>
-
-      <InspectorSection title="Computed Inertia" icon={<Grid3X3 className="size-3.5" />}>
-        <InertiaMatrixDisplay
-          ixx={mp.ixx}
-          iyy={mp.iyy}
-          izz={mp.izz}
-          ixy={mp.ixy}
-          ixz={mp.ixz}
-          iyz={mp.iyz}
-          unit="kg m\u00B2"
-        />
-      </InspectorSection>
-
-      <PoseSection
-        title="Local Pose"
-        position={geometry.localPose.position}
-        rotation={geometry.localPose.rotation}
-      />
-
       <CollisionSection
         geometryId={geometry.id}
         collisionConfig={geometry.collisionConfig}
@@ -115,6 +94,35 @@ export function GeometryInspector() {
           sendUpdateCollisionConfig(geometry.id, config);
         }}
       />
+
+      <InspectorSection
+        title="Computed Mass"
+        icon={<Scale className="size-3.5" />}
+        defaultOpen={false}
+      >
+        <PropertyRow label="Mass" unit="kg" numeric>
+          <span className="font-[family-name:var(--font-mono)] tabular-nums">
+            {formatEngValue(mp.mass)}
+          </span>
+        </PropertyRow>
+        <Vec3Display label="Center of Mass" value={mp.centerOfMass} unit="m" />
+      </InspectorSection>
+
+      <InspectorSection
+        title="Computed Inertia"
+        icon={<Grid3X3 className="size-3.5" />}
+        defaultOpen={false}
+      >
+        <InertiaMatrixDisplay
+          ixx={mp.ixx}
+          iyy={mp.iyy}
+          izz={mp.izz}
+          ixy={mp.ixy}
+          ixz={mp.ixz}
+          iyz={mp.iyz}
+          unit="kg m²"
+        />
+      </InspectorSection>
     </InspectorPanel>
   );
 }

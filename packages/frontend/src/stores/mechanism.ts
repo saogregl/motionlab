@@ -66,12 +66,23 @@ export interface FaceGeometryInfo {
   semiAngle?: number;
 }
 
+export type DatumSurfaceClassId =
+  | 'planar'
+  | 'cylindrical'
+  | 'conical'
+  | 'spherical'
+  | 'toroidal'
+  | 'other';
+
 export interface DatumState {
   id: string;
   name: string;
   parentBodyId: string;
   localPose: BodyPose;
-  surfaceClass?: 'planar' | 'cylindrical' | 'conical' | 'spherical' | 'toroidal' | 'other';
+  sourceGeometryId?: string;
+  sourceFaceIndex?: number;
+  sourceGeometryLocalPose?: BodyPose;
+  surfaceClass?: DatumSurfaceClassId;
   faceGeometry?: FaceGeometryInfo;
 }
 
@@ -85,6 +96,9 @@ export interface JointState {
   childDatumId: string;
   lowerLimit: number;
   upperLimit: number;
+  damping: number;
+  translationalDamping: number;
+  rotationalDamping: number;
 }
 
 export type LoadTypeId = 'point-force' | 'point-torque' | 'spring-damper';
@@ -129,6 +143,7 @@ export interface MechanismState {
   actuators: Map<string, ActuatorState>;
   importing: boolean;
   importError: string | null;
+  hasActiveProject: boolean;
   projectName: string;
   projectFilePath: string | null;
   isDirty: boolean;
@@ -154,24 +169,12 @@ export interface MechanismState {
   updateActuator: (id: string, updates: Partial<Omit<ActuatorState, 'id'>>) => void;
   removeActuator: (id: string) => void;
   clear: () => void;
-  resetProject: () => void;
+  resetProject: (projectName?: string) => void;
   setImporting: (v: boolean) => void;
   setImportError: (e: string | null) => void;
   setProjectMeta: (name: string, filePath: string | null) => void;
   markDirty: () => void;
   markClean: () => void;
-
-  // Pending "Make Body" workflow — geometry IDs to attach after body creation
-  pendingMakeBodyGeometries: string[] | null;
-  setPendingMakeBodyGeometries: (ids: string[] | null) => void;
-
-  // Extended options for the Make Body workflow (dissolve old bodies, trigger rename)
-  pendingMakeBodyOptions: {
-    name: string;
-    bodiesToDissolve: string[];
-    shouldActivateRename: boolean;
-  } | null;
-  setPendingMakeBodyOptions: (opts: MechanismState['pendingMakeBodyOptions']) => void;
 
   // Trigger inline rename on a newly created entity
   pendingRenameEntityId: string | null;
@@ -187,13 +190,10 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
   actuators: new Map<string, ActuatorState>(),
   importing: false,
   importError: null,
+  hasActiveProject: false,
   projectName: 'Untitled',
   projectFilePath: null,
   isDirty: false,
-  pendingMakeBodyGeometries: null,
-  setPendingMakeBodyGeometries: (ids) => set({ pendingMakeBodyGeometries: ids }),
-  pendingMakeBodyOptions: null,
-  setPendingMakeBodyOptions: (opts) => set({ pendingMakeBodyOptions: opts }),
   pendingRenameEntityId: null,
   setPendingRenameEntityId: (id) => set({ pendingRenameEntityId: id }),
 
@@ -379,12 +379,10 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       loads: new Map<string, LoadState>(),
       actuators: new Map<string, ActuatorState>(),
       importError: null,
-      pendingMakeBodyGeometries: null,
-      pendingMakeBodyOptions: null,
       pendingRenameEntityId: null,
     }),
 
-  resetProject: () =>
+  resetProject: (projectName = 'Untitled') =>
     set({
       bodies: new Map<string, BodyState>(),
       geometries: new Map<string, GeometryState>(),
@@ -393,11 +391,10 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       loads: new Map<string, LoadState>(),
       actuators: new Map<string, ActuatorState>(),
       importError: null,
-      projectName: 'Untitled',
+      hasActiveProject: true,
+      projectName,
       projectFilePath: null,
       isDirty: false,
-      pendingMakeBodyGeometries: null,
-      pendingMakeBodyOptions: null,
       pendingRenameEntityId: null,
     }),
 
@@ -405,7 +402,11 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
 
   setImportError: (e) => set({ importError: e }),
 
-  setProjectMeta: (name, filePath) => set({ projectName: name, projectFilePath: filePath }),
+  setProjectMeta: (name, filePath) => set({
+    hasActiveProject: true,
+    projectName: name,
+    projectFilePath: filePath,
+  }),
 
   markDirty: () => set({ isDirty: true }),
 

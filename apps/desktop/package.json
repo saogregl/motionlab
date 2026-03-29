@@ -6,6 +6,7 @@
   "scripts": {
     "build": "electron-forge make",
     "dev": "node scripts/dev.mjs",
+    "debug:agent": "cross-env MOTIONLAB_DEBUG_AGENT=1 MOTIONLAB_DEBUG_CDP_PORT=9222 MOTIONLAB_LOG_LEVEL=trace node scripts/dev.mjs",
     "package": "electron-forge package",
     "clean": "rm -rf .vite dist dist-electron dist-react out *.tsbuildinfo",
     "typecheck": "tsc --noEmit",

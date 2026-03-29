@@ -2,6 +2,12 @@ import { existsSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
+import {
+  DebugSession,
+  isDebugModeEnabled,
+  resolveDebugCdpPort,
+  type DebugBundleRequest,
+} from './debug-session';
 import { type EngineEndpoint, EngineSupervisor } from './engine-supervisor';
 
 // TypeScript declarations for Forge Vite plugin globals
@@ -23,6 +29,7 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 
 const supervisor = new EngineSupervisor();
 let quitting = false;
+let debugSession: DebugSession | null = null;
 
 // ---------------------------------------------------------------------------
 // Recent projects persistence (Epic 20.1)
@@ -199,6 +206,24 @@ function broadcastToRenderers(channel: string, data: unknown): void {
   }
 }
 
+function broadcastDebugEvent(data: Record<string, unknown>): void {
+  broadcastToRenderers('debug-event', data);
+}
+
+async function collectRendererDebugSnapshot(
+  win: BrowserWindow | null,
+): Promise<Record<string, unknown> | null> {
+  if (!win || win.isDestroyed()) return null;
+  try {
+    return await win.webContents.executeJavaScript(
+      'window.motionlabDebug?.getSnapshot ? window.motionlabDebug.getSnapshot() : null',
+      true,
+    );
+  } catch {
+    return null;
+  }
+}
+
 function createWindow(): BrowserWindow {
   const win = new BrowserWindow({
     width: 1600,
@@ -218,6 +243,23 @@ function createWindow(): BrowserWindow {
   // Notify renderer when maximized state changes (snap, double-click, etc.)
   win.on('maximize', () => win.webContents.send('window-maximized-changed', true));
   win.on('unmaximize', () => win.webContents.send('window-maximized-changed', false));
+  win.webContents.on('render-process-gone', (_event, details) => {
+    broadcastDebugEvent({
+      type: 'renderer-process-gone',
+      reason: details.reason,
+      exitCode: details.exitCode,
+    });
+    void debugSession?.appendAnomaly({
+      timestamp: new Date().toISOString(),
+      severity: 'error',
+      code: 'renderer-process-gone',
+      message: 'Renderer process exited unexpectedly',
+      details: {
+        reason: details.reason,
+        exitCode: details.exitCode,
+      },
+    });
+  });
 
   // Send pending file-open request after the renderer is ready (Epic 20.2)
   win.webContents.on('did-finish-load', () => {
@@ -252,7 +294,14 @@ async function showEngineErrorDialog(message: string): Promise<'retry' | 'quit'>
 
 async function startEngineWithRetry(): Promise<EngineEndpoint | null> {
   try {
-    return await supervisor.start();
+    const endpoint = await supervisor.start();
+    debugSession?.setSupervisorLogPath(supervisor.getLogPath());
+    debugSession?.updateEngineInfo({
+      pid: supervisor.getChildPid(),
+      host: endpoint.host,
+      port: endpoint.port,
+    });
+    return endpoint;
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : String(err);
     console.error('[MAIN]', errMsg);
@@ -308,10 +357,39 @@ if (fileArg) {
   pendingOpenFile = path.resolve(fileArg);
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  if (isDebugModeEnabled()) {
+    const cdpPort = resolveDebugCdpPort();
+    debugSession = new DebugSession(app.getPath('userData'), cdpPort);
+    await debugSession.initialize();
+    supervisor.setLogDir(debugSession.getLogDir());
+  }
+
   let engineReady: Promise<EngineEndpoint | null> = startEngineWithRetry();
 
   ipcMain.handle('get-engine-endpoint', () => engineReady);
+  ipcMain.handle('get-debug-session-info', () => debugSession?.getSessionInfo() ?? null);
+  ipcMain.handle('export-debug-bundle', async (_event, request: DebugBundleRequest) => {
+    if (!debugSession) {
+      throw new Error('Debug session is not enabled');
+    }
+    const result = await debugSession.exportBundle(request, BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0] ?? null);
+    broadcastDebugEvent({
+      type: 'bundle-exported',
+      bundlePath: result.bundlePath,
+      reason: request?.reason ?? null,
+    });
+    return result;
+  });
+  ipcMain.on('append-debug-protocol-entry', (_event, entry) => {
+    void debugSession?.appendProtocolEntry(entry);
+  });
+  ipcMain.on('append-debug-console-entry', (_event, entry) => {
+    void debugSession?.appendConsoleEntry(entry);
+  });
+  ipcMain.on('append-debug-anomaly', (_event, entry) => {
+    void debugSession?.appendAnomaly(entry);
+  });
 
   // Window control IPC
   ipcMain.on('window-minimize', (event) => {
@@ -487,9 +565,40 @@ app.whenReady().then(() => {
   // Broadcast crash/restart status to all renderer windows
   supervisor.onCrash((info) => {
     broadcastToRenderers('engine-status-changed', info);
+    broadcastDebugEvent({ type: 'engine-crash', ...info });
+    if (debugSession) {
+      void debugSession.appendAnomaly({
+        timestamp: new Date().toISOString(),
+        severity: info.status === 'fatal' ? 'error' : 'warning',
+        code: info.status === 'fatal' ? 'engine-fatal' : 'engine-restarting',
+        message: 'Engine supervisor observed a crash event',
+        details: info,
+      });
+    }
 
     // On fatal (max restarts exhausted), show error dialog
     if (info.status === 'fatal') {
+      const win = BrowserWindow.getAllWindows()[0] ?? null;
+      const session = debugSession;
+      if (session) {
+        void collectRendererDebugSnapshot(win).then((snapshot) => {
+          if (!snapshot) return;
+          return session.exportBundle(
+            {
+              reason: 'engine-fatal',
+              snapshot,
+            },
+            win,
+          );
+        }).then((result) => {
+          if (!result) return;
+          broadcastDebugEvent({
+            type: 'bundle-exported',
+            bundlePath: result.bundlePath,
+            reason: 'engine-fatal',
+          });
+        }).catch(() => {});
+      }
       dialog
         .showMessageBox({
           type: 'error',
@@ -509,11 +618,22 @@ app.whenReady().then(() => {
   // On successful auto-restart, update cached endpoint and notify renderers
   supervisor.onRestart((endpoint) => {
     engineReady = Promise.resolve(endpoint);
+    debugSession?.setSupervisorLogPath(supervisor.getLogPath());
+    debugSession?.updateEngineInfo({
+      pid: supervisor.getChildPid(),
+      host: endpoint.host,
+      port: endpoint.port,
+    });
     broadcastToRenderers('engine-status-changed', {
       status: 'restarted',
       host: endpoint.host,
       port: endpoint.port,
       sessionToken: endpoint.sessionToken,
+    });
+    broadcastDebugEvent({
+      type: 'engine-restarted',
+      host: endpoint.host,
+      port: endpoint.port,
     });
   });
 

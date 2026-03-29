@@ -10,6 +10,7 @@ import {
   BufferGeometry,
   Color,
   CylinderGeometry,
+  DoubleSide,
   DynamicDrawUsage,
   EdgesGeometry,
   Group,
@@ -22,6 +23,7 @@ import {
   MeshStandardMaterial,
   Object3D,
   OrthographicCamera,
+  PlaneGeometry,
   Quaternion,
   Scene,
   SphereGeometry,
@@ -41,31 +43,35 @@ import {
   ENTITY_JOINT,
   FORCE_ARROW,
   JOINT_STEEL_BLUE,
+  JOINT_TYPE_COLORS,
   MOTOR_INDICATOR,
   PREVIEW_OWNERSHIP_EDGE,
   SPRING_NEUTRAL,
   TORQUE_ARROW,
 } from './rendering/colors-three.js';
-import {
-  estimateAxisDirection,
-  estimateSurfaceType,
-  type DatumPreviewType,
-} from './rendering/surface-type-estimator.js';
+import { type ComIndicatorResult, createComIndicator } from './rendering/com-indicator-three.js';
 import { createDofIndicator, type DofIndicatorResult } from './rendering/dof-indicators-three.js';
-import { createJointAnchor, type JointAnchorResult } from './rendering/joint-anchor-three.js';
-import { createLimitVisual } from './rendering/limit-visuals-three.js';
-import { createMotorVisual } from './rendering/motor-visuals-three.js';
 import {
   createFatLine,
   disposeFatLine,
+  type FatLineOptions,
   isFatLine,
   Line2,
+  LineMaterial,
   setFatLinePoints,
   updateFatLineResolution,
-  type FatLineOptions,
-  LineMaterial,
 } from './rendering/fat-line-three.js';
+import { createFrameTriad, type FrameTriadResult } from './rendering/frame-triad-three.js';
+import { createJointAnchor, type JointAnchorResult } from './rendering/joint-anchor-three.js';
+import { createLimitVisual } from './rendering/limit-visuals-three.js';
 import type { MaterialFactory } from './rendering/materials-three.js';
+import { createMotorVisual } from './rendering/motor-visuals-three.js';
+import { createOriginTriad, type OriginTriadResult } from './rendering/origin-triad-three.js';
+import {
+  type DatumPreviewType,
+  estimateAxisDirection,
+  estimateSurfaceType,
+} from './rendering/surface-type-estimator.js';
 
 export type CameraPreset =
   | 'isometric'
@@ -93,6 +99,27 @@ export interface MeshDataInput {
 export interface PoseInput {
   readonly position: [number, number, number];
   readonly rotation: [number, number, number, number];
+}
+
+export type DatumVisualSurfaceClass =
+  | 'planar'
+  | 'cylindrical'
+  | 'conical'
+  | 'spherical'
+  | 'toroidal'
+  | 'other';
+
+export interface DatumVisualFaceGeometry {
+  readonly axisDirection?: { readonly x: number; readonly y: number; readonly z: number };
+  readonly normal?: { readonly x: number; readonly y: number; readonly z: number };
+  readonly radius?: number;
+  readonly secondaryRadius?: number;
+  readonly semiAngle?: number;
+}
+
+export interface DatumVisualOptions {
+  readonly surfaceClass?: DatumVisualSurfaceClass;
+  readonly faceGeometry?: DatumVisualFaceGeometry;
 }
 
 export interface JointPreviewAlignment {
@@ -169,6 +196,8 @@ type DatumMeta = {
   kind: 'datum';
   parentBodyId: string;
   localPose: PoseInput;
+  surfaceClass?: DatumVisualSurfaceClass;
+  faceGeometry?: DatumVisualFaceGeometry;
   disabledOpacity: number;
   emphasisOpacity: number;
   isCreationAnchor: boolean;
@@ -181,6 +210,7 @@ type JointMeta = {
   jointType: string;
   linkLine?: Line2;
   anchor?: JointAnchorResult;
+  alwaysOnIndicator?: DofIndicatorResult;
   lowerLimit?: number;
   upperLimit?: number;
 };
@@ -229,6 +259,7 @@ export interface DatumPreviewConfig {
 const DEFAULT_BODY_COLOR = new Color('#8faac8');
 const FACE_HIGHLIGHT_COLOR = new Color('#f59e0b');
 const BLACK = new Color(0, 0, 0);
+const SKIP_AXIS_JOINT_TYPES = new Set(['fixed', 'spherical', 'universal', 'distance']);
 const DATUM_COLOR = new Color('#4ade80');
 const LOAD_COLOR = new Color('#f87171');
 const FOCUS_PADDING = 1.6;
@@ -240,7 +271,11 @@ const BVH_ASYNC_TRI_THRESHOLD = 100_000;
 // Scratch objects for joint anchor orientation (avoid per-frame allocations)
 const _anchorYAxis = new Vector3(0, 1, 0);
 const _anchorQuat = new Quaternion();
-const BVH_BUILD_OPTIONS = { indirect: true } as Parameters<BufferGeometry['computeBoundsTree']>[0] & {
+const _jointAxisScratch = new Vector3();
+const _datumWorldQuat = new Quaternion();
+const BVH_BUILD_OPTIONS = { indirect: true } as Parameters<
+  BufferGeometry['computeBoundsTree']
+>[0] & {
   indirect: true;
 };
 
@@ -271,12 +306,7 @@ function getLoadBaseColor(kindTag: LoadMeta['kindTag']): Color {
 
 function setPose(target: Object3D, pose: PoseInput): void {
   target.position.set(pose.position[0], pose.position[1], pose.position[2]);
-  target.quaternion.set(
-    pose.rotation[0],
-    pose.rotation[1],
-    pose.rotation[2],
-    pose.rotation[3],
-  );
+  target.quaternion.set(pose.rotation[0], pose.rotation[1], pose.rotation[2], pose.rotation[3]);
 }
 
 function isMeshStandardMaterial(material: unknown): material is MeshStandardMaterial {
@@ -328,8 +358,9 @@ function setObjectLayerRecursive(root: Object3D, layer: number): void {
   });
 }
 
-function createJointColor(_jointType: string): Color {
-  return cloneColor(JOINT_STEEL_BLUE);
+function createJointColor(jointType: string): Color {
+  const typeColor = JOINT_TYPE_COLORS[jointType];
+  return cloneColor(typeColor ?? JOINT_STEEL_BLUE);
 }
 
 function getLoadKind(loadState: LoadStateInput | null): LoadMeta['kindTag'] {
@@ -366,9 +397,10 @@ function setCameraToBox(
   box.getCenter(center);
   box.getSize(size);
 
-  const dir = direction.lengthSq() > EPSILON
-    ? direction.clone().normalize()
-    : new Vector3(1, 1, 1).normalize();
+  const dir =
+    direction.lengthSq() > EPSILON
+      ? direction.clone().normalize()
+      : new Vector3(1, 1, 1).normalize();
 
   const maxDim = Math.max(size.x, size.y, size.z, MIN_CAMERA_EXTENT);
   camera.position.copy(center).add(dir.multiplyScalar(maxDim * 2.5));
@@ -398,10 +430,21 @@ export class SceneGraphManager {
   private readonly loadPreviewRoot = new Group();
   private readonly forceArrowIds = new Set<string>();
   private readonly activeDofIndicators = new Map<string, DofIndicatorResult>();
-  private readonly activeLimitVisuals = new Map<string, import('./rendering/limit-visuals-three.js').LimitVisual>();
+  private readonly activeLimitVisuals = new Map<
+    string,
+    import('./rendering/limit-visuals-three.js').LimitVisual
+  >();
   private readonly jointSelectionOverlays = new Map<string, Group>();
+  private readonly activeBodyFrameTriads = new Map<string, FrameTriadResult>();
+  private readonly activeGeometryFrameTriads = new Map<string, FrameTriadResult>();
+  /** Reverse index: geometryId → body entity ID for O(1) lookup in selection overlays. */
+  private readonly geometryToBodyId = new Map<string, string>();
+  private readonly activeJointAxisLines = new Map<string, Line2>();
+  private readonly activeComIndicators = new Map<string, ComIndicatorResult>();
+  private readonly _comPositions = new Map<string, Vector3>();
   private readonly provisionalPreviewRoot = new Group();
   private _dofPreviewIndicator: DofIndicatorResult | null = null;
+  private _provisionalDofIndicator: DofIndicatorResult | null = null;
   private readonly jointLineStart = new Vector3();
   private readonly jointLineEnd = new Vector3();
   private readonly jointLineCenter = new Vector3();
@@ -417,15 +460,29 @@ export class SceneGraphManager {
   private readonly axisWorldVector = new Vector3();
 
   private currentSelectedIds = new Set<string>();
+  private _pendingFocusRoots: Group[] | null = null;
+  private _pendingFocusRaf = 0;
+  private _pendingOverlayRaf = 0;
+  private _pendingOverlaySelectedIds: Set<string> | null = null;
+  private _pendingOverlayRawIds: Set<string> | null = null;
+  private _selectionGeneration = 0;
   private _hoveredId: string | null = null;
   private readonly connectedBodyHighlights = new Set<string>();
   private _gridVisible = true;
+  private _datumsVisible = true;
+  private _jointAnchorsVisible = true;
+  private _collisionWireframesVisible = false;
+  private _comVisible = true;
   private _canvasSize = { width: 1, height: 1 };
   private _gizmoMode: GizmoMode = 'off';
   private _gizmoAttachedId: string | null = null;
   private _gizmoDragEndCallback: GizmoDragEndCallback | undefined;
+  private _gizmoTranslationSnap = 0.01;
+  private _gizmoRotationSnap = Math.PI / 12;
+  private _gizmoSpace: 'local' | 'world' = 'world';
   private _orbitTarget = new Vector3(0, 0, 0);
   private _datumPreviewBodyId: string | null = null;
+  private _originTriad: OriginTriadResult | null = null;
   private mutationDepth = 0;
   private pendingJointRefresh = false;
   private pendingLoadRefresh = false;
@@ -442,6 +499,8 @@ export class SceneGraphManager {
   private entityListChangedListeners: (() => void)[] = [];
   onGizmoStateChanged?: () => void;
   onGridVisibilityChanged?: () => void;
+  onDatumsVisibilityChanged?: () => void;
+  onJointAnchorsVisibilityChanged?: () => void;
 
   constructor(scene: Scene, camera: OrthographicCamera, deps: SceneGraphDeps) {
     ensureBvhRaycastingPatched();
@@ -474,6 +533,9 @@ export class SceneGraphManager {
     this.loadPreviewRoot.visible = false;
     setObjectLayerRecursive(this.loadPreviewRoot, VIEWPORT_PICK_LAYER);
     this._scene.add(this.loadPreviewRoot);
+
+    this._originTriad = createOriginTriad();
+    this._scene.add(this._originTriad.rootNode);
   }
 
   get scene(): Scene {
@@ -591,6 +653,91 @@ export class SceneGraphManager {
     return first.done ? null : first.value;
   }
 
+  private addDatumPlaneGlyph(root: Group): void {
+    const halfExtent = 0.16;
+    const outline = createFatLine(
+      [
+        new Vector3(-halfExtent, -halfExtent, 0),
+        new Vector3(halfExtent, -halfExtent, 0),
+        new Vector3(halfExtent, halfExtent, 0),
+        new Vector3(-halfExtent, halfExtent, 0),
+        new Vector3(-halfExtent, -halfExtent, 0),
+      ],
+      { color: DATUM_COLOR, transparent: true, opacity: 0.7 },
+      { entityType: 'datum', datumGlyph: 'plane' },
+    );
+    root.add(outline);
+
+    const fill = new Mesh(
+      new PlaneGeometry(halfExtent * 2, halfExtent * 2),
+      new MeshBasicMaterial({
+        color: DATUM_COLOR,
+        transparent: true,
+        opacity: 0.08,
+        side: DoubleSide,
+        depthWrite: false,
+        depthTest: false,
+      }),
+    );
+    fill.userData = { entityType: 'datum', datumGlyph: 'plane-fill' };
+    root.add(fill);
+  }
+
+  private addDatumAxisGlyph(root: Group): void {
+    const axisLength = 0.3;
+    const tip = new Vector3(0, 0, axisLength);
+    const back = new Vector3(0, 0, axisLength - 0.06);
+    root.add(
+      createFatLine(
+        [new Vector3(0, 0, -axisLength), tip],
+        { color: DATUM_COLOR, transparent: true, opacity: 0.75 },
+        { entityType: 'datum', datumGlyph: 'axis' },
+      ),
+    );
+    root.add(
+      createFatLine(
+        [new Vector3(0.025, 0, back.z), tip, new Vector3(-0.025, 0, back.z)],
+        { color: DATUM_COLOR, transparent: true, opacity: 0.75 },
+        { entityType: 'datum', datumGlyph: 'axis-arrow' },
+      ),
+    );
+  }
+
+  private addDatumSphericalGlyph(root: Group): void {
+    const radius = 0.1;
+    const segments = 24;
+    const points: Vector3[] = [];
+    for (let i = 0; i <= segments; i++) {
+      const angle = (i / segments) * Math.PI * 2;
+      points.push(new Vector3(Math.cos(angle) * radius, Math.sin(angle) * radius, 0));
+    }
+    root.add(
+      createFatLine(
+        points,
+        { color: DATUM_COLOR, transparent: true, opacity: 0.6, depthTest: false },
+        { entityType: 'datum', datumGlyph: 'spherical' },
+      ),
+    );
+  }
+
+  private addDatumSemanticGlyph(root: Group, options?: DatumVisualOptions): void {
+    switch (options?.surfaceClass) {
+      case 'planar':
+        this.addDatumPlaneGlyph(root);
+        break;
+      case 'cylindrical':
+      case 'conical':
+      case 'toroidal':
+        this.addDatumAxisGlyph(root);
+        break;
+      case 'spherical':
+        this.addDatumSphericalGlyph(root);
+        break;
+      default:
+        break;
+    }
+  }
+
   private ensureGeometryColorAttribute(geometryState: BodyGeometryRenderState): BufferAttribute {
     const existing = geometryState.colorAttribute;
     if (existing) {
@@ -617,6 +764,7 @@ export class SceneGraphManager {
     entity.rootNode.remove(geometryState.rootNode);
     disposeObject3D(geometryState.rootNode);
     entity.meta.geometries.delete(geometryState.id);
+    this.geometryToBodyId.delete(geometryState.id);
     const meshIndex = entity.meshes.indexOf(geometryState.mesh);
     if (meshIndex >= 0) {
       entity.meshes.splice(meshIndex, 1);
@@ -837,16 +985,22 @@ export class SceneGraphManager {
     // Read vertex positions
     const n = vertexIndices.length;
     const positions: [number, number, number][] = new Array(n);
-    let cx = 0, cy = 0, cz = 0;
+    let cx = 0,
+      cy = 0,
+      cz = 0;
     for (let i = 0; i < n; i++) {
       const vi = vertexIndices[i]!;
       const px = posAttr.getX(vi);
       const py = posAttr.getY(vi);
       const pz = posAttr.getZ(vi);
       positions[i] = [px, py, pz];
-      cx += px; cy += py; cz += pz;
+      cx += px;
+      cy += py;
+      cz += pz;
     }
-    cx /= n; cy /= n; cz /= n;
+    cx /= n;
+    cy /= n;
+    cz /= n;
 
     // For non-axis faces, vertex centroid is correct
     if (previewType !== 'axis' || !axisDirection) {
@@ -860,14 +1014,20 @@ export class SceneGraphManager {
     let ux: number, uy: number, uz: number;
     if (Math.abs(dy) < 0.9) {
       // cross(D, worldUp) where worldUp = (0,1,0)
-      ux = dz; uy = 0; uz = -dx;
+      ux = dz;
+      uy = 0;
+      uz = -dx;
     } else {
       // cross(D, worldRight) where worldRight = (1,0,0)
-      ux = 0; uy = -dz; uz = dy;
+      ux = 0;
+      uy = -dz;
+      uz = dy;
     }
     const uLen = Math.sqrt(ux * ux + uy * uy + uz * uz);
     if (uLen < 1e-12) return [cx, cy, cz];
-    ux /= uLen; uy /= uLen; uz /= uLen;
+    ux /= uLen;
+    uy /= uLen;
+    uz /= uLen;
 
     // W = cross(D, U)
     const wx = dy * uz - dz * uy;
@@ -887,14 +1047,25 @@ export class SceneGraphManager {
     const hCenter = hSum / n;
 
     // Center the 2D data for better numerical conditioning
-    let uMean = 0, wMean = 0;
-    for (let i = 0; i < n; i++) { uMean += us[i]!; wMean += ws[i]!; }
-    uMean /= n; wMean /= n;
+    let uMean = 0,
+      wMean = 0;
+    for (let i = 0; i < n; i++) {
+      uMean += us[i]!;
+      wMean += ws[i]!;
+    }
+    uMean /= n;
+    wMean /= n;
 
     // Kasa algebraic circle fit:
     // Minimize sum((ui-a)^2 + (wi-b)^2 - R^2)^2
     // Solve 2x2 system for center offset (a', b') from mean
-    let Suu = 0, Svv = 0, Suv = 0, Suuu = 0, Svvv = 0, Suvv = 0, Svuu = 0;
+    let Suu = 0,
+      Svv = 0,
+      Suv = 0,
+      Suuu = 0,
+      Svvv = 0,
+      Suvv = 0,
+      Svuu = 0;
     for (let i = 0; i < n; i++) {
       const u = us[i]! - uMean;
       const v = ws[i]! - wMean;
@@ -977,11 +1148,7 @@ export class SceneGraphManager {
     return this._canvasSize.width / Math.max(this._canvasSize.height, 1);
   }
 
-  upsertBody(
-    id: string,
-    name: string,
-    pose: PoseInput,
-  ): SceneEntity {
+  upsertBody(id: string, name: string, pose: PoseInput): SceneEntity {
     return this.batchMutation(() => {
       const existing = this.entities.get(id);
       if (existing) {
@@ -1129,6 +1296,7 @@ export class SceneGraphManager {
         entity.meta.primaryGeometryId = geometryId;
       }
       entity.meta.geometries.set(geometryId, geometryState);
+      this.geometryToBodyId.set(geometryId, bodyId);
       entity.meshes.push(mesh);
 
       if (triangleCount > EDGE_DEFER_THRESHOLD) {
@@ -1174,10 +1342,17 @@ export class SceneGraphManager {
     partIndex?: Uint32Array,
   ): SceneEntity {
     const entity = this.upsertBody(id, name, pose);
-    this.addBodyGeometry(id, id, name, meshData, {
-      position: [0, 0, 0],
-      rotation: [0, 0, 0, 1],
-    }, partIndex);
+    this.addBodyGeometry(
+      id,
+      id,
+      name,
+      meshData,
+      {
+        position: [0, 0, 0],
+        rotation: [0, 0, 0, 1],
+      },
+      partIndex,
+    );
     return entity;
   }
 
@@ -1300,6 +1475,7 @@ export class SceneGraphManager {
     parentBodyId: string,
     localPose: PoseInput,
     _name?: string,
+    options?: DatumVisualOptions,
   ): SceneEntity | undefined {
     return this.batchMutation(() => {
       const parent = this.entities.get(parentBodyId);
@@ -1321,10 +1497,12 @@ export class SceneGraphManager {
       root.add(pickSphere);
 
       const originDot = new Mesh(
-        new SphereGeometry(0.018, 8, 8),
-        new MeshBasicMaterial({ color: 0xffffff, toneMapped: false }),
+        new SphereGeometry(0.012, 8, 8),
+        new MeshBasicMaterial({ color: ENTITY_DATUM, toneMapped: false }),
       );
       root.add(originDot);
+
+      this.addDatumSemanticGlyph(root, options);
 
       const AXIS_LENGTH = 0.18;
       const ARROW_SIZE = 0.03;
@@ -1339,7 +1517,7 @@ export class SceneGraphManager {
         const [dx, dy, dz] = axisDirections[i];
         const color = axisColors[i];
         const axisEnd = new Vector3(dx, dy, dz);
-        root.add(createFatLine([this.lineOrigin, axisEnd], { color }, {}));
+        root.add(createFatLine([this.lineOrigin, axisEnd], { color, depthTest: false }, {}));
 
         const dir = axisEnd.clone().normalize();
         const perp = new Vector3();
@@ -1349,11 +1527,17 @@ export class SceneGraphManager {
           perp.crossVectors(dir, new Vector3(1, 0, 0)).normalize();
         }
         const back = axisEnd.clone().sub(dir.clone().multiplyScalar(ARROW_SIZE));
-        root.add(createFatLine([
-          back.clone().add(perp.clone().multiplyScalar(ARROW_SIZE * 0.4)),
-          axisEnd.clone(),
-          back.clone().sub(perp.clone().multiplyScalar(ARROW_SIZE * 0.4)),
-        ], { color }, {}));
+        root.add(
+          createFatLine(
+            [
+              back.clone().add(perp.clone().multiplyScalar(ARROW_SIZE * 0.4)),
+              axisEnd.clone(),
+              back.clone().sub(perp.clone().multiplyScalar(ARROW_SIZE * 0.4)),
+            ],
+            { color, depthTest: false },
+            {},
+          ),
+        );
       }
 
       setPose(root, localPose);
@@ -1369,6 +1553,8 @@ export class SceneGraphManager {
           kind: 'datum',
           parentBodyId,
           localPose,
+          surfaceClass: options?.surfaceClass,
+          faceGeometry: options?.faceGeometry,
           disabledOpacity: 1,
           emphasisOpacity: 1,
           isCreationAnchor: false,
@@ -1376,6 +1562,9 @@ export class SceneGraphManager {
       };
       this.entities.set(id, entity);
       this.applyVisualState(entity);
+      if (!this._datumsVisible) {
+        root.visible = false;
+      }
       this.markEntityListChanged();
       this.markJointRefreshNeeded();
       this.markLoadRefreshNeeded();
@@ -1424,20 +1613,33 @@ export class SceneGraphManager {
       root.userData = { entityId: id, entityType: 'joint', jointType };
 
       const color = createJointColor(jointType);
-      const linkLine = createLine(
-        [this.lineOrigin, this.lineOrigin],
-        color,
-        { entityId: id, entityType: 'joint' },
-      );
+      const linkLine = createLine([this.lineOrigin, this.lineOrigin], color, {
+        entityId: id,
+        entityType: 'joint',
+      });
       // Enable transparency for hover/idle opacity changes
       (linkLine.material as LineMaterial).transparent = true;
       (linkLine.material as LineMaterial).opacity = 0.6;
       root.add(linkLine);
 
       // Joint anchor glyph (always visible sphere + axis pin)
-      const anchor = createJointAnchor();
+      const anchor = createJointAnchor(jointType);
       anchor.rootNode.userData = { entityId: id, entityType: 'joint' };
       root.add(anchor.rootNode);
+
+      // Always-on mini DOF indicator (visible even when not selected)
+      let alwaysOnIndicator: DofIndicatorResult | undefined;
+      const miniDof = createDofIndicator(jointType);
+      if (miniDof) {
+        miniDof.rootNode.scale.setScalar(0.6);
+        miniDof.rootNode.traverse((obj) => {
+          if (obj instanceof Mesh && obj.material instanceof MeshBasicMaterial) {
+            obj.material.opacity = 0.25;
+          }
+        });
+        root.add(miniDof.rootNode);
+        alwaysOnIndicator = miniDof;
+      }
 
       setObjectLayerRecursive(root, VIEWPORT_PICK_LAYER);
 
@@ -1455,11 +1657,17 @@ export class SceneGraphManager {
           jointType,
           linkLine,
           anchor,
+          alwaysOnIndicator,
         },
       };
       this.entities.set(id, entity);
       this.markJointRefreshNeeded();
       this.applyVisualState(entity);
+      if (!this._jointAnchorsVisible) {
+        if (anchor) anchor.rootNode.visible = false;
+        linkLine.visible = false;
+        if (alwaysOnIndicator) alwaysOnIndicator.rootNode.visible = false;
+      }
       this.markEntityListChanged();
       this.requestRender();
       return entity;
@@ -1477,6 +1685,9 @@ export class SceneGraphManager {
       }
       if (entity.meta.anchor) {
         entity.meta.anchor.dispose();
+      }
+      if (entity.meta.alwaysOnIndicator) {
+        entity.meta.alwaysOnIndicator.dispose();
       }
       entity.rootNode.removeFromParent();
       disposeObject3D(entity.rootNode);
@@ -1496,6 +1707,45 @@ export class SceneGraphManager {
       if (entity.meta.linkLine) {
         (entity.meta.linkLine.material as LineMaterial).color.copy(createJointColor(jointType));
       }
+      // Recreate the anchor with new type-specific geometry and color
+      if (entity.meta.anchor) {
+        const anchorRoot = entity.meta.anchor.rootNode;
+        anchorRoot.removeFromParent();
+        entity.meta.anchor.dispose();
+        const newAnchor = createJointAnchor(jointType);
+        newAnchor.rootNode.userData = { entityId: id, entityType: 'joint' };
+        entity.rootNode.add(newAnchor.rootNode);
+        entity.meta.anchor = newAnchor;
+        // Update entity meshes to include new anchor meshes
+        entity.meshes.length = 0;
+        entity.meshes.push(...newAnchor.meshes);
+        if (!this._jointAnchorsVisible) {
+          newAnchor.rootNode.visible = false;
+        }
+      }
+      // Recreate the always-on DOF indicator for the new type
+      if (entity.meta.alwaysOnIndicator) {
+        entity.meta.alwaysOnIndicator.rootNode.removeFromParent();
+        entity.meta.alwaysOnIndicator.dispose();
+        entity.meta.alwaysOnIndicator = undefined;
+      }
+      const miniDof = createDofIndicator(jointType);
+      if (miniDof) {
+        miniDof.rootNode.scale.setScalar(0.6);
+        miniDof.rootNode.traverse((obj) => {
+          if (obj instanceof Mesh && obj.material instanceof MeshBasicMaterial) {
+            obj.material.opacity = 0.25;
+          }
+        });
+        entity.rootNode.add(miniDof.rootNode);
+        entity.meta.alwaysOnIndicator = miniDof;
+        // Hide if full indicator is active (joint is selected)
+        if (this.activeDofIndicators.has(id)) {
+          miniDof.rootNode.visible = false;
+        }
+      }
+      this.markJointRefreshNeeded();
+      this.applyVisualState(entity);
       this.requestRender();
     });
   }
@@ -1520,9 +1770,7 @@ export class SceneGraphManager {
    * orange triad + dashed line at child body origin,
    * with lines running body → datum → joint center.
    */
-  private createJointCoordinateOverlay(
-    entity: SceneEntityInternal,
-  ): Group | null {
+  private createJointCoordinateOverlay(entity: SceneEntityInternal): Group | null {
     if (entity.meta.kind !== 'joint') return null;
     const { parentDatumId, childDatumId } = entity.meta;
 
@@ -1570,12 +1818,16 @@ export class SceneGraphManager {
 
     // Helper: create a dashed line between multiple world-space points
     const createDashedLine = (points: Vector3[], color: Color) => {
-      const line = createFatLine(points, {
-        color,
-        dashed: true,
-        dashSize: 0.02,
-        gapSize: 0.01,
-      }, { isPickable: false });
+      const line = createFatLine(
+        points,
+        {
+          color,
+          dashed: true,
+          dashSize: 0.02,
+          gapSize: 0.01,
+        },
+        { isPickable: false },
+      );
       return line;
     };
 
@@ -1612,30 +1864,25 @@ export class SceneGraphManager {
 
       parentDatum.rootNode.getWorldPosition(this.jointLineStart);
       childDatum.rootNode.getWorldPosition(this.jointLineEnd);
-      this.jointLineCenter
-        .copy(this.jointLineStart)
-        .add(this.jointLineEnd)
-        .multiplyScalar(0.5);
-      entity.rootNode.position.copy(this.jointLineCenter);
+
+      // Position anchor at parent datum (joint frame is defined there)
+      entity.rootNode.position.copy(this.jointLineStart);
       entity.rootNode.quaternion.identity();
       entity.rootNode.visible = true;
 
+      // Link line connects parent datum → child datum
       if (entity.meta.linkLine) {
-        this.lineStart.copy(this.jointLineStart).sub(this.jointLineCenter);
-        this.lineEnd.copy(this.jointLineEnd).sub(this.jointLineCenter);
-        setLinePoints(entity.meta.linkLine, [
-          this.lineStart,
-          this.lineEnd,
-        ]);
+        this.lineOrigin.set(0, 0, 0);
+        this.lineEnd.copy(this.jointLineEnd).sub(this.jointLineStart);
+        setLinePoints(entity.meta.linkLine, [this.lineOrigin, this.lineEnd]);
       }
 
-      // Orient anchor pin along parent→child axis
+      // Orient anchor pin along parent datum Z-axis (the joint axis)
       if (entity.meta.anchor) {
-        // lineEnd points from center toward child datum (already computed above)
-        const dir = this.lineEnd;
-        if (dir.lengthSq() > 1e-8) {
-          const yAxis = _anchorYAxis;
-          _anchorQuat.setFromUnitVectors(yAxis, dir.clone().normalize());
+        parentDatum.rootNode.getWorldQuaternion(_datumWorldQuat);
+        _jointAxisScratch.set(0, 0, 1).applyQuaternion(_datumWorldQuat);
+        if (_jointAxisScratch.lengthSq() > 1e-8) {
+          _anchorQuat.setFromUnitVectors(_anchorYAxis, _jointAxisScratch.normalize());
           entity.meta.anchor.rootNode.quaternion.copy(_anchorQuat);
         }
       }
@@ -1670,11 +1917,10 @@ export class SceneGraphManager {
       }
 
       if (kindTag === 'spring-damper') {
-        const line = createLine(
-          [this.lineOrigin, this.lineOrigin],
-          getLoadBaseColor(kindTag),
-          { entityId: loadId, entityType: 'load' },
-        );
+        const line = createLine([this.lineOrigin, this.lineOrigin], getLoadBaseColor(kindTag), {
+          entityId: loadId,
+          entityType: 'load',
+        });
         root.add(line);
         meta.line = line;
       } else {
@@ -1863,34 +2109,25 @@ export class SceneGraphManager {
       const maxDim = Math.max(size.x, size.y, size.z, MIN_CAMERA_EXTENT);
       const dir = directions[preset].clone().normalize();
       const pos = center.clone().add(dir.multiplyScalar(maxDim * 2.5));
-      this.boundsApi.refresh(box).moveTo([pos.x, pos.y, pos.z]).lookAt({ target: [center.x, center.y, center.z] }).fit();
+      this.boundsApi
+        .refresh(box)
+        .moveTo([pos.x, pos.y, pos.z])
+        .lookAt({ target: [center.x, center.y, center.z] })
+        .fit();
     } else {
       setCameraToBox(this._camera, box, directions[preset], this.canvasAspect);
     }
     this.requestRender();
   }
 
-  animateCameraTo(
-    _alpha: number,
-    _beta: number,
-    _radius?: number,
-    _duration?: number,
-  ): void {
+  animateCameraTo(_alpha: number, _beta: number, _radius?: number, _duration?: number): void {
     this.fitAll();
   }
 
   focusOnEntity(id: string): void {
     const entity = this.entities.get(id);
     if (!entity) return;
-    const box = getBoxForRoots([entity.rootNode]);
-    if (this.boundsApi) {
-      this.boundsApi.refresh(box).fit();
-    } else {
-      const direction = this._camera.position.clone();
-      if (direction.lengthSq() < EPSILON) direction.set(1, 1, 1);
-      setCameraToBox(this._camera, box, direction, this.canvasAspect);
-    }
-    this.requestRender();
+    this.scheduleFocus([entity.rootNode]);
   }
 
   focusOnEntities(ids: string[]): void {
@@ -1898,22 +2135,68 @@ export class SceneGraphManager {
       .map((id) => this.entities.get(id)?.rootNode)
       .filter((value): value is Group => Boolean(value));
     if (roots.length === 0) return;
-    const box = getBoxForRoots(roots);
-    if (this.boundsApi) {
-      this.boundsApi.refresh(box).fit();
-    } else {
-      const direction = new Vector3();
-      this._camera.getWorldDirection(direction);
-      direction.negate();
-      setCameraToBox(this._camera, box, direction, this.canvasAspect);
-    }
-    this.requestRender();
+    this.scheduleFocus(roots);
   }
-  applySelection(selectedIds: Set<string>): void {
+
+  /** Defer bounding-box computation + camera fit to next animation frame. */
+  private scheduleFocus(roots: Group[]): void {
+    const executeFocus = () => {
+      const box = getBoxForRoots(roots);
+      if (this.boundsApi) {
+        this.boundsApi.refresh(box).fit();
+      } else {
+        const direction = roots.length === 1
+          ? this._camera.position.clone()
+          : new Vector3();
+        if (roots.length === 1) {
+          if (direction.lengthSq() < EPSILON) direction.set(1, 1, 1);
+        } else {
+          this._camera.getWorldDirection(direction);
+          direction.negate();
+        }
+        setCameraToBox(this._camera, box, direction, this.canvasAspect);
+      }
+      this.requestRender();
+    };
+
+    if (typeof requestAnimationFrame === 'function') {
+      this._pendingFocusRoots = roots;
+      if (this._pendingFocusRaf) cancelAnimationFrame(this._pendingFocusRaf);
+      this._pendingFocusRaf = requestAnimationFrame(() => {
+        this._pendingFocusRaf = 0;
+        this._pendingFocusRoots = null;
+        executeFocus();
+      });
+    } else {
+      executeFocus();
+    }
+  }
+  applySelection(selectedIds: Set<string>, rawSelectedIds?: Set<string>): void {
+    this.batchMutation(() => this.applySelectionInner(selectedIds, rawSelectedIds));
+  }
+
+  /** Force deferred selection overlays to be created synchronously (for tests). */
+  flushSelectionOverlays(): void {
+    if (!this._pendingOverlayRaf) return;
+    cancelAnimationFrame(this._pendingOverlayRaf);
+    this._pendingOverlayRaf = 0;
+    const ids = this._pendingOverlaySelectedIds;
+    const rawIds = this._pendingOverlayRawIds;
+    this._pendingOverlaySelectedIds = null;
+    this._pendingOverlayRawIds = null;
+    if (ids) {
+      this.batchMutation(() => this.createSelectionOverlays(ids, rawIds ?? new Set()));
+    }
+  }
+
+  private applySelectionInner(selectedIds: Set<string>, rawSelectedIds?: Set<string>): void {
     const prev = this.currentSelectedIds;
     this.currentSelectedIds = new Set(selectedIds);
+    const generation = ++this._selectionGeneration;
 
-    // Only update entities whose selection state changed
+    // ── Phase 1 (synchronous): visual state + remove stale overlays ──
+    // Material tinting is the primary selection indicator and must be immediate.
+
     for (const id of selectedIds) {
       if (!prev.has(id)) {
         const entity = this.entities.get(id);
@@ -1927,15 +2210,89 @@ export class SceneGraphManager {
       }
     }
 
-    // DOF indicators: remove for joints no longer selected
+    // Remove overlays for deselected entities (fast — just detach + dispose)
     for (const [id, indicator] of this.activeDofIndicators) {
       if (!selectedIds.has(id)) {
         indicator.rootNode.removeFromParent();
         indicator.dispose();
         this.activeDofIndicators.delete(id);
+        const entity = this.entities.get(id);
+        if (entity && entity.meta.kind === 'joint' && entity.meta.alwaysOnIndicator) {
+          entity.meta.alwaysOnIndicator.rootNode.visible = true;
+        }
       }
     }
-    // DOF indicators: create for newly selected joints
+    for (const [id, visual] of this.activeLimitVisuals) {
+      if (!selectedIds.has(id)) {
+        visual.rootNode.removeFromParent();
+        visual.dispose();
+        this.activeLimitVisuals.delete(id);
+      }
+    }
+    for (const [id, overlay] of this.jointSelectionOverlays) {
+      if (!selectedIds.has(id)) {
+        overlay.removeFromParent();
+        disposeObject3D(overlay);
+        this.jointSelectionOverlays.delete(id);
+      }
+    }
+    for (const [id, triad] of this.activeBodyFrameTriads) {
+      if (!selectedIds.has(id)) {
+        triad.rootNode.removeFromParent();
+        triad.dispose();
+        this.activeBodyFrameTriads.delete(id);
+      }
+    }
+    const rawIds = rawSelectedIds ?? new Set<string>();
+    for (const [geomId, triad] of this.activeGeometryFrameTriads) {
+      if (!rawIds.has(geomId)) {
+        triad.rootNode.removeFromParent();
+        triad.dispose();
+        this.activeGeometryFrameTriads.delete(geomId);
+      }
+    }
+    for (const [id, line] of this.activeJointAxisLines) {
+      if (!selectedIds.has(id)) {
+        line.removeFromParent();
+        disposeFatLine(line);
+        this.activeJointAxisLines.delete(id);
+      }
+    }
+    for (const [id, indicator] of this.activeComIndicators) {
+      if (!selectedIds.has(id)) {
+        indicator.rootNode.removeFromParent();
+        indicator.dispose();
+        this.activeComIndicators.delete(id);
+      }
+    }
+
+    this.requestRender();
+
+    // ── Phase 2 (deferred): create overlays for newly selected entities ──
+    // GPU object allocation (Line2, LineMaterial, Geometry) is deferred to the
+    // next animation frame so the selection tint is visible immediately.
+
+    // Defer overlay creation to next animation frame so the selection tint
+    // renders immediately. Falls back to synchronous if rAF is unavailable (tests).
+    if (typeof requestAnimationFrame === 'function') {
+      this._pendingOverlaySelectedIds = selectedIds;
+      this._pendingOverlayRawIds = rawIds;
+      if (this._pendingOverlayRaf) cancelAnimationFrame(this._pendingOverlayRaf);
+      this._pendingOverlayRaf = requestAnimationFrame(() => {
+        this._pendingOverlayRaf = 0;
+        if (this._selectionGeneration !== generation) return;
+        this._pendingOverlaySelectedIds = null;
+        this._pendingOverlayRawIds = null;
+        this.batchMutation(() => this.createSelectionOverlays(selectedIds, rawIds));
+      });
+    } else {
+      this.createSelectionOverlays(selectedIds, rawIds);
+    }
+  }
+
+  /** Phase 2 of selection: create visual overlays for the current selection set. */
+  private createSelectionOverlays(selectedIds: Set<string>, rawIds: Set<string>): void {
+    // DOF indicators
     for (const id of selectedIds) {
       if (this.activeDofIndicators.has(id)) continue;
       const entity = this.entities.get(id);
@@ -1944,17 +2301,12 @@ export class SceneGraphManager {
       if (!indicator) continue;
       entity.rootNode.add(indicator.rootNode);
       this.activeDofIndicators.set(id, indicator);
-    }
-
-    // Limit visuals: remove for joints no longer selected
-    for (const [id, visual] of this.activeLimitVisuals) {
-      if (!selectedIds.has(id)) {
-        visual.rootNode.removeFromParent();
-        visual.dispose();
-        this.activeLimitVisuals.delete(id);
+      if (entity.meta.alwaysOnIndicator) {
+        entity.meta.alwaysOnIndicator.rootNode.visible = false;
       }
     }
-    // Limit visuals: create for newly selected joints with limits
+
+    // Limit visuals
     for (const id of selectedIds) {
       if (this.activeLimitVisuals.has(id)) continue;
       const entity = this.entities.get(id);
@@ -1969,15 +2321,7 @@ export class SceneGraphManager {
       this.activeLimitVisuals.set(id, visual);
     }
 
-    // Joint selection coordinate overlays: remove for deselected joints
-    for (const [id, overlay] of this.jointSelectionOverlays) {
-      if (!selectedIds.has(id)) {
-        overlay.removeFromParent();
-        disposeObject3D(overlay);
-        this.jointSelectionOverlays.delete(id);
-      }
-    }
-    // Joint selection coordinate overlays: create for newly selected joints
+    // Joint coordinate overlays
     for (const id of selectedIds) {
       if (this.jointSelectionOverlays.has(id)) continue;
       const entity = this.entities.get(id);
@@ -1986,6 +2330,76 @@ export class SceneGraphManager {
       if (overlay) {
         this._scene.add(overlay);
         this.jointSelectionOverlays.set(id, overlay);
+      }
+    }
+
+    // Body frame triads
+    for (const id of selectedIds) {
+      if (this.activeBodyFrameTriads.has(id)) continue;
+      const entity = this.entities.get(id);
+      if (!entity || entity.meta.kind !== 'body') continue;
+      const triad = createFrameTriad({ axisLength: 0.14, opacity: 0.5 });
+      entity.rootNode.add(triad.rootNode);
+      this.activeBodyFrameTriads.set(id, triad);
+    }
+
+    // Geometry frame triads (O(1) lookup via index)
+    for (const geomId of rawIds) {
+      if (this.activeGeometryFrameTriads.has(geomId)) continue;
+      const bodyId = this.geometryToBodyId.get(geomId);
+      if (!bodyId) continue;
+      const entity = this.entities.get(bodyId);
+      if (!entity || entity.meta.kind !== 'body') continue;
+      const geomState = entity.meta.geometries.get(geomId);
+      if (!geomState) continue;
+      const triad = createFrameTriad({ axisLength: 0.1, opacity: 0.6 });
+      geomState.rootNode.add(triad.rootNode);
+      this.activeGeometryFrameTriads.set(geomId, triad);
+    }
+
+    // Joint axis lines
+    for (const id of selectedIds) {
+      if (this.activeJointAxisLines.has(id)) continue;
+      const entity = this.entities.get(id);
+      if (!entity || entity.meta.kind !== 'joint') continue;
+      if (SKIP_AXIS_JOINT_TYPES.has(entity.meta.jointType)) continue;
+      const parentDatumEntity = this.entities.get(entity.meta.parentDatumId);
+      if (!parentDatumEntity) continue;
+      const datumQuat = new Quaternion();
+      parentDatumEntity.rootNode.getWorldQuaternion(datumQuat);
+      const axis = new Vector3(0, 0, 1).applyQuaternion(datumQuat);
+      const jointPos = new Vector3();
+      entity.rootNode.getWorldPosition(jointPos);
+      const start = jointPos.clone().addScaledVector(axis, -0.3);
+      const end = jointPos.clone().addScaledVector(axis, 0.3);
+      const line = createFatLine(
+        [start, end],
+        {
+          color: JOINT_STEEL_BLUE,
+          lineWidth: 2,
+          dashed: true,
+          dashSize: 0.02,
+          gapSize: 0.01,
+          depthTest: false,
+        },
+        { isPickable: false },
+      );
+      this._scene.add(line);
+      this.activeJointAxisLines.set(id, line);
+    }
+
+    // COM indicators
+    if (this._comVisible) {
+      for (const id of selectedIds) {
+        if (this.activeComIndicators.has(id)) continue;
+        const entity = this.entities.get(id);
+        if (!entity || entity.meta.kind !== 'body') continue;
+        const com = this._comPositions.get(id);
+        if (!com) continue;
+        const indicator = createComIndicator();
+        indicator.rootNode.position.copy(com);
+        entity.rootNode.add(indicator.rootNode);
+        this.activeComIndicators.set(id, indicator);
       }
     }
 
@@ -2056,7 +2470,8 @@ export class SceneGraphManager {
     if (
       entity.meta.highlightedFace?.geometryId === geometryId &&
       entity.meta.highlightedFace.faceIndex === faceIndex
-    ) return;
+    )
+      return;
 
     this.clearFaceHighlight(bodyId);
 
@@ -2117,6 +2532,37 @@ export class SceneGraphManager {
 
   getGizmoMode(): GizmoMode {
     return this._gizmoMode;
+  }
+
+  setGizmoSnap(translationSnap: number, rotationSnap: number): void {
+    this._gizmoTranslationSnap = translationSnap;
+    this._gizmoRotationSnap = rotationSnap;
+    this.onGizmoStateChanged?.();
+  }
+
+  getGizmoSnap(): { translationSnap: number; rotationSnap: number } {
+    return {
+      translationSnap: this._gizmoTranslationSnap,
+      rotationSnap: this._gizmoRotationSnap,
+    };
+  }
+
+  setGizmoSpace(space: 'local' | 'world'): void {
+    this._gizmoSpace = space;
+    this.onGizmoStateChanged?.();
+    this.requestRender();
+  }
+
+  getGizmoSpace(): 'local' | 'world' {
+    return this._gizmoSpace;
+  }
+
+  getGizmoAttachedEntityKind(): 'body' | 'datum' | null {
+    if (!this._gizmoAttachedId) return null;
+    const entity = this.entities.get(this._gizmoAttachedId);
+    if (!entity) return null;
+    if (entity.meta.kind === 'body' || entity.meta.kind === 'datum') return entity.meta.kind;
+    return null;
   }
 
   setGizmoOnDragEnd(callback: GizmoDragEndCallback | undefined): void {
@@ -2188,10 +2634,12 @@ export class SceneGraphManager {
     this.batchMutation(() => {
       const entity = this.entities.get(jointId);
       if (!entity || entity.meta.kind !== 'joint') return;
-      const payload = data as {
-        force?: { x?: number; y?: number; z?: number };
-        torque?: { x?: number; y?: number; z?: number };
-      } | undefined;
+      const payload = data as
+        | {
+            force?: { x?: number; y?: number; z?: number };
+            torque?: { x?: number; y?: number; z?: number };
+          }
+        | undefined;
 
       const vectors = [
         { id: `${jointId}::force`, type: 'point-force' as const, value: payload?.force },
@@ -2264,7 +2712,11 @@ export class SceneGraphManager {
     }
 
     this.datumPreviewRoot.visible = true;
-    this.datumPreviewRoot.position.set(preview.position[0], preview.position[1], preview.position[2]);
+    this.datumPreviewRoot.position.set(
+      preview.position[0],
+      preview.position[1],
+      preview.position[2],
+    );
 
     const color = cloneColor(PREVIEW_OWNERSHIP_EDGE.color);
     const previewOpts: FatLineOptions = { color };
@@ -2272,9 +2724,15 @@ export class SceneGraphManager {
     if (preview.type === 'point') {
       // Crosshair lines (flat, no 3D geometry)
       const size = 0.06;
-      this.datumPreviewRoot.add(createFatLine([new Vector3(-size, 0, 0), new Vector3(size, 0, 0)], previewOpts));
-      this.datumPreviewRoot.add(createFatLine([new Vector3(0, -size, 0), new Vector3(0, size, 0)], previewOpts));
-      this.datumPreviewRoot.add(createFatLine([new Vector3(0, 0, -size), new Vector3(0, 0, size)], previewOpts));
+      this.datumPreviewRoot.add(
+        createFatLine([new Vector3(-size, 0, 0), new Vector3(size, 0, 0)], previewOpts),
+      );
+      this.datumPreviewRoot.add(
+        createFatLine([new Vector3(0, -size, 0), new Vector3(0, size, 0)], previewOpts),
+      );
+      this.datumPreviewRoot.add(
+        createFatLine([new Vector3(0, 0, -size), new Vector3(0, 0, size)], previewOpts),
+      );
       setObjectLayerRecursive(this.datumPreviewRoot, VIEWPORT_PICK_LAYER);
       this.requestRender();
       return;
@@ -2297,11 +2755,16 @@ export class SceneGraphManager {
         perp.crossVectors(dir, new Vector3(1, 0, 0)).normalize();
       }
       const back = tip.clone().sub(dir.clone().multiplyScalar(arrowSize));
-      this.datumPreviewRoot.add(createFatLine([
-        back.clone().add(perp.clone().multiplyScalar(arrowSize * 0.4)),
-        tip.clone(),
-        back.clone().sub(perp.clone().multiplyScalar(arrowSize * 0.4)),
-      ], previewOpts));
+      this.datumPreviewRoot.add(
+        createFatLine(
+          [
+            back.clone().add(perp.clone().multiplyScalar(arrowSize * 0.4)),
+            tip.clone(),
+            back.clone().sub(perp.clone().multiplyScalar(arrowSize * 0.4)),
+          ],
+          previewOpts,
+        ),
+      );
       setObjectLayerRecursive(this.datumPreviewRoot, VIEWPORT_PICK_LAYER);
       this.requestRender();
       return;
@@ -2374,15 +2837,16 @@ export class SceneGraphManager {
     this.loadPreviewRoot.visible = true;
 
     if (kindTag === 'spring-damper') {
-      const secondDatum = loadState.childDatumId ? this.entities.get(loadState.childDatumId) : undefined;
+      const secondDatum = loadState.childDatumId
+        ? this.entities.get(loadState.childDatumId)
+        : undefined;
       if (!secondDatum) return;
       secondDatum.rootNode.getWorldPosition(this.loadSecond);
       this.loadPreviewRoot.add(
-        createLine(
-          [this.loadAnchor, this.loadSecond],
-          getLoadBaseColor(kindTag),
-          { entityId: '__load_preview__', entityType: 'preview' },
-        ),
+        createLine([this.loadAnchor, this.loadSecond], getLoadBaseColor(kindTag), {
+          entityId: '__load_preview__',
+          entityType: 'preview',
+        }),
       );
       this.requestRender();
       return;
@@ -2506,11 +2970,59 @@ export class SceneGraphManager {
     parent.rootNode.getWorldPosition(start);
     child.rootNode.getWorldPosition(end);
 
+    const kind = alignment?.kind ?? 'general';
+    const lineOpacity = kind === 'general' ? 0.35 : 0.55;
+
     const line = createLine(this.resolveJointPreviewLinePoints(start, end, alignment), ACCENT, {});
     const material = line.material as LineMaterial;
     material.transparent = true;
-    material.opacity = 0.55;
+    material.opacity = lineOpacity;
     this.jointPreviewRoot.add(line);
+
+    // Alignment-specific visual extras
+    if (kind === 'coaxial' && alignment?.axis) {
+      // Show dashed axis-extension lines beyond both datums
+      const axis = new Vector3(alignment.axis.x, alignment.axis.y, alignment.axis.z).normalize();
+      const midpoint = start.clone().add(end).multiplyScalar(0.5);
+      const halfLen = Math.max(alignment.distance * 0.5, 0.12);
+      const extStart = midpoint.clone().addScaledVector(axis, -(halfLen + 0.08));
+      const extEnd = midpoint.clone().addScaledVector(axis, halfLen + 0.08);
+      const ext1 = createFatLine([midpoint.clone().addScaledVector(axis, -halfLen), extStart], {
+        color: ACCENT,
+        lineWidth: 1,
+        transparent: true,
+        opacity: 0.25,
+        dashed: true,
+        dashSize: 0.008,
+        gapSize: 0.008,
+      });
+      const ext2 = createFatLine([midpoint.clone().addScaledVector(axis, halfLen), extEnd], {
+        color: ACCENT,
+        lineWidth: 1,
+        transparent: true,
+        opacity: 0.25,
+        dashed: true,
+        dashSize: 0.008,
+        gapSize: 0.008,
+      });
+      this.jointPreviewRoot.add(ext1);
+      this.jointPreviewRoot.add(ext2);
+    } else if (kind === 'coincident') {
+      // Show a highlight sphere at the shared point
+      const midpoint = start.clone().add(end).multiplyScalar(0.5);
+      const sphere = new Mesh(
+        new SphereGeometry(0.015, 12, 12),
+        new MeshBasicMaterial({
+          color: ACCENT.getHex(),
+          transparent: true,
+          opacity: 0.5,
+          depthTest: false,
+        }),
+      );
+      sphere.position.copy(midpoint);
+      this.jointPreviewRoot.add(sphere);
+    }
+
     this.jointPreviewRoot.visible = true;
     setObjectLayerRecursive(this.jointPreviewRoot, VIEWPORT_PICK_LAYER);
     this.requestRender();
@@ -2575,7 +3087,47 @@ export class SceneGraphManager {
       disposeObject3D(child);
     }
     this.provisionalPreviewRoot.visible = false;
+    this.clearProvisionalDofPreview();
     this.requestRender();
+  }
+
+  /**
+   * Show a mini DOF indicator at the given world position during pick-child hover,
+   * giving the user a spatial preview of the inferred joint type.
+   */
+  showProvisionalDofPreview(
+    position: { x: number; y: number; z: number },
+    jointType: string,
+    axisDirection?: { x: number; y: number; z: number } | null,
+  ): void {
+    this.clearProvisionalDofPreview();
+
+    const axis = axisDirection
+      ? new Vector3(axisDirection.x, axisDirection.y, axisDirection.z)
+      : undefined;
+    const indicator = createDofIndicator(jointType, axis);
+    if (!indicator) return;
+
+    indicator.rootNode.position.set(position.x, position.y, position.z);
+    indicator.rootNode.scale.setScalar(0.5);
+    indicator.rootNode.traverse((obj) => {
+      if (obj instanceof Mesh && obj.material instanceof MeshBasicMaterial) {
+        obj.material.opacity = 0.35;
+      }
+    });
+
+    this.provisionalPreviewRoot.add(indicator.rootNode);
+    this._provisionalDofIndicator = indicator;
+    setObjectLayerRecursive(this.provisionalPreviewRoot, VIEWPORT_PICK_LAYER);
+    this.requestRender();
+  }
+
+  private clearProvisionalDofPreview(): void {
+    if (this._provisionalDofIndicator) {
+      this._provisionalDofIndicator.rootNode.removeFromParent();
+      this._provisionalDofIndicator.dispose();
+      this._provisionalDofIndicator = null;
+    }
   }
 
   showJointTypePreview(
@@ -2663,6 +3215,102 @@ export class SceneGraphManager {
     return this._gridVisible;
   }
 
+  get datumsVisible(): boolean {
+    return this._datumsVisible;
+  }
+
+  toggleDatums(): void {
+    this._datumsVisible = !this._datumsVisible;
+    this.applyDatumVisibility();
+    this.onDatumsVisibilityChanged?.();
+    this.requestRender();
+  }
+
+  get jointAnchorsVisible(): boolean {
+    return this._jointAnchorsVisible;
+  }
+
+  toggleJointAnchors(): void {
+    this._jointAnchorsVisible = !this._jointAnchorsVisible;
+    this.applyJointAnchorVisibility();
+    this.onJointAnchorsVisibilityChanged?.();
+    this.requestRender();
+  }
+
+  get collisionWireframesVisible(): boolean {
+    return this._collisionWireframesVisible;
+  }
+
+  toggleCollisionWireframes(): void {
+    this._collisionWireframesVisible = !this._collisionWireframesVisible;
+    this.setCollisionWireframeVisibility(this._collisionWireframesVisible);
+    this.requestRender();
+  }
+
+  get comVisible(): boolean {
+    return this._comVisible;
+  }
+
+  toggleCom(): void {
+    this._comVisible = !this._comVisible;
+    if (this._comVisible) {
+      // Create COM indicators for currently selected bodies
+      for (const id of this.currentSelectedIds) {
+        if (this.activeComIndicators.has(id)) continue;
+        const entity = this.entities.get(id);
+        if (!entity || entity.meta.kind !== 'body') continue;
+        const com = this._comPositions.get(id);
+        if (!com) continue;
+        const indicator = createComIndicator();
+        indicator.rootNode.position.copy(com);
+        entity.rootNode.add(indicator.rootNode);
+        this.activeComIndicators.set(id, indicator);
+      }
+    } else {
+      // Remove all active COM indicators
+      for (const [id, indicator] of this.activeComIndicators) {
+        indicator.rootNode.removeFromParent();
+        indicator.dispose();
+        this.activeComIndicators.delete(id);
+      }
+    }
+    this.requestRender();
+  }
+
+  setBodyCom(bodyId: string, com: { x: number; y: number; z: number }): void {
+    const vec = this._comPositions.get(bodyId);
+    if (vec) {
+      vec.set(com.x, com.y, com.z);
+    } else {
+      this._comPositions.set(bodyId, new Vector3(com.x, com.y, com.z));
+    }
+    // Update active indicator if one exists
+    const indicator = this.activeComIndicators.get(bodyId);
+    if (indicator) {
+      indicator.rootNode.position.set(com.x, com.y, com.z);
+      this.requestRender();
+    }
+  }
+
+  private applyDatumVisibility(): void {
+    for (const [, entity] of this.entities) {
+      if (entity.meta.kind === 'datum') {
+        entity.rootNode.visible = this._datumsVisible;
+      }
+    }
+  }
+
+  private applyJointAnchorVisibility(): void {
+    for (const [, entity] of this.entities) {
+      if (entity.meta.kind === 'joint') {
+        if (entity.meta.anchor) entity.meta.anchor.rootNode.visible = this._jointAnchorsVisible;
+        if (entity.meta.linkLine) entity.meta.linkLine.visible = this._jointAnchorsVisible;
+        if (entity.meta.alwaysOnIndicator)
+          entity.meta.alwaysOnIndicator.rootNode.visible = this._jointAnchorsVisible;
+      }
+    }
+  }
+
   getGeometryIndex(bodyId: string, geometryId: string): BodyGeometryIndex | undefined {
     const entity = this.entities.get(bodyId);
     if (!this.isBodyEntity(entity)) return undefined;
@@ -2707,7 +3355,11 @@ export class SceneGraphManager {
     return this.hasPendingGeometryBvhs();
   }
 
-  getGeometryFacePreview(bodyId: string, geometryId: string, faceIndex: number): FacePreviewData | null {
+  getGeometryFacePreview(
+    bodyId: string,
+    geometryId: string,
+    faceIndex: number,
+  ): FacePreviewData | null {
     const entity = this.entities.get(bodyId);
     if (!this.isBodyEntity(entity)) return null;
     const geometryState = this.getBodyGeometryState(entity, geometryId);
@@ -2722,11 +3374,22 @@ export class SceneGraphManager {
     }
 
     const faceRange = geometryIndex.faceRanges[faceIndex];
-    const previewType = estimateSurfaceType(geometryState.normals, geometryState.indices, faceRange);
-    const axisDirection = previewType === 'axis'
-      ? estimateAxisDirection(geometryState.normals, geometryState.indices, faceRange)
-      : null;
-    const localCentroid = this.computeFaceLocalCentroid(entity, geometryId, faceIndex, previewType, axisDirection);
+    const previewType = estimateSurfaceType(
+      geometryState.normals,
+      geometryState.indices,
+      faceRange,
+    );
+    const axisDirection =
+      previewType === 'axis'
+        ? estimateAxisDirection(geometryState.normals, geometryState.indices, faceRange)
+        : null;
+    const localCentroid = this.computeFaceLocalCentroid(
+      entity,
+      geometryId,
+      faceIndex,
+      previewType,
+      axisDirection,
+    );
     const result: FacePreviewData = { previewType, axisDirection, localCentroid };
     geometryState.facePreviewCache.set(faceIndex, result);
     return result;
@@ -2769,15 +3432,17 @@ export class SceneGraphManager {
     return this.getFaceCentroidWorld(bodyId, entity.meta.primaryGeometryId, faceIndex);
   }
 
-  projectToScreen(
-    worldPos: { x: number; y: number; z: number },
-  ): { x: number; y: number; z: number } {
+  projectToScreen(worldPos: { x: number; y: number; z: number }): {
+    x: number;
+    y: number;
+    z: number;
+  } {
     this._camera.updateMatrixWorld(true);
     this._camera.updateProjectionMatrix();
     const projected = new Vector3(worldPos.x, worldPos.y, worldPos.z).project(this._camera);
     return {
-      x: ((projected.x + 1) * 0.5) * this._canvasSize.width,
-      y: ((1 - projected.y) * 0.5) * this._canvasSize.height,
+      x: (projected.x + 1) * 0.5 * this._canvasSize.width,
+      y: (1 - projected.y) * 0.5 * this._canvasSize.height,
       z: projected.z,
     };
   }
@@ -2789,9 +3454,10 @@ export class SceneGraphManager {
 
     if (entity.meta.kind === 'datum') {
       // Datum uses MeshBasicMaterial + LineBasicMaterial (flat, no PBR)
-      const opacity = entity.meta.isCreationAnchor || entity.meta.emphasisOpacity >= 1
-        ? 1
-        : Math.min(entity.meta.disabledOpacity, entity.meta.emphasisOpacity);
+      const opacity =
+        entity.meta.isCreationAnchor || entity.meta.emphasisOpacity >= 1
+          ? 1
+          : Math.min(entity.meta.disabledOpacity, entity.meta.emphasisOpacity);
       entity.rootNode.traverse((child) => {
         if (isFatLine(child)) {
           const mat = child.material as LineMaterial;
@@ -2838,21 +3504,21 @@ export class SceneGraphManager {
     }
 
     if (entity.meta.kind === 'joint') {
+      const typeColor = JOINT_TYPE_COLORS[entity.meta.jointType] ?? JOINT_STEEL_BLUE;
       if (entity.meta.linkLine) {
         const lineMaterial = entity.meta.linkLine.material as LineMaterial;
         if (isSelected) {
           lineMaterial.color.copy(entityColor);
           lineMaterial.opacity = 1.0;
         } else if (isHovered) {
-          lineMaterial.color.copy(JOINT_STEEL_BLUE);
+          lineMaterial.color.copy(typeColor);
           lineMaterial.opacity = 1.0;
         } else {
-          lineMaterial.color.copy(JOINT_STEEL_BLUE);
+          lineMaterial.color.copy(typeColor);
           lineMaterial.opacity = 0.6;
         }
         lineMaterial.needsUpdate = true;
       }
-      // Anchor glyph emissive hover / selection tint
       if (entity.meta.anchor) {
         for (const mesh of entity.meta.anchor.meshes) {
           const mat = mesh.material as MeshStandardMaterial;
@@ -2862,17 +3528,23 @@ export class SceneGraphManager {
             mat.color.copy(entityColor);
             mat.opacity = 1.0;
           } else if (isHovered) {
-            mat.color.copy(JOINT_STEEL_BLUE);
-            mat.emissive.copy(JOINT_STEEL_BLUE);
+            mat.color.copy(typeColor);
+            mat.emissive.copy(typeColor);
             mat.emissiveIntensity = 0.3;
             mat.opacity = 1.0;
           } else {
-            mat.color.copy(JOINT_STEEL_BLUE);
+            mat.color.copy(typeColor);
             mat.emissive.set(0x000000);
             mat.emissiveIntensity = 0;
-            mat.opacity = 0.7;
+            mat.opacity = 0.85;
           }
           mat.needsUpdate = true;
+        }
+        const triadOpacity = isSelected ? 0.9 : isHovered ? 0.6 : 0.35;
+        for (const line of entity.meta.anchor.triadLines) {
+          const lineMat = line.material as LineBasicMaterial;
+          lineMat.opacity = triadOpacity;
+          lineMat.needsUpdate = true;
         }
       }
     }
@@ -2929,11 +3601,7 @@ export class SceneGraphManager {
 
       if (entity.meta.line) {
         const vectorData = entity.meta.loadState?.vector;
-        this.loadDirection.set(
-          vectorData?.x ?? 0,
-          vectorData?.y ?? 1,
-          vectorData?.z ?? 0,
-        );
+        this.loadDirection.set(vectorData?.x ?? 0, vectorData?.y ?? 1, vectorData?.z ?? 0);
         if (entity.meta.loadState?.referenceFrame === 'datum-local') {
           anchorDatum.rootNode.getWorldQuaternion(this.loadOrientation);
           this.loadDirection.applyQuaternion(this.loadOrientation);
@@ -2949,7 +3617,11 @@ export class SceneGraphManager {
         if (entity.meta.arrow) {
           entity.meta.arrow.position.set(0, 0, 0);
           entity.meta.arrow.setDirection(this.loadDirection);
-          entity.meta.arrow.setLength(length, Math.min(length * 0.25, 0.18), Math.min(length * 0.14, 0.1));
+          entity.meta.arrow.setLength(
+            length,
+            Math.min(length * 0.25, 0.18),
+            Math.min(length * 0.14, 0.1),
+          );
           entity.meta.arrow.setColor(getLoadBaseColor(entity.meta.kindTag));
         }
       }
@@ -2994,13 +3666,15 @@ export class SceneGraphManager {
   updateCollisionWireframe(
     bodyId: string,
     geometryId: string,
-    config: {
-      shapeType: 'none' | 'box' | 'sphere' | 'cylinder' | 'convex-hull';
-      halfExtents?: { x: number; y: number; z: number };
-      radius?: number;
-      height?: number;
-      offset?: { x: number; y: number; z: number };
-    } | undefined,
+    config:
+      | {
+          shapeType: 'none' | 'box' | 'sphere' | 'cylinder' | 'convex-hull';
+          halfExtents?: { x: number; y: number; z: number };
+          radius?: number;
+          height?: number;
+          offset?: { x: number; y: number; z: number };
+        }
+      | undefined,
   ): void {
     this.batchMutation(() => {
       const entity = this.entities.get(bodyId);
@@ -3054,6 +3728,7 @@ export class SceneGraphManager {
         wireMesh.position.set(config.offset.x, config.offset.y, config.offset.z);
       }
 
+      wireMesh.visible = this._collisionWireframesVisible;
       geometryState.rootNode.add(wireMesh);
       geometryState.collisionWireframe = wireMesh;
     });

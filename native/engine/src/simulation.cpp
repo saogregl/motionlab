@@ -11,10 +11,10 @@
 
 #include "chrono/functions/ChFunctionConst.h"
 #include "chrono/physics/ChBody.h"
+#include "chrono/physics/ChBodyAuxRef.h"
 #include "chrono/physics/ChLink.h"
 #include "chrono/physics/ChLinkDistance.h"
 #include "chrono/physics/ChLinkLock.h"
-#include "chrono/physics/ChLinkMate.h"
 #include "chrono/physics/ChLinkMotorLinearForce.h"
 #include "chrono/physics/ChLinkMotorLinearPosition.h"
 #include "chrono/physics/ChLinkMotorLinearSpeed.h"
@@ -64,6 +64,10 @@ WorldFrame compute_datum_world_frame(const mech::Pose& body_pose,
     return {body_rot.Rotate(datum_local_pos) + body_pos, body_rot * datum_local_rot};
 }
 
+bool body_is_fixed(const mech::Body& body) {
+    return body.motion_type() == mech::MOTION_TYPE_FIXED;
+}
+
 ChVector3d vec3_to_chrono(const mech::Vec3& v) {
     return {v.x(), v.y(), v.z()};
 }
@@ -80,34 +84,6 @@ void set_vec3(mech::Vec3* out, const ChVector3d& v) {
 
 double angle_from_quat_z(const ChQuaterniond& q) {
     return 2.0 * std::atan2(q.e3(), q.e0());
-}
-
-ChVector3d z_axis_from_rot(const ChQuaterniond& q) {
-    return q.Rotate(ChVector3d(0, 0, 1));
-}
-
-struct MateRelativeState {
-    double trans_x, trans_y, trans_z;
-    double rot_z;
-    double vel_x, vel_y, vel_z;
-    double ang_vel_z;
-};
-
-MateRelativeState extract_mate_state(const std::shared_ptr<ChLinkMateGeneric>& mate) {
-    ChFramed f1 = mate->GetFrame1Abs();
-    ChFramed f2 = mate->GetFrame2Abs();
-    ChQuaterniond q1_inv = f1.GetRot().GetConjugate();
-    ChVector3d pos_rel = q1_inv.Rotate(f2.GetPos() - f1.GetPos());
-    ChQuaterniond q_rel = q1_inv * f2.GetRot();
-    auto* b1 = mate->GetBody1();
-    auto* b2 = mate->GetBody2();
-    ChVector3d v1 = b1->PointSpeedLocalToParent(mate->GetFrame1Rel().GetPos());
-    ChVector3d v2 = b2->PointSpeedLocalToParent(mate->GetFrame2Rel().GetPos());
-    ChVector3d vel = q1_inv.Rotate(v2 - v1);
-    ChVector3d w = q1_inv.Rotate(b2->GetAngVelParent() - b1->GetAngVelParent());
-    return {pos_rel.x(), pos_rel.y(), pos_rel.z(),
-            angle_from_quat_z(q_rel),
-            vel.x(), vel.y(), vel.z(), w.z()};
 }
 
 void append_scalar_channel(std::vector<ChannelDescriptor>& out,
@@ -243,7 +219,7 @@ static void validate_mechanism(
     // E2: No ground
     bool has_ground = false;
     for (const auto& body : mechanism.bodies()) {
-        if (body.is_fixed()) { has_ground = true; break; }
+        if (body_is_fixed(body)) { has_ground = true; break; }
     }
     if (!has_ground) {
         emit(DiagnosticSeverity::ERROR, "NO_GROUND",
@@ -253,7 +229,7 @@ static void validate_mechanism(
 
     // E3: Zero-mass non-fixed bodies
     for (const auto& body : mechanism.bodies()) {
-        if (body.is_fixed()) continue;
+        if (body_is_fixed(body)) continue;
         if (body.has_mass_properties() && body.mass_properties().mass() <= 0.0) {
             emit(DiagnosticSeverity::ERROR, "ZERO_MASS",
                  "Body '" + body.name() + "' has zero or negative mass but is not fixed",
@@ -349,7 +325,7 @@ static void validate_mechanism(
 
     // W1: Floating bodies
     for (const auto& body : mechanism.bodies()) {
-        if (body.is_fixed()) continue;
+        if (body_is_fixed(body)) continue;
         if (connected_bodies.find(body.id().id()) == connected_bodies.end()) {
             emit(DiagnosticSeverity::WARNING, "FLOATING_BODY",
                  "Body '" + body.name() + "' has no joints or loads connecting it to the mechanism",
@@ -362,7 +338,7 @@ static void validate_mechanism(
     {
         int moving_bodies = 0;
         for (const auto& body : mechanism.bodies()) {
-            if (!body.is_fixed()) moving_bodies++;
+            if (!body_is_fixed(body)) moving_bodies++;
         }
         int total_constraints = 0;
         for (const auto& joint : mechanism.joints()) {
@@ -647,7 +623,7 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
 
     for (const auto& body : mechanism.bodies()) {
         const std::string id = body.id().id();
-        auto ch_body = chrono_types::make_shared<ChBody>();
+        auto ch_body = chrono_types::make_shared<ChBodyAuxRef>();
 
         const auto& mp = body.mass_properties();
         ch_body->SetMass(mp.mass());
@@ -658,10 +634,12 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
         ChVector3d pos(p.position().x(), p.position().y(), p.position().z());
         ChQuaterniond rot(p.orientation().w(), p.orientation().x(),
                           p.orientation().y(), p.orientation().z());
-        ch_body->SetPos(pos);
-        ch_body->SetRot(rot);
+        ch_body->SetFrameRefToAbs(ChFrame<>(pos, rot));
 
-        ch_body->SetFixed(body.is_fixed());
+        const auto& com = mp.center_of_mass();
+        ch_body->SetFrameCOMToRef(ChFrame<>(ChVector3d(com.x(), com.y(), com.z())));
+
+        ch_body->SetFixed(body_is_fixed(body));
 
         impl_->system->AddBody(ch_body);
         impl_->body_map[id] = ch_body;
@@ -773,12 +751,10 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
         }
 
         const auto* parent_body_proto = parent_body_proto_it->second;
-        const auto* child_body_proto = child_body_proto_it->second;
         auto parent_body = parent_body_it->second;
         auto child_body = child_body_it->second;
 
         WorldFrame parent_wf = compute_datum_world_frame(parent_body_proto->pose(), parent_datum->local_pose());
-        WorldFrame child_wf = compute_datum_world_frame(child_body_proto->pose(), child_datum->local_pose());
         const auto actuator_it = actuator_by_joint.find(joint.id().id());
 
         std::shared_ptr<ChLink> link;
@@ -867,117 +843,119 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
                         break;
                 }
             }
+
+            // Motors embed the joint constraint (SpindleConstraint::REVOLUTE /
+            // GuideConstraint::PRISMATIC by default). If the joint also defines
+            // limits or damping, those are silently ignored when a motor is active.
+            if (link) {
+                bool has_limits = false;
+                bool has_damping = false;
+                if (joint.type() == mech::JOINT_TYPE_REVOLUTE) {
+                    has_limits = joint.has_revolute() && joint.revolute().has_angle_limit();
+                    has_damping = joint.has_revolute() && joint.revolute().damping() > 0.0;
+                } else if (joint.type() == mech::JOINT_TYPE_PRISMATIC) {
+                    has_limits = joint.has_prismatic() && joint.prismatic().has_translation_limit();
+                    has_damping = joint.has_prismatic() && joint.prismatic().damping() > 0.0;
+                }
+                if (has_limits || has_damping) {
+                    result.diagnostics.push_back(
+                        "Joint '" + joint.name() + "': limits/damping ignored when motor is active");
+                }
+            }
         }
 
         if (!link) {
             switch (joint.type()) {
 
             case mech::JOINT_TYPE_REVOLUTE: {
-                bool has_limits = joint.has_revolute() && joint.revolute().has_angle_limit();
-                if (has_limits) {
-                    auto lock = chrono_types::make_shared<ChLinkLockRevolute>();
-                    lock->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
+                auto lock = chrono_types::make_shared<ChLinkLockRevolute>();
+                lock->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
+                if (joint.has_revolute() && joint.revolute().has_angle_limit()) {
                     lock->LimitRz().SetActive(true);
                     lock->LimitRz().SetMin(joint.revolute().angle_limit().lower());
                     lock->LimitRz().SetMax(joint.revolute().angle_limit().upper());
-                    link = lock;
-                } else {
-                    auto mate = chrono_types::make_shared<ChLinkMateRevolute>();
-                    mate->Initialize(parent_body, child_body, false,
-                        parent_wf.pos, child_wf.pos,
-                        z_axis_from_rot(parent_wf.rot), z_axis_from_rot(child_wf.rot));
-                    link = mate;
                 }
+                if (joint.has_revolute() && joint.revolute().damping() > 0.0) {
+                    lock->ForceRz().SetActive(true);
+                    lock->ForceRz().SetDampingCoefficient(joint.revolute().damping());
+                }
+                link = lock;
                 break;
             }
 
             case mech::JOINT_TYPE_PRISMATIC: {
-                bool has_limits = joint.has_prismatic() && joint.prismatic().has_translation_limit();
-                if (has_limits) {
-                    auto lock = chrono_types::make_shared<ChLinkLockPrismatic>();
-                    lock->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
+                auto lock = chrono_types::make_shared<ChLinkLockPrismatic>();
+                lock->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
+                if (joint.has_prismatic() && joint.prismatic().has_translation_limit()) {
                     lock->LimitZ().SetActive(true);
                     lock->LimitZ().SetMin(joint.prismatic().translation_limit().lower());
                     lock->LimitZ().SetMax(joint.prismatic().translation_limit().upper());
-                    link = lock;
-                } else {
-                    auto mate = chrono_types::make_shared<ChLinkMatePrismatic>();
-                    mate->Initialize(parent_body, child_body, false,
-                        parent_wf.pos, child_wf.pos,
-                        z_axis_from_rot(parent_wf.rot), z_axis_from_rot(child_wf.rot));
-                    link = mate;
                 }
+                if (joint.has_prismatic() && joint.prismatic().damping() > 0.0) {
+                    lock->ForceZ().SetActive(true);
+                    lock->ForceZ().SetDampingCoefficient(joint.prismatic().damping());
+                }
+                link = lock;
                 break;
             }
 
             case mech::JOINT_TYPE_FIXED: {
-                auto mate = chrono_types::make_shared<ChLinkMateFix>();
-                mate->Initialize(parent_body, child_body, false,
-                    ChFrame<>(parent_wf.pos, parent_wf.rot),
-                    ChFrame<>(child_wf.pos, child_wf.rot));
-                link = mate;
+                auto lock = chrono_types::make_shared<ChLinkLockLock>();
+                lock->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
+                link = lock;
                 break;
             }
 
             case mech::JOINT_TYPE_SPHERICAL: {
-                auto mate = chrono_types::make_shared<ChLinkMateSpherical>();
-                mate->Initialize(parent_body, child_body, false,
-                    parent_wf.pos, child_wf.pos);
-                link = mate;
+                auto lock = chrono_types::make_shared<ChLinkLockSpherical>();
+                lock->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
+                link = lock;
                 break;
             }
 
             case mech::JOINT_TYPE_CYLINDRICAL: {
-                bool has_limits = joint.has_cylindrical() &&
-                    (joint.cylindrical().has_translation_limit() || joint.cylindrical().has_rotation_limit());
-                if (has_limits) {
-                    auto lock = chrono_types::make_shared<ChLinkLockCylindrical>();
-                    lock->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
-                    if (joint.cylindrical().has_translation_limit()) {
-                        lock->LimitZ().SetActive(true);
-                        lock->LimitZ().SetMin(joint.cylindrical().translation_limit().lower());
-                        lock->LimitZ().SetMax(joint.cylindrical().translation_limit().upper());
-                    }
-                    if (joint.cylindrical().has_rotation_limit()) {
-                        lock->LimitRz().SetActive(true);
-                        lock->LimitRz().SetMin(joint.cylindrical().rotation_limit().lower());
-                        lock->LimitRz().SetMax(joint.cylindrical().rotation_limit().upper());
-                    }
-                    link = lock;
-                } else {
-                    auto mate = chrono_types::make_shared<ChLinkMateCylindrical>();
-                    mate->Initialize(parent_body, child_body, false,
-                        parent_wf.pos, child_wf.pos,
-                        z_axis_from_rot(parent_wf.rot), z_axis_from_rot(child_wf.rot));
-                    link = mate;
+                auto lock = chrono_types::make_shared<ChLinkLockCylindrical>();
+                lock->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
+                if (joint.has_cylindrical() && joint.cylindrical().has_translation_limit()) {
+                    lock->LimitZ().SetActive(true);
+                    lock->LimitZ().SetMin(joint.cylindrical().translation_limit().lower());
+                    lock->LimitZ().SetMax(joint.cylindrical().translation_limit().upper());
                 }
+                if (joint.has_cylindrical() && joint.cylindrical().has_rotation_limit()) {
+                    lock->LimitRz().SetActive(true);
+                    lock->LimitRz().SetMin(joint.cylindrical().rotation_limit().lower());
+                    lock->LimitRz().SetMax(joint.cylindrical().rotation_limit().upper());
+                }
+                if (joint.has_cylindrical() && joint.cylindrical().translational_damping() > 0.0) {
+                    lock->ForceZ().SetActive(true);
+                    lock->ForceZ().SetDampingCoefficient(joint.cylindrical().translational_damping());
+                }
+                if (joint.has_cylindrical() && joint.cylindrical().rotational_damping() > 0.0) {
+                    lock->ForceRz().SetActive(true);
+                    lock->ForceRz().SetDampingCoefficient(joint.cylindrical().rotational_damping());
+                }
+                link = lock;
                 break;
             }
 
             case mech::JOINT_TYPE_PLANAR: {
-                auto mate = chrono_types::make_shared<ChLinkMatePlanar>();
-                mate->Initialize(parent_body, child_body, false,
-                    parent_wf.pos, child_wf.pos,
-                    z_axis_from_rot(parent_wf.rot), z_axis_from_rot(child_wf.rot));
-                link = mate;
+                auto lock = chrono_types::make_shared<ChLinkLockPlanar>();
+                lock->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
+                link = lock;
                 break;
             }
 
             case mech::JOINT_TYPE_POINT_LINE: {
-                auto mate = chrono_types::make_shared<ChLinkMateGeneric>(true, true, false, false, false, false);
-                mate->Initialize(parent_body, child_body, false,
-                    ChFrame<>(parent_wf.pos, parent_wf.rot),
-                    ChFrame<>(child_wf.pos, child_wf.rot));
-                link = mate;
+                auto lock = chrono_types::make_shared<ChLinkLockPointLine>();
+                lock->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
+                link = lock;
                 break;
             }
 
             case mech::JOINT_TYPE_POINT_PLANE: {
-                auto mate = chrono_types::make_shared<ChLinkMateGeneric>(false, false, true, false, false, false);
-                mate->Initialize(parent_body, child_body, false,
-                    ChFrame<>(parent_wf.pos, parent_wf.rot),
-                    ChFrame<>(child_wf.pos, child_wf.rot));
-                link = mate;
+                auto lock = chrono_types::make_shared<ChLinkLockPointPlane>();
+                lock->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
+                link = lock;
                 break;
             }
 
@@ -1155,8 +1133,14 @@ void SimulationRuntime::reset() {
             continue;
         }
         const auto& pose = pose_it->second;
-        body->SetPos({pose.position[0], pose.position[1], pose.position[2]});
-        body->SetRot({pose.orientation[0], pose.orientation[1], pose.orientation[2], pose.orientation[3]});
+        if (auto aux = std::dynamic_pointer_cast<ChBodyAuxRef>(body)) {
+            aux->SetFrameRefToAbs(ChFrame<>(
+                ChVector3d(pose.position[0], pose.position[1], pose.position[2]),
+                ChQuaterniond(pose.orientation[0], pose.orientation[1], pose.orientation[2], pose.orientation[3])));
+        } else {
+            body->SetPos({pose.position[0], pose.position[1], pose.position[2]});
+            body->SetRot({pose.orientation[0], pose.orientation[1], pose.orientation[2], pose.orientation[3]});
+        }
         body->SetPosDt({0, 0, 0});
         body->SetRotDt({1, 0, 0, 0});
         body->EmptyAccumulators();
@@ -1201,8 +1185,9 @@ std::vector<BodyPose> SimulationRuntime::getBodyPoses() const {
     for (const auto& [id, body] : impl_->body_map) {
         BodyPose pose;
         pose.body_id = id;
-        const auto pos = body->GetPos();
-        const auto rot = body->GetRot();
+        const auto& ref = body->GetFrameRefToAbs();
+        const auto pos = ref.GetPos();
+        const auto rot = ref.GetRot();
         pose.position[0] = pos.x();
         pose.position[1] = pos.y();
         pose.position[2] = pos.z();
@@ -1236,10 +1221,6 @@ std::vector<JointState> SimulationRuntime::getJointStates() const {
                 const auto& rel_rot = lock->GetRelCoordsys().rot;
                 state.position = angle_from_quat_z(rel_rot);
                 state.velocity = lock->GetRelativeAngVel().z();
-            } else if (auto mate = std::dynamic_pointer_cast<ChLinkMateGeneric>(entry.link)) {
-                auto s = extract_mate_state(mate);
-                state.position = s.rot_z;
-                state.velocity = s.ang_vel_z;
             }
             states.push_back(state);
         } else if (entry.joint_type == mech::JOINT_TYPE_PRISMATIC) {
@@ -1249,10 +1230,6 @@ std::vector<JointState> SimulationRuntime::getJointStates() const {
             } else if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
                 state.position = lock->GetRelCoordsys().pos.z();
                 state.velocity = lock->GetRelCoordsysDt().pos.z();
-            } else if (auto mate = std::dynamic_pointer_cast<ChLinkMateGeneric>(entry.link)) {
-                auto s = extract_mate_state(mate);
-                state.position = s.trans_z;
-                state.velocity = s.vel_z;
             }
             states.push_back(state);
         }
@@ -1344,10 +1321,6 @@ std::vector<ChannelValue> SimulationRuntime::getChannelValues() const {
             } else if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
                 pos = angle_from_quat_z(lock->GetRelCoordsys().rot);
                 vel = lock->GetRelativeAngVel().z();
-            } else if (auto mate = std::dynamic_pointer_cast<ChLinkMateGeneric>(entry.link)) {
-                auto s = extract_mate_state(mate);
-                pos = s.rot_z;
-                vel = s.ang_vel_z;
             }
             values.push_back(make_scalar_value(prefix + "coord/rot_z", pos));
             values.push_back(make_scalar_value(prefix + "coord_rate/rot_z", vel));
@@ -1360,10 +1333,6 @@ std::vector<ChannelValue> SimulationRuntime::getChannelValues() const {
             } else if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
                 pos = lock->GetRelCoordsys().pos.z();
                 vel = lock->GetRelCoordsysDt().pos.z();
-            } else if (auto mate = std::dynamic_pointer_cast<ChLinkMateGeneric>(entry.link)) {
-                auto s = extract_mate_state(mate);
-                pos = s.trans_z;
-                vel = s.vel_z;
             }
             values.push_back(make_scalar_value(prefix + "coord/trans_z", pos));
             values.push_back(make_scalar_value(prefix + "coord_rate/trans_z", vel));
@@ -1373,12 +1342,6 @@ std::vector<ChannelValue> SimulationRuntime::getChannelValues() const {
                 values.push_back(make_scalar_value(prefix + "coord_rate/trans_z", lock->GetRelCoordsysDt().pos.z()));
                 values.push_back(make_scalar_value(prefix + "coord/rot_z", angle_from_quat_z(lock->GetRelCoordsys().rot)));
                 values.push_back(make_scalar_value(prefix + "coord_rate/rot_z", lock->GetRelativeAngVel().z()));
-            } else if (auto mate = std::dynamic_pointer_cast<ChLinkMateGeneric>(entry.link)) {
-                auto s = extract_mate_state(mate);
-                values.push_back(make_scalar_value(prefix + "coord/trans_z", s.trans_z));
-                values.push_back(make_scalar_value(prefix + "coord_rate/trans_z", s.vel_z));
-                values.push_back(make_scalar_value(prefix + "coord/rot_z", s.rot_z));
-                values.push_back(make_scalar_value(prefix + "coord_rate/rot_z", s.ang_vel_z));
             }
         } else if (entry.joint_type == mech::JOINT_TYPE_PLANAR) {
             if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
@@ -1386,12 +1349,6 @@ std::vector<ChannelValue> SimulationRuntime::getChannelValues() const {
                 values.push_back(make_scalar_value(prefix + "coord/trans_z", lock->GetRelCoordsys().pos.z()));
                 values.push_back(make_scalar_value(prefix + "coord_rate/trans_x", lock->GetRelCoordsysDt().pos.x()));
                 values.push_back(make_scalar_value(prefix + "coord_rate/trans_z", lock->GetRelCoordsysDt().pos.z()));
-            } else if (auto mate = std::dynamic_pointer_cast<ChLinkMateGeneric>(entry.link)) {
-                auto s = extract_mate_state(mate);
-                values.push_back(make_scalar_value(prefix + "coord/trans_x", s.trans_x));
-                values.push_back(make_scalar_value(prefix + "coord/trans_z", s.trans_z));
-                values.push_back(make_scalar_value(prefix + "coord_rate/trans_x", s.vel_x));
-                values.push_back(make_scalar_value(prefix + "coord_rate/trans_z", s.vel_z));
             }
         } else if (entry.joint_type == mech::JOINT_TYPE_SPHERICAL || entry.joint_type == mech::JOINT_TYPE_UNIVERSAL) {
             if (auto universal = std::dynamic_pointer_cast<ChLinkUniversal>(entry.link)) {
@@ -1400,15 +1357,11 @@ std::vector<ChannelValue> SimulationRuntime::getChannelValues() const {
                 ChQuaterniond q = frame2.GetRot().GetConjugate() * frame1.GetRot();
                 values.push_back(make_vector_value(prefix + "coord/rot_vec", {q.e1(), q.e2(), q.e3()}));
                 values.push_back(make_vector_value(prefix + "coord_rate/ang_vel", reaction.torque));
-            } else if (auto mate = std::dynamic_pointer_cast<ChLinkMateGeneric>(entry.link)) {
-                ChFramed f1 = mate->GetFrame1Abs();
-                ChFramed f2 = mate->GetFrame2Abs();
-                ChQuaterniond q_rel = f1.GetRot().GetConjugate() * f2.GetRot();
+            } else if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
+                const auto& rel = lock->GetRelCoordsys();
                 values.push_back(make_vector_value(prefix + "coord/rot_vec",
-                    {q_rel.e1(), q_rel.e2(), q_rel.e3()}));
-                ChVector3d w = f1.GetRot().GetConjugate().Rotate(
-                    mate->GetBody2()->GetAngVelParent() - mate->GetBody1()->GetAngVelParent());
-                values.push_back(make_vector_value(prefix + "coord_rate/ang_vel", w));
+                    {rel.rot.e1(), rel.rot.e2(), rel.rot.e3()}));
+                values.push_back(make_vector_value(prefix + "coord_rate/ang_vel", lock->GetRelativeAngVel()));
             }
         } else if (entry.joint_type == mech::JOINT_TYPE_DISTANCE) {
             if (auto distance = std::dynamic_pointer_cast<ChLinkDistance>(entry.link)) {

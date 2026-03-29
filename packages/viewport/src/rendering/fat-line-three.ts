@@ -66,14 +66,38 @@ export interface FatLineOptions {
   gapSize?: number;
 }
 
-export function createFatLine(
-  points: readonly Vector3[],
-  opts: FatLineOptions,
-  userData?: Record<string, unknown>,
-): Line2 {
-  const geometry = new LineGeometry();
-  geometry.setPositions(pointsToPositions(points));
+// ── Shared material cache (ref-counted) ─────────────────────────────────────
+// Lines created for indicators (frame triads, axis lines, joint overlays) share
+// identical material params. Caching avoids redundant LineMaterial constructor +
+// shader compilation costs on every selection change.
 
+interface CachedMaterial {
+  material: LineMaterial;
+  refCount: number;
+}
+
+const _materialCache = new Map<string, CachedMaterial>();
+
+function materialKey(opts: FatLineOptions): string {
+  const lw = opts.lineWidth ?? INDICATOR_LINE_WIDTH;
+  const tr = opts.transparent ?? false;
+  const op = opts.opacity ?? 1;
+  const tm = opts.toneMapped ?? false;
+  const dt = opts.depthTest ?? true;
+  const da = opts.dashed ?? false;
+  const ds = opts.dashScale ?? 1;
+  const dz = opts.dashSize ?? 0.02;
+  const gs = opts.gapSize ?? 0.01;
+  return `${opts.color.getHex()}_${lw}_${tr}_${op}_${tm}_${dt}_${da}_${ds}_${dz}_${gs}`;
+}
+
+function acquireMaterial(opts: FatLineOptions): LineMaterial {
+  const key = materialKey(opts);
+  const cached = _materialCache.get(key);
+  if (cached) {
+    cached.refCount++;
+    return cached.material;
+  }
   const material = new LineMaterial({
     color: opts.color.getHex(),
     linewidth: opts.lineWidth ?? INDICATOR_LINE_WIDTH,
@@ -87,6 +111,36 @@ export function createFatLine(
     gapSize: opts.gapSize ?? 0.01,
   });
   trackMaterial(material);
+  _materialCache.set(key, { material, refCount: 1 });
+  return material;
+}
+
+function releaseMaterial(mat: LineMaterial): void {
+  for (const [key, cached] of _materialCache) {
+    if (cached.material === mat) {
+      cached.refCount--;
+      if (cached.refCount <= 0) {
+        _materialCache.delete(key);
+        untrackMaterial(mat);
+        mat.dispose();
+      }
+      return;
+    }
+  }
+  // Not in cache — dispose directly (e.g. material created before caching)
+  untrackMaterial(mat);
+  mat.dispose();
+}
+
+export function createFatLine(
+  points: readonly Vector3[],
+  opts: FatLineOptions,
+  userData?: Record<string, unknown>,
+): Line2 {
+  const geometry = new LineGeometry();
+  geometry.setPositions(pointsToPositions(points));
+
+  const material = acquireMaterial(opts);
 
   const line = new Line2(geometry, material);
   line.computeLineDistances();
@@ -103,12 +157,10 @@ export function setFatLinePoints(line: Line2, points: readonly Vector3[]): void 
   line.computeLineDistances();
 }
 
-/** Dispose a Line2 and untrack its material. */
+/** Dispose a Line2 and release its shared material. */
 export function disposeFatLine(line: Line2): void {
   line.geometry.dispose();
-  const mat = line.material as LineMaterial;
-  untrackMaterial(mat);
-  mat.dispose();
+  releaseMaterial(line.material as LineMaterial);
 }
 
 /** Type guard: is this object a Line2 with a LineMaterial? */

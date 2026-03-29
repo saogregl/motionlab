@@ -14,7 +14,7 @@ function LeftPanel({ children, className, createAction }: LeftPanelProps) {
   const [viewMode, setViewMode] = useState<'tree' | 'list'>('tree');
 
   return (
-    <div data-slot="left-panel" className={cn('flex h-full flex-col bg-layer-base', className)}>
+    <div data-slot="left-panel" className={cn('flex h-full flex-col', className)}>
       {/* Tab row */}
       <Tabs defaultValue="structure" className="gap-0">
         <TabsList variant="contained" className="h-7 w-full shrink-0 px-0">

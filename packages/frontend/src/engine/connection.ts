@@ -24,6 +24,7 @@ import {
   createRenameDatumCommand,
   createRenameGeometryCommand,
   createUpdateDatumPoseCommand,
+  createUpdateGeometryPoseCommand,
   createSaveProjectCommand,
   createScrubCommand,
   createSimulationControlCommand,
@@ -36,6 +37,9 @@ import {
   createUpdateMassPropertiesCommand,
   createUpdatePrimitiveCommand,
   createUpdateCollisionConfigCommand,
+  createMakeCompoundBodyCommand,
+  createSplitBodyCommand,
+  createReparentGeometryCommand,
   type CollisionConfigInput,
   type PrimitiveParamsInput,
   type SimulationSettingsInput,
@@ -59,6 +63,7 @@ import {
   type Actuator,
   type RevoluteMotorActuator,
   type PrismaticMotorActuator,
+  DatumSurfaceClass,
   DiagnosticSeverity,
 } from '@motionlab/protocol';
 import type { AnalyzeFacePairSuccess, CreateDatumFromFaceSuccess, ElementId, Joint, MissingAssetInfo } from '@motionlab/protocol';
@@ -80,8 +85,8 @@ import { useToolModeStore } from '../stores/tool-mode.js';
 import { useToastStore } from '../stores/toast.js';
 import { type StoreSample, addSamplesBatched, useTraceStore } from '../stores/traces.js';
 import { alignmentFromEngineAnalysis, analyzeDatumAlignment, computeDatumWorldPose } from '../utils/datum-alignment.js';
-import { commitJointCreation } from '../utils/joint-commit.js';
-import { shouldAutoCommit } from '../utils/joint-frame-inference.js';
+import { getDebugRecorder } from '../debug/api.js';
+import { SaveIntentTracker } from './save-intent.js';
 
 // ---------------------------------------------------------------------------
 // Proto extraction helpers — reduce duplication across import/load/relocate
@@ -122,6 +127,25 @@ function extractPose(
       w: pose?.orientation?.w ?? 1,
     },
   };
+}
+
+function mapDatumSurfaceClass(surfaceClass: DatumSurfaceClass | undefined): DatumState['surfaceClass'] | undefined {
+  switch (surfaceClass) {
+    case DatumSurfaceClass.PLANAR:
+      return 'planar';
+    case DatumSurfaceClass.CYLINDRICAL:
+      return 'cylindrical';
+    case DatumSurfaceClass.CONICAL:
+      return 'conical';
+    case DatumSurfaceClass.SPHERICAL:
+      return 'spherical';
+    case DatumSurfaceClass.TOROIDAL:
+      return 'toroidal';
+    case DatumSurfaceClass.OTHER:
+      return 'other';
+    default:
+      return undefined;
+  }
 }
 
 function extractMeshData(
@@ -567,11 +591,7 @@ let relocateAssetCallback: ((bodyId: string, success: boolean, errorMessage?: st
 /** Pending primitive source info — set before sending, consumed by result handler. */
 let pendingPrimitiveSource: GeometryState['primitiveSource'] | null = null;
 
-/** When true, the next save will force a "Save As" dialog instead of silent save. */
-let forceSaveAsNextSave = false;
-
-/** When true, the next save result is routed to auto-save (no dialog, no markClean). */
-let isAutoSaving = false;
+const saveIntentTracker = new SaveIntentTracker();
 
 export function onRelocateAssetResult(
   cb: ((bodyId: string, success: boolean, errorMessage?: string) => void) | null,
@@ -598,9 +618,25 @@ export function setPlaybackSpeed(speed: number): void {
 let frameCount = 0;
 let lastFpsMeasure = 0;
 let measuredFps = 0;
+let nextSequenceId = 1n;
+let reportedMissingSceneGraphForSession = false;
 
 export function getMeasuredFps(): number {
   return measuredFps;
+}
+
+function allocateSequenceId(): bigint {
+  const id = nextSequenceId;
+  nextSequenceId += 1n;
+  return id;
+}
+
+function sendBinaryCommand(builder: (sequenceId: bigint) => Uint8Array): boolean {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return false;
+  const bytes = builder(allocateSequenceId());
+  getDebugRecorder().recordOutboundCommand(bytes);
+  ws.send(bytes);
+  return true;
 }
 
 function cleanup() {
@@ -616,11 +652,13 @@ function cleanup() {
     ws.close();
     ws = null;
   }
+  getDebugRecorder().markConnectionClosed('cleanup');
 }
 
 export function connect(set: SetState, _get: GetState) {
   cleanup();
   const myEpoch = ++connectEpoch;
+  reportedMissingSceneGraphForSession = false;
 
   set({ status: 'discovering' });
 
@@ -651,10 +689,17 @@ export function connect(set: SetState, _get: GetState) {
       socket.onopen = () => {
         if (ws !== socket) return;
         set({ status: 'handshaking' });
-
-        socket.send(createHandshakeCommand(endpoint.sessionToken ?? ''));
+        const handshakeBytes = createHandshakeCommand(endpoint.sessionToken ?? '', allocateSequenceId());
+        getDebugRecorder().recordOutboundCommand(handshakeBytes);
+        socket.send(handshakeBytes);
 
         handshakeTimer = setTimeout(() => {
+          getDebugRecorder().recordAnomaly({
+            severity: 'error',
+            code: 'handshake-timeout',
+            message: 'Handshake timed out',
+            details: { timeoutMs: 5000 },
+          });
           set({ status: 'error', errorMessage: 'Handshake timed out' });
           cleanup();
         }, 5000);
@@ -663,12 +708,15 @@ export function connect(set: SetState, _get: GetState) {
       socket.onmessage = (event) => {
         if (ws !== socket) return;
         let evt: ReturnType<typeof parseEvent>;
+        const sizeBytes = event.data instanceof ArrayBuffer ? event.data.byteLength : 0;
         try {
           evt = parseEvent(event.data as ArrayBuffer);
         } catch (err) {
           console.warn('[protocol] failed to parse event:', err);
+          getDebugRecorder().recordParseFailure('event', err, sizeBytes);
           return;
         }
+        getDebugRecorder().recordInboundEvent(evt, sizeBytes);
 
         if ((import.meta as unknown as { env: { DEV: boolean } }).env.DEV) {
           console.debug('[protocol] ←', eventToDebugJson(evt));
@@ -683,6 +731,15 @@ export function connect(set: SetState, _get: GetState) {
             }
             if (!ack.compatible) {
               const engineVersion = ack.engineProtocol?.version ?? 'unknown';
+              getDebugRecorder().recordAnomaly({
+                severity: 'error',
+                code: 'handshake-incompatible',
+                message: 'Protocol version mismatch during handshake',
+                details: {
+                  expectedVersion: PROTOCOL_VERSION,
+                  engineVersion,
+                },
+              });
               set({
                 status: 'error',
                 errorMessage: `Protocol version mismatch: frontend expects v${PROTOCOL_VERSION} but engine reports v${engineVersion}. Please rebuild both components.`,
@@ -1017,13 +1074,10 @@ export function connect(set: SetState, _get: GetState) {
               if (s.parentBody) {
                 const bodyId = s.parentBody.id?.id ?? '';
                 if (bodyId) {
-                  mechStore.updateBodyMass(
-                    bodyId,
-                    extractMassProperties(s.parentBody.massProperties),
-                    s.parentBody.massOverride ?? false,
-                  );
+                  mechStore.addBodies([extractBodyState(s.parentBody)]);
                 }
               }
+              applyUpdatedDatums(s.updatedDatums);
 
               // Replace mesh in scene graph
               if (sceneGraphManager && geomProto) {
@@ -1070,24 +1124,7 @@ export function connect(set: SetState, _get: GetState) {
             const mechStore = useMechanismStore.getState();
             if (result.result.case === 'datum') {
               const d = result.result.value;
-              mechStore.addDatum({
-                id: d.id?.id ?? '',
-                name: d.name,
-                parentBodyId: d.parentBodyId?.id ?? '',
-                localPose: {
-                  position: {
-                    x: d.localPose?.position?.x ?? 0,
-                    y: d.localPose?.position?.y ?? 0,
-                    z: d.localPose?.position?.z ?? 0,
-                  },
-                  rotation: {
-                    x: d.localPose?.orientation?.x ?? 0,
-                    y: d.localPose?.orientation?.y ?? 0,
-                    z: d.localPose?.orientation?.z ?? 0,
-                    w: d.localPose?.orientation?.w ?? 1,
-                  },
-                },
-              });
+              mechStore.addDatum(extractDatumState(d));
               useSimulationStore.getState().setNeedsCompile(true);
 
               // If joint creation is waiting for this datum (primitive fallback path),
@@ -1143,26 +1180,7 @@ export function connect(set: SetState, _get: GetState) {
               const success = result.result.value;
               const d = success.datum;
               if (!d) break;
-              mechStore.addDatum({
-                id: d.id?.id ?? '',
-                name: d.name,
-                parentBodyId: d.parentBodyId?.id ?? '',
-                localPose: {
-                  position: {
-                    x: d.localPose?.position?.x ?? 0,
-                    y: d.localPose?.position?.y ?? 0,
-                    z: d.localPose?.position?.z ?? 0,
-                  },
-                  rotation: {
-                    x: d.localPose?.orientation?.x ?? 0,
-                    y: d.localPose?.orientation?.y ?? 0,
-                    z: d.localPose?.orientation?.z ?? 0,
-                    w: d.localPose?.orientation?.w ?? 1,
-                  },
-                },
-                surfaceClass: mapSurfaceClass(success.surfaceClass),
-                faceGeometry: mapFaceGeometry(success.faceGeometry),
-              });
+              mechStore.addDatum(extractDatumState(d));
               statusStore.setMessage(
                 `Created datum from ${surfaceClassToLabel(success.surfaceClass)} face`,
               );
@@ -1195,27 +1213,8 @@ export function connect(set: SetState, _get: GetState) {
                 }
                 jcs.setCreatingDatum(false);
 
-                // Auto-commit: if both datums are from high-confidence face picks
-                // and alignment supports it, skip the type selector and create the joint.
-                const updatedJcs = useJointCreationStore.getState();
-                if (
-                  updatedJcs.step === 'select-type' &&
-                  updatedJcs.parentDatumId &&
-                  updatedJcs.childDatumId
-                ) {
-                  const autoResult = shouldAutoCommit(
-                    updatedJcs.parentSurfaceClass,
-                    updatedJcs.childSurfaceClass,
-                    updatedJcs.alignmentKind,
-                  );
-                  if (autoResult.autoCommit && autoResult.jointType) {
-                    commitJointCreation(
-                      updatedJcs.parentDatumId,
-                      updatedJcs.childDatumId,
-                      autoResult.jointType,
-                    );
-                  }
-                }
+                // The type selector panel always appears so the user can
+                // confirm or override the recommended joint type.
               }
 
               const lcs = useLoadCreationStore.getState();
@@ -1260,26 +1259,7 @@ export function connect(set: SetState, _get: GetState) {
               if (!d) break;
 
               // Add child datum to mechanism store
-              mechStore.addDatum({
-                id: d.id?.id ?? '',
-                name: d.name,
-                parentBodyId: d.parentBodyId?.id ?? '',
-                localPose: {
-                  position: {
-                    x: d.localPose?.position?.x ?? 0,
-                    y: d.localPose?.position?.y ?? 0,
-                    z: d.localPose?.position?.z ?? 0,
-                  },
-                  rotation: {
-                    x: d.localPose?.orientation?.x ?? 0,
-                    y: d.localPose?.orientation?.y ?? 0,
-                    z: d.localPose?.orientation?.z ?? 0,
-                    w: d.localPose?.orientation?.w ?? 1,
-                  },
-                },
-                surfaceClass: mapSurfaceClass(success.childSurfaceClass),
-                faceGeometry: mapFaceGeometry(success.childFaceGeometry),
-              });
+              mechStore.addDatum(extractDatumState(d));
 
               const jcs = useJointCreationStore.getState();
               if (jcs.creatingDatum) {
@@ -1294,20 +1274,8 @@ export function connect(set: SetState, _get: GetState) {
                 jcs.setChildDatum(childId, alignment, childSurfaceClass);
                 jcs.setCreatingDatum(false);
 
-                // Auto-commit for high-confidence engine results
-                const updatedJcs = useJointCreationStore.getState();
-                if (
-                  updatedJcs.step === 'select-type' &&
-                  updatedJcs.parentDatumId &&
-                  updatedJcs.childDatumId &&
-                  success.recommendationConfidence >= 0.9
-                ) {
-                  commitJointCreation(
-                    updatedJcs.parentDatumId,
-                    updatedJcs.childDatumId,
-                    recommendedType,
-                  );
-                }
+                // The type selector panel always appears so the user can
+                // confirm or override the recommended joint type.
 
                 statusStore.setMessage(
                   `Analyzed: ${alignmentKind} alignment (${Math.round(success.recommendationConfidence * 100)}% confidence)`,
@@ -1392,6 +1360,26 @@ export function connect(set: SetState, _get: GetState) {
             }
             break;
           }
+          case 'updateGeometryPoseResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'geometry') {
+              const g = result.result.value;
+              const geomId = g.id?.id ?? '';
+              mechStore.updateGeometry(geomId, {
+                localPose: extractPose(g.localPose),
+              });
+              // Update parent body with recomputed aggregate mass
+              if (result.updatedParentBody?.id?.id) {
+                mechStore.addBodies([extractBodyState(result.updatedParentBody)]);
+              }
+              applyUpdatedDatums(result.updatedDatums);
+              useSimulationStore.getState().setNeedsCompile(true);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[geometry] update pose failed:', result.result.value);
+            }
+            break;
+          }
           case 'updateBodyResult': {
             const result = evt.payload.value;
             const mechStore = useMechanismStore.getState();
@@ -1402,6 +1390,7 @@ export function connect(set: SetState, _get: GetState) {
             } else if (result.result.case === 'errorMessage') {
               console.error('[body] update failed:', result.result.value);
             }
+            applyUpdatedDatums(result.updatedDatums);
             break;
           }
           case 'createJointResult': {
@@ -1417,6 +1406,7 @@ export function connect(set: SetState, _get: GetState) {
                 childDatumId: j.childDatumId?.id ?? '',
                 lowerLimit: j.lowerLimit,
                 upperLimit: j.upperLimit,
+                ...extractJointDamping(j),
               });
               useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
@@ -1436,6 +1426,7 @@ export function connect(set: SetState, _get: GetState) {
                 childDatumId: j.childDatumId?.id ?? '',
                 lowerLimit: j.lowerLimit,
                 upperLimit: j.upperLimit,
+                ...extractJointDamping(j),
               });
               useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
@@ -1658,6 +1649,14 @@ export function connect(set: SetState, _get: GetState) {
 
             if (!sceneGraphManager) {
               console.warn('[sim] no sceneGraphManager, skipping frame');
+              if (!reportedMissingSceneGraphForSession) {
+                reportedMissingSceneGraphForSession = true;
+                getDebugRecorder().recordAnomaly({
+                  severity: 'warning',
+                  code: 'simulation-frame-without-scene-graph',
+                  message: 'Simulation frames arrived before the scene graph manager was attached',
+                });
+              }
               break;
             }
             const frame = evt.payload.value;
@@ -1735,9 +1734,9 @@ export function connect(set: SetState, _get: GetState) {
               const bytes = new Uint8Array(result.result.value);
               const mechStore = useMechanismStore.getState();
 
-              // Auto-save: write to .autosave file silently, don't touch UI state
-              if (isAutoSaving) {
-                isAutoSaving = false;
+              const saveIntent = saveIntentTracker.consumeProjectData(mechStore.projectFilePath);
+
+              if (saveIntent.kind === 'autosave') {
                 const projectPath = mechStore.projectFilePath;
                 window.motionlab?.autoSaveWrite?.(bytes, projectPath)
                   .catch((err: unknown) => console.error('[autosave] write failed:', err));
@@ -1746,8 +1745,7 @@ export function connect(set: SetState, _get: GetState) {
 
               // Manual save flow
               const projectName = mechStore.projectName;
-              const existingPath = forceSaveAsNextSave ? null : mechStore.projectFilePath;
-              forceSaveAsNextSave = false;
+              const existingPath = saveIntent.existingPath;
 
               const savePromise = existingPath && window.motionlab?.saveProjectToPath
                 ? window.motionlab.saveProjectToPath(bytes, existingPath)
@@ -1767,7 +1765,8 @@ export function connect(set: SetState, _get: GetState) {
                   console.error('[project] save failed:', err);
                 });
             } else if (result.result.case === 'errorMessage') {
-              console.error('[project] save failed:', result.result.value);
+              const intent = saveIntentTracker.consumeError();
+              console.error(intent === 'autosave' ? '[autosave] save failed:' : '[project] save failed:', result.result.value);
             }
             break;
           }
@@ -1879,39 +1878,31 @@ export function connect(set: SetState, _get: GetState) {
               // Rebuild datums
               if (mechanism) {
                 for (const d of mechanism.datums) {
-                  const datumState = {
-                    id: d.id?.id ?? '',
-                    name: d.name,
-                    parentBodyId: d.parentBodyId?.id ?? '',
-                    localPose: {
-                      position: {
-                        x: d.localPose?.position?.x ?? 0,
-                        y: d.localPose?.position?.y ?? 0,
-                        z: d.localPose?.position?.z ?? 0,
-                      },
-                      rotation: {
-                        x: d.localPose?.orientation?.x ?? 0,
-                        y: d.localPose?.orientation?.y ?? 0,
-                        z: d.localPose?.orientation?.z ?? 0,
-                        w: d.localPose?.orientation?.w ?? 1,
-                      },
-                    },
-                  };
+                  const datumState = extractDatumState(d);
                   mechStore.addDatum(datumState);
                   if (sceneGraphManager) {
-                    sceneGraphManager.addDatum(datumState.id, datumState.parentBodyId, {
-                      position: [
-                        datumState.localPose.position.x,
-                        datumState.localPose.position.y,
-                        datumState.localPose.position.z,
-                      ],
-                      rotation: [
-                        datumState.localPose.rotation.x,
-                        datumState.localPose.rotation.y,
-                        datumState.localPose.rotation.z,
-                        datumState.localPose.rotation.w,
-                      ],
-                    });
+                    sceneGraphManager.addDatum(
+                      datumState.id,
+                      datumState.parentBodyId,
+                      {
+                        position: [
+                          datumState.localPose.position.x,
+                          datumState.localPose.position.y,
+                          datumState.localPose.position.z,
+                        ],
+                        rotation: [
+                          datumState.localPose.rotation.x,
+                          datumState.localPose.rotation.y,
+                          datumState.localPose.rotation.z,
+                          datumState.localPose.rotation.w,
+                        ],
+                      },
+                      datumState.name,
+                      {
+                        surfaceClass: datumState.surfaceClass,
+                        faceGeometry: datumState.faceGeometry,
+                      },
+                    );
                   }
                 }
 
@@ -1925,6 +1916,7 @@ export function connect(set: SetState, _get: GetState) {
                     childDatumId: j.childDatumId?.id ?? '',
                     lowerLimit: j.lowerLimit,
                     upperLimit: j.upperLimit,
+                    ...extractJointDamping(j),
                   };
                   mechStore.addJoint(jointState);
                   if (sceneGraphManager) {
@@ -2016,68 +2008,14 @@ export function connect(set: SetState, _get: GetState) {
             const result = evt.payload.value;
             if (result.result.case === 'body') {
               const b = result.result.value;
-              const mechStore = useMechanismStore.getState();
-              const bodyId = b.id?.id ?? '';
-              mechStore.addBodies([extractBodyState(b)]);
+              useMechanismStore.getState().addBodies([extractBodyState(b)]);
               useSimulationStore.getState().setNeedsCompile(true);
-
-              // Check for pending "Make Body" geometry attachments
-              const pendingGeoms = mechStore.pendingMakeBodyGeometries;
-              const pendingOpts = mechStore.pendingMakeBodyOptions;
-              if (pendingGeoms && pendingGeoms.length > 0) {
-                mechStore.setPendingMakeBodyGeometries(null);
-                mechStore.setPendingMakeBodyOptions(null);
-                for (const geomId of pendingGeoms) {
-                  sendAttachGeometry(geomId, bodyId);
-                }
-
-                // Dissolve old bodies that are now empty
-                if (pendingOpts?.bodiesToDissolve) {
-                  for (const oldBodyId of pendingOpts.bodiesToDissolve) {
-                    // Check if old body still has geometries not being moved
-                    const remaining = [...mechStore.geometries.values()].filter(
-                      (g) => g.parentBodyId === oldBodyId && !pendingGeoms.includes(g.id),
-                    );
-                    const hasDatums = [...mechStore.datums.values()].some((d) => d.parentBodyId === oldBodyId);
-                    const bodyDatumIds = new Set(
-                      [...mechStore.datums.values()].filter((d) => d.parentBodyId === oldBodyId).map((d) => d.id),
-                    );
-                    const hasJoints = [...mechStore.joints.values()].some(
-                      (j) => bodyDatumIds.has(j.parentDatumId) || bodyDatumIds.has(j.childDatumId),
-                    );
-                    if (remaining.length === 0 && !hasDatums && !hasJoints) {
-                      sendDeleteBody(oldBodyId);
-                    } else if (remaining.length === 0) {
-                      useToastStore.getState().addToast({
-                        variant: 'warning',
-                        title: 'Empty body',
-                        description: `${mechStore.bodies.get(oldBodyId)?.name ?? 'Body'} has no geometries but still has datums or joints`,
-                        duration: 5000,
-                      });
-                    }
-                  }
-                }
-
-                // Trigger inline rename in the project tree
-                if (pendingOpts?.shouldActivateRename) {
-                  mechStore.setPendingRenameEntityId(bodyId);
-                }
-
-                useSelectionStore.getState().select(bodyId);
-                useToastStore.getState().addToast({
-                  variant: 'success',
-                  title: 'Body created',
-                  description: `${b.name} — ${pendingGeoms.length} ${pendingGeoms.length === 1 ? 'geometry' : 'geometries'}`,
-                  duration: 3000,
-                });
-              } else {
-                useToastStore.getState().addToast({
-                  variant: 'success',
-                  title: 'Body created',
-                  description: b.name,
-                  duration: 3000,
-                });
-              }
+              useToastStore.getState().addToast({
+                variant: 'success',
+                title: 'Body created',
+                description: b.name,
+                duration: 3000,
+              });
             } else if (result.result.case === 'errorMessage') {
               useToastStore.getState().addToast({
                 variant: 'error',
@@ -2152,6 +2090,7 @@ export function connect(set: SetState, _get: GetState) {
               if (result.newParentBody?.id?.id) {
                 mechStore.addBodies([extractBodyState(result.newParentBody)]);
               }
+              applyUpdatedDatums(result.updatedDatums);
 
               // Rebuild scene graph for affected bodies
               if (sceneGraphManager) {
@@ -2303,11 +2242,224 @@ export function connect(set: SetState, _get: GetState) {
             const result = evt.payload.value;
             if (result.success) {
               const mechStore = useMechanismStore.getState();
-              mechStore.resetProject();
+              mechStore.resetProject(mechStore.projectName);
               useSimulationStore.getState().reset();
               if (sceneGraphManager) sceneGraphManager.clear();
             } else {
               console.error('[project] new project failed:', result.errorMessage);
+            }
+            break;
+          }
+          case 'makeCompoundBodyResult': {
+            console.debug('[make-body] received makeCompoundBodyResult');
+            const result = evt.payload.value;
+            if (result.result.case === 'success') {
+              const success = result.result.value;
+              const bodyId = success.createdBody?.id?.id ?? '';
+              useMechanismStore.setState((state) => {
+                const bodies = new Map(state.bodies);
+                const geometries = new Map(state.geometries);
+                const datums = new Map(state.datums);
+
+                if (success.createdBody) {
+                  console.debug('[make-body] new body:', {
+                    id: bodyId,
+                    pose: success.createdBody.pose,
+                  });
+                  bodies.set(bodyId, extractBodyState(success.createdBody));
+                }
+
+                for (const g of success.attachedGeometries) {
+                  const geomId = g.id?.id ?? '';
+                  const existing = geometries.get(geomId);
+                  if (!existing) continue;
+                  console.debug('[make-body] geometry:', {
+                    id: geomId,
+                    parentBodyId: g.parentBodyId?.id,
+                    localPose: g.localPose,
+                  });
+                  geometries.set(geomId, {
+                    ...existing,
+                    parentBodyId: g.parentBodyId?.id ?? null,
+                    localPose: extractPose(g.localPose),
+                  });
+                }
+
+                for (const datum of success.updatedDatums) {
+                  const datumId = datum.id?.id ?? '';
+                  if (!datumId) continue;
+                  datums.set(datumId, extractDatumState(datum, datums.get(datumId)));
+                }
+
+                for (const eid of success.dissolvedBodyIds) {
+                  bodies.delete(eid.id);
+                }
+
+                for (const mb of success.modifiedBodies) {
+                  const mbId = mb.id?.id ?? '';
+                  if (!mbId) continue;
+                  bodies.set(mbId, extractBodyState(mb));
+                }
+
+                return {
+                  bodies,
+                  geometries,
+                  datums,
+                  isDirty: true,
+                };
+              });
+
+              useMechanismStore.getState().setPendingRenameEntityId(bodyId);
+              useSelectionStore.getState().select(bodyId);
+              useSimulationStore.getState().setNeedsCompile(true);
+              useToastStore.getState().addToast({
+                variant: 'success',
+                title: 'Body created',
+                description: `${success.createdBody?.name ?? 'Body'} — ${success.attachedGeometries.length} ${success.attachedGeometries.length === 1 ? 'geometry' : 'geometries'}`,
+                duration: 3000,
+              });
+            } else if (result.result.case === 'errorMessage') {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Make body failed',
+                description: result.result.value,
+              });
+            }
+            break;
+          }
+          case 'splitBodyResult': {
+            const result = evt.payload.value;
+            if (result.result.case === 'success') {
+              const success = result.result.value;
+              const mechStore = useMechanismStore.getState();
+              const bodyId = success.createdBody?.id?.id ?? '';
+
+              // Add new body
+              if (success.createdBody) {
+                mechStore.addBodies([extractBodyState(success.createdBody)]);
+              }
+
+              // Update geometries
+              for (const g of success.attachedGeometries) {
+                const geomId = g.id?.id ?? '';
+                mechStore.updateGeometry(geomId, {
+                  parentBodyId: g.parentBodyId?.id ?? null,
+                  localPose: extractPose(g.localPose),
+                });
+              }
+
+              // Update source body (recomputed mass)
+              if (success.sourceBody?.id?.id) {
+                mechStore.addBodies([extractBodyState(success.sourceBody)]);
+              }
+              applyUpdatedDatums(success.updatedDatums);
+
+              // Rebuild scene graph
+              if (sceneGraphManager) {
+                const updatedStore = useMechanismStore.getState();
+
+                // Rebuild new body
+                const newBody = updatedStore.bodies.get(bodyId);
+                if (newBody) {
+                  sceneGraphManager.removeBody(bodyId);
+                  const newGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === bodyId);
+                  addBodyToSceneGraph(sceneGraphManager, newBody, newGeoms);
+                }
+
+                // Rebuild source body
+                const srcId = success.sourceBody?.id?.id ?? '';
+                if (srcId) {
+                  sceneGraphManager.removeBody(srcId);
+                  const srcBody = updatedStore.bodies.get(srcId);
+                  if (srcBody) {
+                    const srcGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === srcId);
+                    addBodyToSceneGraph(sceneGraphManager, srcBody, srcGeoms);
+                  }
+                }
+              }
+
+              mechStore.setPendingRenameEntityId(bodyId);
+              useSelectionStore.getState().select(bodyId);
+              useSimulationStore.getState().setNeedsCompile(true);
+              useToastStore.getState().addToast({
+                variant: 'success',
+                title: 'Body split',
+                description: `${success.createdBody?.name ?? 'Body'} — ${success.attachedGeometries.length} ${success.attachedGeometries.length === 1 ? 'geometry' : 'geometries'}`,
+                duration: 3000,
+              });
+            } else if (result.result.case === 'errorMessage') {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Split body failed',
+                description: result.result.value,
+              });
+            }
+            break;
+          }
+          case 'reparentGeometryResult': {
+            const result = evt.payload.value;
+            if (result.result.case === 'success') {
+              const success = result.result.value;
+              const mechStore = useMechanismStore.getState();
+
+              const geomId = success.geometry?.id?.id ?? '';
+              const newParentId = success.geometry?.parentBodyId?.id ?? null;
+              const oldGeom = mechStore.geometries.get(geomId);
+              const oldParentId = oldGeom?.parentBodyId ?? null;
+
+              // Update geometry
+              if (success.geometry) {
+                mechStore.updateGeometry(geomId, {
+                  parentBodyId: newParentId,
+                  localPose: extractPose(success.geometry.localPose),
+                });
+              }
+
+              // Update parent bodies
+              if (success.oldParentBody?.id?.id) {
+                mechStore.addBodies([extractBodyState(success.oldParentBody)]);
+              }
+              if (success.newParentBody?.id?.id) {
+                mechStore.addBodies([extractBodyState(success.newParentBody)]);
+              }
+              applyUpdatedDatums(success.updatedDatums);
+
+              // Rebuild scene graph
+              if (sceneGraphManager) {
+                const updatedStore = useMechanismStore.getState();
+
+                // Remove synthetic detached-geometry if was unparented
+                if (!oldParentId) {
+                  sceneGraphManager.removeBody(`${DETACHED_BODY_PREFIX}${geomId}`);
+                }
+
+                // Rebuild old parent
+                if (oldParentId) {
+                  sceneGraphManager.removeBody(oldParentId);
+                  const oldBody = updatedStore.bodies.get(oldParentId);
+                  if (oldBody) {
+                    const oldGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === oldParentId);
+                    addBodyToSceneGraph(sceneGraphManager, oldBody, oldGeoms);
+                  }
+                }
+
+                // Rebuild new parent
+                if (newParentId && newParentId !== oldParentId) {
+                  sceneGraphManager.removeBody(newParentId);
+                  const newBody = updatedStore.bodies.get(newParentId);
+                  if (newBody) {
+                    const newGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === newParentId);
+                    addBodyToSceneGraph(sceneGraphManager, newBody, newGeoms);
+                  }
+                }
+              }
+              useSimulationStore.getState().setNeedsCompile(true);
+            } else if (result.result.case === 'errorMessage') {
+              useToastStore.getState().addToast({
+                variant: 'error',
+                title: 'Move geometry failed',
+                description: result.result.value,
+              });
             }
             break;
           }
@@ -2322,12 +2474,23 @@ export function connect(set: SetState, _get: GetState) {
           clearTimeout(handshakeTimer);
           handshakeTimer = null;
         }
+        getDebugRecorder().recordAnomaly({
+          severity: 'warning',
+          code: 'websocket-closed',
+          message: 'Engine WebSocket connection closed',
+        });
+        getDebugRecorder().markConnectionClosed('socket-close');
         set({ status: 'disconnected' });
         ws = null;
       };
 
       socket.onerror = () => {
         if (ws !== socket) return;
+        getDebugRecorder().recordAnomaly({
+          severity: 'error',
+          code: 'websocket-error',
+          message: 'Engine WebSocket encountered an error',
+        });
         set({ status: 'error', errorMessage: 'WebSocket error' });
         useToastStore.getState().addToast({
           variant: 'error',
@@ -2350,16 +2513,14 @@ export function sendImportAsset(
   filePath: string,
   options?: { densityOverride?: number; tessellationQuality?: number; unitSystem?: string; importMode?: 'auto-body' | 'visual-only' },
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createImportAssetCommand(filePath, options));
+  sendBinaryCommand((sequenceId) => createImportAssetCommand(filePath, options, sequenceId));
 }
 
 export function sendPlaceAssetInScene(
   assetId: string,
   position: { x: number; y: number; z: number },
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createPlaceAssetInSceneCommand(assetId, position));
+  sendBinaryCommand((sequenceId) => createPlaceAssetInSceneCommand(assetId, position, sequenceId));
 }
 
 export function sendCreatePrimitiveBody(
@@ -2369,9 +2530,9 @@ export function sendCreatePrimitiveBody(
   params: { box?: { width: number; height: number; depth: number }; cylinder?: { radius: number; height: number }; sphere?: { radius: number } },
   density?: number,
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
   pendingPrimitiveSource = { shape, params };
-  ws.send(createCreatePrimitiveBodyCommand(shape, name, position, params, density));
+  sendBinaryCommand((sequenceId) =>
+    createCreatePrimitiveBodyCommand(shape, name, position, params, density, sequenceId));
 }
 
 export function sendUpdatePrimitive(
@@ -2379,16 +2540,14 @@ export function sendUpdatePrimitive(
   params: PrimitiveParamsInput,
   density?: number,
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createUpdatePrimitiveCommand(geometryId, params, density));
+  sendBinaryCommand((sequenceId) => createUpdatePrimitiveCommand(geometryId, params, density, sequenceId));
 }
 
 export function sendUpdateCollisionConfig(
   geometryId: string,
   config: CollisionConfigInput,
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createUpdateCollisionConfigCommand(geometryId, config));
+  sendBinaryCommand((sequenceId) => createUpdateCollisionConfigCommand(geometryId, config, sequenceId));
 }
 
 export function sendCreateDatum(
@@ -2399,8 +2558,7 @@ export function sendCreateDatum(
     orientation: { x: number; y: number; z: number; w: number };
   },
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createCreateDatumCommand(parentBodyId, localPose, name));
+  sendBinaryCommand((sequenceId) => createCreateDatumCommand(parentBodyId, localPose, name, sequenceId));
 }
 
 export function sendCreateDatumFromFace(
@@ -2408,8 +2566,8 @@ export function sendCreateDatumFromFace(
   faceIndex: number,
   name: string,
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createCreateDatumFromFaceCommand(geometryId, faceIndex, name));
+  sendBinaryCommand((sequenceId) =>
+    createCreateDatumFromFaceCommand(geometryId, faceIndex, name, sequenceId));
 }
 
 export function sendAnalyzeFacePair(
@@ -2420,18 +2578,24 @@ export function sendAnalyzeFacePair(
   childFaceIndex: number,
   childDatumName: string,
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createAnalyzeFacePairCommand(parentDatumId, parentGeometryId, parentFaceIndex, childGeometryId, childFaceIndex, childDatumName));
+  sendBinaryCommand((sequenceId) =>
+    createAnalyzeFacePairCommand(
+      parentDatumId,
+      parentGeometryId,
+      parentFaceIndex,
+      childGeometryId,
+      childFaceIndex,
+      childDatumName,
+      sequenceId,
+    ));
 }
 
 export function sendDeleteDatum(datumId: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createDeleteDatumCommand(datumId));
+  sendBinaryCommand((sequenceId) => createDeleteDatumCommand(datumId, sequenceId));
 }
 
 export function sendRenameDatum(datumId: string, newName: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createRenameDatumCommand(datumId, newName));
+  sendBinaryCommand((sequenceId) => createRenameDatumCommand(datumId, newName, sequenceId));
 }
 
 export function sendUpdateDatumPose(
@@ -2441,8 +2605,82 @@ export function sendUpdateDatumPose(
     orientation: { x: number; y: number; z: number; w: number };
   },
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createUpdateDatumPoseCommand(datumId, newLocalPose));
+  sendBinaryCommand((sequenceId) => createUpdateDatumPoseCommand(datumId, newLocalPose, sequenceId));
+}
+
+export function sendUpdateGeometryPose(
+  geometryId: string,
+  newLocalPose: {
+    position: { x: number; y: number; z: number };
+    orientation: { x: number; y: number; z: number; w: number };
+  },
+): void {
+  sendBinaryCommand((sequenceId) => createUpdateGeometryPoseCommand(geometryId, newLocalPose, sequenceId));
+}
+
+/** Extract damping values from a Joint proto's typed config oneof. */
+function extractJointDamping(j: Joint): { damping: number; translationalDamping: number; rotationalDamping: number } {
+  let damping = 0;
+  let translationalDamping = 0;
+  let rotationalDamping = 0;
+  if (j.config.case === 'revolute') {
+    damping = j.config.value.damping;
+  } else if (j.config.case === 'prismatic') {
+    damping = j.config.value.damping;
+  } else if (j.config.case === 'cylindrical') {
+    translationalDamping = j.config.value.translationalDamping;
+    rotationalDamping = j.config.value.rotationalDamping;
+  }
+  return { damping, translationalDamping, rotationalDamping };
+}
+
+/** Build the typed config oneof for a Joint proto, merging limits and damping. */
+function buildJointConfig(
+  type: JointTypeId,
+  lowerLimit: number,
+  upperLimit: number,
+  damping: number,
+  translationalDamping: number,
+  rotationalDamping: number,
+): Joint['config'] {
+  switch (type) {
+    case 'revolute':
+      return {
+        case: 'revolute',
+        value: {
+          $typeName: 'motionlab.mechanism.RevoluteJointConfig',
+          angleLimit: lowerLimit !== 0 || upperLimit !== 0
+            ? { $typeName: 'motionlab.mechanism.Range', lower: lowerLimit, upper: upperLimit }
+            : undefined,
+          damping,
+        },
+      } as Joint['config'];
+    case 'prismatic':
+      return {
+        case: 'prismatic',
+        value: {
+          $typeName: 'motionlab.mechanism.PrismaticJointConfig',
+          translationLimit: lowerLimit !== 0 || upperLimit !== 0
+            ? { $typeName: 'motionlab.mechanism.Range', lower: lowerLimit, upper: upperLimit }
+            : undefined,
+          damping,
+        },
+      } as Joint['config'];
+    case 'cylindrical':
+      return {
+        case: 'cylindrical',
+        value: {
+          $typeName: 'motionlab.mechanism.CylindricalJointConfig',
+          translationLimit: lowerLimit !== 0 || upperLimit !== 0
+            ? { $typeName: 'motionlab.mechanism.Range', lower: lowerLimit, upper: upperLimit }
+            : undefined,
+          translationalDamping,
+          rotationalDamping,
+        },
+      } as Joint['config'];
+    default:
+      return { case: undefined, value: undefined } as unknown as Joint['config'];
+  }
 }
 
 export function sendCreateJoint(
@@ -2452,9 +2690,11 @@ export function sendCreateJoint(
   name: string,
   lowerLimit: number,
   upperLimit: number,
+  damping = 0,
+  translationalDamping = 0,
+  rotationalDamping = 0,
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(
+  sendBinaryCommand((sequenceId) =>
     createCreateJointCommand({
       parentDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: parentDatumId } as ElementId,
       childDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: childDatumId } as ElementId,
@@ -2462,8 +2702,8 @@ export function sendCreateJoint(
       name,
       lowerLimit,
       upperLimit,
-    } as Joint),
-  );
+      config: buildJointConfig(type, lowerLimit, upperLimit, damping, translationalDamping, rotationalDamping),
+    } as Joint, sequenceId));
 }
 
 export function sendUpdateJoint(
@@ -2475,22 +2715,30 @@ export function sendUpdateJoint(
     upperLimit?: number;
     parentDatumId?: string;
     childDatumId?: string;
+    damping?: number;
+    translationalDamping?: number;
+    rotationalDamping?: number;
   },
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
   const existing = useMechanismStore.getState().joints.get(jointId);
   if (!existing) return;
-  ws.send(
+  const type = updates.type ?? existing.type;
+  const lowerLimit = updates.lowerLimit ?? existing.lowerLimit;
+  const upperLimit = updates.upperLimit ?? existing.upperLimit;
+  const damping = updates.damping ?? existing.damping;
+  const translationalDamping = updates.translationalDamping ?? existing.translationalDamping;
+  const rotationalDamping = updates.rotationalDamping ?? existing.rotationalDamping;
+  sendBinaryCommand((sequenceId) =>
     createUpdateJointCommand({
       id: { $typeName: 'motionlab.mechanism.ElementId', id: jointId } as ElementId,
       parentDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: updates.parentDatumId ?? existing.parentDatumId } as ElementId,
       childDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: updates.childDatumId ?? existing.childDatumId } as ElementId,
-      type: updates.type !== undefined ? toProtoJointType(updates.type) : toProtoJointType(existing.type),
+      type: toProtoJointType(type),
       name: updates.name ?? existing.name,
-      lowerLimit: updates.lowerLimit ?? existing.lowerLimit,
-      upperLimit: updates.upperLimit ?? existing.upperLimit,
-    } as Joint),
-  );
+      lowerLimit,
+      upperLimit,
+      config: buildJointConfig(type, lowerLimit, upperLimit, damping, translationalDamping, rotationalDamping),
+    } as Joint, sequenceId));
 }
 
 export function sendUpdateBody(
@@ -2503,10 +2751,10 @@ export function sendUpdateBody(
       orientation: { x: number; y: number; z: number; w: number };
     };
     motionType?: 'dynamic' | 'fixed';
+    pinDatumsInWorld?: boolean;
   },
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createUpdateBodyCommand(bodyId, updates));
+  sendBinaryCommand((sequenceId) => createUpdateBodyCommand(bodyId, updates, sequenceId));
 }
 
 export function sendCreateBody(
@@ -2517,33 +2765,54 @@ export function sendCreateBody(
     motionType?: 'dynamic' | 'fixed';
   },
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createCreateBodyCommand(name, options));
+  sendBinaryCommand((sequenceId) => createCreateBodyCommand(name, options, sequenceId));
 }
 
 export function sendDeleteBody(bodyId: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createDeleteBodyCommand(bodyId));
+  sendBinaryCommand((sequenceId) => createDeleteBodyCommand(bodyId, sequenceId));
 }
 
 export function sendAttachGeometry(geometryId: string, targetBodyId: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createAttachGeometryCommand(geometryId, targetBodyId));
+  sendBinaryCommand((sequenceId) =>
+    createAttachGeometryCommand(geometryId, targetBodyId, undefined, sequenceId));
 }
 
 export function sendDetachGeometry(geometryId: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createDetachGeometryCommand(geometryId));
+  sendBinaryCommand((sequenceId) => createDetachGeometryCommand(geometryId, sequenceId));
 }
 
 export function sendDeleteGeometry(geometryId: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createDeleteGeometryCommand(geometryId));
+  sendBinaryCommand((sequenceId) => createDeleteGeometryCommand(geometryId, sequenceId));
 }
 
 export function sendRenameGeometry(geometryId: string, newName: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createRenameGeometryCommand(geometryId, newName));
+  sendBinaryCommand((sequenceId) => createRenameGeometryCommand(geometryId, newName, sequenceId));
+}
+
+export function sendMakeCompoundBody(
+  geometryIds: string[],
+  name: string,
+  options?: { motionType?: 'dynamic' | 'fixed'; dissolveEmptyBodies?: boolean; referenceBodyId?: string },
+): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) {
+    console.warn('[make-body] WebSocket not open, cannot send command. ws:', ws ? `readyState=${ws.readyState}` : 'null');
+    return;
+  }
+  console.debug('[make-body] sending binary command over WebSocket');
+  sendBinaryCommand((sequenceId) => createMakeCompoundBodyCommand(geometryIds, name, options, sequenceId));
+}
+
+export function sendSplitBody(
+  sourceBodyId: string,
+  geometryIds: string[],
+  name: string,
+  options?: { motionType?: 'dynamic' | 'fixed' },
+): void {
+  sendBinaryCommand((sequenceId) => createSplitBodyCommand(sourceBodyId, geometryIds, name, options, sequenceId));
+}
+
+export function sendReparentGeometry(geometryId: string, targetBodyId: string): void {
+  sendBinaryCommand((sequenceId) => createReparentGeometryCommand(geometryId, targetBodyId, sequenceId));
 }
 
 export function sendUpdateMassProperties(
@@ -2551,55 +2820,48 @@ export function sendUpdateMassProperties(
   massOverride: boolean,
   massProperties?: { mass: number; centerOfMass: { x: number; y: number; z: number }; ixx: number; iyy: number; izz: number; ixy: number; ixz: number; iyz: number },
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createUpdateMassPropertiesCommand(bodyId, massOverride, massProperties));
+  sendBinaryCommand((sequenceId) =>
+    createUpdateMassPropertiesCommand(bodyId, massOverride, massProperties, sequenceId));
 }
 
 export function sendDeleteJoint(jointId: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createDeleteJointCommand(jointId));
+  sendBinaryCommand((sequenceId) => createDeleteJointCommand(jointId, sequenceId));
 }
 
 export function sendCreateLoad(loadState: LoadState): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createCreateLoadCommand(loadStateToProto(loadState)));
+  sendBinaryCommand((sequenceId) => createCreateLoadCommand(loadStateToProto(loadState), sequenceId));
 }
 
 export function sendUpdateLoad(loadState: LoadState): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createUpdateLoadCommand(loadStateToProto(loadState)));
+  sendBinaryCommand((sequenceId) => createUpdateLoadCommand(loadStateToProto(loadState), sequenceId));
 }
 
 export function sendDeleteLoad(loadId: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createDeleteLoadCommand(loadId));
+  sendBinaryCommand((sequenceId) => createDeleteLoadCommand(loadId, sequenceId));
 }
 
 export function sendCreateActuator(actuatorState: ActuatorState): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createCreateActuatorCommand(actuatorStateToProto(actuatorState)));
+  sendBinaryCommand((sequenceId) =>
+    createCreateActuatorCommand(actuatorStateToProto(actuatorState), sequenceId));
 }
 
 export function sendUpdateActuator(actuatorState: ActuatorState): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createUpdateActuatorCommand(actuatorStateToProto(actuatorState)));
+  sendBinaryCommand((sequenceId) =>
+    createUpdateActuatorCommand(actuatorStateToProto(actuatorState), sequenceId));
 }
 
 export function sendDeleteActuator(actuatorId: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createDeleteActuatorCommand(actuatorId));
+  sendBinaryCommand((sequenceId) => createDeleteActuatorCommand(actuatorId, sequenceId));
 }
 
 export function sendCompileMechanism(
   settings?: SimulationSettingsInput,
 ): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createCompileMechanismCommand(settings));
+  sendBinaryCommand((sequenceId) => createCompileMechanismCommand(settings, sequenceId));
 }
 
 export function sendSimulationControl(action: SimulationAction): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createSimulationControlCommand(action));
+  sendBinaryCommand((sequenceId) => createSimulationControlCommand(action, sequenceId));
 }
 
 function buildSettingsInput(): SimulationSettingsInput {
@@ -2647,39 +2909,36 @@ export function sendCompileAndStep(): void {
 }
 
 export function sendScrub(time: number): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createScrubCommand(time));
+  sendBinaryCommand((sequenceId) => createScrubCommand(time, sequenceId));
 }
 
 export function sendSaveProject(projectName: string): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  isAutoSaving = false; // Manual save takes precedence over any pending auto-save
-  ws.send(createSaveProjectCommand(projectName));
+  saveIntentTracker.requestManualSave();
+  sendBinaryCommand((sequenceId) => createSaveProjectCommand(projectName, sequenceId));
 }
 
 export function sendAutoSave(projectName: string): void {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  isAutoSaving = true;
-  ws.send(createSaveProjectCommand(projectName));
+  if (!saveIntentTracker.requestAutoSave()) return;
+  sendBinaryCommand((sequenceId) => createSaveProjectCommand(projectName, sequenceId));
 }
 
 export function sendLoadProject(data: Uint8Array): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createLoadProjectCommand(data));
+  sendBinaryCommand((sequenceId) => createLoadProjectCommand(data, sequenceId));
 }
 
 export function sendRelocateAsset(bodyId: string, newFilePath: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createRelocateAssetCommand(bodyId, newFilePath));
+  sendBinaryCommand((sequenceId) =>
+    createRelocateAssetCommand(bodyId, newFilePath, undefined, sequenceId));
 }
 
 export function sendNewProject(projectName: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  ws.send(createNewProjectCommand(projectName));
+  sendBinaryCommand((sequenceId) => createNewProjectCommand(projectName, sequenceId));
 }
 
 export function sendSaveProjectAs(projectName: string): void {
-  forceSaveAsNextSave = true;
+  saveIntentTracker.requestSaveAs();
   sendSaveProject(projectName);
 }
 
@@ -2695,20 +2954,65 @@ function mapSurfaceClass(sc: FaceSurfaceClass): DatumState['surfaceClass'] {
 }
 
 function mapFaceGeometry(
-  fg: CreateDatumFromFaceSuccess['faceGeometry'],
+  fg:
+    | CreateDatumFromFaceSuccess['faceGeometry']
+    | {
+        axisDirection?: { x?: number; y?: number; z?: number };
+        normal?: { x?: number; y?: number; z?: number };
+        radius?: number;
+        secondaryRadius?: number;
+        semiAngle?: number;
+      }
+    | undefined,
 ): FaceGeometryInfo | undefined {
   if (!fg) return undefined;
   const result: FaceGeometryInfo = {};
   if (fg.axisDirection) {
-    result.axisDirection = { x: fg.axisDirection.x, y: fg.axisDirection.y, z: fg.axisDirection.z };
+    result.axisDirection = {
+      x: fg.axisDirection.x ?? 0,
+      y: fg.axisDirection.y ?? 0,
+      z: fg.axisDirection.z ?? 0,
+    };
   }
   if (fg.normal) {
-    result.normal = { x: fg.normal.x, y: fg.normal.y, z: fg.normal.z };
+    result.normal = {
+      x: fg.normal.x ?? 0,
+      y: fg.normal.y ?? 0,
+      z: fg.normal.z ?? 0,
+    };
   }
   if (fg.radius !== undefined) result.radius = fg.radius;
   if (fg.secondaryRadius !== undefined) result.secondaryRadius = fg.secondaryRadius;
   if (fg.semiAngle !== undefined) result.semiAngle = fg.semiAngle;
   return Object.keys(result).length > 0 ? result : undefined;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- generated mechanism/protocol datum shapes are large but structurally consistent here
+function extractDatumState(datum: any, existing?: DatumState): DatumState {
+  return {
+    id: datum.id?.id ?? '',
+    name: datum.name ?? existing?.name ?? '',
+    parentBodyId: datum.parentBodyId?.id ?? existing?.parentBodyId ?? '',
+    localPose: extractPose(datum.localPose),
+    sourceGeometryId: datum.sourceGeometryId?.id || existing?.sourceGeometryId,
+    sourceFaceIndex:
+      datum.sourceFaceIndex !== undefined ? Number(datum.sourceFaceIndex) : existing?.sourceFaceIndex,
+    sourceGeometryLocalPose: datum.sourceGeometryLocalPose
+      ? extractPose(datum.sourceGeometryLocalPose)
+      : existing?.sourceGeometryLocalPose,
+    surfaceClass: mapDatumSurfaceClass(datum.surfaceClass) ?? existing?.surfaceClass,
+    faceGeometry: mapFaceGeometry(datum.faceGeometry) ?? existing?.faceGeometry,
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- generated repeated datum payloads vary by result type
+function applyUpdatedDatums(datums: readonly any[]): void {
+  const mechStore = useMechanismStore.getState();
+  for (const datum of datums) {
+    const datumId = datum.id?.id ?? '';
+    if (!datumId) continue;
+    mechStore.addDatum(extractDatumState(datum, mechStore.datums.get(datumId)));
+  }
 }
 
 function surfaceClassToLabel(surfaceClass: FaceSurfaceClass): string {

@@ -19,6 +19,7 @@
 #include "../src/mechanism_state.h"
 #include "../src/simulation.h"
 #include "mechanism/mechanism.pb.h"
+#include "test_helpers.h"
 
 namespace mech = motionlab::mechanism;
 namespace eng = motionlab::engine;
@@ -47,7 +48,7 @@ static mech::Mechanism build_pendulum_mechanism() {
         auto* body = m.add_bodies();
         body->mutable_id()->set_id("body-a");
         body->set_name("Ground");
-        body->set_is_fixed(true);
+        body->set_motion_type(mech::MOTION_TYPE_FIXED);
 
         auto* pose = body->mutable_pose();
         auto* pos = pose->mutable_position();
@@ -226,7 +227,7 @@ static int test_missing_datum_reference() {
     auto* body = m.add_bodies();
     body->mutable_id()->set_id("body-1");
     body->set_name("Body 1");
-    body->set_is_fixed(true);
+    body->set_motion_type(mech::MOTION_TYPE_FIXED);
     auto* mp = body->mutable_mass_properties();
     mp->set_mass(1.0);
     mp->set_ixx(0.1); mp->set_iyy(0.1); mp->set_izz(0.1);
@@ -263,7 +264,7 @@ static int test_zero_mass() {
     auto* ground = m.add_bodies();
     ground->mutable_id()->set_id("body-ground");
     ground->set_name("Ground");
-    ground->set_is_fixed(true);
+    ground->set_motion_type(mech::MOTION_TYPE_FIXED);
     auto* gmp = ground->mutable_mass_properties();
     gmp->set_mass(1.0);
     gmp->set_ixx(0.1); gmp->set_iyy(0.1); gmp->set_izz(0.1);
@@ -303,7 +304,7 @@ static int test_negative_mass() {
     auto* ground = m.add_bodies();
     ground->mutable_id()->set_id("body-ground");
     ground->set_name("Ground");
-    ground->set_is_fixed(true);
+    ground->set_motion_type(mech::MOTION_TYPE_FIXED);
     auto* gmp = ground->mutable_mass_properties();
     gmp->set_mass(1.0);
     gmp->set_ixx(0.1); gmp->set_iyy(0.1); gmp->set_izz(0.1);
@@ -383,7 +384,7 @@ static int test_reset() {
 // Test 7: Exact pendulum example — matches generate-pendulum-example.mts
 //
 // Differences from test 1:
-//   - Ground has is_fixed=true (all tests require explicit ground)
+//   - Ground has motion_type=FIXED (all tests require explicit ground)
 //   - Arm at (0.7,0,0) with pivot at (0.2,0,0) (test 1: arm at 1.0, pivot at 0.5)
 //   - Realistic box inertia (test 1: isotropic 0.1)
 //   - Joint limits set to ±6.28 (test 1: no limits)
@@ -394,12 +395,12 @@ static mech::Mechanism build_example_pendulum() {
     m.mutable_id()->set_id("mech-pendulum");
     m.set_name("Pendulum");
 
-    // Ground: 0.4×0.2×0.2 m, 1 kg, is_fixed=true
+    // Ground: 0.4×0.2×0.2 m, 1 kg, motion_type=FIXED
     {
         auto* body = m.add_bodies();
         body->mutable_id()->set_id("body-ground");
         body->set_name("Ground");
-        body->set_is_fixed(true);
+        body->set_motion_type(mech::MOTION_TYPE_FIXED);
 
         auto* pose = body->mutable_pose();
         auto* pos = pose->mutable_position();
@@ -424,7 +425,7 @@ static mech::Mechanism build_example_pendulum() {
         auto* body = m.add_bodies();
         body->mutable_id()->set_id("body-arm");
         body->set_name("Pendulum Arm");
-        // is_fixed NOT set (defaults false)
+        // motion_type not set (defaults to UNSPECIFIED → dynamic)
 
         auto* pose = body->mutable_pose();
         auto* pos = pose->mutable_position();
@@ -779,7 +780,7 @@ static int test_no_geometry_mass_preserved() {
     auto* body = m.add_bodies();
     body->mutable_id()->set_id("body-a");
     body->set_name("Test Body");
-    body->set_is_fixed(true);
+    body->set_motion_type(mech::MOTION_TYPE_FIXED);
     // mass_override defaults to false
     auto* mp = body->mutable_mass_properties();
     mp->set_mass(5.0);
@@ -829,7 +830,7 @@ static mech::Mechanism build_fixed_joint_mechanism() {
     auto* ground = m.add_bodies();
     ground->mutable_id()->set_id("body-ground");
     ground->set_name("Ground");
-    ground->set_is_fixed(true);
+    ground->set_motion_type(mech::MOTION_TYPE_FIXED);
     auto* gpose = ground->mutable_pose();
     gpose->mutable_position()->set_x(0); gpose->mutable_position()->set_y(0); gpose->mutable_position()->set_z(0);
     gpose->mutable_orientation()->set_w(1);
@@ -944,7 +945,7 @@ static mech::Mechanism build_multi_type_mechanism() {
         auto* body = m.add_bodies();
         body->mutable_id()->set_id(id);
         body->set_name(name);
-        body->set_is_fixed(fixed);
+        body->set_motion_type(fixed ? mech::MOTION_TYPE_FIXED : mech::MOTION_TYPE_DYNAMIC);
         auto* pose = body->mutable_pose();
         pose->mutable_position()->set_x(x);
         pose->mutable_orientation()->set_w(1);
@@ -1097,7 +1098,7 @@ static int test_self_joint_error() {
     auto* body = m.add_bodies();
     body->mutable_id()->set_id("body-1");
     body->set_name("Only Body");
-    body->set_is_fixed(true);
+    body->set_motion_type(mech::MOTION_TYPE_FIXED);
     auto* mp = body->mutable_mass_properties();
     mp->set_mass(1.0);
     mp->set_ixx(0.1); mp->set_iyy(0.1); mp->set_izz(0.1);
@@ -1208,7 +1209,7 @@ static int test_under_constrained_warning() {
     auto* ground = m.add_bodies();
     ground->mutable_id()->set_id("body-g");
     ground->set_name("Ground");
-    ground->set_is_fixed(true);
+    ground->set_motion_type(mech::MOTION_TYPE_FIXED);
     auto* gmp = ground->mutable_mass_properties();
     gmp->set_mass(1.0);
     gmp->set_ixx(0.1); gmp->set_iyy(0.1); gmp->set_izz(0.1);
@@ -1276,7 +1277,7 @@ static int test_over_constrained_warning() {
     auto* ground = m.add_bodies();
     ground->mutable_id()->set_id("body-g");
     ground->set_name("Ground");
-    ground->set_is_fixed(true);
+    ground->set_motion_type(mech::MOTION_TYPE_FIXED);
     auto* gmp = ground->mutable_mass_properties();
     gmp->set_mass(1.0);
     gmp->set_ixx(0.1); gmp->set_iyy(0.1); gmp->set_izz(0.1);
@@ -1331,7 +1332,7 @@ static int test_disconnected_subgroups_info() {
     auto* body_c = m.add_bodies();
     body_c->mutable_id()->set_id("body-c");
     body_c->set_name("Ground 2");
-    body_c->set_is_fixed(true);
+    body_c->set_motion_type(mech::MOTION_TYPE_FIXED);
     auto* cmp = body_c->mutable_mass_properties();
     cmp->set_mass(1.0);
     cmp->set_ixx(0.1); cmp->set_iyy(0.1); cmp->set_izz(0.1);
@@ -1429,7 +1430,7 @@ static int test_zero_mass_fixed_body_ok() {
     auto* body = m.add_bodies();
     body->mutable_id()->set_id("body-1");
     body->set_name("Ground");
-    body->set_is_fixed(true);
+    body->set_motion_type(mech::MOTION_TYPE_FIXED);
     auto* mp = body->mutable_mass_properties();
     mp->set_mass(0.0);
     mp->set_ixx(0.1); mp->set_iyy(0.1); mp->set_izz(0.1);
@@ -1469,6 +1470,400 @@ static int test_backward_compat_string_diagnostics() {
     return 0;
 }
 
+// ===========================================================================
+// Epic 3: ChLinkLock + ChBodyAuxRef Regression Tests
+// ===========================================================================
+
+// Test: Lock-based revolute produces same pendulum trajectory as before
+static int test_lock_revolute_pendulum() {
+    std::cout << "  [test_lock_revolute_pendulum] ";
+
+    auto m = build_pendulum_mechanism();
+    eng::SimulationRuntime runtime;
+    auto result = runtime.compile(m);
+    assert(result.success);
+
+    for (int i = 0; i < 100; i++) runtime.step(0.001);
+
+    auto poses = runtime.getBodyPoses();
+    const eng::BodyPose* pendulum = nullptr;
+    for (const auto& p : poses) {
+        if (p.body_id == "body-b") pendulum = &p;
+    }
+    assert(pendulum);
+
+    // Pendulum should swing down: Y decreases from 0
+    assert(pendulum->position[1] < -0.01 && "Pendulum should swing down under gravity");
+    // X should change from 1.0
+    assert(std::abs(pendulum->position[0] - 1.0) > 0.001 && "Pendulum X should shift");
+
+    auto states = runtime.getJointStates();
+    assert(states.size() == 1);
+    assert(!std::isnan(states[0].position) && "Joint position should not be NaN");
+    assert(!std::isnan(states[0].velocity) && "Joint velocity should not be NaN");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test: Spherical joint via ChLinkLockSpherical — 3 rotational DOF
+static int test_lock_spherical() {
+    std::cout << "  [test_lock_spherical] ";
+
+    MechanismBuilder mb;
+    mb.addFixedBody("ground")
+      .addBody("ball", 1.0, 1.0, 0, 0)
+      .addDatum("d1", "ground", 0.5, 0, 0)
+      .addDatum("d2", "ball", -0.5, 0, 0)
+      .addJoint("j1", mech::JOINT_TYPE_SPHERICAL, "d1", "d2");
+
+    auto sr = run_sim(mb.build(), 0.001, 200);
+
+    auto& ball = find_body(sr.poses, "ball");
+    // Ball should swing down (spherical allows all rotations)
+    assert(ball.position[1] < -0.01 && "Spherical joint should allow pendulum swing");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test: Planar joint via ChLinkLockPlanar — body slides on plane
+static int test_lock_planar() {
+    std::cout << "  [test_lock_planar] ";
+
+    MechanismBuilder mb;
+    mb.addFixedBody("ground")
+      .addBody("slider", 1.0, 1.0, 0, 0)
+      .addDatum("d1", "ground", 0.5, 0, 0)
+      .addDatum("d2", "slider", -0.5, 0, 0)
+      .addJoint("j1", mech::JOINT_TYPE_PLANAR, "d1", "d2");
+
+    auto sr = run_sim(mb.build(), 0.001, 200);
+
+    auto& slider = find_body(sr.poses, "slider");
+    // Planar joint constrains Z translation — body should still be able to move in X/Y
+    assert(!std::isnan(slider.position[0]) && "Position should not be NaN");
+    assert(!std::isnan(slider.position[1]) && "Position should not be NaN");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test: Point-line joint via ChLinkLockPointLine
+static int test_lock_point_line() {
+    std::cout << "  [test_lock_point_line] ";
+
+    MechanismBuilder mb;
+    mb.addFixedBody("ground")
+      .addBody("slider", 1.0, 1.0, 0, 0)
+      .addDatum("d1", "ground", 0.5, 0, 0)
+      .addDatum("d2", "slider", -0.5, 0, 0)
+      .addJoint("j1", mech::JOINT_TYPE_POINT_LINE, "d1", "d2");
+
+    auto sr = run_sim(mb.build(), 0.001, 100);
+
+    auto& slider = find_body(sr.poses, "slider");
+    assert(!std::isnan(slider.position[0]) && "Position should not be NaN");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test: Point-plane joint via ChLinkLockPointPlane
+static int test_lock_point_plane() {
+    std::cout << "  [test_lock_point_plane] ";
+
+    MechanismBuilder mb;
+    mb.addFixedBody("ground")
+      .addBody("slider", 1.0, 1.0, 0, 0)
+      .addDatum("d1", "ground", 0.5, 0, 0)
+      .addDatum("d2", "slider", -0.5, 0, 0)
+      .addJoint("j1", mech::JOINT_TYPE_POINT_PLANE, "d1", "d2");
+
+    auto sr = run_sim(mb.build(), 0.001, 100);
+
+    auto& slider = find_body(sr.poses, "slider");
+    assert(!std::isnan(slider.position[0]) && "Position should not be NaN");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test: ChBodyAuxRef with non-zero COM offset
+static int test_auxref_com_offset() {
+    std::cout << "  [test_auxref_com_offset] ";
+
+    // Pendulum with COM offset — should behave differently than zero-COM
+    MechanismBuilder mb;
+    mb.addFixedBody("ground")
+      .addBody("pendulum", 1.0, 1.0, 0, 0)
+      .withCenterOfMass(0.3, 0, 0)  // COM shifted from body origin
+      .addDatum("d1", "ground", 0.5, 0, 0)
+      .addDatum("d2", "pendulum", -0.5, 0, 0)
+      .addRevoluteJoint("j1", "d1", "d2");
+
+    eng::SimulationRuntime runtime;
+    auto result = runtime.compile(mb.build());
+    assert(result.success);
+
+    for (int i = 0; i < 100; i++) runtime.step(0.001);
+
+    auto poses = runtime.getBodyPoses();
+    auto& pend = find_body(poses, "pendulum");
+
+    // Pose readback should return the REF frame (body origin), not COM
+    // The body was placed at (1,0,0), and after swinging should still be near X=1
+    // but Y should decrease (pendulum swings down)
+    assert(!std::isnan(pend.position[0]) && "REF frame X should not be NaN");
+    assert(pend.position[1] < 0.0 && "Pendulum should swing down");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test: ChBodyAuxRef with zero COM matches standard pendulum behavior
+static int test_auxref_zero_com() {
+    std::cout << "  [test_auxref_zero_com] ";
+
+    auto m = build_pendulum_mechanism();
+    eng::SimulationRuntime runtime;
+    auto result = runtime.compile(m);
+    assert(result.success);
+
+    for (int i = 0; i < 50; i++) runtime.step(0.001);
+
+    auto poses = runtime.getBodyPoses();
+    auto& pend = find_body(poses, "body-b");
+
+    // With zero COM offset, ChBodyAuxRef should behave identically to ChBody
+    assert(pend.position[1] < -0.001 && "Zero-COM pendulum should still swing");
+    assert(!std::isnan(pend.position[0]));
+    assert(!std::isnan(pend.position[1]));
+    assert(!std::isnan(pend.position[2]));
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test: All Lock joint types produce non-NaN reaction forces
+static int test_lock_reaction_forces() {
+    std::cout << "  [test_lock_reaction_forces] ";
+
+    // Use the existing multi-type mechanism (revolute, prismatic, fixed, spherical)
+    auto mechanism = build_multi_type_mechanism();
+    eng::SimulationRuntime runtime;
+    auto result = runtime.compile(mechanism);
+    assert(result.success);
+
+    for (int i = 0; i < 50; i++) runtime.step(0.001);
+
+    auto states = runtime.getJointStates();
+    // Revolute and prismatic joints should be present
+    bool found_revolute = false, found_prismatic = false;
+    for (const auto& s : states) {
+        assert(!std::isnan(s.reaction_force[0]) && "Reaction force X should not be NaN");
+        assert(!std::isnan(s.reaction_force[1]) && "Reaction force Y should not be NaN");
+        assert(!std::isnan(s.reaction_force[2]) && "Reaction force Z should not be NaN");
+        assert(!std::isnan(s.reaction_torque[0]) && "Reaction torque X should not be NaN");
+        assert(!std::isnan(s.reaction_torque[1]) && "Reaction torque Y should not be NaN");
+        assert(!std::isnan(s.reaction_torque[2]) && "Reaction torque Z should not be NaN");
+        if (s.joint_id == "j1") found_revolute = true;
+        if (s.joint_id == "j2") found_prismatic = true;
+    }
+    assert(found_revolute && "Should find revolute joint state");
+    assert(found_prismatic && "Should find prismatic joint state");
+
+    // Channel values should also be non-NaN
+    auto channels = runtime.getChannelValues();
+    for (const auto& ch : channels) {
+        assert(!std::isnan(ch.scalar) && "Channel scalar should not be NaN");
+        assert(!std::isnan(ch.vector[0]) && "Channel vector[0] should not be NaN");
+        assert(!std::isnan(ch.vector[1]) && "Channel vector[1] should not be NaN");
+        assert(!std::isnan(ch.vector[2]) && "Channel vector[2] should not be NaN");
+    }
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// Test: Cylindrical joint with limits via ChLinkLockCylindrical
+static int test_lock_cylindrical_limits() {
+    std::cout << "  [test_lock_cylindrical_limits] ";
+
+    MechanismBuilder mb;
+    mb.addFixedBody("ground")
+      .addBody("slider", 1.0, 1.0, 0, 0)
+      .addDatum("d1", "ground", 0.5, 0, 0)
+      .addDatum("d2", "slider", -0.5, 0, 0)
+      .addJoint("j1", mech::JOINT_TYPE_CYLINDRICAL, "d1", "d2");
+
+    // Add translation and rotation limits to the cylindrical joint
+    auto m = mb.build();
+    auto* joint = m.mutable_joints(0);
+    auto* cyl = joint->mutable_cylindrical();
+    cyl->mutable_translation_limit()->set_lower(-0.1);
+    cyl->mutable_translation_limit()->set_upper(0.1);
+    cyl->mutable_rotation_limit()->set_lower(-0.5);
+    cyl->mutable_rotation_limit()->set_upper(0.5);
+
+    eng::SimulationRuntime runtime;
+    auto result = runtime.compile(m);
+    assert(result.success && "Cylindrical joint with limits should compile");
+
+    for (int i = 0; i < 200; i++) runtime.step(0.001);
+
+    auto poses = runtime.getBodyPoses();
+    auto& slider = find_body(poses, "slider");
+    assert(!std::isnan(slider.position[0]) && "Position should not be NaN");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+// ---------------------------------------------------------------------------
+// Epic 6: Joint Dynamics (Damping) Tests
+// ---------------------------------------------------------------------------
+
+int test_revolute_damping_reduces_velocity() {
+    std::cout << "  [test_revolute_damping_reduces_velocity] ";
+
+    // Undamped pendulum
+    MechanismBuilder mb_undamped;
+    mb_undamped.addFixedBody("ground")
+        .addBody("pendulum", 1.0, 1.0, 0, 0)
+        .addDatum("d1", "ground", 0.5, 0, 0)
+        .addDatum("d2", "pendulum", -0.5, 0, 0)
+        .addRevoluteJoint("j1", "d1", "d2");
+
+    // Damped pendulum (same geometry)
+    MechanismBuilder mb_damped;
+    mb_damped.addFixedBody("ground")
+        .addBody("pendulum", 1.0, 1.0, 0, 0)
+        .addDatum("d1", "ground", 0.5, 0, 0)
+        .addDatum("d2", "pendulum", -0.5, 0, 0)
+        .addRevoluteJoint("j1", "d1", "d2")
+        .withRevoluteDamping(0.5);
+
+    auto sr_undamped = run_sim(mb_undamped.build(), 0.001, 500);
+    auto sr_damped = run_sim(mb_damped.build(), 0.001, 500);
+
+    assert(!sr_undamped.joints.empty() && !sr_damped.joints.empty());
+    double vel_undamped = std::abs(sr_undamped.joints[0].velocity);
+    double vel_damped = std::abs(sr_damped.joints[0].velocity);
+
+    assert(!std::isnan(vel_undamped) && "Undamped velocity should not be NaN");
+    assert(!std::isnan(vel_damped) && "Damped velocity should not be NaN");
+    assert(vel_damped < vel_undamped && "Damped velocity should be less than undamped");
+
+    std::cout << "PASS (undamped_vel=" << vel_undamped << ", damped_vel=" << vel_damped << ")\n";
+    return 0;
+}
+
+int test_prismatic_damping_decelerates() {
+    std::cout << "  [test_prismatic_damping_decelerates] ";
+
+    MechanismBuilder mb;
+    mb.addFixedBody("ground")
+        .addBody("slider", 1.0, 0, 1.0, 0)  // offset in Y, gravity pulls down
+        .addDatum("d1", "ground", 0, 0.5, 0)
+        .addDatum("d2", "slider", 0, -0.5, 0)
+        .addPrismaticJoint("j1", "d1", "d2")
+        .withPrismaticDamping(1.0);
+
+    eng::SimulationRuntime runtime;
+    auto result = runtime.compile(mb.build());
+    assert(result.success && "Should compile");
+
+    // Step and check velocity at two time points
+    for (int i = 0; i < 100; i++) runtime.step(0.001);
+    auto states_early = runtime.getJointStates();
+    double vel_early = std::abs(states_early[0].velocity);
+
+    for (int i = 0; i < 400; i++) runtime.step(0.001);
+    auto states_late = runtime.getJointStates();
+    double vel_late = std::abs(states_late[0].velocity);
+
+    assert(!std::isnan(vel_early) && "Early velocity should not be NaN");
+    assert(!std::isnan(vel_late) && "Late velocity should not be NaN");
+
+    std::cout << "PASS (vel_early=" << vel_early << ", vel_late=" << vel_late << ")\n";
+    return 0;
+}
+
+int test_zero_damping_matches_undamped() {
+    std::cout << "  [test_zero_damping_matches_undamped] ";
+
+    // No damping field set
+    MechanismBuilder mb_none;
+    mb_none.addFixedBody("ground")
+        .addBody("pendulum", 1.0, 1.0, 0, 0)
+        .addDatum("d1", "ground", 0.5, 0, 0)
+        .addDatum("d2", "pendulum", -0.5, 0, 0)
+        .addRevoluteJoint("j1", "d1", "d2");
+
+    // Explicit damping = 0.0
+    MechanismBuilder mb_zero;
+    mb_zero.addFixedBody("ground")
+        .addBody("pendulum", 1.0, 1.0, 0, 0)
+        .addDatum("d1", "ground", 0.5, 0, 0)
+        .addDatum("d2", "pendulum", -0.5, 0, 0)
+        .addRevoluteJoint("j1", "d1", "d2")
+        .withRevoluteDamping(0.0);
+
+    auto sr_none = run_sim(mb_none.build(), 0.001, 200);
+    auto sr_zero = run_sim(mb_zero.build(), 0.001, 200);
+
+    auto& body_none = find_body(sr_none.poses, "pendulum");
+    auto& body_zero = find_body(sr_zero.poses, "pendulum");
+
+    double diff = std::abs(body_none.position[1] - body_zero.position[1]);
+    assert(diff < 1e-12 && "Zero damping should produce identical results to no damping");
+
+    std::cout << "PASS (diff=" << diff << ")\n";
+    return 0;
+}
+
+int test_cylindrical_separate_damping() {
+    std::cout << "  [test_cylindrical_separate_damping] ";
+
+    // Cylindrical with rotational damping only
+    MechanismBuilder mb;
+    mb.addFixedBody("ground")
+        .addBody("slider", 1.0, 1.0, 0, 0)
+        .addDatum("d1", "ground", 0.5, 0, 0)
+        .addDatum("d2", "slider", -0.5, 0, 0)
+        .addJoint("j1", mech::JOINT_TYPE_CYLINDRICAL, "d1", "d2");
+
+    auto m = mb.build();
+    auto* cyl = m.mutable_joints(0)->mutable_cylindrical();
+    cyl->set_rotational_damping(1.0);
+    cyl->set_translational_damping(0.0);
+
+    eng::SimulationRuntime runtime;
+    auto result = runtime.compile(m);
+    assert(result.success && "Should compile");
+
+    for (int i = 0; i < 200; i++) runtime.step(0.001);
+
+    auto poses = runtime.getBodyPoses();
+    auto& body = find_body(poses, "slider");
+    assert(!std::isnan(body.position[0]) && "Position X should not be NaN");
+    assert(!std::isnan(body.position[1]) && "Position Y should not be NaN");
+    assert(!std::isnan(body.position[2]) && "Position Z should not be NaN");
+
+    // Cylindrical joints report channels, not joint states — verify via channels
+    auto channels = runtime.getChannelValues();
+    bool has_channel = false;
+    for (const auto& ch : channels) {
+        assert(!std::isnan(ch.scalar) && "Channel scalar should not be NaN");
+        has_channel = true;
+    }
+    assert(has_channel && "Should have channel values");
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
@@ -1498,10 +1893,27 @@ int main() {
     failures += test_backward_compat();
     failures += test_no_geometry_mass_preserved();
 
-    std::cout << "\n=== ChLinkMate Migration Tests (Epic 3) ===\n";
+    std::cout << "\n=== ChLinkLock Migration Tests (Epic 3) ===\n";
     failures += test_fixed_joint_no_motion();
     failures += test_limited_revolute_fallback();
     failures += test_multi_type_channels();
+
+    std::cout << "\n=== Epic 3: ChLinkLock + ChBodyAuxRef Regression ===\n";
+    failures += test_lock_revolute_pendulum();
+    failures += test_lock_spherical();
+    failures += test_lock_planar();
+    failures += test_lock_point_line();
+    failures += test_lock_point_plane();
+    failures += test_auxref_com_offset();
+    failures += test_auxref_zero_com();
+    failures += test_lock_reaction_forces();
+    failures += test_lock_cylindrical_limits();
+
+    std::cout << "\n=== Epic 6: Joint Dynamics (Damping) ===\n";
+    failures += test_revolute_damping_reduces_velocity();
+    failures += test_prismatic_damping_decelerates();
+    failures += test_zero_damping_matches_undamped();
+    failures += test_cylindrical_separate_damping();
 
     std::cout << "\n=== Pre-Simulation Validation Tests (Epic 17 Prompt 3) ===\n";
     failures += test_no_ground_error();

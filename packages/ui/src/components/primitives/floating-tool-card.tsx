@@ -4,6 +4,7 @@ import {
   type ReactNode,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react';
@@ -38,10 +39,24 @@ function FloatingToolCard({
 }: FloatingToolCardProps) {
   const [position, setPosition] = useState(defaultPosition ?? { x: 12, y: 12 });
   const [isDragging, setIsDragging] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(
     null,
   );
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // Panel-aware initial position: offset by --vp-inset-left on mount
+  useLayoutEffect(() => {
+    if (!cardRef.current) return;
+    const el = cardRef.current.closest('[style*="--vp-inset-left"]') as HTMLElement | null;
+    if (el) {
+      const insetLeft = parseFloat(getComputedStyle(el).getPropertyValue('--vp-inset-left')) || 0;
+      if (insetLeft > 0) {
+        setPosition((prev) => ({ x: prev.x + insetLeft, y: prev.y }));
+      }
+    }
+    setMounted(true);
+  }, []);
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
@@ -112,13 +127,17 @@ function FloatingToolCard({
       data-slot="floating-tool-card"
       className={cn(
         'absolute min-w-[240px] w-[260px] max-w-[300px]',
-        'bg-[var(--layer-elevated)] border border-[var(--border-default)] border-t-2 border-t-[var(--accent-primary)]',
+        'bg-[var(--layer-elevated-glass)] backdrop-blur-[var(--panel-blur)] border border-[var(--border-default)] border-t-2 border-t-[var(--accent-primary)]',
         'rounded-[var(--radius-sm)] shadow-[var(--shadow-medium)]',
         'z-[var(--z-floating)]',
-        'animate-in fade-in-0 duration-[var(--duration-fast)]',
+        !mounted && 'animate-in fade-in-0 duration-[var(--duration-fast)]',
         className,
       )}
-      style={{ left: position.x, top: position.y }}
+      style={{
+        left: position.x,
+        top: position.y,
+        willChange: isDragging ? 'left, top' : undefined,
+      }}
     >
       {/* Header */}
       <div

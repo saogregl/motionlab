@@ -85,6 +85,9 @@ function makeJoint(id: string, parentDatumId: string, childDatumId: string): Joi
     childDatumId,
     lowerLimit: -3.14,
     upperLimit: 3.14,
+    damping: 0,
+    translationalDamping: 0,
+    rotationalDamping: 0,
   };
 }
 
@@ -125,6 +128,10 @@ describe('Mechanism store', () => {
       actuators: new Map(),
       importing: false,
       importError: null,
+      hasActiveProject: false,
+      projectName: 'Untitled',
+      projectFilePath: null,
+      isDirty: false,
     });
   });
 
@@ -255,6 +262,34 @@ describe('Mechanism store', () => {
     expect(datum?.surfaceClass).toBe('cylindrical');
   });
 
+  it('stores datum face provenance metadata', () => {
+    useMechanismStore.getState().addDatum({
+      id: 'datum-2',
+      name: 'Datum 2',
+      parentBodyId: 'body-1',
+      localPose: {
+        position: { x: 1, y: 2, z: 3 },
+        rotation: { x: 0, y: 0, z: 0, w: 1 },
+      },
+      sourceGeometryId: 'geom-1',
+      sourceFaceIndex: 4,
+      sourceGeometryLocalPose: {
+        position: { x: 0.1, y: 0.2, z: 0.3 },
+        rotation: { x: 0, y: 0, z: 0, w: 1 },
+      },
+      surfaceClass: 'planar',
+      faceGeometry: {
+        normal: { x: 0, y: 0, z: 1 },
+      },
+    });
+
+    const datum = useMechanismStore.getState().datums.get('datum-2');
+    expect(datum?.sourceGeometryId).toBe('geom-1');
+    expect(datum?.sourceFaceIndex).toBe(4);
+    expect(datum?.sourceGeometryLocalPose?.position.x).toBe(0.1);
+    expect(datum?.faceGeometry?.normal?.z).toBe(1);
+  });
+
   // --- Joints ---
 
   it('addJoint adds to map', () => {
@@ -370,5 +405,25 @@ describe('Mechanism store', () => {
     useMechanismStore.getState().addGeometries([makeGeometry('g1', 'b1')]);
     useMechanismStore.getState().resetProject();
     expect(useMechanismStore.getState().geometries.size).toBe(0);
+  });
+
+  it('starts with no active project until project metadata is set', () => {
+    expect(useMechanismStore.getState().hasActiveProject).toBe(false);
+
+    useMechanismStore.getState().setProjectMeta('Demo', null);
+
+    const state = useMechanismStore.getState();
+    expect(state.hasActiveProject).toBe(true);
+    expect(state.projectName).toBe('Demo');
+  });
+
+  it('resetProject marks a new empty project as active and preserves the chosen name', () => {
+    useMechanismStore.getState().resetProject('Template Project');
+
+    const state = useMechanismStore.getState();
+    expect(state.hasActiveProject).toBe(true);
+    expect(state.projectName).toBe('Template Project');
+    expect(state.projectFilePath).toBeNull();
+    expect(state.isDirty).toBe(false);
   });
 });

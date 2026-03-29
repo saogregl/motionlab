@@ -1,8 +1,8 @@
 export { IdentitySection } from './IdentitySection.js';
 export type { IdentitySectionProps } from './IdentitySection.js';
 
-export { PoseSection } from './PoseSection.js';
-export type { PoseSectionProps } from './PoseSection.js';
+export { TransformSection } from './TransformSection.js';
+export type { TransformSectionProps } from './TransformSection.js';
 
 export { SimulationValuesSection } from './SimulationValuesSection.js';
 export type {

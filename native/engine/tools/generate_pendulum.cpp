@@ -91,7 +91,7 @@ static void build_body_proto(mech::Body* pb,
                               const MassPropertiesResult& mass) {
     pb->mutable_id()->set_id(id);
     pb->set_name(name);
-    pb->set_is_fixed(is_fixed);
+    pb->set_motion_type(is_fixed ? mech::MOTION_TYPE_FIXED : mech::MOTION_TYPE_DYNAMIC);
 
     auto* pose = pb->mutable_pose();
     auto* p = pose->mutable_position();
@@ -191,7 +191,7 @@ int main(int argc, char* argv[]) {
 
     // ── Build ProjectFile protobuf ──
     mech::ProjectFile project;
-    project.set_version(1);
+    project.set_version(3);
 
     auto* meta = project.mutable_metadata();
     meta->set_name("Pendulum Example");

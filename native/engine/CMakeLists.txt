@@ -21,10 +21,32 @@ function(motionlab_target_warnings target)
   endif()
 endfunction()
 
+# ──────────────────────────────────────────────
+# Optional sanitizer support (GCC/Clang only)
+# ──────────────────────────────────────────────
+
+option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
+option(ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer" OFF)
+
+function(motionlab_target_sanitizers target)
+  if(MSVC)
+    return()  # MSVC sanitizers use different flags; not supported yet
+  endif()
+  if(ENABLE_ASAN)
+    target_compile_options(${target} PRIVATE -fsanitize=address -fno-omit-frame-pointer)
+    target_link_options(${target} PRIVATE -fsanitize=address)
+  endif()
+  if(ENABLE_UBSAN)
+    target_compile_options(${target} PRIVATE -fsanitize=undefined)
+    target_link_options(${target} PRIVATE -fsanitize=undefined)
+  endif()
+endfunction()
+
 function(motionlab_add_test name source)
   add_executable(${name} ${source})
   target_link_libraries(${name} PRIVATE motionlab-engine-lib)
   motionlab_target_warnings(${name})
+  motionlab_target_sanitizers(${name})
   add_test(NAME ${name} COMMAND ${name})
 endfunction()
 
@@ -185,6 +207,7 @@ if(WIN32)
 endif()
 
 motionlab_target_warnings(motionlab-engine-lib)
+motionlab_target_sanitizers(motionlab-engine-lib)
 
 # ──────────────────────────────────────────────
 # Engine executable
@@ -196,6 +219,7 @@ add_executable(motionlab-engine
 target_link_libraries(motionlab-engine PRIVATE
   motionlab-engine-lib
 )
+motionlab_target_sanitizers(motionlab-engine)
 
 # ──────────────────────────────────────────────
 # Tools
@@ -228,4 +252,7 @@ if(BUILD_TESTS)
   motionlab_add_test(motionlab-face-tests       tests/test_face_classifier.cpp)
   motionlab_add_test(motionlab-face-pair-tests   tests/test_face_pair_analyzer.cpp)
   motionlab_add_test(motionlab-sim-tests        tests/test_simulation.cpp)
+  motionlab_add_test(motionlab-pose-math-tests  tests/test_pose_math.cpp)
+  motionlab_add_test(motionlab-mapping-tests    tests/test_mapping.cpp)
+  motionlab_add_test(motionlab-roundtrip-tests  tests/test_roundtrip.cpp)
 endif()

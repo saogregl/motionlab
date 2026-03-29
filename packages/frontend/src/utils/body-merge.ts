@@ -1,8 +1,7 @@
 import {
-  sendAttachGeometry,
-  sendCreateBody,
-  sendDeleteBody,
   sendDetachGeometry,
+  sendMakeCompoundBody,
+  sendSplitBody,
 } from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
@@ -87,6 +86,15 @@ export interface ResolvedSelection {
   bodiesToDissolve: string[];
 }
 
+function resolveSelectedEntityBodyId(id: string): string | undefined {
+  const mech = useMechanismStore.getState();
+  if (mech.bodies.has(id)) {
+    return id;
+  }
+  const geom = mech.geometries.get(id);
+  return geom?.parentBodyId ?? undefined;
+}
+
 /**
  * Resolve a raw selection (mix of body and geometry IDs) into a flat
  * list of geometry IDs and a list of bodies to dissolve.
@@ -113,39 +121,75 @@ export function resolveGeometryIds(selectedIds: Set<string>): ResolvedSelection 
   return { geometryIds: [...geometryIdSet], bodiesToDissolve };
 }
 
+/**
+ * Resolve the body frame that should be preserved when creating a compound
+ * body. Prefer the last-selected entity's body, then fall back to the first
+ * selected body-bearing entity.
+ */
+export function resolveMakeBodyReferenceBodyId(selectedIds: Set<string>): string | undefined {
+  const { lastSelectedId } = useSelectionStore.getState();
+  if (lastSelectedId && selectedIds.has(lastSelectedId)) {
+    const lastSelectedBodyId = resolveSelectedEntityBodyId(lastSelectedId);
+    if (lastSelectedBodyId) {
+      return lastSelectedBodyId;
+    }
+  }
+
+  for (const id of selectedIds) {
+    const bodyId = resolveSelectedEntityBodyId(id);
+    if (bodyId) {
+      return bodyId;
+    }
+  }
+
+  return undefined;
+}
+
 /* ── Make Body (merge) ── */
 
 /**
  * Create a new body from the current selection.
  *
- * Handles mixed selections (bodies + geometries), auto-detaches
- * geometries from existing bodies, and triggers inline rename.
+ * Sends a single atomic MakeCompoundBody command to the engine which
+ * handles detach, body creation, attach with world-position-preserving
+ * local poses, datum re-parenting, and dissolution of empty source bodies.
  */
 export function executeMakeBody(selectedIds: Set<string>): void {
-  const { geometryIds, bodiesToDissolve } = resolveGeometryIds(selectedIds);
-  if (geometryIds.length === 0) return;
-
+  console.debug('[make-body] selectedIds:', [...selectedIds]);
   const mech = useMechanismStore.getState();
-  const name = inferBodyName([...selectedIds]);
+  const { geometryIds } = resolveGeometryIds(selectedIds);
+  const referenceBodyId = resolveMakeBodyReferenceBodyId(selectedIds);
+  console.debug('[make-body] resolved geometryIds:', geometryIds);
+  if (geometryIds.length === 0) {
+    console.warn('[make-body] no geometry IDs resolved — aborting');
+    return;
+  }
 
-  // Detach geometries that already belong to a body
-  for (const geomId of geometryIds) {
-    const geom = mech.geometries.get(geomId);
+  // Preserve fixed status: if any source body is fixed, the compound body is fixed
+  let motionType: 'dynamic' | 'fixed' = 'dynamic';
+  for (const gId of geometryIds) {
+    const geom = mech.geometries.get(gId);
     if (geom?.parentBodyId) {
-      sendDetachGeometry(geomId);
+      const body = mech.bodies.get(geom.parentBodyId);
+      if (body?.motionType === 'fixed') {
+        motionType = 'fixed';
+      }
     }
   }
 
-  // Set up the pending workflow so the createBodyResult handler
-  // can attach geometries and clean up dissolved bodies
-  mech.setPendingMakeBodyGeometries(geometryIds);
-  mech.setPendingMakeBodyOptions({
+  const name = inferBodyName([...selectedIds]);
+  console.debug('[make-body] sending MakeCompoundBody command:', {
     name,
-    bodiesToDissolve,
-    shouldActivateRename: true,
+    geometryIds,
+    motionType,
+    originMode: referenceBodyId ? 'preserveFrame' : 'worldCenterOfMass',
+    referenceBodyId,
   });
-
-  sendCreateBody(name);
+  sendMakeCompoundBody(geometryIds, name, {
+    motionType,
+    dissolveEmptyBodies: true,
+    referenceBodyId,
+  });
 }
 
 /* ── Detach geometry ── */
@@ -177,9 +221,9 @@ export function executeDetachGeometry(geometryId: string): void {
 /**
  * Split selected geometries out of their parent body into a new body.
  *
- * All selected geometry IDs must belong to the same source body,
- * and the selection must not include all of the body's children
- * (that would be a move, not a split).
+ * Sends a single atomic SplitBody command to the engine which handles
+ * detach, body creation at centroid, and attach with world-position-
+ * preserving local poses.
  */
 export function executeSplitBody(
   selectedGeometryIds: Set<string>,
@@ -198,19 +242,5 @@ export function executeSplitBody(
   if (validIds.length === 0) return;
 
   const name = inferBodyName(validIds);
-
-  // Detach each geometry from the source body
-  for (const geomId of validIds) {
-    sendDetachGeometry(geomId);
-  }
-
-  // Set up pending workflow for the new body
-  mech.setPendingMakeBodyGeometries(validIds);
-  mech.setPendingMakeBodyOptions({
-    name,
-    bodiesToDissolve: [],
-    shouldActivateRename: true,
-  });
-
-  sendCreateBody(name);
+  sendSplitBody(sourceBodyId, validIds, name);
 }

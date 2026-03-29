@@ -19,7 +19,7 @@ import {
   Vec3Schema,
 } from './generated/mechanism/mechanism_pb.js';
 import type { Actuator, Joint, Load } from './generated/mechanism/mechanism_pb.js';
-import type { Event, SimulationAction } from './generated/protocol/transport_pb.js';
+import type { Command, Event, SimulationAction } from './generated/protocol/transport_pb.js';
 import {
   CommandSchema,
   CompileMechanismCommandSchema,
@@ -69,7 +69,11 @@ import {
   UpdateDatumPoseCommandSchema,
   UpdateJointCommandSchema,
   UpdateLoadCommandSchema,
+  MakeCompoundBodyCommandSchema,
+  SplitBodyCommandSchema,
+  ReparentGeometryCommandSchema,
   UpdateCollisionConfigCommandSchema,
+  UpdateGeometryPoseCommandSchema,
   UpdateMassPropertiesCommandSchema,
   UpdatePrimitiveCommandSchema,
 } from './generated/protocol/transport_pb.js';
@@ -169,6 +173,23 @@ export function createPlaceAssetInSceneCommand(
  */
 export function parseEvent(data: ArrayBuffer): Event {
   return fromBinary(EventSchema, new Uint8Array(data));
+}
+
+/**
+ * Parses a binary Command envelope from an ArrayBuffer or Uint8Array.
+ */
+export function parseCommand(data: ArrayBuffer | Uint8Array): Command {
+  return fromBinary(
+    CommandSchema,
+    data instanceof Uint8Array ? data : new Uint8Array(data),
+  );
+}
+
+/**
+ * Returns a JSON string representation of a Command for debug logging.
+ */
+export function commandToDebugJson(cmd: Command): string {
+  return toJsonString(CommandSchema, cmd);
 }
 
 /**
@@ -318,6 +339,38 @@ export function createUpdateDatumPoseCommand(
       case: 'updateDatumPose',
       value: create(UpdateDatumPoseCommandSchema, {
         datumId: create(ElementIdSchema, { id: datumId }),
+        newLocalPose: create(PoseSchema, {
+          position: create(Vec3Schema, newLocalPose.position),
+          orientation: create(QuatSchema, {
+            w: newLocalPose.orientation.w,
+            x: newLocalPose.orientation.x,
+            y: newLocalPose.orientation.y,
+            z: newLocalPose.orientation.z,
+          }),
+        }),
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing an UpdateGeometryPose payload.
+ */
+export function createUpdateGeometryPoseCommand(
+  geometryId: string,
+  newLocalPose: {
+    position: { x: number; y: number; z: number };
+    orientation: { x: number; y: number; z: number; w: number };
+  },
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'updateGeometryPose',
+      value: create(UpdateGeometryPoseCommandSchema, {
+        geometryId: create(ElementIdSchema, { id: geometryId }),
         newLocalPose: create(PoseSchema, {
           position: create(Vec3Schema, newLocalPose.position),
           orientation: create(QuatSchema, {
@@ -799,6 +852,7 @@ export function createUpdateBodyCommand(
       orientation: { x: number; y: number; z: number; w: number };
     };
     motionType?: MotionTypeId;
+    pinDatumsInWorld?: boolean;
   },
   sequenceId?: bigint,
 ): Uint8Array {
@@ -829,6 +883,7 @@ export function createUpdateBodyCommand(
         motionType: updates.motionType !== undefined
           ? toProtoMotionType(updates.motionType)
           : undefined,
+        pinDatumsInWorld: updates.pinDatumsInWorld ?? false,
       }),
     },
   });
@@ -1182,6 +1237,89 @@ export function createUpdateCollisionConfigCommand(
           height: config.height ?? 0,
           offset: config.offset ? create(Vec3Schema, config.offset) : undefined,
         }),
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a MakeCompoundBody payload.
+ */
+export function createMakeCompoundBodyCommand(
+  geometryIds: string[],
+  name: string,
+  options?: {
+    motionType?: MotionTypeId;
+    dissolveEmptyBodies?: boolean;
+    referenceBodyId?: string;
+  },
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'makeCompoundBody',
+      value: create(MakeCompoundBodyCommandSchema, {
+        geometryIds: geometryIds.map((id) => create(ElementIdSchema, { id })),
+        name,
+        motionType: options?.motionType !== undefined
+          ? toProtoMotionType(options.motionType)
+          : MotionType.DYNAMIC,
+        dissolveEmptyBodies: options?.dissolveEmptyBodies ?? false,
+        referenceBodyId: options?.referenceBodyId
+          ? create(ElementIdSchema, { id: options.referenceBodyId })
+          : undefined,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a SplitBody payload.
+ */
+export function createSplitBodyCommand(
+  sourceBodyId: string,
+  geometryIds: string[],
+  name: string,
+  options?: {
+    motionType?: MotionTypeId;
+  },
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'splitBody',
+      value: create(SplitBodyCommandSchema, {
+        sourceBodyId: create(ElementIdSchema, { id: sourceBodyId }),
+        geometryIds: geometryIds.map((id) => create(ElementIdSchema, { id })),
+        name,
+        motionType: options?.motionType !== undefined
+          ? toProtoMotionType(options.motionType)
+          : MotionType.DYNAMIC,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a ReparentGeometry payload.
+ */
+export function createReparentGeometryCommand(
+  geometryId: string,
+  targetBodyId: string,
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'reparentGeometry',
+      value: create(ReparentGeometryCommandSchema, {
+        geometryId: create(ElementIdSchema, { id: geometryId }),
+        targetBodyId: create(ElementIdSchema, { id: targetBodyId }),
       }),
     },
   });

@@ -1,4 +1,5 @@
 #include "../src/mechanism_state.h"
+#include "../src/pose_math.h"
 #include "engine/log.h"
 
 #include <cassert>
@@ -27,6 +28,51 @@ std::optional<mech::Datum> add_datum(eng::MechanismState& state,
     const double pos[3] = {x, 0.0, 0.0};
     const double orient[4] = {1.0, 0.0, 0.0, 0.0};
     return state.create_datum(body_id, name, pos, orient);
+}
+
+void add_geometry(eng::MechanismState& state,
+                  const std::string& geometry_id,
+                  const std::string& name,
+                  const std::string& body_id,
+                  double x) {
+    mech::MassProperties mp;
+    mp.set_mass(1.0);
+    mp.set_ixx(0.01);
+    mp.set_iyy(0.01);
+    mp.set_izz(0.01);
+    const double pos[3] = {x, 0.0, 0.0};
+    const double orient[4] = {1.0, 0.0, 0.0, 0.0};
+    auto result = state.add_geometry(geometry_id, name, body_id, pos, orient, mp);
+    assert(result.entry.has_value());
+}
+
+std::optional<mech::Datum> add_face_linked_datum(eng::MechanismState& state,
+                                                 const std::string& body_id,
+                                                 const std::string& geometry_id,
+                                                 const std::string& name,
+                                                 double body_local_x,
+                                                 double geometry_local_x,
+                                                 uint32_t face_index = 0) {
+    const double body_local_pos[3] = {body_local_x, 0.0, 0.0};
+    const double geom_local_pos[3] = {geometry_local_x, 0.0, 0.0};
+    const double orient[4] = {1.0, 0.0, 0.0, 0.0};
+    auto datum = state.create_datum(body_id, name, body_local_pos, orient);
+    if (!datum.has_value()) {
+        return datum;
+    }
+
+    mech::DatumFaceGeometryInfo face_geometry;
+    face_geometry.mutable_axis_direction()->set_z(1.0);
+    auto annotated = state.set_datum_face_attachment(
+        datum->id().id(),
+        geometry_id,
+        face_index,
+        geom_local_pos,
+        orient,
+        mech::DATUM_SURFACE_CLASS_CYLINDRICAL,
+        &face_geometry);
+    assert(annotated.has_value());
+    return annotated;
 }
 
 mech::Joint make_revolute_joint_draft(const std::string& parent_datum_id,
@@ -555,6 +601,27 @@ void test_mass_aggregation() {
     assert(std::abs(shifted_agg.center_of_mass().x() - 2.5) < 1e-10);
     assert(std::abs(shifted_agg.center_of_mass().y()) < 1e-10);
 
+    // Geometry local rotation must rotate both COM offset and inertia tensor
+    const double s = std::sqrt(2.0) / 2.0;
+    const double rot90z[4] = {s, 0.0, 0.0, s};
+    mech::MassProperties rotated_mp;
+    rotated_mp.set_mass(4.0);
+    rotated_mp.mutable_center_of_mass()->set_x(1.0);
+    rotated_mp.set_ixx(0.1);
+    rotated_mp.set_iyy(0.2);
+    rotated_mp.set_izz(0.3);
+    auto rotated_body_id = state.create_body("RotatedBody", pos, orient);
+    const double translated_pos[3] = {2.0, 0.0, 0.0};
+    state.add_geometry("g-rot", "RotatedPart", rotated_body_id, translated_pos, rot90z, rotated_mp);
+
+    auto rotated_agg = state.compute_aggregate_mass(rotated_body_id);
+    assert(std::abs(rotated_agg.mass() - 4.0) < 1e-10);
+    assert(std::abs(rotated_agg.center_of_mass().x() - 2.0) < 1e-10);
+    assert(std::abs(rotated_agg.center_of_mass().y() - 1.0) < 1e-10);
+    assert(std::abs(rotated_agg.ixx() - 0.2) < 1e-10);
+    assert(std::abs(rotated_agg.iyy() - 0.1) < 1e-10);
+    assert(std::abs(rotated_agg.izz() - 0.3) < 1e-10);
+
     std::cout << "  PASS: mass aggregation" << std::endl;
 }
 
@@ -663,16 +730,159 @@ void test_attach_detach_geometry() {
     assert(result.entry.has_value());
     assert(result.entry->parent_body_id().id() == body_b);
 
-    // Body A now 0, Body B now 2.0
-    assert(state.build_body_proto(body_a)->mass_properties().mass() == 0.0);
+    // Body A preserves its prior mass when left empty; Body B now reflects the geometry
+    assert(state.build_body_proto(body_a)->mass_properties().mass() == 2.0);
     assert(state.build_body_proto(body_b)->mass_properties().mass() == 2.0);
 
     // Detach geometry
     auto detach_result = state.detach_geometry("g1");
     assert(detach_result.entry.has_value());
-    assert(state.build_body_proto(body_b)->mass_properties().mass() == 0.0);
+    assert(state.build_body_proto(body_b)->mass_properties().mass() == 2.0);
 
     std::cout << "  PASS: attach/detach geometry" << std::endl;
+}
+
+void test_face_linked_datum_tracks_geometry_pose_and_reparent() {
+    eng::MechanismState state;
+    const double origin[3] = {0, 0, 0};
+    const double orient[4] = {1, 0, 0, 0};
+
+    std::string body_a = state.create_body("BodyA", origin, orient);
+    const double body_b_pos[3] = {5.0, 0.0, 0.0};
+    std::string body_b = state.create_body("BodyB", body_b_pos, orient);
+    add_geometry(state, "g1", "Geom1", body_a, 0.0);
+
+    auto linked = add_face_linked_datum(state, body_a, "g1", "AxisDatum", 0.25, 0.25);
+    assert(linked.has_value());
+
+    const double moved_geom_pos[3] = {1.0, 0.0, 0.0};
+    auto moved = state.update_geometry_local_pose("g1", moved_geom_pos, orient);
+    assert(moved.entry.has_value());
+    assert(moved.updated_datums.size() == 1);
+    assert(std::abs(moved.updated_datums[0].local_pose().position().x() - 1.25) < 1e-10);
+
+    auto reparented = state.reparent_geometry("g1", body_b);
+    assert(reparented.entry.has_value());
+    assert(reparented.updated_datums.size() == 1);
+
+    const auto* datum_after = state.get_datum(linked->id().id());
+    assert(datum_after != nullptr);
+    assert(datum_after->parent_body_id().id() == body_b);
+    assert(datum_after->source_geometry_id().id() == "g1");
+    assert(std::abs(datum_after->local_pose().position().x() - (-3.75)) < 1e-10);
+
+    std::cout << "  PASS: face-linked datum tracks geometry pose and reparent" << std::endl;
+}
+
+void test_detach_geometry_rejects_face_linked_datums() {
+    eng::MechanismState state;
+    const double origin[3] = {0, 0, 0};
+    const double orient[4] = {1, 0, 0, 0};
+
+    std::string body = state.create_body("BodyA", origin, orient);
+    add_geometry(state, "g1", "Geom1", body, 0.0);
+    auto linked = add_face_linked_datum(state, body, "g1", "AxisDatum", 0.25, 0.25);
+    assert(linked.has_value());
+
+    auto result = state.detach_geometry("g1");
+    assert(!result.entry.has_value());
+    assert(result.error.find("Cannot detach geometry with face-linked datums") != std::string::npos);
+
+    std::cout << "  PASS: detach rejects face-linked datums" << std::endl;
+}
+
+void test_split_body_updates_only_linked_datums() {
+    eng::MechanismState state;
+    const double origin[3] = {0, 0, 0};
+    const double orient[4] = {1, 0, 0, 0};
+
+    std::string body = state.create_body("Source", origin, orient);
+    add_geometry(state, "g1", "Geom1", body, 0.0);
+    add_geometry(state, "g2", "Geom2", body, 2.0);
+
+    auto linked_g1 = add_face_linked_datum(state, body, "g1", "DatumG1", 0.25, 0.25);
+    auto linked_g2 = add_face_linked_datum(state, body, "g2", "DatumG2", 2.25, 0.25, 1);
+    auto manual = add_datum(state, body, "Manual", 9.0);
+    assert(linked_g1.has_value());
+    assert(linked_g2.has_value());
+    assert(manual.has_value());
+
+    auto split = state.split_body(body, {"g1"}, "Split", false);
+    assert(split.error.empty());
+    assert(split.updated_datums.size() == 1);
+    assert(split.updated_datums[0].id().id() == linked_g1->id().id());
+
+    const auto* d1_after = state.get_datum(linked_g1->id().id());
+    const auto* d2_after = state.get_datum(linked_g2->id().id());
+    const auto* manual_after = state.get_datum(manual->id().id());
+    assert(d1_after != nullptr && d2_after != nullptr && manual_after != nullptr);
+    assert(d1_after->parent_body_id().id() == split.created_body_id);
+    assert(d2_after->parent_body_id().id() == body);
+    assert(manual_after->parent_body_id().id() == body);
+
+    std::cout << "  PASS: split body updates only linked datums" << std::endl;
+}
+
+void test_update_geometry_primitive_clears_datum_provenance() {
+    eng::MechanismState state;
+    const double origin[3] = {0, 0, 0};
+    const double orient[4] = {1, 0, 0, 0};
+
+    std::string body = state.create_body("BodyA", origin, orient);
+    add_geometry(state, "g1", "Geom1", body, 0.0);
+    auto linked = add_face_linked_datum(state, body, "g1", "AxisDatum", 0.25, 0.25);
+    assert(linked.has_value());
+
+    mech::MassProperties mp;
+    mp.set_mass(2.0);
+    mp.set_ixx(0.02);
+    mp.set_iyy(0.02);
+    mp.set_izz(0.02);
+    mech::PrimitiveSource primitive;
+    primitive.set_shape(mech::PrimitiveShape::PRIMITIVE_SHAPE_BOX);
+    primitive.mutable_params()->mutable_box()->set_width(1.0);
+    primitive.mutable_params()->mutable_box()->set_height(1.0);
+    primitive.mutable_params()->mutable_box()->set_depth(1.0);
+
+    auto result = state.update_geometry_primitive("g1", mp, 6, primitive);
+    assert(result.entry.has_value());
+    assert(result.updated_datums.size() == 1);
+
+    const auto* datum_after = state.get_datum(linked->id().id());
+    assert(datum_after != nullptr);
+    assert(!datum_after->has_source_geometry_id());
+    assert(!datum_after->has_source_face_index());
+    assert(!datum_after->has_face_geometry());
+    assert(datum_after->surface_class() == mech::DATUM_SURFACE_CLASS_UNSPECIFIED);
+
+    std::cout << "  PASS: update geometry primitive clears datum provenance" << std::endl;
+}
+
+void test_datum_provenance_proto_roundtrip() {
+    eng::MechanismState state;
+    const double origin[3] = {0, 0, 0};
+    const double orient[4] = {1, 0, 0, 0};
+
+    std::string body = state.create_body("BodyA", origin, orient);
+    add_geometry(state, "g1", "Geom1", body, 0.0);
+    auto linked = add_face_linked_datum(state, body, "g1", "AxisDatum", 0.25, 0.25, 3);
+    assert(linked.has_value());
+
+    auto mechanism = state.build_mechanism_proto();
+    eng::MechanismState reloaded;
+    reloaded.load_from_proto(mechanism);
+
+    const auto* datum = reloaded.get_datum(linked->id().id());
+    assert(datum != nullptr);
+    assert(datum->has_source_geometry_id());
+    assert(datum->source_geometry_id().id() == "g1");
+    assert(datum->has_source_face_index());
+    assert(datum->source_face_index() == 3);
+    assert(datum->surface_class() == mech::DATUM_SURFACE_CLASS_CYLINDRICAL);
+    assert(datum->has_face_geometry());
+    assert(datum->face_geometry().axis_direction().z() == 1.0);
+
+    std::cout << "  PASS: datum provenance proto roundtrip" << std::endl;
 }
 
 void test_geometry_proto_roundtrip() {
@@ -700,6 +910,654 @@ void test_geometry_proto_roundtrip() {
     std::cout << "  PASS: geometry proto roundtrip" << std::endl;
 }
 
+void test_co_translate_datums_translation() {
+    eng::MechanismState state;
+
+    // Create a body at (1, 0, 0) with identity rotation
+    const double pos[3] = {1.0, 0.0, 0.0};
+    const double orient[4] = {1.0, 0.0, 0.0, 0.0};
+    std::string body_id = state.create_body("Body1", pos, orient);
+
+    // Add two datums with local offsets
+    const double d1_pos[3] = {0.5, 0.0, 0.0};
+    const double d2_pos[3] = {0.0, 1.0, 0.0};
+    const double id_orient[4] = {1.0, 0.0, 0.0, 0.0};
+    auto d1 = state.create_datum(body_id, "D1", d1_pos, id_orient);
+    auto d2 = state.create_datum(body_id, "D2", d2_pos, id_orient);
+    assert(d1.has_value() && d2.has_value());
+
+    // d1 world = body_pos + local = (1.5, 0, 0)
+    // d2 world = body_pos + local = (1.0, 1, 0)
+
+    // Build old and new poses
+    mech::Pose old_pose;
+    old_pose.mutable_position()->set_x(1.0);
+    old_pose.mutable_position()->set_y(0.0);
+    old_pose.mutable_position()->set_z(0.0);
+    old_pose.mutable_orientation()->set_w(1.0);
+
+    mech::Pose new_pose;
+    new_pose.mutable_position()->set_x(2.0);
+    new_pose.mutable_position()->set_y(0.0);
+    new_pose.mutable_position()->set_z(0.0);
+    new_pose.mutable_orientation()->set_w(1.0);
+
+    // Translate body to (2, 0, 0)
+    auto updated = state.co_translate_datums(body_id, old_pose, new_pose);
+    assert(updated.size() == 2);
+
+    // After co-translation, datums' new local positions should compensate:
+    // d1 world was (1.5, 0, 0) => new local = world - new_body_pos = (-0.5, 0, 0)
+    // d2 world was (1.0, 1, 0) => new local = world - new_body_pos = (-1.0, 1, 0)
+    const auto* d1_after = state.get_datum(d1->id().id());
+    const auto* d2_after = state.get_datum(d2->id().id());
+    assert(d1_after != nullptr && d2_after != nullptr);
+
+    assert(std::abs(d1_after->local_pose().position().x() - (-0.5)) < 1e-10);
+    assert(std::abs(d1_after->local_pose().position().y()) < 1e-10);
+    assert(std::abs(d1_after->local_pose().position().z()) < 1e-10);
+
+    assert(std::abs(d2_after->local_pose().position().x() - (-1.0)) < 1e-10);
+    assert(std::abs(d2_after->local_pose().position().y() - 1.0) < 1e-10);
+    assert(std::abs(d2_after->local_pose().position().z()) < 1e-10);
+
+    std::cout << "  PASS: co-translate datums (translation)" << std::endl;
+}
+
+void test_co_translate_datums_rotation() {
+    eng::MechanismState state;
+
+    // Create a body at origin with identity rotation
+    const double pos[3] = {0.0, 0.0, 0.0};
+    const double orient[4] = {1.0, 0.0, 0.0, 0.0};
+    std::string body_id = state.create_body("Body1", pos, orient);
+
+    // Add a datum at local (1, 0, 0)
+    const double d_pos[3] = {1.0, 0.0, 0.0};
+    auto d1 = state.create_datum(body_id, "D1", d_pos, orient);
+    assert(d1.has_value());
+
+    // World position of datum = (1, 0, 0)
+
+    // Old pose: identity at origin
+    mech::Pose old_pose;
+    old_pose.mutable_position()->set_x(0.0);
+    old_pose.mutable_position()->set_y(0.0);
+    old_pose.mutable_position()->set_z(0.0);
+    old_pose.mutable_orientation()->set_w(1.0);
+
+    // New pose: 90 degrees around Y axis at origin
+    // q = cos(45°) + sin(45°) * j = (√2/2, 0, √2/2, 0) in (w, x, y, z)
+    const double s = std::sqrt(2.0) / 2.0;
+    mech::Pose new_pose;
+    new_pose.mutable_position()->set_x(0.0);
+    new_pose.mutable_position()->set_y(0.0);
+    new_pose.mutable_position()->set_z(0.0);
+    new_pose.mutable_orientation()->set_w(s);
+    new_pose.mutable_orientation()->set_x(0.0);
+    new_pose.mutable_orientation()->set_y(s);
+    new_pose.mutable_orientation()->set_z(0.0);
+
+    auto updated = state.co_translate_datums(body_id, old_pose, new_pose);
+    assert(updated.size() == 1);
+
+    // Datum world position was (1, 0, 0).
+    // new_local_pos = inv(new_rot).Rotate(world_pos - new_pos)
+    //               = inv(new_rot).Rotate((1,0,0))
+    // inv of 90° around Y is -90° around Y, which maps (1,0,0) -> (0,0,1)
+    // (rotation of -90° around Y: x -> z*sin + x*cos = 0, z -> z*cos - x*sin(-90) = 1)
+    const auto* d1_after = state.get_datum(d1->id().id());
+    assert(d1_after != nullptr);
+    assert(std::abs(d1_after->local_pose().position().x()) < 1e-10);
+    assert(std::abs(d1_after->local_pose().position().y()) < 1e-10);
+    assert(std::abs(d1_after->local_pose().position().z() - 1.0) < 1e-10);
+
+    std::cout << "  PASS: co-translate datums (rotation)" << std::endl;
+}
+
+void test_co_translate_datums_empty() {
+    eng::MechanismState state;
+
+    const double pos[3] = {0.0, 0.0, 0.0};
+    const double orient[4] = {1.0, 0.0, 0.0, 0.0};
+    std::string body_id = state.create_body("Body1", pos, orient);
+
+    // No datums on this body
+    mech::Pose old_pose;
+    old_pose.mutable_orientation()->set_w(1.0);
+    mech::Pose new_pose;
+    new_pose.mutable_position()->set_x(5.0);
+    new_pose.mutable_orientation()->set_w(1.0);
+
+    auto updated = state.co_translate_datums(body_id, old_pose, new_pose);
+    assert(updated.empty());
+
+    std::cout << "  PASS: co-translate datums (empty)" << std::endl;
+}
+
+void test_make_compound_body_basic() {
+    eng::MechanismState state;
+
+    // Create two bodies at different positions
+    const double pos_a[3] = {1.0, 0.0, 0.0};
+    const double pos_b[3] = {3.0, 0.0, 0.0};
+    const double id_orient[4] = {1.0, 0.0, 0.0, 0.0};
+    std::string body_a = state.create_body("BodyA", pos_a, id_orient);
+    std::string body_b = state.create_body("BodyB", pos_b, id_orient);
+
+    // Add one geometry to each body at identity local_pose
+    const double origin[3] = {0, 0, 0};
+    mech::MassProperties mp;
+    mp.set_mass(1.0);
+    mp.set_ixx(0.01); mp.set_iyy(0.01); mp.set_izz(0.01);
+    state.add_geometry("g1", "Geom1", body_a, origin, id_orient, mp);
+    state.add_geometry("g2", "Geom2", body_b, origin, id_orient, mp);
+
+    // Make compound body
+    auto result = state.make_compound_body({"g1", "g2"}, "Merged", false, true);
+    assert(result.error.empty());
+
+    // New body should be at centroid (2, 0, 0)
+    auto new_body = state.build_body_proto(result.created_body_id);
+    assert(new_body.has_value());
+    assert(std::abs(new_body->pose().position().x() - 2.0) < 1e-10);
+    assert(std::abs(new_body->pose().position().y()) < 1e-10);
+    assert(std::abs(new_body->pose().position().z()) < 1e-10);
+
+    // g1 should have local_pose offset (-1, 0, 0) from centroid
+    const auto* g1 = state.get_geometry("g1");
+    assert(g1 != nullptr);
+    assert(g1->parent_body_id().id() == result.created_body_id);
+    assert(std::abs(g1->local_pose().position().x() - (-1.0)) < 1e-10);
+    assert(std::abs(g1->local_pose().position().y()) < 1e-10);
+
+    // g2 should have local_pose offset (+1, 0, 0) from centroid
+    const auto* g2 = state.get_geometry("g2");
+    assert(g2 != nullptr);
+    assert(g2->parent_body_id().id() == result.created_body_id);
+    assert(std::abs(g2->local_pose().position().x() - 1.0) < 1e-10);
+    assert(std::abs(g2->local_pose().position().y()) < 1e-10);
+
+    // Old bodies should be dissolved
+    assert(result.dissolved_body_ids.size() == 2);
+    assert(!state.has_body(body_a));
+    assert(!state.has_body(body_b));
+
+    std::cout << "  PASS: make compound body (basic)" << std::endl;
+}
+
+void test_make_compound_body_datum_position() {
+    eng::MechanismState state;
+
+    // Two bodies at different positions
+    const double pos_a[3] = {1.0, 0.0, 0.0};
+    const double pos_b[3] = {3.0, 0.0, 0.0};
+    const double id_orient[4] = {1.0, 0.0, 0.0, 0.0};
+    std::string body_a = state.create_body("BodyA", pos_a, id_orient);
+    std::string body_b = state.create_body("BodyB", pos_b, id_orient);
+
+    const double origin[3] = {0, 0, 0};
+    mech::MassProperties mp;
+    mp.set_mass(1.0);
+    mp.set_ixx(0.01); mp.set_iyy(0.01); mp.set_izz(0.01);
+    state.add_geometry("g1", "Geom1", body_a, origin, id_orient, mp);
+    state.add_geometry("g2", "Geom2", body_b, origin, id_orient, mp);
+
+    // Merge
+    auto result = state.make_compound_body({"g1", "g2"}, "Merged", false, true);
+    assert(result.error.empty());
+    const std::string& new_body_id = result.created_body_id;
+
+    // Simulate what handle_create_datum_from_face does:
+    // classify_face_for_datum returns face_pos in geometry-local space.
+    // For g1, suppose the face center is at (0.05, 0.02, 0) in geometry-local (meters).
+    const double face_pos[3] = {0.05, 0.02, 0.0};
+    const double face_orient[4] = {1.0, 0.0, 0.0, 0.0};
+
+    // The FIX: compose geometry.local_pose * face_pose to get body-local
+    const auto* g1 = state.get_geometry("g1");
+    double geom_pos[3], geom_orient[4];
+    eng::extract_pose_arrays(g1->local_pose(), geom_pos, geom_orient);
+
+    double body_local_pos[3], body_local_orient[4];
+    eng::compose_pose(geom_pos, geom_orient, face_pos, face_orient,
+                      body_local_pos, body_local_orient);
+
+    // g1 local_pose = (-1, 0, 0), so body_local = (-1 + 0.05, 0 + 0.02, 0) = (-0.95, 0.02, 0)
+    assert(std::abs(body_local_pos[0] - (-0.95)) < 1e-10);
+    assert(std::abs(body_local_pos[1] - 0.02) < 1e-10);
+    assert(std::abs(body_local_pos[2]) < 1e-10);
+
+    // Create datum with the composed position
+    auto datum = state.create_datum(new_body_id, "TestDatum", body_local_pos, body_local_orient);
+    assert(datum.has_value());
+
+    // Verify the datum's body-local position
+    assert(std::abs(datum->local_pose().position().x() - (-0.95)) < 1e-10);
+    assert(std::abs(datum->local_pose().position().y() - 0.02) < 1e-10);
+
+    // Verify world position: body(2,0,0) + datum_local(-0.95, 0.02, 0) = (1.05, 0.02, 0)
+    // This matches body_a(1,0,0) + face_pos(0.05, 0.02, 0) = (1.05, 0.02, 0) — correct!
+    double datum_world[3], datum_world_orient[4];
+    double body_pos[3], body_orient[4];
+    eng::extract_pose_arrays(state.build_body_proto(new_body_id)->pose(), body_pos, body_orient);
+    eng::compose_pose(body_pos, body_orient, body_local_pos, body_local_orient,
+                      datum_world, datum_world_orient);
+    assert(std::abs(datum_world[0] - 1.05) < 1e-10);
+    assert(std::abs(datum_world[1] - 0.02) < 1e-10);
+    assert(std::abs(datum_world[2]) < 1e-10);
+
+    // Now verify the BUG: WITHOUT the geometry-to-body transform,
+    // the datum would be at face_pos directly = (0.05, 0.02, 0) in body-local,
+    // which in world = (2.05, 0.02, 0) — wrong! It should be (1.05, 0.02, 0).
+    double buggy_world[3], buggy_orient[4];
+    eng::compose_pose(body_pos, body_orient, face_pos, face_orient,
+                      buggy_world, buggy_orient);
+    // The buggy position would be at x=2.05 instead of 1.05 — a full 1.0m off
+    assert(std::abs(buggy_world[0] - 2.05) < 1e-10);
+    // This confirms the fix is necessary
+
+    std::cout << "  PASS: make compound body datum position (geometry-to-body transform)" << std::endl;
+}
+
+void test_make_compound_body_rotated_bodies() {
+    eng::MechanismState state;
+
+    // Body A at origin with 90-degree rotation around Z
+    const double pos_a[3] = {0.0, 0.0, 0.0};
+    const double s = std::sqrt(2.0) / 2.0;
+    const double rot90z[4] = {s, 0.0, 0.0, s};  // 90° around Z, [w,x,y,z]
+    std::string body_a = state.create_body("BodyA", pos_a, rot90z);
+
+    // Body B at (2, 0, 0) with identity rotation
+    const double pos_b[3] = {2.0, 0.0, 0.0};
+    const double id_orient[4] = {1.0, 0.0, 0.0, 0.0};
+    std::string body_b = state.create_body("BodyB", pos_b, id_orient);
+
+    const double origin[3] = {0, 0, 0};
+    mech::MassProperties mp;
+    mp.set_mass(1.0);
+    mp.set_ixx(0.01); mp.set_iyy(0.01); mp.set_izz(0.01);
+    state.add_geometry("g1", "Geom1", body_a, origin, id_orient, mp);
+    state.add_geometry("g2", "Geom2", body_b, origin, id_orient, mp);
+
+    auto result = state.make_compound_body({"g1", "g2"}, "Merged", false, true);
+    assert(result.error.empty());
+    const std::string& new_body_id = result.created_body_id;
+
+    // g1 world_pose was (0, 0, 0) with rot90z
+    // g2 world_pose was (2, 0, 0) with identity
+    // centroid = (1, 0, 0), new body orient = identity
+    // g1 local_pose = (-1, 0, 0) with rot90z
+    const auto* g1 = state.get_geometry("g1");
+    assert(std::abs(g1->local_pose().position().x() - (-1.0)) < 1e-10);
+    assert(std::abs(g1->local_pose().orientation().w() - s) < 1e-10);
+    assert(std::abs(g1->local_pose().orientation().z() - s) < 1e-10);
+
+    // Face at (1, 0, 0) in g1's geometry-local space
+    // After compose with g1.local_pose: body_local = (-1,0,0) + rot90z*(1,0,0) = (-1, 1, 0)
+    const double face_pos[3] = {1.0, 0.0, 0.0};
+    const double face_orient[4] = {1.0, 0.0, 0.0, 0.0};
+
+    double geom_pos[3], geom_orient[4];
+    eng::extract_pose_arrays(g1->local_pose(), geom_pos, geom_orient);
+    double body_local_pos[3], body_local_orient[4];
+    eng::compose_pose(geom_pos, geom_orient, face_pos, face_orient,
+                      body_local_pos, body_local_orient);
+
+    assert(std::abs(body_local_pos[0] - (-1.0)) < 1e-10);
+    assert(std::abs(body_local_pos[1] - 1.0) < 1e-10);
+    assert(std::abs(body_local_pos[2]) < 1e-10);
+
+    // World position: (1,0,0) + identity*(-1,1,0) = (0, 1, 0)
+    // Which matches: original body_a(0,0,0) + rot90z*(1,0,0) = (0,1,0) — correct!
+    double body_pos[3], body_orient[4];
+    eng::extract_pose_arrays(state.build_body_proto(new_body_id)->pose(), body_pos, body_orient);
+    double world_pos[3], world_orient[4];
+    eng::compose_pose(body_pos, body_orient, body_local_pos, body_local_orient,
+                      world_pos, world_orient);
+    assert(std::abs(world_pos[0]) < 1e-10);
+    assert(std::abs(world_pos[1] - 1.0) < 1e-10);
+    assert(std::abs(world_pos[2]) < 1e-10);
+
+    std::cout << "  PASS: make compound body datum position (rotated bodies)" << std::endl;
+}
+
+void test_make_compound_body_uses_world_center_of_mass() {
+    eng::MechanismState state;
+
+    const double pos_a[3] = {1.0, 0.0, 0.0};
+    const double pos_b[3] = {5.0, 0.0, 0.0};
+    const double id_orient[4] = {1.0, 0.0, 0.0, 0.0};
+    std::string body_a = state.create_body("BodyA", pos_a, id_orient);
+    std::string body_b = state.create_body("BodyB", pos_b, id_orient);
+
+    const double origin[3] = {0, 0, 0};
+    mech::MassProperties mp_a;
+    mp_a.set_mass(1.0);
+    mp_a.set_ixx(0.01); mp_a.set_iyy(0.01); mp_a.set_izz(0.01);
+    state.add_geometry("g1", "Geom1", body_a, origin, id_orient, mp_a);
+
+    mech::MassProperties mp_b;
+    mp_b.set_mass(3.0);
+    mp_b.set_ixx(0.02); mp_b.set_iyy(0.02); mp_b.set_izz(0.02);
+    state.add_geometry("g2", "Geom2", body_b, origin, id_orient, mp_b);
+
+    auto result = state.make_compound_body({"g1", "g2"}, "Merged", false, true);
+    assert(result.error.empty());
+
+    auto new_body = state.build_body_proto(result.created_body_id);
+    assert(new_body.has_value());
+    assert(std::abs(new_body->pose().position().x() - 4.0) < 1e-10);
+    assert(std::abs(new_body->pose().position().y()) < 1e-10);
+    assert(std::abs(new_body->pose().position().z()) < 1e-10);
+
+    const auto* g1 = state.get_geometry("g1");
+    const auto* g2 = state.get_geometry("g2");
+    assert(g1 != nullptr);
+    assert(g2 != nullptr);
+    assert(std::abs(g1->local_pose().position().x() - (-3.0)) < 1e-10);
+    assert(std::abs(g2->local_pose().position().x() - 1.0) < 1e-10);
+
+    assert(std::abs(new_body->mass_properties().center_of_mass().x()) < 1e-10);
+    assert(std::abs(new_body->mass_properties().center_of_mass().y()) < 1e-10);
+    assert(std::abs(new_body->mass_properties().center_of_mass().z()) < 1e-10);
+
+    std::cout << "  PASS: make compound body uses world center of mass" << std::endl;
+}
+
+void test_make_compound_body_reparents_datums() {
+    eng::MechanismState state;
+
+    // Two bodies at different positions
+    const double pos_a[3] = {1.0, 0.0, 0.0};
+    const double pos_b[3] = {3.0, 0.0, 0.0};
+    const double id_orient[4] = {1.0, 0.0, 0.0, 0.0};
+    std::string body_a = state.create_body("BodyA", pos_a, id_orient);
+    std::string body_b = state.create_body("BodyB", pos_b, id_orient);
+
+    // Add one geometry to each body
+    const double origin[3] = {0, 0, 0};
+    mech::MassProperties mp;
+    mp.set_mass(1.0);
+    mp.set_ixx(0.01); mp.set_iyy(0.01); mp.set_izz(0.01);
+    state.add_geometry("g1", "Geom1", body_a, origin, id_orient, mp);
+    state.add_geometry("g2", "Geom2", body_b, origin, id_orient, mp);
+
+    // Add datums to each body
+    // D1 on body_a at local (0.5, 0, 0) → world (1.5, 0, 0)
+    const double d1_pos[3] = {0.5, 0.0, 0.0};
+    auto d1 = state.create_datum(body_a, "D1", d1_pos, id_orient);
+    assert(d1.has_value());
+    std::string d1_id = d1->id().id();
+
+    // D2 on body_b at local (0, 1, 0) → world (3, 1, 0)
+    const double d2_pos[3] = {0.0, 1.0, 0.0};
+    auto d2 = state.create_datum(body_b, "D2", d2_pos, id_orient);
+    assert(d2.has_value());
+    std::string d2_id = d2->id().id();
+
+    // Make compound body with reference body = body_a
+    auto result = state.make_compound_body({"g1", "g2"}, "Merged", false, true, body_a);
+    assert(result.error.empty());
+
+    // New body should be at body_a's pose (1, 0, 0)
+    auto new_body = state.build_body_proto(result.created_body_id);
+    assert(new_body.has_value());
+    assert(std::abs(new_body->pose().position().x() - 1.0) < 1e-10);
+
+    // D1 should be re-parented to new body with local (0.5, 0, 0) (same as before since origin=body_a)
+    const auto* d1_after = state.get_datum(d1_id);
+    assert(d1_after != nullptr);
+    assert(d1_after->parent_body_id().id() == result.created_body_id);
+    assert(std::abs(d1_after->local_pose().position().x() - 0.5) < 1e-10);
+    assert(std::abs(d1_after->local_pose().position().y()) < 1e-10);
+
+    // D2 should be re-parented to new body with local (2, 1, 0)
+    // (world was (3, 1, 0), new body origin at (1, 0, 0) → local = (2, 1, 0))
+    const auto* d2_after = state.get_datum(d2_id);
+    assert(d2_after != nullptr);
+    assert(d2_after->parent_body_id().id() == result.created_body_id);
+    assert(std::abs(d2_after->local_pose().position().x() - 2.0) < 1e-10);
+    assert(std::abs(d2_after->local_pose().position().y() - 1.0) < 1e-10);
+
+    // Both old bodies should be dissolved (datums were re-parented, no blockers)
+    assert(result.dissolved_body_ids.size() == 2);
+    assert(!state.has_body(body_a));
+    assert(!state.has_body(body_b));
+
+    // reparented_datums should contain both datums
+    assert(result.reparented_datums.size() == 2);
+
+    std::cout << "  PASS: make compound body reparents datums" << std::endl;
+}
+
+void test_make_compound_body_datums_with_joints() {
+    eng::MechanismState state;
+
+    // Three bodies: A, B (to merge), C (external)
+    const double pos_a[3] = {1.0, 0.0, 0.0};
+    const double pos_b[3] = {3.0, 0.0, 0.0};
+    const double pos_c[3] = {5.0, 0.0, 0.0};
+    const double id_orient[4] = {1.0, 0.0, 0.0, 0.0};
+    std::string body_a = state.create_body("BodyA", pos_a, id_orient);
+    std::string body_b = state.create_body("BodyB", pos_b, id_orient);
+    std::string body_c = state.create_body("BodyC", pos_c, id_orient);
+
+    const double origin[3] = {0, 0, 0};
+    mech::MassProperties mp;
+    mp.set_mass(1.0);
+    mp.set_ixx(0.01); mp.set_iyy(0.01); mp.set_izz(0.01);
+    state.add_geometry("g_a", "GeomA", body_a, origin, id_orient, mp);
+    state.add_geometry("g_b", "GeomB", body_b, origin, id_orient, mp);
+    state.add_geometry("g_c", "GeomC", body_c, origin, id_orient, mp);
+
+    // Datum on A and datum on C, joint between them
+    auto d_a = state.create_datum(body_a, "DA", origin, id_orient);
+    assert(d_a.has_value());
+    auto d_c = state.create_datum(body_c, "DC", origin, id_orient);
+    assert(d_c.has_value());
+
+    auto joint_draft = make_revolute_joint_draft(d_a->id().id(), d_c->id().id(), "J1");
+    auto joint_result = state.create_joint(joint_draft);
+    assert(joint_result.error.empty());
+
+    // Merge A + B (keep C separate)
+    auto result = state.make_compound_body({"g_a", "g_b"}, "Merged", false, true, body_a);
+    assert(result.error.empty());
+
+    // D_A should be on the new compound body
+    const auto* d_a_after = state.get_datum(d_a->id().id());
+    assert(d_a_after != nullptr);
+    assert(d_a_after->parent_body_id().id() == result.created_body_id);
+
+    // D_C should still be on body_c
+    const auto* d_c_after = state.get_datum(d_c->id().id());
+    assert(d_c_after != nullptr);
+    assert(d_c_after->parent_body_id().id() == body_c);
+
+    // Joint should still be valid (datums on different bodies)
+    assert(d_a_after->parent_body_id().id() != d_c_after->parent_body_id().id());
+
+    std::cout << "  PASS: make compound body datums with joints" << std::endl;
+}
+
+void test_make_compound_body_rejects_self_joint() {
+    eng::MechanismState state;
+
+    // Two bodies to merge, with a joint between them
+    const double pos_a[3] = {1.0, 0.0, 0.0};
+    const double pos_b[3] = {3.0, 0.0, 0.0};
+    const double id_orient[4] = {1.0, 0.0, 0.0, 0.0};
+    std::string body_a = state.create_body("BodyA", pos_a, id_orient);
+    std::string body_b = state.create_body("BodyB", pos_b, id_orient);
+
+    const double origin[3] = {0, 0, 0};
+    mech::MassProperties mp;
+    mp.set_mass(1.0);
+    mp.set_ixx(0.01); mp.set_iyy(0.01); mp.set_izz(0.01);
+    state.add_geometry("g1", "Geom1", body_a, origin, id_orient, mp);
+    state.add_geometry("g2", "Geom2", body_b, origin, id_orient, mp);
+
+    auto d_a = state.create_datum(body_a, "DA", origin, id_orient);
+    auto d_b = state.create_datum(body_b, "DB", origin, id_orient);
+    assert(d_a.has_value() && d_b.has_value());
+
+    auto joint_draft = make_revolute_joint_draft(d_a->id().id(), d_b->id().id(), "J1");
+    auto joint_result = state.create_joint(joint_draft);
+    assert(joint_result.error.empty());
+
+    // Attempt to merge A + B — should fail because joint would connect body to itself
+    auto result = state.make_compound_body({"g1", "g2"}, "Merged", false, true);
+    assert(!result.error.empty());
+    assert(result.error.find("would connect") != std::string::npos);
+
+    // State should be unchanged
+    assert(state.has_body(body_a));
+    assert(state.has_body(body_b));
+    const auto* g1 = state.get_geometry("g1");
+    assert(g1 != nullptr);
+    assert(g1->parent_body_id().id() == body_a);
+
+    std::cout << "  PASS: make compound body rejects self-joint" << std::endl;
+}
+
+void test_make_compound_body_reference_body_origin() {
+    eng::MechanismState state;
+
+    const double pos_a[3] = {1.0, 0.0, 0.0};
+    const double pos_b[3] = {5.0, 0.0, 0.0};
+    const double id_orient[4] = {1.0, 0.0, 0.0, 0.0};
+    std::string body_a = state.create_body("BodyA", pos_a, id_orient);
+    std::string body_b = state.create_body("BodyB", pos_b, id_orient);
+
+    const double origin[3] = {0, 0, 0};
+    mech::MassProperties mp;
+    mp.set_mass(1.0);
+    mp.set_ixx(0.01); mp.set_iyy(0.01); mp.set_izz(0.01);
+    state.add_geometry("g1", "Geom1", body_a, origin, id_orient, mp);
+    state.add_geometry("g2", "Geom2", body_b, origin, id_orient, mp);
+
+    // Merge with reference body = body_a
+    auto result = state.make_compound_body({"g1", "g2"}, "Merged", false, true, body_a);
+    assert(result.error.empty());
+
+    // New body should be at body_a's pose (1, 0, 0), NOT centroid (3, 0, 0)
+    auto new_body = state.build_body_proto(result.created_body_id);
+    assert(new_body.has_value());
+    assert(std::abs(new_body->pose().position().x() - 1.0) < 1e-10);
+    assert(std::abs(new_body->pose().position().y()) < 1e-10);
+
+    // g1 was at world (1,0,0) with identity local, new body at (1,0,0) → local (0,0,0)
+    const auto* g1 = state.get_geometry("g1");
+    assert(g1 != nullptr);
+    assert(std::abs(g1->local_pose().position().x()) < 1e-10);
+
+    // g2 was at world (5,0,0), new body at (1,0,0) → local (4,0,0)
+    const auto* g2 = state.get_geometry("g2");
+    assert(g2 != nullptr);
+    assert(std::abs(g2->local_pose().position().x() - 4.0) < 1e-10);
+
+    std::cout << "  PASS: make compound body reference body origin" << std::endl;
+}
+
+void test_make_compound_body_preserves_full_body_override_mass() {
+    eng::MechanismState state;
+
+    const double pos_a[3] = {0.0, 0.0, 0.0};
+    const double pos_b[3] = {10.0, 0.0, 0.0};
+    const double id_orient[4] = {1.0, 0.0, 0.0, 0.0};
+
+    mech::MassProperties override_mass;
+    override_mass.set_mass(5.0);
+    override_mass.mutable_center_of_mass()->set_x(1.0);
+    override_mass.set_ixx(0.5);
+    override_mass.set_iyy(0.6);
+    override_mass.set_izz(0.7);
+
+    std::string body_a = state.create_body("BodyA", pos_a, id_orient, &override_mass);
+    std::string body_b = state.create_body("BodyB", pos_b, id_orient);
+
+    const double origin[3] = {0.0, 0.0, 0.0};
+    mech::MassProperties geom_a_mass;
+    geom_a_mass.set_mass(1.0);
+    geom_a_mass.set_ixx(0.01);
+    geom_a_mass.set_iyy(0.01);
+    geom_a_mass.set_izz(0.01);
+    state.add_geometry("g_a", "GeomA", body_a, origin, id_orient, geom_a_mass);
+
+    mech::MassProperties geom_b_mass;
+    geom_b_mass.set_mass(2.0);
+    geom_b_mass.set_ixx(0.1);
+    geom_b_mass.set_iyy(0.2);
+    geom_b_mass.set_izz(0.3);
+    state.add_geometry("g_b", "GeomB", body_b, origin, id_orient, geom_b_mass);
+
+    auto result = state.make_compound_body({"g_a", "g_b"}, "Merged", false, true, body_a);
+    assert(result.error.empty());
+
+    auto new_body = state.build_body_proto(result.created_body_id);
+    assert(new_body.has_value());
+    assert(new_body->mass_override());
+    assert(std::abs(new_body->mass_properties().mass() - 7.0) < 1e-10);
+    assert(std::abs(new_body->mass_properties().center_of_mass().x() - (25.0 / 7.0)) < 1e-10);
+    assert(std::abs(new_body->mass_properties().center_of_mass().y()) < 1e-10);
+
+    const double dx_a = 1.0 - (25.0 / 7.0);
+    const double dx_b = 10.0 - (25.0 / 7.0);
+    const double expected_iyy = 0.6 + 5.0 * dx_a * dx_a + 0.2 + 2.0 * dx_b * dx_b;
+    const double expected_izz = 0.7 + 5.0 * dx_a * dx_a + 0.3 + 2.0 * dx_b * dx_b;
+    assert(std::abs(new_body->mass_properties().ixx() - 0.6) < 1e-10);
+    assert(std::abs(new_body->mass_properties().iyy() - expected_iyy) < 1e-10);
+    assert(std::abs(new_body->mass_properties().izz() - expected_izz) < 1e-10);
+
+    std::cout << "  PASS: make compound body preserves full body override mass" << std::endl;
+}
+
+void test_co_translate_datums_only_when_pinned() {
+    eng::MechanismState state;
+
+    const double origin[3] = {0.0, 0.0, 0.0};
+    const double id_orient[4] = {1.0, 0.0, 0.0, 0.0};
+    std::string body_id = state.create_body("Body", origin, id_orient);
+
+    // Add datum at local (1, 0, 0) → world (1, 0, 0) since body is at origin
+    const double datum_pos[3] = {1.0, 0.0, 0.0};
+    auto datum = state.create_datum(body_id, "D1", datum_pos, id_orient);
+    assert(datum.has_value());
+    std::string datum_id = datum->id().id();
+
+    // Move body to (5, 0, 0) WITHOUT co-translating datums
+    const double new_pos[3] = {5.0, 0.0, 0.0};
+    state.set_body_pose(body_id, new_pos, id_orient);
+
+    // Datum local pose should be unchanged (it moves with the body)
+    const auto* d_after = state.get_datum(datum_id);
+    assert(d_after != nullptr);
+    assert(std::abs(d_after->local_pose().position().x() - 1.0) < 1e-10);
+
+    // Now co-translate: datum should get new local pose to preserve world (1, 0, 0)
+    mech::Pose old_pose;
+    old_pose.mutable_position()->set_x(0.0); old_pose.mutable_position()->set_y(0.0); old_pose.mutable_position()->set_z(0.0);
+    old_pose.mutable_orientation()->set_w(1.0); old_pose.mutable_orientation()->set_x(0.0);
+    old_pose.mutable_orientation()->set_y(0.0); old_pose.mutable_orientation()->set_z(0.0);
+
+    mech::Pose new_pose;
+    new_pose.mutable_position()->set_x(5.0); new_pose.mutable_position()->set_y(0.0); new_pose.mutable_position()->set_z(0.0);
+    new_pose.mutable_orientation()->set_w(1.0); new_pose.mutable_orientation()->set_x(0.0);
+    new_pose.mutable_orientation()->set_y(0.0); new_pose.mutable_orientation()->set_z(0.0);
+
+    auto updated = state.co_translate_datums(body_id, old_pose, new_pose);
+    assert(updated.size() == 1);
+
+    // After co-translation: world pos was (1,0,0), new body at (5,0,0) → new local = (-4, 0, 0)
+    const auto* d_pinned = state.get_datum(datum_id);
+    assert(d_pinned != nullptr);
+    assert(std::abs(d_pinned->local_pose().position().x() - (-4.0)) < 1e-10);
+
+    std::cout << "  PASS: co-translate datums only when pinned" << std::endl;
+}
+
 } // namespace
 
 int main() {
@@ -716,8 +1574,26 @@ int main() {
     test_mass_aggregation();
     test_mass_override();
     test_body_lifecycle();
+    test_co_translate_datums_translation();
+    test_co_translate_datums_rotation();
+    test_co_translate_datums_empty();
+    test_make_compound_body_basic();
+    test_make_compound_body_datum_position();
+    test_make_compound_body_rotated_bodies();
+    test_make_compound_body_uses_world_center_of_mass();
+    test_face_linked_datum_tracks_geometry_pose_and_reparent();
+    test_detach_geometry_rejects_face_linked_datums();
+    test_split_body_updates_only_linked_datums();
+    test_update_geometry_primitive_clears_datum_provenance();
+    test_datum_provenance_proto_roundtrip();
     test_attach_detach_geometry();
     test_geometry_proto_roundtrip();
+    test_make_compound_body_reparents_datums();
+    test_make_compound_body_datums_with_joints();
+    test_make_compound_body_rejects_self_joint();
+    test_make_compound_body_reference_body_origin();
+    test_make_compound_body_preserves_full_body_override_mass();
+    test_co_translate_datums_only_when_pinned();
 
     std::cout << "All MechanismState tests passed." << std::endl;
     return 0;

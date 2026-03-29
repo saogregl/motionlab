@@ -91,7 +91,7 @@ function BottomPanel({
       data-slot="bottom-panel"
       data-expanded={expanded || undefined}
       className={cn(
-        'relative flex flex-col overflow-hidden rounded-[var(--panel-radius)] border border-[var(--border-default)] bg-layer-base',
+        'relative flex flex-col overflow-hidden rounded-[var(--panel-radius)] border border-[var(--border-default)] bg-[var(--layer-base-glass)] backdrop-blur-[var(--panel-blur)] shadow-[var(--shadow-low)]',
         expanded ? 'h-[var(--bottom-panel-h)]' : 'h-auto',
         className,
       )}

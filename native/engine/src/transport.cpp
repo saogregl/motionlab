@@ -12,6 +12,7 @@
 #include "asset_cache.h"
 #include "face_classifier.h"
 #include "face_pair_analyzer.h"
+#include "pose_math.h"
 #include "mechanism_state.h"
 #include "shape_registry.h"
 #include "transport_import_project_context.h"
@@ -57,6 +58,54 @@ void log_status(EngineState state, const std::string& message) {
     std::cout << std::endl << std::flush;
 }
 
+// Maps protobuf Command payload_case enum to a human-readable name for tracing.
+static const char* command_name(protocol::Command::PayloadCase pc) {
+    switch (pc) {
+        case protocol::Command::kHandshake:          return "Handshake";
+        case protocol::Command::kPing:               return "Ping";
+        case protocol::Command::kImportAsset:        return "ImportAsset";
+        case protocol::Command::kCreateDatum:        return "CreateDatum";
+        case protocol::Command::kDeleteDatum:        return "DeleteDatum";
+        case protocol::Command::kRenameDatum:        return "RenameDatum";
+        case protocol::Command::kCreateDatumFromFace:return "CreateDatumFromFace";
+        case protocol::Command::kAnalyzeFacePair:    return "AnalyzeFacePair";
+        case protocol::Command::kUpdateBody:         return "UpdateBody";
+        case protocol::Command::kUpdateDatumPose:    return "UpdateDatumPose";
+        case protocol::Command::kCreateJoint:        return "CreateJoint";
+        case protocol::Command::kUpdateJoint:        return "UpdateJoint";
+        case protocol::Command::kDeleteJoint:        return "DeleteJoint";
+        case protocol::Command::kCreateLoad:         return "CreateLoad";
+        case protocol::Command::kUpdateLoad:         return "UpdateLoad";
+        case protocol::Command::kDeleteLoad:         return "DeleteLoad";
+        case protocol::Command::kCreateActuator:     return "CreateActuator";
+        case protocol::Command::kUpdateActuator:     return "UpdateActuator";
+        case protocol::Command::kDeleteActuator:     return "DeleteActuator";
+        case protocol::Command::kCompileMechanism:   return "CompileMechanism";
+        case protocol::Command::kSimulationControl:  return "SimulationControl";
+        case protocol::Command::kScrub:              return "Scrub";
+        case protocol::Command::kSaveProject:        return "SaveProject";
+        case protocol::Command::kLoadProject:        return "LoadProject";
+        case protocol::Command::kRelocateAsset:      return "RelocateAsset";
+        case protocol::Command::kNewProject:         return "NewProject";
+        case protocol::Command::kCreateBody:         return "CreateBody";
+        case protocol::Command::kDeleteBody:         return "DeleteBody";
+        case protocol::Command::kAttachGeometry:     return "AttachGeometry";
+        case protocol::Command::kDetachGeometry:     return "DetachGeometry";
+        case protocol::Command::kUpdateMassProperties: return "UpdateMassProperties";
+        case protocol::Command::kCreatePrimitiveBody: return "CreatePrimitiveBody";
+        case protocol::Command::kUpdatePrimitive:    return "UpdatePrimitive";
+        case protocol::Command::kUpdateCollisionConfig: return "UpdateCollisionConfig";
+        case protocol::Command::kPlaceAssetInScene:  return "PlaceAssetInScene";
+        case protocol::Command::kDeleteGeometry:     return "DeleteGeometry";
+        case protocol::Command::kRenameGeometry:     return "RenameGeometry";
+        case protocol::Command::kMakeCompoundBody:   return "MakeCompoundBody";
+        case protocol::Command::kSplitBody:          return "SplitBody";
+        case protocol::Command::kReparentGeometry:   return "ReparentGeometry";
+        case protocol::Command::kUpdateGeometryPose: return "UpdateGeometryPose";
+        default:                                     return "Unknown";
+    }
+}
+
 std::optional<EngineConfig> parse_args(int argc, char* argv[]) {
     EngineConfig config{};
     bool has_port = false;
@@ -76,6 +125,9 @@ std::optional<EngineConfig> parse_args(int argc, char* argv[]) {
         } else if (arg == "--session-token" && i + 1 < argc) {
             config.session_token = argv[++i];
             has_token = true;
+        } else if (arg == "--log-level" && i + 1 < argc) {
+            config.log_level = spdlog::level::from_str(argv[++i]);
+            config.log_level_set = true;
         }
     }
 
@@ -211,6 +263,7 @@ struct TransportServer::Impl {
     void send_event(ix::WebSocket& ws, const protocol::Event& event) {
         std::string serialized;
         event.SerializeToString(&serialized);
+        spdlog::trace("[EVT] seq={} size={} bytes", event.sequence_id(), serialized.size());
         std::lock_guard<std::mutex> lock(send_mutex_);
         ws.sendBinary(serialized);
     }
@@ -256,6 +309,11 @@ struct TransportServer::Impl {
         if (!cmd.ParseFromString(msg->str)) {
             ws.close(4003, "Invalid protobuf command");
             return;
+        }
+
+        spdlog::trace("[CMD] seq={} type={}", cmd.sequence_id(), command_name(cmd.payload_case()));
+        if (spdlog::should_log(spdlog::level::trace)) {
+            spdlog::trace("[CMD] payload: {}", cmd.ShortDebugString());
         }
 
         switch (cmd.payload_case()) {
@@ -397,7 +455,32 @@ struct TransportServer::Impl {
                 if (!authenticated) break;
                 enqueue_command(cmd.sequence_id(), cmd.place_asset_in_scene(), &Impl::handle_place_asset_in_scene);
                 break;
+            case protocol::Command::kDeleteGeometry:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.delete_geometry(), &Impl::handle_delete_geometry);
+                break;
+            case protocol::Command::kRenameGeometry:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.rename_geometry(), &Impl::handle_rename_geometry);
+                break;
+            case protocol::Command::kMakeCompoundBody:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.make_compound_body(), &Impl::handle_make_compound_body);
+                break;
+            case protocol::Command::kSplitBody:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.split_body(), &Impl::handle_split_body);
+                break;
+            case protocol::Command::kReparentGeometry:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.reparent_geometry(), &Impl::handle_reparent_geometry);
+                break;
+            case protocol::Command::kUpdateGeometryPose:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.update_geometry_pose(), &Impl::handle_update_geometry_pose);
+                break;
             default:
+                spdlog::warn("Unhandled command payload_case={}", static_cast<int>(cmd.payload_case()));
                 break;
         }
     }
@@ -478,6 +561,24 @@ struct TransportServer::Impl {
         }
     }
 
+    mechanism::DatumSurfaceClass to_mech_surface_class(engine::FaceDatumSurfaceClass surface_class) {
+        switch (surface_class) {
+            case engine::FaceDatumSurfaceClass::Planar:
+                return mechanism::DATUM_SURFACE_CLASS_PLANAR;
+            case engine::FaceDatumSurfaceClass::Cylindrical:
+                return mechanism::DATUM_SURFACE_CLASS_CYLINDRICAL;
+            case engine::FaceDatumSurfaceClass::Conical:
+                return mechanism::DATUM_SURFACE_CLASS_CONICAL;
+            case engine::FaceDatumSurfaceClass::Spherical:
+                return mechanism::DATUM_SURFACE_CLASS_SPHERICAL;
+            case engine::FaceDatumSurfaceClass::Toroidal:
+                return mechanism::DATUM_SURFACE_CLASS_TOROIDAL;
+            case engine::FaceDatumSurfaceClass::Other:
+            default:
+                return mechanism::DATUM_SURFACE_CLASS_OTHER;
+        }
+    }
+
     protocol::FacePairAlignment to_proto_face_pair_alignment(engine::FacePairAlignmentKind kind) {
         switch (kind) {
             case engine::FacePairAlignmentKind::Coaxial:
@@ -519,8 +620,36 @@ struct TransportServer::Impl {
         }
     }
 
+    void populate_mech_face_geometry(mechanism::DatumFaceGeometryInfo* fg,
+                                     const engine::FaceDatumPose& pose) {
+        if (pose.axis_direction.has_value()) {
+            auto* ad = fg->mutable_axis_direction();
+            ad->set_x((*pose.axis_direction)[0]);
+            ad->set_y((*pose.axis_direction)[1]);
+            ad->set_z((*pose.axis_direction)[2]);
+        }
+        if (pose.normal.has_value()) {
+            auto* n = fg->mutable_normal();
+            n->set_x((*pose.normal)[0]);
+            n->set_y((*pose.normal)[1]);
+            n->set_z((*pose.normal)[2]);
+        }
+        if (pose.radius.has_value()) {
+            fg->set_radius(*pose.radius);
+        }
+        if (pose.secondary_radius.has_value()) {
+            fg->set_secondary_radius(*pose.secondary_radius);
+        }
+        if (pose.semi_angle.has_value()) {
+            fg->set_semi_angle(*pose.semi_angle);
+        }
+    }
+
     void handle_create_datum(ix::WebSocket& ws, uint64_t sequence_id,
                               const protocol::CreateDatumCommand& cmd) {
+        std::string parent_id = cmd.has_parent_body_id() ? cmd.parent_body_id().id() : "";
+        spdlog::info("CreateDatum '{}' on body {}", cmd.name(), parent_id);
+
         double pos[3] = {0, 0, 0};
         double orient[4] = {1, 0, 0, 0}; // w,x,y,z identity
 
@@ -537,8 +666,9 @@ struct TransportServer::Impl {
                 orient[3] = cmd.local_pose().orientation().z();
             }
         }
+        spdlog::debug("  pose: pos=[{},{},{}] orient=[{},{},{},{}]",
+                       pos[0], pos[1], pos[2], orient[0], orient[1], orient[2], orient[3]);
 
-        std::string parent_id = cmd.has_parent_body_id() ? cmd.parent_body_id().id() : "";
         auto result = mechanism_state.create_datum(parent_id, cmd.name(), pos, orient);
 
         protocol::Event event;
@@ -546,9 +676,9 @@ struct TransportServer::Impl {
         auto* cr = event.mutable_create_datum_result();
         if (result.has_value()) {
             populate_proto_datum(cr->mutable_datum(), result.value());
-            spdlog::debug("Created datum '{}' (id={}) on body {}", cmd.name(), result->id().id(), parent_id);
+            spdlog::debug("  created datum id={}", result->id().id());
         } else {
-            spdlog::warn("Failed to create datum '{}': parent body not found: {}", cmd.name(), parent_id);
+            spdlog::warn("CreateDatum '{}' failed: parent body not found: {}", cmd.name(), parent_id);
             cr->set_error_message("Parent body not found: " + parent_id);
         }
         send_event(ws, event);
@@ -557,6 +687,8 @@ struct TransportServer::Impl {
     void handle_create_datum_from_face(ix::WebSocket& ws, uint64_t sequence_id,
                                        const protocol::CreateDatumFromFaceCommand& cmd) {
         const std::string geometry_id = cmd.has_geometry_id() ? cmd.geometry_id().id() : "";
+        spdlog::info("CreateDatumFromFace '{}' geometry={} face_index={}",
+                     cmd.name(), geometry_id, cmd.face_index());
 
         protocol::Event event;
         event.set_sequence_id(sequence_id);
@@ -564,6 +696,7 @@ struct TransportServer::Impl {
 
         const auto* geometry = mechanism_state.get_geometry(geometry_id);
         if (!geometry) {
+            spdlog::warn("  geometry not found: {}", geometry_id);
             result->set_error_message("Geometry not found: " + geometry_id);
             send_event(ws, event);
             return;
@@ -592,21 +725,53 @@ struct TransportServer::Impl {
 
         auto face_pose = engine::classify_face_for_datum(*shape, cmd.face_index());
         if (!face_pose.has_value()) {
+            spdlog::warn("  face index {} out of range for geometry {}", cmd.face_index(), geometry_id);
             result->set_error_message("Face index out of range for geometry: " + geometry_id);
             send_event(ws, event);
             return;
         }
+
+        spdlog::debug("  face classified: surface_class={} pos=[{},{},{}]",
+                       static_cast<int>(face_pose->surface_class),
+                       face_pose->position[0], face_pose->position[1], face_pose->position[2]);
 
         const double length_scale = import_project.geometry_length_scale(geometry_id);
         for (double& component : face_pose->position) {
             component *= length_scale;
         }
 
-        auto datum = mechanism_state.create_datum(body_id, cmd.name(), face_pose->position, face_pose->orientation);
+        // Transform face pose from geometry-local → body-local space
+        double geom_pos[3], geom_orient[4];
+        engine::extract_pose_arrays(geometry->local_pose(), geom_pos, geom_orient);
+        double body_local_pos[3], body_local_orient[4];
+        engine::compose_pose(geom_pos, geom_orient,
+                             face_pose->position, face_pose->orientation,
+                             body_local_pos, body_local_orient);
+
+        spdlog::debug("  body-local datum pose: pos=[{},{},{}] orient=[{},{},{},{}]",
+                       body_local_pos[0], body_local_pos[1], body_local_pos[2],
+                       body_local_orient[0], body_local_orient[1], body_local_orient[2], body_local_orient[3]);
+
+        auto datum = mechanism_state.create_datum(body_id, cmd.name(), body_local_pos, body_local_orient);
         if (!datum.has_value()) {
+            spdlog::warn("  failed to create datum for body: {}", body_id);
             result->set_error_message("Failed to create datum for body: " + body_id);
             send_event(ws, event);
             return;
+        }
+
+        mechanism::DatumFaceGeometryInfo face_geometry_info;
+        populate_mech_face_geometry(&face_geometry_info, *face_pose);
+        auto annotated = mechanism_state.set_datum_face_attachment(
+            datum->id().id(),
+            geometry_id,
+            cmd.face_index(),
+            face_pose->position,
+            face_pose->orientation,
+            to_mech_surface_class(face_pose->surface_class),
+            &face_geometry_info);
+        if (annotated.has_value()) {
+            datum = annotated;
         }
 
         auto* success = result->mutable_success();
@@ -718,14 +883,36 @@ struct TransportServer::Impl {
             return;
         }
 
-        // Create child datum
+        // Transform child face pose from geometry-local → body-local space
+        double child_geom_pos[3], child_geom_orient[4];
+        engine::extract_pose_arrays(child_geometry->local_pose(), child_geom_pos, child_geom_orient);
+        double child_body_local_pos[3], child_body_local_orient[4];
+        engine::compose_pose(child_geom_pos, child_geom_orient,
+                             analysis->child_pose.position, analysis->child_pose.orientation,
+                             child_body_local_pos, child_body_local_orient);
+
+        // Create child datum in body-local space
         auto child_datum = mechanism_state.create_datum(
             child_body_id, cmd.child_datum_name(),
-            analysis->child_pose.position, analysis->child_pose.orientation);
+            child_body_local_pos, child_body_local_orient);
         if (!child_datum) {
             result->set_error_message("Failed to create child datum on body: " + child_body_id);
             send_event(ws, event);
             return;
+        }
+
+        mechanism::DatumFaceGeometryInfo child_face_geometry_info;
+        populate_mech_face_geometry(&child_face_geometry_info, analysis->child_pose);
+        auto annotated_child = mechanism_state.set_datum_face_attachment(
+            child_datum->id().id(),
+            child_geometry_id,
+            cmd.child_face_index(),
+            analysis->child_pose.position,
+            analysis->child_pose.orientation,
+            to_mech_surface_class(analysis->child_pose.surface_class),
+            &child_face_geometry_info);
+        if (annotated_child.has_value()) {
+            child_datum = annotated_child;
         }
 
         // Build success response
@@ -826,6 +1013,50 @@ struct TransportServer::Impl {
         send_event(ws, event);
     }
 
+    void handle_update_geometry_pose(ix::WebSocket& ws, uint64_t sequence_id,
+                                     const protocol::UpdateGeometryPoseCommand& cmd) {
+        double pos[3] = {0, 0, 0};
+        double orient[4] = {1, 0, 0, 0};
+
+        if (cmd.has_new_local_pose()) {
+            if (cmd.new_local_pose().has_position()) {
+                pos[0] = cmd.new_local_pose().position().x();
+                pos[1] = cmd.new_local_pose().position().y();
+                pos[2] = cmd.new_local_pose().position().z();
+            }
+            if (cmd.new_local_pose().has_orientation()) {
+                orient[0] = cmd.new_local_pose().orientation().w();
+                orient[1] = cmd.new_local_pose().orientation().x();
+                orient[2] = cmd.new_local_pose().orientation().y();
+                orient[3] = cmd.new_local_pose().orientation().z();
+            }
+        }
+
+        std::string geom_id = cmd.has_geometry_id() ? cmd.geometry_id().id() : "";
+        auto result = mechanism_state.update_geometry_local_pose(geom_id, pos, orient);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* rr = event.mutable_update_geometry_pose_result();
+        if (result.entry.has_value()) {
+            *rr->mutable_geometry() = result.entry.value();
+            // Include updated parent body with recomputed aggregate mass
+            std::string parent_id = result.entry.value().parent_body_id().id();
+            if (!parent_id.empty()) {
+                auto parent_body = mechanism_state.build_body_proto(parent_id);
+                if (parent_body.has_value()) {
+                    *rr->mutable_updated_parent_body() = std::move(parent_body.value());
+                }
+            }
+            for (const auto& datum : result.updated_datums) {
+                *rr->add_updated_datums() = datum;
+            }
+        } else {
+            rr->set_error_message(result.error);
+        }
+        send_event(ws, event);
+    }
+
     void populate_proto_joint(mechanism::Joint* proto_joint,
                                const engine::MechanismState::JointEntry& entry) {
         *proto_joint = entry;
@@ -854,13 +1085,26 @@ struct TransportServer::Impl {
             return;
         }
 
-        if (cmd.has_is_fixed()) {
+        if (cmd.has_motion_type()) {
+            mechanism_state.set_body_fixed(
+                body_id, cmd.motion_type() == mechanism::MOTION_TYPE_FIXED);
+        } else if (cmd.has_is_fixed()) {
             mechanism_state.set_body_fixed(body_id, cmd.is_fixed());
         }
         if (cmd.has_name()) {
             mechanism_state.rename_body(body_id, cmd.name());
         }
+
+        // Update body pose; optionally co-translate datums to preserve their world positions
+        std::vector<engine::MechanismState::DatumEntry> co_translated;
         if (cmd.has_pose()) {
+            // Capture old pose before updating
+            const auto* old_body = mechanism_state.get_body(body_id);
+            mechanism::Pose old_pose;
+            if (old_body) {
+                old_pose = old_body->pose();
+            }
+
             double pos[3] = {
                 cmd.pose().position().x(),
                 cmd.pose().position().y(),
@@ -873,12 +1117,24 @@ struct TransportServer::Impl {
                 cmd.pose().orientation().z()
             };
             mechanism_state.set_body_pose(body_id, pos, orient);
+
+            // Only co-translate when explicitly requested (pin datums in world space).
+            // Default (false): datums move with body via parent-child hierarchy.
+            if (cmd.pin_datums_in_world()) {
+                co_translated = mechanism_state.co_translate_datums(body_id, old_pose, cmd.pose());
+            }
         }
 
         // Build response Body proto from mechanism_state
         auto body_proto = mechanism_state.build_body_proto(body_id);
         if (body_proto.has_value()) {
             *result->mutable_body() = std::move(body_proto.value());
+        }
+
+        // Attach co-translated datums to the result
+        for (const auto& datum : co_translated) {
+            auto* d = result->add_updated_datums();
+            *d = datum;
         }
 
         send_event(ws, event);
@@ -890,6 +1146,9 @@ struct TransportServer::Impl {
 
     void handle_create_body(ix::WebSocket& ws, uint64_t sequence_id,
                              const protocol::CreateBodyCommand& cmd) {
+        spdlog::info("CreateBody '{}' (has_pose={}, has_mass={}, is_fixed={})",
+                     cmd.name(), cmd.has_pose(), cmd.has_mass_properties(), cmd.is_fixed());
+
         double pos[3] = {0, 0, 0};
         double orient[4] = {1, 0, 0, 0};
         if (cmd.has_pose()) {
@@ -901,6 +1160,8 @@ struct TransportServer::Impl {
             orient[2] = cmd.pose().orientation().y();
             orient[3] = cmd.pose().orientation().z();
         }
+        spdlog::debug("  pose: pos=[{},{},{}] orient=[{},{},{},{}]",
+                       pos[0], pos[1], pos[2], orient[0], orient[1], orient[2], orient[3]);
 
         const mechanism::MassProperties* mass_ptr = cmd.has_mass_properties() ? &cmd.mass_properties() : nullptr;
         std::string body_id = mechanism_state.create_body(cmd.name(), pos, orient, mass_ptr, cmd.is_fixed());
@@ -911,7 +1172,9 @@ struct TransportServer::Impl {
         auto body_proto = mechanism_state.build_body_proto(body_id);
         if (body_proto.has_value()) {
             *result->mutable_body() = std::move(body_proto.value());
-            spdlog::debug("Created body '{}' (id={})", cmd.name(), body_id);
+            spdlog::debug("  created body id={}", body_id);
+        } else {
+            spdlog::warn("CreateBody '{}' failed: build_body_proto returned nullopt for id={}", cmd.name(), body_id);
         }
         send_event(ws, event);
     }
@@ -973,6 +1236,9 @@ struct TransportServer::Impl {
             if (new_parent_body.has_value()) {
                 *ar->mutable_new_parent_body() = std::move(new_parent_body.value());
             }
+            for (const auto& datum : result.updated_datums) {
+                *ar->add_updated_datums() = datum;
+            }
         } else {
             ar->set_error_message(result.error);
         }
@@ -1001,6 +1267,219 @@ struct TransportServer::Impl {
             }
         } else {
             dr->set_error_message(result.error);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_delete_geometry(ix::WebSocket& ws, uint64_t sequence_id,
+                                 const protocol::DeleteGeometryCommand& cmd) {
+        std::string geom_id = cmd.has_geometry_id() ? cmd.geometry_id().id() : "";
+
+        import_project.remove_geometry_data(geom_id);
+        bool ok = mechanism_state.remove_geometry(geom_id);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_delete_geometry_result();
+        if (ok) {
+            result->mutable_deleted_id()->set_id(geom_id);
+            spdlog::debug("Deleted geometry (id={})", geom_id);
+        } else {
+            result->set_error_message("Geometry not found: " + geom_id);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_rename_geometry(ix::WebSocket& ws, uint64_t sequence_id,
+                                 const protocol::RenameGeometryCommand& cmd) {
+        std::string geom_id = cmd.has_geometry_id() ? cmd.geometry_id().id() : "";
+
+        bool ok = mechanism_state.rename_geometry(geom_id, cmd.name());
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_rename_geometry_result();
+        if (ok) {
+            const auto* geom = mechanism_state.get_geometry(geom_id);
+            if (geom) {
+                *result->mutable_geometry() = *geom;
+            }
+            spdlog::debug("Renamed geometry (id={}) to '{}'", geom_id, cmd.name());
+        } else {
+            result->set_error_message("Geometry not found: " + geom_id);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_make_compound_body(ix::WebSocket& ws, uint64_t sequence_id,
+                                    const protocol::MakeCompoundBodyCommand& cmd) {
+        spdlog::info("handle_make_compound_body: name='{}', geometry_ids_count={}, dissolve={}",
+                     cmd.name(), cmd.geometry_ids_size(), cmd.dissolve_empty_bodies());
+        std::vector<std::string> geometry_ids;
+        geometry_ids.reserve(cmd.geometry_ids_size());
+
+        // Collect old parent IDs for import_project tracking before the operation
+        std::vector<std::pair<std::string, std::string>> geom_old_parents;
+        for (const auto& eid : cmd.geometry_ids()) {
+            geometry_ids.push_back(eid.id());
+            const auto* geom = mechanism_state.get_geometry(eid.id());
+            geom_old_parents.emplace_back(eid.id(), geom ? geom->parent_body_id().id() : "");
+        }
+
+        bool is_fixed = (cmd.motion_type() == mechanism::MOTION_TYPE_FIXED);
+        std::string ref_body_id = cmd.has_reference_body_id() ? cmd.reference_body_id().id() : "";
+        auto result = mechanism_state.make_compound_body(
+            geometry_ids, cmd.name(), is_fixed, cmd.dissolve_empty_bodies(), ref_body_id);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* er = event.mutable_make_compound_body_result();
+
+        if (!result.error.empty()) {
+            spdlog::warn("make_compound_body failed: {}", result.error);
+            er->set_error_message(result.error);
+            send_event(ws, event);
+            return;
+        }
+
+        auto* success = er->mutable_success();
+
+        // Created body
+        auto body_proto = mechanism_state.build_body_proto(result.created_body_id);
+        if (body_proto.has_value()) {
+            *success->mutable_created_body() = std::move(body_proto.value());
+        }
+
+        // Attached geometries
+        for (const auto& gid : geometry_ids) {
+            const auto* geom = mechanism_state.get_geometry(gid);
+            if (geom) {
+                *success->add_attached_geometries() = *geom;
+            }
+        }
+
+        // Track import_project reparenting
+        for (const auto& [gid, old_parent] : geom_old_parents) {
+            import_project.reparent_geometry_data(gid, old_parent, result.created_body_id);
+        }
+
+        // Dissolved body IDs
+        for (const auto& dissolved_id : result.dissolved_body_ids) {
+            success->add_dissolved_body_ids()->set_id(dissolved_id);
+            import_project.remove_body_data(dissolved_id);
+        }
+
+        // Modified bodies (lost geometries but not dissolved)
+        for (const auto& mod_id : result.modified_body_ids) {
+            auto mod_body = mechanism_state.build_body_proto(mod_id);
+            if (mod_body.has_value()) {
+                *success->add_modified_bodies() = std::move(mod_body.value());
+            }
+        }
+
+        // Re-parented datums
+        for (const auto& datum : result.reparented_datums) {
+            *success->add_updated_datums() = datum;
+        }
+
+        spdlog::debug("Made compound body '{}' (id={}) from {} geometries, {} datums reparented",
+                       cmd.name(), result.created_body_id, geometry_ids.size(),
+                       result.reparented_datums.size());
+        send_event(ws, event);
+    }
+
+    void handle_split_body(ix::WebSocket& ws, uint64_t sequence_id,
+                            const protocol::SplitBodyCommand& cmd) {
+        std::string source_body_id = cmd.has_source_body_id() ? cmd.source_body_id().id() : "";
+        std::vector<std::string> geometry_ids;
+        geometry_ids.reserve(cmd.geometry_ids_size());
+        for (const auto& eid : cmd.geometry_ids()) {
+            geometry_ids.push_back(eid.id());
+        }
+
+        bool is_fixed = (cmd.motion_type() == mechanism::MOTION_TYPE_FIXED);
+        auto result = mechanism_state.split_body(
+            source_body_id, geometry_ids, cmd.name(), is_fixed);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* er = event.mutable_split_body_result();
+
+        if (!result.error.empty()) {
+            er->set_error_message(result.error);
+            send_event(ws, event);
+            return;
+        }
+
+        auto* success = er->mutable_success();
+
+        // Created body
+        auto body_proto = mechanism_state.build_body_proto(result.created_body_id);
+        if (body_proto.has_value()) {
+            *success->mutable_created_body() = std::move(body_proto.value());
+        }
+
+        // Attached geometries
+        for (const auto& gid : geometry_ids) {
+            const auto* geom = mechanism_state.get_geometry(gid);
+            if (geom) {
+                *success->add_attached_geometries() = *geom;
+            }
+            import_project.reparent_geometry_data(gid, source_body_id, result.created_body_id);
+        }
+
+        // Source body (with recomputed mass)
+        auto source_proto = mechanism_state.build_body_proto(source_body_id);
+        if (source_proto.has_value()) {
+            *success->mutable_source_body() = std::move(source_proto.value());
+        }
+
+        for (const auto& datum : result.updated_datums) {
+            *success->add_updated_datums() = datum;
+        }
+
+        spdlog::debug("Split {} geometries from body {} into new body '{}' (id={})",
+                       geometry_ids.size(), source_body_id, cmd.name(), result.created_body_id);
+        send_event(ws, event);
+    }
+
+    void handle_reparent_geometry(ix::WebSocket& ws, uint64_t sequence_id,
+                                   const protocol::ReparentGeometryCommand& cmd) {
+        std::string geom_id = cmd.has_geometry_id() ? cmd.geometry_id().id() : "";
+        std::string target_body_id = cmd.has_target_body_id() ? cmd.target_body_id().id() : "";
+
+        const auto* existing_geometry = mechanism_state.get_geometry(geom_id);
+        const std::string old_parent_id = existing_geometry ? existing_geometry->parent_body_id().id() : "";
+
+        auto result = mechanism_state.reparent_geometry(geom_id, target_body_id);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* er = event.mutable_reparent_geometry_result();
+
+        if (result.entry.has_value()) {
+            auto* success = er->mutable_success();
+            *success->mutable_geometry() = result.entry.value();
+            import_project.reparent_geometry_data(geom_id, old_parent_id, target_body_id);
+
+            if (!old_parent_id.empty() && old_parent_id != target_body_id) {
+                auto old_parent_body = mechanism_state.build_body_proto(old_parent_id);
+                if (old_parent_body.has_value()) {
+                    *success->mutable_old_parent_body() = std::move(old_parent_body.value());
+                }
+            }
+            auto new_parent_body = mechanism_state.build_body_proto(target_body_id);
+            if (new_parent_body.has_value()) {
+                *success->mutable_new_parent_body() = std::move(new_parent_body.value());
+            }
+            for (const auto& datum : result.updated_datums) {
+                *success->add_updated_datums() = datum;
+            }
+
+            spdlog::debug("Reparented geometry {} from body {} to body {}",
+                           geom_id, old_parent_id, target_body_id);
+        } else {
+            er->set_error_message(result.error);
         }
         send_event(ws, event);
     }
@@ -1225,6 +1704,9 @@ struct TransportServer::Impl {
             if (body_proto.has_value()) {
                 *success->mutable_parent_body() = std::move(body_proto.value());
             }
+        }
+        for (const auto& datum : geom_result.updated_datums) {
+            *success->add_updated_datums() = datum;
         }
 
         spdlog::info("Updated primitive geometry '{}' (geom={}, shape={})",

@@ -20,6 +20,10 @@ export function getBodyPose(bodyId: string): BodyPose | undefined {
   return bodyPoses.get(bodyId);
 }
 
+export function getBodyPoseCount(): number {
+  return bodyPoses.size;
+}
+
 export function clearBodyPoses(): void {
   bodyPoses.clear();
 }

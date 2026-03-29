@@ -5,6 +5,8 @@
 #include <optional>
 #include <string>
 
+#include <spdlog/spdlog.h>
+
 namespace motionlab {
 
 // Source of truth: schemas/protocol/transport.proto
@@ -24,6 +26,8 @@ const char* engine_state_string(EngineState state);
 struct EngineConfig {
     uint16_t port;
     std::string session_token;
+    spdlog::level::level_enum log_level = spdlog::level::info;
+    bool log_level_set = false;  // true when --log-level was passed on CLI
 };
 
 std::optional<EngineConfig> parse_args(int argc, char* argv[]);

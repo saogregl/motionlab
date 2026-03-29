@@ -16,7 +16,7 @@ export function resolveDatumFacePick(
   if (!spatial?.geometryId || spatial.faceIndex === undefined) {
     return {
       kind: 'error',
-      message: 'Face-aware datum creation unavailable for this pick',
+      message: 'No face detected — click directly on a geometry surface',
     };
   }
 

@@ -66,7 +66,7 @@ static void build_body_proto(mech::Body* pb,
                               const MassPropertiesResult& mass) {
     pb->mutable_id()->set_id(def.id);
     pb->set_name(def.name);
-    pb->set_is_fixed(def.is_fixed);
+    pb->set_motion_type(def.is_fixed ? mech::MOTION_TYPE_FIXED : mech::MOTION_TYPE_DYNAMIC);
 
     auto* pose = pb->mutable_pose();
     auto* p = pose->mutable_position();
@@ -168,7 +168,7 @@ static bool write_project(const fs::path& out_path, const mech::ProjectFile& pro
 static void init_project(mech::ProjectFile& project,
                           const std::string& name,
                           const std::string& mech_id) {
-    project.set_version(1);
+    project.set_version(3);
     auto* meta = project.mutable_metadata();
     meta->set_name(name);
     meta->set_created_at("2026-03-22T00:00:00Z");

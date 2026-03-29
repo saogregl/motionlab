@@ -34,6 +34,7 @@ import { KeyboardShortcutsDialog } from './components/KeyboardShortcutsDialog.js
 import { ProjectTree } from './components/ProjectTree.js';
 import { SimulationSettingsDialog } from './components/SimulationSettingsDialog.js';
 import { MainToolbar } from './components/MainToolbar.js';
+import { HomeScreen } from './components/home/HomeScreen.js';
 import { ResultsLeftPanel } from './components/ResultsLeftPanel.js';
 import { ResultsBottomDock } from './components/ResultsBottomDock.js';
 import { ResultsToolbar } from './components/ResultsToolbar.js';
@@ -210,6 +211,7 @@ initCommands();
 
 export function App() {
   const connect = useEngineConnection((s) => s.connect);
+  const hasActiveProject = useMechanismStore((s) => s.hasActiveProject);
   const projectName = useMechanismStore((s) => s.projectName);
   const isDirty = useMechanismStore((s) => s.isDirty);
   const openDialog = useDialogStore((s) => s.openDialog);
@@ -257,21 +259,22 @@ export function App() {
 
   useEffect(() => {
     connect();
+    const cleanups: Array<() => void> = [];
     // Register dirty check callback for before-quit dialog (desktop only)
     if (typeof window.motionlab?.onCheckDirty === 'function') {
-      window.motionlab.onCheckDirty(() => useMechanismStore.getState().isDirty);
+      cleanups.push(window.motionlab.onCheckDirty(() => useMechanismStore.getState().isDirty));
     }
     // Register auto-save tick handler (Epic 20.2)
     if (typeof window.motionlab?.onAutoSaveTick === 'function') {
-      window.motionlab.onAutoSaveTick(() => {
+      cleanups.push(window.motionlab.onAutoSaveTick(() => {
         const { isDirty, projectName } = useMechanismStore.getState();
         if (!isDirty) return;
         sendAutoSave(projectName);
-      });
+      }));
     }
     // Register file-open handler for file associations / CLI args (Epic 20.2)
     if (typeof window.motionlab?.onOpenFileRequest === 'function') {
-      window.motionlab.onOpenFileRequest(async (filePath: string) => {
+      cleanups.push(window.motionlab.onOpenFileRequest(async (filePath: string) => {
         const { isDirty } = useMechanismStore.getState();
         if (isDirty) {
           const confirmed = window.confirm('You have unsaved changes. Discard them?');
@@ -279,8 +282,11 @@ export function App() {
         }
         const file = await window.motionlab!.readFileByPath!(filePath);
         if (file) sendLoadProject(file.data);
-      });
+      }));
     }
+    return () => {
+      for (const cleanup of cleanups) cleanup();
+    };
   }, [connect]);
 
   // Listen for missing assets from project loads
@@ -318,51 +324,55 @@ export function App() {
   return (
     <TooltipProvider>
       <LayoutProvider>
-      <AppShell
-        topBar={
-          <TopBar
-            projectName={projectName}
-            isDirty={isDirty}
-            status={<EngineStatusBadge />}
-            actions={<TopBarActions />}
+        {hasActiveProject ? (
+          <AppShell
+            topBar={
+              <TopBar
+                projectName={projectName}
+                isDirty={isDirty}
+                status={<EngineStatusBadge />}
+                actions={<TopBarActions />}
+              />
+            }
+            leftPanel={
+              activeWorkspace === 'build' ? (
+                <LeftPanel createAction={<EntityCreationMenu />}>
+                  <ProjectTree />
+                </LeftPanel>
+              ) : (
+                <ResultsLeftPanel />
+              )
+            }
+            leftPanelOpen={activeWorkspace === 'build' ? leftPanelOpen : resultsLeftPanelOpen}
+            leftPanelWidth={activeWorkspace === 'build' ? leftPanelWidth : resultsLeftPanelWidth}
+            onLeftPanelWidthChange={activeWorkspace === 'build' ? setLeftPanelWidth : setResultsLeftPanelWidth}
+            rightPanel={
+              activeWorkspace === 'build' ? (
+                <RightPanel>
+                  <EntityInspector />
+                </RightPanel>
+              ) : undefined
+            }
+            rightPanelOpen={activeWorkspace === 'build' ? rightPanelOpen : false}
+            rightPanelWidth={activeWorkspace === 'build' ? rightPanelWidth : undefined}
+            onRightPanelWidthChange={activeWorkspace === 'build' ? setRightPanelWidth : undefined}
+            viewport={<ViewportOverlay />}
+            bottomPanel={activeWorkspace === 'build' ? <BuildBottomPanel /> : <ResultsBottomDock />}
+            viewportOverlays={activeWorkspace === 'build' ? <MainToolbar /> : <ResultsToolbar />}
+            tabBar={
+              <WorkspaceTabBar
+                tabs={[
+                  { id: 'build', label: 'Build', active: activeWorkspace === 'build' },
+                  { id: 'results', label: 'Results', active: activeWorkspace === 'results' },
+                ]}
+                onTabSelect={(id) => setActiveWorkspace(id as 'build' | 'results')}
+              />
+            }
+            statusBar={<StatusBarContainer />}
           />
-        }
-        leftPanel={
-          activeWorkspace === 'build' ? (
-            <LeftPanel createAction={<EntityCreationMenu />}>
-              <ProjectTree />
-            </LeftPanel>
-          ) : (
-            <ResultsLeftPanel />
-          )
-        }
-        leftPanelOpen={activeWorkspace === 'build' ? leftPanelOpen : resultsLeftPanelOpen}
-        leftPanelWidth={activeWorkspace === 'build' ? leftPanelWidth : resultsLeftPanelWidth}
-        onLeftPanelWidthChange={activeWorkspace === 'build' ? setLeftPanelWidth : setResultsLeftPanelWidth}
-        rightPanel={
-          activeWorkspace === 'build' ? (
-            <RightPanel>
-              <EntityInspector />
-            </RightPanel>
-          ) : undefined
-        }
-        rightPanelOpen={activeWorkspace === 'build' ? rightPanelOpen : false}
-        rightPanelWidth={activeWorkspace === 'build' ? rightPanelWidth : undefined}
-        onRightPanelWidthChange={activeWorkspace === 'build' ? setRightPanelWidth : undefined}
-        viewport={<ViewportOverlay />}
-        bottomPanel={activeWorkspace === 'build' ? <BuildBottomPanel /> : <ResultsBottomDock />}
-        viewportOverlays={activeWorkspace === 'build' ? <MainToolbar /> : <ResultsToolbar />}
-        tabBar={
-          <WorkspaceTabBar
-            tabs={[
-              { id: 'build', label: 'Build', active: activeWorkspace === 'build' },
-              { id: 'results', label: 'Results', active: activeWorkspace === 'results' },
-            ]}
-            onTabSelect={(id) => setActiveWorkspace(id as 'build' | 'results')}
-          />
-        }
-        statusBar={<StatusBarContainer />}
-      />
+        ) : (
+          <HomeScreen />
+        )}
       </LayoutProvider>
       <Toaster />
       <CommandPalette />

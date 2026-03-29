@@ -184,6 +184,10 @@ export function JointInspector({ jointId }: { jointId: string }) {
                   <SelectItem value="spherical">Spherical</SelectItem>
                   <SelectItem value="cylindrical">Cylindrical</SelectItem>
                   <SelectItem value="planar">Planar</SelectItem>
+                  <SelectItem value="universal">Universal</SelectItem>
+                  <SelectItem value="distance">Distance</SelectItem>
+                  <SelectItem value="point-line">Point-Line</SelectItem>
+                  <SelectItem value="point-plane">Point-Plane</SelectItem>
                 </SelectContent>
               </Select>
             ),
@@ -340,6 +344,46 @@ export function JointInspector({ jointId }: { jointId: string }) {
               disabled={isSimulating}
             />
           </PropertyRow>
+        </InspectorSection>
+      )}
+
+      {(joint.type === 'revolute' || joint.type === 'prismatic' || joint.type === 'cylindrical') && (
+        <InspectorSection title="Dynamics" defaultOpen={false}>
+          {joint.type === 'cylindrical' ? (
+            <>
+              <PropertyRow label="Trans. Damping" numeric>
+                <NumericInput
+                  value={joint.translationalDamping}
+                  onChange={(v) => sendUpdateJoint(jointId, { translationalDamping: v })}
+                  step={0.1}
+                  precision={4}
+                  min={0}
+                  disabled={isSimulating}
+                />
+              </PropertyRow>
+              <PropertyRow label="Rot. Damping" numeric>
+                <NumericInput
+                  value={joint.rotationalDamping}
+                  onChange={(v) => sendUpdateJoint(jointId, { rotationalDamping: v })}
+                  step={0.1}
+                  precision={4}
+                  min={0}
+                  disabled={isSimulating}
+                />
+              </PropertyRow>
+            </>
+          ) : (
+            <PropertyRow label="Damping" numeric>
+              <NumericInput
+                value={joint.damping}
+                onChange={(v) => sendUpdateJoint(jointId, { damping: v })}
+                step={0.1}
+                precision={4}
+                min={0}
+                disabled={isSimulating}
+              />
+            </PropertyRow>
+          )}
         </InspectorSection>
       )}
 

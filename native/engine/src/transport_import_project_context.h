@@ -120,6 +120,10 @@ private:
     std::unordered_map<std::string, AssetTopologyContext> asset_topology_contexts_;
     std::unordered_map<std::string, std::string> body_topology_keys_;
     std::unordered_map<std::string, std::string> geometry_topology_keys_;
+
+    // geometry_id -> positional index within the original STEP file body list.
+    // Stable across body merge/split — does not change when geometry is reparented.
+    std::unordered_map<std::string, size_t> geometry_topology_body_index_;
 };
 
 } // namespace motionlab::transport_detail

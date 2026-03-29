@@ -28,14 +28,28 @@ export class EngineSupervisor {
   private restartCount = 0;
   private logStream: fs.WriteStream | null = null;
   private logDir: string = '';
+  private logPath: string | null = null;
+  private externalLogDir: string | null = null;
 
   /** Get the log directory path (for IPC exposure). */
   getLogDir(): string {
     return this.logDir;
   }
 
+  getLogPath(): string | null {
+    return this.logPath;
+  }
+
+  getChildPid(): number | null {
+    return this.child?.pid ?? null;
+  }
+
+  setLogDir(logDir: string | null): void {
+    this.externalLogDir = logDir;
+  }
+
   private initLogFile(): void {
-    this.logDir = path.join(app.getPath('userData'), 'logs');
+    this.logDir = this.externalLogDir ?? path.join(app.getPath('userData'), 'logs');
     fs.mkdirSync(this.logDir, { recursive: true });
 
     // Rotate: delete logs older than LOG_MAX_AGE_DAYS
@@ -53,8 +67,8 @@ export class EngineSupervisor {
     } catch { /* ignore rotation errors */ }
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const logPath = path.join(this.logDir, `motionlab-${timestamp}.log`);
-    this.logStream = fs.createWriteStream(logPath, { flags: 'a' });
+    this.logPath = path.join(this.logDir, `motionlab-${timestamp}.log`);
+    this.logStream = fs.createWriteStream(this.logPath, { flags: 'a' });
     this.supervisorLog('Session started');
   }
 
@@ -148,6 +162,11 @@ export class EngineSupervisor {
     const port = await this.findFreePort();
 
     const args = [...baseArgs, '--port', String(port), '--session-token', sessionToken];
+
+    const logLevel = process.env.MOTIONLAB_LOG_LEVEL;
+    if (logLevel) {
+      args.push('--log-level', logLevel);
+    }
 
     this.supervisorLog(`Spawning engine on port ${port}`);
     const child = spawn(command, args, {

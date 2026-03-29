@@ -83,7 +83,7 @@ function FloatingPanel({
       className={cn(
         'absolute top-[var(--panel-float-inset)] bottom-[var(--side-panel-bottom,var(--panel-float-inset))] z-[var(--z-panel)]',
         'flex flex-col overflow-hidden',
-        'rounded-[var(--panel-radius)] border border-[var(--border-default)] bg-layer-base',
+        'rounded-[var(--panel-radius)] border border-[var(--border-default)] bg-[var(--layer-base-glass)] backdrop-blur-[var(--panel-blur)] shadow-[var(--shadow-low)]',
         'transition-[transform,opacity] duration-[var(--duration-normal)] ease-[var(--easing-default)]',
         isLeft ? 'left-[var(--panel-float-inset)]' : 'right-[var(--panel-float-inset)]',
         open
@@ -124,7 +124,7 @@ function FloatingPanelHeader({ children, className }: FloatingPanelHeaderProps) 
     <div
       data-slot="floating-panel-header"
       className={cn(
-        'flex h-11 shrink-0 items-center justify-between border-b border-[var(--border-default)] bg-layer-base ps-4 pe-4',
+        'flex h-11 shrink-0 items-center justify-between border-b border-[var(--border-default)] ps-4 pe-4',
         className,
       )}
     >

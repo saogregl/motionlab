@@ -122,7 +122,7 @@ export function HomeScreen() {
   const NavIcon = meta.icon;
 
   return (
-    <div className="flex flex-1 overflow-hidden">
+    <div className="flex h-screen w-screen overflow-hidden bg-bg-app font-[family-name:var(--font-ui)] text-[length:var(--text-base)] text-text-primary">
       <HomeSidebar
         activeItem={activeNav}
         onNavigate={setActiveNav}
@@ -130,7 +130,7 @@ export function HomeScreen() {
         onOpenProject={handleOpenProject}
         engineReady={isReady}
       />
-      <main className="flex flex-1 flex-col overflow-y-auto bg-layer-recessed">
+      <main className="flex min-w-0 flex-1 flex-col overflow-y-auto bg-layer-recessed">
         {/* Page header */}
         <div className="flex items-center gap-2 border-b border-border-default bg-layer-base ps-4 pe-4 py-3">
           <NavIcon className="size-4 shrink-0 text-text-tertiary" strokeWidth={1.5} />

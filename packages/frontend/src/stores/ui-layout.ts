@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 import { useToolModeStore } from './tool-mode.js';
 
-export type Workspace = 'home' | 'build' | 'results';
+export type Workspace = 'build' | 'results';
 
 interface UILayoutState {
   // Workspace
@@ -52,7 +52,7 @@ function clampWidth(w: number): number {
 
 export const useUILayoutStore = create<UILayoutState>()((set, get) => ({
   // Workspace
-  activeWorkspace: 'home',
+  activeWorkspace: 'build',
   setActiveWorkspace: (workspace) => {
     if (get().activeWorkspace === workspace) return;
     set({ activeWorkspace: workspace });

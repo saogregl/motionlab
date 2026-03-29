@@ -1,25 +1,24 @@
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { useViewportInsets } from '@motionlab/ui';
 import {
   Bounds,
-  useBounds,
   Environment,
   GizmoHelper,
   GizmoViewport,
   Grid,
   OrbitControls,
   TransformControls,
+  useBounds,
 } from '@react-three/drei';
-
-import { useViewportInsets } from '@motionlab/ui';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
-import { ACESFilmicToneMapping, Object3D, OrthographicCamera } from 'three';
+import { ACESFilmicToneMapping, DoubleSide, Object3D, OrthographicCamera } from 'three';
 
 import {
-  PickingManager,
   type FaceHoverCallback,
   type HoverCallback,
   type InteractionMode,
   type PickCallback,
+  PickingManager,
   type SpatialPickData,
 } from './picking-three.js';
 import { createMaterialFactory } from './rendering/materials-three.js';
@@ -28,13 +27,7 @@ import { SceneGraphManager } from './scene-graph-three.js';
 
 const DEFAULT_R3F_EVENT_LAYER = 0;
 
-export type {
-  FaceHoverCallback,
-  HoverCallback,
-  InteractionMode,
-  PickCallback,
-  SpatialPickData,
-};
+export type { FaceHoverCallback, HoverCallback, InteractionMode, PickCallback, SpatialPickData };
 
 export type ViewportTheme = 'light' | 'dark';
 
@@ -68,6 +61,24 @@ function GizmoBridge({
 }) {
   const [target, setTarget] = useState<Object3D | null>(null);
   const [mode, setMode] = useState<'translate' | 'rotate'>('translate');
+  const [space, setSpace] = useState<'local' | 'world'>('world');
+  const [snap, setSnap] = useState({ translationSnap: 0.01, rotationSnap: Math.PI / 12 });
+  const [shiftHeld, setShiftHeld] = useState(false);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') setShiftHeld(true);
+    };
+    const up = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') setShiftHeld(false);
+    };
+    window.addEventListener('keydown', down);
+    window.addEventListener('keyup', up);
+    return () => {
+      window.removeEventListener('keydown', down);
+      window.removeEventListener('keyup', up);
+    };
+  }, []);
 
   useEffect(() => {
     if (!sceneGraph) {
@@ -78,6 +89,8 @@ function GizmoBridge({
     const nextTarget = sceneGraph.getGizmoTargetObject();
     setTarget(nextTarget);
     setMode(sceneGraph.getGizmoMode() === 'rotate' ? 'rotate' : 'translate');
+    setSnap(sceneGraph.getGizmoSnap());
+    setSpace(sceneGraph.getGizmoSpace());
   }, [sceneGraph, revision]);
 
   if (!sceneGraph || !target || sceneGraph.getGizmoMode() === 'off') {
@@ -88,6 +101,9 @@ function GizmoBridge({
     <TransformControls
       object={target}
       mode={mode}
+      space={space}
+      translationSnap={shiftHeld ? snap.translationSnap : null}
+      rotationSnap={shiftHeld ? snap.rotationSnap : null}
       onMouseDown={() => {
         onDragStart?.();
       }}
@@ -106,10 +122,7 @@ function GizmoLayout({ theme }: { theme: ViewportTheme }) {
   const insets = useViewportInsets();
   return (
     <GizmoHelper alignment="bottom-right" margin={[72 + insets.right, 72 + insets.bottom]}>
-      <GizmoViewport
-        axisColors={VIEWPORT_THEMES[theme].axisColors}
-        labelColor="white"
-      />
+      <GizmoViewport axisColors={VIEWPORT_THEMES[theme].axisColors} labelColor="white" />
     </GizmoHelper>
   );
 }
@@ -120,7 +133,7 @@ function SceneSetup({
   onHover,
   onFaceHover,
   interactionMode,
-  gridVisible = false,
+  gridVisible = true,
   theme = 'dark',
 }: SceneSetupProps) {
   const scene = useThree((s) => s.scene);
@@ -167,13 +180,6 @@ function SceneSetup({
     sceneGraph.onGizmoStateChanged = () => {
       setGizmoRevision((value) => value + 1);
     };
-
-    // Bridge grid toggle from imperative SceneGraphManager to React state.
-    // Also sync the initial state so React starts consistent with the manager.
-    sceneGraph.onGridVisibilityChanged = () => {
-      setShowGrid(sceneGraph.gridVisible);
-    };
-    setShowGrid(sceneGraph.gridVisible);
 
     sceneGraphRef.current = sceneGraph;
     setSceneGraphState(sceneGraph);
@@ -253,6 +259,7 @@ function SceneSetup({
           fadeStrength={1.2}
           cellThickness={0.6}
           sectionThickness={1.0}
+          side={DoubleSide}
           position={[0, -0.001, 0]}
         />
       )}
@@ -300,7 +307,9 @@ function BoundsBridge({ sceneGraph }: { sceneGraph: SceneGraphManager | null }) 
   const bounds = useBounds();
   useEffect(() => {
     sceneGraph?.setBoundsApi(bounds);
-    return () => { sceneGraph?.setBoundsApi(null); };
+    return () => {
+      sceneGraph?.setBoundsApi(null);
+    };
   }, [sceneGraph, bounds]);
   return null;
 }

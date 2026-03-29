@@ -349,12 +349,12 @@ The user's last selection is persisted as the default for next time.
 - `packages/frontend/src/components/ProjectTree.tsx` — Context menu on loose geometries: "Make Body" groups selected geometries under a new body
 - `packages/frontend/src/stores/tool-mode.ts` — Implement as a direct command (no mode needed)
 
-**Flow:** Select loose geometries (Shift+click or Ctrl/Cmd+click) → right-click → "Make Body" → `CreateBodyCommand` + `AttachGeometryCommand` for each selected geometry.
+**Flow:** Select loose geometries or existing bodies (Shift+click or Ctrl/Cmd+click) → right-click → "Make Body" → `MakeCompoundBodyCommand` groups the selection while preserving world placement. When a selected body is present, its frame becomes the merged body origin; loose-geometry-only merges fall back to centroid placement.
 
 **Acceptance criteria:**
 - "Make Body" groups selected loose geometries into a new body
 - Mass aggregates from attached geometries
-- New body appears in tree and viewport at the centroid of its geometries
+- New body appears in tree and viewport without moving the merged selection in world space
 
 ### D4. Frontend: Geometry re-parenting
 

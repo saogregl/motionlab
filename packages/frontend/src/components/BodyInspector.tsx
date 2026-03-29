@@ -16,9 +16,9 @@ import type { BodyMassProperties } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
-import { IdentitySection, MassSection, PoseSection } from './inspector/sections/index.js';
+import { IdentitySection, MassSection, TransformSection } from './inspector/sections/index.js';
 
-const DEBOUNCE_MS = 300;
+const MASS_DEBOUNCE_MS = 300;
 
 export function BodyInspector() {
   const selectedIds = useSelectionStore((s) => s.selectedIds);
@@ -40,7 +40,7 @@ export function BodyInspector() {
       clearTimeout(massUpdateTimer.current);
       massUpdateTimer.current = setTimeout(() => {
         sendUpdateMassProperties(bodyId, override, mp);
-      }, DEBOUNCE_MS);
+      }, MASS_DEBOUNCE_MS);
     },
     [],
   );
@@ -63,6 +63,14 @@ export function BodyInspector() {
       entityType="Body"
       entityIcon={<Box className="size-5" />}
     >
+      <TransformSection
+        frameLabel="(world)"
+        position={body.pose.position}
+        rotation={body.pose.rotation}
+        disabled={isSimulating}
+        onTransformChange={(pose) => sendUpdateBody(body.id, { pose })}
+      />
+
       <IdentitySection
         entityId={body.id}
         entityType="body"
@@ -123,10 +131,12 @@ export function BodyInspector() {
       )}
 
       {livePose && (
-        <PoseSection
-          title="Current Pose"
+        <TransformSection
+          frameLabel="(simulation)"
           position={livePose.position}
           rotation={livePose.rotation}
+          editable={false}
+          defaultOpen={true}
         />
       )}
     </InspectorPanel>

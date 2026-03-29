@@ -4,8 +4,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   DETACHED_BODY_PREFIX,
   registerSceneGraph,
-  sendCreateDatum,
   sendAnalyzeFacePair,
+  sendCreateDatum,
   sendCreateDatumFromFace,
   sendUpdateBody,
   sendUpdateDatumPose,
@@ -13,7 +13,13 @@ import {
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useLoadCreationStore } from '../stores/load-creation.js';
-import type { ActuatorState, BodyPose, GeometryState, LoadState } from '../stores/mechanism.js';
+import type {
+  ActuatorState,
+  BodyPose,
+  BodyState,
+  GeometryState,
+  LoadState,
+} from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
@@ -44,13 +50,23 @@ function localPoseFromSpatial(spatial: SpatialPickData): {
   const m = spatial.bodyWorldMatrix;
   // Simple inversion for rigid transforms: transpose rotation, negate translated position
   // m = [r00 r10 r20 0 | r01 r11 r21 0 | r02 r12 r22 0 | tx ty tz 1] (column-major)
-  const r00 = m[0], r01 = m[4], r02 = m[8];
-  const r10 = m[1], r11 = m[5], r12 = m[9];
-  const r20 = m[2], r21 = m[6], r22 = m[10];
-  const tx = m[12], ty = m[13], tz = m[14];
+  const r00 = m[0],
+    r01 = m[4],
+    r02 = m[8];
+  const r10 = m[1],
+    r11 = m[5],
+    r12 = m[9];
+  const r20 = m[2],
+    r21 = m[6],
+    r22 = m[10];
+  const tx = m[12],
+    ty = m[13],
+    tz = m[14];
 
   // Local position = R^T * (worldPoint - translation)
-  const dx = wp.x - tx, dy = wp.y - ty, dz = wp.z - tz;
+  const dx = wp.x - tx,
+    dy = wp.y - ty,
+    dz = wp.z - tz;
   const localPos = {
     x: r00 * dx + r10 * dy + r20 * dz,
     y: r01 * dx + r11 * dy + r21 * dz,
@@ -59,7 +75,9 @@ function localPoseFromSpatial(spatial: SpatialPickData): {
 
   // Compute quaternion that rotates [0,0,1] to the world normal direction,
   // then transform to body-local frame
-  const nx = wn.x, ny = wn.y, nz = wn.z;
+  const nx = wn.x,
+    ny = wn.y,
+    nz = wn.z;
   // Transform normal to body-local
   const localNx = r00 * nx + r10 * ny + r20 * nz;
   const localNy = r01 * nx + r11 * ny + r21 * nz;
@@ -74,7 +92,9 @@ function localPoseFromSpatial(spatial: SpatialPickData): {
     return { position: localPos, orientation: { x: 1, y: 0, z: 0, w: 0 } };
   }
   // cross([0,0,1], localNormal) = [-localNy, localNx, 0]
-  const cx = -localNy, cy = localNx, cz = 0;
+  const cx = -localNy,
+    cy = localNx,
+    cz = 0;
   const w = 1 + dot;
   const len = Math.sqrt(cx * cx + cy * cy + cz * cz + w * w);
   return {
@@ -106,6 +126,10 @@ function poseSignature(pose: BodyPose): string {
     pose.rotation.z,
     pose.rotation.w,
   ].join('|');
+}
+
+export function bodyPoseSignature(body: Pick<BodyState, 'pose'>): string {
+  return poseSignature(body.pose);
 }
 
 function loadSignature(load: LoadState): string {
@@ -186,7 +210,10 @@ export function useViewportBridge() {
         const pose = geometry.localPose;
         sceneGraph.upsertBody(syntheticId, geometry.name, convertPose(pose));
         sceneGraph.addBodyGeometry(
-          syntheticId, geometry.id, geometry.name, geometry.meshData,
+          syntheticId,
+          geometry.id,
+          geometry.name,
+          geometry.meshData,
           { position: [0, 0, 0], rotation: [0, 0, 0, 1] },
           geometry.partIndex,
         );
@@ -228,22 +255,42 @@ export function useViewportBridge() {
       if (event.entityKind === 'datum') {
         sendUpdateDatumPose(event.entityId, {
           position: { x: event.position[0], y: event.position[1], z: event.position[2] },
-          orientation: { x: event.rotation[0], y: event.rotation[1], z: event.rotation[2], w: event.rotation[3] },
+          orientation: {
+            x: event.rotation[0],
+            y: event.rotation[1],
+            z: event.rotation[2],
+            w: event.rotation[3],
+          },
         });
       } else if (event.entityKind === 'body') {
         sendUpdateBody(event.entityId, {
           pose: {
             position: { x: event.position[0], y: event.position[1], z: event.position[2] },
-            orientation: { x: event.rotation[0], y: event.rotation[1], z: event.rotation[2], w: event.rotation[3] },
+            orientation: {
+              x: event.rotation[0],
+              y: event.rotation[1],
+              z: event.rotation[2],
+              w: event.rotation[3],
+            },
           },
         });
       }
       sceneGraph.refreshJointPositions();
     });
 
+    // Sync display state changes from scene graph to tool-mode store
+    sceneGraph.onGridVisibilityChanged = () => {
+      useToolModeStore.getState().setGridVisible(sceneGraph.gridVisible);
+    };
+    sceneGraph.onDatumsVisibilityChanged = () => {
+      useToolModeStore.getState().setDatumsVisible(sceneGraph.datumsVisible);
+    };
+    sceneGraph.onJointAnchorsVisibilityChanged = () => {
+      useToolModeStore.getState().setJointsVisible(sceneGraph.jointAnchorsVisible);
+    };
+
     // Signal the subscription effect to wire up now that the scene graph is ready.
     setSgTrigger((t) => t + 1);
-
   }, []);
 
   // Store subscriptions — set up after scene is ready, tear down on unmount
@@ -252,6 +299,10 @@ export function useViewportBridge() {
     if (!sg) return;
 
     const trackedBodyIds = new Set<string>(useMechanismStore.getState().bodies.keys());
+    const trackedBodyPoseSignatures = new Map<string, string>();
+    for (const [id, body] of useMechanismStore.getState().bodies) {
+      trackedBodyPoseSignatures.set(id, bodyPoseSignature(body));
+    }
     const trackedGeometries = new Map(useMechanismStore.getState().geometries);
     const trackedDatumIds = new Set<string>(useMechanismStore.getState().datums.keys());
     const trackedDatumSignatures = new Map<string, string>();
@@ -313,28 +364,26 @@ export function useViewportBridge() {
       // --- Body diff ---
       const currentBodyIds = new Set<string>(state.bodies.keys());
 
-      for (const id of currentBodyIds) {
+      for (const [id, body] of state.bodies) {
+        const nextBodyPoseSignature = bodyPoseSignature(body);
         if (!trackedBodyIds.has(id)) {
           // New body — add with attached geometry meshes
-          const body = state.bodies.get(id);
-          if (!body) continue;
           const bodyGeoms = geometriesByBody.get(body.id) ?? [];
-          if (bodyGeoms.length === 0) continue;
-          sg.upsertBody(body.id, body.name, convertPose(body.pose));
-          for (const geometry of bodyGeoms) {
-            sg.addBodyGeometry(
-              body.id,
-              geometry.id,
-              geometry.name,
-              geometry.meshData,
-              convertPose(geometry.localPose),
-              geometry.partIndex,
-            );
+          if (bodyGeoms.length > 0) {
+            sg.upsertBody(body.id, body.name, convertPose(body.pose));
+            for (const geometry of bodyGeoms) {
+              sg.addBodyGeometry(
+                body.id,
+                geometry.id,
+                geometry.name,
+                geometry.meshData,
+                convertPose(geometry.localPose),
+                geometry.partIndex,
+              );
+            }
           }
         } else if (bodiesNeedingRebuild.has(id)) {
           // Body exists but geometries changed — rebuild child geometry meshes
-          const body = state.bodies.get(id);
-          if (!body) continue;
           sg.removeBody(id);
           const bodyGeoms = geometriesByBody.get(body.id) ?? [];
           if (bodyGeoms.length > 0) {
@@ -350,12 +399,20 @@ export function useViewportBridge() {
               );
             }
           }
+        } else {
+          const prevBodyPoseSignature = trackedBodyPoseSignatures.get(id);
+          if (prevBodyPoseSignature !== nextBodyPoseSignature) {
+            sg.updateBodyTransform(id, convertPose(body.pose));
+          }
         }
+
+        trackedBodyPoseSignatures.set(id, nextBodyPoseSignature);
       }
 
       for (const id of trackedBodyIds) {
         if (!currentBodyIds.has(id)) {
           sg.removeBody(id);
+          trackedBodyPoseSignatures.delete(id);
         }
       }
 
@@ -370,7 +427,10 @@ export function useViewportBridge() {
         const pose = geometry.localPose;
         sg.upsertBody(syntheticId, geometry.name, convertPose(pose));
         sg.addBodyGeometry(
-          syntheticId, geometry.id, geometry.name, geometry.meshData,
+          syntheticId,
+          geometry.id,
+          geometry.name,
+          geometry.meshData,
           { position: [0, 0, 0], rotation: [0, 0, 0, 1] },
           geometry.partIndex,
         );
@@ -378,7 +438,11 @@ export function useViewportBridge() {
 
       const hadBodies = trackedBodyIds.size > 0;
       trackedBodyIds.clear();
-      for (const id of currentBodyIds) trackedBodyIds.add(id);
+      trackedBodyPoseSignatures.clear();
+      for (const [id, body] of state.bodies) {
+        trackedBodyIds.add(id);
+        trackedBodyPoseSignatures.set(id, bodyPoseSignature(body));
+      }
 
       if (!hadBodies && trackedBodyIds.size > 0) {
         sg.fitAll();
@@ -462,7 +526,11 @@ export function useViewportBridge() {
       for (const id of currentJointIds) {
         trackedJointIds.add(id);
         const joint = state.joints.get(id);
-        if (joint) trackedJointSignatures.set(id, `${joint.type}:${joint.parentDatumId}:${joint.childDatumId}`);
+        if (joint)
+          trackedJointSignatures.set(
+            id,
+            `${joint.type}:${joint.parentDatumId}:${joint.childDatumId}`,
+          );
       }
 
       // --- Load diff ---
@@ -622,7 +690,10 @@ export function useViewportBridge() {
       const simState = useSimulationStore.getState().state;
       const isSimulating = simState === 'running' || simState === 'paused';
 
-      if (isSimulating && (mode === 'create-datum' || mode === 'create-joint' || mode === 'create-load')) {
+      if (
+        isSimulating &&
+        (mode === 'create-datum' || mode === 'create-joint' || mode === 'create-load')
+      ) {
         return;
       }
 
@@ -686,9 +757,11 @@ export function useViewportBridge() {
             if (!parentDatum || !childDatum) return;
 
             if (parentDatum.parentBodyId === childDatum.parentBodyId) {
-              useAuthoringStatusStore.getState().setMessage(
-                'Both surfaces are on the same body — pick a surface on a different body',
-              );
+              useAuthoringStatusStore
+                .getState()
+                .setMessage(
+                  'Both surfaces are on the same body — pick a surface on a different body',
+                );
               return;
             }
 
@@ -709,9 +782,11 @@ export function useViewportBridge() {
                 ? datums.get(creationState.parentDatumId)
                 : undefined;
               if (parentDatum && parentDatum.parentBodyId === resolution.bodyId) {
-                useAuthoringStatusStore.getState().setMessage(
-                  'Both surfaces are on the same body — pick a surface on a different body',
-                );
+                useAuthoringStatusStore
+                  .getState()
+                  .setMessage(
+                    'Both surfaces are on the same body — pick a surface on a different body',
+                  );
                 return;
               }
             }
@@ -748,9 +823,11 @@ export function useViewportBridge() {
                 ? datums.get(creationState.parentDatumId)
                 : undefined;
               if (parentDatum && parentDatum.parentBodyId === bodyId) {
-                useAuthoringStatusStore.getState().setMessage(
-                  'Both surfaces are on the same body — pick a surface on a different body',
-                );
+                useAuthoringStatusStore
+                  .getState()
+                  .setMessage(
+                    'Both surfaces are on the same body — pick a surface on a different body',
+                  );
                 return;
               }
             }
@@ -781,9 +858,9 @@ export function useViewportBridge() {
 
           if (creationState.step === 'pick-second-datum') {
             if (creationState.datumId === entityId) {
-              useAuthoringStatusStore.getState().setMessage(
-                'Choose a different datum for the spring-damper target',
-              );
+              useAuthoringStatusStore
+                .getState()
+                .setMessage('Choose a different datum for the spring-damper target');
               return;
             }
             creationState.setSecondDatum(entityId);
@@ -822,7 +899,8 @@ export function useViewportBridge() {
       // Check selection filter
       const filter = useSelectionStore.getState().selectionFilter;
       if (filter) {
-        const { bodies, geometries, datums, joints, loads, actuators } = useMechanismStore.getState();
+        const { bodies, geometries, datums, joints, loads, actuators } =
+          useMechanismStore.getState();
         const entityType = bodies.has(resolvedEntityId)
           ? 'body'
           : geometries.has(resolvedEntityId)
@@ -842,8 +920,16 @@ export function useViewportBridge() {
       if (modifiers.ctrl) {
         useSelectionStore.getState().toggleSelect(resolvedEntityId);
       } else if (modifiers.shift) {
-        const { bodies, geometries, datums, joints, loads, actuators } = useMechanismStore.getState();
-        const orderedIds = [...bodies.keys(), ...geometries.keys(), ...datums.keys(), ...joints.keys(), ...loads.keys(), ...actuators.keys()];
+        const { bodies, geometries, datums, joints, loads, actuators } =
+          useMechanismStore.getState();
+        const orderedIds = [
+          ...bodies.keys(),
+          ...geometries.keys(),
+          ...datums.keys(),
+          ...joints.keys(),
+          ...loads.keys(),
+          ...actuators.keys(),
+        ];
         useSelectionStore.getState().selectRange(resolvedEntityId, orderedIds);
       } else {
         useSelectionStore.getState().select(resolvedEntityId);

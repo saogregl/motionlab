@@ -41,6 +41,8 @@ async function _buildBundle(entry, outFileName, externals) {
 }
 
 async function main() {
+  const cdpPort = process.env.MOTIONLAB_DEBUG_CDP_PORT ?? '9222';
+
   // 1. Start renderer dev server (inline config — avoids CJS/ESM mismatch)
   console.log('[dev] Starting renderer dev server...');
   const uiSrc = path.resolve(root, '../../packages/ui/src');
@@ -117,7 +119,7 @@ async function main() {
   console.log(`[dev] Launching Electron... (Vite ${viteVersion})`);
   // On Windows, .cmd shims require shell:true to execute
   const mainJs = path.join(root, '.vite/build/main.js');
-  const child = spawn('npx', ['electron', '--remote-debugging-port=9222', mainJs], {
+  const child = spawn('npx', ['electron', `--remote-debugging-port=${cdpPort}`, mainJs], {
     stdio: 'inherit',
     cwd: root,
     env: {

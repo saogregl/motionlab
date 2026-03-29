@@ -19,21 +19,24 @@ import {
   FlipVertical,
   Focus,
   Grid3x3,
+  Layers,
   Hexagon,
   Link2,
   MousePointerClick,
   RefreshCw,
   ScanSearch,
   Settings2,
+  Target,
   Trash2,
   Unlink,
   Wrench,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { sendDeleteActuator, sendDeleteDatum, sendDeleteJoint, sendDeleteLoad, sendDetachGeometry } from '../engine/connection.js';
+import { sendDeleteActuator, sendDeleteDatum, sendDeleteJoint, sendDeleteLoad, sendDetachGeometry, sendUpdateJoint } from '../engine/connection.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
+import type { JointTypeId } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
@@ -75,7 +78,8 @@ function BodyMenuContent({
   sceneGraph: SceneGraphManager | null;
 }) {
   const isHidden = useVisibilityStore((s) => s.hiddenIds.has(entityId));
-  const allBodyIds = useMechanismStore((s) => [...s.bodies.keys()]);
+  const bodies = useMechanismStore((s) => s.bodies);
+  const allBodyIds = useMemo(() => [...bodies.keys()], [bodies]);
 
   return (
     <>
@@ -190,7 +194,18 @@ function JointMenuContent({
         <Focus className={iconCls} /> Focus
       </ContextMenuItem>
       <ContextMenuSeparator />
-      <ContextMenuItem className={itemCls} onSelect={() => {}}>
+      <ContextMenuItem
+        className={itemCls}
+        onSelect={() => {
+          const joint = useMechanismStore.getState().joints.get(entityId);
+          if (!joint) return;
+          useSelectionStore.getState().select(entityId);
+          useToolModeStore.getState().setMode('create-joint');
+          useJointCreationStore
+            .getState()
+            .editExisting(entityId, joint.parentDatumId, joint.childDatumId, joint.type);
+        }}
+      >
         <Wrench className={iconCls} /> Edit Joint
       </ContextMenuItem>
       <ContextMenuSub>
@@ -199,17 +214,43 @@ function JointMenuContent({
         </ContextMenuSubTrigger>
         <ContextMenuSubContent>
           {jointTypes.map((type) => (
-            <ContextMenuItem key={type} className={itemCls} onSelect={() => {}}>
+            <ContextMenuItem
+              key={type}
+              className={itemCls}
+              onSelect={() => {
+                sendUpdateJoint(entityId, { type: type.toLowerCase() as JointTypeId });
+              }}
+            >
               {type}
             </ContextMenuItem>
           ))}
         </ContextMenuSubContent>
       </ContextMenuSub>
       <ContextMenuSeparator />
-      <ContextMenuItem className={itemCls} onSelect={() => {}}>
+      <ContextMenuItem
+        className={itemCls}
+        onSelect={() => {
+          const joint = useMechanismStore.getState().joints.get(entityId);
+          if (!joint) return;
+          sendUpdateJoint(entityId, {
+            parentDatumId: joint.childDatumId,
+            childDatumId: joint.parentDatumId,
+          });
+        }}
+      >
         <ArrowLeftRight className={iconCls} /> Swap Bodies
       </ContextMenuItem>
-      <ContextMenuItem className={itemCls} onSelect={() => {}}>
+      <ContextMenuItem
+        className={itemCls}
+        onSelect={() => {
+          const joint = useMechanismStore.getState().joints.get(entityId);
+          if (!joint) return;
+          sendUpdateJoint(entityId, {
+            parentDatumId: joint.childDatumId,
+            childDatumId: joint.parentDatumId,
+          });
+        }}
+      >
         <FlipVertical className={iconCls} /> Reverse Direction
       </ContextMenuItem>
       <ContextMenuSeparator />
@@ -374,10 +415,33 @@ function BackgroundMenuContent({ sceneGraph }: { sceneGraph: SceneGraphManager |
         <ContextMenuShortcut>F</ContextMenuShortcut>
       </ContextMenuItem>
       <ContextMenuSeparator />
-      <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.toggleGrid()}>
-        <Grid3x3 className={iconCls} /> {sceneGraph?.gridVisible ? 'Hide Grid' : 'Show Grid'}
-        <ContextMenuShortcut>G</ContextMenuShortcut>
-      </ContextMenuItem>
+      <ContextMenuSub>
+        <ContextMenuSubTrigger className={itemCls}>
+          <Layers className={iconCls} /> Display
+        </ContextMenuSubTrigger>
+        <ContextMenuSubContent>
+          <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.toggleGrid()}>
+            <Grid3x3 className={iconCls} /> {sceneGraph?.gridVisible ? 'Hide Grid' : 'Show Grid'}
+            <ContextMenuShortcut>G</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.toggleDatums()}>
+            <Crosshair className={iconCls} /> {sceneGraph?.datumsVisible ? 'Hide Datums' : 'Show Datums'}
+            <ContextMenuShortcut>D</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.toggleJointAnchors()}>
+            <Link2 className={iconCls} /> {sceneGraph?.jointAnchorsVisible ? 'Hide Joint Anchors' : 'Show Joint Anchors'}
+            <ContextMenuShortcut>J</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.toggleCollisionWireframes()}>
+            <Hexagon className={iconCls} /> {sceneGraph?.collisionWireframesVisible ? 'Hide Collision Shapes' : 'Show Collision Shapes'}
+            <ContextMenuShortcut>C</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.toggleCom()}>
+            <Target className={iconCls} /> {sceneGraph?.comVisible ? 'Hide Center of Mass' : 'Show Center of Mass'}
+            <ContextMenuShortcut>M</ContextMenuShortcut>
+          </ContextMenuItem>
+        </ContextMenuSubContent>
+      </ContextMenuSub>
       <ContextMenuSeparator />
       <ContextMenuItem
         className={itemCls}

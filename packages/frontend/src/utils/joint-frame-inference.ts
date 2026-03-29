@@ -124,5 +124,32 @@ export function shouldAutoCommit(
     return { autoCommit: true, jointType: 'revolute' };
   }
 
+  // Two cylindrical faces, coincident (overlapping axes) → revolute
+  if (
+    parentSurfaceClass === 'cylindrical' &&
+    childSurfaceClass === 'cylindrical' &&
+    alignmentKind === 'coincident'
+  ) {
+    return { autoCommit: true, jointType: 'revolute' };
+  }
+
+  // Two spherical faces, coincident → spherical
+  if (
+    parentSurfaceClass === 'spherical' &&
+    childSurfaceClass === 'spherical' &&
+    alignmentKind === 'coincident'
+  ) {
+    return { autoCommit: true, jointType: 'spherical' };
+  }
+
+  // Two planar faces, coplanar → fixed (conservative safe choice)
+  if (
+    parentSurfaceClass === 'planar' &&
+    childSurfaceClass === 'planar' &&
+    alignmentKind === 'coplanar'
+  ) {
+    return { autoCommit: true, jointType: 'fixed' };
+  }
+
   return { autoCommit: false, jointType: null };
 }

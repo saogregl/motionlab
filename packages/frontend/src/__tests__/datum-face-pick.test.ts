@@ -23,7 +23,7 @@ describe('resolveDatumFacePick', () => {
 
     expect(resolveDatumFacePick('body-1', bodies, { bodyId: 'body-1' })).toEqual({
       kind: 'error',
-      message: 'Face-aware datum creation unavailable for this pick',
+      message: 'No face detected — click directly on a geometry surface',
     });
   });
 

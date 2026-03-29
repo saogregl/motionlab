@@ -1,4 +1,4 @@
-import { ConnectionBanner, SelectionChip, ViewportHUD, useTheme } from '@motionlab/ui';
+import { ConnectionBanner, SelectionChip, useTheme, ViewportHUD } from '@motionlab/ui';
 import type { DatumPreviewType, SceneGraphManager } from '@motionlab/viewport';
 import { Viewport } from '@motionlab/viewport';
 import { Box, Cog, Crosshair, Link2, Zap } from 'lucide-react';
@@ -17,16 +17,20 @@ import { useToolModeStore } from '../stores/tool-mode.js';
 import { useTraceStore } from '../stores/traces.js';
 import { nearestSample } from '../utils/nearest-sample.js';
 import { getJointCoordinateChannelIds } from '../utils/runtime-channel-ids.js';
+import { FaceTooltip } from './FaceTooltip.js';
 import { JointHoverBadge } from './JointHoverBadge.js';
 import { JointTypeSelectorPanel } from './JointTypeSelectorPanel.js';
 import { LoadCreationCard } from './LoadCreationCard.js';
 import { ModeIndicator } from './ModeIndicator.js';
 import { ViewportContextMenu } from './ViewportContextMenu.js';
 import { ViewportToolModeToolbar } from './ViewportToolModeToolbar.js';
-import { FaceTooltip } from './FaceTooltip.js';
 import { WorldSpaceOverlay } from './WorldSpaceOverlay.js';
 
-function SelectionIcon({ entityType }: { entityType: 'body' | 'datum' | 'joint' | 'load' | 'actuator' }) {
+function SelectionIcon({
+  entityType,
+}: {
+  entityType: 'body' | 'datum' | 'joint' | 'load' | 'actuator';
+}) {
   switch (entityType) {
     case 'body':
       return <Box className="size-3.5" />;
@@ -53,7 +57,8 @@ function JointCreationStatus() {
   );
   const message = useAuthoringStatusStore((s) => s.message);
 
-  const statusClass = 'rounded-md bg-background/80 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur-sm';
+  const statusClass =
+    'rounded-md bg-background/80 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur-sm';
 
   if (creatingDatum) {
     return <div className={statusClass}>Setting joint anchor...</div>;
@@ -70,7 +75,8 @@ function JointCreationStatus() {
     return (
       <div className="flex flex-col gap-1">
         <div className={statusClass}>
-          {parentBody?.name ?? parentDatum?.name ?? 'Body A'} selected. Click a surface on the second body
+          {parentBody?.name ?? parentDatum?.name ?? 'Body A'} selected. Click a surface on the
+          second body
         </div>
         {message ? <div className={statusClass}>{message}</div> : null}
       </div>
@@ -158,33 +164,68 @@ function useSelectedEntity() {
   }, [selectedIds, bodies, datums, joints, loads, actuators]);
 }
 
-function JointCreationDatumLabel({ sceneGraph }: { sceneGraph: SceneGraphManager | null }) {
+function JointCreationDatumLabels({ sceneGraph }: { sceneGraph: SceneGraphManager | null }) {
   const step = useJointCreationStore((s) => s.step);
   const parentDatumId = useJointCreationStore((s) => s.parentDatumId);
+  const childDatumId = useJointCreationStore((s) => s.childDatumId);
   const parentDatum = useMechanismStore((s) =>
     parentDatumId ? s.datums.get(parentDatumId) : undefined,
   );
   const parentBody = useMechanismStore((s) =>
     parentDatum ? s.bodies.get(parentDatum.parentBodyId) : undefined,
   );
+  const childDatum = useMechanismStore((s) =>
+    childDatumId ? s.datums.get(childDatumId) : undefined,
+  );
+  const childBody = useMechanismStore((s) =>
+    childDatum ? s.bodies.get(childDatum.parentBodyId) : undefined,
+  );
 
-  const showLabel = (step === 'pick-child' || step === 'select-type') && parentDatumId && sceneGraph;
-  if (!showLabel) return null;
-
-  // Get the world position of the parent datum
-  const worldPosition = sceneGraph.getEntityWorldPosition(parentDatumId);
-  if (!worldPosition) return null;
+  const showParent =
+    (step === 'pick-child' || step === 'select-type') && parentDatumId && sceneGraph;
+  const showChild = step === 'select-type' && childDatumId && sceneGraph;
 
   return (
-    <WorldSpaceOverlay
-      worldPosition={worldPosition}
-      sceneGraph={sceneGraph}
-      offset={{ x: 0, y: -8 }}
-    >
-      <div className="rounded bg-background/90 px-2 py-0.5 text-[10px] text-muted-foreground backdrop-blur-sm whitespace-nowrap border border-[var(--success)]/40">
-        Anchor on {parentBody?.name ?? parentDatum?.name ?? '?'}
-      </div>
-    </WorldSpaceOverlay>
+    <>
+      {showParent &&
+        (() => {
+          const worldPosition = sceneGraph.getEntityWorldPosition(parentDatumId);
+          if (!worldPosition) return null;
+          return (
+            <WorldSpaceOverlay
+              worldPosition={worldPosition}
+              sceneGraph={sceneGraph}
+              offset={{ x: 0, y: -10 }}
+            >
+              <div className="rounded bg-background/90 px-2 py-0.5 text-[11px] text-muted-foreground backdrop-blur-sm whitespace-nowrap border border-[var(--success)]/70 flex items-center gap-1">
+                <span className="inline-flex size-3.5 items-center justify-center rounded-full bg-[var(--success)]/20 text-[9px] font-semibold text-[var(--success)]">
+                  A
+                </span>
+                {parentBody?.name ?? parentDatum?.name ?? '?'}
+              </div>
+            </WorldSpaceOverlay>
+          );
+        })()}
+      {showChild &&
+        (() => {
+          const worldPosition = sceneGraph.getEntityWorldPosition(childDatumId);
+          if (!worldPosition) return null;
+          return (
+            <WorldSpaceOverlay
+              worldPosition={worldPosition}
+              sceneGraph={sceneGraph}
+              offset={{ x: 0, y: -10 }}
+            >
+              <div className="rounded bg-background/90 px-2 py-0.5 text-[11px] text-muted-foreground backdrop-blur-sm whitespace-nowrap border border-[var(--accent-primary)]/70 flex items-center gap-1">
+                <span className="inline-flex size-3.5 items-center justify-center rounded-full bg-[var(--accent-primary)]/20 text-[9px] font-semibold text-[var(--accent-primary)]">
+                  B
+                </span>
+                {childBody?.name ?? childDatum?.name ?? '?'}
+              </div>
+            </WorldSpaceOverlay>
+          );
+        })()}
+    </>
   );
 }
 
@@ -193,8 +234,13 @@ export function ViewportOverlay() {
   const { theme } = useTheme();
   const [sceneGraph, setSceneGraph] = useState<SceneGraphManager | null>(null);
   const activeMode = useToolModeStore((s) => s.activeMode);
+  const gridVisible = useToolModeStore((s) => s.gridVisible);
   const selectedEntity = useSelectedEntity();
-  const [hoveredFace, setHoveredFace] = useState<{ bodyId: string; faceIndex: number; previewType?: DatumPreviewType } | null>(null);
+  const [hoveredFace, setHoveredFace] = useState<{
+    bodyId: string;
+    faceIndex: number;
+    previewType?: DatumPreviewType;
+  } | null>(null);
   const viewportContainerRef = useRef<HTMLDivElement>(null);
   const connStatus = useEngineConnection((s) => s.status);
   const connError = useEngineConnection((s) => s.errorMessage);
@@ -221,7 +267,11 @@ export function ViewportOverlay() {
       // Entering a highlighting step
       if (isJointStep && state.parentDatumId) {
         // Dim same-body datums when parent is selected
-        if (state.step === 'pick-child' && prev.step !== 'pick-child' && prev.step !== 'select-type') {
+        if (
+          state.step === 'pick-child' &&
+          prev.step !== 'pick-child' &&
+          prev.step !== 'select-type'
+        ) {
           const parentDatum = useMechanismStore.getState().datums.get(state.parentDatumId);
           if (parentDatum) {
             sg.dimDatumsByBody(parentDatum.parentBodyId);
@@ -331,7 +381,7 @@ export function ViewportOverlay() {
         const joint = joints.get(id);
         const channelId = joint ? getJointCoordinateChannelIds(id, joint.type)?.position : null;
         const samples = channelId ? traces.get(channelId) : undefined;
-        const value = samples ? nearestSample(samples, simTime)?.value ?? null : null;
+        const value = samples ? (nearestSample(samples, simTime)?.value ?? null) : null;
         sg.updateJointLimitValue(id, value);
       }
     };
@@ -388,13 +438,26 @@ export function ViewportOverlay() {
       const previewPos = sg.getDatumPreviewPosition();
       if (previewPos) {
         sg.showProvisionalJointPreview(parentDatumId, previewPos);
+        // Show a spatial DOF indicator at the hover position for the inferred type
+        const inferredType =
+          hoveredFace.previewType === 'axis'
+            ? 'revolute'
+            : hoveredFace.previewType === 'plane'
+              ? 'planar'
+              : hoveredFace.previewType === 'point'
+                ? 'spherical'
+                : null;
+        if (inferredType) {
+          sg.showProvisionalDofPreview(previewPos, inferredType);
+        }
       }
     } else {
       sg.clearProvisionalJointPreview();
     }
   }, [activeMode, jointStep, parentDatumId, hoveredFace, sceneGraphRef]);
 
-  const cursorMode = activeMode === 'create-datum' || activeMode === 'create-joint' || activeMode === 'create-load';
+  const cursorMode =
+    activeMode === 'create-datum' || activeMode === 'create-joint' || activeMode === 'create-load';
 
   return (
     <ViewportContextMenu sceneGraph={sceneGraph}>
@@ -409,16 +472,27 @@ export function ViewportOverlay() {
           onHover={handleHover}
           onFaceHover={setHoveredFace}
           interactionMode={activeMode}
+          gridVisible={gridVisible}
           theme={theme}
         />
         {(activeMode === 'create-datum' || activeMode === 'create-joint') && (
-          <FaceTooltip containerRef={viewportContainerRef} hoveredFace={hoveredFace} mode={activeMode} />
+          <FaceTooltip
+            containerRef={viewportContainerRef}
+            hoveredFace={hoveredFace}
+            mode={activeMode}
+          />
         )}
         <ViewportHUD
           topCenter={
             showBanner ? (
               <ConnectionBanner
-                status={connStatus === 'error' ? 'error' : connStatus === 'disconnected' ? 'disconnected' : 'connecting'}
+                status={
+                  connStatus === 'error'
+                    ? 'error'
+                    : connStatus === 'disconnected'
+                      ? 'disconnected'
+                      : 'connecting'
+                }
                 errorMessage={connError ?? undefined}
                 onDismiss={() => setBannerDismissed(true)}
               />
@@ -459,7 +533,7 @@ export function ViewportOverlay() {
         <ModeIndicator />
         <JointTypeSelectorPanel />
         <LoadCreationCard sceneGraph={sceneGraph} />
-        <JointCreationDatumLabel sceneGraph={sceneGraph} />
+        <JointCreationDatumLabels sceneGraph={sceneGraph} />
         <JointHoverBadge sceneGraph={sceneGraph} />
       </div>
     </ViewportContextMenu>

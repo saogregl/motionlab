@@ -140,6 +140,11 @@
   --layer-raised-active: rgba(141, 141, 141, 0.5);
   --layer-elevated: #ffffff;
 
+  /* Glass panel tokens — semi-transparent for backdrop-blur */
+  --layer-base-glass: rgba(255, 255, 255, 0.88);
+  --layer-elevated-glass: rgba(255, 255, 255, 0.9);
+  --panel-blur: 12px;
+
   /* Non-structural surfaces */
   --bg-muted: #e0e0e0;
   --bg-muted-hover: #d1d1d1;
@@ -301,6 +306,11 @@
   --layer-raised-hover: rgba(141, 141, 141, 0.16);
   --layer-raised-active: rgba(141, 141, 141, 0.4);
   --layer-elevated: #333333;
+
+  /* Glass panel tokens — dark override */
+  --layer-base-glass: rgba(28, 28, 28, 0.88);
+  --layer-elevated-glass: rgba(51, 51, 51, 0.9);
+  --panel-blur: 12px;
 
   --bg-muted: #252626;
   --bg-muted-hover: #333333;

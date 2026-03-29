@@ -35,6 +35,7 @@ public:
 
     struct GeometryResult {
         std::optional<GeometryEntry> entry;
+        std::vector<DatumEntry> updated_datums;
         std::string error;
     };
 
@@ -51,6 +52,7 @@ public:
     bool delete_body(const std::string& body_id);
     bool rename_body(const std::string& body_id, const std::string& new_name);
     bool has_body(const std::string& id) const;
+    const BodyEntry* get_body(const std::string& id) const;
     bool set_body_fixed(const std::string& id, bool is_fixed);
     bool set_body_pose(const std::string& id, const double pos[3], const double orient[4]);
     size_t body_count() const;
@@ -64,6 +66,7 @@ public:
                                 uint32_t face_count = 0,
                                 const motionlab::mechanism::PrimitiveSource* primitive_source = nullptr);
     bool remove_geometry(const std::string& geometry_id);
+    bool rename_geometry(const std::string& geometry_id, const std::string& new_name);
     const GeometryEntry* get_geometry(const std::string& id) const;
     size_t geometry_count() const;
 
@@ -79,11 +82,47 @@ public:
         const std::string& geometry_id,
         const motionlab::mechanism::CollisionConfig& collision_config);
 
+    // Update geometry local pose (relative to parent body)
+    GeometryResult update_geometry_local_pose(const std::string& geometry_id,
+                                              const double pos[3], const double orient[4]);
+
     // Geometry attachment
     GeometryResult attach_geometry(const std::string& geometry_id,
                                    const std::string& body_id,
                                    const double pos[3], const double orient[4]);
     GeometryResult detach_geometry(const std::string& geometry_id);
+
+    // Reparent geometry to a different body, preserving world-space position
+    GeometryResult reparent_geometry(const std::string& geometry_id,
+                                     const std::string& target_body_id);
+
+    // Compound body operations (atomic multi-step)
+    struct CompoundBodyResult {
+        std::string created_body_id;
+        std::vector<std::string> dissolved_body_ids;
+        std::vector<std::string> modified_body_ids;
+        std::vector<DatumEntry> reparented_datums;
+        std::string error;
+    };
+    CompoundBodyResult make_compound_body(const std::vector<std::string>& geometry_ids,
+                                          const std::string& name,
+                                          bool is_fixed,
+                                          bool dissolve_empty,
+                                          const std::string& reference_body_id = "");
+
+    // Reparent all datums from source body to target body, preserving world-space positions.
+    std::vector<DatumEntry> reparent_datums(const std::string& source_body_id,
+                                             const std::string& target_body_id);
+
+    struct SplitResult {
+        std::string created_body_id;
+        std::vector<DatumEntry> updated_datums;
+        std::string error;
+    };
+    SplitResult split_body(const std::string& source_body_id,
+                           const std::vector<std::string>& geometry_ids,
+                           const std::string& name,
+                           bool is_fixed);
 
     // Mass management
     std::vector<const GeometryEntry*> get_body_geometries(const std::string& body_id) const;
@@ -109,8 +148,22 @@ public:
     std::optional<DatumEntry> update_datum_pose(const std::string& datum_id,
                                                 const double pos[3],
                                                 const double orient[4]);
+    std::optional<DatumEntry> set_datum_face_attachment(
+        const std::string& datum_id,
+        const std::string& source_geometry_id,
+        uint32_t source_face_index,
+        const double source_geometry_local_pos[3],
+        const double source_geometry_local_orient[4],
+        motionlab::mechanism::DatumSurfaceClass surface_class,
+        const motionlab::mechanism::DatumFaceGeometryInfo* face_geometry = nullptr);
     const DatumEntry* get_datum(const std::string& id) const;
     size_t datum_count() const;
+
+    // Co-translate datums so their world positions stay fixed when a body moves.
+    std::vector<DatumEntry> co_translate_datums(
+        const std::string& body_id,
+        const motionlab::mechanism::Pose& old_body_pose,
+        const motionlab::mechanism::Pose& new_body_pose);
 
     // Joint CRUD
     JointResult create_joint(const JointEntry& draft);
@@ -149,6 +202,9 @@ private:
     std::string validate_actuator(const motionlab::mechanism::Actuator& actuator) const;
 
     void update_body_aggregate_mass(const std::string& body_id);
+    bool geometry_has_linked_datums(const std::string& geometry_id) const;
+    std::vector<DatumEntry> sync_face_datums_for_geometry(const std::string& geometry_id);
+    std::vector<DatumEntry> clear_face_datum_provenance_for_geometry(const std::string& geometry_id);
 
     std::unordered_map<std::string, BodyEntry> bodies_;
     std::unordered_map<std::string, DatumEntry> datums_;

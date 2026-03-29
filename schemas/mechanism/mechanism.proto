@@ -164,12 +164,37 @@ message CollisionConfig {
   Vec3 offset = 5;          // offset from geometry local_pose origin
 }
 
+enum DatumSurfaceClass {
+  DATUM_SURFACE_CLASS_UNSPECIFIED = 0;
+  DATUM_SURFACE_CLASS_PLANAR = 1;
+  DATUM_SURFACE_CLASS_CYLINDRICAL = 2;
+  DATUM_SURFACE_CLASS_CONICAL = 3;
+  DATUM_SURFACE_CLASS_SPHERICAL = 4;
+  DATUM_SURFACE_CLASS_OTHER = 5;
+  DATUM_SURFACE_CLASS_TOROIDAL = 6;
+}
+
+// Cached geometry semantics for a face-created datum.
+// These are authored datum properties, not live topology handles.
+message DatumFaceGeometryInfo {
+  optional Vec3 axis_direction = 1;
+  optional Vec3 normal = 2;
+  optional double radius = 3;
+  optional double secondary_radius = 4;
+  optional double semi_angle = 5;
+}
+
 // Datum frame anchored to a body
 message Datum {
   ElementId id = 1;
   string name = 2;
   ElementId parent_body_id = 3;
   Pose local_pose = 4;
+  ElementId source_geometry_id = 5;            // optional; set for face-created datums
+  optional uint32 source_face_index = 6;       // optional; set for face-created datums
+  Pose source_geometry_local_pose = 7;         // optional geometry-local frame cached for geometry-aware updates
+  DatumSurfaceClass surface_class = 8;         // optional semantic classification for viewport/inference
+  DatumFaceGeometryInfo face_geometry = 9;     // optional cached face geometry metadata
 }
 
 // Joint types
@@ -197,10 +222,12 @@ enum MotionType {
 
 message RevoluteJointConfig {
   Range angle_limit = 1;
+  double damping = 2;                // N·m·s/rad, viscous (0 = none)
 }
 
 message PrismaticJointConfig {
   Range translation_limit = 1;
+  double damping = 2;                // N·s/m, viscous (0 = none)
 }
 
 message FixedJointConfig {}
@@ -210,6 +237,8 @@ message SphericalJointConfig {}
 message CylindricalJointConfig {
   Range translation_limit = 1;
   Range rotation_limit = 2;
+  double translational_damping = 3;  // N·s/m
+  double rotational_damping = 4;     // N·m·s/rad
 }
 
 message PlanarJointConfig {

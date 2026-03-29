@@ -1,0 +1,87 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Engine",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/native/engine/build/dev-linux/motionlab-engine",
+      "args": ["--port", "9090", "--session-token", "debug", "--log-level", "trace"],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "Debug Engine (ASAN)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/native/engine/build/dev-linux-asan/motionlab-engine",
+      "args": ["--port", "9090", "--session-token", "debug", "--log-level", "trace"],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        { "name": "ASAN_OPTIONS", "value": "detect_leaks=1:halt_on_error=0" }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "Debug Mechanism Tests",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/native/engine/build/dev-linux/motionlab-mechanism-tests",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/native/engine",
+      "environment": [
+        { "name": "MOTIONLAB_LOG_LEVEL", "value": "debug" }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "Debug Simulation Tests",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/native/engine/build/dev-linux/motionlab-sim-tests",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/native/engine",
+      "environment": [
+        { "name": "MOTIONLAB_LOG_LEVEL", "value": "debug" }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}

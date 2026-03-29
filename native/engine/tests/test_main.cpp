@@ -827,6 +827,88 @@ static void test_import_unit_system_and_project_roundtrip(uint16_t port) {
     std::cout << "  PASS: import units and project roundtrip" << std::endl;
 }
 
+static void test_reimport_same_asset_after_merge_uses_fresh_ids(uint16_t port) {
+    TestClient client;
+    client.connect(port);
+
+    client.send_command(make_handshake(1, TEST_TOKEN));
+    client.wait_for_message(1);
+
+    const std::string step_file = write_face_test_step_file();
+    size_t scan_from = 2;
+
+    Command import_cmd;
+    import_cmd.set_sequence_id(430);
+    import_cmd.mutable_import_asset()->set_file_path(step_file);
+    client.send_command(import_cmd);
+
+    const auto* first_import_evt = client.wait_for_response(430, scan_from, 10000);
+    assert(first_import_evt != nullptr);
+    assert(first_import_evt->payload_case() == Event::kImportAssetResult);
+    assert(first_import_evt->import_asset_result().success());
+    assert(first_import_evt->import_asset_result().bodies_size() == 2);
+    assert(first_import_evt->import_asset_result().geometries_size() == 2);
+
+    std::vector<std::string> first_body_ids;
+    std::vector<std::string> first_geometry_ids;
+    for (const auto& body : first_import_evt->import_asset_result().bodies()) {
+        first_body_ids.push_back(body.body_id());
+    }
+    for (const auto& geometry : first_import_evt->import_asset_result().geometries()) {
+        first_geometry_ids.push_back(geometry.geometry_id());
+    }
+
+    Command merge_cmd;
+    merge_cmd.set_sequence_id(431);
+    auto* merge = merge_cmd.mutable_make_compound_body();
+    merge->set_name("Merged");
+    merge->set_motion_type(motionlab::mechanism::MOTION_TYPE_DYNAMIC);
+    merge->set_dissolve_empty_bodies(true);
+    merge->mutable_reference_body_id()->set_id(first_body_ids.front());
+    for (const auto& geometry_id : first_geometry_ids) {
+        merge->add_geometry_ids()->set_id(geometry_id);
+    }
+    client.send_command(merge_cmd);
+
+    const auto* merge_evt = client.wait_for_response(431, scan_from, 10000);
+    assert(merge_evt != nullptr);
+    assert(merge_evt->payload_case() == Event::kMakeCompoundBodyResult);
+    assert(merge_evt->make_compound_body_result().result_case() == MakeCompoundBodyResult::kSuccess);
+
+    Command reimport_cmd;
+    reimport_cmd.set_sequence_id(432);
+    reimport_cmd.mutable_import_asset()->set_file_path(step_file);
+    client.send_command(reimport_cmd);
+
+    const auto* second_import_evt = client.wait_for_response(432, scan_from, 10000);
+    assert(second_import_evt != nullptr);
+    assert(second_import_evt->payload_case() == Event::kImportAssetResult);
+    assert(second_import_evt->import_asset_result().success());
+    assert(second_import_evt->import_asset_result().bodies_size() == 2);
+    assert(second_import_evt->import_asset_result().geometries_size() == 2);
+
+    for (const auto& body : second_import_evt->import_asset_result().bodies()) {
+        assert(std::find(first_body_ids.begin(), first_body_ids.end(), body.body_id()) == first_body_ids.end());
+    }
+    for (const auto& geometry : second_import_evt->import_asset_result().geometries()) {
+        assert(std::find(first_geometry_ids.begin(), first_geometry_ids.end(), geometry.geometry_id()) == first_geometry_ids.end());
+    }
+
+    const auto& second_geometry = second_import_evt->import_asset_result().geometries(0);
+    create_datum_from_face_and_expect(
+        client,
+        scan_from,
+        second_geometry.geometry_id(),
+        second_geometry.body_id(),
+        0,
+        433,
+        FACE_SURFACE_CLASS_PLANAR);
+
+    client.close();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::cout << "  PASS: reimport same asset after merge uses fresh ids" << std::endl;
+}
+
 static void test_output_channels_and_scrub(uint16_t port, const std::string& step_file) {
     TestClient client;
     client.connect(port);
@@ -897,9 +979,19 @@ static void test_output_channels_and_scrub(uint16_t port, const std::string& ste
     assert(j_evt->payload_case() == Event::kCreateJointResult);
     assert(j_evt->create_joint_result().result_case() == CreateJointResult::kJoint);
 
+    // Set body1 as fixed (ground) — required for compilation
+    Command fix_cmd;
+    fix_cmd.set_sequence_id(504);
+    auto* ub = fix_cmd.mutable_update_body();
+    ub->mutable_body_id()->set_id(body1_id);
+    ub->set_motion_type(motionlab::mechanism::MOTION_TYPE_FIXED);
+    client.send_command(fix_cmd);
+    const auto* fix_evt = client.wait_for_response(504, scan_from);
+    assert(fix_evt != nullptr);
+
     // Compile mechanism
     Command compile_cmd;
-    compile_cmd.set_sequence_id(504);
+    compile_cmd.set_sequence_id(505);
     compile_cmd.mutable_compile_mechanism();
     client.send_command(compile_cmd);
 
@@ -929,29 +1021,30 @@ static void test_output_channels_and_scrub(uint16_t port, const std::string& ste
     // Let any pending events arrive
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     scan_from = client.message_count();
+    size_t play_scan_from = scan_from;
 
     // Play simulation for ~1s
     Command play_cmd;
-    play_cmd.set_sequence_id(505);
+    play_cmd.set_sequence_id(506);
     play_cmd.mutable_simulation_control()->set_action(SIMULATION_ACTION_PLAY);
     client.send_command(play_cmd);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     // Pause
-    scan_from = client.message_count();
     Command pause_cmd;
-    pause_cmd.set_sequence_id(506);
+    pause_cmd.set_sequence_id(507);
     pause_cmd.mutable_simulation_control()->set_action(SIMULATION_ACTION_PAUSE);
     client.send_command(pause_cmd);
 
+    scan_from = client.message_count();
     const auto* paused_evt = wait_for_sim_state(client, SIM_STATE_PAUSED, scan_from);
     assert(paused_evt != nullptr);
 
-    // Scan all received messages for SimulationFrame events
+    // Scan all received messages for SimulationFrame events (from play start)
     bool found_frame = false;
     size_t total = client.message_count();
-    for (size_t i = scan_from; i < total; ++i) {
+    for (size_t i = play_scan_from; i < total; ++i) {
         const auto& evt = client.wait_for_message(i, 50);
         if (evt.payload_case() == Event::kSimulationFrame) {
             found_frame = true;
@@ -962,7 +1055,7 @@ static void test_output_channels_and_scrub(uint16_t port, const std::string& ste
     // Scrub to a time in the buffered range
     scan_from = client.message_count();
     Command scrub_cmd;
-    scrub_cmd.set_sequence_id(507);
+    scrub_cmd.set_sequence_id(508);
     scrub_cmd.mutable_scrub()->set_time(0.5);
     client.send_command(scrub_cmd);
 
@@ -1024,6 +1117,7 @@ int main() {
     test_face_aware_datum_creation_mixed_fixture(port, mixed_step_file, "create datum from face after cold import");
     test_update_datum_pose(port);
     test_import_unit_system_and_project_roundtrip(port);
+    test_reimport_same_asset_after_merge_uses_fresh_ids(port);
     test_output_channels_and_scrub(port, step_file);
 
     // Shutdown

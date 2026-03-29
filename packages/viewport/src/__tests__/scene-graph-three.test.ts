@@ -1,6 +1,6 @@
-import { describe, expect, it, vi } from 'vitest';
 import { MeshStandardMaterial, OrthographicCamera, Scene, Vector3 } from 'three';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
+import { describe, expect, it, vi } from 'vitest';
 
 import { ENTITY_COLORS } from '../rendering/colors-three.js';
 import { createMaterialFactory } from '../rendering/materials-three.js';
@@ -20,22 +20,9 @@ function makeManager(requestRender?: () => void) {
 
 function makeBodyMesh() {
   return {
-    vertices: new Float32Array([
-      0, 0, 0,
-      1, 0, 0,
-      0, 1, 0,
-      0, 0, 1,
-    ]),
-    indices: new Uint32Array([
-      0, 1, 2,
-      0, 1, 3,
-    ]),
-    normals: new Float32Array([
-      0, 0, 1,
-      0, 0, 1,
-      0, 0, 1,
-      0, 1, 0,
-    ]),
+    vertices: new Float32Array([0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1]),
+    indices: new Uint32Array([0, 1, 2, 0, 1, 3]),
+    normals: new Float32Array([0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0]),
   };
 }
 
@@ -46,12 +33,30 @@ function getFirstDatumLineOpacity(manager: SceneGraphManager, datumId: string): 
   let opacity: number | null = null;
   datum.rootNode.traverse((child) => {
     if (opacity !== null) return;
-    if ('material' in child && child.material && typeof child.material === 'object' && 'opacity' in child.material) {
+    if (
+      'material' in child &&
+      child.material &&
+      typeof child.material === 'object' &&
+      'opacity' in child.material
+    ) {
       opacity = Number(child.material.opacity);
     }
   });
 
   return opacity;
+}
+
+function countDatumGlyphs(manager: SceneGraphManager, datumId: string, glyph: string): number {
+  const datum = manager.getEntity(datumId);
+  if (!datum) return 0;
+
+  let count = 0;
+  datum.rootNode.traverse((child) => {
+    if (child.userData?.datumGlyph === glyph) {
+      count += 1;
+    }
+  });
+  return count;
 }
 
 describe('SceneGraphManager', () => {
@@ -144,7 +149,62 @@ describe('SceneGraphManager', () => {
     materialFactory.dispose();
   });
 
-  it('positions joints between datum world positions', () => {
+  it('renders persistent plane and axis datum glyphs from semantic metadata', () => {
+    const { manager, materialFactory } = makeManager();
+
+    manager.upsertBody('body-1', 'Body 1', {
+      position: [0, 0, 0],
+      rotation: [0, 0, 0, 1],
+    });
+    manager.addDatum(
+      'datum-plane',
+      'body-1',
+      { position: [0, 0, 0], rotation: [0, 0, 0, 1] },
+      'Plane Datum',
+      { surfaceClass: 'planar' },
+    );
+    manager.addDatum(
+      'datum-axis',
+      'body-1',
+      { position: [1, 0, 0], rotation: [0, 0, 0, 1] },
+      'Axis Datum',
+      { surfaceClass: 'cylindrical' },
+    );
+
+    expect(countDatumGlyphs(manager, 'datum-plane', 'plane')).toBe(1);
+    expect(countDatumGlyphs(manager, 'datum-axis', 'axis')).toBe(1);
+    expect(countDatumGlyphs(manager, 'datum-axis', 'axis-arrow')).toBe(1);
+
+    manager.dispose();
+    materialFactory.dispose();
+  });
+
+  it('supports datums on empty bodies', () => {
+    const { manager, materialFactory } = makeManager();
+
+    manager.upsertBody('body-empty', 'Empty Body', {
+      position: [1, 2, 3],
+      rotation: [0, 0, 0, 1],
+    });
+    manager.addDatum('datum-empty', 'body-empty', {
+      position: [0.5, 0, 0],
+      rotation: [0, 0, 0, 1],
+    });
+
+    expect(manager.getEntity('body-empty')).toBeTruthy();
+    expect(manager.getEntityWorldPosition('datum-empty')).toEqual({ x: 1.5, y: 2, z: 3 });
+
+    manager.updateBodyTransform('body-empty', {
+      position: [2, 4, 6],
+      rotation: [0, 0, 0, 1],
+    });
+    expect(manager.getEntityWorldPosition('datum-empty')).toEqual({ x: 2.5, y: 4, z: 6 });
+
+    manager.dispose();
+    materialFactory.dispose();
+  });
+
+  it('positions joints at parent datum world position', () => {
     const { manager, materialFactory } = makeManager();
 
     manager.addBody('body-a', 'A', makeBodyMesh(), {
@@ -167,7 +227,7 @@ describe('SceneGraphManager', () => {
 
     const joint = manager.getEntity('joint-1');
     expect(joint).toBeTruthy();
-    expect(joint?.rootNode.position.x).toBeCloseTo(1);
+    expect(joint?.rootNode.position.x).toBeCloseTo(0);
     expect(joint?.rootNode.position.y).toBeCloseTo(0);
 
     manager.dispose();
@@ -269,7 +329,8 @@ describe('SceneGraphManager', () => {
     ]);
 
     const joint = manager.getEntity('joint-1');
-    expect(joint?.rootNode.position.x).toBeCloseTo(2.5);
+    // Joint follows parent datum: body-a moved to (1,0,0), datum-a is local (0,0,0)
+    expect(joint?.rootNode.position.x).toBeCloseTo(1);
 
     manager.dispose();
     materialFactory.dispose();
@@ -443,6 +504,7 @@ describe('SceneGraphManager', () => {
     manager.addJoint('joint-1', 'datum-a', 'datum-b', 'prismatic');
     manager.updateJointLimits('joint-1', 0, 0.5);
     manager.applySelection(new Set(['joint-1']));
+    manager.flushSelectionOverlays();
     manager.updateJointLimitValue('joint-1', 0.25);
 
     const visual = (manager as any).activeLimitVisuals.get('joint-1');
@@ -632,10 +694,16 @@ describe('SceneGraphManager', () => {
     const cyl = createCylinderMeshDataWithTopology(0.6, 0.6, 2, 48);
 
     // Place the cylinder at [3, 1, 0] so the axis center is at world (3, 1, 0)
-    manager.addBody('cyl', 'Cylinder', cyl, {
-      position: [3, 1, 0],
-      rotation: [0, 0, 0, 1],
-    }, cyl.partIndex);
+    manager.addBody(
+      'cyl',
+      'Cylinder',
+      cyl,
+      {
+        position: [3, 1, 0],
+        rotation: [0, 0, 0, 1],
+      },
+      cyl.partIndex,
+    );
 
     // Face 0 = side face (cylindrical). The axis center in local space should
     // be at (0, 0, 0) — the center of the cylinder. In world space: (3, 1, 0).

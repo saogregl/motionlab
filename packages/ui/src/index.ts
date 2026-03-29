@@ -20,7 +20,7 @@ export { QuatDisplay } from './components/engineering/quat-display';
 export type { Vec3DisplayProps } from './components/engineering/vec3-display';
 export { Vec3Display } from './components/engineering/vec3-display';
 export { formatEngValue } from './lib/format';
-export { quatToEulerDeg } from './lib/quat-math';
+export { quatToEulerDeg, eulerDegToQuat, isNearGimbalLock } from './lib/quat-math';
 export type { Axis, AxisColorLabelProps } from './components/primitives/axis-color-label';
 export { AxisColorLabel } from './components/primitives/axis-color-label';
 export type {

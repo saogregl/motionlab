@@ -85,6 +85,18 @@ describe('Epic 12 command regressions', () => {
     expect(useJointCreationStore.getState().preselectedJointType).toBe('prismatic');
   });
 
+  it('registers the extended joint subtype commands', () => {
+    const commands = createCreateCommands();
+    const universal = findCommand(commands, 'create.joint.universal');
+    const distance = findCommand(commands, 'create.joint.distance');
+
+    universal.execute();
+    expect(useJointCreationStore.getState().preselectedJointType).toBe('universal');
+
+    distance.execute();
+    expect(useJointCreationStore.getState().preselectedJointType).toBe('distance');
+  });
+
   it('clears stale joint subtype state for generic joint creation', () => {
     useJointCreationStore.setState({
       step: 'idle',

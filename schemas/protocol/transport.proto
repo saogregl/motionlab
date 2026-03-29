@@ -52,6 +52,10 @@ message Command {
     UpdatePrimitiveCommand update_primitive = 58;
     UpdateCollisionConfigCommand update_collision_config = 59;
     PlaceAssetInSceneCommand place_asset_in_scene = 60;
+    MakeCompoundBodyCommand make_compound_body = 62;
+    SplitBodyCommand split_body = 63;
+    ReparentGeometryCommand reparent_geometry = 64;
+    UpdateGeometryPoseCommand update_geometry_pose = 65;
     CompileMechanismCommand compile_mechanism = 30;
     SimulationControlCommand simulation_control = 31;
     ScrubCommand scrub = 32;
@@ -98,6 +102,10 @@ message Event {
     UpdateCollisionConfigResult update_collision_config_result = 59;
     PlaceAssetInSceneResult place_asset_in_scene_result = 60;
     AnalyzeFacePairResult analyze_face_pair_result = 61;
+    MakeCompoundBodyResult make_compound_body_result = 62;
+    SplitBodyResult split_body_result = 63;
+    ReparentGeometryResult reparent_geometry_result = 64;
+    UpdateGeometryPoseResult update_geometry_pose_result = 65;
     CompilationResultEvent compilation_result = 30;
     SimulationStateEvent simulation_state = 31;
     SimulationFrame simulation_frame = 32;
@@ -343,6 +351,7 @@ message UpdateBodyCommand {
   optional string name = 3;
   optional motionlab.mechanism.Pose pose = 4;
   optional motionlab.mechanism.MotionType motion_type = 5;
+  bool pin_datums_in_world = 6;  // When true, co-translate datums to preserve world positions (default false = datums move with body)
 }
 
 message UpdateBodyResult {
@@ -350,6 +359,7 @@ message UpdateBodyResult {
     motionlab.mechanism.Body body = 1;
     string error_message = 2;
   }
+  repeated motionlab.mechanism.Datum updated_datums = 3;
 }
 
 // ──────────────────────────────────────────────
@@ -398,6 +408,7 @@ message AttachGeometryResult {
   }
   motionlab.mechanism.Body old_parent_body = 3;
   motionlab.mechanism.Body new_parent_body = 4;
+  repeated motionlab.mechanism.Datum updated_datums = 5;
 }
 
 // Detach geometry from its parent body (geometry becomes unparented)
@@ -497,6 +508,7 @@ message UpdatePrimitiveSuccess {
   motionlab.mechanism.Body parent_body = 3;         // body with recomputed aggregate mass
   repeated uint32 part_index = 4;                    // face-aware picking indices
   uint32 face_count = 5;
+  repeated motionlab.mechanism.Datum updated_datums = 6;
 }
 
 // ──────────────────────────────────────────────
@@ -520,6 +532,98 @@ message UpdateCollisionConfigResult {
 message UpdateCollisionConfigSuccess {
   motionlab.mechanism.Geometry geometry = 1;                       // updated geometry with collision_config
   motionlab.mechanism.CollisionConfig resolved_config = 2;  // with auto-fit dimensions filled in
+}
+
+// ──────────────────────────────────────────────
+// Compound body operations (atomic multi-step)
+// ──────────────────────────────────────────────
+
+// Create a compound body from multiple geometries, atomically detaching them
+// from existing parents, creating a new body at either the reference body pose
+// or the selected assembly's world center of mass, and re-attaching with
+// computed local poses that preserve world positions.
+message MakeCompoundBodyCommand {
+  repeated motionlab.mechanism.ElementId geometry_ids = 1;
+  string name = 2;
+  motionlab.mechanism.MotionType motion_type = 3;
+  bool dissolve_empty_bodies = 4;
+  motionlab.mechanism.ElementId reference_body_id = 5;  // Use this body's pose as compound body origin (falls back to world center of mass if empty)
+}
+
+message MakeCompoundBodySuccess {
+  motionlab.mechanism.Body created_body = 1;
+  repeated motionlab.mechanism.Geometry attached_geometries = 2;
+  repeated motionlab.mechanism.ElementId dissolved_body_ids = 3;
+  repeated motionlab.mechanism.Body modified_bodies = 4;
+  repeated motionlab.mechanism.Datum updated_datums = 5;  // Re-parented datums with new parent_body_id and local_pose
+}
+
+message MakeCompoundBodyResult {
+  oneof result {
+    MakeCompoundBodySuccess success = 1;
+    string error_message = 2;
+  }
+}
+
+// Split selected geometries from a source body into a new body.
+// Atomically detaches, creates new body at centroid, re-attaches with
+// local poses that preserve world positions.
+message SplitBodyCommand {
+  motionlab.mechanism.ElementId source_body_id = 1;
+  repeated motionlab.mechanism.ElementId geometry_ids = 2;
+  string name = 3;
+  motionlab.mechanism.MotionType motion_type = 4;
+}
+
+message SplitBodySuccess {
+  motionlab.mechanism.Body created_body = 1;
+  repeated motionlab.mechanism.Geometry attached_geometries = 2;
+  motionlab.mechanism.Body source_body = 3;
+  repeated motionlab.mechanism.Datum updated_datums = 4;
+}
+
+message SplitBodyResult {
+  oneof result {
+    SplitBodySuccess success = 1;
+    string error_message = 2;
+  }
+}
+
+// Move a geometry from one body to another while preserving its world-space position.
+// Engine computes the correct local pose via inverse transform.
+message ReparentGeometryCommand {
+  motionlab.mechanism.ElementId geometry_id = 1;
+  motionlab.mechanism.ElementId target_body_id = 2;
+}
+
+message ReparentGeometrySuccess {
+  motionlab.mechanism.Geometry geometry = 1;
+  motionlab.mechanism.Body old_parent_body = 2;
+  motionlab.mechanism.Body new_parent_body = 3;
+  repeated motionlab.mechanism.Datum updated_datums = 4;
+}
+
+message ReparentGeometryResult {
+  oneof result {
+    ReparentGeometrySuccess success = 1;
+    string error_message = 2;
+  }
+}
+
+// Update a geometry's local pose (relative to parent body).
+// Engine recomputes aggregate mass for the parent body.
+message UpdateGeometryPoseCommand {
+  motionlab.mechanism.ElementId geometry_id = 1;
+  motionlab.mechanism.Pose new_local_pose = 2;
+}
+
+message UpdateGeometryPoseResult {
+  oneof result {
+    motionlab.mechanism.Geometry geometry = 1;
+    string error_message = 2;
+  }
+  motionlab.mechanism.Body updated_parent_body = 3;
+  repeated motionlab.mechanism.Datum updated_datums = 4;
 }
 
 // Joint CRUD — Command→Result pattern with oneof success/error

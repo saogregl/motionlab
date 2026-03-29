@@ -8,6 +8,7 @@
     "dev": "turbo run dev",
     "dev:web": "turbo run dev --filter=@motionlab/web",
     "dev:desktop": "ELECTRON_DISABLE_SANDBOX=1 turbo run dev --filter=@motionlab/desktop",
+    "debug:agent": "pnpm --filter @motionlab/desktop run debug:agent",
     "lint": "biome check .",
     "lint:write": "biome check --write .",
     "format": "biome format --write .",

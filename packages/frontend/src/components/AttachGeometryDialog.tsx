@@ -14,7 +14,7 @@ import {
 } from '@motionlab/ui';
 import { useState } from 'react';
 
-import { sendAttachGeometry } from '../engine/connection.js';
+import { sendReparentGeometry } from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 
 interface AttachGeometryDialogProps {
@@ -34,7 +34,7 @@ export function AttachGeometryDialog({
 
   const handleAttach = () => {
     if (!selectedBodyId) return;
-    sendAttachGeometry(geometryId, selectedBodyId);
+    sendReparentGeometry(geometryId, selectedBodyId);
     onOpenChange(false);
     setSelectedBodyId('');
   };

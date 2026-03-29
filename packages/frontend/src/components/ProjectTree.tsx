@@ -23,7 +23,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { executeCommand } from '../commands/registry.js';
 import {
   getSceneGraph,
-  sendAttachGeometry,
   sendDeleteBody,
   sendDeleteDatum,
   sendDeleteGeometry,
@@ -37,9 +36,11 @@ import {
   sendUpdateBody,
   sendUpdateJoint,
   sendUpdateLoad,
+  sendReparentGeometry,
 } from '../engine/connection.js';
 import { AttachGeometryDialog } from './AttachGeometryDialog.js';
 import { CreateBodyDialog } from './CreateBodyDialog.js';
+import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useLoadCreationStore } from '../stores/load-creation.js';
 import { useMechanismStore } from '../stores/mechanism.js';
@@ -137,6 +138,31 @@ export function ProjectTree() {
   const nodes = useMemo<TreeNode[]>(() => {
     const result: TreeNode[] = [];
 
+    // ── Single-pass parent-ID indexes ──
+    const geosByBody = new Map<string, typeof geometries extends Map<string, infer V> ? V[] : never>();
+    const unparentedGeometries: (typeof geometries extends Map<string, infer V> ? V : never)[] = [];
+    for (const g of geometries.values()) {
+      if (g.parentBodyId) {
+        let bucket = geosByBody.get(g.parentBodyId);
+        if (!bucket) { bucket = []; geosByBody.set(g.parentBodyId, bucket); }
+        bucket.push(g);
+      } else {
+        unparentedGeometries.push(g);
+      }
+    }
+    const datumsByBody = new Map<string, typeof datums extends Map<string, infer V> ? V[] : never>();
+    for (const d of datums.values()) {
+      let bucket = datumsByBody.get(d.parentBodyId);
+      if (!bucket) { bucket = []; datumsByBody.set(d.parentBodyId, bucket); }
+      bucket.push(d);
+    }
+    const actuatorsByJoint = new Map<string, typeof actuators extends Map<string, infer V> ? V[] : never>();
+    for (const a of actuators.values()) {
+      let bucket = actuatorsByJoint.get(a.jointId);
+      if (!bucket) { bucket = []; actuatorsByJoint.set(a.jointId, bucket); }
+      bucket.push(a);
+    }
+
     // Root
     result.push({
       id: ROOT_ID,
@@ -160,8 +186,8 @@ export function ProjectTree() {
 
     // Bodies + their geometries + their datums
     for (const body of bodies.values()) {
-      const bodyGeometries = [...geometries.values()].filter((g) => g.parentBodyId === body.id);
-      const bodyDatums = [...datums.values()].filter((d) => d.parentBodyId === body.id);
+      const bodyGeometries = geosByBody.get(body.id) ?? [];
+      const bodyDatums = datumsByBody.get(body.id) ?? [];
       const hasChildren = bodyGeometries.length > 0 || bodyDatums.length > 0;
       result.push({
         id: body.id,
@@ -196,7 +222,6 @@ export function ProjectTree() {
       }
     }
 
-    const unparentedGeometries = [...geometries.values()].filter((g) => g.parentBodyId == null);
     if (unparentedGeometries.length > 0) {
       result.push({
         id: GEOMETRIES_GROUP_ID,
@@ -231,7 +256,7 @@ export function ProjectTree() {
         _count: joints.size,
       });
       for (const joint of joints.values()) {
-        const jointActuators = [...actuators.values()].filter((a) => a.jointId === joint.id);
+        const jointActuators = actuatorsByJoint.get(joint.id) ?? [];
         result.push({
           id: joint.id,
           parentId: JOINTS_GROUP_ID,
@@ -282,6 +307,14 @@ export function ProjectTree() {
     return result;
   }, [bodies, geometries, datums, joints, loads, actuators]);
 
+  // ── O(1) node lookup map for parent walks ──
+
+  const nodeMap = useMemo(() => {
+    const map = new Map<string, TreeNode>();
+    for (const node of nodes) map.set(node.id, node);
+    return map;
+  }, [nodes]);
+
   // ── Auto-expand parents of selected entities ──
 
   useEffect(() => {
@@ -289,12 +322,13 @@ export function ProjectTree() {
 
     const needed = new Set<string>();
     for (const id of selectedIds) {
-      const node = nodes.find((n) => n.id === id);
+      const node = nodeMap.get(id);
       if (!node) continue;
       let parentId = node.parentId;
       while (parentId) {
+        if (needed.has(parentId)) break; // already walked this ancestor chain
         needed.add(parentId);
-        const parent = nodes.find((n) => n.id === parentId);
+        const parent = nodeMap.get(parentId);
         parentId = parent?.parentId ?? null;
       }
     }
@@ -306,7 +340,7 @@ export function ProjectTree() {
       setExpandedIds(next);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- expandedIds excluded to avoid loops
-  }, [selectedIds, nodes]);
+  }, [selectedIds, nodeMap]);
 
   // ── Auto-activate inline rename after merge ──
 
@@ -600,12 +634,16 @@ export function ProjectTree() {
                     const bodyDatums = [...datums.values()].filter(
                       (d) => d.parentBodyId === node.id,
                     );
+                    useToolModeStore.getState().setMode('create-joint');
+                    const store = useJointCreationStore.getState();
+                    store.setPreselectedJointType(null);
+                    store.startCreation();
                     if (bodyDatums.length > 0) {
-                      useToolModeStore.getState().setMode('create-joint');
-                      const store = useJointCreationStore.getState();
-                      store.setPreselectedJointType(null);
-                      store.startCreation();
                       store.setParentDatum(bodyDatums[0].id);
+                    } else {
+                      useAuthoringStatusStore.getState().setMessage(
+                        'Click a face on this body to place the parent datum',
+                      );
                     }
                   }
             }
@@ -672,7 +710,7 @@ export function ProjectTree() {
             }
             makeBodyDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
             bodyList={isSimulating ? undefined : [...bodies.values()].map((b) => ({ id: b.id, name: b.name }))}
-            onMoveToBody={isSimulating ? undefined : (bodyId) => sendAttachGeometry(node.id, bodyId)}
+            onMoveToBody={isSimulating ? undefined : (bodyId) => sendReparentGeometry(node.id, bodyId)}
             onAttachToBody={isSimulating ? undefined : () => setAttachGeomId(node.id)}
             attachDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
             onDetachFromBody={
@@ -772,11 +810,15 @@ export function ProjectTree() {
                       Spherical: 'spherical',
                       Cylindrical: 'cylindrical',
                       Planar: 'planar',
+                      Universal: 'universal',
+                      Distance: 'distance',
+                      'Point-Line': 'point-line',
+                      'Point-Plane': 'point-plane',
                     };
                     const mapped = typeMap[type];
                     if (mapped) {
                       sendUpdateJoint(node.id, {
-                        type: mapped as 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar',
+                        type: mapped as Parameters<typeof sendUpdateJoint>[1]['type'],
                       });
                     }
                   }

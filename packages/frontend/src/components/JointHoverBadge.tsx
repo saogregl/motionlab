@@ -28,7 +28,7 @@ export function JointHoverBadge({ sceneGraph }: { sceneGraph: SceneGraphManager 
       offset={{ x: 0, y: -12 }}
     >
       <div className="rounded bg-background/80 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground backdrop-blur-sm whitespace-nowrap">
-        {dof.label}
+        {joint.name} &middot; {dof.label}
       </div>
     </WorldSpaceOverlay>
   );

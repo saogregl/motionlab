@@ -103,13 +103,33 @@ export function EntityCreationMenu() {
               Fixed
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem disabled>
+            <DropdownMenuItem onSelect={() => executeCommand('create.joint.spherical')}>
               <Circle className="size-4" />
               Spherical
             </DropdownMenuItem>
-            <DropdownMenuItem disabled>
+            <DropdownMenuItem onSelect={() => executeCommand('create.joint.cylindrical')}>
               <Cylinder className="size-4" />
               Cylindrical
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => executeCommand('create.joint.planar')}>
+              <MoveHorizontal className="size-4" />
+              Planar
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => executeCommand('create.joint.universal')}>
+              <RotateCw className="size-4" />
+              Universal
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => executeCommand('create.joint.distance')}>
+              <Link2 className="size-4" />
+              Distance
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => executeCommand('create.joint.point-line')}>
+              <MoveHorizontal className="size-4" />
+              Point-Line
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => executeCommand('create.joint.point-plane')}>
+              <Circle className="size-4" />
+              Point-Plane
             </DropdownMenuItem>
           </DropdownMenuSubContent>
         </DropdownMenuSub>

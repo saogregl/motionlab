@@ -129,6 +129,20 @@
         "CMAKE_BUILD_TYPE": "Release",
         "BUILD_TESTS": "OFF"
       }
+    },
+    {
+      "name": "dev-linux-asan",
+      "displayName": "Development (Linux GCC + ASAN/UBSAN)",
+      "description": "Linux GCC debug build with AddressSanitizer and UndefinedBehaviorSanitizer",
+      "inherits": "linux-base",
+      "binaryDir": "${sourceDir}/build/dev-linux-asan",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "BUILD_TESTS": "ON",
+        "ENABLE_ASAN": "ON",
+        "ENABLE_UBSAN": "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -155,6 +169,10 @@
     {
       "name": "release-linux",
       "configurePreset": "release-linux"
+    },
+    {
+      "name": "dev-linux-asan",
+      "configurePreset": "dev-linux-asan"
     }
   ],
   "testPresets": [
@@ -175,6 +193,13 @@
     {
       "name": "dev-linux",
       "configurePreset": "dev-linux",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "dev-linux-asan",
+      "configurePreset": "dev-linux-asan",
       "output": {
         "outputOnFailure": true
       }

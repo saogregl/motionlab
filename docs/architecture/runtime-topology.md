@@ -7,6 +7,7 @@
 - Cached imports do not eagerly rebuild native topology state. Face-aware commands trigger lazy topology reload only when a retained shape is actually needed.
 - Inside the native boundary, transport now delegates import/project concerns and runtime/session concerns to separate native modules instead of keeping those behaviors entirely inside one transport implementation block.
 - `apps/desktop` will launch the engine process and expose the desktop shell (not yet implemented — Epic 1, Prompt 2).
+- Desktop debug mode adds a local-only inspection layer for AI agents: Electron owns session manifests, bundle export, and artifact capture, while the renderer exposes a read-only debug API. This is not part of the engine protocol contract and does not move hot-path runtime transport through Electron.
 - The renderer/frontend will connect through versioned protocol contracts (not yet implemented — Epic 1, Prompt 3).
 - `apps/web` reuses the shared frontend without local native-process supervision.
 
@@ -35,7 +36,9 @@ Viewport-managed scene entities render on a dedicated Three.js layer that is als
 
 Hover picking is suspended while orbit or transform controls are actively dragging. Click picking still uses the viewport's custom picker, but drag interaction no longer continuously re-runs hover/face analysis against dense CAD meshes.
 
-Body rendering now uses a **body root + child geometry mesh** scene graph. Picking and face highlight run against geometry-local topology rather than merged body meshes, which keeps `geometry_id + face_index` stable for multi-geometry bodies and attached geometry local poses.
+Body rendering now uses a **body root + child geometry mesh** scene graph. Picking and face highlight run against geometry-local topology rather than merged body meshes, which keeps `geometry_id + face_index` stable for multi-geometry bodies and attached geometry local poses. Body roots are created even when a body currently owns zero geometries so authored datums, joints, and loads on empty bodies remain visible and selectable.
+
+Datum rendering is semantic rather than triad-only: planar datums render a persistent plane glyph, cylindrical/conical/toroidal datums render an axis glyph, and manual or point-like datums remain triad-only. Datum parent changes are treated as scene-graph rebuild events instead of pose-only updates.
 
 Geometry meshes use **BVH-accelerated Three.js raycasting** for exact picking. Large static meshes may build their BVH asynchronously per geometry; while that acceleration is still building, select-mode hover is intentionally rate-limited so dense mesh hover does not monopolize the main thread. Face-aware modes still use exact triangle hits and preserve current picking semantics.
 

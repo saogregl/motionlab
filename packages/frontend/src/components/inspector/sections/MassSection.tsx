@@ -1,13 +1,13 @@
 import type { Axis } from '@motionlab/ui';
 import {
   EditableInertiaMatrix,
+  formatEngValue,
   InertiaMatrixDisplay,
   InspectorSection,
   NumericInput,
   PropertyRow,
   Switch,
   Vec3Display,
-  formatEngValue,
 } from '@motionlab/ui';
 import { Grid3X3, Scale } from 'lucide-react';
 import { useCallback, useRef } from 'react';
@@ -111,7 +111,7 @@ function MassSection({
             ixy={mp.ixy}
             ixz={mp.ixz}
             iyz={mp.iyz}
-            unit="kg m\u00B2"
+            unit="kg m²"
             onChange={(values) => debouncedChange({ ...mp, ...values })}
             disabled={isSimulating}
           />
@@ -123,7 +123,7 @@ function MassSection({
             ixy={mp.ixy}
             ixz={mp.ixz}
             iyz={mp.iyz}
-            unit="kg m\u00B2"
+            unit="kg m²"
           />
         )}
       </InspectorSection>
