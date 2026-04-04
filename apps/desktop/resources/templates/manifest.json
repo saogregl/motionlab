@@ -27,7 +27,7 @@
     {
       "id": "slider-crank",
       "name": "Slider-Crank",
-      "description": "Crank, connecting rod, and slider with revolute and prismatic joints.",
+      "description": "Driven slider-crank with a motorized crank, connecting rod, and prismatic slider guide.",
       "filename": "slider-crank.motionlab",
       "icon": "move-horizontal",
       "category": "linkages"

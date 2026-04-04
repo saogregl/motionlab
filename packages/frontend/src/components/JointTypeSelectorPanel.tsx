@@ -16,7 +16,7 @@ import {
   Move,
   RotateCw,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { sendCreateJoint, sendUpdateJoint } from '../engine/connection.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
@@ -168,7 +168,7 @@ export function JointTypeSelectorPanel() {
         setUpperLimit(0);
       }
     }
-  }, [step === 'pick-parent', step === 'select-type', editingJoint]);
+  }, [step, editingJoint]);
 
   // Show for all active steps, not just select-type
   if (step === 'idle') return null;
@@ -179,11 +179,11 @@ export function JointTypeSelectorPanel() {
   const canCreate = !!parentDatumId && !!childDatumId && !!currentType;
 
   // Sort: recommended first
-  const recommendedSet = new Set(recommendedTypes);
-  const sortedOptions = [
+  const recommendedSet = useMemo(() => new Set(recommendedTypes), [recommendedTypes]);
+  const sortedOptions = useMemo(() => [
     ...JOINT_TYPE_OPTIONS.filter((o) => recommendedSet.has(o.type)),
     ...JOINT_TYPE_OPTIONS.filter((o) => !recommendedSet.has(o.type)),
-  ];
+  ], [recommendedSet]);
 
   const handleCommit = () => {
     if (!parentDatumId || !childDatumId || !currentType) return;
@@ -213,12 +213,8 @@ export function JointTypeSelectorPanel() {
   };
 
   const handleCancel = () => {
-    if (isEditing) {
-      exitMode();
-      useToolModeStore.getState().setMode('select');
-    } else {
-      cancel();
-    }
+    exitMode();
+    useToolModeStore.getState().setMode('select');
   };
 
   return (

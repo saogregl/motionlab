@@ -146,52 +146,32 @@ AlignmentResult check_perpendicular(const FaceDatumPose& cylinder, const FaceDat
 
 } // anonymous namespace
 
-std::optional<FacePairAnalysis> analyze_face_pair(
-    const TopoDS_Shape& parent_shape, uint32_t parent_face_index, double parent_length_scale,
-    const TopoDS_Shape& child_shape, uint32_t child_face_index, double child_length_scale) {
-
-    // Classify both faces
-    auto parent_pose = classify_face_for_datum(parent_shape, parent_face_index);
-    if (!parent_pose) return std::nullopt;
-
-    auto child_pose = classify_face_for_datum(child_shape, child_face_index);
-    if (!child_pose) return std::nullopt;
-
-    // Apply length scales to positions
-    for (double& c : parent_pose->position) c *= parent_length_scale;
-    for (double& c : child_pose->position) c *= child_length_scale;
-
-    // Scale radii
-    if (parent_pose->radius) *parent_pose->radius *= parent_length_scale;
-    if (parent_pose->secondary_radius) *parent_pose->secondary_radius *= parent_length_scale;
-    if (child_pose->radius) *child_pose->radius *= child_length_scale;
-    if (child_pose->secondary_radius) *child_pose->secondary_radius *= child_length_scale;
-
-    // Determine alignment based on surface class pair
+FacePairAnalysis analyze_face_pair_poses(const FaceDatumPose& parent_pose,
+                                         const FaceDatumPose& child_pose) {
     AlignmentResult alignment;
 
-    const auto psc = parent_pose->surface_class;
-    const auto csc = child_pose->surface_class;
+    const auto psc = parent_pose.surface_class;
+    const auto csc = child_pose.surface_class;
 
     if (psc == FaceDatumSurfaceClass::Cylindrical && csc == FaceDatumSurfaceClass::Cylindrical) {
-        alignment = check_coaxial(*parent_pose, *child_pose);
+        alignment = check_coaxial(parent_pose, child_pose);
     } else if (psc == FaceDatumSurfaceClass::Planar && csc == FaceDatumSurfaceClass::Planar) {
-        alignment = check_coplanar(*parent_pose, *child_pose);
+        alignment = check_coplanar(parent_pose, child_pose);
     } else if (psc == FaceDatumSurfaceClass::Spherical && csc == FaceDatumSurfaceClass::Spherical) {
-        alignment = check_coincident_spheres(*parent_pose, *child_pose);
+        alignment = check_coincident_spheres(parent_pose, child_pose);
     } else if (psc == FaceDatumSurfaceClass::Cylindrical && csc == FaceDatumSurfaceClass::Planar) {
-        alignment = check_perpendicular(*parent_pose, *child_pose);
+        alignment = check_perpendicular(parent_pose, child_pose);
     } else if (psc == FaceDatumSurfaceClass::Planar && csc == FaceDatumSurfaceClass::Cylindrical) {
-        alignment = check_perpendicular(*child_pose, *parent_pose);
+        alignment = check_perpendicular(child_pose, parent_pose);
     } else {
         alignment = {FacePairAlignmentKind::General, 1.0, JOINT_FIXED, 0.3};
     }
 
     // Compute proposed joint frame: midpoint position, averaged Z-axis orientation
-    auto frame_pos = midpoint(parent_pose->position, child_pose->position);
+    auto frame_pos = midpoint(parent_pose.position, child_pose.position);
 
-    auto parent_dir = get_primary_direction(*parent_pose);
-    auto child_dir = get_primary_direction(*child_pose);
+    auto parent_dir = get_primary_direction(parent_pose);
+    auto child_dir = get_primary_direction(child_pose);
     std::array<double, 4> frame_orient = {1.0, 0.0, 0.0, 0.0}; // identity
     if (parent_dir && child_dir) {
         gp_Dir avg = average_direction(*parent_dir, *child_dir);
@@ -203,8 +183,8 @@ std::optional<FacePairAnalysis> analyze_face_pair(
     }
 
     FacePairAnalysis result;
-    result.parent_pose = *parent_pose;
-    result.child_pose = *child_pose;
+    result.parent_pose = parent_pose;
+    result.child_pose = child_pose;
     result.alignment = alignment.kind;
     result.alignment_error = alignment.error;
     result.recommended_joint_type = alignment.recommended_joint_type;
@@ -213,6 +193,27 @@ std::optional<FacePairAnalysis> analyze_face_pair(
     result.joint_frame_orientation = frame_orient;
 
     return result;
+}
+
+std::optional<FacePairAnalysis> analyze_face_pair(
+    const TopoDS_Shape& parent_shape, uint32_t parent_face_index, double parent_length_scale,
+    const TopoDS_Shape& child_shape, uint32_t child_face_index, double child_length_scale) {
+
+    auto parent_pose = classify_face_for_datum(parent_shape, parent_face_index);
+    if (!parent_pose) return std::nullopt;
+
+    auto child_pose = classify_face_for_datum(child_shape, child_face_index);
+    if (!child_pose) return std::nullopt;
+
+    for (double& c : parent_pose->position) c *= parent_length_scale;
+    for (double& c : child_pose->position) c *= child_length_scale;
+
+    if (parent_pose->radius) *parent_pose->radius *= parent_length_scale;
+    if (parent_pose->secondary_radius) *parent_pose->secondary_radius *= parent_length_scale;
+    if (child_pose->radius) *child_pose->radius *= child_length_scale;
+    if (child_pose->secondary_radius) *child_pose->secondary_radius *= child_length_scale;
+
+    return analyze_face_pair_poses(*parent_pose, *child_pose);
 }
 
 } // namespace motionlab::engine

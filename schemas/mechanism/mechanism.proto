@@ -326,18 +326,67 @@ enum ActuatorControlMode {
   ACTUATOR_CONTROL_MODE_EFFORT = 3;
 }
 
+// --- Command function shapes ---
+
+message ConstantFunction {
+  double value = 1;
+}
+
+message RampFunction {
+  double initial_value = 1;
+  double slope = 2;             // units/s
+}
+
+message SineFunction {
+  double amplitude = 1;
+  double frequency = 2;         // Hz
+  double phase = 3;             // rad
+  double offset = 4;            // DC bias
+}
+
+message PiecewiseLinearFunction {
+  repeated double times = 1;    // must be monotonically increasing
+  repeated double values = 2;   // same length as times
+}
+
+enum SmoothStepProfile {
+  SMOOTH_STEP_PROFILE_UNSPECIFIED = 0;
+  SMOOTH_STEP_PROFILE_CYCLOIDAL = 1;
+  SMOOTH_STEP_PROFILE_TRAPEZOIDAL = 2;
+}
+
+message SmoothStepFunction {
+  double displacement = 1;      // total displacement over duration
+  double duration = 2;          // seconds
+  SmoothStepProfile profile = 3;
+  double accel_fraction = 4;    // [0,1] fraction of duration for accel (trapezoidal only)
+  double decel_fraction = 5;    // [0,1] fraction of duration for decel (trapezoidal only)
+}
+
+message CommandFunction {
+  oneof shape {
+    ConstantFunction constant = 1;
+    RampFunction ramp = 2;
+    SineFunction sine = 3;
+    PiecewiseLinearFunction piecewise_linear = 4;
+    SmoothStepFunction smooth_step = 5;
+  }
+}
+
 message RevoluteMotorActuator {
   ElementId joint_id = 1;
   ActuatorControlMode control_mode = 2;
-  double command_value = 3;
+  double command_value = 3;          // deprecated: use command_function
   optional double effort_limit = 4;
+  CommandFunction command_function = 5;
 }
 
 message PrismaticMotorActuator {
   ElementId joint_id = 1;
   ActuatorControlMode control_mode = 2;
-  double command_value = 3;
+  double command_value = 3;          // deprecated: use command_function
   optional double effort_limit = 4;
+  CommandFunction command_function = 5;
 }
 
 message Actuator {
@@ -346,6 +395,49 @@ message Actuator {
   oneof config {
     RevoluteMotorActuator revolute_motor = 3;
     PrismaticMotorActuator prismatic_motor = 4;
+  }
+}
+
+// Sensor types relevant to mechanism analysis
+enum SensorType {
+  SENSOR_TYPE_UNSPECIFIED = 0;
+  SENSOR_TYPE_ACCELEROMETER = 1;   // linear acceleration on a body
+  SENSOR_TYPE_GYROSCOPE = 2;       // angular velocity on a body
+  SENSOR_TYPE_TACHOMETER = 3;      // RPM around an axis on a body
+  SENSOR_TYPE_ENCODER = 4;         // joint position/velocity measurement
+}
+
+// Axis selection for tachometer measurement direction
+enum SensorAxis {
+  SENSOR_AXIS_UNSPECIFIED = 0;     // defaults to Z
+  SENSOR_AXIS_X = 1;
+  SENSOR_AXIS_Y = 2;
+  SENSOR_AXIS_Z = 3;
+}
+
+message AccelerometerConfig {}
+
+message GyroscopeConfig {}
+
+message TachometerConfig {
+  SensorAxis axis = 1;             // which local axis to measure RPM around
+}
+
+message EncoderConfig {
+  ElementId joint_id = 1;          // the joint this encoder measures
+}
+
+// Sensor entity — first-class authored entity mounted to a datum.
+message Sensor {
+  ElementId id = 1;
+  string name = 2;
+  SensorType type = 3;
+  ElementId datum_id = 4;          // mount point (body-mounted sensors)
+  oneof config {
+    AccelerometerConfig accelerometer = 5;
+    GyroscopeConfig gyroscope = 6;
+    TachometerConfig tachometer = 7;
+    EncoderConfig encoder = 8;
   }
 }
 
@@ -359,6 +451,7 @@ message Mechanism {
   repeated Load loads = 6;
   repeated Actuator actuators = 7;
   repeated Geometry geometries = 8;
+  repeated Sensor sensors = 9;
 }
 
 // Display data for a body, stored in project files for self-contained persistence

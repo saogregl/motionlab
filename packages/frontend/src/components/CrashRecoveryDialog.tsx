@@ -12,25 +12,10 @@ import { useState } from 'react';
 import { sendLoadProject } from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import type { RecoverableProject } from '../types/motionlab.js';
+import { formatRelativeTime, truncatePath } from '../utils/format.js';
 
-function formatRelativeTime(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60_000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days < 30) return `${days}d ago`;
-  return new Date(iso).toLocaleDateString();
-}
-
-function truncatePath(filePath: string, maxLen = 50): string {
-  if (filePath.length <= maxLen) return filePath;
-  const parts = filePath.split('/');
-  if (parts.length <= 3) return `\u2026${filePath.slice(-maxLen)}`;
-  return `\u2026/${parts.slice(-3).join('/')}`;
-}
+/** Delay to let loadProjectResult handler run before setting project metadata. */
+const METADATA_SETTLE_MS = 500;
 
 interface CrashRecoveryDialogProps {
   recoverableProjects: RecoverableProject[];
@@ -53,7 +38,7 @@ export function CrashRecoveryDialog({ recoverableProjects, onClose }: CrashRecov
       setTimeout(() => {
         mechStore.setProjectMeta(project.name, project.originalPath);
         mechStore.markDirty(); // Recovered state differs from last saved version
-      }, 500);
+      }, METADATA_SETTLE_MS);
       // Clean up the autosave file
       await window.motionlab.discardAutoSave(project.autoSavePath);
       onClose();

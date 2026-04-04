@@ -227,7 +227,7 @@ export function useViewportBridge() {
 
     // Initial sync: add any joints already in the store (after datums)
     for (const joint of joints.values()) {
-      sceneGraph.addJoint(joint.id, joint.parentDatumId, joint.childDatumId, joint.type);
+      sceneGraph.addJoint(joint.id, joint.parentDatumId, joint.childDatumId, joint.type, joint.name);
     }
 
     // Initial sync: add any loads already in the store (after datums)
@@ -491,7 +491,7 @@ export function useViewportBridge() {
         if (!trackedJointIds.has(id)) {
           const joint = state.joints.get(id);
           if (!joint) continue;
-          sg.addJoint(joint.id, joint.parentDatumId, joint.childDatumId, joint.type);
+          sg.addJoint(joint.id, joint.parentDatumId, joint.childDatumId, joint.type, joint.name);
           sg.updateJointLimits(joint.id, joint.lowerLimit, joint.upperLimit);
         }
       }
@@ -512,7 +512,7 @@ export function useViewportBridge() {
           if (prevSig !== undefined && prevSig !== sig) {
             // Type or datum IDs changed — rebuild the joint visual
             sg.removeJoint(id);
-            sg.addJoint(joint.id, joint.parentDatumId, joint.childDatumId, joint.type);
+            sg.addJoint(joint.id, joint.parentDatumId, joint.childDatumId, joint.type, joint.name);
             sg.updateJointLimits(joint.id, joint.lowerLimit, joint.upperLimit);
           } else {
             // Limits may have changed without type/datum change

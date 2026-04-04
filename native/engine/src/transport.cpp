@@ -11,6 +11,7 @@
 #include "primitive_generator.h"
 #include "asset_cache.h"
 #include "face_classifier.h"
+#include "face_metadata_cache.h"
 #include "face_pair_analyzer.h"
 #include "pose_math.h"
 #include "mechanism_state.h"
@@ -80,6 +81,10 @@ static const char* command_name(protocol::Command::PayloadCase pc) {
         case protocol::Command::kCreateActuator:     return "CreateActuator";
         case protocol::Command::kUpdateActuator:     return "UpdateActuator";
         case protocol::Command::kDeleteActuator:     return "DeleteActuator";
+        case protocol::Command::kPrepareFacePicking: return "PrepareFacePicking";
+        case protocol::Command::kCreateSensor:       return "CreateSensor";
+        case protocol::Command::kUpdateSensor:       return "UpdateSensor";
+        case protocol::Command::kDeleteSensor:       return "DeleteSensor";
         case protocol::Command::kCompileMechanism:   return "CompileMechanism";
         case protocol::Command::kSimulationControl:  return "SimulationControl";
         case protocol::Command::kScrub:              return "Scrub";
@@ -166,6 +171,7 @@ struct TransportServer::Impl {
     std::atomic<bool> running{false};
     engine::MechanismState mechanism_state;
     engine::ShapeRegistry shape_registry;
+    engine::FaceMetadataCache face_metadata_cache;
     transport_detail::ImportProjectContext import_project;
     transport_detail::RuntimeSession runtime_session;
 
@@ -391,6 +397,22 @@ struct TransportServer::Impl {
                 if (!authenticated) break;
                 enqueue_command(cmd.sequence_id(), cmd.delete_actuator(), &Impl::handle_delete_actuator);
                 break;
+            case protocol::Command::kPrepareFacePicking:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.prepare_face_picking(), &Impl::handle_prepare_face_picking);
+                break;
+            case protocol::Command::kCreateSensor:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.create_sensor(), &Impl::handle_create_sensor);
+                break;
+            case protocol::Command::kUpdateSensor:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.update_sensor(), &Impl::handle_update_sensor);
+                break;
+            case protocol::Command::kDeleteSensor:
+                if (!authenticated) break;
+                enqueue_command(cmd.sequence_id(), cmd.delete_sensor(), &Impl::handle_delete_sensor);
+                break;
             case protocol::Command::kCompileMechanism:
                 if (!authenticated) break;
                 enqueue_command(cmd.sequence_id(), cmd.compile_mechanism(), &Impl::handle_compile_mechanism);
@@ -531,11 +553,44 @@ struct TransportServer::Impl {
 
     void handle_import_asset(ix::WebSocket& ws, uint64_t sequence_id,
                               const protocol::ImportAssetCommand& cmd) {
+        face_metadata_cache.clear();
         import_project.handle_import_asset(
             ws, sequence_id, cmd,
             [this](ix::WebSocket& target_ws, const protocol::Event& event) {
                 send_event(target_ws, event);
             });
+    }
+
+    bool ensure_face_metadata_cached(const std::string& geometry_id, std::string* error_message) {
+        if (face_metadata_cache.has_geometry(geometry_id)) {
+            return true;
+        }
+        if (!import_project.ensure_geometry_shape_loaded(geometry_id)) {
+            if (error_message) {
+                *error_message = "Shape not available for geometry: " + geometry_id;
+            }
+            return false;
+        }
+
+        const TopoDS_Shape* shape = shape_registry.get(geometry_id);
+        if (!shape) {
+            if (error_message) {
+                *error_message = "Shape data unavailable for geometry: " + geometry_id;
+            }
+            return false;
+        }
+
+        if (!face_metadata_cache.prepare_geometry(
+                geometry_id, *shape, import_project.geometry_length_scale(geometry_id), error_message)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    const engine::FaceDatumPose* get_prepared_face_pose(const std::string& geometry_id,
+                                                        uint32_t face_index) const {
+        return face_metadata_cache.get_face_pose(geometry_id, face_index);
     }
 
     void populate_proto_datum(mechanism::Datum* datum,
@@ -684,6 +739,27 @@ struct TransportServer::Impl {
         send_event(ws, event);
     }
 
+    void handle_prepare_face_picking(ix::WebSocket& ws, uint64_t sequence_id,
+                                     const protocol::PrepareFacePickingCommand& cmd) {
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* result = event.mutable_prepare_face_picking_result();
+        auto* success = result->mutable_success();
+
+        for (const auto& geometry_id_proto : cmd.geometry_ids()) {
+            const std::string geometry_id = geometry_id_proto.id();
+            std::string error_message;
+            if (ensure_face_metadata_cached(geometry_id, &error_message)) {
+                success->add_prepared_geometry_ids()->set_id(geometry_id);
+            } else {
+                spdlog::debug("PrepareFacePicking skipped geometry {}: {}", geometry_id, error_message);
+                success->add_failed_geometry_ids()->set_id(geometry_id);
+            }
+        }
+
+        send_event(ws, event);
+    }
+
     void handle_create_datum_from_face(ix::WebSocket& ws, uint64_t sequence_id,
                                        const protocol::CreateDatumFromFaceCommand& cmd) {
         const std::string geometry_id = cmd.has_geometry_id() ? cmd.geometry_id().id() : "";
@@ -709,22 +785,15 @@ struct TransportServer::Impl {
             return;
         }
 
-        if (!import_project.ensure_geometry_shape_loaded(geometry_id)) {
+        std::string error_message;
+        if (!ensure_face_metadata_cached(geometry_id, &error_message)) {
             result->set_error_message("Face-aware datum creation unavailable for geometry: " + geometry_id);
             send_event(ws, event);
             return;
         }
 
-        const TopoDS_Shape* shape = shape_registry.get(geometry_id);
-
-        if (!shape) {
-            result->set_error_message("Face-aware datum creation unavailable for geometry: " + geometry_id);
-            send_event(ws, event);
-            return;
-        }
-
-        auto face_pose = engine::classify_face_for_datum(*shape, cmd.face_index());
-        if (!face_pose.has_value()) {
+        const engine::FaceDatumPose* face_pose = get_prepared_face_pose(geometry_id, cmd.face_index());
+        if (!face_pose) {
             spdlog::warn("  face index {} out of range for geometry {}", cmd.face_index(), geometry_id);
             result->set_error_message("Face index out of range for geometry: " + geometry_id);
             send_event(ws, event);
@@ -734,11 +803,6 @@ struct TransportServer::Impl {
         spdlog::debug("  face classified: surface_class={} pos=[{},{},{}]",
                        static_cast<int>(face_pose->surface_class),
                        face_pose->position[0], face_pose->position[1], face_pose->position[2]);
-
-        const double length_scale = import_project.geometry_length_scale(geometry_id);
-        for (double& component : face_pose->position) {
-            component *= length_scale;
-        }
 
         // Transform face pose from geometry-local → body-local space
         double geom_pos[3], geom_orient[4];
@@ -781,28 +845,7 @@ struct TransportServer::Impl {
         success->mutable_geometry_id()->set_id(geometry_id);
 
         // Populate enriched face geometry metadata
-        auto* fg = success->mutable_face_geometry();
-        if (face_pose->axis_direction.has_value()) {
-            auto* ad = fg->mutable_axis_direction();
-            ad->set_x((*face_pose->axis_direction)[0]);
-            ad->set_y((*face_pose->axis_direction)[1]);
-            ad->set_z((*face_pose->axis_direction)[2]);
-        }
-        if (face_pose->normal.has_value()) {
-            auto* n = fg->mutable_normal();
-            n->set_x((*face_pose->normal)[0]);
-            n->set_y((*face_pose->normal)[1]);
-            n->set_z((*face_pose->normal)[2]);
-        }
-        if (face_pose->radius.has_value()) {
-            fg->set_radius(*face_pose->radius * length_scale);
-        }
-        if (face_pose->secondary_radius.has_value()) {
-            fg->set_secondary_radius(*face_pose->secondary_radius * length_scale);
-        }
-        if (face_pose->semi_angle.has_value()) {
-            fg->set_semi_angle(*face_pose->semi_angle);
-        }
+        populate_face_geometry(success->mutable_face_geometry(), *face_pose, 1.0);
 
         send_event(ws, event);
     }
@@ -850,45 +893,36 @@ struct TransportServer::Impl {
             return;
         }
 
-        // Ensure shapes loaded
-        if (!import_project.ensure_geometry_shape_loaded(parent_geometry_id)) {
+        std::string parent_error;
+        if (!ensure_face_metadata_cached(parent_geometry_id, &parent_error)) {
             result->set_error_message("Shape not available for parent geometry: " + parent_geometry_id);
             send_event(ws, event);
             return;
         }
-        if (!import_project.ensure_geometry_shape_loaded(child_geometry_id)) {
+        std::string child_error;
+        if (!ensure_face_metadata_cached(child_geometry_id, &child_error)) {
             result->set_error_message("Shape not available for child geometry: " + child_geometry_id);
             send_event(ws, event);
             return;
         }
 
-        const TopoDS_Shape* parent_shape = shape_registry.get(parent_geometry_id);
-        const TopoDS_Shape* child_shape = shape_registry.get(child_geometry_id);
-        if (!parent_shape || !child_shape) {
-            result->set_error_message("Shape data unavailable for pairwise analysis");
-            send_event(ws, event);
-            return;
-        }
-
-        const double parent_scale = import_project.geometry_length_scale(parent_geometry_id);
-        const double child_scale = import_project.geometry_length_scale(child_geometry_id);
-
-        auto analysis = engine::analyze_face_pair(
-            *parent_shape, cmd.parent_face_index(), parent_scale,
-            *child_shape, cmd.child_face_index(), child_scale);
-
-        if (!analysis) {
+        const engine::FaceDatumPose* parent_pose =
+            get_prepared_face_pose(parent_geometry_id, cmd.parent_face_index());
+        const engine::FaceDatumPose* child_pose =
+            get_prepared_face_pose(child_geometry_id, cmd.child_face_index());
+        if (!parent_pose || !child_pose) {
             result->set_error_message("Face index out of range during pairwise analysis");
             send_event(ws, event);
             return;
         }
+        auto analysis = engine::analyze_face_pair_poses(*parent_pose, *child_pose);
 
         // Transform child face pose from geometry-local → body-local space
         double child_geom_pos[3], child_geom_orient[4];
         engine::extract_pose_arrays(child_geometry->local_pose(), child_geom_pos, child_geom_orient);
         double child_body_local_pos[3], child_body_local_orient[4];
         engine::compose_pose(child_geom_pos, child_geom_orient,
-                             analysis->child_pose.position, analysis->child_pose.orientation,
+                             analysis.child_pose.position, analysis.child_pose.orientation,
                              child_body_local_pos, child_body_local_orient);
 
         // Create child datum in body-local space
@@ -902,14 +936,14 @@ struct TransportServer::Impl {
         }
 
         mechanism::DatumFaceGeometryInfo child_face_geometry_info;
-        populate_mech_face_geometry(&child_face_geometry_info, analysis->child_pose);
+        populate_mech_face_geometry(&child_face_geometry_info, analysis.child_pose);
         auto annotated_child = mechanism_state.set_datum_face_attachment(
             child_datum->id().id(),
             child_geometry_id,
             cmd.child_face_index(),
-            analysis->child_pose.position,
-            analysis->child_pose.orientation,
-            to_mech_surface_class(analysis->child_pose.surface_class),
+            analysis.child_pose.position,
+            analysis.child_pose.orientation,
+            to_mech_surface_class(analysis.child_pose.surface_class),
             &child_face_geometry_info);
         if (annotated_child.has_value()) {
             child_datum = annotated_child;
@@ -918,32 +952,32 @@ struct TransportServer::Impl {
         // Build success response
         auto* success = result->mutable_success();
         populate_proto_datum(success->mutable_child_datum(), child_datum.value());
-        success->set_child_surface_class(to_proto_surface_class(analysis->child_pose.surface_class));
-        populate_face_geometry(success->mutable_child_face_geometry(), analysis->child_pose, 1.0);
+        success->set_child_surface_class(to_proto_surface_class(analysis.child_pose.surface_class));
+        populate_face_geometry(success->mutable_child_face_geometry(), analysis.child_pose, 1.0);
         success->mutable_child_geometry_id()->set_id(child_geometry_id);
         success->set_child_face_index(cmd.child_face_index());
 
-        success->set_parent_surface_class(to_proto_surface_class(analysis->parent_pose.surface_class));
-        populate_face_geometry(success->mutable_parent_face_geometry(), analysis->parent_pose, 1.0);
+        success->set_parent_surface_class(to_proto_surface_class(analysis.parent_pose.surface_class));
+        populate_face_geometry(success->mutable_parent_face_geometry(), analysis.parent_pose, 1.0);
 
-        success->set_alignment(to_proto_face_pair_alignment(analysis->alignment));
-        success->set_alignment_error(analysis->alignment_error);
-        success->set_recommended_joint_type(static_cast<mechanism::JointType>(analysis->recommended_joint_type));
-        success->set_recommendation_confidence(analysis->confidence);
+        success->set_alignment(to_proto_face_pair_alignment(analysis.alignment));
+        success->set_alignment_error(analysis.alignment_error);
+        success->set_recommended_joint_type(static_cast<mechanism::JointType>(analysis.recommended_joint_type));
+        success->set_recommendation_confidence(analysis.confidence);
 
         auto* frame = success->mutable_proposed_joint_frame();
         auto* frame_pos = frame->mutable_position();
-        frame_pos->set_x(analysis->joint_frame_position[0]);
-        frame_pos->set_y(analysis->joint_frame_position[1]);
-        frame_pos->set_z(analysis->joint_frame_position[2]);
+        frame_pos->set_x(analysis.joint_frame_position[0]);
+        frame_pos->set_y(analysis.joint_frame_position[1]);
+        frame_pos->set_z(analysis.joint_frame_position[2]);
         auto* frame_orient = frame->mutable_orientation();
-        frame_orient->set_w(analysis->joint_frame_orientation[0]);
-        frame_orient->set_x(analysis->joint_frame_orientation[1]);
-        frame_orient->set_y(analysis->joint_frame_orientation[2]);
-        frame_orient->set_z(analysis->joint_frame_orientation[3]);
+        frame_orient->set_w(analysis.joint_frame_orientation[0]);
+        frame_orient->set_x(analysis.joint_frame_orientation[1]);
+        frame_orient->set_y(analysis.joint_frame_orientation[2]);
+        frame_orient->set_z(analysis.joint_frame_orientation[3]);
 
         spdlog::debug("Analyzed face pair: alignment={}, confidence={}, recommended_type={}",
-                       static_cast<int>(analysis->alignment), analysis->confidence, analysis->recommended_joint_type);
+                       static_cast<int>(analysis.alignment), analysis.confidence, analysis.recommended_joint_type);
 
         send_event(ws, event);
     }
@@ -1184,6 +1218,7 @@ struct TransportServer::Impl {
         std::string body_id = cmd.has_body_id() ? cmd.body_id().id() : "";
 
         // Clean up import context data
+        face_metadata_cache.clear();
         import_project.remove_body_data(body_id);
 
         bool ok = mechanism_state.delete_body(body_id);
@@ -1275,6 +1310,7 @@ struct TransportServer::Impl {
                                  const protocol::DeleteGeometryCommand& cmd) {
         std::string geom_id = cmd.has_geometry_id() ? cmd.geometry_id().id() : "";
 
+        face_metadata_cache.invalidate_geometry(geom_id);
         import_project.remove_geometry_data(geom_id);
         bool ok = mechanism_state.remove_geometry(geom_id);
 
@@ -1586,6 +1622,7 @@ struct TransportServer::Impl {
         if (prim.brep_shape) {
             shape_registry.store(geometry_id, *prim.brep_shape);
         }
+        face_metadata_cache.invalidate_geometry(geometry_id);
 
         // Build GeometryImportResult for the response
         auto* gir = result->mutable_geometry();
@@ -1686,6 +1723,7 @@ struct TransportServer::Impl {
         if (prim.brep_shape) {
             shape_registry.store(geom_id, *prim.brep_shape);
         }
+        face_metadata_cache.invalidate_geometry(geom_id);
 
         // Build success response
         auto* success = result->mutable_success();
@@ -1956,6 +1994,56 @@ struct TransportServer::Impl {
     }
 
     // ──────────────────────────────────────────────
+    // Sensor CRUD
+    // ──────────────────────────────────────────────
+
+    void handle_create_sensor(ix::WebSocket& ws, uint64_t sequence_id,
+                               const protocol::CreateSensorCommand& cmd) {
+        auto result = mechanism_state.create_sensor(cmd.draft());
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* cr = event.mutable_create_sensor_result();
+        if (result.entry.has_value()) {
+            *cr->mutable_sensor() = result.entry.value();
+        } else {
+            cr->set_error_message(result.error);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_update_sensor(ix::WebSocket& ws, uint64_t sequence_id,
+                               const protocol::UpdateSensorCommand& cmd) {
+        auto result = mechanism_state.update_sensor(cmd.sensor());
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* ur = event.mutable_update_sensor_result();
+        if (result.entry.has_value()) {
+            *ur->mutable_sensor() = result.entry.value();
+        } else {
+            ur->set_error_message(result.error);
+        }
+        send_event(ws, event);
+    }
+
+    void handle_delete_sensor(ix::WebSocket& ws, uint64_t sequence_id,
+                               const protocol::DeleteSensorCommand& cmd) {
+        const std::string sensor_id = cmd.has_sensor_id() ? cmd.sensor_id().id() : "";
+        bool ok = mechanism_state.delete_sensor(sensor_id);
+
+        protocol::Event event;
+        event.set_sequence_id(sequence_id);
+        auto* dr = event.mutable_delete_sensor_result();
+        if (ok) {
+            dr->mutable_deleted_id()->set_id(sensor_id);
+        } else {
+            dr->set_error_message("Sensor not found: " + sensor_id);
+        }
+        send_event(ws, event);
+    }
+
+    // ──────────────────────────────────────────────
     // Project persistence (Epic 6.4)
     // ──────────────────────────────────────────────
 
@@ -1971,6 +2059,7 @@ struct TransportServer::Impl {
 
     void handle_load_project(ix::WebSocket& ws, uint64_t sequence_id,
                               const protocol::LoadProjectCommand& cmd) {
+        face_metadata_cache.clear();
         import_project.handle_load_project(
             ws, sequence_id, cmd,
             [this](ix::WebSocket& target_ws, const protocol::Event& event) {
@@ -1981,6 +2070,7 @@ struct TransportServer::Impl {
 
     void handle_relocate_asset(ix::WebSocket& ws, uint64_t sequence_id,
                                 const protocol::RelocateAssetCommand& cmd) {
+        face_metadata_cache.clear();
         import_project.handle_relocate_asset(
             ws, sequence_id, cmd,
             [this](ix::WebSocket& target_ws, const protocol::Event& event) {
@@ -2002,6 +2092,7 @@ struct TransportServer::Impl {
         runtime_session.stop_thread();
         mechanism_state.clear();
         shape_registry.clear();
+        face_metadata_cache.clear();
         import_project.clear();
 
         protocol::Event event;

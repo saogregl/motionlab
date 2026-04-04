@@ -52,12 +52,12 @@ export interface DofIndicatorResult {
 
 const ARC_RADIUS = 0.12;
 const ARC_TUBE = 0.005;
-const ARC_RADIAL_SEGMENTS = 8;
-const ARC_TUBULAR_SEGMENTS = 32;
+const ARC_RADIAL_SEGMENTS = 16;
+const ARC_TUBULAR_SEGMENTS = 64;
 const ARROW_LENGTH = 0.20;
 const ARROWHEAD_RADIUS = 0.012;
 const ARROWHEAD_HEIGHT = 0.025;
-const ARROWHEAD_SEGMENTS = 8;
+const ARROWHEAD_SEGMENTS = 16;
 
 // ── Shared geometry templates (module-level, reused via .clone()) ──
 

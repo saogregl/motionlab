@@ -9,14 +9,25 @@ import {
   SelectValue,
 } from '@motionlab/ui';
 import { Box } from 'lucide-react';
-import { useCallback, useRef } from 'react';
-import { sendUpdateBody, sendUpdateMassProperties } from '../engine/connection.js';
+import { useCallback, useMemo, useRef } from 'react';
+import {
+  sendUpdateBody,
+  sendUpdateCollisionConfig,
+  sendUpdateMassProperties,
+  sendUpdatePrimitive,
+} from '../engine/connection.js';
 import { getBodyPose } from '../stores/body-poses.js';
-import type { BodyMassProperties } from '../stores/mechanism.js';
+import type { BodyMassProperties, GeometryState } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
-import { IdentitySection, MassSection, TransformSection } from './inspector/sections/index.js';
+import {
+  CollisionSection,
+  IdentitySection,
+  MassSection,
+  PrimitiveParamsSection,
+  TransformSection,
+} from './inspector/sections/index.js';
 
 const MASS_DEBOUNCE_MS = 300;
 
@@ -50,12 +61,25 @@ export function BodyInspector() {
   }
 
   const { massProperties: mp } = body;
-  const geometryCount = [...geometries.values()].filter(
-    (g) => g.parentBodyId === body.id,
-  ).length;
-  const sourceFilename =
-    [...geometries.values()].find((g) => g.parentBodyId === body.id)
-      ?.sourceAssetRef.originalFilename || '\u2014';
+  const childGeometries = useMemo(() => {
+    const result: GeometryState[] = [];
+    for (const g of geometries.values()) {
+      if (g.parentBodyId === body.id) result.push(g);
+    }
+    return result;
+  }, [geometries, body.id]);
+
+  const geometryLabel = useMemo(() => {
+    if (childGeometries.length === 0) return '\u2014';
+    if (childGeometries.length === 1) {
+      const g = childGeometries[0];
+      if (g.primitiveSource) {
+        return g.primitiveSource.shape.charAt(0).toUpperCase() + g.primitiveSource.shape.slice(1);
+      }
+      return g.sourceAssetRef.originalFilename || 'Mesh';
+    }
+    return `${childGeometries.length} geometries`;
+  }, [childGeometries]);
 
   return (
     <InspectorPanel
@@ -77,8 +101,8 @@ export function BodyInspector() {
         name={body.name}
         metadata={[
           {
-            label: 'Source',
-            value: <span className="text-2xs truncate">{sourceFilename}</span>,
+            label: 'Geometry',
+            value: <span className="text-2xs truncate">{geometryLabel}</span>,
           },
         ]}
       />
@@ -98,11 +122,40 @@ export function BodyInspector() {
         </Select>
       </PropertyRow>
 
+      {childGeometries.length === 1 && childGeometries[0].primitiveSource && (
+        <PrimitiveParamsSection
+          geometryId={childGeometries[0].id}
+          shape={childGeometries[0].primitiveSource.shape}
+          params={childGeometries[0].primitiveSource.params}
+          isSimulating={isSimulating}
+          onParamsChange={(params) => sendUpdatePrimitive(childGeometries[0].id, params)}
+        />
+      )}
+
+      {childGeometries.length === 1 && (
+        <CollisionSection
+          geometryId={childGeometries[0].id}
+          collisionConfig={childGeometries[0].collisionConfig}
+          isSimulating={isSimulating}
+          onConfigChange={(config) =>
+            sendUpdateCollisionConfig(childGeometries[0].id, config)
+          }
+        />
+      )}
+
+      {childGeometries.length > 1 && (
+        <div className="ps-3 pe-3 pt-1 pb-1">
+          <span className="text-xs text-[var(--text-secondary)]">
+            {childGeometries.length} geometries — select individually to edit
+          </span>
+        </div>
+      )}
+
       <MassSection
         bodyId={body.id}
         massProperties={mp}
         massOverride={body.massOverride ?? false}
-        geometryCount={geometryCount}
+        geometryCount={childGeometries.length}
         isSimulating={isSimulating}
         onOverrideChange={(checked) => {
           if (checked) {

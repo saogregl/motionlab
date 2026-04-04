@@ -99,12 +99,12 @@ export function HomeSidebar({ activeItem, onNavigate, onNewProject, onOpenProjec
                   type="button"
                   className={cn(
                     'flex w-full items-center gap-2 ps-3 pe-3 py-1.5 text-[length:var(--text-sm)] text-left transition-colors hover:bg-layer-base-hover',
-                    isActive && 'border-s-2 border-accent-primary bg-accent-soft text-accent-text font-medium',
+                    isActive && 'border-s-2 border-border-strong bg-layer-base-active text-text-primary font-medium',
                   )}
                   onClick={() => onNavigate(item.id)}
                 >
                   <Icon
-                    className={cn('size-4 shrink-0', isActive ? 'text-accent-text' : 'text-text-tertiary')}
+                    className={cn('size-4 shrink-0', isActive ? 'text-text-secondary' : 'text-text-tertiary')}
                     strokeWidth={1.5}
                   />
                   <span className="truncate">{item.label}</span>

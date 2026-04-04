@@ -1,10 +1,6 @@
-import {
-  InspectorSection,
-  QuatDisplay,
-  Vec3Display,
-} from '@motionlab/ui';
 import type { Axis } from '@motionlab/ui';
-import { Move3D } from 'lucide-react';
+import { InspectorSection, QuatDisplay, Vec3Display } from '@motionlab/ui';
+
 import { useCallback, useEffect, useRef } from 'react';
 
 const DEBOUNCE_MS = 300;
@@ -81,11 +77,7 @@ function TransformSection({
   const isEditable = editable && !disabled;
 
   return (
-    <InspectorSection
-      title={`Transform ${frameLabel}`}
-      icon={<Move3D className="size-3.5" />}
-      defaultOpen={defaultOpen}
-    >
+    <InspectorSection title={`Transform ${frameLabel}`} defaultOpen={defaultOpen}>
       <Vec3Display
         label="Position"
         value={position}

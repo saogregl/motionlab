@@ -1,137 +1,107 @@
-import {
-  ConeGeometry,
-  Group,
-  Line,
-  LineBasicMaterial,
-  Mesh,
-  MeshBasicMaterial,
-  TorusGeometry,
-  BufferGeometry,
-  Float32BufferAttribute,
-} from 'three';
+/**
+ * Motor / actuator overlay visuals — fat-line-based arcs and arrows.
+ *
+ * Revolute motor: amber 270° arc with arrowhead chevron.
+ * Prismatic motor: amber double-ended arrow along Y-axis.
+ */
+
+import { Group, Vector3 } from 'three';
+import { Line2 } from 'three/examples/jsm/lines/Line2.js';
+import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 
 import { MOTOR_INDICATOR } from './colors-three.js';
+import { trackMaterial, untrackMaterial } from './fat-line-three.js';
+import { buildArcPoints, buildArrowChevron } from './line-primitives-three.js';
 
 // ── Result interface ──
 
 export interface MotorVisualResult {
   rootNode: Group;
-  meshes: Mesh[];
   dispose(): void;
 }
 
-// ── Geometry constants ──
+// ── Constants ──
 
 const RING_RADIUS = 0.065;
-const RING_TUBE = 0.006;
-const RING_RADIAL_SEGMENTS = 8;
-const RING_TUBULAR_SEGMENTS = 24;
-const ARROWHEAD_RADIUS = 0.01;
-const ARROWHEAD_HEIGHT = 0.02;
-const ARROWHEAD_SEGMENTS = 6;
+const ARC_LINE_WIDTH = 2;
+const ARC_OPACITY = 0.85;
+const ARROW_LINE_WIDTH = 1.5;
 const ARROW_LENGTH = 0.14;
+const PI = Math.PI;
 
-// ── Shared geometry templates ──
+// ── Helpers ──
 
-let _ringGeometry: TorusGeometry | null = null;
-let _arrowheadGeometry: ConeGeometry | null = null;
-
-function getRingGeometry(): TorusGeometry {
-  if (!_ringGeometry) {
-    _ringGeometry = new TorusGeometry(
-      RING_RADIUS,
-      RING_TUBE,
-      RING_RADIAL_SEGMENTS,
-      RING_TUBULAR_SEGMENTS,
-      Math.PI * 1.5,
-    );
-  }
-  return _ringGeometry;
-}
-
-function getArrowheadGeometry(): ConeGeometry {
-  if (!_arrowheadGeometry) {
-    _arrowheadGeometry = new ConeGeometry(ARROWHEAD_RADIUS, ARROWHEAD_HEIGHT, ARROWHEAD_SEGMENTS);
-  }
-  return _arrowheadGeometry;
-}
-
-// ── Material helpers ──
-
-function makeMotorMaterial(opacity = 0.85): MeshBasicMaterial {
-  return new MeshBasicMaterial({
-    color: MOTOR_INDICATOR,
+function makeMotorMat(lineWidth: number, opacity = ARC_OPACITY): LineMaterial {
+  const mat = new LineMaterial({
+    color: MOTOR_INDICATOR.getHex(),
+    linewidth: lineWidth,
     transparent: true,
     opacity,
     depthTest: false,
+    depthWrite: false,
+    toneMapped: false,
+    dashed: false,
+    dashScale: 1,
+    dashSize: 0.02,
+    gapSize: 0.01,
   });
+  trackMaterial(mat);
+  return mat;
 }
 
-function makeMotorLineMaterial(opacity = 0.85): LineBasicMaterial {
-  return new LineBasicMaterial({
-    color: MOTOR_INDICATOR,
-    transparent: true,
-    opacity,
-    depthTest: false,
-  });
+function makeLine(points: Vector3[], mat: LineMaterial, renderOrder = 11): Line2 {
+  const geo = new LineGeometry();
+  const arr = new Float32Array(points.length * 3);
+  for (let i = 0; i < points.length; i++) {
+    arr[i * 3] = points[i].x;
+    arr[i * 3 + 1] = points[i].y;
+    arr[i * 3 + 2] = points[i].z;
+  }
+  geo.setPositions(arr);
+  const line = new Line2(geo, mat);
+  line.computeLineDistances();
+  line.frustumCulled = false;
+  line.renderOrder = renderOrder;
+  return line;
 }
 
-// ── Utilities ──
-
-function collectMeshes(root: Group): Mesh[] {
-  const meshes: Mesh[] = [];
-  root.traverse((child) => {
-    if (child instanceof Mesh) meshes.push(child);
-  });
-  return meshes;
-}
-
-function disposeChildren(root: Group): void {
-  root.traverse((child) => {
-    if (child instanceof Mesh || child instanceof Line) {
-      child.geometry.dispose();
-      if (child.material instanceof MeshBasicMaterial || child.material instanceof LineBasicMaterial) {
-        child.material.dispose();
-      }
-    }
-  });
-}
-
-// ── Per-type indicator factories ──
+// ── Per-type factories ──
 
 function createRevoluteMotorVisual(): MotorVisualResult {
   const root = new Group();
   root.name = 'motor_revolute';
   root.renderOrder = 11;
 
-  // Amber arc ring (270°) — similar to DOF indicator but smaller + amber
-  const arcGeo = getRingGeometry().clone();
-  const arc = new Mesh(arcGeo, makeMotorMaterial());
-  arc.userData = { entityType: 'actuator' };
-  root.add(arc);
+  // 270° arc in XY plane (matching old TorusGeometry plane)
+  const arcPts = buildArcPoints(RING_RADIUS, 0, PI * 1.5, 36, 'xy');
+  const arcMat = makeMotorMat(ARC_LINE_WIDTH);
+  const arcLine = makeLine(arcPts, arcMat);
+  root.add(arcLine);
 
-  // Arrowhead at end of arc
-  const arrowhead = new Mesh(getArrowheadGeometry().clone(), makeMotorMaterial());
-  arrowhead.userData = { entityType: 'actuator' };
-  const endAngle = Math.PI * 1.5;
-  arrowhead.position.set(
-    Math.cos(endAngle) * RING_RADIUS,
-    Math.sin(endAngle) * RING_RADIUS,
-    0,
-  );
-  arrowhead.rotation.z = endAngle + Math.PI / 2;
-  root.add(arrowhead);
+  // Arrowhead chevron at the end of the arc
+  const endPt = arcPts[arcPts.length - 1];
+  const endDir = endPt.clone().normalize();
+  // Tangent at end: perpendicular to radial in XY plane
+  const tangent = new Vector3(-endDir.y, endDir.x, 0).normalize();
+  const chevronPts = buildArrowChevron(endPt, tangent, endDir, 0.012);
+  const chevronMat = makeMotorMat(ARROW_LINE_WIDTH);
+  const chevronLine = makeLine(chevronPts, chevronMat);
+  root.add(chevronLine);
 
-  // Offset slightly so it doesn't fully overlap the DOF indicator
+  // Offset slightly along Z so it doesn't overlap the joint glyph
   root.position.z = 0.015;
 
-  const meshes = collectMeshes(root);
+  const lines = [arcLine, chevronLine];
 
   return {
     rootNode: root,
-    meshes,
     dispose() {
-      disposeChildren(root);
+      for (const l of lines) {
+        l.geometry.dispose();
+        untrackMaterial(l.material as LineMaterial);
+        (l.material as LineMaterial).dispose();
+      }
     },
   };
 }
@@ -143,42 +113,46 @@ function createPrismaticMotorVisual(): MotorVisualResult {
 
   const halfLen = ARROW_LENGTH / 2;
 
-  // Top arrowhead
-  const topArrow = new Mesh(getArrowheadGeometry().clone(), makeMotorMaterial());
-  topArrow.position.set(0, halfLen, 0);
-  topArrow.userData = { entityType: 'actuator' };
-  root.add(topArrow);
-
-  // Bottom arrowhead (pointing down)
-  const botArrow = new Mesh(getArrowheadGeometry().clone(), makeMotorMaterial());
-  botArrow.position.set(0, -halfLen, 0);
-  botArrow.rotation.z = Math.PI;
-  botArrow.userData = { entityType: 'actuator' };
-  root.add(botArrow);
-
-  // Shaft line
-  const shaftGeo = new BufferGeometry();
-  shaftGeo.setAttribute(
-    'position',
-    new Float32BufferAttribute(
-      [0, -halfLen + ARROWHEAD_HEIGHT * 0.5, 0, 0, halfLen - ARROWHEAD_HEIGHT * 0.5, 0],
-      3,
-    ),
+  // Shaft line along Y
+  const shaftMat = makeMotorMat(ARROW_LINE_WIDTH);
+  const shaftLine = makeLine(
+    [new Vector3(0, -halfLen, 0), new Vector3(0, halfLen, 0)],
+    shaftMat,
   );
-  const shaft = new Line(shaftGeo, makeMotorLineMaterial());
-  shaft.userData = { entityType: 'actuator' };
-  root.add(shaft);
+  root.add(shaftLine);
 
-  // Offset slightly to not overlap the DOF indicator
+  // Arrow chevrons at both ends
+  const yUp = new Vector3(0, 1, 0);
+  const yDown = new Vector3(0, -1, 0);
+  const xPerp = new Vector3(1, 0, 0);
+
+  const topMat = makeMotorMat(ARROW_LINE_WIDTH);
+  const topChevron = makeLine(
+    buildArrowChevron(new Vector3(0, halfLen, 0), yUp, xPerp, 0.012),
+    topMat,
+  );
+  root.add(topChevron);
+
+  const botMat = makeMotorMat(ARROW_LINE_WIDTH);
+  const botChevron = makeLine(
+    buildArrowChevron(new Vector3(0, -halfLen, 0), yDown, xPerp, 0.012),
+    botMat,
+  );
+  root.add(botChevron);
+
+  // Offset slightly in X so it doesn't overlap the joint glyph
   root.position.x = 0.015;
 
-  const meshes = collectMeshes(root);
+  const lines = [shaftLine, topChevron, botChevron];
 
   return {
     rootNode: root,
-    meshes,
     dispose() {
-      disposeChildren(root);
+      for (const l of lines) {
+        l.geometry.dispose();
+        untrackMaterial(l.material as LineMaterial);
+        (l.material as LineMaterial).dispose();
+      }
     },
   };
 }

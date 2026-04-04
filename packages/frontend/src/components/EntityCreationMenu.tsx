@@ -22,18 +22,14 @@ import {
   Lock,
   MoveHorizontal,
   Plus,
+  Radio,
   RotateCcw,
   RotateCw,
   Zap,
 } from 'lucide-react';
 
 import { executeCommand } from '../commands/registry.js';
-import { useCommand } from '../commands/use-commands.js';
-
-function useCmdDisabled(id: string): boolean {
-  const cmd = useCommand(id);
-  return cmd?.disabled ?? true;
-}
+import { useCmdDisabled } from '../hooks/use-cmd-disabled.js';
 
 export function EntityCreationMenu() {
   const createBodyDisabled = useCmdDisabled('create.body');
@@ -172,6 +168,32 @@ export function EntityCreationMenu() {
             <DropdownMenuItem disabled>
               <ArrowUpDown className="size-4" />
               Prismatic Motor
+            </DropdownMenuItem>
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
+
+        {/* Sensor submenu */}
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger disabled>
+            <Radio className="size-4" />
+            Create Sensor
+          </DropdownMenuSubTrigger>
+          <DropdownMenuSubContent>
+            <DropdownMenuItem disabled>
+              <Radio className="size-4" />
+              Accelerometer
+            </DropdownMenuItem>
+            <DropdownMenuItem disabled>
+              <Radio className="size-4" />
+              Gyroscope
+            </DropdownMenuItem>
+            <DropdownMenuItem disabled>
+              <Radio className="size-4" />
+              Tachometer
+            </DropdownMenuItem>
+            <DropdownMenuItem disabled>
+              <Radio className="size-4" />
+              Encoder
             </DropdownMenuItem>
           </DropdownMenuSubContent>
         </DropdownMenuSub>

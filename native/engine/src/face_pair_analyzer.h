@@ -29,6 +29,9 @@ struct FacePairAnalysis {
     std::array<double, 4> joint_frame_orientation;  // w, x, y, z
 };
 
+FacePairAnalysis analyze_face_pair_poses(const FaceDatumPose& parent_pose,
+                                         const FaceDatumPose& child_pose);
+
 std::optional<FacePairAnalysis> analyze_face_pair(
     const TopoDS_Shape& parent_shape, uint32_t parent_face_index, double parent_length_scale,
     const TopoDS_Shape& child_shape, uint32_t child_face_index, double child_length_scale);

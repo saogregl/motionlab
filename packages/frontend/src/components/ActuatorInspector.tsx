@@ -11,27 +11,17 @@ import {
   Switch,
 } from '@motionlab/ui';
 import { Cog, Settings2 } from 'lucide-react';
+import { useMemo } from 'react';
 
 import { sendUpdateActuator } from '../engine/connection.js';
-import type { ActuatorState, ActuatorTypeId, ControlModeId } from '../stores/mechanism.js';
+import type { ActuatorState, ActuatorTypeId, CommandFunctionShape, ControlModeId } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { useTraceStore } from '../stores/traces.js';
+import { getActuatorUnit } from '../utils/actuator-units.js';
 import { getJointCoordinateChannelIds } from '../utils/runtime-channel-ids.js';
-import { IdentitySection, SimulationValuesSection } from './inspector/sections/index.js';
-
-function getActuatorUnit(actuatorType: ActuatorTypeId, controlMode: ControlModeId): string {
-  const isRevolute = actuatorType === 'revolute-motor';
-  switch (controlMode) {
-    case 'position':
-      return isRevolute ? 'rad' : 'm';
-    case 'speed':
-      return isRevolute ? 'rad/s' : 'm/s';
-    case 'effort':
-      return isRevolute ? 'Nm' : 'N';
-  }
-}
+import { CommandFunctionSection, IdentitySection, SimulationValuesSection } from './inspector/sections/index.js';
 
 function updateActuator(actuator: ActuatorState, updates: Partial<ActuatorState>): void {
   sendUpdateActuator({ ...actuator, ...updates });
@@ -50,44 +40,49 @@ export function ActuatorInspector({ actuatorId }: { actuatorId: string }) {
   const select = useSelectionStore((s) => s.select);
   const setHovered = useSelectionStore((s) => s.setHovered);
 
+  // Build channel definitions for SimulationValuesSection
+  const channelDefs = useMemo(() => {
+    if (!actuator || !joint) return [];
+    const commandUnit = getActuatorUnit(actuator.type, actuator.controlMode);
+    const effortUnit = actuator.type === 'revolute-motor' ? 'Nm' : 'N';
+    const coordChannels = getJointCoordinateChannelIds(actuator.jointId, joint.type);
+    return [
+      ...(coordChannels?.position
+        ? [{
+            channelId: coordChannels.position,
+            label: 'Actual Position',
+            unit: channels.get(coordChannels.position)?.unit ?? '',
+            type: 'scalar' as const,
+          }]
+        : []),
+      ...(coordChannels?.velocity
+        ? [{
+            channelId: coordChannels.velocity,
+            label: 'Actual Velocity',
+            unit: channels.get(coordChannels.velocity)?.unit ?? '',
+            type: 'scalar' as const,
+          }]
+        : []),
+      {
+        channelId: `actuator/${actuatorId}/command`,
+        label: 'Commanded',
+        unit: commandUnit,
+        type: 'scalar' as const,
+      },
+      {
+        channelId: `actuator/${actuatorId}/effort`,
+        label: 'Applied Effort',
+        unit: effortUnit,
+        type: 'scalar' as const,
+      },
+    ];
+  }, [actuator, actuatorId, joint, channels]);
+
   if (!actuator) return <InspectorPanel />;
 
   const commandUnit = getActuatorUnit(actuator.type, actuator.controlMode);
   const effortUnit = actuator.type === 'revolute-motor' ? 'Nm' : 'N';
   const hasEffortLimit = actuator.effortLimit !== undefined;
-
-  // Build channel definitions for SimulationValuesSection
-  const coordChannels = joint ? getJointCoordinateChannelIds(actuator.jointId, joint.type) : null;
-  const channelDefs = [
-    ...(coordChannels?.position
-      ? [{
-          channelId: coordChannels.position,
-          label: 'Actual Position',
-          unit: channels.get(coordChannels.position)?.unit ?? '',
-          type: 'scalar' as const,
-        }]
-      : []),
-    ...(coordChannels?.velocity
-      ? [{
-          channelId: coordChannels.velocity,
-          label: 'Actual Velocity',
-          unit: channels.get(coordChannels.velocity)?.unit ?? '',
-          type: 'scalar' as const,
-        }]
-      : []),
-    {
-      channelId: `actuator/${actuatorId}/command`,
-      label: 'Commanded',
-      unit: commandUnit,
-      type: 'scalar' as const,
-    },
-    {
-      channelId: `actuator/${actuatorId}/effort`,
-      label: 'Applied Effort',
-      unit: effortUnit,
-      type: 'scalar' as const,
-    },
-  ];
 
   return (
     <InspectorPanel
@@ -146,16 +141,6 @@ export function ActuatorInspector({ actuatorId }: { actuatorId: string }) {
             </SelectContent>
           </Select>
         </PropertyRow>
-        <PropertyRow label="Command" unit={commandUnit} numeric>
-          <NumericInput
-            variant="inline"
-            value={actuator.commandValue}
-            onChange={(v) => updateActuator(actuator, { commandValue: v })}
-            step={actuator.controlMode === 'position' ? 0.1 : actuator.controlMode === 'speed' ? 0.1 : 1}
-            precision={4}
-            disabled={isSimulating}
-          />
-        </PropertyRow>
         <PropertyRow label="Effort Limit">
           <div className="flex items-center gap-1.5">
             <Switch
@@ -182,6 +167,16 @@ export function ActuatorInspector({ actuatorId }: { actuatorId: string }) {
           </div>
         </PropertyRow>
       </InspectorSection>
+
+      <CommandFunctionSection
+        fn={actuator.commandFunction}
+        onChange={(commandFunction: CommandFunctionShape) => {
+          const commandValue = commandFunction.shape === 'constant' ? commandFunction.value : actuator.commandValue;
+          updateActuator(actuator, { commandFunction, commandValue });
+        }}
+        unit={commandUnit}
+        disabled={isSimulating}
+      />
 
       <SimulationValuesSection channelDefinitions={channelDefs} />
     </InspectorPanel>

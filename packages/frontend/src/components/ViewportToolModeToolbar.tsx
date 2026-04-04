@@ -14,6 +14,7 @@ import {
   Globe,
   Grid3x3,
   Link2,
+  Type,
   MousePointer2,
   Move,
   RotateCw,
@@ -58,6 +59,8 @@ export function ViewportToolModeToolbar() {
   const setDatumsVisible = useToolModeStore((s) => s.setDatumsVisible);
   const setJointsVisible = useToolModeStore((s) => s.setJointsVisible);
   const setGridVisible = useToolModeStore((s) => s.setGridVisible);
+  const labelsVisible = useToolModeStore((s) => s.labelsVisible);
+  const setLabelsVisible = useToolModeStore((s) => s.setLabelsVisible);
   const simState = useSimulationStore((s) => s.state);
   const isSimulating = simState === 'running' || simState === 'paused';
 
@@ -236,6 +239,17 @@ export function ViewportToolModeToolbar() {
         }}
       >
         <Grid3x3 className="size-4" />
+      </ToolbarButton>
+      <ToolbarButton
+        tooltip={labelsVisible ? 'Hide Labels' : 'Show Labels'}
+        active={labelsVisible}
+        onClick={() => {
+          const sg = getSceneGraph();
+          sg?.toggleLabels();
+          setLabelsVisible(!labelsVisible);
+        }}
+      >
+        <Type className="size-4" />
       </ToolbarButton>
     </div>
   );

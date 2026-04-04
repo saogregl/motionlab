@@ -1,28 +1,8 @@
-import { cn } from '@motionlab/ui';
+import { cn, CollapsibleSection } from '@motionlab/ui';
 import { ChevronDown, Clock, Folder, FolderOpen, Trash2 } from 'lucide-react';
 import type { RecentProject } from '../../types/motionlab.js';
-
-import { CollapsibleSection } from './CollapsibleSection.js';
 import { MechanismThumbnail } from './MechanismThumbnail.js';
-
-function formatRelativeTime(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60_000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days < 30) return `${days}d ago`;
-  return new Date(iso).toLocaleDateString();
-}
-
-function truncatePath(filePath: string, maxLen = 60): string {
-  if (filePath.length <= maxLen) return filePath;
-  const parts = filePath.split('/');
-  if (parts.length <= 3) return `…${filePath.slice(-maxLen)}`;
-  return `…/${parts.slice(-3).join('/')}`;
-}
+import { formatRelativeTime, truncatePath } from '../../utils/format.js';
 
 interface HomeProjectGridProps {
   projects: RecentProject[];
@@ -67,7 +47,7 @@ export function HomeProjectGrid({ projects, onOpenProject, onRemoveProject }: Ho
               <div className="h-10 w-14 shrink-0 overflow-hidden rounded-[var(--radius-sm)] border border-border-default text-text-tertiary">
                 <MechanismThumbnail />
               </div>
-              <span className="min-w-0 flex-1 truncate text-[length:var(--text-xs)] text-text-primary group-hover:text-accent-text">
+              <span className="min-w-0 flex-1 truncate text-[length:var(--text-xs)] text-text-primary group-hover:text-text-secondary">
                 {project.name}
               </span>
             </button>
@@ -119,7 +99,7 @@ export function HomeProjectGrid({ projects, onOpenProject, onRemoveProject }: Ho
               <div className="h-7 w-10 shrink-0 overflow-hidden rounded-[var(--radius-sm)] border border-border-default text-text-tertiary">
                 <MechanismThumbnail />
               </div>
-              <span className="truncate text-[length:var(--text-xs)] text-text-primary group-hover:text-accent-text">
+              <span className="truncate text-[length:var(--text-xs)] text-text-primary group-hover:text-text-secondary">
                 {project.name}
               </span>
               <button

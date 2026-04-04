@@ -1,5 +1,5 @@
-import { cn } from '../../lib/utils';
 import { formatEngValue } from '../../lib/format';
+import { cn } from '../../lib/utils';
 import { NumericInput } from '../primitives/numeric-input';
 
 interface EditableInertiaMatrixProps {
@@ -84,7 +84,7 @@ function EditableInertiaMatrix({
         <span className="text-[10px] text-[var(--text-tertiary)]">{unit}</span>
       </div>
       {/* 4x4 grid: label col + 3 data cols, header row + 3 data rows */}
-      <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-px overflow-hidden rounded-[var(--radius-md)] border border-[var(--inspector-grid-border)] bg-[var(--inspector-grid-border)]">
+      <div className="grid min-w-0 grid-cols-[auto_1fr_1fr_1fr] gap-px overflow-hidden rounded-[var(--radius-md)] border border-[var(--inspector-grid-border)] bg-[var(--inspector-grid-border)]">
         {/* Header row */}
         <div className="bg-[var(--layer-recessed)]" />
         <HeaderCell label="xx" />

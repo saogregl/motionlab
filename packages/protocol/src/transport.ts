@@ -15,10 +15,13 @@ import {
   PrimitiveParamsSchema,
   PrimitiveShape,
   QuatSchema,
+  SensorAxis,
+  SensorSchema,
+  SensorType,
   SphereParamsSchema,
   Vec3Schema,
 } from './generated/mechanism/mechanism_pb.js';
-import type { Actuator, Joint, Load } from './generated/mechanism/mechanism_pb.js';
+import type { Actuator, Joint, Load, Sensor } from './generated/mechanism/mechanism_pb.js';
 import type { Command, Event, SimulationAction } from './generated/protocol/transport_pb.js';
 import {
   CommandSchema,
@@ -47,6 +50,7 @@ import {
   PlaceAssetInSceneCommandSchema,
   LoadProjectCommandSchema,
   NewProjectCommandSchema,
+  PrepareFacePickingCommandSchema,
   PingSchema,
   RelocateAssetCommandSchema,
   ProtocolVersionSchema,
@@ -64,8 +68,11 @@ import {
   DiagnosticSeverity,
   AnalyzeFacePairCommandSchema,
   AttachGeometryCommandSchema,
+  CreateSensorCommandSchema,
+  DeleteSensorCommandSchema,
   UpdateActuatorCommandSchema,
   UpdateBodyCommandSchema,
+  UpdateSensorCommandSchema,
   UpdateDatumPoseCommandSchema,
   UpdateJointCommandSchema,
   UpdateLoadCommandSchema,
@@ -250,6 +257,25 @@ export function createCreateDatumFromFaceCommand(
         geometryId: create(ElementIdSchema, { id: geometryId }),
         faceIndex,
         name,
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+/**
+ * Creates a binary-encoded Command envelope containing a PrepareFacePicking payload.
+ */
+export function createPrepareFacePickingCommand(
+  geometryIds: string[],
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'prepareFacePicking',
+      value: create(PrepareFacePickingCommandSchema, {
+        geometryIds: geometryIds.map((id) => create(ElementIdSchema, { id })),
       }),
     },
   });
@@ -540,6 +566,109 @@ export function createDeleteActuatorCommand(
     },
   });
   return toBinary(CommandSchema, cmd);
+}
+
+// ──────────────────────────────────────────────
+// Sensor CRUD
+// ──────────────────────────────────────────────
+
+export function createCreateSensorCommand(draft: Sensor, sequenceId?: bigint): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'createSensor',
+      value: create(CreateSensorCommandSchema, {
+        draft: create(SensorSchema, draft),
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+export function createUpdateSensorCommand(
+  sensor: Sensor,
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'updateSensor',
+      value: create(UpdateSensorCommandSchema, {
+        sensor: create(SensorSchema, sensor),
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+export function createDeleteSensorCommand(
+  sensorId: string,
+  sequenceId?: bigint,
+): Uint8Array {
+  const cmd = create(CommandSchema, {
+    sequenceId: sequenceId ?? 0n,
+    payload: {
+      case: 'deleteSensor',
+      value: create(DeleteSensorCommandSchema, {
+        sensorId: create(ElementIdSchema, { id: sensorId }),
+      }),
+    },
+  });
+  return toBinary(CommandSchema, cmd);
+}
+
+export type SensorTypeId = 'accelerometer' | 'gyroscope' | 'tachometer' | 'encoder';
+export type SensorAxisId = 'x' | 'y' | 'z';
+
+export function mapSensorType(type: SensorType): SensorTypeId {
+  switch (type) {
+    case SensorType.ACCELEROMETER:
+      return 'accelerometer';
+    case SensorType.GYROSCOPE:
+      return 'gyroscope';
+    case SensorType.TACHOMETER:
+      return 'tachometer';
+    case SensorType.ENCODER:
+      return 'encoder';
+    default:
+      return 'accelerometer';
+  }
+}
+
+export function toProtoSensorType(type: SensorTypeId): SensorType {
+  switch (type) {
+    case 'accelerometer':
+      return SensorType.ACCELEROMETER;
+    case 'gyroscope':
+      return SensorType.GYROSCOPE;
+    case 'tachometer':
+      return SensorType.TACHOMETER;
+    case 'encoder':
+      return SensorType.ENCODER;
+  }
+}
+
+export function mapSensorAxis(axis: SensorAxis): SensorAxisId {
+  switch (axis) {
+    case SensorAxis.X:
+      return 'x';
+    case SensorAxis.Y:
+      return 'y';
+    case SensorAxis.Z:
+    default:
+      return 'z';
+  }
+}
+
+export function toProtoSensorAxis(axis: SensorAxisId): SensorAxis {
+  switch (axis) {
+    case 'x':
+      return SensorAxis.X;
+    case 'y':
+      return SensorAxis.Y;
+    case 'z':
+      return SensorAxis.Z;
+  }
 }
 
 /**

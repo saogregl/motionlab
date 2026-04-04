@@ -9,7 +9,7 @@ import {
   Switch,
   Vec3Display,
 } from '@motionlab/ui';
-import { Grid3X3, Scale } from 'lucide-react';
+
 import { useCallback, useRef } from 'react';
 
 const DEBOUNCE_MS = 300;
@@ -56,9 +56,17 @@ function MassSection({
     [onMassPropertiesChange],
   );
 
+  const handleComChange = useCallback(
+    (axis: Axis, val: number) => {
+      const newCom = { ...mp.centerOfMass, [axis]: val };
+      debouncedChange({ ...mp, centerOfMass: newCom });
+    },
+    [mp, debouncedChange],
+  );
+
   return (
     <>
-      <InspectorSection title="Mass Properties" icon={<Scale className="size-3.5" />}>
+      <InspectorSection title="Mass Properties">
         <PropertyRow label="Source">
           <span className="text-2xs text-[var(--text-secondary)]">
             {massOverride
@@ -95,14 +103,11 @@ function MassSection({
           value={mp.centerOfMass}
           unit="m"
           editable={massOverride && !isSimulating}
-          onChange={(axis: Axis, val: number) => {
-            const newCom = { ...mp.centerOfMass, [axis]: val };
-            debouncedChange({ ...mp, centerOfMass: newCom });
-          }}
+          onChange={handleComChange}
         />
       </InspectorSection>
 
-      <InspectorSection title="Inertia Tensor" icon={<Grid3X3 className="size-3.5" />}>
+      <InspectorSection title="Inertia Tensor">
         {massOverride ? (
           <EditableInertiaMatrix
             ixx={mp.ixx}

@@ -1,10 +1,4 @@
-import {
-  InspectorSection,
-  PropertyRow,
-  Vec3Display,
-  formatEngValue,
-} from '@motionlab/ui';
-import { Activity } from 'lucide-react';
+import { formatEngValue, InspectorSection, PropertyRow, Vec3Display } from '@motionlab/ui';
 
 import { useSimulationStore } from '../../../stores/simulation.js';
 import { useTraceStore } from '../../../stores/traces.js';
@@ -36,7 +30,7 @@ function SimulationValuesSection({
   }
 
   return (
-    <InspectorSection title={title} icon={<Activity className="size-3.5" />}>
+    <InspectorSection title={title}>
       {channelDefinitions.map((def) => {
         const channelType = def.type ?? 'scalar';
         const samples = traces.get(def.channelId);
@@ -46,12 +40,7 @@ function SimulationValuesSection({
         if (channelType === 'vec3') {
           if (val?.vec) {
             return (
-              <Vec3Display
-                key={def.channelId}
-                label={def.label}
-                value={val.vec}
-                unit={def.unit}
-              />
+              <Vec3Display key={def.channelId} label={def.label} value={val.vec} unit={def.unit} />
             );
           }
           if (hasChannel) {

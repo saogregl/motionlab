@@ -32,21 +32,10 @@ import { CreateActuatorDialog } from './CreateActuatorDialog.js';
 import { JointConnectionDiagram } from './JointConnectionDiagram.js';
 import { IdentitySection, SimulationValuesSection } from './inspector/sections/index.js';
 
-import type { ActuatorTypeId, ControlModeId, JointTypeId } from '../stores/mechanism.js';
+import type { JointTypeId } from '../stores/mechanism.js';
+import { getActuatorUnit } from '../utils/actuator-units.js';
 
 type JointType = JointTypeId;
-
-function getActuatorUnit(actuatorType: ActuatorTypeId, controlMode: ControlModeId): string {
-  const isRevolute = actuatorType === 'revolute-motor';
-  switch (controlMode) {
-    case 'position':
-      return isRevolute ? 'rad' : 'm';
-    case 'speed':
-      return isRevolute ? 'rad/s' : 'm/s';
-    case 'effort':
-      return isRevolute ? 'Nm' : 'N';
-  }
-}
 
 export function JointInspector({ jointId }: { jointId: string }) {
   const joint = useMechanismStore((s) => s.joints.get(jointId));
@@ -120,40 +109,43 @@ export function JointInspector({ jointId }: { jointId: string }) {
     return composeWorldPose(childBody.pose, childDatum.localPose);
   }, [childDatum, childBody, frameMode]);
 
-  if (!joint) return <InspectorPanel />;
-
   // Build channel definitions for SimulationValuesSection
-  const coordChannels = getJointCoordinateChannelIds(jointId, joint.type);
-  const channelDefs = [
-    ...(coordChannels?.position
-      ? [{
-          channelId: coordChannels.position,
-          label: 'Position',
-          unit: channels.get(coordChannels.position)?.unit ?? '',
-          type: 'scalar' as const,
-        }]
-      : []),
-    ...(coordChannels?.velocity
-      ? [{
-          channelId: coordChannels.velocity,
-          label: 'Velocity',
-          unit: channels.get(coordChannels.velocity)?.unit ?? '',
-          type: 'scalar' as const,
-        }]
-      : []),
-    {
-      channelId: `joint/${jointId}/reaction_force`,
-      label: 'Reaction Force',
-      unit: 'N',
-      type: 'vec3' as const,
-    },
-    {
-      channelId: `joint/${jointId}/reaction_torque`,
-      label: 'Reaction Torque',
-      unit: 'N\u00B7m',
-      type: 'vec3' as const,
-    },
-  ];
+  const channelDefs = useMemo(() => {
+    if (!joint) return [];
+    const coordChannels = getJointCoordinateChannelIds(jointId, joint.type);
+    return [
+      ...(coordChannels?.position
+        ? [{
+            channelId: coordChannels.position,
+            label: 'Position',
+            unit: channels.get(coordChannels.position)?.unit ?? '',
+            type: 'scalar' as const,
+          }]
+        : []),
+      ...(coordChannels?.velocity
+        ? [{
+            channelId: coordChannels.velocity,
+            label: 'Velocity',
+            unit: channels.get(coordChannels.velocity)?.unit ?? '',
+            type: 'scalar' as const,
+          }]
+        : []),
+      {
+        channelId: `joint/${jointId}/reaction_force`,
+        label: 'Reaction Force',
+        unit: 'N',
+        type: 'vec3' as const,
+      },
+      {
+        channelId: `joint/${jointId}/reaction_torque`,
+        label: 'Reaction Torque',
+        unit: 'N\u00B7m',
+        type: 'vec3' as const,
+      },
+    ];
+  }, [joint, jointId, channels]);
+
+  if (!joint) return <InspectorPanel />;
 
   return (
     <InspectorPanel

@@ -276,6 +276,7 @@ function installConsolePatch(): void {
 export function installDebugApi(): void {
   if (installed) return;
   installed = true;
+  recorder.setEnabled(isEnabled());
 
   window.motionlabDebug = {
     isEnabled,

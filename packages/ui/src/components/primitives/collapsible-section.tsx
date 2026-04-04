@@ -1,9 +1,9 @@
-import { cn } from '@motionlab/ui';
+import { cn } from '../../lib/utils';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
-interface CollapsibleSectionProps {
+export interface CollapsibleSectionProps {
   title: string;
   icon?: ReactNode;
   defaultOpen?: boolean;
@@ -13,7 +13,7 @@ interface CollapsibleSectionProps {
   className?: string;
 }
 
-function CollapsibleSection({
+export function CollapsibleSection({
   title,
   icon,
   defaultOpen = true,
@@ -46,6 +46,3 @@ function CollapsibleSection({
     </div>
   );
 }
-
-export { CollapsibleSection };
-export type { CollapsibleSectionProps };

@@ -28,7 +28,7 @@ export function updateFatLineResolution(width: number, height: number): void {
   }
 }
 
-function trackMaterial(mat: LineMaterial): void {
+export function trackMaterial(mat: LineMaterial): void {
   mat.resolution.copy(_sharedResolution);
   _trackedMaterials.add(mat);
 }

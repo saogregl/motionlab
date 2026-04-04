@@ -1,16 +1,11 @@
-import {
-  CopyableId,
-  InlineEditableName,
-  InspectorSection,
-  PropertyRow,
-} from '@motionlab/ui';
-import { Fingerprint } from 'lucide-react';
+import { CopyableId, InlineEditableName, InspectorSection, PropertyRow } from '@motionlab/ui';
+
 import type { ReactNode } from 'react';
 import { useCallback, useState } from 'react';
 
 interface IdentitySectionProps {
   entityId: string;
-  entityType: 'body' | 'geometry' | 'datum' | 'joint' | 'load' | 'actuator';
+  entityType: 'body' | 'geometry' | 'datum' | 'joint' | 'load' | 'actuator' | 'sensor';
   name: string;
   onRename?: (newName: string) => void;
   metadata?: Array<{ label: string; value: ReactNode }>;
@@ -45,7 +40,7 @@ function IdentitySection({
   const typeLabel = entityType.charAt(0).toUpperCase() + entityType.slice(1);
 
   return (
-    <InspectorSection title="Identity" icon={<Fingerprint className="size-3.5" />}>
+    <InspectorSection title="Identity">
       <PropertyRow label="Name">
         {onRename ? (
           <InlineEditableName

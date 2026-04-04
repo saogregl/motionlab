@@ -2,14 +2,9 @@ import { ToolbarButton, ToolbarGroup } from '@motionlab/ui';
 import { Pause, Play, RotateCcw, StepForward } from 'lucide-react';
 
 import { executeCommand } from '../commands/registry.js';
-import { useCommand } from '../commands/use-commands.js';
 import { useSimulationStore } from '../stores/simulation.js';
+import { useCmdDisabled } from '../hooks/use-cmd-disabled.js';
 import { ViewDropdown } from './MainToolbar.js';
-
-function useCmdDisabled(id: string): boolean {
-  const cmd = useCommand(id);
-  return cmd?.disabled ?? true;
-}
 
 export function ResultsToolbar() {
   const simState = useSimulationStore((s) => s.state);

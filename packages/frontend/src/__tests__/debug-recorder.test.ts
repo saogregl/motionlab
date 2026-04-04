@@ -29,6 +29,7 @@ describe('DebugRecorder', () => {
         sequenceId: entry.sequenceId,
       }),
     });
+    recorder.setEnabled(true);
 
     recorder.recordOutboundCommand(createSaveProjectCommand('Demo', 42n));
     expect(recorder.getPendingCommands()).toEqual([
@@ -56,6 +57,7 @@ describe('DebugRecorder', () => {
   it('records command timeouts as anomalies', async () => {
     const { DebugRecorder } = await import('../debug/recorder.js');
     const recorder = new DebugRecorder();
+    recorder.setEnabled(true);
 
     recorder.recordOutboundCommand(createSaveProjectCommand('Timeout', 7n));
     vi.advanceTimersByTime(15_001);
@@ -71,6 +73,7 @@ describe('DebugRecorder', () => {
   it('keeps streaming traffic in a separate rolling buffer', async () => {
     const { DebugRecorder } = await import('../debug/recorder.js');
     const recorder = new DebugRecorder();
+    recorder.setEnabled(true);
 
     recorder.recordInboundEvent({
       sequenceId: 99n,
@@ -87,5 +90,23 @@ describe('DebugRecorder', () => {
         streaming: true,
       }),
     );
+  });
+
+  it('does not record traffic when disabled', async () => {
+    const { DebugRecorder } = await import('../debug/recorder.js');
+    const recorder = new DebugRecorder();
+
+    recorder.recordOutboundCommand(createSaveProjectCommand('Demo', 42n));
+    recorder.recordInboundEvent({
+      sequenceId: 42n,
+      payload: {
+        case: 'simulationFrame',
+      },
+    } as never, 96);
+
+    expect(recorder.getPendingCommands()).toEqual([]);
+    expect(recorder.getRecentEntries()).toEqual([]);
+    expect(recorder.getRecentStreamEntries()).toEqual([]);
+    expect(recorder.getAnomalies()).toEqual([]);
   });
 });

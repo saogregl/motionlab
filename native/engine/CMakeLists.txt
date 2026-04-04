@@ -160,6 +160,7 @@ add_library(motionlab-engine-lib STATIC
   src/primitive_generator.cpp
   src/asset_cache.cpp
   src/face_classifier.cpp
+  src/face_metadata_cache.cpp
   src/face_pair_analyzer.cpp
   src/mechanism_state.cpp
   src/ring_buffer.cpp

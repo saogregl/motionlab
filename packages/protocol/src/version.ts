@@ -2,7 +2,7 @@
  * Protocol version — incremented on breaking changes.
  * Used for engine ↔ frontend compatibility checks.
  */
-export const PROTOCOL_VERSION = 5;
+export const PROTOCOL_VERSION = 6;
 
 export const PROTOCOL_NAME = 'motionlab';
 

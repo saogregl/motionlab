@@ -1,4 +1,5 @@
 import {
+  formatEngValue,
   InspectorSection,
   NumericInput,
   PropertyRow,
@@ -7,9 +8,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  formatEngValue,
 } from '@motionlab/ui';
-import { Shield } from 'lucide-react';
+
 import { useCallback, useRef } from 'react';
 
 const DEBOUNCE_MS = 300;
@@ -28,7 +28,13 @@ interface CollisionSectionProps {
   geometryId: string;
   collisionConfig?: CollisionConfig;
   isSimulating: boolean;
-  onConfigChange: (config: { shapeType: CollisionShapeType; halfExtents?: { x: number; y: number; z: number }; radius?: number; height?: number; offset?: { x: number; y: number; z: number } }) => void;
+  onConfigChange: (config: {
+    shapeType: CollisionShapeType;
+    halfExtents?: { x: number; y: number; z: number };
+    radius?: number;
+    height?: number;
+    offset?: { x: number; y: number; z: number };
+  }) => void;
 }
 
 const SHAPE_OPTIONS: { value: CollisionShapeType; label: string }[] = [
@@ -66,7 +72,7 @@ function CollisionSection({
   };
 
   return (
-    <InspectorSection title="Collision Shape" icon={<Shield className="size-3.5" />}>
+    <InspectorSection title="Collision Shape">
       <PropertyRow label="Shape">
         <Select value={shapeType} onValueChange={handleShapeChange} disabled={isSimulating}>
           <SelectTrigger className="h-6 w-full text-2xs">

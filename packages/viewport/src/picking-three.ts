@@ -578,15 +578,13 @@ export class PickingManager {
     const previewType = facePreview?.previewType;
 
     if (geoIndex && previewType) {
-
-      // Update face highlight
-      this.sceneGraph.clearAllFaceHighlights();
+      if (
+        this.lastHoverFace &&
+        this.lastHoverFace.bodyId !== entityId
+      ) {
+        this.sceneGraph.clearFaceHighlight(this.lastHoverFace.bodyId);
+      }
       this.sceneGraph.highlightFace(entityId, geometryId ?? entityId, faceIndex);
-
-      // Look up face centroid in world space for deterministic positioning
-      const centroidWorld = geometryId
-        ? this.sceneGraph.getFaceCentroidWorld(entityId, geometryId, faceIndex)
-        : this.sceneGraph.getBodyFaceCentroidWorld(entityId, faceIndex);
 
       // Show datum preview
       this.updateDatumPreview(
@@ -594,7 +592,7 @@ export class PickingManager {
         entityId,
         previewType,
         facePreview.axisDirection,
-        centroidWorld,
+        null,
       );
     }
 
@@ -673,7 +671,9 @@ export class PickingManager {
 
     // Clear visuals when leaving a face
     if (!next) {
-      this.sceneGraph.clearAllFaceHighlights();
+      if (prev) {
+        this.sceneGraph.clearFaceHighlight(prev.bodyId);
+      }
       this.sceneGraph.clearDatumPreview();
     }
 

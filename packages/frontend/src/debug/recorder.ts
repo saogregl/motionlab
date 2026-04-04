@@ -87,6 +87,7 @@ export class DebugRecorder {
   private readonly anomalies: DebugAnomaly[] = [];
   private readonly pendingCommands = new Map<string, PendingCommandRecord>();
   private readonly listeners = new Set<(event: DebugEvent) => void>();
+  private enabled = false;
 
   constructor(host: DebugRecorderHost = {}, limits: Partial<DebugCaptureLimits> = {}) {
     this.host = host;
@@ -95,6 +96,22 @@ export class DebugRecorder {
 
   getCaptureLimits(): DebugCaptureLimits {
     return { ...this.limits };
+  }
+
+  setEnabled(enabled: boolean): void {
+    if (this.enabled === enabled) return;
+    this.enabled = enabled;
+    if (!enabled) {
+      this.clearPendingCommands();
+      this.recentEntries.length = 0;
+      this.recentStreamEntries.length = 0;
+      this.consoleEntries.length = 0;
+      this.anomalies.length = 0;
+    }
+  }
+
+  isEnabled(): boolean {
+    return this.enabled;
   }
 
   onEvent(listener: (event: DebugEvent) => void): () => void {
@@ -114,7 +131,17 @@ export class DebugRecorder {
     }
   }
 
+  private clearPendingCommands(): PendingCommandRecord[] {
+    const pending = [...this.pendingCommands.values()];
+    for (const command of pending) {
+      globalThis.clearTimeout(command.timeoutId);
+      this.pendingCommands.delete(command.sequenceId);
+    }
+    return pending;
+  }
+
   private recordEntry(entry: DebugProtocolEntry): void {
+    if (!this.enabled) return;
     const target = entry.streaming ? this.recentStreamEntries : this.recentEntries;
     const limit = entry.streaming
       ? this.limits.maxRecentStreamEntries
@@ -126,6 +153,7 @@ export class DebugRecorder {
   }
 
   recordOutboundCommand(bytes: Uint8Array): string {
+    if (!this.enabled) return '';
     const command = parseCommand(bytes);
     const sequenceId = command.sequenceId.toString();
     const entry: DebugProtocolEntry = {
@@ -176,6 +204,7 @@ export class DebugRecorder {
   }
 
   recordInboundEvent(event: Event, sizeBytes: number): void {
+    if (!this.enabled) return;
     const messageType = event.payload.case ?? 'unknown';
     const streaming = messageType === 'simulationFrame' || messageType === 'simulationTrace';
     const entry: DebugProtocolEntry = {
@@ -198,6 +227,7 @@ export class DebugRecorder {
   }
 
   recordConsole(level: DebugConsoleEntry['level'], args: unknown[]): void {
+    if (!this.enabled) return;
     const entry: DebugConsoleEntry = {
       timestamp: nowIso(),
       level,
@@ -208,6 +238,7 @@ export class DebugRecorder {
   }
 
   recordParseFailure(source: 'command' | 'event', error: unknown, sizeBytes: number): void {
+    if (!this.enabled) return;
     this.recordAnomaly({
       severity: 'error',
       code: `protocol-${source}-parse-failure`,
@@ -224,6 +255,7 @@ export class DebugRecorder {
       timestamp: nowIso(),
       ...input,
     };
+    if (!this.enabled) return anomaly;
     appendBounded(this.anomalies, anomaly, this.limits.maxRecentAnomalies);
     this.host.appendAnomaly?.(anomaly);
     this.emit({ type: 'anomaly', anomaly });
@@ -231,11 +263,8 @@ export class DebugRecorder {
   }
 
   markConnectionClosed(reason: string): void {
-    const pending = [...this.pendingCommands.values()];
-    for (const command of pending) {
-      globalThis.clearTimeout(command.timeoutId);
-      this.pendingCommands.delete(command.sequenceId);
-    }
+    const pending = this.clearPendingCommands();
+    if (!this.enabled) return;
     if (pending.length > 0) {
       this.recordAnomaly({
         severity: 'warning',

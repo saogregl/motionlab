@@ -16,6 +16,7 @@ public:
     using JointEntry = motionlab::mechanism::Joint;
     using LoadEntry = motionlab::mechanism::Load;
     using ActuatorEntry = motionlab::mechanism::Actuator;
+    using SensorEntry = motionlab::mechanism::Sensor;
     using GeometryEntry = motionlab::mechanism::Geometry;
 
     struct JointResult {
@@ -30,6 +31,11 @@ public:
 
     struct ActuatorResult {
         std::optional<ActuatorEntry> entry;
+        std::string error;
+    };
+
+    struct SensorResult {
+        std::optional<SensorEntry> entry;
         std::string error;
     };
 
@@ -189,6 +195,13 @@ public:
     size_t actuator_count() const;
     bool is_joint_referenced_by_actuator(const std::string& joint_id) const;
 
+    // Sensor CRUD
+    SensorResult create_sensor(const SensorEntry& draft);
+    SensorResult update_sensor(const SensorEntry& sensor);
+    bool delete_sensor(const std::string& sensor_id);
+    const SensorEntry* get_sensor(const std::string& id) const;
+    size_t sensor_count() const;
+
     void clear();
 
 private:
@@ -200,6 +213,7 @@ private:
     std::string validate_joint(motionlab::mechanism::Joint* joint) const;
     std::string validate_load(const motionlab::mechanism::Load& load) const;
     std::string validate_actuator(const motionlab::mechanism::Actuator& actuator) const;
+    std::string validate_sensor(const motionlab::mechanism::Sensor& sensor) const;
 
     void update_body_aggregate_mass(const std::string& body_id);
     bool geometry_has_linked_datums(const std::string& geometry_id) const;
@@ -211,6 +225,7 @@ private:
     std::unordered_map<std::string, JointEntry> joints_;
     std::unordered_map<std::string, LoadEntry> loads_;
     std::unordered_map<std::string, ActuatorEntry> actuators_;
+    std::unordered_map<std::string, SensorEntry> sensors_;
     std::unordered_map<std::string, GeometryEntry> geometries_;
 };
 

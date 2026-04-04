@@ -27,18 +27,8 @@ import {
 } from 'lucide-react';
 
 import { executeCommand } from '../commands/registry.js';
-import { useCommand } from '../commands/use-commands.js';
 import { useSimulationStore } from '../stores/simulation.js';
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-/** Shorthand for reading a command's disabled state. */
-function useCmdDisabled(id: string): boolean {
-  const cmd = useCommand(id);
-  return cmd?.disabled ?? true;
-}
+import { useCmdDisabled } from '../hooks/use-cmd-disabled.js';
 
 // ---------------------------------------------------------------------------
 // MainToolbar — centered floating bar

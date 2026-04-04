@@ -11,12 +11,20 @@ import {
   createCreateActuatorCommand,
   createUpdateActuatorCommand,
   createDeleteActuatorCommand,
+  createCreateSensorCommand,
+  createUpdateSensorCommand,
+  createDeleteSensorCommand,
+  mapSensorType,
+  mapSensorAxis,
+  toProtoSensorType,
+  toProtoSensorAxis,
   createCreateLoadCommand,
   createUpdateLoadCommand,
   createDeleteLoadCommand,
   createHandshakeCommand,
   createImportAssetCommand,
   createPlaceAssetInSceneCommand,
+  createPrepareFacePickingCommand,
   createCreatePrimitiveBodyCommand,
   createLoadProjectCommand,
   createNewProjectCommand,
@@ -63,8 +71,13 @@ import {
   type Actuator,
   type RevoluteMotorActuator,
   type PrismaticMotorActuator,
+  type CommandFunction,
+  SmoothStepProfile,
   DatumSurfaceClass,
   DiagnosticSeverity,
+  SensorType,
+  SensorAxis,
+  type Sensor,
 } from '@motionlab/protocol';
 import type { AnalyzeFacePairSuccess, CreateDatumFromFaceSuccess, ElementId, Joint, MissingAssetInfo } from '@motionlab/protocol';
 import type { SceneGraphManager } from '@motionlab/viewport';
@@ -75,7 +88,7 @@ import type { EngineConnectionState } from '../stores/engine-connection.js';
 import { useImportFlowStore } from '../stores/import-flow.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useLoadCreationStore } from '../stores/load-creation.js';
-import type { ActuatorState, ActuatorTypeId, ControlModeId, BodyMassProperties, BodyPose, BodyState, DatumState, FaceGeometryInfo, GeometryState, JointTypeId, LoadState, LoadTypeId, ReferenceFrameId, MeshData } from '../stores/mechanism.js';
+import type { ActuatorState, ActuatorTypeId, CommandFunctionShape, ControlModeId, BodyMassProperties, BodyPose, BodyState, DatumState, FaceGeometryInfo, GeometryState, JointTypeId, LoadState, LoadTypeId, ReferenceFrameId, MeshData, SensorState, SensorTypeId, SensorAxisId } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { type ChannelDescriptor, type StructuredDiagnostic, useSimulationStore } from '../stores/simulation.js';
@@ -372,32 +385,78 @@ function toProtoControlMode(mode: ControlModeId): ActuatorControlMode {
   }
 }
 
+function extractCommandFunction(cf: CommandFunction | undefined, legacyValue: number): CommandFunctionShape {
+  if (!cf) return { shape: 'constant', value: legacyValue };
+  switch (cf.shape.case) {
+    case 'constant':
+      return { shape: 'constant', value: cf.shape.value.value };
+    case 'ramp':
+      return { shape: 'ramp', initialValue: cf.shape.value.initialValue, slope: cf.shape.value.slope };
+    case 'sine':
+      return { shape: 'sine', amplitude: cf.shape.value.amplitude, frequency: cf.shape.value.frequency, phase: cf.shape.value.phase, offset: cf.shape.value.offset };
+    case 'piecewiseLinear':
+      return { shape: 'piecewise-linear', times: [...cf.shape.value.times], values: [...cf.shape.value.values] };
+    case 'smoothStep':
+      return {
+        shape: 'smooth-step',
+        displacement: cf.shape.value.displacement,
+        duration: cf.shape.value.duration,
+        profile: cf.shape.value.profile === SmoothStepProfile.TRAPEZOIDAL ? 'trapezoidal' : 'cycloidal',
+        accelFraction: cf.shape.value.accelFraction,
+        decelFraction: cf.shape.value.decelFraction,
+      };
+    default:
+      return { shape: 'constant', value: legacyValue };
+  }
+}
+
+function commandFunctionToProto(fn: CommandFunctionShape): CommandFunction {
+  switch (fn.shape) {
+    case 'constant':
+      return { $typeName: 'motionlab.mechanism.CommandFunction', shape: { case: 'constant', value: { $typeName: 'motionlab.mechanism.ConstantFunction', value: fn.value } } } as CommandFunction;
+    case 'ramp':
+      return { $typeName: 'motionlab.mechanism.CommandFunction', shape: { case: 'ramp', value: { $typeName: 'motionlab.mechanism.RampFunction', initialValue: fn.initialValue, slope: fn.slope } } } as CommandFunction;
+    case 'sine':
+      return { $typeName: 'motionlab.mechanism.CommandFunction', shape: { case: 'sine', value: { $typeName: 'motionlab.mechanism.SineFunction', amplitude: fn.amplitude, frequency: fn.frequency, phase: fn.phase, offset: fn.offset } } } as CommandFunction;
+    case 'piecewise-linear':
+      return { $typeName: 'motionlab.mechanism.CommandFunction', shape: { case: 'piecewiseLinear', value: { $typeName: 'motionlab.mechanism.PiecewiseLinearFunction', times: fn.times, values: fn.values } } } as CommandFunction;
+    case 'smooth-step':
+      return { $typeName: 'motionlab.mechanism.CommandFunction', shape: { case: 'smoothStep', value: { $typeName: 'motionlab.mechanism.SmoothStepFunction', displacement: fn.displacement, duration: fn.duration, profile: fn.profile === 'trapezoidal' ? SmoothStepProfile.TRAPEZOIDAL : SmoothStepProfile.CYCLOIDAL, accelFraction: fn.accelFraction, decelFraction: fn.decelFraction } } } as CommandFunction;
+  }
+}
+
 function extractActuatorState(actuator: Actuator): ActuatorState {
   const base = {
     id: actuator.id?.id ?? '',
     name: actuator.name,
   };
   switch (actuator.config.case) {
-    case 'revoluteMotor':
+    case 'revoluteMotor': {
+      const commandFunction = extractCommandFunction(actuator.config.value.commandFunction, actuator.config.value.commandValue);
       return {
         ...base,
         type: 'revolute-motor' as ActuatorTypeId,
         jointId: actuator.config.value.jointId?.id ?? '',
         controlMode: mapControlMode(actuator.config.value.controlMode),
         commandValue: actuator.config.value.commandValue,
+        commandFunction,
         effortLimit: actuator.config.value.effortLimit,
       };
-    case 'prismaticMotor':
+    }
+    case 'prismaticMotor': {
+      const commandFunction = extractCommandFunction(actuator.config.value.commandFunction, actuator.config.value.commandValue);
       return {
         ...base,
         type: 'prismatic-motor' as ActuatorTypeId,
         jointId: actuator.config.value.jointId?.id ?? '',
         controlMode: mapControlMode(actuator.config.value.controlMode),
         commandValue: actuator.config.value.commandValue,
+        commandFunction,
         effortLimit: actuator.config.value.effortLimit,
       };
+    }
     default:
-      return { ...base, type: 'revolute-motor' as ActuatorTypeId, jointId: '', controlMode: 'position', commandValue: 0 };
+      return { ...base, type: 'revolute-motor' as ActuatorTypeId, jointId: '', controlMode: 'position', commandValue: 0, commandFunction: { shape: 'constant', value: 0 } };
   }
 }
 
@@ -409,11 +468,13 @@ function actuatorStateToProto(s: ActuatorState): Actuator {
     ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.jointId } as ElementId)
     : undefined;
   const controlMode = toProtoControlMode(s.controlMode);
+  const commandFunction = commandFunctionToProto(s.commandFunction);
   const motorFields = {
     jointId,
     controlMode,
     commandValue: s.commandValue,
     effortLimit: s.effortLimit,
+    commandFunction,
   };
   switch (s.type) {
     case 'revolute-motor':
@@ -443,6 +504,67 @@ function actuatorStateToProto(s: ActuatorState): Actuator {
         },
       } as Actuator;
   }
+}
+
+function extractSensorState(sensor: Sensor): SensorState {
+  const base: SensorState = {
+    id: sensor.id?.id ?? '',
+    name: sensor.name,
+    type: mapSensorType(sensor.type) as SensorTypeId,
+    datumId: sensor.datumId?.id ?? '',
+  };
+  switch (sensor.config.case) {
+    case 'tachometer':
+      return { ...base, axis: mapSensorAxis(sensor.config.value.axis) as SensorAxisId };
+    case 'encoder':
+      return { ...base, jointId: sensor.config.value.jointId?.id ?? '' };
+    default:
+      return base;
+  }
+}
+
+function sensorStateToProto(s: SensorState): Sensor {
+  const id = s.id
+    ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.id } as ElementId)
+    : undefined;
+  const datumId = s.datumId
+    ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.datumId } as ElementId)
+    : undefined;
+  const sensorType = toProtoSensorType(s.type);
+
+  let config: Sensor['config'];
+  switch (s.type) {
+    case 'accelerometer':
+      config = { case: 'accelerometer' as const, value: { $typeName: 'motionlab.mechanism.AccelerometerConfig' } as any };
+      break;
+    case 'gyroscope':
+      config = { case: 'gyroscope' as const, value: { $typeName: 'motionlab.mechanism.GyroscopeConfig' } as any };
+      break;
+    case 'tachometer':
+      config = {
+        case: 'tachometer' as const,
+        value: { $typeName: 'motionlab.mechanism.TachometerConfig', axis: toProtoSensorAxis(s.axis ?? 'z') } as any,
+      };
+      break;
+    case 'encoder':
+      config = {
+        case: 'encoder' as const,
+        value: {
+          $typeName: 'motionlab.mechanism.EncoderConfig',
+          jointId: s.jointId ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.jointId } as ElementId) : undefined,
+        } as any,
+      };
+      break;
+  }
+
+  return {
+    $typeName: 'motionlab.mechanism.Sensor',
+    id,
+    name: s.name,
+    type: sensorType,
+    datumId,
+    config,
+  } as Sensor;
 }
 
 function extractBodyState(
@@ -718,7 +840,9 @@ export function connect(set: SetState, _get: GetState) {
         }
         getDebugRecorder().recordInboundEvent(evt, sizeBytes);
 
-        if ((import.meta as unknown as { env: { DEV: boolean } }).env.DEV) {
+        const messageType = evt.payload.case;
+        const isStreamingEvent = messageType === 'simulationFrame' || messageType === 'simulationTrace';
+        if ((import.meta as unknown as { env: { DEV: boolean } }).env.DEV && !isStreamingEvent) {
           console.debug('[protocol] ←', eventToDebugJson(evt));
         }
 
@@ -1515,6 +1639,41 @@ export function connect(set: SetState, _get: GetState) {
             }
             break;
           }
+          case 'createSensorResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'sensor') {
+              const sensorState = extractSensorState(result.result.value);
+              mechStore.addSensor(sensorState);
+              useSimulationStore.getState().setNeedsCompile(true);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[sensor] create failed:', result.result.value);
+            }
+            break;
+          }
+          case 'updateSensorResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'sensor') {
+              const sensorState = extractSensorState(result.result.value);
+              mechStore.updateSensor(sensorState.id, sensorState);
+              useSimulationStore.getState().setNeedsCompile(true);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[sensor] update failed:', result.result.value);
+            }
+            break;
+          }
+          case 'deleteSensorResult': {
+            const result = evt.payload.value;
+            const mechStore = useMechanismStore.getState();
+            if (result.result.case === 'deletedId') {
+              mechStore.removeSensor(result.result.value.id);
+              useSimulationStore.getState().setNeedsCompile(true);
+            } else if (result.result.case === 'errorMessage') {
+              console.error('[sensor] delete failed:', result.result.value);
+            }
+            break;
+          }
           case 'compilationResult': {
             const result = evt.payload.value;
             const channels: ChannelDescriptor[] = (result.channels ?? []).map((ch) => ({
@@ -1925,6 +2084,7 @@ export function connect(set: SetState, _get: GetState) {
                       jointState.parentDatumId,
                       jointState.childDatumId,
                       jointState.type,
+                      jointState.name,
                     );
                   }
                 }
@@ -1939,6 +2099,12 @@ export function connect(set: SetState, _get: GetState) {
                 for (const a of mechanism.actuators) {
                   const actuatorState = extractActuatorState(a);
                   mechStore.addActuator(actuatorState);
+                }
+
+                // Rebuild sensors
+                for (const s of mechanism.sensors) {
+                  const sensorState = extractSensorState(s);
+                  mechStore.addSensor(sensorState);
                 }
               }
 
@@ -2570,6 +2736,12 @@ export function sendCreateDatumFromFace(
     createCreateDatumFromFaceCommand(geometryId, faceIndex, name, sequenceId));
 }
 
+export function sendPrepareFacePicking(geometryIds: string[]): void {
+  if (geometryIds.length === 0) return;
+  sendBinaryCommand((sequenceId) =>
+    createPrepareFacePickingCommand(geometryIds, sequenceId));
+}
+
 export function sendAnalyzeFacePair(
   parentDatumId: string,
   parentGeometryId: string,
@@ -2852,6 +3024,20 @@ export function sendUpdateActuator(actuatorState: ActuatorState): void {
 
 export function sendDeleteActuator(actuatorId: string): void {
   sendBinaryCommand((sequenceId) => createDeleteActuatorCommand(actuatorId, sequenceId));
+}
+
+export function sendCreateSensor(sensorState: SensorState): void {
+  sendBinaryCommand((sequenceId) =>
+    createCreateSensorCommand(sensorStateToProto(sensorState), sequenceId));
+}
+
+export function sendUpdateSensor(sensorState: SensorState): void {
+  sendBinaryCommand((sequenceId) =>
+    createUpdateSensorCommand(sensorStateToProto(sensorState), sequenceId));
+}
+
+export function sendDeleteSensor(sensorId: string): void {
+  sendBinaryCommand((sequenceId) => createDeleteSensorCommand(sensorId, sequenceId));
 }
 
 export function sendCompileMechanism(

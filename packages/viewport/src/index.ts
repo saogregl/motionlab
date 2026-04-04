@@ -2,6 +2,7 @@
 export { BodyGeometryIndex } from './body-geometry-index.js';
 export { computeDatumLocalPose } from './datum-pose.js';
 export { estimateAxisDirection, estimateSurfaceType, type DatumPreviewType } from './rendering/surface-type-estimator.js';
+export { computeLabelLayout, type ScreenLabel, type PlacedLabel } from './label-layout.js';
 
 // Scene graph (Three.js implementation)
 export {
@@ -16,6 +17,7 @@ export {
   type GizmoMode,
   type JointForceUpdate,
   type JointPreviewAlignment,
+  type LabelEntry,
   type LoadStateInput,
   type MeshDataInput,
   type PoseInput,
@@ -43,16 +45,11 @@ export {
   type MaterialPreset,
 } from './rendering/materials-three.js';
 
-// DOF indicators
+// Joint glyph (technical-drawing style)
 export {
-  createDofIndicator,
+  createJointGlyph,
   DOF_TABLE,
-  type DofIndicatorResult,
+  type JointGlyphResult,
   type DofSpec,
-} from './rendering/dof-indicators-three.js';
-
-// Joint anchor glyph
-export {
-  createJointAnchor,
-  type JointAnchorResult,
-} from './rendering/joint-anchor-three.js';
+  type GlyphMode,
+} from './rendering/joint-glyph-three.js';

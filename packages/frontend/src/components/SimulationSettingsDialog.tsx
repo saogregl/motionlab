@@ -20,6 +20,7 @@ import {
   TabsTrigger,
 } from '@motionlab/ui';
 import { Beaker, FlaskConical, Gauge, Zap } from 'lucide-react';
+import { useCallback } from 'react';
 
 import type { IntegratorType, SettingsPreset, SolverType } from '../stores/simulation-settings.js';
 import { useSimulationSettingsStore } from '../stores/simulation-settings.js';
@@ -39,8 +40,15 @@ const PRESET_ITEMS: { key: SettingsPreset; label: string; icon: React.ReactNode 
 export function SimulationSettingsDialog({ open, onClose }: SimulationSettingsDialogProps) {
   const store = useSimulationSettingsStore();
 
+  const handleOpenChange = useCallback(
+    (isOpen: boolean) => {
+      if (!isOpen) onClose();
+    },
+    [onClose],
+  );
+
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
           <DialogTitle>Simulation Settings</DialogTitle>

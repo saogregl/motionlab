@@ -124,6 +124,15 @@ export interface LoadState {
 export type ActuatorTypeId = 'revolute-motor' | 'prismatic-motor';
 export type ControlModeId = 'position' | 'speed' | 'effort';
 
+export type CommandFunctionShape =
+  | { shape: 'constant'; value: number }
+  | { shape: 'ramp'; initialValue: number; slope: number }
+  | { shape: 'sine'; amplitude: number; frequency: number; phase: number; offset: number }
+  | { shape: 'piecewise-linear'; times: number[]; values: number[] }
+  | { shape: 'smooth-step'; displacement: number; duration: number; profile: 'cycloidal' | 'trapezoidal'; accelFraction: number; decelFraction: number };
+
+export type CommandFunctionShapeId = CommandFunctionShape['shape'];
+
 export interface ActuatorState {
   id: string;
   name: string;
@@ -131,7 +140,20 @@ export interface ActuatorState {
   jointId: string;
   controlMode: ControlModeId;
   commandValue: number;
+  commandFunction: CommandFunctionShape;
   effortLimit?: number;
+}
+
+export type SensorTypeId = 'accelerometer' | 'gyroscope' | 'tachometer' | 'encoder';
+export type SensorAxisId = 'x' | 'y' | 'z';
+
+export interface SensorState {
+  id: string;
+  name: string;
+  type: SensorTypeId;
+  datumId: string;
+  axis?: SensorAxisId;   // tachometer axis
+  jointId?: string;       // encoder target joint
 }
 
 export interface MechanismState {
@@ -141,6 +163,7 @@ export interface MechanismState {
   joints: Map<string, JointState>;
   loads: Map<string, LoadState>;
   actuators: Map<string, ActuatorState>;
+  sensors: Map<string, SensorState>;
   importing: boolean;
   importError: string | null;
   hasActiveProject: boolean;
@@ -168,6 +191,9 @@ export interface MechanismState {
   addActuator: (actuator: ActuatorState) => void;
   updateActuator: (id: string, updates: Partial<Omit<ActuatorState, 'id'>>) => void;
   removeActuator: (id: string) => void;
+  addSensor: (sensor: SensorState) => void;
+  updateSensor: (id: string, updates: Partial<Omit<SensorState, 'id'>>) => void;
+  removeSensor: (id: string) => void;
   clear: () => void;
   resetProject: (projectName?: string) => void;
   setImporting: (v: boolean) => void;
@@ -188,6 +214,7 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
   joints: new Map<string, JointState>(),
   loads: new Map<string, LoadState>(),
   actuators: new Map<string, ActuatorState>(),
+  sensors: new Map<string, SensorState>(),
   importing: false,
   importError: null,
   hasActiveProject: false,
@@ -370,6 +397,29 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       return { actuators: next, isDirty: true };
     }),
 
+  addSensor: (sensor) =>
+    set((state) => {
+      const next = new Map(state.sensors);
+      next.set(sensor.id, sensor);
+      return { sensors: next, isDirty: true };
+    }),
+
+  updateSensor: (id, updates) =>
+    set((state) => {
+      const existing = state.sensors.get(id);
+      if (!existing) return {};
+      const next = new Map(state.sensors);
+      next.set(id, { ...existing, ...updates });
+      return { sensors: next, isDirty: true };
+    }),
+
+  removeSensor: (id) =>
+    set((state) => {
+      const next = new Map(state.sensors);
+      next.delete(id);
+      return { sensors: next, isDirty: true };
+    }),
+
   clear: () =>
     set({
       bodies: new Map<string, BodyState>(),
@@ -378,6 +428,7 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       joints: new Map<string, JointState>(),
       loads: new Map<string, LoadState>(),
       actuators: new Map<string, ActuatorState>(),
+      sensors: new Map<string, SensorState>(),
       importError: null,
       pendingRenameEntityId: null,
     }),
@@ -390,6 +441,7 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
       joints: new Map<string, JointState>(),
       loads: new Map<string, LoadState>(),
       actuators: new Map<string, ActuatorState>(),
+      sensors: new Map<string, SensorState>(),
       importError: null,
       hasActiveProject: true,
       projectName,

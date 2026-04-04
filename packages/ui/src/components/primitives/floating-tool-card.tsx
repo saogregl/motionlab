@@ -127,8 +127,9 @@ function FloatingToolCard({
       data-slot="floating-tool-card"
       className={cn(
         'absolute min-w-[240px] w-[260px] max-w-[300px]',
-        'bg-[var(--layer-elevated-glass)] backdrop-blur-[var(--panel-blur)] border border-[var(--border-default)] border-t-2 border-t-[var(--accent-primary)]',
-        'rounded-[var(--radius-sm)] shadow-[var(--shadow-medium)]',
+        'bg-[var(--layer-base-glass)] backdrop-blur-[var(--panel-blur)]',
+        'border border-[var(--border-default)]',
+        'rounded-[var(--panel-radius)] shadow-[var(--shadow-low)]',
         'z-[var(--z-floating)]',
         !mounted && 'animate-in fade-in-0 duration-[var(--duration-fast)]',
         className,
@@ -145,7 +146,7 @@ function FloatingToolCard({
         role="toolbar"
         className={cn(
           'flex h-7 items-center gap-1.5 ps-2 pe-1',
-          'bg-[var(--layer-recessed)] border-b border-[var(--border-subtle)]',
+          'bg-foreground/5 border-b border-[var(--border-subtle)]',
           isDragging ? 'cursor-grabbing' : 'cursor-grab',
         )}
         onMouseDown={handleMouseDown}
@@ -175,7 +176,7 @@ function FloatingToolCard({
       {children && (
         <div
           data-slot="floating-tool-card-body"
-          className="py-0.5"
+          className="py-1"
           style={{ '--inspector-label-w': '70px' } as CSSProperties}
         >
           {children}

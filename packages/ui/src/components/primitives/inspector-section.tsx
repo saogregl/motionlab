@@ -36,7 +36,10 @@ function InspectorSection({
       open={open}
       onOpenChange={onOpenChange}
       defaultOpen={defaultOpen}
-      className={cn('rounded-[var(--section-radius)] border border-[var(--border-default)] bg-[var(--layer-recessed)]', className)}
+      className={cn(
+        'rounded-[var(--section-radius)] border border-[var(--border-subtle)] bg-[var(--layer-recessed)]',
+        className,
+      )}
     >
       <Collapsible.Trigger
         data-slot="inspector-section-trigger"

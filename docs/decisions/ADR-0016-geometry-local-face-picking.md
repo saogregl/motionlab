@@ -29,8 +29,11 @@ These gaps showed up most clearly on overlapping or nested CAD parts, where hove
 4. **Storybook STEP imports are normalized to meters.**
    Browser-side STEP loading must request meter output so viewport stories exercise approximately the same scale assumptions as the native engine import path.
 
-5. **Protocol version 5 codifies the clean break.**
-   `CreateDatumFromFaceCommand` sends `geometry_id`, and `CreateDatumFromFaceSuccess` returns `geometry_id` alongside `face_index` and `FaceSurfaceClass`.
+5. **Exact picking stays viewport-local, but native face metadata may be prewarmed.**
+   The viewport remains responsible for exact ray hits and triangle-to-face resolution. The native boundary may prewarm topology and cache per-face metadata for authoring modes so the first face-aware command does not pay a cold lazy-load penalty.
+
+6. **Protocol version 6 codifies the prewarm path.**
+   `CreateDatumFromFaceCommand` still sends `geometry_id`, and `CreateDatumFromFaceSuccess` still returns `geometry_id` alongside `face_index` and `FaceSurfaceClass`. `PrepareFacePickingCommand` is an additive authoring-performance hint that lets the frontend request topology/face-metadata warmup without moving hover picking off the viewport thread.
 
 ## Consequences
 
@@ -40,6 +43,7 @@ These gaps showed up most clearly on overlapping or nested CAD parts, where hove
 - The native engine receives the exact topology owner for face-aware datum creation.
 - Viewport hover/highlight and click resolution use the same identity model.
 - STEP stories become useful again for scale-sensitive picking validation.
+- Face-aware authoring no longer needs to wait for the first click to trigger native topology reload in the common case.
 
 ### Tradeoffs
 

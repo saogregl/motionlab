@@ -53,18 +53,20 @@ export const ENTITY_COLORS: Record<string, Color> = {
 export const JOINT_CYLINDRICAL = new Color(0, 0.81, 0.82); // cyan (same as prismatic)
 export const JOINT_UNIVERSAL = new Color(0.6, 0.3, 0.8); // purple variant
 
-// ── Joint anchor (fallback) ──
+// ── Joint anchor (unified steel-blue palette) ──
 export const JOINT_STEEL_BLUE = new Color(0.44, 0.59, 0.78); // #708fb7
+export const JOINT_GLYPH_HOVER = new Color('#92B4D8');
+export const JOINT_GLYPH_SELECTED = new Color('#B8D4F0');
 
-/** Per-type joint anchor/line color lookup. Falls back to JOINT_STEEL_BLUE. */
+/** Per-type joint anchor/line color lookup. Unified to steel-blue. */
 export const JOINT_TYPE_COLORS: Record<string, Color> = {
-  revolute: JOINT_REVOLUTE,
-  prismatic: JOINT_PRISMATIC,
-  fixed: JOINT_FIXED,
-  spherical: JOINT_SPHERICAL,
-  cylindrical: JOINT_CYLINDRICAL,
-  planar: JOINT_PLANAR,
-  universal: JOINT_UNIVERSAL,
+  revolute: JOINT_STEEL_BLUE,
+  prismatic: JOINT_STEEL_BLUE,
+  fixed: JOINT_STEEL_BLUE,
+  spherical: JOINT_STEEL_BLUE,
+  cylindrical: JOINT_STEEL_BLUE,
+  planar: JOINT_STEEL_BLUE,
+  universal: JOINT_STEEL_BLUE,
   distance: JOINT_STEEL_BLUE,
   'point-line': JOINT_STEEL_BLUE,
   'point-plane': JOINT_STEEL_BLUE,

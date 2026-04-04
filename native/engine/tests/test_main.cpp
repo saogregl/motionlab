@@ -617,6 +617,62 @@ static void test_face_aware_datum_creation_mixed_fixture(uint16_t port,
     std::cout << "  PASS: " << label << std::endl;
 }
 
+static void test_prepare_face_picking(uint16_t port, const std::string& step_file) {
+    TestClient client;
+    client.connect(port);
+
+    client.send_command(make_handshake(1, TEST_TOKEN));
+    client.wait_for_message(1);
+
+    size_t scan_from = client.message_count();
+
+    Command import_cmd;
+    import_cmd.set_sequence_id(600);
+    import_cmd.mutable_import_asset()->set_file_path(step_file);
+    client.send_command(import_cmd);
+
+    const auto* import_evt = client.wait_for_response(600, scan_from, 10000);
+    assert(import_evt != nullptr);
+    assert(import_evt->payload_case() == Event::kImportAssetResult);
+    assert(import_evt->import_asset_result().success());
+    assert(import_evt->import_asset_result().geometries_size() == 2);
+
+    Command prepare_cmd;
+    prepare_cmd.set_sequence_id(601);
+    auto* prepare = prepare_cmd.mutable_prepare_face_picking();
+    for (const auto& geometry : import_evt->import_asset_result().geometries()) {
+        prepare->add_geometry_ids()->set_id(geometry.geometry_id());
+    }
+    client.send_command(prepare_cmd);
+
+    const auto* prepare_evt = client.wait_for_response(601, scan_from, 10000);
+    assert(prepare_evt != nullptr);
+    assert(prepare_evt->payload_case() == Event::kPrepareFacePickingResult);
+    assert(prepare_evt->prepare_face_picking_result().result_case() == PrepareFacePickingResult::kSuccess);
+    const auto& success = prepare_evt->prepare_face_picking_result().success();
+    assert(success.prepared_geometry_ids_size() == import_evt->import_asset_result().geometries_size());
+    assert(success.failed_geometry_ids_size() == 0);
+
+    const auto& first_geometry = import_evt->import_asset_result().geometries(0);
+    Command face_cmd;
+    face_cmd.set_sequence_id(602);
+    auto* create = face_cmd.mutable_create_datum_from_face();
+    create->mutable_geometry_id()->set_id(first_geometry.geometry_id());
+    create->set_face_index(0);
+    create->set_name("PreparedDatum");
+    client.send_command(face_cmd);
+
+    const auto* face_evt = client.wait_for_response(602, scan_from, 10000);
+    assert(face_evt != nullptr);
+    assert(face_evt->payload_case() == Event::kCreateDatumFromFaceResult);
+    assert(face_evt->create_datum_from_face_result().result_case() == CreateDatumFromFaceResult::kSuccess);
+    assert(face_evt->create_datum_from_face_result().success().geometry_id().id() == first_geometry.geometry_id());
+
+    client.close();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::cout << "  PASS: prepare face picking" << std::endl;
+}
+
 // Helper: wait for an event of a specific payload_case, with timeout
 static const Event* wait_for_event_type(TestClient& client, Event::PayloadCase target,
                                          size_t start_index, int timeout_ms = 5000) {
@@ -825,6 +881,100 @@ static void test_import_unit_system_and_project_roundtrip(uint16_t port) {
     client.close();
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     std::cout << "  PASS: import units and project roundtrip" << std::endl;
+}
+
+static void test_load_project_preserves_actuators(uint16_t port) {
+    TestClient client;
+    client.connect(port);
+
+    client.send_command(make_handshake(1, TEST_TOKEN));
+    client.wait_for_message(1);
+
+    motionlab::mechanism::ProjectFile project;
+    project.set_version(3);
+    project.mutable_metadata()->set_name("Actuated Project");
+    project.mutable_metadata()->set_created_at("2026-03-31T00:00:00Z");
+    project.mutable_metadata()->set_modified_at("2026-03-31T00:00:00Z");
+
+    auto* mech = project.mutable_mechanism();
+    mech->mutable_id()->set_id("mech-actuated");
+    mech->set_name("Actuated Project");
+
+    auto* ground = mech->add_bodies();
+    ground->mutable_id()->set_id("body-ground");
+    ground->set_name("Ground");
+    ground->set_motion_type(motionlab::mechanism::MOTION_TYPE_FIXED);
+    ground->mutable_pose()->mutable_orientation()->set_w(1);
+    auto* gmp = ground->mutable_mass_properties();
+    gmp->set_mass(1.0);
+    gmp->set_ixx(0.1);
+    gmp->set_iyy(0.1);
+    gmp->set_izz(0.1);
+
+    auto* crank = mech->add_bodies();
+    crank->mutable_id()->set_id("body-crank");
+    crank->set_name("Crank");
+    crank->mutable_pose()->mutable_position()->set_x(1.0);
+    crank->mutable_pose()->mutable_orientation()->set_w(1);
+    auto* cmp = crank->mutable_mass_properties();
+    cmp->set_mass(1.0);
+    cmp->set_ixx(0.1);
+    cmp->set_iyy(0.1);
+    cmp->set_izz(0.1);
+
+    auto* dg = mech->add_datums();
+    dg->mutable_id()->set_id("datum-ground");
+    dg->set_name("Ground Pivot");
+    dg->mutable_parent_body_id()->set_id("body-ground");
+    dg->mutable_local_pose()->mutable_position()->set_x(0.5);
+    dg->mutable_local_pose()->mutable_orientation()->set_w(1);
+
+    auto* dc = mech->add_datums();
+    dc->mutable_id()->set_id("datum-crank");
+    dc->set_name("Crank Pivot");
+    dc->mutable_parent_body_id()->set_id("body-crank");
+    dc->mutable_local_pose()->mutable_position()->set_x(-0.5);
+    dc->mutable_local_pose()->mutable_orientation()->set_w(1);
+
+    auto* joint = mech->add_joints();
+    joint->mutable_id()->set_id("joint-crank");
+    joint->set_name("Crank Joint");
+    joint->set_type(motionlab::mechanism::JOINT_TYPE_REVOLUTE);
+    joint->mutable_parent_datum_id()->set_id("datum-ground");
+    joint->mutable_child_datum_id()->set_id("datum-crank");
+
+    auto* actuator = mech->add_actuators();
+    actuator->mutable_id()->set_id("motor-1");
+    actuator->set_name("Motor 1");
+    auto* motor = actuator->mutable_revolute_motor();
+    motor->mutable_joint_id()->set_id("joint-crank");
+    motor->set_control_mode(motionlab::mechanism::ACTUATOR_CONTROL_MODE_SPEED);
+    motor->set_command_value(3.14);
+
+    std::string project_bytes;
+    assert(project.SerializeToString(&project_bytes));
+
+    size_t scan_from = 2;
+    Command load_cmd;
+    load_cmd.set_sequence_id(424);
+    load_cmd.mutable_load_project()->set_project_data(project_bytes);
+    client.send_command(load_cmd);
+
+    const auto* load_evt = client.wait_for_response(424, scan_from, 10000);
+    assert(load_evt != nullptr);
+    assert(load_evt->payload_case() == Event::kLoadProjectResult);
+    assert(load_evt->load_project_result().result_case() == LoadProjectResult::kSuccess);
+
+    const auto& success = load_evt->load_project_result().success();
+    assert(success.mechanism().actuators_size() == 1);
+    assert(success.mechanism().actuators(0).id().id() == "motor-1");
+    assert(success.mechanism().actuators(0).has_revolute_motor());
+    assert(success.mechanism().actuators(0).revolute_motor().joint_id().id() == "joint-crank");
+    assert(std::abs(success.mechanism().actuators(0).revolute_motor().command_value() - 3.14) < 1e-10);
+
+    client.close();
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::cout << "  PASS: load project preserves actuators" << std::endl;
 }
 
 static void test_reimport_same_asset_after_merge_uses_fresh_ids(uint16_t port) {
@@ -1115,8 +1265,10 @@ int main() {
     test_create_joint_invalid_datum(port);
     test_delete_joint_nonexistent(port);
     test_face_aware_datum_creation_mixed_fixture(port, mixed_step_file, "create datum from face after cold import");
+    test_prepare_face_picking(port, mixed_step_file);
     test_update_datum_pose(port);
     test_import_unit_system_and_project_roundtrip(port);
+    test_load_project_preserves_actuators(port);
     test_reimport_same_asset_after_merge_uses_fresh_ids(port);
     test_output_channels_and_scrub(port, step_file);
 

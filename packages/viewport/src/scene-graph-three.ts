@@ -42,6 +42,8 @@ import {
   ENTITY_DATUM,
   ENTITY_JOINT,
   FORCE_ARROW,
+  JOINT_GLYPH_HOVER,
+  JOINT_GLYPH_SELECTED,
   JOINT_STEEL_BLUE,
   JOINT_TYPE_COLORS,
   MOTOR_INDICATOR,
@@ -50,7 +52,7 @@ import {
   TORQUE_ARROW,
 } from './rendering/colors-three.js';
 import { type ComIndicatorResult, createComIndicator } from './rendering/com-indicator-three.js';
-import { createDofIndicator, type DofIndicatorResult } from './rendering/dof-indicators-three.js';
+import { createJointGlyph, type JointGlyphResult } from './rendering/joint-glyph-three.js';
 import {
   createFatLine,
   disposeFatLine,
@@ -62,7 +64,7 @@ import {
   updateFatLineResolution,
 } from './rendering/fat-line-three.js';
 import { createFrameTriad, type FrameTriadResult } from './rendering/frame-triad-three.js';
-import { createJointAnchor, type JointAnchorResult } from './rendering/joint-anchor-three.js';
+// Legacy troika labels removed — HTML overlay (EntityLabelOverlay) handles all labels.
 import { createLimitVisual } from './rendering/limit-visuals-three.js';
 import type { MaterialFactory } from './rendering/materials-three.js';
 import { createMotorVisual } from './rendering/motor-visuals-three.js';
@@ -144,6 +146,18 @@ export interface GizmoDragEndEvent {
 
 export type GizmoDragEndCallback = (event: GizmoDragEndEvent) => void;
 
+/** Label data snapshot for the HTML overlay layer. */
+export interface LabelEntry {
+  entityId: string;
+  entityType: 'body' | 'joint';
+  name: string;
+  worldPosition: { x: number; y: number; z: number };
+  /** Approximate screen-space radius of the entity's visual extent (px). */
+  screenRadius: number;
+  isSelected: boolean;
+  isHovered: boolean;
+}
+
 export interface BodyTransformUpdate {
   id: string;
   pose: PoseInput;
@@ -208,9 +222,9 @@ type JointMeta = {
   parentDatumId: string;
   childDatumId: string;
   jointType: string;
+  jointName: string;
   linkLine?: Line2;
-  anchor?: JointAnchorResult;
-  alwaysOnIndicator?: DofIndicatorResult;
+  glyph?: JointGlyphResult;
   lowerLimit?: number;
   upperLimit?: number;
 };
@@ -429,7 +443,7 @@ export class SceneGraphManager {
   private readonly dofPreviewRoot = new Group();
   private readonly loadPreviewRoot = new Group();
   private readonly forceArrowIds = new Set<string>();
-  private readonly activeDofIndicators = new Map<string, DofIndicatorResult>();
+  // DOF indication is now merged into joint glyphs — no separate activeDofIndicators map.
   private readonly activeLimitVisuals = new Map<
     string,
     import('./rendering/limit-visuals-three.js').LimitVisual
@@ -443,8 +457,8 @@ export class SceneGraphManager {
   private readonly activeComIndicators = new Map<string, ComIndicatorResult>();
   private readonly _comPositions = new Map<string, Vector3>();
   private readonly provisionalPreviewRoot = new Group();
-  private _dofPreviewIndicator: DofIndicatorResult | null = null;
-  private _provisionalDofIndicator: DofIndicatorResult | null = null;
+  private _dofPreviewIndicator: JointGlyphResult | null = null;
+  private _provisionalDofIndicator: JointGlyphResult | null = null;
   private readonly jointLineStart = new Vector3();
   private readonly jointLineEnd = new Vector3();
   private readonly jointLineCenter = new Vector3();
@@ -472,6 +486,7 @@ export class SceneGraphManager {
   private _datumsVisible = true;
   private _jointAnchorsVisible = true;
   private _collisionWireframesVisible = false;
+  private _labelsVisible = true;
   private _comVisible = true;
   private _canvasSize = { width: 1, height: 1 };
   private _gizmoMode: GizmoMode = 'off';
@@ -501,6 +516,7 @@ export class SceneGraphManager {
   onGridVisibilityChanged?: () => void;
   onDatumsVisibilityChanged?: () => void;
   onJointAnchorsVisibilityChanged?: () => void;
+  onLabelStateChanged?: () => void;
 
   constructor(scene: Scene, camera: OrthographicCamera, deps: SceneGraphDeps) {
     ensureBvhRaycastingPatched();
@@ -1449,10 +1465,6 @@ export class SceneGraphManager {
       this.clearDatumPreview();
       this.clearJointPreviewLine();
       this.clearJointTypePreview();
-      for (const [id, indicator] of this.activeDofIndicators) {
-        indicator.dispose();
-      }
-      this.activeDofIndicators.clear();
       this.markEntityListChanged();
       this.requestRender();
     });
@@ -1604,6 +1616,7 @@ export class SceneGraphManager {
     parentDatumId: string,
     childDatumId: string,
     jointType: string,
+    name?: string,
   ): SceneEntity | undefined {
     return this.batchMutation(() => {
       this.removeJoint(id);
@@ -1622,24 +1635,13 @@ export class SceneGraphManager {
       (linkLine.material as LineMaterial).opacity = 0.6;
       root.add(linkLine);
 
-      // Joint anchor glyph (always visible sphere + axis pin)
-      const anchor = createJointAnchor(jointType);
-      anchor.rootNode.userData = { entityId: id, entityType: 'joint' };
-      root.add(anchor.rootNode);
+      // Technical-drawing-style joint glyph (replaces mesh anchor + DOF indicator)
+      const glyph = createJointGlyph(jointType);
+      glyph.rootNode.userData = { entityId: id, entityType: 'joint' };
+      glyph.setMode('idle');
+      root.add(glyph.rootNode);
 
-      // Always-on mini DOF indicator (visible even when not selected)
-      let alwaysOnIndicator: DofIndicatorResult | undefined;
-      const miniDof = createDofIndicator(jointType);
-      if (miniDof) {
-        miniDof.rootNode.scale.setScalar(0.6);
-        miniDof.rootNode.traverse((obj) => {
-          if (obj instanceof Mesh && obj.material instanceof MeshBasicMaterial) {
-            obj.material.opacity = 0.25;
-          }
-        });
-        root.add(miniDof.rootNode);
-        alwaysOnIndicator = miniDof;
-      }
+      const jointName = name || jointType;
 
       setObjectLayerRecursive(root, VIEWPORT_PICK_LAYER);
 
@@ -1649,24 +1651,23 @@ export class SceneGraphManager {
         id,
         type: 'joint',
         rootNode: root,
-        meshes: [...anchor.meshes],
+        meshes: [],
         meta: {
           kind: 'joint',
           parentDatumId,
           childDatumId,
           jointType,
+          jointName,
           linkLine,
-          anchor,
-          alwaysOnIndicator,
+          glyph,
         },
       };
       this.entities.set(id, entity);
       this.markJointRefreshNeeded();
       this.applyVisualState(entity);
       if (!this._jointAnchorsVisible) {
-        if (anchor) anchor.rootNode.visible = false;
+        glyph.rootNode.visible = false;
         linkLine.visible = false;
-        if (alwaysOnIndicator) alwaysOnIndicator.rootNode.visible = false;
       }
       this.markEntityListChanged();
       this.requestRender();
@@ -1678,16 +1679,8 @@ export class SceneGraphManager {
     return this.batchMutation(() => {
       const entity = this.entities.get(id);
       if (!entity || entity.meta.kind !== 'joint') return false;
-      const indicator = this.activeDofIndicators.get(id);
-      if (indicator) {
-        indicator.dispose();
-        this.activeDofIndicators.delete(id);
-      }
-      if (entity.meta.anchor) {
-        entity.meta.anchor.dispose();
-      }
-      if (entity.meta.alwaysOnIndicator) {
-        entity.meta.alwaysOnIndicator.dispose();
+      if (entity.meta.glyph) {
+        entity.meta.glyph.dispose();
       }
       entity.rootNode.removeFromParent();
       disposeObject3D(entity.rootNode);
@@ -1707,42 +1700,18 @@ export class SceneGraphManager {
       if (entity.meta.linkLine) {
         (entity.meta.linkLine.material as LineMaterial).color.copy(createJointColor(jointType));
       }
-      // Recreate the anchor with new type-specific geometry and color
-      if (entity.meta.anchor) {
-        const anchorRoot = entity.meta.anchor.rootNode;
-        anchorRoot.removeFromParent();
-        entity.meta.anchor.dispose();
-        const newAnchor = createJointAnchor(jointType);
-        newAnchor.rootNode.userData = { entityId: id, entityType: 'joint' };
-        entity.rootNode.add(newAnchor.rootNode);
-        entity.meta.anchor = newAnchor;
-        // Update entity meshes to include new anchor meshes
-        entity.meshes.length = 0;
-        entity.meshes.push(...newAnchor.meshes);
-        if (!this._jointAnchorsVisible) {
-          newAnchor.rootNode.visible = false;
-        }
+      // Recreate the glyph with new type-specific shape
+      if (entity.meta.glyph) {
+        entity.meta.glyph.rootNode.removeFromParent();
+        entity.meta.glyph.dispose();
       }
-      // Recreate the always-on DOF indicator for the new type
-      if (entity.meta.alwaysOnIndicator) {
-        entity.meta.alwaysOnIndicator.rootNode.removeFromParent();
-        entity.meta.alwaysOnIndicator.dispose();
-        entity.meta.alwaysOnIndicator = undefined;
-      }
-      const miniDof = createDofIndicator(jointType);
-      if (miniDof) {
-        miniDof.rootNode.scale.setScalar(0.6);
-        miniDof.rootNode.traverse((obj) => {
-          if (obj instanceof Mesh && obj.material instanceof MeshBasicMaterial) {
-            obj.material.opacity = 0.25;
-          }
-        });
-        entity.rootNode.add(miniDof.rootNode);
-        entity.meta.alwaysOnIndicator = miniDof;
-        // Hide if full indicator is active (joint is selected)
-        if (this.activeDofIndicators.has(id)) {
-          miniDof.rootNode.visible = false;
-        }
+      const newGlyph = createJointGlyph(jointType);
+      newGlyph.rootNode.userData = { entityId: id, entityType: 'joint' };
+      entity.rootNode.add(newGlyph.rootNode);
+      entity.meta.glyph = newGlyph;
+      entity.meshes.length = 0;
+      if (!this._jointAnchorsVisible) {
+        newGlyph.rootNode.visible = false;
       }
       this.markJointRefreshNeeded();
       this.applyVisualState(entity);
@@ -1877,13 +1846,13 @@ export class SceneGraphManager {
         setLinePoints(entity.meta.linkLine, [this.lineOrigin, this.lineEnd]);
       }
 
-      // Orient anchor pin along parent datum Z-axis (the joint axis)
-      if (entity.meta.anchor) {
+      // Orient glyph along parent datum Z-axis (the joint axis)
+      if (entity.meta.glyph) {
         parentDatum.rootNode.getWorldQuaternion(_datumWorldQuat);
         _jointAxisScratch.set(0, 0, 1).applyQuaternion(_datumWorldQuat);
         if (_jointAxisScratch.lengthSq() > 1e-8) {
           _anchorQuat.setFromUnitVectors(_anchorYAxis, _jointAxisScratch.normalize());
-          entity.meta.anchor.rootNode.quaternion.copy(_anchorQuat);
+          entity.meta.glyph.rootNode.quaternion.copy(_anchorQuat);
         }
       }
     }
@@ -2035,7 +2004,7 @@ export class SceneGraphManager {
         id: actuatorId,
         type: 'actuator',
         rootNode: root,
-        meshes: visual.meshes,
+        meshes: [],
         meta: { kind: 'actuator', jointId, actuatorType },
       };
       this.entities.set(actuatorId, entity);
@@ -2211,17 +2180,6 @@ export class SceneGraphManager {
     }
 
     // Remove overlays for deselected entities (fast — just detach + dispose)
-    for (const [id, indicator] of this.activeDofIndicators) {
-      if (!selectedIds.has(id)) {
-        indicator.rootNode.removeFromParent();
-        indicator.dispose();
-        this.activeDofIndicators.delete(id);
-        const entity = this.entities.get(id);
-        if (entity && entity.meta.kind === 'joint' && entity.meta.alwaysOnIndicator) {
-          entity.meta.alwaysOnIndicator.rootNode.visible = true;
-        }
-      }
-    }
     for (const [id, visual] of this.activeLimitVisuals) {
       if (!selectedIds.has(id)) {
         visual.rootNode.removeFromParent();
@@ -2266,6 +2224,7 @@ export class SceneGraphManager {
       }
     }
 
+    this.onLabelStateChanged?.();
     this.requestRender();
 
     // ── Phase 2 (deferred): create overlays for newly selected entities ──
@@ -2292,19 +2251,7 @@ export class SceneGraphManager {
 
   /** Phase 2 of selection: create visual overlays for the current selection set. */
   private createSelectionOverlays(selectedIds: Set<string>, rawIds: Set<string>): void {
-    // DOF indicators
-    for (const id of selectedIds) {
-      if (this.activeDofIndicators.has(id)) continue;
-      const entity = this.entities.get(id);
-      if (!entity || entity.meta.kind !== 'joint') continue;
-      const indicator = createDofIndicator(entity.meta.jointType);
-      if (!indicator) continue;
-      entity.rootNode.add(indicator.rootNode);
-      this.activeDofIndicators.set(id, indicator);
-      if (entity.meta.alwaysOnIndicator) {
-        entity.meta.alwaysOnIndicator.rootNode.visible = false;
-      }
-    }
+    // DOF indication is handled by the joint glyph's 'selected' mode — no separate overlay.
 
     // Limit visuals
     for (const id of selectedIds) {
@@ -2458,7 +2405,28 @@ export class SceneGraphManager {
         this.applyConnectedBodyHighlights(hoveredId);
       }
     }
+    this.onLabelStateChanged?.();
     this.requestRender();
+  }
+
+  private clearFaceHighlightInternal(
+    entity: SceneEntityInternal & { meta: BodyMeta },
+    requestRender: boolean,
+  ): void {
+    if (entity.meta.highlightedFace === null) return;
+    const { geometryId, faceIndex } = entity.meta.highlightedFace;
+    const geometryState = this.getBodyGeometryState(entity, geometryId);
+    const colorAttr = geometryState?.colorAttribute;
+    if (!colorAttr) {
+      entity.meta.highlightedFace = null;
+      return;
+    }
+    const vertexIndices = this.getFaceVertexIndices(entity, geometryId, faceIndex);
+    this.setFaceVertexColor(colorAttr, vertexIndices, new Color(1, 1, 1));
+    entity.meta.highlightedFace = null;
+    if (requestRender) {
+      this.requestRender();
+    }
   }
 
   highlightFace(bodyId: string, geometryId: string, faceIndex: number): void {
@@ -2473,7 +2441,7 @@ export class SceneGraphManager {
     )
       return;
 
-    this.clearFaceHighlight(bodyId);
+    this.clearFaceHighlightInternal(entity, false);
 
     const colorAttr = this.ensureGeometryColorAttribute(geometryState);
     const vertexIndices = this.getFaceVertexIndices(entity, geometryId, faceIndex);
@@ -2485,15 +2453,7 @@ export class SceneGraphManager {
   clearFaceHighlight(bodyId: string): void {
     const entity = this.entities.get(bodyId);
     if (!this.isBodyEntity(entity)) return;
-    if (entity.meta.highlightedFace === null) return;
-    const { geometryId, faceIndex } = entity.meta.highlightedFace;
-    const geometryState = this.getBodyGeometryState(entity, geometryId);
-    const colorAttr = geometryState?.colorAttribute;
-    if (!colorAttr) return;
-    const vertexIndices = this.getFaceVertexIndices(entity, geometryId, faceIndex);
-    this.setFaceVertexColor(colorAttr, vertexIndices, new Color(1, 1, 1));
-    entity.meta.highlightedFace = null;
-    this.requestRender();
+    this.clearFaceHighlightInternal(entity, true);
   }
 
   clearAllFaceHighlights(): void {
@@ -3105,19 +3065,13 @@ export class SceneGraphManager {
     const axis = axisDirection
       ? new Vector3(axisDirection.x, axisDirection.y, axisDirection.z)
       : undefined;
-    const indicator = createDofIndicator(jointType, axis);
-    if (!indicator) return;
+    const glyph = createJointGlyph(jointType, axis);
+    glyph.rootNode.position.set(position.x, position.y, position.z);
+    glyph.rootNode.scale.setScalar(0.5);
+    glyph.setOpacity(0.35);
 
-    indicator.rootNode.position.set(position.x, position.y, position.z);
-    indicator.rootNode.scale.setScalar(0.5);
-    indicator.rootNode.traverse((obj) => {
-      if (obj instanceof Mesh && obj.material instanceof MeshBasicMaterial) {
-        obj.material.opacity = 0.35;
-      }
-    });
-
-    this.provisionalPreviewRoot.add(indicator.rootNode);
-    this._provisionalDofIndicator = indicator;
+    this.provisionalPreviewRoot.add(glyph.rootNode);
+    this._provisionalDofIndicator = glyph;
     setObjectLayerRecursive(this.provisionalPreviewRoot, VIEWPORT_PICK_LAYER);
     this.requestRender();
   }
@@ -3155,23 +3109,13 @@ export class SceneGraphManager {
     }
     previewAxis.normalize();
 
-    const indicator = createDofIndicator(jointType, previewAxis);
-    if (!indicator) {
-      this.dofPreviewRoot.visible = false;
-      return;
-    }
+    const glyph = createJointGlyph(jointType, previewAxis);
+    glyph.rootNode.position.copy(midpoint);
+    glyph.setOpacity(0.5);
 
-    indicator.rootNode.position.copy(midpoint);
-    // Reduce opacity for preview appearance
-    indicator.rootNode.traverse((obj) => {
-      if (obj instanceof Mesh && obj.material instanceof MeshBasicMaterial) {
-        obj.material.opacity = 0.5;
-      }
-    });
-
-    this.dofPreviewRoot.add(indicator.rootNode);
+    this.dofPreviewRoot.add(glyph.rootNode);
     this.dofPreviewRoot.visible = true;
-    this._dofPreviewIndicator = indicator;
+    this._dofPreviewIndicator = glyph;
     setObjectLayerRecursive(this.dofPreviewRoot, VIEWPORT_PICK_LAYER);
     this.requestRender();
   }
@@ -3190,13 +3134,24 @@ export class SceneGraphManager {
     this.requestRender();
   }
 
-  /** DOF indicators are now static — no per-frame animation needed. */
+  /** True when any joint glyph has an active hover animation. */
   hasDofAnimations(): boolean {
+    for (const entity of this.entities.values()) {
+      if (entity.meta.kind === 'joint' && entity.meta.glyph?.isAnimating()) {
+        return true;
+      }
+    }
     return false;
   }
 
-  /** No-op — DOF indicators are static. Kept for interface compatibility. */
-  updateDofAnimations(_time: number): void {}
+  /** Advance dash-crawl animation on hovered joint glyphs. */
+  updateDofAnimations(time: number): void {
+    for (const entity of this.entities.values()) {
+      if (entity.meta.kind === 'joint' && entity.meta.glyph?.isAnimating()) {
+        entity.meta.glyph.updateAnimation(time);
+      }
+    }
+  }
 
   pickEntityAtPoint(): { entityId: string; entityType: string } | null {
     if (!this._hoveredId) return null;
@@ -3303,12 +3258,26 @@ export class SceneGraphManager {
   private applyJointAnchorVisibility(): void {
     for (const [, entity] of this.entities) {
       if (entity.meta.kind === 'joint') {
-        if (entity.meta.anchor) entity.meta.anchor.rootNode.visible = this._jointAnchorsVisible;
+        if (entity.meta.glyph) entity.meta.glyph.rootNode.visible = this._jointAnchorsVisible;
         if (entity.meta.linkLine) entity.meta.linkLine.visible = this._jointAnchorsVisible;
-        if (entity.meta.alwaysOnIndicator)
-          entity.meta.alwaysOnIndicator.rootNode.visible = this._jointAnchorsVisible;
       }
     }
+  }
+
+  get labelsVisible(): boolean {
+    return this._labelsVisible;
+  }
+
+  toggleLabels(): void {
+    this._labelsVisible = !this._labelsVisible;
+    this.applyLabelVisibility();
+    this.requestRender();
+  }
+
+  private applyLabelVisibility(): void {
+    // Labels are rendered by the HTML overlay (EntityLabelOverlay).
+    // Just notify the overlay so it can show/hide.
+    this.onLabelStateChanged?.();
   }
 
   getGeometryIndex(bodyId: string, geometryId: string): BodyGeometryIndex | undefined {
@@ -3383,14 +3352,11 @@ export class SceneGraphManager {
       previewType === 'axis'
         ? estimateAxisDirection(geometryState.normals, geometryState.indices, faceRange)
         : null;
-    const localCentroid = this.computeFaceLocalCentroid(
-      entity,
-      geometryId,
-      faceIndex,
+    const result: FacePreviewData = {
       previewType,
       axisDirection,
-    );
-    const result: FacePreviewData = { previewType, axisDirection, localCentroid };
+      localCentroid: null,
+    };
     geometryState.facePreviewCache.set(faceIndex, result);
     return result;
   }
@@ -3414,7 +3380,18 @@ export class SceneGraphManager {
     if (!this.isBodyEntity(entity)) return null;
 
     const preview = this.getGeometryFacePreview(bodyId, geometryId, faceIndex);
-    if (!preview?.localCentroid) return null;
+    if (!preview) return null;
+
+    if (!preview.localCentroid) {
+      preview.localCentroid = this.computeFaceLocalCentroid(
+        entity,
+        geometryId,
+        faceIndex,
+        preview.previewType,
+        preview.axisDirection,
+      );
+    }
+    if (!preview.localCentroid) return null;
 
     const geometryState = this.getBodyGeometryState(entity, geometryId);
     if (!geometryState) return null;
@@ -3445,6 +3422,75 @@ export class SceneGraphManager {
       y: (1 - projected.y) * 0.5 * this._canvasSize.height,
       z: projected.z,
     };
+  }
+
+  // ── Label overlay API ──
+
+  /** Returns a snapshot of all body/joint labels for the HTML overlay layer. */
+  getLabelSnapshot(): LabelEntry[] {
+    this._camera.updateMatrixWorld(true);
+    this._camera.updateProjectionMatrix();
+
+    const result: LabelEntry[] = [];
+    const pos = new Vector3();
+    const edgePos = new Vector3();
+    const hw = this._canvasSize.width * 0.5;
+    const hh = this._canvasSize.height * 0.5;
+
+    for (const entity of this.entities.values()) {
+      if (entity.meta.kind === 'body') {
+        if (!entity.meta.bodyName) continue;
+        entity.rootNode.getWorldPosition(pos);
+
+        // Estimate screen radius from bounding sphere of geometry meshes.
+        let screenRadius = 0;
+        for (const [, geo] of entity.meta.geometries) {
+          const sphere = geo.mesh.geometry.boundingSphere;
+          if (!sphere) {
+            geo.mesh.geometry.computeBoundingSphere();
+          }
+          const bs = geo.mesh.geometry.boundingSphere;
+          if (bs) {
+            // Project center and an edge point, measure pixel distance.
+            const center = pos.clone().project(this._camera);
+            edgePos.copy(pos);
+            edgePos.x += bs.radius;
+            const edge = edgePos.project(this._camera);
+            const dx = (edge.x - center.x) * hw;
+            const dy = (edge.y - center.y) * hh;
+            const r = Math.sqrt(dx * dx + dy * dy);
+            if (r > screenRadius) screenRadius = r;
+          }
+        }
+
+        result.push({
+          entityId: entity.id,
+          entityType: 'body',
+          name: entity.meta.bodyName,
+          worldPosition: { x: pos.x, y: pos.y, z: pos.z },
+          screenRadius,
+          isSelected: this.currentSelectedIds.has(entity.id),
+          isHovered: this._hoveredId === entity.id,
+        });
+      } else if (entity.meta.kind === 'joint') {
+        entity.rootNode.getWorldPosition(pos);
+        result.push({
+          entityId: entity.id,
+          entityType: 'joint',
+          name: entity.meta.jointName,
+          worldPosition: { x: pos.x, y: pos.y, z: pos.z },
+          screenRadius: 12, // joints are point-like
+          isSelected: this.currentSelectedIds.has(entity.id),
+          isHovered: this._hoveredId === entity.id,
+        });
+      }
+    }
+    return result;
+  }
+
+  /** Called by the HTML overlay when a label pill is hovered. */
+  onLabelHover(entityId: string | null): void {
+    this.applyHover(entityId);
   }
 
   private applyVisualState(entity: SceneEntityInternal): void {
@@ -3519,32 +3565,16 @@ export class SceneGraphManager {
         }
         lineMaterial.needsUpdate = true;
       }
-      if (entity.meta.anchor) {
-        for (const mesh of entity.meta.anchor.meshes) {
-          const mat = mesh.material as MeshStandardMaterial;
-          if (isSelected) {
-            mat.emissive.set(0x000000);
-            mat.emissiveIntensity = 0;
-            mat.color.copy(entityColor);
-            mat.opacity = 1.0;
-          } else if (isHovered) {
-            mat.color.copy(typeColor);
-            mat.emissive.copy(typeColor);
-            mat.emissiveIntensity = 0.3;
-            mat.opacity = 1.0;
-          } else {
-            mat.color.copy(typeColor);
-            mat.emissive.set(0x000000);
-            mat.emissiveIntensity = 0;
-            mat.opacity = 0.85;
-          }
-          mat.needsUpdate = true;
-        }
-        const triadOpacity = isSelected ? 0.9 : isHovered ? 0.6 : 0.35;
-        for (const line of entity.meta.anchor.triadLines) {
-          const lineMat = line.material as LineBasicMaterial;
-          lineMat.opacity = triadOpacity;
-          lineMat.needsUpdate = true;
+      if (entity.meta.glyph) {
+        if (isSelected) {
+          entity.meta.glyph.setMode('selected');
+          entity.meta.glyph.setColor(JOINT_GLYPH_SELECTED);
+        } else if (isHovered) {
+          entity.meta.glyph.setMode('hover');
+          entity.meta.glyph.setColor(JOINT_GLYPH_HOVER);
+        } else {
+          entity.meta.glyph.setMode('idle');
+          entity.meta.glyph.setColor(JOINT_STEEL_BLUE);
         }
       }
     }

@@ -1,5 +1,5 @@
 import { InspectorSection, NumericInput, PropertyRow } from '@motionlab/ui';
-import { Box } from 'lucide-react';
+
 import { useCallback, useRef } from 'react';
 
 const DEBOUNCE_MS = 300;
@@ -42,7 +42,7 @@ function PrimitiveParamsSection({
   const shapeLabel = shape.charAt(0).toUpperCase() + shape.slice(1);
 
   return (
-    <InspectorSection title={`${shapeLabel} Dimensions`} icon={<Box className="size-3.5" />}>
+    <InspectorSection title={`${shapeLabel} Dimensions`}>
       {shape === 'box' && params.box && (
         <>
           <PropertyRow label="Width" unit="m" numeric>

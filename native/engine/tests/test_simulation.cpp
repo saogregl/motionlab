@@ -532,6 +532,100 @@ static int test_example_pendulum() {
     return 0;
 }
 
+static int test_example_slider_crank() {
+    std::cout << "  [test_example_slider_crank] ";
+
+    constexpr double crank_angle = 35.0 * PI / 180.0;
+    constexpr double crank_length = 0.15;
+    constexpr double conrod_length = 0.25;
+    constexpr double crank_speed = PI;
+
+    const double crank_pin_x = crank_length * std::cos(crank_angle);
+    const double crank_pin_y = crank_length * std::sin(crank_angle);
+    const double slider_x =
+        crank_pin_x + std::sqrt(conrod_length * conrod_length - crank_pin_y * crank_pin_y);
+
+    auto q_crank = make_quat(0, 0, 1, crank_angle);
+    auto q_conrod = make_quat(0, 0, 1, std::atan2(-crank_pin_y, slider_x - crank_pin_x));
+    auto q_slide = make_quat(0, 1, 0, PI / 2.0);
+
+    auto mechanism = MechanismBuilder("slider-crank-example")
+        .addFixedBody("ground")
+        .addBodyWithOrientation(
+            "crank",
+            1.0,
+            crank_pin_x / 2.0,
+            crank_pin_y / 2.0,
+            0.0,
+            q_crank.q[0], q_crank.q[1], q_crank.q[2], q_crank.q[3])
+        .addBodyWithOrientation(
+            "conrod",
+            1.0,
+            (crank_pin_x + slider_x) / 2.0,
+            crank_pin_y / 2.0,
+            0.0,
+            q_conrod.q[0], q_conrod.q[1], q_conrod.q[2], q_conrod.q[3])
+        .addBody("slider", 1.0, slider_x, 0.0, 0.0)
+        .addDatum("datum-crank-ground", "ground", 0.0, 0.0, 0.0)
+        .addDatum("datum-crank-base", "crank", -0.075, 0.0, 0.0)
+        .addDatum("datum-pin-crank", "crank", 0.075, 0.0, 0.0)
+        .addDatum("datum-pin-conrod", "conrod", -0.125, 0.0, 0.0)
+        .addDatum("datum-slider-conrod", "conrod", 0.125, 0.0, 0.0)
+        .addDatum("datum-slider-pin", "slider", 0.0, 0.0, 0.0)
+        .addDatumWithOrientation(
+            "datum-slide-ground",
+            "ground",
+            slider_x, 0.0, 0.0,
+            q_slide.q[0], q_slide.q[1], q_slide.q[2], q_slide.q[3])
+        .addDatumWithOrientation(
+            "datum-slide-slider",
+            "slider",
+            0.0, 0.0, 0.0,
+            q_slide.q[0], q_slide.q[1], q_slide.q[2], q_slide.q[3])
+        .addRevoluteJoint("joint-crank-pivot", "datum-crank-ground", "datum-crank-base")
+        .addRevoluteJoint("joint-crank-conrod", "datum-pin-crank", "datum-pin-conrod")
+        .addRevoluteJoint("joint-conrod-slider", "datum-slider-conrod", "datum-slider-pin")
+        .addPrismaticJoint("joint-slide", "datum-slide-ground", "datum-slide-slider")
+        .addRevoluteMotor("actuator-crank", "joint-crank-pivot", mech::ACTUATOR_CONTROL_MODE_SPEED, crank_speed)
+        .build();
+
+    eng::SimulationConfig config;
+    config.gravity[0] = 0.0;
+    config.gravity[1] = 0.0;
+    config.gravity[2] = 0.0;
+
+    eng::SimulationRuntime runtime;
+    auto result = runtime.compile(mechanism, config);
+    assert(result.success && "Slider-crank example should compile");
+
+    for (int i = 0; i < 200; ++i) {
+        runtime.step(0.001);
+    }
+
+    const auto poses = runtime.getBodyPoses();
+    const auto states = runtime.getJointStates();
+
+    const eng::BodyPose* slider = nullptr;
+    for (const auto& pose : poses) {
+        if (pose.body_id == "slider") slider = &pose;
+    }
+    assert(slider && "Slider body pose should be present");
+    assert(std::abs(slider->position[1]) < 1e-4 && "Slider should stay constrained to X axis");
+    assert(std::abs(slider->position[2]) < 1e-4 && "Slider should stay constrained to X axis");
+    assert(std::abs(slider->position[0] - slider_x) > 1e-2 && "Slider should move along X");
+
+    const eng::JointState* crank_joint = nullptr;
+    for (const auto& state : states) {
+        if (state.joint_id == "joint-crank-pivot") crank_joint = &state;
+    }
+    assert(crank_joint && "Crank joint state should be present");
+    assert(std::abs(crank_joint->velocity - crank_speed) < 0.1 && "Crank motor should drive the pivot speed");
+
+    std::cout << "PASS (slider_x=" << slider->position[0]
+              << ", crank_vel=" << crank_joint->velocity << ")\n";
+    return 0;
+}
+
 // ---------------------------------------------------------------------------
 // Solver Configuration Tests (Epic 17)
 // ---------------------------------------------------------------------------
@@ -1131,6 +1225,30 @@ static int test_self_joint_error() {
     assert(diag && "Expected SELF_JOINT diagnostic");
     assert(diag->severity == eng::DiagnosticSeverity::ERROR);
     assert(!diag->affected_entity_ids.empty());
+
+    std::cout << "PASS\n";
+    return 0;
+}
+
+static int test_joint_datum_misalignment_error() {
+    std::cout << "  [test_joint_datum_misalignment_error] ";
+
+    eng::SimulationRuntime runtime;
+    auto m = build_pendulum_mechanism();
+
+    for (int i = 0; i < m.datums_size(); ++i) {
+        auto* datum = m.mutable_datums(i);
+        if (datum->id().id() == "datum-b") {
+            datum->mutable_local_pose()->mutable_position()->set_x(-0.4);
+        }
+    }
+
+    auto result = runtime.compile(m);
+    // Misalignment is now a warning, not an error — compilation succeeds
+    assert(result.success);
+    auto* diag = find_diagnostic(result, "JOINT_DATUM_MISALIGNMENT");
+    assert(diag && "Expected JOINT_DATUM_MISALIGNMENT warning");
+    assert(diag->severity == eng::DiagnosticSeverity::WARNING);
 
     std::cout << "PASS\n";
     return 0;
@@ -1865,6 +1983,265 @@ int test_cylindrical_separate_damping() {
 }
 
 // ---------------------------------------------------------------------------
+// Sensor tests
+// ---------------------------------------------------------------------------
+
+// Helper: build pendulum mechanism with sensors attached
+static mech::Mechanism build_pendulum_with_sensors() {
+    auto m = build_pendulum_mechanism();
+
+    // Add a datum on body-b at the body origin (for body-mounted sensors)
+    {
+        auto* datum = m.add_datums();
+        datum->mutable_id()->set_id("datum-sensor");
+        datum->set_name("Sensor mount");
+        datum->mutable_parent_body_id()->set_id("body-b");
+        auto* lp = datum->mutable_local_pose();
+        lp->mutable_position()->set_x(0); lp->mutable_position()->set_y(0); lp->mutable_position()->set_z(0);
+        lp->mutable_orientation()->set_w(1); lp->mutable_orientation()->set_x(0);
+        lp->mutable_orientation()->set_y(0); lp->mutable_orientation()->set_z(0);
+    }
+
+    // Accelerometer on pendulum body
+    {
+        auto* s = m.add_sensors();
+        s->mutable_id()->set_id("sensor-accel");
+        s->set_name("Accel1");
+        s->set_type(mech::SENSOR_TYPE_ACCELEROMETER);
+        s->mutable_datum_id()->set_id("datum-sensor");
+        s->mutable_accelerometer();
+    }
+
+    // Gyroscope on pendulum body
+    {
+        auto* s = m.add_sensors();
+        s->mutable_id()->set_id("sensor-gyro");
+        s->set_name("Gyro1");
+        s->set_type(mech::SENSOR_TYPE_GYROSCOPE);
+        s->mutable_datum_id()->set_id("datum-sensor");
+        s->mutable_gyroscope();
+    }
+
+    // Tachometer on pendulum body, Z axis
+    {
+        auto* s = m.add_sensors();
+        s->mutable_id()->set_id("sensor-tach");
+        s->set_name("Tach1");
+        s->set_type(mech::SENSOR_TYPE_TACHOMETER);
+        s->mutable_datum_id()->set_id("datum-sensor");
+        auto* tc = s->mutable_tachometer();
+        tc->set_axis(mech::SENSOR_AXIS_Z);
+    }
+
+    // Encoder on the revolute joint
+    {
+        auto* s = m.add_sensors();
+        s->mutable_id()->set_id("sensor-encoder");
+        s->set_name("Encoder1");
+        s->set_type(mech::SENSOR_TYPE_ENCODER);
+        s->mutable_datum_id()->set_id("datum-sensor");  // encoder also needs datum_id in proto
+        auto* ec = s->mutable_encoder();
+        ec->mutable_joint_id()->set_id("joint-rev");
+    }
+
+    return m;
+}
+
+static int test_sensor_channel_descriptors() {
+    std::cout << "  [test_sensor_channel_descriptors] ";
+    eng::SimulationRuntime runtime;
+    auto m = build_pendulum_with_sensors();
+    eng::SimulationConfig config;
+    // gravity defaults to {0, -9.81, 0}
+    auto result = runtime.compile(m, config);
+    assert(result.success);
+
+    auto descriptors = runtime.getChannelDescriptors();
+
+    // Check that sensor channels exist
+    bool found_accel = false, found_gyro = false, found_tach = false;
+    bool found_enc_pos = false, found_enc_vel = false;
+    for (const auto& d : descriptors) {
+        if (d.channel_id == "sensor/sensor-accel/acceleration") found_accel = true;
+        if (d.channel_id == "sensor/sensor-gyro/angular_velocity") found_gyro = true;
+        if (d.channel_id == "sensor/sensor-tach/rpm") found_tach = true;
+        if (d.channel_id == "sensor/sensor-encoder/position") found_enc_pos = true;
+        if (d.channel_id == "sensor/sensor-encoder/velocity") found_enc_vel = true;
+    }
+    assert(found_accel && "Accelerometer channel missing");
+    assert(found_gyro && "Gyroscope channel missing");
+    assert(found_tach && "Tachometer channel missing");
+    assert(found_enc_pos && "Encoder position channel missing");
+    assert(found_enc_vel && "Encoder velocity channel missing");
+
+    std::cout << "PASSED\n";
+    return 0;
+}
+
+static int test_sensor_accelerometer_gravity() {
+    std::cout << "  [test_sensor_accelerometer_gravity] ";
+    eng::SimulationRuntime runtime;
+    auto m = build_pendulum_with_sensors();
+    eng::SimulationConfig config;
+    // gravity defaults to {0, -9.81, 0}
+    auto result = runtime.compile(m, config);
+    assert(result.success);
+
+    // Do a few steps so the pendulum swings
+    for (int i = 0; i < 50; ++i) {
+        runtime.step(config.timestep);
+    }
+
+    auto values = runtime.getChannelValues();
+    // Find accelerometer value — on a swinging pendulum, the accelerometer
+    // senses both the constraint reaction (gravity compensation) and centripetal
+    // acceleration. The magnitude should be nonzero.
+    for (const auto& v : values) {
+        if (v.channel_id == "sensor/sensor-accel/acceleration") {
+            double mag = std::sqrt(v.vector[0]*v.vector[0] +
+                                   v.vector[1]*v.vector[1] +
+                                   v.vector[2]*v.vector[2]);
+            // The accelerometer should report nonzero acceleration (gravity + dynamics)
+            assert(mag > 0.01 && "Accelerometer should sense nonzero acceleration on moving pendulum");
+            std::cout << "PASSED (accel mag=" << mag
+                      << ", xyz=[" << v.vector[0] << "," << v.vector[1] << "," << v.vector[2] << "])\n";
+            return 0;
+        }
+    }
+    assert(false && "Accelerometer channel not found in values");
+    return 1;
+}
+
+static int test_sensor_encoder_matches_joint() {
+    std::cout << "  [test_sensor_encoder_matches_joint] ";
+    eng::SimulationRuntime runtime;
+    auto m = build_pendulum_with_sensors();
+    eng::SimulationConfig config;
+    // gravity defaults to {0, -9.81, 0}
+    auto result = runtime.compile(m, config);
+    assert(result.success);
+
+    // Run some steps so the pendulum swings
+    for (int i = 0; i < 100; ++i) {
+        runtime.step(config.timestep);
+    }
+
+    auto values = runtime.getChannelValues();
+    double joint_pos = 0, joint_vel = 0;
+    double encoder_pos = 0, encoder_vel = 0;
+    bool found_joint_pos = false, found_encoder_pos = false;
+
+    for (const auto& v : values) {
+        if (v.channel_id == "joint/joint-rev/coord/rot_z") {
+            joint_pos = v.scalar; found_joint_pos = true;
+        }
+        if (v.channel_id == "joint/joint-rev/coord_rate/rot_z") {
+            joint_vel = v.scalar;
+        }
+        if (v.channel_id == "sensor/sensor-encoder/position") {
+            encoder_pos = v.scalar; found_encoder_pos = true;
+        }
+        if (v.channel_id == "sensor/sensor-encoder/velocity") {
+            encoder_vel = v.scalar;
+        }
+    }
+    assert(found_joint_pos && "Joint position channel not found");
+    assert(found_encoder_pos && "Encoder position channel not found");
+    assert(std::abs(joint_pos - encoder_pos) < 1e-12 &&
+           "Encoder position should exactly match joint coordinate");
+    assert(std::abs(joint_vel - encoder_vel) < 1e-12 &&
+           "Encoder velocity should exactly match joint velocity");
+
+    std::cout << "PASSED (pos=" << encoder_pos << ", vel=" << encoder_vel << ")\n";
+    return 0;
+}
+
+static int test_sensor_tachometer_rpm() {
+    std::cout << "  [test_sensor_tachometer_rpm] ";
+    eng::SimulationRuntime runtime;
+    auto m = build_pendulum_with_sensors();
+    eng::SimulationConfig config;
+    // gravity defaults to {0, -9.81, 0}
+    auto result = runtime.compile(m, config);
+    assert(result.success);
+
+    // Run some steps so the pendulum swings
+    for (int i = 0; i < 100; ++i) {
+        runtime.step(config.timestep);
+    }
+
+    auto values = runtime.getChannelValues();
+    double gyro_z = 0;
+    double tach_rpm = 0;
+    bool found_gyro = false, found_tach = false;
+
+    for (const auto& v : values) {
+        if (v.channel_id == "sensor/sensor-gyro/angular_velocity") {
+            gyro_z = v.vector[2];  // Z component
+            found_gyro = true;
+        }
+        if (v.channel_id == "sensor/sensor-tach/rpm") {
+            tach_rpm = v.scalar;
+            found_tach = true;
+        }
+    }
+    assert(found_gyro && "Gyroscope channel not found");
+    assert(found_tach && "Tachometer channel not found");
+
+    // Tachometer RPM should be gyro_z * 60 / (2*pi)
+    double expected_rpm = gyro_z * 60.0 / (2.0 * M_PI);
+    assert(std::abs(tach_rpm - expected_rpm) < 1e-10 &&
+           "Tachometer RPM should match angular velocity conversion");
+
+    std::cout << "PASSED (rpm=" << tach_rpm << ")\n";
+    return 0;
+}
+
+static int test_sensor_invalid_datum() {
+    std::cout << "  [test_sensor_invalid_datum] ";
+    eng::SimulationRuntime runtime;
+    auto m = build_pendulum_mechanism();
+
+    // Add sensor with nonexistent datum
+    auto* s = m.add_sensors();
+    s->mutable_id()->set_id("sensor-bad");
+    s->set_name("BadSensor");
+    s->set_type(mech::SENSOR_TYPE_ACCELEROMETER);
+    s->mutable_datum_id()->set_id("datum-nonexistent");
+    s->mutable_accelerometer();
+
+    eng::SimulationConfig config;
+    // gravity defaults to {0, -9.81, 0}
+    auto result = runtime.compile(m, config);
+    assert(!result.success && "Should fail with invalid datum reference");
+
+    std::cout << "PASSED\n";
+    return 0;
+}
+
+static int test_sensor_encoder_invalid_joint() {
+    std::cout << "  [test_sensor_encoder_invalid_joint] ";
+    eng::SimulationRuntime runtime;
+    auto m = build_pendulum_mechanism();
+
+    auto* s = m.add_sensors();
+    s->mutable_id()->set_id("sensor-bad-enc");
+    s->set_name("BadEncoder");
+    s->set_type(mech::SENSOR_TYPE_ENCODER);
+    s->mutable_datum_id()->set_id("datum-a");
+    auto* ec = s->mutable_encoder();
+    ec->mutable_joint_id()->set_id("joint-nonexistent");
+
+    eng::SimulationConfig config;
+    // gravity defaults to {0, -9.81, 0}
+    auto result = runtime.compile(m, config);
+    assert(!result.success && "Should fail with invalid joint reference");
+
+    std::cout << "PASSED\n";
+    return 0;
+}
+
+// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
@@ -1880,6 +2257,7 @@ int main() {
     failures += test_negative_mass();
     failures += test_reset();
     failures += test_example_pendulum();
+    failures += test_example_slider_crank();
 
     std::cout << "\n=== Solver Configuration Tests (Epic 17) ===\n";
     failures += test_default_solver_config();
@@ -1918,6 +2296,7 @@ int main() {
     std::cout << "\n=== Pre-Simulation Validation Tests (Epic 17 Prompt 3) ===\n";
     failures += test_no_ground_error();
     failures += test_self_joint_error();
+    failures += test_joint_datum_misalignment_error();
     failures += test_duplicate_actuator_error();
     failures += test_floating_body_warning();
     failures += test_under_constrained_warning();
@@ -1927,6 +2306,14 @@ int main() {
     failures += test_multiple_errors_accumulated();
     failures += test_zero_mass_fixed_body_ok();
     failures += test_backward_compat_string_diagnostics();
+
+    std::cout << "\n=== Sensor Tests ===\n";
+    failures += test_sensor_channel_descriptors();
+    failures += test_sensor_accelerometer_gravity();
+    failures += test_sensor_encoder_matches_joint();
+    failures += test_sensor_tachometer_rpm();
+    failures += test_sensor_invalid_datum();
+    failures += test_sensor_encoder_invalid_joint();
 
     if (failures == 0) {
         std::cout << "\nAll simulation tests passed.\n";

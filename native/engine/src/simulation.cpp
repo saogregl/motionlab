@@ -10,6 +10,12 @@
 #include <unordered_set>
 
 #include "chrono/functions/ChFunctionConst.h"
+#include "chrono/functions/ChFunctionConstAcc.h"
+#include "chrono/functions/ChFunctionCycloidal.h"
+#include "chrono/functions/ChFunctionInterp.h"
+#include "chrono/functions/ChFunctionLambda.h"
+#include "chrono/functions/ChFunctionRamp.h"
+#include "chrono/functions/ChFunctionSine.h"
 #include "chrono/physics/ChBody.h"
 #include "chrono/physics/ChBodyAuxRef.h"
 #include "chrono/physics/ChLink.h"
@@ -158,6 +164,59 @@ int constraints_removed_for_joint(mech::JointType type) {
 }
 
 // ---------------------------------------------------------------------------
+// Command function factory — maps product-level CommandFunction proto to
+// the corresponding Chrono ChFunction type.
+// ---------------------------------------------------------------------------
+std::shared_ptr<ChFunction> create_command_function(
+    const mech::CommandFunction& fn,
+    double legacy_command_value) {
+    switch (fn.shape_case()) {
+        case mech::CommandFunction::kConstant:
+            return chrono_types::make_shared<ChFunctionConst>(fn.constant().value());
+
+        case mech::CommandFunction::kRamp:
+            return chrono_types::make_shared<ChFunctionRamp>(
+                fn.ramp().initial_value(), fn.ramp().slope());
+
+        case mech::CommandFunction::kSine: {
+            auto sine = chrono_types::make_shared<ChFunctionSine>(
+                fn.sine().amplitude(), fn.sine().frequency(), fn.sine().phase());
+            double offset = fn.sine().offset();
+            if (offset == 0.0) return sine;
+            auto wrapped = chrono_types::make_shared<ChFunctionLambda>();
+            wrapped->SetFunction([sine, offset](double t) {
+                return sine->GetVal(t) + offset;
+            });
+            return wrapped;
+        }
+
+        case mech::CommandFunction::kPiecewiseLinear: {
+            auto interp = chrono_types::make_shared<ChFunctionInterp>();
+            const auto& pl = fn.piecewise_linear();
+            for (int i = 0; i < pl.times_size(); ++i)
+                interp->AddPoint(pl.times(i), pl.values(i));
+            interp->SetExtrapolate(true);
+            return interp;
+        }
+
+        case mech::CommandFunction::kSmoothStep: {
+            const auto& ss = fn.smooth_step();
+            if (ss.profile() == mech::SMOOTH_STEP_PROFILE_CYCLOIDAL) {
+                return chrono_types::make_shared<ChFunctionCycloidal>(
+                    ss.displacement(), ss.duration());
+            } else {
+                return chrono_types::make_shared<ChFunctionConstAcc>(
+                    ss.displacement(), ss.accel_fraction(),
+                    1.0 - ss.decel_fraction(), ss.duration());
+            }
+        }
+
+        default:
+            return chrono_types::make_shared<ChFunctionConst>(legacy_command_value);
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Union-Find for connected components
 // ---------------------------------------------------------------------------
 struct UnionFind {
@@ -254,6 +313,36 @@ static void validate_mechanism(
                      "A joint must connect datums on different bodies — reassign one of the datums",
                      {joint.id().id(), parent_body_id});
             }
+        }
+    }
+
+    // E4b: Joint datums must start coincident in world space
+    constexpr double joint_anchor_tolerance = 1e-3;  // 1 mm
+    for (const auto& joint : mechanism.joints()) {
+        auto pit = datum_lookup.find(joint.parent_datum_id().id());
+        auto cit = datum_lookup.find(joint.child_datum_id().id());
+        if (pit == datum_lookup.end() || cit == datum_lookup.end()) {
+            continue;
+        }
+
+        const auto parent_body_it = body_lookup.find(pit->second->parent_body_id().id());
+        const auto child_body_it = body_lookup.find(cit->second->parent_body_id().id());
+        if (parent_body_it == body_lookup.end() || child_body_it == body_lookup.end()) {
+            continue;
+        }
+
+        const auto parent_world =
+            compute_datum_world_frame(parent_body_it->second->pose(), pit->second->local_pose());
+        const auto child_world =
+            compute_datum_world_frame(child_body_it->second->pose(), cit->second->local_pose());
+        const double anchor_gap = (child_world.pos - parent_world.pos).Length();
+
+        if (anchor_gap > joint_anchor_tolerance) {
+            emit(DiagnosticSeverity::WARNING, "JOINT_DATUM_MISALIGNMENT",
+                 "Joint '" + joint.name() + "' connects datums that are " +
+                     std::to_string(anchor_gap) + " m apart in world space",
+                 "Move or rotate the connected bodies/datums so both joint anchors coincide before simulation",
+                 {joint.id().id(), pit->second->id().id(), cit->second->id().id()});
         }
     }
 
@@ -466,6 +555,19 @@ struct SimulationRuntime::Impl {
     };
     std::unordered_map<std::string, ActuatorRuntime> actuators;
 
+    struct SensorRuntime {
+        std::string id;
+        std::string name;
+        mech::SensorType sensor_type;
+        std::shared_ptr<ChBody> body;       // resolved parent body (body-mounted sensors)
+        ChVector3d offset_pos{0, 0, 0};     // datum local position
+        ChQuaterniond offset_rot{1, 0, 0, 0}; // datum local orientation
+        int axis = 2;                        // tachometer: 0=X, 1=Y, 2=Z
+        std::string joint_id;                // encoder: references joint_map entry
+        mech::JointType joint_type = mech::JOINT_TYPE_UNSPECIFIED;
+    };
+    std::unordered_map<std::string, SensorRuntime> sensors;
+
     std::unordered_map<std::string, BodyPose> initial_poses;
 
     std::shared_ptr<ChContactMaterialNSC> contact_material;
@@ -617,6 +719,7 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
     impl_->point_loads.clear();
     impl_->springs.clear();
     impl_->actuators.clear();
+    impl_->sensors.clear();
     impl_->initial_poses.clear();
     impl_->current_time = 0.0;
     impl_->step_count = 0;
@@ -764,8 +867,9 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
                 switch (actuator.revolute_motor().control_mode()) {
                     case mech::ACTUATOR_CONTROL_MODE_POSITION: {
                         auto motor = chrono_types::make_shared<ChLinkMotorRotationAngle>();
-                        motor->SetAngleFunction(
-                            chrono_types::make_shared<ChFunctionConst>(actuator.revolute_motor().command_value()));
+                        motor->SetAngleFunction(create_command_function(
+                            actuator.revolute_motor().command_function(),
+                            actuator.revolute_motor().command_value()));
                         motor->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
                         link = motor;
                         impl_->actuators[actuator.id().id()] = {
@@ -776,8 +880,9 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
                     }
                     case mech::ACTUATOR_CONTROL_MODE_SPEED: {
                         auto motor = chrono_types::make_shared<ChLinkMotorRotationSpeed>();
-                        motor->SetSpeedFunction(
-                            chrono_types::make_shared<ChFunctionConst>(actuator.revolute_motor().command_value()));
+                        motor->SetSpeedFunction(create_command_function(
+                            actuator.revolute_motor().command_function(),
+                            actuator.revolute_motor().command_value()));
                         motor->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
                         link = motor;
                         impl_->actuators[actuator.id().id()] = {
@@ -788,8 +893,9 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
                     }
                     case mech::ACTUATOR_CONTROL_MODE_EFFORT: {
                         auto motor = chrono_types::make_shared<ChLinkMotorRotationTorque>();
-                        motor->SetTorqueFunction(
-                            chrono_types::make_shared<ChFunctionConst>(actuator.revolute_motor().command_value()));
+                        motor->SetTorqueFunction(create_command_function(
+                            actuator.revolute_motor().command_function(),
+                            actuator.revolute_motor().command_value()));
                         motor->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
                         link = motor;
                         impl_->actuators[actuator.id().id()] = {
@@ -805,8 +911,9 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
                 switch (actuator_it->second->prismatic_motor().control_mode()) {
                     case mech::ACTUATOR_CONTROL_MODE_POSITION: {
                         auto motor = chrono_types::make_shared<ChLinkMotorLinearPosition>();
-                        motor->SetMotionFunction(
-                            chrono_types::make_shared<ChFunctionConst>(actuator.prismatic_motor().command_value()));
+                        motor->SetMotionFunction(create_command_function(
+                            actuator.prismatic_motor().command_function(),
+                            actuator.prismatic_motor().command_value()));
                         motor->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
                         link = motor;
                         impl_->actuators[actuator.id().id()] = {
@@ -817,8 +924,9 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
                     }
                     case mech::ACTUATOR_CONTROL_MODE_SPEED: {
                         auto motor = chrono_types::make_shared<ChLinkMotorLinearSpeed>();
-                        motor->SetSpeedFunction(
-                            chrono_types::make_shared<ChFunctionConst>(actuator.prismatic_motor().command_value()));
+                        motor->SetSpeedFunction(create_command_function(
+                            actuator.prismatic_motor().command_function(),
+                            actuator.prismatic_motor().command_value()));
                         motor->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
                         link = motor;
                         impl_->actuators[actuator.id().id()] = {
@@ -829,8 +937,9 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
                     }
                     case mech::ACTUATOR_CONTROL_MODE_EFFORT: {
                         auto motor = chrono_types::make_shared<ChLinkMotorLinearForce>();
-                        motor->SetForceFunction(
-                            chrono_types::make_shared<ChFunctionConst>(actuator.prismatic_motor().command_value()));
+                        motor->SetForceFunction(create_command_function(
+                            actuator.prismatic_motor().command_function(),
+                            actuator.prismatic_motor().command_value()));
                         motor->Initialize(parent_body, child_body, ChFramed(parent_wf.pos, parent_wf.rot));
                         link = motor;
                         impl_->actuators[actuator.id().id()] = {
@@ -1070,6 +1179,73 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
         }
     }
 
+    // --- Sensors ---
+    for (const auto& sensor : mechanism.sensors()) {
+        const std::string id = sensor.id().id();
+        Impl::SensorRuntime sr;
+        sr.id = id;
+        sr.name = sensor.name();
+        sr.sensor_type = sensor.type();
+
+        if (sensor.type() == mech::SENSOR_TYPE_ENCODER) {
+            // Encoder references a joint, not a datum
+            if (!sensor.has_encoder() || !sensor.encoder().has_joint_id()) {
+                result.error_message = "Encoder sensor '" + sensor.name() + "' requires a joint_id";
+                impl_->state = SimState::ERROR;
+                return result;
+            }
+            sr.joint_id = sensor.encoder().joint_id().id();
+            auto jit = impl_->joint_map.find(sr.joint_id);
+            if (jit == impl_->joint_map.end()) {
+                result.error_message = "Encoder sensor '" + sensor.name() +
+                    "' references unknown joint '" + sr.joint_id + "'";
+                impl_->state = SimState::ERROR;
+                return result;
+            }
+            sr.joint_type = static_cast<mech::JointType>(jit->second.joint_type);
+        } else {
+            // Body-mounted sensor — resolve datum to body + offset
+            if (!sensor.has_datum_id()) {
+                result.error_message = "Sensor '" + sensor.name() + "' requires a datum_id";
+                impl_->state = SimState::ERROR;
+                return result;
+            }
+            auto dit = datum_lookup.find(sensor.datum_id().id());
+            if (dit == datum_lookup.end()) {
+                result.error_message = "Sensor '" + sensor.name() +
+                    "' references unknown datum '" + sensor.datum_id().id() + "'";
+                impl_->state = SimState::ERROR;
+                return result;
+            }
+            const auto& datum = *dit->second;
+            auto bit = impl_->body_map.find(datum.parent_body_id().id());
+            if (bit == impl_->body_map.end()) {
+                result.error_message = "Sensor '" + sensor.name() +
+                    "' datum references unknown body '" + datum.parent_body_id().id() + "'";
+                impl_->state = SimState::ERROR;
+                return result;
+            }
+            sr.body = bit->second;
+            const auto& lp = datum.local_pose();
+            sr.offset_pos = ChVector3d(lp.position().x(), lp.position().y(), lp.position().z());
+            sr.offset_rot = ChQuaterniond(lp.orientation().w(), lp.orientation().x(),
+                                          lp.orientation().y(), lp.orientation().z());
+        }
+
+        // Tachometer axis
+        if (sensor.type() == mech::SENSOR_TYPE_TACHOMETER && sensor.has_tachometer()) {
+            switch (sensor.tachometer().axis()) {
+                case mech::SENSOR_AXIS_X: sr.axis = 0; break;
+                case mech::SENSOR_AXIS_Y: sr.axis = 1; break;
+                case mech::SENSOR_AXIS_Z:
+                case mech::SENSOR_AXIS_UNSPECIFIED:
+                default: sr.axis = 2; break;
+            }
+        }
+
+        impl_->sensors[id] = std::move(sr);
+    }
+
     // Populate deprecated string diagnostics from structured diagnostics
     for (const auto& sd : result.structured_diagnostics) {
         result.diagnostics.push_back(sd.message);
@@ -1077,12 +1253,13 @@ CompilationResult SimulationRuntime::compile(const mech::Mechanism& mechanism,
 
     const auto t_end = clock::now();
     const auto total_ms = std::chrono::duration_cast<std::chrono::milliseconds>(t_end - t_start).count();
-    spdlog::debug("compile: total={}ms bodies={} joints={} loads={} actuators={}",
+    spdlog::debug("compile: total={}ms bodies={} joints={} loads={} actuators={} sensors={}",
         total_ms,
         mechanism.bodies_size(),
         mechanism.joints_size(),
         mechanism.loads_size(),
-        mechanism.actuators_size());
+        mechanism.actuators_size(),
+        mechanism.sensors_size());
 
     result.success = true;
     impl_->state = SimState::IDLE;
@@ -1300,6 +1477,36 @@ std::vector<ChannelDescriptor> SimulationRuntime::getChannelDescriptors() const 
                               actuator.rotation_motor ? "Nm" : "N");
     }
 
+    for (const auto& [id, sensor] : impl_->sensors) {
+        const auto prefix = "sensor/" + id + "/";
+        switch (sensor.sensor_type) {
+            case mech::SENSOR_TYPE_ACCELEROMETER:
+                append_vector_channel(descriptors, prefix + "acceleration",
+                                      sensor.name + " Acceleration", "m/s²");
+                break;
+            case mech::SENSOR_TYPE_GYROSCOPE:
+                append_vector_channel(descriptors, prefix + "angular_velocity",
+                                      sensor.name + " Angular Velocity", "rad/s");
+                break;
+            case mech::SENSOR_TYPE_TACHOMETER:
+                append_scalar_channel(descriptors, prefix + "rpm",
+                                      sensor.name + " RPM", "rpm");
+                break;
+            case mech::SENSOR_TYPE_ENCODER: {
+                bool is_prismatic = (sensor.joint_type == mech::JOINT_TYPE_PRISMATIC);
+                append_scalar_channel(descriptors, prefix + "position",
+                                      sensor.name + " Position",
+                                      is_prismatic ? "m" : "rad");
+                append_scalar_channel(descriptors, prefix + "velocity",
+                                      sensor.name + " Velocity",
+                                      is_prismatic ? "m/s" : "rad/s");
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
     return descriptors;
 }
 
@@ -1390,6 +1597,67 @@ std::vector<ChannelValue> SimulationRuntime::getChannelValues() const {
         } else if (actuator.linear_motor) {
             values.push_back(make_scalar_value("actuator/" + id + "/effort",
                                                actuator.linear_motor->GetMotorForce()));
+        }
+    }
+
+    for (const auto& [id, sensor] : impl_->sensors) {
+        const auto prefix = "sensor/" + id + "/";
+        switch (sensor.sensor_type) {
+            case mech::SENSOR_TYPE_ACCELEROMETER: {
+                // Reproduce Chrono's accelerometer math:
+                // linear acceleration at mount point + gravity compensation in body-local frame
+                ChVector3d acc = sensor.body->PointAccelerationLocalToParent(sensor.offset_pos);
+                ChVector3d gravity_comp = sensor.body->GetRot().GetInverse().Rotate(
+                    impl_->system->GetGravitationalAcceleration());
+                values.push_back(make_vector_value(prefix + "acceleration", acc - gravity_comp));
+                break;
+            }
+            case mech::SENSOR_TYPE_GYROSCOPE: {
+                values.push_back(make_vector_value(prefix + "angular_velocity",
+                                                   sensor.body->GetAngVelLocal()));
+                break;
+            }
+            case mech::SENSOR_TYPE_TACHOMETER: {
+                auto w = sensor.body->GetAngVelLocal();
+                double omega = 0.0;
+                switch (sensor.axis) {
+                    case 0: omega = w.x(); break;
+                    case 1: omega = w.y(); break;
+                    case 2: omega = w.z(); break;
+                }
+                double rpm = omega * 60.0 / (2.0 * CH_PI);
+                values.push_back(make_scalar_value(prefix + "rpm", rpm));
+                break;
+            }
+            case mech::SENSOR_TYPE_ENCODER: {
+                auto jit = impl_->joint_map.find(sensor.joint_id);
+                if (jit != impl_->joint_map.end()) {
+                    const auto& entry = jit->second;
+                    double pos = 0.0, vel = 0.0;
+                    if (entry.joint_type == mech::JOINT_TYPE_REVOLUTE) {
+                        if (auto motor = std::dynamic_pointer_cast<ChLinkMotorRotation>(entry.link)) {
+                            pos = motor->GetMotorAngle();
+                            vel = motor->GetMotorAngleDt();
+                        } else if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
+                            pos = angle_from_quat_z(lock->GetRelCoordsys().rot);
+                            vel = lock->GetRelativeAngVel().z();
+                        }
+                    } else if (entry.joint_type == mech::JOINT_TYPE_PRISMATIC) {
+                        if (auto motor = std::dynamic_pointer_cast<ChLinkMotorLinear>(entry.link)) {
+                            pos = motor->GetMotorPos();
+                            vel = motor->GetMotorPosDt();
+                        } else if (auto lock = std::dynamic_pointer_cast<ChLinkLock>(entry.link)) {
+                            pos = lock->GetRelCoordsys().pos.z();
+                            vel = lock->GetRelCoordsysDt().pos.z();
+                        }
+                    }
+                    values.push_back(make_scalar_value(prefix + "position", pos));
+                    values.push_back(make_scalar_value(prefix + "velocity", vel));
+                }
+                break;
+            }
+            default:
+                break;
         }
     }
 

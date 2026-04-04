@@ -1,23 +1,22 @@
-import {
-  BufferGeometry,
-  CylinderGeometry,
-  Group,
-  Line,
-  LineBasicMaterial,
-  Mesh,
-  MeshBasicMaterial,
-  SphereGeometry,
-  TorusGeometry,
-  Vector3,
-} from 'three';
+/**
+ * Joint limit visuals — fat-line-based arcs and rails showing motion range.
+ *
+ * Revolute: arc in XY plane from lowerLimit to upperLimit.
+ * Prismatic: parallel rails along Z-axis spanning [lower, upper].
+ */
+
+import { Group, Vector3 } from 'three';
+import { Line2 } from 'three/examples/jsm/lines/Line2.js';
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 
 import { DOF_FREE, JOINT_STEEL_BLUE } from './colors-three.js';
+import { trackMaterial, untrackMaterial } from './fat-line-three.js';
+import { buildArcPoints } from './line-primitives-three.js';
 
 // ── Types ──
 
 export interface LimitVisual {
   rootNode: Group;
-  meshes: Mesh[];
   /** Update the current-position indicator (value in radians or meters). */
   update(currentValue: number | null): void;
   dispose(): void;
@@ -26,45 +25,72 @@ export interface LimitVisual {
 // ── Constants ──
 
 const ARC_RADIUS = 0.10;
-const ARC_TUBE = 0.006;
-const ARC_RADIAL_SEGMENTS = 6;
-const ARC_TUBULAR_SEGMENTS = 48;
-const BAND_RADIUS = 0.008;
-const BAND_RADIAL_SEGMENTS = 6;
-const LIMIT_OPACITY = 0.3;
+const LIMIT_LINE_WIDTH = 2;
+const LIMIT_OPACITY = 0.30;
+const MARKER_LINE_WIDTH = 1.5;
 const MARKER_OPACITY = 0.85;
-const REVOLUTE_MARKER_RADIUS = 0.12;
-const PRISMATIC_MARKER_RADIUS = 0.014;
-const PRISMATIC_MARKER_SEGMENTS = 10;
+const MARKER_LENGTH = 0.12;
+const RAIL_SEPARATION = 0.016;
+const RAIL_LINE_WIDTH = 1.5;
+const ARC_SEGMENTS_PER_RAD = 10;
 
-function makeLimitMaterial(): MeshBasicMaterial {
-  return new MeshBasicMaterial({
-    color: JOINT_STEEL_BLUE,
+// ── Helpers ──
+
+function makeLineMat(
+  color: THREE.Color,
+  lineWidth: number,
+  opacity: number,
+  dashed = false,
+): LineMaterial {
+  const mat = new LineMaterial({
+    color: color.getHex(),
+    linewidth: lineWidth,
     transparent: true,
-    opacity: LIMIT_OPACITY,
+    opacity,
+    depthTest: false,
     depthWrite: false,
+    toneMapped: false,
+    dashed,
+    dashSize: dashed ? 0.008 : 0.02,
+    gapSize: dashed ? 0.004 : 0.01,
+    dashScale: 1,
   });
+  trackMaterial(mat);
+  return mat;
 }
 
-function makeMarkerMaterial(): MeshBasicMaterial {
-  return new MeshBasicMaterial({
-    color: DOF_FREE,
-    transparent: true,
-    opacity: MARKER_OPACITY,
-    depthWrite: false,
-  });
+import type * as THREE from 'three';
+import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
+
+function makeLine(points: Vector3[], mat: LineMaterial): Line2 {
+  const geo = new LineGeometry();
+  const arr = new Float32Array(points.length * 3);
+  for (let i = 0; i < points.length; i++) {
+    arr[i * 3] = points[i].x;
+    arr[i * 3 + 1] = points[i].y;
+    arr[i * 3 + 2] = points[i].z;
+  }
+  geo.setPositions(arr);
+  const line = new Line2(geo, mat);
+  line.computeLineDistances();
+  line.frustumCulled = false;
+  line.renderOrder = 1;
+  return line;
 }
 
-function makeMarkerLineMaterial(): LineBasicMaterial {
-  return new LineBasicMaterial({
-    color: DOF_FREE,
-    transparent: true,
-    opacity: MARKER_OPACITY,
-    depthWrite: false,
-  });
+function updateLinePoints(line: Line2, points: Vector3[]): void {
+  const geo = line.geometry as LineGeometry;
+  const arr = new Float32Array(points.length * 3);
+  for (let i = 0; i < points.length; i++) {
+    arr[i * 3] = points[i].x;
+    arr[i * 3 + 1] = points[i].y;
+    arr[i * 3 + 2] = points[i].z;
+  }
+  geo.setPositions(arr);
+  line.computeLineDistances();
 }
 
-// ── Revolute limit: partial torus arc ──
+// ── Revolute limit: fat-line arc ──
 
 export function createRevoluteLimitVisual(
   lowerLimit: number,
@@ -76,56 +102,45 @@ export function createRevoluteLimitVisual(
   const root = new Group();
   root.name = 'limit-visual-revolute';
 
-  // TorusGeometry(radius, tube, radialSegments, tubularSegments, arc)
-  const geometry = new TorusGeometry(
-    ARC_RADIUS,
-    ARC_TUBE,
-    ARC_RADIAL_SEGMENTS,
-    ARC_TUBULAR_SEGMENTS,
-    arc,
+  const segs = Math.max(8, Math.round(arc * ARC_SEGMENTS_PER_RAD));
+  // Arc in XY plane (TorusGeometry was also XY)
+  const arcPts = buildArcPoints(ARC_RADIUS, lowerLimit, upperLimit, segs, 'xy');
+  const arcMat = makeLineMat(JOINT_STEEL_BLUE, LIMIT_LINE_WIDTH, LIMIT_OPACITY);
+  const arcLine = makeLine(arcPts, arcMat);
+  root.add(arcLine);
+
+  // Current-position marker: radial line from origin to arc radius
+  const markerMat = makeLineMat(DOF_FREE, MARKER_LINE_WIDTH, MARKER_OPACITY);
+  const markerLine = makeLine(
+    [new Vector3(0, 0, 0), new Vector3(MARKER_LENGTH, 0, 0)],
+    markerMat,
   );
-  const material = makeLimitMaterial();
-  const mesh = new Mesh(geometry, material);
-  // Rotate so the arc starts at lowerLimit around the Z-axis
-  // TorusGeometry arc starts along +X in the XY plane; we need to rotate
-  // to align with the joint Z-axis. Torus lies in XY plane by default.
-  mesh.rotation.z = lowerLimit;
-  mesh.userData.isPickable = false;
-  mesh.renderOrder = 1;
-  root.add(mesh);
+  markerLine.visible = false;
+  markerLine.renderOrder = 2;
+  root.add(markerLine);
 
-  const markerGeometry = new BufferGeometry().setFromPoints([
-    new Vector3(0, 0, 0),
-    new Vector3(REVOLUTE_MARKER_RADIUS, 0, 0),
-  ]);
-  const marker = new Line(markerGeometry, makeMarkerLineMaterial());
-  marker.userData.isPickable = false;
-  marker.visible = false;
-  marker.renderOrder = 2;
-  root.add(marker);
-
-  const meshes = [mesh];
+  const lines = [arcLine, markerLine];
 
   return {
     rootNode: root,
-    meshes,
     update(currentValue: number | null) {
-      marker.visible = currentValue !== null;
+      markerLine.visible = currentValue !== null;
       if (currentValue === null) return;
-      marker.rotation.z = Math.min(Math.max(currentValue, lowerLimit), upperLimit);
+      const clamped = Math.min(Math.max(currentValue, lowerLimit), upperLimit);
+      // Rotate the marker line to the current angle
+      markerLine.rotation.z = clamped;
     },
     dispose() {
-      for (const m of meshes) {
-        m.geometry.dispose();
-        (m.material as MeshBasicMaterial).dispose();
+      for (const l of lines) {
+        l.geometry.dispose();
+        untrackMaterial(l.material as LineMaterial);
+        (l.material as LineMaterial).dispose();
       }
-      marker.geometry.dispose();
-      (marker.material as LineBasicMaterial).dispose();
     },
   };
 }
 
-// ── Prismatic limit: thin cylinder band along Z-axis ──
+// ── Prismatic limit: parallel rail lines along Z-axis ──
 
 export function createPrismaticLimitVisual(
   lowerLimit: number,
@@ -137,60 +152,71 @@ export function createPrismaticLimitVisual(
   const root = new Group();
   root.name = 'limit-visual-prismatic';
 
-  const geometry = new CylinderGeometry(
-    BAND_RADIUS,
-    BAND_RADIUS,
-    length,
-    BAND_RADIAL_SEGMENTS,
-  );
-  const material = makeLimitMaterial();
-  const mesh = new Mesh(geometry, material);
-  // CylinderGeometry is along Y by default; rotate to align with Z
-  mesh.rotation.x = Math.PI / 2;
-  // Position center of band at midpoint between lower and upper
-  mesh.position.z = (lowerLimit + upperLimit) / 2;
-  mesh.userData.isPickable = false;
-  mesh.renderOrder = 1;
-  root.add(mesh);
+  const half = RAIL_SEPARATION / 2;
 
-  const marker = new Mesh(
-    new SphereGeometry(PRISMATIC_MARKER_RADIUS, PRISMATIC_MARKER_SEGMENTS, PRISMATIC_MARKER_SEGMENTS),
-    makeMarkerMaterial(),
+  // Two parallel rails along Z
+  const railMat = makeLineMat(JOINT_STEEL_BLUE, RAIL_LINE_WIDTH, LIMIT_OPACITY);
+  const leftRail = makeLine(
+    [new Vector3(-half, 0, lowerLimit), new Vector3(-half, 0, upperLimit)],
+    railMat,
   );
-  marker.userData.isPickable = false;
-  marker.visible = false;
-  marker.renderOrder = 2;
-  root.add(marker);
+  const rightMat = makeLineMat(JOINT_STEEL_BLUE, RAIL_LINE_WIDTH, LIMIT_OPACITY);
+  const rightRail = makeLine(
+    [new Vector3(half, 0, lowerLimit), new Vector3(half, 0, upperLimit)],
+    rightMat,
+  );
+  root.add(leftRail);
+  root.add(rightRail);
 
-  const meshes = [mesh];
+  // End caps
+  const capMat = makeLineMat(JOINT_STEEL_BLUE, RAIL_LINE_WIDTH, LIMIT_OPACITY);
+  const lowCap = makeLine(
+    [new Vector3(-half, 0, lowerLimit), new Vector3(half, 0, lowerLimit)],
+    capMat,
+  );
+  const highCap = makeLine(
+    [new Vector3(-half, 0, upperLimit), new Vector3(half, 0, upperLimit)],
+    capMat,
+  );
+  root.add(lowCap);
+  root.add(highCap);
+
+  // Current-position marker: small crosshair at position along Z
+  const markerMat = makeLineMat(DOF_FREE, MARKER_LINE_WIDTH, MARKER_OPACITY);
+  const crossSize = 0.008;
+  const markerLine = makeLine(
+    [new Vector3(-crossSize, 0, 0), new Vector3(crossSize, 0, 0)],
+    markerMat,
+  );
+  markerLine.visible = false;
+  markerLine.renderOrder = 2;
+  root.add(markerLine);
+
+  const lines = [leftRail, rightRail, lowCap, highCap, markerLine];
 
   return {
     rootNode: root,
-    meshes,
     update(currentValue: number | null) {
-      marker.visible = currentValue !== null;
+      markerLine.visible = currentValue !== null;
       if (currentValue === null) return;
-      marker.position.set(0, 0, Math.min(Math.max(currentValue, lowerLimit), upperLimit));
+      markerLine.position.z = Math.min(Math.max(currentValue, lowerLimit), upperLimit);
     },
     dispose() {
-      for (const m of meshes) {
-        m.geometry.dispose();
-        (m.material as MeshBasicMaterial).dispose();
+      for (const l of lines) {
+        l.geometry.dispose();
+        untrackMaterial(l.material as LineMaterial);
+        (l.material as LineMaterial).dispose();
       }
-      marker.geometry.dispose();
-      (marker.material as MeshBasicMaterial).dispose();
     },
   };
 }
 
-// ── Cylindrical limit: combine revolute arc + prismatic band ──
+// ── Cylindrical limit ──
 
 export function createCylindricalLimitVisual(
   lowerLimit: number,
   upperLimit: number,
 ): LimitVisual | null {
-  // For cylindrical joints, limits typically apply to the translational DOF.
-  // We show a prismatic band for now; revolute portion is unbounded.
   return createPrismaticLimitVisual(lowerLimit, upperLimit);
 }
 

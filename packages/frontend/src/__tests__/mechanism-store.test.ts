@@ -110,6 +110,7 @@ function makeActuator(id: string, jointId: string): ActuatorState {
     jointId,
     controlMode: 'speed',
     commandValue: 1,
+    commandFunction: { shape: 'constant', value: 1 },
   };
 }
 

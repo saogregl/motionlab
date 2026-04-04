@@ -4,7 +4,7 @@
 
 - The native engine (`native/engine`) listens on a loopback WebSocket (`127.0.0.1:<port>`) and performs a binary protobuf handshake with session token and protocol version validation. It uses `ixwebsocket` for transport. Single-client only.
 - The WebSocket callback thread is no longer responsible for executing heavy engine commands. Authenticated commands are routed onto a dedicated native worker queue so import, compile, save/load, and scrub work do not block socket parsing or ping handling.
-- Cached imports do not eagerly rebuild native topology state. Face-aware commands trigger lazy topology reload only when a retained shape is actually needed.
+- Cached imports do not eagerly rebuild native topology state on load. Face-aware commands can still trigger lazy topology reload, but face-authoring modes may also issue an explicit prewarm request so native shape and face-metadata caches are ready before the first click.
 - Inside the native boundary, transport now delegates import/project concerns and runtime/session concerns to separate native modules instead of keeping those behaviors entirely inside one transport implementation block.
 - `apps/desktop` will launch the engine process and expose the desktop shell (not yet implemented — Epic 1, Prompt 2).
 - Desktop debug mode adds a local-only inspection layer for AI agents: Electron owns session manifests, bundle export, and artifact capture, while the renderer exposes a read-only debug API. This is not part of the engine protocol contract and does not move hot-path runtime transport through Electron.
@@ -40,7 +40,7 @@ Body rendering now uses a **body root + child geometry mesh** scene graph. Picki
 
 Datum rendering is semantic rather than triad-only: planar datums render a persistent plane glyph, cylindrical/conical/toroidal datums render an axis glyph, and manual or point-like datums remain triad-only. Datum parent changes are treated as scene-graph rebuild events instead of pose-only updates.
 
-Geometry meshes use **BVH-accelerated Three.js raycasting** for exact picking. Large static meshes may build their BVH asynchronously per geometry; while that acceleration is still building, select-mode hover is intentionally rate-limited so dense mesh hover does not monopolize the main thread. Face-aware modes still use exact triangle hits and preserve current picking semantics.
+Geometry meshes use **BVH-accelerated Three.js raycasting** for exact picking. Large static meshes may build their BVH asynchronously per geometry; while that acceleration is still building, select-mode hover is intentionally rate-limited so dense mesh hover does not monopolize the main thread. Face-aware modes still use exact triangle hits and preserve current picking semantics. Hover previews no longer require exact centroid fitting on every move; the viewport can use transient hit-space previews while native face metadata is prepared for authoritative commands.
 
 ## Frame Streaming Path (Epic 8)
 

@@ -19,4 +19,6 @@ export type { PrimitiveParamsSectionProps } from './PrimitiveParamsSection.js';
 export { CollisionSection } from './CollisionSection.js';
 export type { CollisionSectionProps } from './CollisionSection.js';
 
+export { CommandFunctionSection } from './CommandFunctionSection.js';
+
 export { AxisPresetBar } from './AxisPresetBar.js';

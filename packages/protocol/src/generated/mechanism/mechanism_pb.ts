@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file mechanism/mechanism.proto.
  */
 export const file_mechanism_mechanism: GenFile = /*@__PURE__*/
-  fileDesc("ChltZWNoYW5pc20vbWVjaGFuaXNtLnByb3RvEhNtb3Rpb25sYWIubWVjaGFuaXNtIhcKCUVsZW1lbnRJZBIKCgJpZBgBIAEoCSJICg9Qcm9qZWN0TWV0YWRhdGESDAoEbmFtZRgBIAEoCRISCgpjcmVhdGVkX2F0GAIgASgJEhMKC21vZGlmaWVkX2F0GAMgASgJIlgKDkFzc2V0UmVmZXJlbmNlEhQKDGNvbnRlbnRfaGFzaBgBIAEoCRIVCg1yZWxhdGl2ZV9wYXRoGAIgASgJEhkKEW9yaWdpbmFsX2ZpbGVuYW1lGAMgASgJIicKBFZlYzMSCQoBeBgBIAEoARIJCgF5GAIgASgBEgkKAXoYAyABKAEiMgoEUXVhdBIJCgF3GAEgASgBEgkKAXgYAiABKAESCQoBeRgDIAEoARIJCgF6GAQgASgBImMKBFBvc2USKwoIcG9zaXRpb24YASABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSLgoLb3JpZW50YXRpb24YAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlF1YXQiJQoFUmFuZ2USDQoFbG93ZXIYASABKAESDQoFdXBwZXIYAiABKAEinwEKDk1hc3NQcm9wZXJ0aWVzEgwKBG1hc3MYASABKAESMQoOY2VudGVyX29mX21hc3MYAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSCwoDaXh4GAMgASgBEgsKA2l5eRgEIAEoARILCgNpenoYBSABKAESCwoDaXh5GAYgASgBEgsKA2l4ehgHIAEoARILCgNpeXoYCCABKAEiQQoLRGlzcGxheU1lc2gSEAoIdmVydGljZXMYASADKAISDwoHaW5kaWNlcxgCIAMoDRIPCgdub3JtYWxzGAMgAygCIs0CCgRCb2R5EioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRInCgRwb3NlGAMgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5Qb3NlEjwKD21hc3NfcHJvcGVydGllcxgEIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uTWFzc1Byb3BlcnRpZXMSQQoQc291cmNlX2Fzc2V0X3JlZhgFIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uQXNzZXRSZWZlcmVuY2VCAhgBEhQKCGlzX2ZpeGVkGAYgASgIQgIYARIVCg1tYXNzX292ZXJyaWRlGAcgASgIEjQKC21vdGlvbl90eXBlGAggASgOMh8ubW90aW9ubGFiLm1lY2hhbmlzbS5Nb3Rpb25UeXBlIv0DCghHZW9tZXRyeRIqCgJpZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEgwKBG5hbWUYAiABKAkSNgoOcGFyZW50X2JvZHlfaWQYAyABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBItCgpsb2NhbF9wb3NlGAQgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5Qb3NlEj0KEHNvdXJjZV9hc3NldF9yZWYYBSABKAsyIy5tb3Rpb25sYWIubWVjaGFuaXNtLkFzc2V0UmVmZXJlbmNlEjYKDGRpc3BsYXlfbWVzaBgGIAEoCzIgLm1vdGlvbmxhYi5tZWNoYW5pc20uRGlzcGxheU1lc2gSRQoYY29tcHV0ZWRfbWFzc19wcm9wZXJ0aWVzGAcgASgLMiMubW90aW9ubGFiLm1lY2hhbmlzbS5NYXNzUHJvcGVydGllcxISCgpmYWNlX2NvdW50GAggASgNEj4KEHByaW1pdGl2ZV9zb3VyY2UYCSABKAsyJC5tb3Rpb25sYWIubWVjaGFuaXNtLlByaW1pdGl2ZVNvdXJjZRI+ChBjb2xsaXNpb25fY29uZmlnGAogASgLMiQubW90aW9ubGFiLm1lY2hhbmlzbS5Db2xsaXNpb25Db25maWciOQoJQm94UGFyYW1zEg0KBXdpZHRoGAEgASgBEg4KBmhlaWdodBgCIAEoARINCgVkZXB0aBgDIAEoASIwCg5DeWxpbmRlclBhcmFtcxIOCgZyYWRpdXMYASABKAESDgoGaGVpZ2h0GAIgASgBIh4KDFNwaGVyZVBhcmFtcxIOCgZyYWRpdXMYASABKAEivgEKD1ByaW1pdGl2ZVBhcmFtcxItCgNib3gYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkJveFBhcmFtc0gAEjcKCGN5bGluZGVyGAIgASgLMiMubW90aW9ubGFiLm1lY2hhbmlzbS5DeWxpbmRlclBhcmFtc0gAEjMKBnNwaGVyZRgDIAEoCzIhLm1vdGlvbmxhYi5tZWNoYW5pc20uU3BoZXJlUGFyYW1zSABCDgoMc2hhcGVfcGFyYW1zInsKD1ByaW1pdGl2ZVNvdXJjZRIyCgVzaGFwZRgBIAEoDjIjLm1vdGlvbmxhYi5tZWNoYW5pc20uUHJpbWl0aXZlU2hhcGUSNAoGcGFyYW1zGAIgASgLMiQubW90aW9ubGFiLm1lY2hhbmlzbS5QcmltaXRpdmVQYXJhbXMiygEKD0NvbGxpc2lvbkNvbmZpZxI7CgpzaGFwZV90eXBlGAEgASgOMicubW90aW9ubGFiLm1lY2hhbmlzbS5Db2xsaXNpb25TaGFwZVR5cGUSLwoMaGFsZl9leHRlbnRzGAIgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5WZWMzEg4KBnJhZGl1cxgDIAEoARIOCgZoZWlnaHQYBCABKAESKQoGb2Zmc2V0GAUgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5WZWMzIpkCChVEYXR1bUZhY2VHZW9tZXRyeUluZm8SNgoOYXhpc19kaXJlY3Rpb24YASABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzNIAIgBARIuCgZub3JtYWwYAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzNIAYgBARITCgZyYWRpdXMYAyABKAFIAogBARIdChBzZWNvbmRhcnlfcmFkaXVzGAQgASgBSAOIAQESFwoKc2VtaV9hbmdsZRgFIAEoAUgEiAEBQhEKD19heGlzX2RpcmVjdGlvbkIJCgdfbm9ybWFsQgkKB19yYWRpdXNCEwoRX3NlY29uZGFyeV9yYWRpdXNCDQoLX3NlbWlfYW5nbGUi2wMKBURhdHVtEioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRI2Cg5wYXJlbnRfYm9keV9pZBgDIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEi0KCmxvY2FsX3Bvc2UYBCABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlBvc2USOgoSc291cmNlX2dlb21ldHJ5X2lkGAUgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSHgoRc291cmNlX2ZhY2VfaW5kZXgYBiABKA1IAIgBARI9Chpzb3VyY2VfZ2VvbWV0cnlfbG9jYWxfcG9zZRgHIAEoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uUG9zZRI9Cg1zdXJmYWNlX2NsYXNzGAggASgOMiYubW90aW9ubGFiLm1lY2hhbmlzbS5EYXR1bVN1cmZhY2VDbGFzcxJBCg1mYWNlX2dlb21ldHJ5GAkgASgLMioubW90aW9ubGFiLm1lY2hhbmlzbS5EYXR1bUZhY2VHZW9tZXRyeUluZm9CFAoSX3NvdXJjZV9mYWNlX2luZGV4IlcKE1Jldm9sdXRlSm9pbnRDb25maWcSLwoLYW5nbGVfbGltaXQYASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLlJhbmdlEg8KB2RhbXBpbmcYAiABKAEiXgoUUHJpc21hdGljSm9pbnRDb25maWcSNQoRdHJhbnNsYXRpb25fbGltaXQYASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLlJhbmdlEg8KB2RhbXBpbmcYAiABKAEiEgoQRml4ZWRKb2ludENvbmZpZyIWChRTcGhlcmljYWxKb2ludENvbmZpZyK+AQoWQ3lsaW5kcmljYWxKb2ludENvbmZpZxI1ChF0cmFuc2xhdGlvbl9saW1pdBgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uUmFuZ2USMgoOcm90YXRpb25fbGltaXQYAiABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLlJhbmdlEh0KFXRyYW5zbGF0aW9uYWxfZGFtcGluZxgDIAEoARIaChJyb3RhdGlvbmFsX2RhbXBpbmcYBCABKAEiuQEKEVBsYW5hckpvaW50Q29uZmlnEjcKE3RyYW5zbGF0aW9uX3hfbGltaXQYASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLlJhbmdlEjcKE3RyYW5zbGF0aW9uX3lfbGltaXQYAiABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLlJhbmdlEjIKDnJvdGF0aW9uX2xpbWl0GAMgASgLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5SYW5nZSKCAQoUVW5pdmVyc2FsSm9pbnRDb25maWcSNAoQcm90YXRpb25feF9saW1pdBgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uUmFuZ2USNAoQcm90YXRpb25feV9saW1pdBgCIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uUmFuZ2UiSQoTRGlzdGFuY2VKb2ludENvbmZpZxIyCg5kaXN0YW5jZV9saW1pdBgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uUmFuZ2UiFgoUUG9pbnRMaW5lSm9pbnRDb25maWciFwoVUG9pbnRQbGFuZUpvaW50Q29uZmlnIpIHCgVKb2ludBIqCgJpZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEgwKBG5hbWUYAiABKAkSLAoEdHlwZRgDIAEoDjIeLm1vdGlvbmxhYi5tZWNoYW5pc20uSm9pbnRUeXBlEjcKD3BhcmVudF9kYXR1bV9pZBgEIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEjYKDmNoaWxkX2RhdHVtX2lkGAUgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSFwoLbG93ZXJfbGltaXQYBiABKAFCAhgBEhcKC3VwcGVyX2xpbWl0GAcgASgBQgIYARI8CghyZXZvbHV0ZRgIIAEoCzIoLm1vdGlvbmxhYi5tZWNoYW5pc20uUmV2b2x1dGVKb2ludENvbmZpZ0gAEj4KCXByaXNtYXRpYxgJIAEoCzIpLm1vdGlvbmxhYi5tZWNoYW5pc20uUHJpc21hdGljSm9pbnRDb25maWdIABI2CgVmaXhlZBgKIAEoCzIlLm1vdGlvbmxhYi5tZWNoYW5pc20uRml4ZWRKb2ludENvbmZpZ0gAEj4KCXNwaGVyaWNhbBgLIAEoCzIpLm1vdGlvbmxhYi5tZWNoYW5pc20uU3BoZXJpY2FsSm9pbnRDb25maWdIABJCCgtjeWxpbmRyaWNhbBgMIAEoCzIrLm1vdGlvbmxhYi5tZWNoYW5pc20uQ3lsaW5kcmljYWxKb2ludENvbmZpZ0gAEjgKBnBsYW5hchgNIAEoCzImLm1vdGlvbmxhYi5tZWNoYW5pc20uUGxhbmFySm9pbnRDb25maWdIABI+Cgl1bml2ZXJzYWwYDiABKAsyKS5tb3Rpb25sYWIubWVjaGFuaXNtLlVuaXZlcnNhbEpvaW50Q29uZmlnSAASPAoIZGlzdGFuY2UYDyABKAsyKC5tb3Rpb25sYWIubWVjaGFuaXNtLkRpc3RhbmNlSm9pbnRDb25maWdIABI/Cgpwb2ludF9saW5lGBAgASgLMikubW90aW9ubGFiLm1lY2hhbmlzbS5Qb2ludExpbmVKb2ludENvbmZpZ0gAEkEKC3BvaW50X3BsYW5lGBEgASgLMioubW90aW9ubGFiLm1lY2hhbmlzbS5Qb2ludFBsYW5lSm9pbnRDb25maWdIAEIICgZjb25maWciqwEKDlBvaW50Rm9yY2VMb2FkEjAKCGRhdHVtX2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSKQoGdmVjdG9yGAIgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5WZWMzEjwKD3JlZmVyZW5jZV9mcmFtZRgDIAEoDjIjLm1vdGlvbmxhYi5tZWNoYW5pc20uUmVmZXJlbmNlRnJhbWUirAEKD1BvaW50VG9ycXVlTG9hZBIwCghkYXR1bV9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEikKBnZlY3RvchgCIAEoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uVmVjMxI8Cg9yZWZlcmVuY2VfZnJhbWUYAyABKA4yIy5tb3Rpb25sYWIubWVjaGFuaXNtLlJlZmVyZW5jZUZyYW1lIsIBChZMaW5lYXJTcHJpbmdEYW1wZXJMb2FkEjcKD3BhcmVudF9kYXR1bV9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEjYKDmNoaWxkX2RhdHVtX2lkGAIgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSEwoLcmVzdF9sZW5ndGgYAyABKAESEQoJc3RpZmZuZXNzGAQgASgBEg8KB2RhbXBpbmcYBSABKAEikQIKBExvYWQSKgoCaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIMCgRuYW1lGAIgASgJEjoKC3BvaW50X2ZvcmNlGAMgASgLMiMubW90aW9ubGFiLm1lY2hhbmlzbS5Qb2ludEZvcmNlTG9hZEgAEjwKDHBvaW50X3RvcnF1ZRgEIAEoCzIkLm1vdGlvbmxhYi5tZWNoYW5pc20uUG9pbnRUb3JxdWVMb2FkSAASSwoUbGluZWFyX3NwcmluZ19kYW1wZXIYBSABKAsyKy5tb3Rpb25sYWIubWVjaGFuaXNtLkxpbmVhclNwcmluZ0RhbXBlckxvYWRIAEIICgZjb25maWcizAEKFVJldm9sdXRlTW90b3JBY3R1YXRvchIwCghqb2ludF9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEj4KDGNvbnRyb2xfbW9kZRgCIAEoDjIoLm1vdGlvbmxhYi5tZWNoYW5pc20uQWN0dWF0b3JDb250cm9sTW9kZRIVCg1jb21tYW5kX3ZhbHVlGAMgASgBEhkKDGVmZm9ydF9saW1pdBgEIAEoAUgAiAEBQg8KDV9lZmZvcnRfbGltaXQizQEKFlByaXNtYXRpY01vdG9yQWN0dWF0b3ISMAoIam9pbnRfaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBI+Cgxjb250cm9sX21vZGUYAiABKA4yKC5tb3Rpb25sYWIubWVjaGFuaXNtLkFjdHVhdG9yQ29udHJvbE1vZGUSFQoNY29tbWFuZF92YWx1ZRgDIAEoARIZCgxlZmZvcnRfbGltaXQYBCABKAFIAIgBAUIPCg1fZWZmb3J0X2xpbWl0ItwBCghBY3R1YXRvchIqCgJpZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEgwKBG5hbWUYAiABKAkSRAoOcmV2b2x1dGVfbW90b3IYAyABKAsyKi5tb3Rpb25sYWIubWVjaGFuaXNtLlJldm9sdXRlTW90b3JBY3R1YXRvckgAEkYKD3ByaXNtYXRpY19tb3RvchgEIAEoCzIrLm1vdGlvbmxhYi5tZWNoYW5pc20uUHJpc21hdGljTW90b3JBY3R1YXRvckgAQggKBmNvbmZpZyLXAgoJTWVjaGFuaXNtEioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRIpCgZib2RpZXMYAyADKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLkJvZHkSKgoGZGF0dW1zGAQgAygLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5EYXR1bRIqCgZqb2ludHMYBSADKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLkpvaW50EigKBWxvYWRzGAYgAygLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5Mb2FkEjAKCWFjdHVhdG9ycxgHIAMoCzIdLm1vdGlvbmxhYi5tZWNoYW5pc20uQWN0dWF0b3ISMQoKZ2VvbWV0cmllcxgIIAMoCzIdLm1vdGlvbmxhYi5tZWNoYW5pc20uR2VvbWV0cnkisgEKD0JvZHlEaXNwbGF5RGF0YRIPCgdib2R5X2lkGAEgASgJEjYKDGRpc3BsYXlfbWVzaBgCIAEoCzIgLm1vdGlvbmxhYi5tZWNoYW5pc20uRGlzcGxheU1lc2gSEgoKcGFydF9pbmRleBgDIAMoDRIPCgdkZW5zaXR5GAQgASgBEhwKFHRlc3NlbGxhdGlvbl9xdWFsaXR5GAUgASgBEhMKC3VuaXRfc3lzdGVtGAYgASgJIroBChNHZW9tZXRyeURpc3BsYXlEYXRhEhMKC2dlb21ldHJ5X2lkGAEgASgJEjYKDGRpc3BsYXlfbWVzaBgCIAEoCzIgLm1vdGlvbmxhYi5tZWNoYW5pc20uRGlzcGxheU1lc2gSEgoKcGFydF9pbmRleBgDIAMoDRIPCgdkZW5zaXR5GAQgASgBEhwKFHRlc3NlbGxhdGlvbl9xdWFsaXR5GAUgASgBEhMKC3VuaXRfc3lzdGVtGAYgASgJIpMCCgtQcm9qZWN0RmlsZRIPCgd2ZXJzaW9uGAEgASgNEjYKCG1ldGFkYXRhGAIgASgLMiQubW90aW9ubGFiLm1lY2hhbmlzbS5Qcm9qZWN0TWV0YWRhdGESMQoJbWVjaGFuaXNtGAMgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5NZWNoYW5pc20SPwoRYm9keV9kaXNwbGF5X2RhdGEYBCADKAsyJC5tb3Rpb25sYWIubWVjaGFuaXNtLkJvZHlEaXNwbGF5RGF0YRJHChVnZW9tZXRyeV9kaXNwbGF5X2RhdGEYBSADKAsyKC5tb3Rpb25sYWIubWVjaGFuaXNtLkdlb21ldHJ5RGlzcGxheURhdGEqhAEKDlByaW1pdGl2ZVNoYXBlEh8KG1BSSU1JVElWRV9TSEFQRV9VTlNQRUNJRklFRBAAEhcKE1BSSU1JVElWRV9TSEFQRV9CT1gQARIcChhQUklNSVRJVkVfU0hBUEVfQ1lMSU5ERVIQAhIaChZQUklNSVRJVkVfU0hBUEVfU1BIRVJFEAMquwEKEkNvbGxpc2lvblNoYXBlVHlwZRIdChlDT0xMSVNJT05fU0hBUEVfVFlQRV9OT05FEAASHAoYQ09MTElTSU9OX1NIQVBFX1RZUEVfQk9YEAESHwobQ09MTElTSU9OX1NIQVBFX1RZUEVfU1BIRVJFEAISIQodQ09MTElTSU9OX1NIQVBFX1RZUEVfQ1lMSU5ERVIQAxIkCiBDT0xMSVNJT05fU0hBUEVfVFlQRV9DT05WRVhfSFVMTBAEKoICChFEYXR1bVN1cmZhY2VDbGFzcxIjCh9EQVRVTV9TVVJGQUNFX0NMQVNTX1VOU1BFQ0lGSUVEEAASHgoaREFUVU1fU1VSRkFDRV9DTEFTU19QTEFOQVIQARIjCh9EQVRVTV9TVVJGQUNFX0NMQVNTX0NZTElORFJJQ0FMEAISHwobREFUVU1fU1VSRkFDRV9DTEFTU19DT05JQ0FMEAMSIQodREFUVU1fU1VSRkFDRV9DTEFTU19TUEhFUklDQUwQBBIdChlEQVRVTV9TVVJGQUNFX0NMQVNTX09USEVSEAUSIAocREFUVU1fU1VSRkFDRV9DTEFTU19UT1JPSURBTBAGKqcCCglKb2ludFR5cGUSGgoWSk9JTlRfVFlQRV9VTlNQRUNJRklFRBAAEhcKE0pPSU5UX1RZUEVfUkVWT0xVVEUQARIYChRKT0lOVF9UWVBFX1BSSVNNQVRJQxACEhQKEEpPSU5UX1RZUEVfRklYRUQQAxIYChRKT0lOVF9UWVBFX1NQSEVSSUNBTBAEEhoKFkpPSU5UX1RZUEVfQ1lMSU5EUklDQUwQBRIVChFKT0lOVF9UWVBFX1BMQU5BUhAGEhgKFEpPSU5UX1RZUEVfVU5JVkVSU0FMEAcSFwoTSk9JTlRfVFlQRV9ESVNUQU5DRRAIEhkKFUpPSU5UX1RZUEVfUE9JTlRfTElORRAJEhoKFkpPSU5UX1RZUEVfUE9JTlRfUExBTkUQCipZCgpNb3Rpb25UeXBlEhsKF01PVElPTl9UWVBFX1VOU1BFQ0lGSUVEEAASFwoTTU9USU9OX1RZUEVfRFlOQU1JQxABEhUKEU1PVElPTl9UWVBFX0ZJWEVEEAIqbQoOUmVmZXJlbmNlRnJhbWUSHwobUkVGRVJFTkNFX0ZSQU1FX1VOU1BFQ0lGSUVEEAASHwobUkVGRVJFTkNFX0ZSQU1FX0RBVFVNX0xPQ0FMEAESGQoVUkVGRVJFTkNFX0ZSQU1FX1dPUkxEEAIqowEKE0FjdHVhdG9yQ29udHJvbE1vZGUSJQohQUNUVUFUT1JfQ09OVFJPTF9NT0RFX1VOU1BFQ0lGSUVEEAASIgoeQUNUVUFUT1JfQ09OVFJPTF9NT0RFX1BPU0lUSU9OEAESHwobQUNUVUFUT1JfQ09OVFJPTF9NT0RFX1NQRUVEEAISIAocQUNUVUFUT1JfQ09OVFJPTF9NT0RFX0VGRk9SVBADYgZwcm90bzM");
+  fileDesc("ChltZWNoYW5pc20vbWVjaGFuaXNtLnByb3RvEhNtb3Rpb25sYWIubWVjaGFuaXNtIhcKCUVsZW1lbnRJZBIKCgJpZBgBIAEoCSJICg9Qcm9qZWN0TWV0YWRhdGESDAoEbmFtZRgBIAEoCRISCgpjcmVhdGVkX2F0GAIgASgJEhMKC21vZGlmaWVkX2F0GAMgASgJIlgKDkFzc2V0UmVmZXJlbmNlEhQKDGNvbnRlbnRfaGFzaBgBIAEoCRIVCg1yZWxhdGl2ZV9wYXRoGAIgASgJEhkKEW9yaWdpbmFsX2ZpbGVuYW1lGAMgASgJIicKBFZlYzMSCQoBeBgBIAEoARIJCgF5GAIgASgBEgkKAXoYAyABKAEiMgoEUXVhdBIJCgF3GAEgASgBEgkKAXgYAiABKAESCQoBeRgDIAEoARIJCgF6GAQgASgBImMKBFBvc2USKwoIcG9zaXRpb24YASABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSLgoLb3JpZW50YXRpb24YAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlF1YXQiJQoFUmFuZ2USDQoFbG93ZXIYASABKAESDQoFdXBwZXIYAiABKAEinwEKDk1hc3NQcm9wZXJ0aWVzEgwKBG1hc3MYASABKAESMQoOY2VudGVyX29mX21hc3MYAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzMSCwoDaXh4GAMgASgBEgsKA2l5eRgEIAEoARILCgNpenoYBSABKAESCwoDaXh5GAYgASgBEgsKA2l4ehgHIAEoARILCgNpeXoYCCABKAEiQQoLRGlzcGxheU1lc2gSEAoIdmVydGljZXMYASADKAISDwoHaW5kaWNlcxgCIAMoDRIPCgdub3JtYWxzGAMgAygCIs0CCgRCb2R5EioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRInCgRwb3NlGAMgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5Qb3NlEjwKD21hc3NfcHJvcGVydGllcxgEIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uTWFzc1Byb3BlcnRpZXMSQQoQc291cmNlX2Fzc2V0X3JlZhgFIAEoCzIjLm1vdGlvbmxhYi5tZWNoYW5pc20uQXNzZXRSZWZlcmVuY2VCAhgBEhQKCGlzX2ZpeGVkGAYgASgIQgIYARIVCg1tYXNzX292ZXJyaWRlGAcgASgIEjQKC21vdGlvbl90eXBlGAggASgOMh8ubW90aW9ubGFiLm1lY2hhbmlzbS5Nb3Rpb25UeXBlIv0DCghHZW9tZXRyeRIqCgJpZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEgwKBG5hbWUYAiABKAkSNgoOcGFyZW50X2JvZHlfaWQYAyABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBItCgpsb2NhbF9wb3NlGAQgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5Qb3NlEj0KEHNvdXJjZV9hc3NldF9yZWYYBSABKAsyIy5tb3Rpb25sYWIubWVjaGFuaXNtLkFzc2V0UmVmZXJlbmNlEjYKDGRpc3BsYXlfbWVzaBgGIAEoCzIgLm1vdGlvbmxhYi5tZWNoYW5pc20uRGlzcGxheU1lc2gSRQoYY29tcHV0ZWRfbWFzc19wcm9wZXJ0aWVzGAcgASgLMiMubW90aW9ubGFiLm1lY2hhbmlzbS5NYXNzUHJvcGVydGllcxISCgpmYWNlX2NvdW50GAggASgNEj4KEHByaW1pdGl2ZV9zb3VyY2UYCSABKAsyJC5tb3Rpb25sYWIubWVjaGFuaXNtLlByaW1pdGl2ZVNvdXJjZRI+ChBjb2xsaXNpb25fY29uZmlnGAogASgLMiQubW90aW9ubGFiLm1lY2hhbmlzbS5Db2xsaXNpb25Db25maWciOQoJQm94UGFyYW1zEg0KBXdpZHRoGAEgASgBEg4KBmhlaWdodBgCIAEoARINCgVkZXB0aBgDIAEoASIwCg5DeWxpbmRlclBhcmFtcxIOCgZyYWRpdXMYASABKAESDgoGaGVpZ2h0GAIgASgBIh4KDFNwaGVyZVBhcmFtcxIOCgZyYWRpdXMYASABKAEivgEKD1ByaW1pdGl2ZVBhcmFtcxItCgNib3gYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkJveFBhcmFtc0gAEjcKCGN5bGluZGVyGAIgASgLMiMubW90aW9ubGFiLm1lY2hhbmlzbS5DeWxpbmRlclBhcmFtc0gAEjMKBnNwaGVyZRgDIAEoCzIhLm1vdGlvbmxhYi5tZWNoYW5pc20uU3BoZXJlUGFyYW1zSABCDgoMc2hhcGVfcGFyYW1zInsKD1ByaW1pdGl2ZVNvdXJjZRIyCgVzaGFwZRgBIAEoDjIjLm1vdGlvbmxhYi5tZWNoYW5pc20uUHJpbWl0aXZlU2hhcGUSNAoGcGFyYW1zGAIgASgLMiQubW90aW9ubGFiLm1lY2hhbmlzbS5QcmltaXRpdmVQYXJhbXMiygEKD0NvbGxpc2lvbkNvbmZpZxI7CgpzaGFwZV90eXBlGAEgASgOMicubW90aW9ubGFiLm1lY2hhbmlzbS5Db2xsaXNpb25TaGFwZVR5cGUSLwoMaGFsZl9leHRlbnRzGAIgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5WZWMzEg4KBnJhZGl1cxgDIAEoARIOCgZoZWlnaHQYBCABKAESKQoGb2Zmc2V0GAUgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5WZWMzIpkCChVEYXR1bUZhY2VHZW9tZXRyeUluZm8SNgoOYXhpc19kaXJlY3Rpb24YASABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzNIAIgBARIuCgZub3JtYWwYAiABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlZlYzNIAYgBARITCgZyYWRpdXMYAyABKAFIAogBARIdChBzZWNvbmRhcnlfcmFkaXVzGAQgASgBSAOIAQESFwoKc2VtaV9hbmdsZRgFIAEoAUgEiAEBQhEKD19heGlzX2RpcmVjdGlvbkIJCgdfbm9ybWFsQgkKB19yYWRpdXNCEwoRX3NlY29uZGFyeV9yYWRpdXNCDQoLX3NlbWlfYW5nbGUi2wMKBURhdHVtEioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRI2Cg5wYXJlbnRfYm9keV9pZBgDIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEi0KCmxvY2FsX3Bvc2UYBCABKAsyGS5tb3Rpb25sYWIubWVjaGFuaXNtLlBvc2USOgoSc291cmNlX2dlb21ldHJ5X2lkGAUgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSHgoRc291cmNlX2ZhY2VfaW5kZXgYBiABKA1IAIgBARI9Chpzb3VyY2VfZ2VvbWV0cnlfbG9jYWxfcG9zZRgHIAEoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uUG9zZRI9Cg1zdXJmYWNlX2NsYXNzGAggASgOMiYubW90aW9ubGFiLm1lY2hhbmlzbS5EYXR1bVN1cmZhY2VDbGFzcxJBCg1mYWNlX2dlb21ldHJ5GAkgASgLMioubW90aW9ubGFiLm1lY2hhbmlzbS5EYXR1bUZhY2VHZW9tZXRyeUluZm9CFAoSX3NvdXJjZV9mYWNlX2luZGV4IlcKE1Jldm9sdXRlSm9pbnRDb25maWcSLwoLYW5nbGVfbGltaXQYASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLlJhbmdlEg8KB2RhbXBpbmcYAiABKAEiXgoUUHJpc21hdGljSm9pbnRDb25maWcSNQoRdHJhbnNsYXRpb25fbGltaXQYASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLlJhbmdlEg8KB2RhbXBpbmcYAiABKAEiEgoQRml4ZWRKb2ludENvbmZpZyIWChRTcGhlcmljYWxKb2ludENvbmZpZyK+AQoWQ3lsaW5kcmljYWxKb2ludENvbmZpZxI1ChF0cmFuc2xhdGlvbl9saW1pdBgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uUmFuZ2USMgoOcm90YXRpb25fbGltaXQYAiABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLlJhbmdlEh0KFXRyYW5zbGF0aW9uYWxfZGFtcGluZxgDIAEoARIaChJyb3RhdGlvbmFsX2RhbXBpbmcYBCABKAEiuQEKEVBsYW5hckpvaW50Q29uZmlnEjcKE3RyYW5zbGF0aW9uX3hfbGltaXQYASABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLlJhbmdlEjcKE3RyYW5zbGF0aW9uX3lfbGltaXQYAiABKAsyGi5tb3Rpb25sYWIubWVjaGFuaXNtLlJhbmdlEjIKDnJvdGF0aW9uX2xpbWl0GAMgASgLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5SYW5nZSKCAQoUVW5pdmVyc2FsSm9pbnRDb25maWcSNAoQcm90YXRpb25feF9saW1pdBgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uUmFuZ2USNAoQcm90YXRpb25feV9saW1pdBgCIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uUmFuZ2UiSQoTRGlzdGFuY2VKb2ludENvbmZpZxIyCg5kaXN0YW5jZV9saW1pdBgBIAEoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uUmFuZ2UiFgoUUG9pbnRMaW5lSm9pbnRDb25maWciFwoVUG9pbnRQbGFuZUpvaW50Q29uZmlnIpIHCgVKb2ludBIqCgJpZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEgwKBG5hbWUYAiABKAkSLAoEdHlwZRgDIAEoDjIeLm1vdGlvbmxhYi5tZWNoYW5pc20uSm9pbnRUeXBlEjcKD3BhcmVudF9kYXR1bV9pZBgEIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEjYKDmNoaWxkX2RhdHVtX2lkGAUgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSFwoLbG93ZXJfbGltaXQYBiABKAFCAhgBEhcKC3VwcGVyX2xpbWl0GAcgASgBQgIYARI8CghyZXZvbHV0ZRgIIAEoCzIoLm1vdGlvbmxhYi5tZWNoYW5pc20uUmV2b2x1dGVKb2ludENvbmZpZ0gAEj4KCXByaXNtYXRpYxgJIAEoCzIpLm1vdGlvbmxhYi5tZWNoYW5pc20uUHJpc21hdGljSm9pbnRDb25maWdIABI2CgVmaXhlZBgKIAEoCzIlLm1vdGlvbmxhYi5tZWNoYW5pc20uRml4ZWRKb2ludENvbmZpZ0gAEj4KCXNwaGVyaWNhbBgLIAEoCzIpLm1vdGlvbmxhYi5tZWNoYW5pc20uU3BoZXJpY2FsSm9pbnRDb25maWdIABJCCgtjeWxpbmRyaWNhbBgMIAEoCzIrLm1vdGlvbmxhYi5tZWNoYW5pc20uQ3lsaW5kcmljYWxKb2ludENvbmZpZ0gAEjgKBnBsYW5hchgNIAEoCzImLm1vdGlvbmxhYi5tZWNoYW5pc20uUGxhbmFySm9pbnRDb25maWdIABI+Cgl1bml2ZXJzYWwYDiABKAsyKS5tb3Rpb25sYWIubWVjaGFuaXNtLlVuaXZlcnNhbEpvaW50Q29uZmlnSAASPAoIZGlzdGFuY2UYDyABKAsyKC5tb3Rpb25sYWIubWVjaGFuaXNtLkRpc3RhbmNlSm9pbnRDb25maWdIABI/Cgpwb2ludF9saW5lGBAgASgLMikubW90aW9ubGFiLm1lY2hhbmlzbS5Qb2ludExpbmVKb2ludENvbmZpZ0gAEkEKC3BvaW50X3BsYW5lGBEgASgLMioubW90aW9ubGFiLm1lY2hhbmlzbS5Qb2ludFBsYW5lSm9pbnRDb25maWdIAEIICgZjb25maWciqwEKDlBvaW50Rm9yY2VMb2FkEjAKCGRhdHVtX2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSKQoGdmVjdG9yGAIgASgLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5WZWMzEjwKD3JlZmVyZW5jZV9mcmFtZRgDIAEoDjIjLm1vdGlvbmxhYi5tZWNoYW5pc20uUmVmZXJlbmNlRnJhbWUirAEKD1BvaW50VG9ycXVlTG9hZBIwCghkYXR1bV9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEikKBnZlY3RvchgCIAEoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uVmVjMxI8Cg9yZWZlcmVuY2VfZnJhbWUYAyABKA4yIy5tb3Rpb25sYWIubWVjaGFuaXNtLlJlZmVyZW5jZUZyYW1lIsIBChZMaW5lYXJTcHJpbmdEYW1wZXJMb2FkEjcKD3BhcmVudF9kYXR1bV9pZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEjYKDmNoaWxkX2RhdHVtX2lkGAIgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSEwoLcmVzdF9sZW5ndGgYAyABKAESEQoJc3RpZmZuZXNzGAQgASgBEg8KB2RhbXBpbmcYBSABKAEikQIKBExvYWQSKgoCaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIMCgRuYW1lGAIgASgJEjoKC3BvaW50X2ZvcmNlGAMgASgLMiMubW90aW9ubGFiLm1lY2hhbmlzbS5Qb2ludEZvcmNlTG9hZEgAEjwKDHBvaW50X3RvcnF1ZRgEIAEoCzIkLm1vdGlvbmxhYi5tZWNoYW5pc20uUG9pbnRUb3JxdWVMb2FkSAASSwoUbGluZWFyX3NwcmluZ19kYW1wZXIYBSABKAsyKy5tb3Rpb25sYWIubWVjaGFuaXNtLkxpbmVhclNwcmluZ0RhbXBlckxvYWRIAEIICgZjb25maWciIQoQQ29uc3RhbnRGdW5jdGlvbhINCgV2YWx1ZRgBIAEoASI0CgxSYW1wRnVuY3Rpb24SFQoNaW5pdGlhbF92YWx1ZRgBIAEoARINCgVzbG9wZRgCIAEoASJTCgxTaW5lRnVuY3Rpb24SEQoJYW1wbGl0dWRlGAEgASgBEhEKCWZyZXF1ZW5jeRgCIAEoARINCgVwaGFzZRgDIAEoARIOCgZvZmZzZXQYBCABKAEiOAoXUGllY2V3aXNlTGluZWFyRnVuY3Rpb24SDQoFdGltZXMYASADKAESDgoGdmFsdWVzGAIgAygBIqUBChJTbW9vdGhTdGVwRnVuY3Rpb24SFAoMZGlzcGxhY2VtZW50GAEgASgBEhAKCGR1cmF0aW9uGAIgASgBEjcKB3Byb2ZpbGUYAyABKA4yJi5tb3Rpb25sYWIubWVjaGFuaXNtLlNtb290aFN0ZXBQcm9maWxlEhYKDmFjY2VsX2ZyYWN0aW9uGAQgASgBEhYKDmRlY2VsX2ZyYWN0aW9uGAUgASgBIsUCCg9Db21tYW5kRnVuY3Rpb24SOQoIY29uc3RhbnQYASABKAsyJS5tb3Rpb25sYWIubWVjaGFuaXNtLkNvbnN0YW50RnVuY3Rpb25IABIxCgRyYW1wGAIgASgLMiEubW90aW9ubGFiLm1lY2hhbmlzbS5SYW1wRnVuY3Rpb25IABIxCgRzaW5lGAMgASgLMiEubW90aW9ubGFiLm1lY2hhbmlzbS5TaW5lRnVuY3Rpb25IABJIChBwaWVjZXdpc2VfbGluZWFyGAQgASgLMiwubW90aW9ubGFiLm1lY2hhbmlzbS5QaWVjZXdpc2VMaW5lYXJGdW5jdGlvbkgAEj4KC3Ntb290aF9zdGVwGAUgASgLMicubW90aW9ubGFiLm1lY2hhbmlzbS5TbW9vdGhTdGVwRnVuY3Rpb25IAEIHCgVzaGFwZSKMAgoVUmV2b2x1dGVNb3RvckFjdHVhdG9yEjAKCGpvaW50X2lkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSPgoMY29udHJvbF9tb2RlGAIgASgOMigubW90aW9ubGFiLm1lY2hhbmlzbS5BY3R1YXRvckNvbnRyb2xNb2RlEhUKDWNvbW1hbmRfdmFsdWUYAyABKAESGQoMZWZmb3J0X2xpbWl0GAQgASgBSACIAQESPgoQY29tbWFuZF9mdW5jdGlvbhgFIAEoCzIkLm1vdGlvbmxhYi5tZWNoYW5pc20uQ29tbWFuZEZ1bmN0aW9uQg8KDV9lZmZvcnRfbGltaXQijQIKFlByaXNtYXRpY01vdG9yQWN0dWF0b3ISMAoIam9pbnRfaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBI+Cgxjb250cm9sX21vZGUYAiABKA4yKC5tb3Rpb25sYWIubWVjaGFuaXNtLkFjdHVhdG9yQ29udHJvbE1vZGUSFQoNY29tbWFuZF92YWx1ZRgDIAEoARIZCgxlZmZvcnRfbGltaXQYBCABKAFIAIgBARI+ChBjb21tYW5kX2Z1bmN0aW9uGAUgASgLMiQubW90aW9ubGFiLm1lY2hhbmlzbS5Db21tYW5kRnVuY3Rpb25CDwoNX2VmZm9ydF9saW1pdCLcAQoIQWN0dWF0b3ISKgoCaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZBIMCgRuYW1lGAIgASgJEkQKDnJldm9sdXRlX21vdG9yGAMgASgLMioubW90aW9ubGFiLm1lY2hhbmlzbS5SZXZvbHV0ZU1vdG9yQWN0dWF0b3JIABJGCg9wcmlzbWF0aWNfbW90b3IYBCABKAsyKy5tb3Rpb25sYWIubWVjaGFuaXNtLlByaXNtYXRpY01vdG9yQWN0dWF0b3JIAEIICgZjb25maWciFQoTQWNjZWxlcm9tZXRlckNvbmZpZyIRCg9HeXJvc2NvcGVDb25maWciQQoQVGFjaG9tZXRlckNvbmZpZxItCgRheGlzGAEgASgOMh8ubW90aW9ubGFiLm1lY2hhbmlzbS5TZW5zb3JBeGlzIkEKDUVuY29kZXJDb25maWcSMAoIam9pbnRfaWQYASABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLkVsZW1lbnRJZCKfAwoGU2Vuc29yEioKAmlkGAEgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSDAoEbmFtZRgCIAEoCRItCgR0eXBlGAMgASgOMh8ubW90aW9ubGFiLm1lY2hhbmlzbS5TZW5zb3JUeXBlEjAKCGRhdHVtX2lkGAQgASgLMh4ubW90aW9ubGFiLm1lY2hhbmlzbS5FbGVtZW50SWQSQQoNYWNjZWxlcm9tZXRlchgFIAEoCzIoLm1vdGlvbmxhYi5tZWNoYW5pc20uQWNjZWxlcm9tZXRlckNvbmZpZ0gAEjkKCWd5cm9zY29wZRgGIAEoCzIkLm1vdGlvbmxhYi5tZWNoYW5pc20uR3lyb3Njb3BlQ29uZmlnSAASOwoKdGFjaG9tZXRlchgHIAEoCzIlLm1vdGlvbmxhYi5tZWNoYW5pc20uVGFjaG9tZXRlckNvbmZpZ0gAEjUKB2VuY29kZXIYCCABKAsyIi5tb3Rpb25sYWIubWVjaGFuaXNtLkVuY29kZXJDb25maWdIAEIICgZjb25maWcihQMKCU1lY2hhbmlzbRIqCgJpZBgBIAEoCzIeLm1vdGlvbmxhYi5tZWNoYW5pc20uRWxlbWVudElkEgwKBG5hbWUYAiABKAkSKQoGYm9kaWVzGAMgAygLMhkubW90aW9ubGFiLm1lY2hhbmlzbS5Cb2R5EioKBmRhdHVtcxgEIAMoCzIaLm1vdGlvbmxhYi5tZWNoYW5pc20uRGF0dW0SKgoGam9pbnRzGAUgAygLMhoubW90aW9ubGFiLm1lY2hhbmlzbS5Kb2ludBIoCgVsb2FkcxgGIAMoCzIZLm1vdGlvbmxhYi5tZWNoYW5pc20uTG9hZBIwCglhY3R1YXRvcnMYByADKAsyHS5tb3Rpb25sYWIubWVjaGFuaXNtLkFjdHVhdG9yEjEKCmdlb21ldHJpZXMYCCADKAsyHS5tb3Rpb25sYWIubWVjaGFuaXNtLkdlb21ldHJ5EiwKB3NlbnNvcnMYCSADKAsyGy5tb3Rpb25sYWIubWVjaGFuaXNtLlNlbnNvciKyAQoPQm9keURpc3BsYXlEYXRhEg8KB2JvZHlfaWQYASABKAkSNgoMZGlzcGxheV9tZXNoGAIgASgLMiAubW90aW9ubGFiLm1lY2hhbmlzbS5EaXNwbGF5TWVzaBISCgpwYXJ0X2luZGV4GAMgAygNEg8KB2RlbnNpdHkYBCABKAESHAoUdGVzc2VsbGF0aW9uX3F1YWxpdHkYBSABKAESEwoLdW5pdF9zeXN0ZW0YBiABKAkiugEKE0dlb21ldHJ5RGlzcGxheURhdGESEwoLZ2VvbWV0cnlfaWQYASABKAkSNgoMZGlzcGxheV9tZXNoGAIgASgLMiAubW90aW9ubGFiLm1lY2hhbmlzbS5EaXNwbGF5TWVzaBISCgpwYXJ0X2luZGV4GAMgAygNEg8KB2RlbnNpdHkYBCABKAESHAoUdGVzc2VsbGF0aW9uX3F1YWxpdHkYBSABKAESEwoLdW5pdF9zeXN0ZW0YBiABKAkikwIKC1Byb2plY3RGaWxlEg8KB3ZlcnNpb24YASABKA0SNgoIbWV0YWRhdGEYAiABKAsyJC5tb3Rpb25sYWIubWVjaGFuaXNtLlByb2plY3RNZXRhZGF0YRIxCgltZWNoYW5pc20YAyABKAsyHi5tb3Rpb25sYWIubWVjaGFuaXNtLk1lY2hhbmlzbRI/ChFib2R5X2Rpc3BsYXlfZGF0YRgEIAMoCzIkLm1vdGlvbmxhYi5tZWNoYW5pc20uQm9keURpc3BsYXlEYXRhEkcKFWdlb21ldHJ5X2Rpc3BsYXlfZGF0YRgFIAMoCzIoLm1vdGlvbmxhYi5tZWNoYW5pc20uR2VvbWV0cnlEaXNwbGF5RGF0YSqEAQoOUHJpbWl0aXZlU2hhcGUSHwobUFJJTUlUSVZFX1NIQVBFX1VOU1BFQ0lGSUVEEAASFwoTUFJJTUlUSVZFX1NIQVBFX0JPWBABEhwKGFBSSU1JVElWRV9TSEFQRV9DWUxJTkRFUhACEhoKFlBSSU1JVElWRV9TSEFQRV9TUEhFUkUQAyq7AQoSQ29sbGlzaW9uU2hhcGVUeXBlEh0KGUNPTExJU0lPTl9TSEFQRV9UWVBFX05PTkUQABIcChhDT0xMSVNJT05fU0hBUEVfVFlQRV9CT1gQARIfChtDT0xMSVNJT05fU0hBUEVfVFlQRV9TUEhFUkUQAhIhCh1DT0xMSVNJT05fU0hBUEVfVFlQRV9DWUxJTkRFUhADEiQKIENPTExJU0lPTl9TSEFQRV9UWVBFX0NPTlZFWF9IVUxMEAQqggIKEURhdHVtU3VyZmFjZUNsYXNzEiMKH0RBVFVNX1NVUkZBQ0VfQ0xBU1NfVU5TUEVDSUZJRUQQABIeChpEQVRVTV9TVVJGQUNFX0NMQVNTX1BMQU5BUhABEiMKH0RBVFVNX1NVUkZBQ0VfQ0xBU1NfQ1lMSU5EUklDQUwQAhIfChtEQVRVTV9TVVJGQUNFX0NMQVNTX0NPTklDQUwQAxIhCh1EQVRVTV9TVVJGQUNFX0NMQVNTX1NQSEVSSUNBTBAEEh0KGURBVFVNX1NVUkZBQ0VfQ0xBU1NfT1RIRVIQBRIgChxEQVRVTV9TVVJGQUNFX0NMQVNTX1RPUk9JREFMEAYqpwIKCUpvaW50VHlwZRIaChZKT0lOVF9UWVBFX1VOU1BFQ0lGSUVEEAASFwoTSk9JTlRfVFlQRV9SRVZPTFVURRABEhgKFEpPSU5UX1RZUEVfUFJJU01BVElDEAISFAoQSk9JTlRfVFlQRV9GSVhFRBADEhgKFEpPSU5UX1RZUEVfU1BIRVJJQ0FMEAQSGgoWSk9JTlRfVFlQRV9DWUxJTkRSSUNBTBAFEhUKEUpPSU5UX1RZUEVfUExBTkFSEAYSGAoUSk9JTlRfVFlQRV9VTklWRVJTQUwQBxIXChNKT0lOVF9UWVBFX0RJU1RBTkNFEAgSGQoVSk9JTlRfVFlQRV9QT0lOVF9MSU5FEAkSGgoWSk9JTlRfVFlQRV9QT0lOVF9QTEFORRAKKlkKCk1vdGlvblR5cGUSGwoXTU9USU9OX1RZUEVfVU5TUEVDSUZJRUQQABIXChNNT1RJT05fVFlQRV9EWU5BTUlDEAESFQoRTU9USU9OX1RZUEVfRklYRUQQAiptCg5SZWZlcmVuY2VGcmFtZRIfChtSRUZFUkVOQ0VfRlJBTUVfVU5TUEVDSUZJRUQQABIfChtSRUZFUkVOQ0VfRlJBTUVfREFUVU1fTE9DQUwQARIZChVSRUZFUkVOQ0VfRlJBTUVfV09STEQQAiqjAQoTQWN0dWF0b3JDb250cm9sTW9kZRIlCiFBQ1RVQVRPUl9DT05UUk9MX01PREVfVU5TUEVDSUZJRUQQABIiCh5BQ1RVQVRPUl9DT05UUk9MX01PREVfUE9TSVRJT04QARIfChtBQ1RVQVRPUl9DT05UUk9MX01PREVfU1BFRUQQAhIgChxBQ1RVQVRPUl9DT05UUk9MX01PREVfRUZGT1JUEAMqgAEKEVNtb290aFN0ZXBQcm9maWxlEiMKH1NNT09USF9TVEVQX1BST0ZJTEVfVU5TUEVDSUZJRUQQABIhCh1TTU9PVEhfU1RFUF9QUk9GSUxFX0NZQ0xPSURBTBABEiMKH1NNT09USF9TVEVQX1BST0ZJTEVfVFJBUEVaT0lEQUwQAiqYAQoKU2Vuc29yVHlwZRIbChdTRU5TT1JfVFlQRV9VTlNQRUNJRklFRBAAEh0KGVNFTlNPUl9UWVBFX0FDQ0VMRVJPTUVURVIQARIZChVTRU5TT1JfVFlQRV9HWVJPU0NPUEUQAhIaChZTRU5TT1JfVFlQRV9UQUNIT01FVEVSEAMSFwoTU0VOU09SX1RZUEVfRU5DT0RFUhAEKmIKClNlbnNvckF4aXMSGwoXU0VOU09SX0FYSVNfVU5TUEVDSUZJRUQQABIRCg1TRU5TT1JfQVhJU19YEAESEQoNU0VOU09SX0FYSVNfWRACEhEKDVNFTlNPUl9BWElTX1oQA2IGcHJvdG8z");
 
 /**
  * Unique identifier for any mechanism element
@@ -1199,6 +1199,203 @@ export const LoadSchema: GenMessage<Load> = /*@__PURE__*/
   messageDesc(file_mechanism_mechanism, 33);
 
 /**
+ * @generated from message motionlab.mechanism.ConstantFunction
+ */
+export type ConstantFunction = Message<"motionlab.mechanism.ConstantFunction"> & {
+  /**
+   * @generated from field: double value = 1;
+   */
+  value: number;
+};
+
+/**
+ * Describes the message motionlab.mechanism.ConstantFunction.
+ * Use `create(ConstantFunctionSchema)` to create a new message.
+ */
+export const ConstantFunctionSchema: GenMessage<ConstantFunction> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 34);
+
+/**
+ * @generated from message motionlab.mechanism.RampFunction
+ */
+export type RampFunction = Message<"motionlab.mechanism.RampFunction"> & {
+  /**
+   * @generated from field: double initial_value = 1;
+   */
+  initialValue: number;
+
+  /**
+   * units/s
+   *
+   * @generated from field: double slope = 2;
+   */
+  slope: number;
+};
+
+/**
+ * Describes the message motionlab.mechanism.RampFunction.
+ * Use `create(RampFunctionSchema)` to create a new message.
+ */
+export const RampFunctionSchema: GenMessage<RampFunction> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 35);
+
+/**
+ * @generated from message motionlab.mechanism.SineFunction
+ */
+export type SineFunction = Message<"motionlab.mechanism.SineFunction"> & {
+  /**
+   * @generated from field: double amplitude = 1;
+   */
+  amplitude: number;
+
+  /**
+   * Hz
+   *
+   * @generated from field: double frequency = 2;
+   */
+  frequency: number;
+
+  /**
+   * rad
+   *
+   * @generated from field: double phase = 3;
+   */
+  phase: number;
+
+  /**
+   * DC bias
+   *
+   * @generated from field: double offset = 4;
+   */
+  offset: number;
+};
+
+/**
+ * Describes the message motionlab.mechanism.SineFunction.
+ * Use `create(SineFunctionSchema)` to create a new message.
+ */
+export const SineFunctionSchema: GenMessage<SineFunction> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 36);
+
+/**
+ * @generated from message motionlab.mechanism.PiecewiseLinearFunction
+ */
+export type PiecewiseLinearFunction = Message<"motionlab.mechanism.PiecewiseLinearFunction"> & {
+  /**
+   * must be monotonically increasing
+   *
+   * @generated from field: repeated double times = 1;
+   */
+  times: number[];
+
+  /**
+   * same length as times
+   *
+   * @generated from field: repeated double values = 2;
+   */
+  values: number[];
+};
+
+/**
+ * Describes the message motionlab.mechanism.PiecewiseLinearFunction.
+ * Use `create(PiecewiseLinearFunctionSchema)` to create a new message.
+ */
+export const PiecewiseLinearFunctionSchema: GenMessage<PiecewiseLinearFunction> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 37);
+
+/**
+ * @generated from message motionlab.mechanism.SmoothStepFunction
+ */
+export type SmoothStepFunction = Message<"motionlab.mechanism.SmoothStepFunction"> & {
+  /**
+   * total displacement over duration
+   *
+   * @generated from field: double displacement = 1;
+   */
+  displacement: number;
+
+  /**
+   * seconds
+   *
+   * @generated from field: double duration = 2;
+   */
+  duration: number;
+
+  /**
+   * @generated from field: motionlab.mechanism.SmoothStepProfile profile = 3;
+   */
+  profile: SmoothStepProfile;
+
+  /**
+   * [0,1] fraction of duration for accel (trapezoidal only)
+   *
+   * @generated from field: double accel_fraction = 4;
+   */
+  accelFraction: number;
+
+  /**
+   * [0,1] fraction of duration for decel (trapezoidal only)
+   *
+   * @generated from field: double decel_fraction = 5;
+   */
+  decelFraction: number;
+};
+
+/**
+ * Describes the message motionlab.mechanism.SmoothStepFunction.
+ * Use `create(SmoothStepFunctionSchema)` to create a new message.
+ */
+export const SmoothStepFunctionSchema: GenMessage<SmoothStepFunction> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 38);
+
+/**
+ * @generated from message motionlab.mechanism.CommandFunction
+ */
+export type CommandFunction = Message<"motionlab.mechanism.CommandFunction"> & {
+  /**
+   * @generated from oneof motionlab.mechanism.CommandFunction.shape
+   */
+  shape: {
+    /**
+     * @generated from field: motionlab.mechanism.ConstantFunction constant = 1;
+     */
+    value: ConstantFunction;
+    case: "constant";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.RampFunction ramp = 2;
+     */
+    value: RampFunction;
+    case: "ramp";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.SineFunction sine = 3;
+     */
+    value: SineFunction;
+    case: "sine";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.PiecewiseLinearFunction piecewise_linear = 4;
+     */
+    value: PiecewiseLinearFunction;
+    case: "piecewiseLinear";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.SmoothStepFunction smooth_step = 5;
+     */
+    value: SmoothStepFunction;
+    case: "smoothStep";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message motionlab.mechanism.CommandFunction.
+ * Use `create(CommandFunctionSchema)` to create a new message.
+ */
+export const CommandFunctionSchema: GenMessage<CommandFunction> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 39);
+
+/**
  * @generated from message motionlab.mechanism.RevoluteMotorActuator
  */
 export type RevoluteMotorActuator = Message<"motionlab.mechanism.RevoluteMotorActuator"> & {
@@ -1213,6 +1410,8 @@ export type RevoluteMotorActuator = Message<"motionlab.mechanism.RevoluteMotorAc
   controlMode: ActuatorControlMode;
 
   /**
+   * deprecated: use command_function
+   *
    * @generated from field: double command_value = 3;
    */
   commandValue: number;
@@ -1221,6 +1420,11 @@ export type RevoluteMotorActuator = Message<"motionlab.mechanism.RevoluteMotorAc
    * @generated from field: optional double effort_limit = 4;
    */
   effortLimit?: number;
+
+  /**
+   * @generated from field: motionlab.mechanism.CommandFunction command_function = 5;
+   */
+  commandFunction?: CommandFunction;
 };
 
 /**
@@ -1228,7 +1432,7 @@ export type RevoluteMotorActuator = Message<"motionlab.mechanism.RevoluteMotorAc
  * Use `create(RevoluteMotorActuatorSchema)` to create a new message.
  */
 export const RevoluteMotorActuatorSchema: GenMessage<RevoluteMotorActuator> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 34);
+  messageDesc(file_mechanism_mechanism, 40);
 
 /**
  * @generated from message motionlab.mechanism.PrismaticMotorActuator
@@ -1245,6 +1449,8 @@ export type PrismaticMotorActuator = Message<"motionlab.mechanism.PrismaticMotor
   controlMode: ActuatorControlMode;
 
   /**
+   * deprecated: use command_function
+   *
    * @generated from field: double command_value = 3;
    */
   commandValue: number;
@@ -1253,6 +1459,11 @@ export type PrismaticMotorActuator = Message<"motionlab.mechanism.PrismaticMotor
    * @generated from field: optional double effort_limit = 4;
    */
   effortLimit?: number;
+
+  /**
+   * @generated from field: motionlab.mechanism.CommandFunction command_function = 5;
+   */
+  commandFunction?: CommandFunction;
 };
 
 /**
@@ -1260,7 +1471,7 @@ export type PrismaticMotorActuator = Message<"motionlab.mechanism.PrismaticMotor
  * Use `create(PrismaticMotorActuatorSchema)` to create a new message.
  */
 export const PrismaticMotorActuatorSchema: GenMessage<PrismaticMotorActuator> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 35);
+  messageDesc(file_mechanism_mechanism, 41);
 
 /**
  * @generated from message motionlab.mechanism.Actuator
@@ -1299,7 +1510,136 @@ export type Actuator = Message<"motionlab.mechanism.Actuator"> & {
  * Use `create(ActuatorSchema)` to create a new message.
  */
 export const ActuatorSchema: GenMessage<Actuator> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 36);
+  messageDesc(file_mechanism_mechanism, 42);
+
+/**
+ * @generated from message motionlab.mechanism.AccelerometerConfig
+ */
+export type AccelerometerConfig = Message<"motionlab.mechanism.AccelerometerConfig"> & {
+};
+
+/**
+ * Describes the message motionlab.mechanism.AccelerometerConfig.
+ * Use `create(AccelerometerConfigSchema)` to create a new message.
+ */
+export const AccelerometerConfigSchema: GenMessage<AccelerometerConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 43);
+
+/**
+ * @generated from message motionlab.mechanism.GyroscopeConfig
+ */
+export type GyroscopeConfig = Message<"motionlab.mechanism.GyroscopeConfig"> & {
+};
+
+/**
+ * Describes the message motionlab.mechanism.GyroscopeConfig.
+ * Use `create(GyroscopeConfigSchema)` to create a new message.
+ */
+export const GyroscopeConfigSchema: GenMessage<GyroscopeConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 44);
+
+/**
+ * @generated from message motionlab.mechanism.TachometerConfig
+ */
+export type TachometerConfig = Message<"motionlab.mechanism.TachometerConfig"> & {
+  /**
+   * which local axis to measure RPM around
+   *
+   * @generated from field: motionlab.mechanism.SensorAxis axis = 1;
+   */
+  axis: SensorAxis;
+};
+
+/**
+ * Describes the message motionlab.mechanism.TachometerConfig.
+ * Use `create(TachometerConfigSchema)` to create a new message.
+ */
+export const TachometerConfigSchema: GenMessage<TachometerConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 45);
+
+/**
+ * @generated from message motionlab.mechanism.EncoderConfig
+ */
+export type EncoderConfig = Message<"motionlab.mechanism.EncoderConfig"> & {
+  /**
+   * the joint this encoder measures
+   *
+   * @generated from field: motionlab.mechanism.ElementId joint_id = 1;
+   */
+  jointId?: ElementId;
+};
+
+/**
+ * Describes the message motionlab.mechanism.EncoderConfig.
+ * Use `create(EncoderConfigSchema)` to create a new message.
+ */
+export const EncoderConfigSchema: GenMessage<EncoderConfig> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 46);
+
+/**
+ * Sensor entity — first-class authored entity mounted to a datum.
+ *
+ * @generated from message motionlab.mechanism.Sensor
+ */
+export type Sensor = Message<"motionlab.mechanism.Sensor"> & {
+  /**
+   * @generated from field: motionlab.mechanism.ElementId id = 1;
+   */
+  id?: ElementId;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * @generated from field: motionlab.mechanism.SensorType type = 3;
+   */
+  type: SensorType;
+
+  /**
+   * mount point (body-mounted sensors)
+   *
+   * @generated from field: motionlab.mechanism.ElementId datum_id = 4;
+   */
+  datumId?: ElementId;
+
+  /**
+   * @generated from oneof motionlab.mechanism.Sensor.config
+   */
+  config: {
+    /**
+     * @generated from field: motionlab.mechanism.AccelerometerConfig accelerometer = 5;
+     */
+    value: AccelerometerConfig;
+    case: "accelerometer";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.GyroscopeConfig gyroscope = 6;
+     */
+    value: GyroscopeConfig;
+    case: "gyroscope";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.TachometerConfig tachometer = 7;
+     */
+    value: TachometerConfig;
+    case: "tachometer";
+  } | {
+    /**
+     * @generated from field: motionlab.mechanism.EncoderConfig encoder = 8;
+     */
+    value: EncoderConfig;
+    case: "encoder";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message motionlab.mechanism.Sensor.
+ * Use `create(SensorSchema)` to create a new message.
+ */
+export const SensorSchema: GenMessage<Sensor> = /*@__PURE__*/
+  messageDesc(file_mechanism_mechanism, 47);
 
 /**
  * Complete mechanism definition
@@ -1346,6 +1686,11 @@ export type Mechanism = Message<"motionlab.mechanism.Mechanism"> & {
    * @generated from field: repeated motionlab.mechanism.Geometry geometries = 8;
    */
   geometries: Geometry[];
+
+  /**
+   * @generated from field: repeated motionlab.mechanism.Sensor sensors = 9;
+   */
+  sensors: Sensor[];
 };
 
 /**
@@ -1353,7 +1698,7 @@ export type Mechanism = Message<"motionlab.mechanism.Mechanism"> & {
  * Use `create(MechanismSchema)` to create a new message.
  */
 export const MechanismSchema: GenMessage<Mechanism> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 37);
+  messageDesc(file_mechanism_mechanism, 48);
 
 /**
  * Display data for a body, stored in project files for self-contained persistence
@@ -1399,7 +1744,7 @@ export type BodyDisplayData = Message<"motionlab.mechanism.BodyDisplayData"> & {
  * Use `create(BodyDisplayDataSchema)` to create a new message.
  */
 export const BodyDisplayDataSchema: GenMessage<BodyDisplayData> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 38);
+  messageDesc(file_mechanism_mechanism, 49);
 
 /**
  * Display data for a geometry, stored in project files for self-contained persistence
@@ -1445,7 +1790,7 @@ export type GeometryDisplayData = Message<"motionlab.mechanism.GeometryDisplayDa
  * Use `create(GeometryDisplayDataSchema)` to create a new message.
  */
 export const GeometryDisplayDataSchema: GenMessage<GeometryDisplayData> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 39);
+  messageDesc(file_mechanism_mechanism, 50);
 
 /**
  * Self-contained project file (binary protobuf with version field)
@@ -1486,7 +1831,7 @@ export type ProjectFile = Message<"motionlab.mechanism.ProjectFile"> & {
  * Use `create(ProjectFileSchema)` to create a new message.
  */
 export const ProjectFileSchema: GenMessage<ProjectFile> = /*@__PURE__*/
-  messageDesc(file_mechanism_mechanism, 40);
+  messageDesc(file_mechanism_mechanism, 51);
 
 /**
  * Primitive shape types for parametric geometry creation
@@ -1771,4 +2116,111 @@ export enum ActuatorControlMode {
  */
 export const ActuatorControlModeSchema: GenEnum<ActuatorControlMode> = /*@__PURE__*/
   enumDesc(file_mechanism_mechanism, 6);
+
+/**
+ * @generated from enum motionlab.mechanism.SmoothStepProfile
+ */
+export enum SmoothStepProfile {
+  /**
+   * @generated from enum value: SMOOTH_STEP_PROFILE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: SMOOTH_STEP_PROFILE_CYCLOIDAL = 1;
+   */
+  CYCLOIDAL = 1,
+
+  /**
+   * @generated from enum value: SMOOTH_STEP_PROFILE_TRAPEZOIDAL = 2;
+   */
+  TRAPEZOIDAL = 2,
+}
+
+/**
+ * Describes the enum motionlab.mechanism.SmoothStepProfile.
+ */
+export const SmoothStepProfileSchema: GenEnum<SmoothStepProfile> = /*@__PURE__*/
+  enumDesc(file_mechanism_mechanism, 7);
+
+/**
+ * Sensor types relevant to mechanism analysis
+ *
+ * @generated from enum motionlab.mechanism.SensorType
+ */
+export enum SensorType {
+  /**
+   * @generated from enum value: SENSOR_TYPE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * linear acceleration on a body
+   *
+   * @generated from enum value: SENSOR_TYPE_ACCELEROMETER = 1;
+   */
+  ACCELEROMETER = 1,
+
+  /**
+   * angular velocity on a body
+   *
+   * @generated from enum value: SENSOR_TYPE_GYROSCOPE = 2;
+   */
+  GYROSCOPE = 2,
+
+  /**
+   * RPM around an axis on a body
+   *
+   * @generated from enum value: SENSOR_TYPE_TACHOMETER = 3;
+   */
+  TACHOMETER = 3,
+
+  /**
+   * joint position/velocity measurement
+   *
+   * @generated from enum value: SENSOR_TYPE_ENCODER = 4;
+   */
+  ENCODER = 4,
+}
+
+/**
+ * Describes the enum motionlab.mechanism.SensorType.
+ */
+export const SensorTypeSchema: GenEnum<SensorType> = /*@__PURE__*/
+  enumDesc(file_mechanism_mechanism, 8);
+
+/**
+ * Axis selection for tachometer measurement direction
+ *
+ * @generated from enum motionlab.mechanism.SensorAxis
+ */
+export enum SensorAxis {
+  /**
+   * defaults to Z
+   *
+   * @generated from enum value: SENSOR_AXIS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: SENSOR_AXIS_X = 1;
+   */
+  X = 1,
+
+  /**
+   * @generated from enum value: SENSOR_AXIS_Y = 2;
+   */
+  Y = 2,
+
+  /**
+   * @generated from enum value: SENSOR_AXIS_Z = 3;
+   */
+  Z = 3,
+}
+
+/**
+ * Describes the enum motionlab.mechanism.SensorAxis.
+ */
+export const SensorAxisSchema: GenEnum<SensorAxis> = /*@__PURE__*/
+  enumDesc(file_mechanism_mechanism, 9);
 

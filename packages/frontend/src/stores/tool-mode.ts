@@ -25,6 +25,8 @@ export interface ToolModeState {
   jointsVisible: boolean;
   /** Whether the reference grid is visible in the viewport. */
   gridVisible: boolean;
+  /** Whether entity labels are visible in the viewport. */
+  labelsVisible: boolean;
 
   setMode: (mode: ToolMode) => void;
   setGizmoMode: (mode: GizmoMode) => void;
@@ -35,6 +37,7 @@ export interface ToolModeState {
   setDatumsVisible: (visible: boolean) => void;
   setJointsVisible: (visible: boolean) => void;
   setGridVisible: (visible: boolean) => void;
+  setLabelsVisible: (visible: boolean) => void;
 }
 
 export const useToolModeStore = create<ToolModeState>()((set) => ({
@@ -47,6 +50,7 @@ export const useToolModeStore = create<ToolModeState>()((set) => ({
   datumsVisible: true,
   jointsVisible: true,
   gridVisible: true,
+  labelsVisible: true,
 
   setMode: (mode) => set({ activeMode: mode }),
   setGizmoMode: (mode) => set({ gizmoMode: mode }),
@@ -57,4 +61,5 @@ export const useToolModeStore = create<ToolModeState>()((set) => ({
   setDatumsVisible: (visible) => set({ datumsVisible: visible }),
   setJointsVisible: (visible) => set({ jointsVisible: visible }),
   setGridVisible: (visible) => set({ gridVisible: visible }),
+  setLabelsVisible: (visible) => set({ labelsVisible: visible }),
 }));

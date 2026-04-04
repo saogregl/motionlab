@@ -6,6 +6,7 @@ import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { executeMakeBody } from '../utils/body-merge.js';
 import { ActuatorInspector } from './ActuatorInspector.js';
+import { SensorInspector } from './SensorInspector.js';
 import { BodyInspector } from './BodyInspector.js';
 import { DatumInspector } from './DatumInspector.js';
 import { GeometryInspector } from './GeometryInspector.js';
@@ -28,6 +29,7 @@ export function EntityInspector() {
   const joints = useMechanismStore((s) => s.joints);
   const loads = useMechanismStore((s) => s.loads);
   const actuators = useMechanismStore((s) => s.actuators);
+  const sensors = useMechanismStore((s) => s.sensors);
   const simState = useSimulationStore((s) => s.state);
 
   const showSimMeta = simState !== 'idle';
@@ -47,6 +49,7 @@ export function EntityInspector() {
       else if (joints.has(id)) counts['Joint'] = (counts['Joint'] ?? 0) + 1;
       else if (loads.has(id)) counts['Load'] = (counts['Load'] ?? 0) + 1;
       else if (actuators.has(id)) counts['Actuator'] = (counts['Actuator'] ?? 0) + 1;
+      else if (sensors.has(id)) counts['Sensor'] = (counts['Sensor'] ?? 0) + 1;
     }
     const pluralize = (word: string, n: number) => {
       if (n === 1) return word;
@@ -58,8 +61,8 @@ export function EntityInspector() {
       .map(([type, count]) => `${count} ${pluralize(type, count)}`)
       .join(', ');
     const isSimulating = simState === 'running' || simState === 'paused';
-    const canMakeBody = !isSimulating &&
-      [...selectedIds].some((id) => geometries.has(id) || bodies.has(id));
+    const canMakeBody =
+      !isSimulating && [...selectedIds].some((id) => geometries.has(id) || bodies.has(id));
 
     return (
       <InspectorPanel
@@ -67,7 +70,7 @@ export function EntityInspector() {
         entityIcon={<Layers className="size-5" />}
       >
         <div className="ps-3 pe-3 pt-2">
-          <span className="text-2xs text-[var(--text-secondary)]">{breakdown}</span>
+          <span className="text-xs text-[var(--text-secondary)]">{breakdown}</span>
           {canMakeBody && (
             <Button
               variant="outline"
@@ -128,6 +131,14 @@ export function EntityInspector() {
     return (
       <>
         <ActuatorInspector actuatorId={firstId} />
+        {showSimMeta && <SimulationMetadataSection />}
+      </>
+    );
+  }
+  if (sensors.has(firstId)) {
+    return (
+      <>
+        <SensorInspector sensorId={firstId} />
         {showSimMeta && <SimulationMetadataSection />}
       </>
     );

@@ -1,17 +1,15 @@
+import { Button } from '../ui/button';
 import {
-  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@motionlab/ui';
+} from '../ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { ChevronDown } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 
-interface ToolbarSplitButtonProps {
+export interface ToolbarSplitButtonProps {
   /** Tooltip for the main button */
   tooltip: string;
   /** Keyboard shortcut hint shown in tooltip */

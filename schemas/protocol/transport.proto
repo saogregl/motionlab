@@ -41,6 +41,7 @@ message Command {
     CreateActuatorCommand create_actuator = 26;
     UpdateActuatorCommand update_actuator = 27;
     DeleteActuatorCommand delete_actuator = 28;
+    PrepareFacePickingCommand prepare_face_picking = 29;
     CreateBodyCommand create_body = 50;
     DeleteBodyCommand delete_body = 51;
     AttachGeometryCommand attach_geometry = 52;
@@ -56,6 +57,9 @@ message Command {
     SplitBodyCommand split_body = 63;
     ReparentGeometryCommand reparent_geometry = 64;
     UpdateGeometryPoseCommand update_geometry_pose = 65;
+    CreateSensorCommand create_sensor = 70;
+    UpdateSensorCommand update_sensor = 71;
+    DeleteSensorCommand delete_sensor = 72;
     CompileMechanismCommand compile_mechanism = 30;
     SimulationControlCommand simulation_control = 31;
     ScrubCommand scrub = 32;
@@ -106,6 +110,10 @@ message Event {
     SplitBodyResult split_body_result = 63;
     ReparentGeometryResult reparent_geometry_result = 64;
     UpdateGeometryPoseResult update_geometry_pose_result = 65;
+    PrepareFacePickingResult prepare_face_picking_result = 66;
+    CreateSensorResult create_sensor_result = 70;
+    UpdateSensorResult update_sensor_result = 71;
+    DeleteSensorResult delete_sensor_result = 72;
     CompilationResultEvent compilation_result = 30;
     SimulationStateEvent simulation_state = 31;
     SimulationFrame simulation_frame = 32;
@@ -271,6 +279,22 @@ message CreateDatumResult {
 message CreateDatumFromFaceResult {
   oneof result {
     CreateDatumFromFaceSuccess success = 1;
+    string error_message = 2;
+  }
+}
+
+message PrepareFacePickingCommand {
+  repeated motionlab.mechanism.ElementId geometry_ids = 1;
+}
+
+message PrepareFacePickingSuccess {
+  repeated motionlab.mechanism.ElementId prepared_geometry_ids = 1;
+  repeated motionlab.mechanism.ElementId failed_geometry_ids = 2;
+}
+
+message PrepareFacePickingResult {
+  oneof result {
+    PrepareFacePickingSuccess success = 1;
     string error_message = 2;
   }
 }
@@ -721,6 +745,43 @@ message UpdateActuatorResult {
 }
 
 message DeleteActuatorResult {
+  oneof result {
+    motionlab.mechanism.ElementId deleted_id = 1;
+    string error_message = 2;
+  }
+}
+
+// ──────────────────────────────────────────────
+// Sensor CRUD
+// ──────────────────────────────────────────────
+
+message CreateSensorCommand {
+  motionlab.mechanism.Sensor draft = 1;
+}
+
+message UpdateSensorCommand {
+  motionlab.mechanism.Sensor sensor = 1;
+}
+
+message DeleteSensorCommand {
+  motionlab.mechanism.ElementId sensor_id = 1;
+}
+
+message CreateSensorResult {
+  oneof result {
+    motionlab.mechanism.Sensor sensor = 1;
+    string error_message = 2;
+  }
+}
+
+message UpdateSensorResult {
+  oneof result {
+    motionlab.mechanism.Sensor sensor = 1;
+    string error_message = 2;
+  }
+}
+
+message DeleteSensorResult {
   oneof result {
     motionlab.mechanism.ElementId deleted_id = 1;
     string error_message = 2;

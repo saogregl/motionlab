@@ -89,6 +89,7 @@ function makeSceneGraph(mesh: Mesh, rootNode?: Group): SceneGraphManager {
     getBodyGeometryIndex: () => undefined,
     getGeometryIndex: () => undefined,
     clearAllFaceHighlights: () => {},
+    clearFaceHighlight: () => {},
     clearDatumPreview: () => {},
     showDatumPreview: () => {},
     getBodyFacePreview: () => null,

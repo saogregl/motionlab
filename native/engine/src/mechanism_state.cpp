@@ -1632,6 +1632,43 @@ bool MechanismState::is_datum_referenced_by_load(const std::string& datum_id) co
 // Actuator CRUD
 // ──────────────────────────────────────────────
 
+std::string validate_command_function(const mech::CommandFunction& fn) {
+    switch (fn.shape_case()) {
+        case mech::CommandFunction::kPiecewiseLinear: {
+            const auto& pl = fn.piecewise_linear();
+            if (pl.times_size() != pl.values_size())
+                return "Piecewise linear: times and values must have the same length";
+            if (pl.times_size() < 2)
+                return "Piecewise linear: at least 2 points required";
+            for (int i = 1; i < pl.times_size(); ++i) {
+                if (pl.times(i) <= pl.times(i - 1))
+                    return "Piecewise linear: times must be monotonically increasing";
+            }
+            break;
+        }
+        case mech::CommandFunction::kSmoothStep: {
+            const auto& ss = fn.smooth_step();
+            if (ss.duration() <= 0.0)
+                return "Smooth step: duration must be positive";
+            if (ss.accel_fraction() < 0.0 || ss.accel_fraction() > 1.0)
+                return "Smooth step: accel_fraction must be in [0, 1]";
+            if (ss.decel_fraction() < 0.0 || ss.decel_fraction() > 1.0)
+                return "Smooth step: decel_fraction must be in [0, 1]";
+            if (ss.accel_fraction() + ss.decel_fraction() > 1.0)
+                return "Smooth step: accel_fraction + decel_fraction must be <= 1";
+            break;
+        }
+        case mech::CommandFunction::kSine: {
+            if (fn.sine().frequency() <= 0.0)
+                return "Sine: frequency must be positive";
+            break;
+        }
+        default:
+            break;
+    }
+    return {};
+}
+
 std::string MechanismState::validate_actuator(const mech::Actuator& actuator) const {
     const auto require_joint = [&](const std::string& joint_id, mech::JointType expected_type) -> std::string {
         const auto it = joints_.find(joint_id);
@@ -1651,6 +1688,10 @@ std::string MechanismState::validate_actuator(const mech::Actuator& actuator) co
             if (actuator.revolute_motor().control_mode() == mech::ACTUATOR_CONTROL_MODE_UNSPECIFIED) {
                 return "Actuator control mode is required";
             }
+            if (actuator.revolute_motor().has_command_function()) {
+                auto fn_error = validate_command_function(actuator.revolute_motor().command_function());
+                if (!fn_error.empty()) return fn_error;
+            }
             break;
         }
         case mech::Actuator::kPrismaticMotor: {
@@ -1658,6 +1699,10 @@ std::string MechanismState::validate_actuator(const mech::Actuator& actuator) co
             if (!error.empty()) return error;
             if (actuator.prismatic_motor().control_mode() == mech::ACTUATOR_CONTROL_MODE_UNSPECIFIED) {
                 return "Actuator control mode is required";
+            }
+            if (actuator.prismatic_motor().has_command_function()) {
+                auto fn_error = validate_command_function(actuator.prismatic_motor().command_function());
+                if (!fn_error.empty()) return fn_error;
             }
             break;
         }
@@ -1724,6 +1769,73 @@ bool MechanismState::is_joint_referenced_by_actuator(const std::string& joint_id
 }
 
 // ──────────────────────────────────────────────
+// Sensor CRUD
+// ──────────────────────────────────────────────
+
+std::string MechanismState::validate_sensor(const mech::Sensor& sensor) const {
+    if (sensor.type() == mech::SENSOR_TYPE_UNSPECIFIED) {
+        return "Sensor type is required";
+    }
+    if (sensor.type() == mech::SENSOR_TYPE_ENCODER) {
+        if (!sensor.has_encoder() || !sensor.encoder().has_joint_id() ||
+            sensor.encoder().joint_id().id().empty()) {
+            return "Encoder sensor requires a joint_id";
+        }
+        if (joints_.find(sensor.encoder().joint_id().id()) == joints_.end()) {
+            return "Encoder joint not found: " + sensor.encoder().joint_id().id();
+        }
+    } else {
+        if (!sensor.has_datum_id() || sensor.datum_id().id().empty()) {
+            return "Body-mounted sensor requires a datum_id";
+        }
+        if (datums_.find(sensor.datum_id().id()) == datums_.end()) {
+            return "Sensor datum not found: " + sensor.datum_id().id();
+        }
+    }
+    return {};
+}
+
+MechanismState::SensorResult MechanismState::create_sensor(const SensorEntry& draft) {
+    mech::Sensor sensor = draft;
+    sensor.mutable_id()->set_id(generate_uuidv7());
+    auto error = validate_sensor(sensor);
+    if (!error.empty()) {
+        return {{}, error};
+    }
+    sensors_[sensor.id().id()] = sensor;
+    return {sensor, {}};
+}
+
+MechanismState::SensorResult MechanismState::update_sensor(const SensorEntry& sensor) {
+    if (!sensor.has_id()) {
+        return {{}, "Sensor not found: "};
+    }
+    auto it = sensors_.find(sensor.id().id());
+    if (it == sensors_.end()) {
+        return {{}, "Sensor not found: " + sensor.id().id()};
+    }
+    auto error = validate_sensor(sensor);
+    if (!error.empty()) {
+        return {{}, error};
+    }
+    it->second = sensor;
+    return {sensor, {}};
+}
+
+bool MechanismState::delete_sensor(const std::string& sensor_id) {
+    return sensors_.erase(sensor_id) > 0;
+}
+
+const MechanismState::SensorEntry* MechanismState::get_sensor(const std::string& id) const {
+    auto it = sensors_.find(id);
+    return it == sensors_.end() ? nullptr : &it->second;
+}
+
+size_t MechanismState::sensor_count() const {
+    return sensors_.size();
+}
+
+// ──────────────────────────────────────────────
 // Proto serialization
 // ──────────────────────────────────────────────
 
@@ -1733,6 +1845,7 @@ void MechanismState::clear() {
     joints_.clear();
     loads_.clear();
     actuators_.clear();
+    sensors_.clear();
     geometries_.clear();
 }
 
@@ -1754,6 +1867,9 @@ void MechanismState::load_from_proto(const mech::Mechanism& mech_proto) {
     }
     for (const auto& actuator : mech_proto.actuators()) {
         actuators_[actuator.id().id()] = actuator;
+    }
+    for (const auto& sensor : mech_proto.sensors()) {
+        sensors_[sensor.id().id()] = sensor;
     }
     for (const auto& geom : mech_proto.geometries()) {
         geometries_[geom.id().id()] = geom;
@@ -1781,6 +1897,9 @@ mech::Mechanism MechanismState::build_mechanism_proto() const {
     }
     for (const auto& [_, actuator] : actuators_) {
         *mech_proto.add_actuators() = actuator;
+    }
+    for (const auto& [_, sensor] : sensors_) {
+        *mech_proto.add_sensors() = sensor;
     }
     for (const auto& [_, geom] : geometries_) {
         *mech_proto.add_geometries() = geom;

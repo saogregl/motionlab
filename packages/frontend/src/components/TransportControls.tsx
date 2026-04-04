@@ -2,13 +2,8 @@ import { ToolbarButton } from '@motionlab/ui';
 import { Pause, Play, RotateCcw, StepForward } from 'lucide-react';
 
 import { executeCommand } from '../commands/registry.js';
-import { useCommand } from '../commands/use-commands.js';
 import { useSimulationStore } from '../stores/simulation.js';
-
-function useCmdDisabled(id: string): boolean {
-  const cmd = useCommand(id);
-  return cmd?.disabled ?? true;
-}
+import { useCmdDisabled } from '../hooks/use-cmd-disabled.js';
 
 export function TransportControls() {
   const simState = useSimulationStore((s) => s.state);

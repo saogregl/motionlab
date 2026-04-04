@@ -17,7 +17,7 @@ import {
   TreeView,
   Button,
 } from '@motionlab/ui';
-import { Activity, Box, Cog, Crosshair, Hexagon, Import, Link2, Plus, RotateCcw, Zap } from 'lucide-react';
+import { Activity, Box, Cog, Crosshair, Hexagon, Import, Link2, Plus, Radio, RotateCcw, Zap } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { executeCommand } from '../commands/registry.js';
@@ -29,6 +29,8 @@ import {
   sendDeleteJoint,
   sendDeleteActuator,
   sendDeleteLoad,
+  sendDeleteSensor,
+  sendUpdateSensor,
   sendDetachGeometry,
   sendRenameDatum,
   sendRenameGeometry,
@@ -62,6 +64,7 @@ const BODIES_GROUP_ID = '__group_bodies';
 const GEOMETRIES_GROUP_ID = '__group_geometries';
 const JOINTS_GROUP_ID = '__group_joints';
 const LOADS_GROUP_ID = '__group_loads';
+const SENSORS_GROUP_ID = '__group_sensors';
 
 function isStructuralId(id: string) {
   return id.startsWith('__');
@@ -69,7 +72,7 @@ function isStructuralId(id: string) {
 
 // ── Node type discriminator ──
 
-type NodeType = 'root' | 'group' | 'body' | 'geometry' | 'datum' | 'joint' | 'load' | 'actuator';
+type NodeType = 'root' | 'group' | 'body' | 'geometry' | 'datum' | 'joint' | 'load' | 'actuator' | 'sensor';
 
 // ── Icons ──
 
@@ -86,6 +89,7 @@ const ICONS: Record<string, React.ReactNode> = {
   joint: <Link2 className="size-3.5" />,
   load: <Zap className="size-3.5" />,
   actuator: <Cog className="size-3.5" />,
+  sensor: <Radio className="size-3.5" />,
 };
 
 // ── Component ──
@@ -97,6 +101,7 @@ export function ProjectTree() {
   const joints = useMechanismStore((s) => s.joints);
   const loads = useMechanismStore((s) => s.loads);
   const actuators = useMechanismStore((s) => s.actuators);
+  const sensors = useMechanismStore((s) => s.sensors);
   const selectedIds = useSelectionStore((s) => s.selectedIds);
   const setSelection = useSelectionStore((s) => s.setSelection);
   const lastSelectedId = useSelectionStore((s) => s.lastSelectedId);
@@ -304,8 +309,32 @@ export function ProjectTree() {
       }
     }
 
+    // Sensors group (only if sensors exist)
+    if (sensors.size > 0) {
+      result.push({
+        id: SENSORS_GROUP_ID,
+        parentId: ROOT_ID,
+        level: 1,
+        name: 'Sensors',
+        hasChildren: sensors.size > 0,
+        _type: 'group' as NodeType,
+        _count: sensors.size,
+      });
+      for (const sensor of sensors.values()) {
+        result.push({
+          id: sensor.id,
+          parentId: SENSORS_GROUP_ID,
+          level: 2,
+          name: sensor.name,
+          hasChildren: false,
+          _type: 'sensor' as NodeType,
+          _sensorType: sensor.type,
+        });
+      }
+    }
+
     return result;
-  }, [bodies, geometries, datums, joints, loads, actuators]);
+  }, [bodies, geometries, datums, joints, loads, actuators, sensors]);
 
   // ── O(1) node lookup map for parent walks ──
 
@@ -383,7 +412,7 @@ export function ProjectTree() {
   const handleDelete = useCallback(
     (ids: Set<string>) => {
       if (isSimulating) return;
-      const { bodies: bm, geometries: gm, datums: dm, joints: jm, loads: lm, actuators: am } = useMechanismStore.getState();
+      const { bodies: bm, geometries: gm, datums: dm, joints: jm, loads: lm, actuators: am, sensors: sm } = useMechanismStore.getState();
       for (const id of ids) {
         if (bm.has(id)) {
           sendDeleteBody(id);
@@ -397,6 +426,8 @@ export function ProjectTree() {
           sendDeleteLoad(id);
         } else if (am.has(id)) {
           sendDeleteActuator(id);
+        } else if (sm.has(id)) {
+          sendDeleteSensor(id);
         }
       }
     },
@@ -406,7 +437,7 @@ export function ProjectTree() {
   // ── Rename commit ──
 
   const handleRenameCommit = useCallback((id: string, newName: string) => {
-    const { bodies: bm, geometries: gm, datums: dm, joints: jm, loads: lm, actuators: am } = useMechanismStore.getState();
+    const { bodies: bm, geometries: gm, datums: dm, joints: jm, loads: lm, actuators: am, sensors: sm } = useMechanismStore.getState();
     if (bm.has(id)) {
       sendUpdateBody(id, { name: newName });
     } else if (gm.has(id)) {
@@ -421,6 +452,9 @@ export function ProjectTree() {
     } else if (am.has(id)) {
       const existing = am.get(id)!;
       sendUpdateActuator({ ...existing, name: newName });
+    } else if (sm.has(id)) {
+      const existing = sm.get(id)!;
+      sendUpdateSensor({ ...existing, name: newName });
     }
     setEditingId(null);
   }, []);
@@ -478,6 +512,8 @@ export function ProjectTree() {
         if (act) {
           secondary = act.controlMode;
         }
+      } else if (nodeType === 'sensor') {
+        secondary = node._sensorType as string;
       }
       const isEditing = editingId === node.id;
       const isHidden = hiddenIds.has(node.id);
@@ -528,6 +564,7 @@ export function ProjectTree() {
           else if (joints.has(sid)) counts['Joint'] = (counts['Joint'] ?? 0) + 1;
           else if (loads.has(sid)) counts['Load'] = (counts['Load'] ?? 0) + 1;
           else if (actuators.has(sid)) counts['Actuator'] = (counts['Actuator'] ?? 0) + 1;
+          else if (sensors.has(sid)) counts['Sensor'] = (counts['Sensor'] ?? 0) + 1;
         }
         const pluralize = (w: string, n: number) => {
           if (n === 1) return w;

@@ -75,6 +75,12 @@ export type { ToolbarButtonProps } from './components/primitives/toolbar-button'
 export { ToolbarButton } from './components/primitives/toolbar-button';
 export type { ToolbarGroupProps } from './components/primitives/toolbar-group';
 export { ToolbarGroup } from './components/primitives/toolbar-group';
+export type { ToolbarSplitButtonProps } from './components/primitives/toolbar-split-button';
+export { ToolbarSplitButton } from './components/primitives/toolbar-split-button';
+export type { CollapsibleSectionProps } from './components/primitives/collapsible-section';
+export { CollapsibleSection } from './components/primitives/collapsible-section';
+export type { DataPointTableProps, DataPointTableColumn } from './components/primitives/data-point-table';
+export { DataPointTable } from './components/primitives/data-point-table';
 // Primitives
 export { GroupHeaderRow, TreeRow } from './components/primitives/tree-row';
 export type { TreeRowRenderProps } from './components/primitives/tree-view';

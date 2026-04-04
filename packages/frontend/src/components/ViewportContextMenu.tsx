@@ -30,6 +30,7 @@ import {
   Trash2,
   Unlink,
   Wrench,
+  Zap,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useMemo, useState } from 'react';
@@ -39,6 +40,7 @@ import { useJointCreationStore } from '../stores/joint-creation.js';
 import type { JointTypeId } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
+import { useSimulationStore } from '../stores/simulation.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
 import { useVisibilityStore } from '../stores/visibility.js';
 import { resolveViewportEntityId } from '../utils/viewport-entity-resolution.js';
@@ -182,6 +184,28 @@ function JointMenuContent({
   entityId: string;
   sceneGraph: SceneGraphManager | null;
 }) {
+  const simState = useSimulationStore((s) => s.state);
+  const isSimulating = simState === 'running' || simState === 'paused';
+  const joint = useMechanismStore((s) => s.joints.get(entityId));
+  const hasExistingActuator = useMechanismStore((s) => {
+    for (const a of s.actuators.values()) {
+      if (a.jointId === entityId) return true;
+    }
+    return false;
+  });
+
+  const isMotorCapableType = joint?.type === 'revolute' || joint?.type === 'prismatic';
+  const canAddMotor = !isSimulating && !!joint && isMotorCapableType && !hasExistingActuator;
+  const addMotorDisabledReason = isSimulating
+    ? 'Not available during simulation'
+    : !joint
+      ? undefined
+      : !isMotorCapableType
+        ? 'Only revolute and prismatic joints support motors'
+        : hasExistingActuator
+          ? 'Joint already has a motor'
+          : undefined;
+
   return (
     <>
       <ContextMenuItem
@@ -226,6 +250,14 @@ function JointMenuContent({
           ))}
         </ContextMenuSubContent>
       </ContextMenuSub>
+      <ContextMenuItem
+        className={itemCls}
+        onSelect={() => useSelectionStore.getState().select(entityId)}
+        disabled={!canAddMotor}
+        title={!canAddMotor ? addMotorDisabledReason : undefined}
+      >
+        <Zap className={iconCls} /> Add Motor
+      </ContextMenuItem>
       <ContextMenuSeparator />
       <ContextMenuItem
         className={itemCls}

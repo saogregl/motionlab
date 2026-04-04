@@ -5,7 +5,7 @@ interface ThumbnailProps {
 }
 
 /**
- * Simple gear/mechanism SVG thumbnail for project documents.
+ * Kinematic linkage SVG thumbnail for project documents.
  * Uses currentColor so it inherits text color from parent.
  */
 function MechanismThumbnail({ className }: ThumbnailProps) {
@@ -14,41 +14,21 @@ function MechanismThumbnail({ className }: ThumbnailProps) {
       viewBox="0 0 80 60"
       className={cn('size-full', className)}
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
       <rect width="80" height="60" fill="var(--layer-raised)" rx="2" />
-      <g transform="translate(40,30)" fill="none" stroke="currentColor" strokeWidth="1.2" opacity="0.6">
-        {/* Outer gear teeth (8 teeth) */}
-        {Array.from({ length: 8 }).map((_, i) => {
-          const angle = (i * Math.PI * 2) / 8;
-          const innerR = 12;
-          const outerR = 16;
-          const halfTooth = Math.PI / 16;
-          const x1 = Math.cos(angle - halfTooth) * innerR;
-          const y1 = Math.sin(angle - halfTooth) * innerR;
-          const x2 = Math.cos(angle - halfTooth) * outerR;
-          const y2 = Math.sin(angle - halfTooth) * outerR;
-          const x3 = Math.cos(angle + halfTooth) * outerR;
-          const y3 = Math.sin(angle + halfTooth) * outerR;
-          const x4 = Math.cos(angle + halfTooth) * innerR;
-          const y4 = Math.sin(angle + halfTooth) * innerR;
-          return (
-            <polygon
-              key={i}
-              points={`${x1},${y1} ${x2},${y2} ${x3},${y3} ${x4},${y4}`}
-              fill="currentColor"
-              opacity="0.2"
-            />
-          );
-        })}
-        {/* Gear body circle */}
-        <circle cx="0" cy="0" r="12" />
-        {/* Center hole */}
-        <circle cx="0" cy="0" r="4" />
-        {/* Spokes */}
-        <line x1="0" y1="-4" x2="0" y2="-12" />
-        <line x1="4" y1="0" x2="12" y2="0" />
-        <line x1="0" y1="4" x2="0" y2="12" />
-        <line x1="-4" y1="0" x2="-12" y2="0" />
+      <g fill="none" stroke="currentColor" strokeWidth="1.2" opacity="0.5">
+        <line x1="18" y1="46" x2="35" y2="22" />
+        <line x1="35" y1="22" x2="58" y2="14" />
+        <line x1="58" y1="14" x2="66" y2="40" />
+        <line x1="35" y1="22" x2="44" y2="46" />
+        <circle cx="18" cy="46" r="3" />
+        <circle cx="35" cy="22" r="3" />
+        <circle cx="58" cy="14" r="3" />
+        <circle cx="66" cy="40" r="2.5" />
+        <circle cx="44" cy="46" r="3" />
+        <circle cx="18" cy="46" r="1" fill="currentColor" opacity="0.3" />
+        <circle cx="44" cy="46" r="1" fill="currentColor" opacity="0.3" />
       </g>
     </svg>
   );
@@ -63,6 +43,7 @@ function EmptyDocumentThumbnail({ className }: ThumbnailProps) {
       viewBox="0 0 80 60"
       className={cn('size-full', className)}
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
       <rect width="80" height="60" fill="var(--layer-raised)" rx="2" />
       <g transform="translate(40,30)" opacity="0.5">

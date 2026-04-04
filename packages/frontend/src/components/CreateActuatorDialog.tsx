@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 import { sendCreateActuator, sendUpdateActuator } from '../engine/connection.js';
 import type { ActuatorState, ActuatorTypeId, ControlModeId, JointTypeId } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
+import { getActuatorUnit as getCommandUnit, getEffortUnit } from '../utils/actuator-units.js';
 
 interface CreateActuatorDialogProps {
   jointId: string;
@@ -27,22 +28,6 @@ interface CreateActuatorDialogProps {
   onClose: () => void;
   /** When provided, dialog operates in edit mode */
   initialActuator?: ActuatorState;
-}
-
-function getCommandUnit(actuatorType: ActuatorTypeId, controlMode: ControlModeId): string {
-  const isRevolute = actuatorType === 'revolute-motor';
-  switch (controlMode) {
-    case 'position':
-      return isRevolute ? 'rad' : 'm';
-    case 'speed':
-      return isRevolute ? 'rad/s' : 'm/s';
-    case 'effort':
-      return isRevolute ? 'Nm' : 'N';
-  }
-}
-
-function getEffortUnit(actuatorType: ActuatorTypeId): string {
-  return actuatorType === 'revolute-motor' ? 'Nm' : 'N';
 }
 
 export function CreateActuatorDialog({
@@ -91,6 +76,7 @@ export function CreateActuatorDialog({
       jointId,
       controlMode,
       commandValue,
+      commandFunction: initialActuator?.commandFunction ?? { shape: 'constant', value: commandValue },
       effortLimit: hasEffortLimit ? (effortLimit ?? 0) : undefined,
     };
     if (isEdit) {

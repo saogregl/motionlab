@@ -408,7 +408,10 @@ MeshData CadImporter::tessellate(const TopoDS_Shape& shape, double quality) {
             mesh.vertices.push_back(static_cast<float>(p.Y()));
             mesh.vertices.push_back(static_cast<float>(p.Z()));
 
-            // Use face normal if available, otherwise zero
+            // Use face normal if available, otherwise zero.
+            // EnsureNormalConsistency computes normals from the surface
+            // parametric direction but does NOT flip for TopAbs_REVERSED
+            // faces — we must negate manually (matching Chrono convention).
             if (tri->HasNormals()) {
                 gp_Dir n = tri->Normal(i);
                 if (!loc.IsIdentity()) {

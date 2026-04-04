@@ -123,6 +123,8 @@ interface MotionLabAPI {
   onDebugEvent?(callback: (event: Record<string, unknown>) => void): () => void;
 }
 
+const debugModeEnabled = process.env.MOTIONLAB_DEBUG_AGENT === '1';
+
 const api: MotionLabAPI = {
   platform: process.platform,
   getEngineEndpoint: () => ipcRenderer.invoke('get-engine-endpoint'),
@@ -183,21 +185,24 @@ const api: MotionLabAPI = {
   readFileByPath: (filePath: string) => ipcRenderer.invoke('read-file-by-path', filePath),
   getTemplates: () => ipcRenderer.invoke('get-templates'),
   openTemplate: (filename: string) => ipcRenderer.invoke('open-template', filename),
-  getDebugSessionInfo: () => ipcRenderer.invoke('get-debug-session-info'),
-  exportDebugBundle: (request: { reason?: string; snapshot: Record<string, unknown> }) =>
-    ipcRenderer.invoke('export-debug-bundle', request),
-  appendDebugProtocolEntry: (entry: Record<string, unknown>) =>
-    ipcRenderer.send('append-debug-protocol-entry', entry),
-  appendDebugConsoleEntry: (entry: Record<string, unknown>) =>
-    ipcRenderer.send('append-debug-console-entry', entry),
-  appendDebugAnomaly: (entry: Record<string, unknown>) =>
-    ipcRenderer.send('append-debug-anomaly', entry),
-  onDebugEvent: (callback: (event: Record<string, unknown>) => void) => {
+};
+
+if (debugModeEnabled) {
+  api.getDebugSessionInfo = () => ipcRenderer.invoke('get-debug-session-info');
+  api.exportDebugBundle = (request: { reason?: string; snapshot: Record<string, unknown> }) =>
+    ipcRenderer.invoke('export-debug-bundle', request);
+  api.appendDebugProtocolEntry = (entry: Record<string, unknown>) =>
+    ipcRenderer.send('append-debug-protocol-entry', entry);
+  api.appendDebugConsoleEntry = (entry: Record<string, unknown>) =>
+    ipcRenderer.send('append-debug-console-entry', entry);
+  api.appendDebugAnomaly = (entry: Record<string, unknown>) =>
+    ipcRenderer.send('append-debug-anomaly', entry);
+  api.onDebugEvent = (callback: (event: Record<string, unknown>) => void) => {
     const listener = (_event: Electron.IpcRendererEvent, event: Record<string, unknown>) =>
       callback(event);
     ipcRenderer.on('debug-event', listener);
     return () => ipcRenderer.removeListener('debug-event', listener);
-  },
-};
+  };
+}
 
 contextBridge.exposeInMainWorld('motionlab', api);

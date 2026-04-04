@@ -140,7 +140,7 @@ export function HomeScreen() {
         </div>
 
         {/* Content */}
-        <div className="flex-1">
+        <div className="flex-1 pt-3">
           {activeNav === 'recent' && (
             <>
               <GettingStartedSection

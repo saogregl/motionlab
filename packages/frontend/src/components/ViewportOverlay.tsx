@@ -4,6 +4,7 @@ import { Viewport } from '@motionlab/viewport';
 import { Box, Cog, Crosshair, Link2, Zap } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { sendPrepareFacePicking } from '../engine/connection.js';
 import { useViewportBridge } from '../hooks/useViewportBridge.js';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { useEngineConnection } from '../stores/engine-connection.js';
@@ -24,6 +25,7 @@ import { LoadCreationCard } from './LoadCreationCard.js';
 import { ModeIndicator } from './ModeIndicator.js';
 import { ViewportContextMenu } from './ViewportContextMenu.js';
 import { ViewportToolModeToolbar } from './ViewportToolModeToolbar.js';
+import { EntityLabelOverlay } from './EntityLabelOverlay.js';
 import { WorldSpaceOverlay } from './WorldSpaceOverlay.js';
 
 function SelectionIcon({
@@ -244,6 +246,7 @@ export function ViewportOverlay() {
   const viewportContainerRef = useRef<HTMLDivElement>(null);
   const connStatus = useEngineConnection((s) => s.status);
   const connError = useEngineConnection((s) => s.errorMessage);
+  const geometries = useMechanismStore((s) => s.geometries);
   const [bannerDismissed, setBannerDismissed] = useState(false);
   const showBanner = !bannerDismissed && connStatus !== 'ready' && connStatus !== 'discovering';
 
@@ -417,6 +420,15 @@ export function ViewportOverlay() {
   }, [activeMode]);
 
   useEffect(() => {
+    if (connStatus !== 'ready') return;
+    if (activeMode !== 'create-datum' && activeMode !== 'create-joint') return;
+
+    const geometryIds = Array.from(geometries.keys());
+    if (geometryIds.length === 0) return;
+    sendPrepareFacePicking(geometryIds);
+  }, [activeMode, connStatus, geometries]);
+
+  useEffect(() => {
     if (activeMode === 'create-load') return;
     sceneGraphRef.current?.clearLoadPreview();
   }, [activeMode, sceneGraphRef]);
@@ -535,6 +547,7 @@ export function ViewportOverlay() {
         <LoadCreationCard sceneGraph={sceneGraph} />
         <JointCreationDatumLabels sceneGraph={sceneGraph} />
         <JointHoverBadge sceneGraph={sceneGraph} />
+        <EntityLabelOverlay sceneGraph={sceneGraph} />
       </div>
     </ViewportContextMenu>
   );
