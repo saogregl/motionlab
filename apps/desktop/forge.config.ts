@@ -24,7 +24,7 @@ const config: ForgeConfig = {
     {
       name: '@electron-forge/maker-zip',
       config: {},
-      platforms: ['darwin', 'win32'],
+      platforms: ['darwin'],
     },
     {
       name: '@electron-forge/maker-deb',
@@ -36,23 +36,32 @@ const config: ForgeConfig = {
       },
       platforms: ['linux'],
     },
+    {
+      name: '@electron-forge/maker-squirrel',
+      config: {
+        name: 'motionlab',
+        authors: 'MotionLab',
+        description: 'MotionLab desktop mechanism authoring and simulation workbench.',
+      },
+      platforms: ['win32'],
+    },
   ],
   plugins: [
     new VitePlugin({
       build: [
         {
           entry: 'src/main.ts',
-          config: 'vite.main.config.ts',
+          config: 'vite.main.config.mjs',
         },
         {
           entry: 'src/preload.ts',
-          config: 'vite.preload.config.ts',
+          config: 'vite.preload.config.mjs',
         },
       ],
       renderer: [
         {
           name: 'main_window',
-          config: 'vite.renderer.config.ts',
+          config: 'vite.renderer.config.mjs',
         },
       ],
     }),

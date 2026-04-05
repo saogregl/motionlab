@@ -1,7 +1,10 @@
 {
   "name": "@motionlab/desktop",
+  "productName": "MotionLab",
   "version": "0.0.1",
   "private": true,
+  "description": "MotionLab desktop mechanism authoring and simulation workbench.",
+  "author": "MotionLab",
   "main": ".vite/build/main.js",
   "scripts": {
     "build": "electron-forge make",

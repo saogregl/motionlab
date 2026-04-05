@@ -1,0 +1,149 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate tag matches committed versions
+        run: node scripts/validate-release-tag.mjs "${GITHUB_REF_NAME}"
+
+  linux-installer:
+    needs: validate-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - name: Install Linux packaging dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build g++ dpkg fakeroot
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install hoisted desktop dependencies
+        run: pnpm install:desktop
+      - name: Typecheck desktop app
+        run: pnpm --filter @motionlab/desktop typecheck
+      - name: Prepare vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git "$RUNNER_TEMP/vcpkg"
+          "$RUNNER_TEMP/vcpkg/bootstrap-vcpkg.sh"
+      - name: Cache vcpkg installed packages
+        uses: actions/cache@v4
+        with:
+          path: native/engine/build/vcpkg_installed
+          key: release-vcpkg-linux-${{ hashFiles('native/engine/vcpkg.json') }}
+          restore-keys: release-vcpkg-linux-
+      - name: Build release engine
+        env:
+          VCPKG_ROOT: ${{ runner.temp }}/vcpkg
+        run: pnpm build:engine
+      - name: Make Linux installer
+        run: pnpm --filter @motionlab/desktop exec electron-forge make --platform=linux
+      - name: Upload Linux release assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: motionlab-linux-release
+          if-no-files-found: error
+          path: apps/desktop/out/make/deb/x64/*.deb
+
+  windows-installer:
+    needs: validate-version
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          path-type: inherit
+          install: >-
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install hoisted desktop dependencies
+        run: pnpm install:desktop
+      - name: Prepare vcpkg
+        shell: pwsh
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git "$env:RUNNER_TEMP\vcpkg"
+          & "$env:RUNNER_TEMP\vcpkg\bootstrap-vcpkg.bat"
+      - name: Cache vcpkg installed packages
+        uses: actions/cache@v4
+        with:
+          path: native/engine/build/vcpkg_installed
+          key: release-vcpkg-windows-${{ hashFiles('native/engine/vcpkg.json') }}
+          restore-keys: release-vcpkg-windows-
+      - name: Build Windows release engine
+        shell: pwsh
+        env:
+          VCPKG_ROOT: ${{ runner.temp }}/vcpkg
+        run: pnpm build:engine:win
+      - name: Make Windows installer
+        run: pnpm --filter @motionlab/desktop exec electron-forge make --platform=win32
+      - name: Upload Windows release assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: motionlab-windows-release
+          if-no-files-found: error
+          path: |
+            apps/desktop/out/make/squirrel.windows/x64/*.exe
+            apps/desktop/out/make/squirrel.windows/x64/*.nupkg
+            apps/desktop/out/make/squirrel.windows/x64/RELEASES
+
+  github-release:
+    needs:
+      - linux-installer
+      - windows-installer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Linux release assets
+        uses: actions/download-artifact@v4
+        with:
+          name: motionlab-linux-release
+          path: release-assets/linux
+      - name: Download Windows release assets
+        uses: actions/download-artifact@v4
+        with:
+          name: motionlab-windows-release
+          path: release-assets/windows
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: MotionLab ${{ github.ref_name }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: |
+            release-assets/linux/*.deb
+            release-assets/windows/*.exe
+            release-assets/windows/*.nupkg
+            release-assets/windows/RELEASES
