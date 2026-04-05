@@ -1,6 +1,6 @@
 # Packaging
 
-How to build and package MotionLab for desktop distribution.
+How to build and package MotionLab for desktop distribution and GitHub Releases.
 
 ## Prerequisites
 
@@ -24,16 +24,36 @@ This runs the `release-linux` (or `release-mingw`) CMake preset and copies the b
 ## Package the Desktop App
 
 ```bash
+# Linux
 pnpm package:desktop
+
+# Windows
+pnpm package:desktop:win
 ```
 
-This builds the engine in release mode, then runs `electron-forge package`. Output is in `apps/desktop/out/`.
+These commands first refresh the hoisted `apps/desktop` install that Electron Forge expects, then build the platform-specific release engine and run `electron-forge make`. Output is in `apps/desktop/out/`.
+
+To build the unpacked desktop bundle without installers:
+
+```bash
+pnpm --filter @motionlab/desktop run package
+```
 
 ## Distribution Formats
 
 - **Linux:** DEB (via `@electron-forge/maker-deb`)
-- **Windows:** ZIP (via `@electron-forge/maker-zip`)
+- **Windows:** Squirrel installer assets: `Setup.exe`, `RELEASES`, `.nupkg` (via `@electron-forge/maker-squirrel`)
 - **macOS:** ZIP (via `@electron-forge/maker-zip`) — untested
+
+## GitHub Releases
+
+The repository ships a tag-driven GitHub Actions release workflow in `.github/workflows/release.yml`.
+
+- Push a tag in the form `vX.Y.Z`
+- The workflow validates that `package.json` and `apps/desktop/package.json` both match `X.Y.Z`
+- Linux builds a `.deb`
+- Windows builds Squirrel installer assets
+- The final job creates a GitHub Release for the tag and uploads all generated assets
 
 ## Runtime Topology
 

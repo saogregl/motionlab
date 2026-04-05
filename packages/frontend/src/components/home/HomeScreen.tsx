@@ -30,6 +30,7 @@ export function HomeScreen() {
   const [activeNav, setActiveNav] = useState<HomeNavItem>('recent');
   const [recentProjects, setRecentProjects] = useState<RecentProject[]>([]);
   const [templates, setTemplates] = useState<TemplateInfo[]>([]);
+  const [appVersion, setAppVersion] = useState<string | null>(null);
 
   const loadRecentProjects = useCallback(async () => {
     if (!window.motionlab?.getRecentProjects) return;
@@ -47,6 +48,30 @@ export function HomeScreen() {
     loadRecentProjects();
     loadTemplates();
   }, [loadRecentProjects, loadTemplates]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadAppInfo() {
+      if (!window.motionlab?.getAppInfo) return;
+      try {
+        const info = await window.motionlab.getAppInfo();
+        if (!cancelled) {
+          setAppVersion(info.version);
+        }
+      } catch {
+        if (!cancelled) {
+          setAppVersion(null);
+        }
+      }
+    }
+
+    void loadAppInfo();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const goToWorkbench = useCallback(() => {
     useUILayoutStore.getState().setActiveWorkspace('build');
@@ -129,6 +154,7 @@ export function HomeScreen() {
         onNewProject={handleNewProject}
         onOpenProject={handleOpenProject}
         engineReady={isReady}
+        appVersion={appVersion}
       />
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto bg-layer-recessed">
         {/* Page header */}
@@ -196,7 +222,7 @@ export function HomeScreen() {
         {/* Footer */}
         <footer className="mt-auto flex items-center justify-between border-t border-border-default bg-layer-recessed ps-4 pe-4 py-2 text-[length:var(--text-2xs)] text-text-tertiary">
           <span>MotionLab — Mechanism Workbench</span>
-          <span className="font-mono text-[length:var(--text-3xs)]">v0.0.1</span>
+          {appVersion && <span className="font-mono text-[length:var(--text-3xs)]">{`v${appVersion}`}</span>}
         </footer>
       </main>
     </div>
