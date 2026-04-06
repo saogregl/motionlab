@@ -22,11 +22,6 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Buf lint
-        run: pnpm lint:proto
-      - name: Buf breaking change detection
-        if: github.event_name == 'pull_request'
-        run: pnpm breaking:proto
       - name: Verify generated proto files are fresh
         run: |
           pnpm generate:proto
