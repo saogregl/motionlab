@@ -26,6 +26,8 @@ jobs:
   linux-installer:
     needs: validate-version
     runs-on: ubuntu-latest
+    env:
+      VCPKG_BINARY_CACHE: ${{ github.workspace }}/.vcpkg-cache
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -47,15 +49,20 @@ jobs:
         run: |
           git clone https://github.com/microsoft/vcpkg.git "$RUNNER_TEMP/vcpkg"
           "$RUNNER_TEMP/vcpkg/bootstrap-vcpkg.sh"
-      - name: Cache vcpkg installed packages
+      - name: Cache vcpkg outputs
         uses: actions/cache@v4
         with:
-          path: native/engine/build/vcpkg_installed
-          key: release-vcpkg-linux-${{ hashFiles('native/engine/vcpkg.json') }}
-          restore-keys: release-vcpkg-linux-
+          path: |
+            native/engine/build/vcpkg_installed
+            .vcpkg-cache
+            ${{ runner.temp }}/vcpkg/downloads
+          key: release-vcpkg-linux-${{ hashFiles('native/engine/vcpkg.json', 'native/engine/CMakePresets.json') }}
+          restore-keys: |
+            release-vcpkg-linux-
       - name: Build release engine
         env:
           VCPKG_ROOT: ${{ runner.temp }}/vcpkg
+          VCPKG_DEFAULT_BINARY_CACHE: ${{ env.VCPKG_BINARY_CACHE }}
         run: pnpm build:engine
       - name: Make Linux installer
         run: pnpm --filter @motionlab/desktop exec electron-forge make --platform=linux
@@ -69,6 +76,8 @@ jobs:
   windows-installer:
     needs: validate-version
     runs-on: windows-latest
+    env:
+      VCPKG_BINARY_CACHE: ${{ github.workspace }}\.vcpkg-cache
     steps:
       - uses: actions/checkout@v4
       - uses: msys2/setup-msys2@v2
@@ -96,16 +105,21 @@ jobs:
         run: |
           git clone https://github.com/microsoft/vcpkg.git "$env:RUNNER_TEMP\vcpkg"
           & "$env:RUNNER_TEMP\vcpkg\bootstrap-vcpkg.bat"
-      - name: Cache vcpkg installed packages
+      - name: Cache vcpkg outputs
         uses: actions/cache@v4
         with:
-          path: native/engine/build/vcpkg_installed
-          key: release-vcpkg-windows-${{ hashFiles('native/engine/vcpkg.json') }}
-          restore-keys: release-vcpkg-windows-
+          path: |
+            native/engine/build/vcpkg_installed
+            .vcpkg-cache
+            ${{ runner.temp }}\vcpkg\downloads
+          key: release-vcpkg-windows-${{ hashFiles('native/engine/vcpkg.json', 'native/engine/CMakePresets.json') }}
+          restore-keys: |
+            release-vcpkg-windows-
       - name: Build Windows release engine
         shell: pwsh
         env:
           VCPKG_ROOT: ${{ runner.temp }}/vcpkg
+          VCPKG_DEFAULT_BINARY_CACHE: ${{ env.VCPKG_BINARY_CACHE }}
         run: pnpm build:engine:win
       - name: Make Windows installer
         run: pnpm --filter @motionlab/desktop exec electron-forge make --platform=win32
