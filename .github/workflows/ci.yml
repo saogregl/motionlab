@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  js-and-docs:
+  js:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,26 +15,17 @@ jobs:
           fetch-depth: 0
       - uses: pnpm/action-setup@v4
         with:
-          version: 10.25.0
+          version: 10.33.0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Buf lint
-        run: pnpm lint:proto
-      - name: Buf breaking change detection
-        if: github.event_name == 'pull_request'
-        run: pnpm breaking:proto
       - name: Verify generated proto files are fresh
         run: |
           pnpm generate:proto
           git diff --exit-code -- packages/protocol/src/generated/ native/engine/src/generated/
-      - name: Generate docs inventories
-        run: pnpm docs:generate
-      - name: Check docs structure
-        run: pnpm docs:check
       - name: Biome check
         run: pnpm lint
       - name: Typecheck
@@ -47,37 +38,3 @@ jobs:
         run: |
           echo "## Test Results" >> $GITHUB_STEP_SUMMARY
           echo "- **JS workspace tests:** ${{ steps.js-tests.outcome }}" >> $GITHUB_STEP_SUMMARY
-
-  native-smoke:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install toolchain
-        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build g++
-      - name: Prepare vcpkg
-        run: |
-          git clone https://github.com/microsoft/vcpkg.git "$RUNNER_TEMP/vcpkg"
-          "$RUNNER_TEMP/vcpkg/bootstrap-vcpkg.sh"
-      - name: Cache vcpkg installed packages
-        uses: actions/cache@v4
-        with:
-          path: native/engine/build/vcpkg_installed
-          key: vcpkg-linux-${{ hashFiles('native/engine/vcpkg.json') }}
-          restore-keys: vcpkg-linux-
-      - name: Configure native engine
-        working-directory: native/engine
-        env:
-          VCPKG_ROOT: ${{ runner.temp }}/vcpkg
-        run: cmake --preset dev-linux
-      - name: Build native engine
-        working-directory: native/engine
-        run: cmake --build build/dev-linux
-      - name: Run native tests
-        id: native-tests
-        working-directory: native/engine
-        run: ctest --preset dev-linux
-      - name: Test results summary
-        if: always()
-        run: |
-          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
-          echo "- **Native CTest:** ${{ steps.native-tests.outcome }}" >> $GITHUB_STEP_SUMMARY

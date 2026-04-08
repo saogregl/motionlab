@@ -4,6 +4,11 @@ export interface MotionLabEndpoint {
   sessionToken?: string;
 }
 
+export interface MotionLabAppInfo {
+  name: string;
+  version: string;
+}
+
 export interface RecentProject {
   name: string;
   filePath: string;
@@ -94,6 +99,7 @@ export interface MotionLabDebugAPI {
 
 export interface MotionLabAPI {
   platform: string;
+  getAppInfo(): Promise<MotionLabAppInfo>;
   getEngineEndpoint(): Promise<MotionLabEndpoint | null>;
   openFileDialog(options?: {
     filters?: Array<{ name: string; extensions: string[] }>;

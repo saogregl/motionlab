@@ -15,6 +15,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 interface MotionLabAPI {
   platform: string;
+  getAppInfo(): Promise<{ name: string; version: string }>;
   getEngineEndpoint(): Promise<{
     host: string;
     port: number;
@@ -127,6 +128,7 @@ const debugModeEnabled = process.env.MOTIONLAB_DEBUG_AGENT === '1';
 
 const api: MotionLabAPI = {
   platform: process.platform,
+  getAppInfo: () => ipcRenderer.invoke('get-app-info'),
   getEngineEndpoint: () => ipcRenderer.invoke('get-engine-endpoint'),
   onEngineStatusChanged: (callback) => {
     const listener = (_event: Electron.IpcRendererEvent, status: { status: string; code?: number | null; signal?: string | null }) => {

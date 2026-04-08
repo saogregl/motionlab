@@ -47,9 +47,17 @@ interface HomeSidebarProps {
   onNewProject: () => void;
   onOpenProject: () => void;
   engineReady: boolean;
+  appVersion: string | null;
 }
 
-export function HomeSidebar({ activeItem, onNavigate, onNewProject, onOpenProject, engineReady }: HomeSidebarProps) {
+export function HomeSidebar({
+  activeItem,
+  onNavigate,
+  onNewProject,
+  onOpenProject,
+  engineReady,
+  appVersion,
+}: HomeSidebarProps) {
   return (
     <aside className="flex h-full w-[170px] shrink-0 flex-col border-e border-border-default bg-layer-base [-webkit-app-region:no-drag]">
       {/* Create / Open buttons */}
@@ -121,7 +129,7 @@ export function HomeSidebar({ activeItem, onNavigate, onNewProject, onOpenProjec
       {/* Bottom section */}
       <div className="border-t border-border-default p-3">
         <p className="text-[length:var(--text-2xs)] font-medium text-text-secondary">
-          MotionLab v0.0.1
+          {appVersion ? `MotionLab v${appVersion}` : 'MotionLab'}
         </p>
         <p className="text-[length:var(--text-2xs)] text-text-tertiary">
           Mechanism Workbench

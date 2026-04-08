@@ -367,6 +367,10 @@ app.whenReady().then(async () => {
 
   let engineReady: Promise<EngineEndpoint | null> = startEngineWithRetry();
 
+  ipcMain.handle('get-app-info', () => ({
+    name: app.getName(),
+    version: app.getVersion(),
+  }));
   ipcMain.handle('get-engine-endpoint', () => engineReady);
   ipcMain.handle('get-debug-session-info', () => debugSession?.getSessionInfo() ?? null);
   ipcMain.handle('export-debug-bundle', async (_event, request: DebugBundleRequest) => {
