@@ -84,6 +84,7 @@ import type { SceneGraphManager } from '@motionlab/viewport';
 import { useAssetLibraryStore } from '../stores/asset-library.js';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { clearBodyPoses, setBodyPose } from '../stores/body-poses.js';
+import { resetSimClock, scheduleReactBroadcast, setSimClock } from '../stores/sim-clock.js';
 import type { EngineConnectionState } from '../stores/engine-connection.js';
 import { useImportFlowStore } from '../stores/import-flow.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
@@ -1768,6 +1769,7 @@ export function connect(set: SetState, _get: GetState) {
             ) {
               useTraceStore.getState().clear();
               clearBodyPoses();
+              resetSimClock();
               if (sceneGraphManager) {
                 sceneGraphManager.clearForceArrows();
                 const { bodies } = useMechanismStore.getState();
@@ -1862,11 +1864,11 @@ export function connect(set: SetState, _get: GetState) {
             );
             /*
              * Update simulation time from frame data so timeline tracks progress.
-             * Keep this out of the viewport hot path.
+             * Write to the module-level cache (zero React cost) and schedule a
+             * throttled broadcast to the Zustand store at ~10 Hz.
              */
-            useSimulationStore
-              .getState()
-              .updateSimTime(frame.simTime, Number(frame.stepCount));
+            setSimClock(frame.simTime, Number(frame.stepCount));
+            scheduleReactBroadcast();
             break;
           }
           case 'simulationTrace': {

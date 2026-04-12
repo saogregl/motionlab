@@ -17,7 +17,9 @@ import {
   Group,
   Line,
   LineBasicMaterial,
+  Mesh,
   Quaternion,
+  ShaderMaterial,
   Vector3,
 } from 'three';
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
@@ -26,6 +28,7 @@ import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 
 import { AXIS_X, AXIS_Y, AXIS_Z, JOINT_STEEL_BLUE } from './colors-three.js';
 import { trackMaterial, untrackMaterial } from './fat-line-three.js';
+import { createSDFLine, disposeSDFLine } from './sdf-line-three.js';
 import {
   buildArcPoints,
   buildArrowChevron,
@@ -68,6 +71,8 @@ export interface JointGlyphResult {
   rootNode: Group;
   /** All Line2 objects in the glyph (for picking / traversal). */
   lines: Line2[];
+  /** SDF billboarded quad meshes (animated dashed lines). */
+  sdfMeshes: Mesh[];
   /** Mini XYZ triad lines (kept from the old system for compatibility). */
   triadLines: Line[];
   /** Switch visual mode. */
@@ -105,6 +110,12 @@ interface GlyphLine {
   role: LineRole;
   /** If true, this line's dashOffset will be animated on hover. */
   animateDash?: boolean;
+}
+
+/** SDF billboarded quad line — used for animated dashed lines. */
+interface SDFGlyphLine {
+  mesh: Mesh;
+  role: LineRole;
 }
 
 const OPACITY: Record<GlyphMode, Record<LineRole, number>> = {
@@ -214,6 +225,7 @@ function orientToAxis(group: Group, axis: Vector3): void {
 class GlyphBuilder {
   readonly rootNode = new Group();
   readonly glyphLines: GlyphLine[] = [];
+  readonly sdfLines: SDFGlyphLine[] = [];
   readonly lines: Line2[] = [];
   readonly triadLines: Line[];
 
@@ -234,7 +246,26 @@ class GlyphBuilder {
     }
   }
 
-  /** Add a line to the glyph and the scene group. */
+  /**
+   * Add an SDF billboarded quad line (round caps, crisp AA, animated dashes).
+   * Use for lines with animateDash — replaces the equivalent addLine call.
+   */
+  addSDFLine(points: Vector3[], lineWidth: number, role: LineRole): Mesh {
+    const mesh = createSDFLine(points, {
+      color: this._baseColor,
+      lineWidth: lineWidth + 0.5, // slightly thicker than equivalent Line2 for visual parity
+      opacity: OPACITY.idle[role],
+      dashed: true,
+      dashSize: 0.008,
+      gapSize: 0.004,
+    });
+    mesh.renderOrder = 5;
+    this.rootNode.add(mesh);
+    this.sdfLines.push({ mesh, role });
+    return mesh;
+  }
+
+  /** Add a solid (or non-animated dashed) Line2 line to the glyph. */
   addLine(
     points: Vector3[],
     lineWidth: number,
@@ -263,6 +294,7 @@ class GlyphBuilder {
     return {
       rootNode: self.rootNode,
       lines: self.lines,
+      sdfMeshes: self.sdfLines.map((sl) => sl.mesh),
       triadLines: self.triadLines,
 
       setMode(mode: GlyphMode) {
@@ -287,6 +319,20 @@ class GlyphBuilder {
           gl.material.needsUpdate = true;
         }
 
+        // SDF animated dash lines.
+        for (const sl of self.sdfLines) {
+          const u = (sl.mesh.material as ShaderMaterial).uniforms;
+          u.uOpacity.value = OPACITY[mode][sl.role] * self._opacityMultiplier;
+          if (mode === 'selected') {
+            // Solid when selected — cleaner read at full opacity.
+            u.uDashed.value = 0.0;
+            u.uDashOffset.value = 0;
+          } else {
+            u.uDashed.value = 1.0;
+            if (mode !== 'hover') u.uDashOffset.value = 0;
+          }
+        }
+
         // Triad opacity
         const triadOp = mode === 'selected' ? 0.9 : mode === 'hover' ? 0.6 : 0.35;
         for (const line of self.triadLines) {
@@ -300,6 +346,9 @@ class GlyphBuilder {
         for (const gl of self.glyphLines) {
           gl.material.color.copy(color);
           gl.material.needsUpdate = true;
+        }
+        for (const sl of self.sdfLines) {
+          (sl.mesh.material as ShaderMaterial).uniforms.uColor.value.copy(color);
         }
       },
 
@@ -317,6 +366,9 @@ class GlyphBuilder {
             gl.material.needsUpdate = true;
           }
         }
+        for (const sl of self.sdfLines) {
+          (sl.mesh.material as ShaderMaterial).uniforms.uDashOffset.value = time * 0.03;
+        }
       },
 
       isAnimating() {
@@ -328,6 +380,9 @@ class GlyphBuilder {
           gl.line.geometry.dispose();
           untrackMaterial(gl.material);
           gl.material.dispose();
+        }
+        for (const sl of self.sdfLines) {
+          disposeSDFLine(sl.mesh);
         }
         for (const line of self.triadLines) {
           line.geometry.dispose();
@@ -356,7 +411,7 @@ function buildRevoluteGlyph(alignmentAxis?: Vector3): JointGlyphResult {
   const arcEnd = (7 * PI) / 4;
   const arcR = 0.035;
   const arcPts = buildArcPoints(arcR, arcStart, arcEnd, arcSegments(arcEnd - arcStart), 'xz');
-  b.addLine(arcPts, 2.0, 'primary', { animateDash: true });
+  b.addSDFLine(arcPts, 2.0, 'primary');
 
   // Single arrowhead at the trailing arc end (rotation direction)
   const endPt = arcPts[arcPts.length - 1];
@@ -378,9 +433,7 @@ function buildPrismaticGlyph(alignmentAxis?: Vector3): JointGlyphResult {
 
   // Axis line along Y
   const axisHalf = 0.06;
-  b.addLine([new Vector3(0, -axisHalf, 0), new Vector3(0, axisHalf, 0)], 1.5, 'primary', {
-    animateDash: true,
-  });
+  b.addSDFLine([new Vector3(0, -axisHalf, 0), new Vector3(0, axisHalf, 0)], 1.5, 'primary');
 
   // Parallel rails
   const railHalf = 0.05;
@@ -434,10 +487,8 @@ function buildSphericalGlyph(): JointGlyphResult {
   const offset = PI / 6; // start at 30° so gap is at the back
   const segs = arcSegments(sweep);
 
-  // XZ plane — solid
-  b.addLine(buildArcPoints(arcR, offset, offset + sweep, segs, 'xz'), 2.0, 'primary', {
-    animateDash: true,
-  });
+  // XZ plane — animated dash (SDF)
+  b.addSDFLine(buildArcPoints(arcR, offset, offset + sweep, segs, 'xz'), 2.0, 'primary');
   // XY plane — short-dash
   const xyArc = b.addLine(
     buildArcPoints(arcR, offset, offset + sweep, segs, 'xy'),
@@ -476,11 +527,10 @@ function buildCylindricalGlyph(alignmentAxis?: Vector3): JointGlyphResult {
   const arcR = 0.03;
   const arcStart = PI / 4;
   const arcEnd = (7 * PI) / 4;
-  b.addLine(
+  b.addSDFLine(
     buildArcPoints(arcR, arcStart, arcEnd, arcSegments(arcEnd - arcStart), 'xz'),
     2.0,
     'primary',
-    { animateDash: true },
   );
 
   // Translation: rails along Y
@@ -513,11 +563,11 @@ function buildUniversalGlyph(alignmentAxis?: Vector3): JointGlyphResult {
 
   // XZ plane
   const xzPts = buildArcPoints(arcR, offset, offset + sweep, segs, 'xz');
-  b.addLine(xzPts, 2.0, 'primary', { animateDash: true });
+  b.addSDFLine(xzPts, 2.0, 'primary');
 
   // XY plane (perpendicular)
   const xyPts = buildArcPoints(arcR, offset, offset + sweep, segs, 'xy');
-  b.addLine(xyPts, 2.0, 'primary', { animateDash: true });
+  b.addSDFLine(xyPts, 2.0, 'primary');
 
   // Tick marks at arc endpoints
   const tickLen = 0.005;
@@ -544,11 +594,10 @@ function buildPlanarGlyph(alignmentAxis?: Vector3): JointGlyphResult {
   const arcR = 0.025;
   const arcStart = PI / 4;
   const arcEnd = (7 * PI) / 4;
-  b.addLine(
+  b.addSDFLine(
     buildArcPoints(arcR, arcStart, arcEnd, arcSegments(arcEnd - arcStart), 'xz'),
     1.5,
     'primary',
-    { animateDash: true },
   );
 
   // Translation: double-ended arrows along X and Z

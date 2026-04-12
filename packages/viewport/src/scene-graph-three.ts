@@ -1,10 +1,7 @@
 /// <reference path="./three-mesh-bvh-worker.d.ts" />
 
-/// <reference path="./three-mesh-bvh-worker.d.ts" />
-
 import {
   ArrowHelper,
-  Box3,
   BoxGeometry,
   BufferAttribute,
   BufferGeometry,
@@ -32,6 +29,8 @@ import {
 import { GenerateMeshBVHWorker } from 'three-mesh-bvh/src/workers/GenerateMeshBVHWorker.js';
 
 import { BodyGeometryIndex } from './body-geometry-index.js';
+import { BvhManager } from './bvh-manager.js';
+import { PreviewManager } from './preview-manager.js';
 import { ensureBvhRaycastingPatched } from './rendering/bvh-raycast.js';
 import {
   ACCENT,
@@ -41,18 +40,14 @@ import {
   ENTITY_COLORS,
   ENTITY_DATUM,
   ENTITY_JOINT,
-  FORCE_ARROW,
   JOINT_GLYPH_HOVER,
   JOINT_GLYPH_SELECTED,
   JOINT_STEEL_BLUE,
   JOINT_TYPE_COLORS,
   MOTOR_INDICATOR,
   PREVIEW_OWNERSHIP_EDGE,
-  SPRING_NEUTRAL,
-  TORQUE_ARROW,
 } from './rendering/colors-three.js';
 import { type ComIndicatorResult, createComIndicator } from './rendering/com-indicator-three.js';
-import { createJointGlyph, type JointGlyphResult } from './rendering/joint-glyph-three.js';
 import {
   createFatLine,
   disposeFatLine,
@@ -60,377 +55,106 @@ import {
   isFatLine,
   Line2,
   LineMaterial,
-  setFatLinePoints,
   updateFatLineResolution,
 } from './rendering/fat-line-three.js';
 import { createFrameTriad, type FrameTriadResult } from './rendering/frame-triad-three.js';
-// Legacy troika labels removed — HTML overlay (EntityLabelOverlay) handles all labels.
+import { createJointGlyph, type JointGlyphResult } from './rendering/joint-glyph-three.js';
 import { createLimitVisual } from './rendering/limit-visuals-three.js';
 import type { MaterialFactory } from './rendering/materials-three.js';
 import { createMotorVisual } from './rendering/motor-visuals-three.js';
 import { createOriginTriad, type OriginTriadResult } from './rendering/origin-triad-three.js';
+import { updateSDFLineResolution } from './rendering/sdf-line-three.js';
 import {
   type DatumPreviewType,
   estimateAxisDirection,
   estimateSurfaceType,
 } from './rendering/surface-type-estimator.js';
 
-export type CameraPreset =
-  | 'isometric'
-  | 'front'
-  | 'back'
-  | 'left'
-  | 'right'
-  | 'top'
-  | 'bottom'
-  | 'fit-all';
+// ── Internal types from scene-context.ts ──────────────────────────────────
+import {
+  type BodyBvhState,
+  type BodyGeometryRenderState,
+  type BodyMeta,
+  type BodyTransformUpdate,
+  type CameraPreset,
+  type DatumMeta,
+  type DatumPreviewConfig,
+  type DatumVisualOptions,
+  type EntityMeta,
+  type FacePreviewData,
+  type GizmoDragEndCallback,
+  type GizmoMode,
+  isBodyEntity,
+  type JointForceUpdate,
+  type JointMeta,
+  type JointPreviewAlignment,
+  type LabelEntry,
+  type LoadMeta,
+  type LoadStateInput,
+  type MeshDataInput,
+  type PendingBvhBuild,
+  type PoseInput,
+  type SceneEntity,
+  type SceneEntityInternal,
+} from './scene-context.js';
 
-export interface SceneEntity {
-  readonly id: string;
-  readonly type: 'body' | 'datum' | 'joint' | 'load' | 'actuator';
-  readonly rootNode: Group;
-  readonly meshes: Mesh[];
-}
+// ── Utilities from scene-graph-utils.ts ───────────────────────────────────
+import {
+  _anchorQuat,
+  _anchorYAxis,
+  _datumWorldQuat,
+  _jointAxisScratch,
+  BLACK,
+  BVH_ASYNC_TRI_THRESHOLD,
+  BVH_BUILD_OPTIONS,
+  cloneColor,
+  createJointColor,
+  createLine,
+  DATUM_COLOR,
+  DEFAULT_BODY_COLOR,
+  disposeObject3D,
+  EPSILON,
+  FACE_HIGHLIGHT_COLOR,
+  getBodyEdgeLines,
+  getBoxForRoots,
+  getLoadBaseColor,
+  getLoadKind,
+  isMeshStandardMaterial,
+  LOAD_COLOR,
+  MIN_CAMERA_EXTENT,
+  SKIP_AXIS_JOINT_TYPES,
+  setCameraToBox,
+  setLinePoints,
+  setObjectLayerRecursive,
+  setPose,
+} from './scene-graph-utils.js';
 
-export interface MeshDataInput {
-  readonly vertices: Float32Array;
-  readonly indices: Uint32Array;
-  readonly normals: Float32Array;
-}
+// ── Public type re-exports (backward compat — index.ts imports from here) ──
+export type {
+  BodyBvhState,
+  BodyTransformUpdate,
+  CameraPreset,
+  DatumPreviewConfig,
+  DatumVisualFaceGeometry,
+  DatumVisualOptions,
+  DatumVisualSurfaceClass,
+  GizmoDragEndCallback,
+  GizmoDragEndEvent,
+  GizmoMode,
+  JointForceUpdate,
+  JointPreviewAlignment,
+  LabelEntry,
+  LoadStateInput,
+  MeshDataInput,
+  PoseInput,
+  SceneEntity,
+} from './scene-context.js';
 
-export interface PoseInput {
-  readonly position: [number, number, number];
-  readonly rotation: [number, number, number, number];
-}
-
-export type DatumVisualSurfaceClass =
-  | 'planar'
-  | 'cylindrical'
-  | 'conical'
-  | 'spherical'
-  | 'toroidal'
-  | 'other';
-
-export interface DatumVisualFaceGeometry {
-  readonly axisDirection?: { readonly x: number; readonly y: number; readonly z: number };
-  readonly normal?: { readonly x: number; readonly y: number; readonly z: number };
-  readonly radius?: number;
-  readonly secondaryRadius?: number;
-  readonly semiAngle?: number;
-}
-
-export interface DatumVisualOptions {
-  readonly surfaceClass?: DatumVisualSurfaceClass;
-  readonly faceGeometry?: DatumVisualFaceGeometry;
-}
-
-export interface JointPreviewAlignment {
-  readonly kind: 'coaxial' | 'coplanar' | 'coincident' | 'perpendicular' | 'general';
-  readonly axis?: { readonly x: number; readonly y: number; readonly z: number };
-  readonly distance: number;
-}
+export const VIEWPORT_PICK_LAYER = 1;
 
 export interface SceneGraphDeps {
   materialFactory: MaterialFactory;
   requestRender?: () => void;
-}
-
-export type GizmoMode = 'translate' | 'rotate' | 'off';
-
-export interface GizmoDragEndEvent {
-  entityId: string;
-  entityKind: 'datum' | 'body';
-  position: [number, number, number];
-  rotation: [number, number, number, number];
-}
-
-export type GizmoDragEndCallback = (event: GizmoDragEndEvent) => void;
-
-/** Label data snapshot for the HTML overlay layer. */
-export interface LabelEntry {
-  entityId: string;
-  entityType: 'body' | 'joint';
-  name: string;
-  worldPosition: { x: number; y: number; z: number };
-  /** Approximate screen-space radius of the entity's visual extent (px). */
-  screenRadius: number;
-  isSelected: boolean;
-  isHovered: boolean;
-}
-
-export interface BodyTransformUpdate {
-  id: string;
-  pose: PoseInput;
-}
-
-export interface JointForceUpdate {
-  jointId: string;
-  force?: { x?: number; y?: number; z?: number };
-  torque?: { x?: number; y?: number; z?: number };
-}
-
-export type BodyBvhState = 'none' | 'building' | 'ready' | 'failed';
-
-type SceneEntityInternal = SceneEntity & {
-  readonly meta: EntityMeta;
-};
-
-type HighlightedFace = {
-  geometryId: string;
-  faceIndex: number;
-};
-
-type BodyGeometryRenderState = {
-  id: string;
-  name: string;
-  rootNode: Group;
-  mesh: Mesh;
-  localPose: PoseInput;
-  normals: Float32Array;
-  indices: Uint32Array;
-  geometryIndex?: BodyGeometryIndex;
-  colorAttribute?: BufferAttribute;
-  facePreviewCache: Map<number, FacePreviewData>;
-  faceVertexIndicesCache: Map<number, Uint32Array>;
-  edgeLines?: LineSegments;
-  collisionWireframe?: Mesh;
-  bvhState: BodyBvhState;
-  bvhBuildToken: number;
-};
-
-type BodyMeta = {
-  kind: 'body';
-  geometries: Map<string, BodyGeometryRenderState>;
-  primaryGeometryId: string | null;
-  highlightedFace: HighlightedFace | null;
-  bodyName: string;
-};
-
-type DatumMeta = {
-  kind: 'datum';
-  parentBodyId: string;
-  localPose: PoseInput;
-  surfaceClass?: DatumVisualSurfaceClass;
-  faceGeometry?: DatumVisualFaceGeometry;
-  disabledOpacity: number;
-  emphasisOpacity: number;
-  isCreationAnchor: boolean;
-};
-
-type JointMeta = {
-  kind: 'joint';
-  parentDatumId: string;
-  childDatumId: string;
-  jointType: string;
-  jointName: string;
-  linkLine?: Line2;
-  glyph?: JointGlyphResult;
-  lowerLimit?: number;
-  upperLimit?: number;
-};
-
-export interface LoadStateInput {
-  type?: string;
-  datumId?: string;
-  parentDatumId?: string;
-  childDatumId?: string;
-  vector?: { x?: number; y?: number; z?: number };
-  referenceFrame?: 'datum-local' | 'world';
-}
-
-type LoadMeta = {
-  kind: 'load';
-  loadState: LoadStateInput | null;
-  kindTag: 'point-force' | 'point-torque' | 'spring-damper' | 'unknown';
-  anchorDatumId?: string;
-  secondDatumId?: string;
-  line?: Line2;
-  arrow?: ArrowHelper;
-};
-
-type ActuatorMeta = {
-  kind: 'actuator';
-  jointId: string;
-  actuatorType: string;
-};
-
-type EntityMeta = BodyMeta | DatumMeta | JointMeta | LoadMeta | ActuatorMeta;
-
-type FacePreviewData = {
-  previewType: DatumPreviewType;
-  axisDirection: [number, number, number] | null;
-  localCentroid: [number, number, number] | null;
-};
-
-export interface DatumPreviewConfig {
-  bodyId: string;
-  type: 'point' | 'axis' | 'plane';
-  position: [number, number, number];
-  normal?: [number, number, number];
-  axisDirection?: [number, number, number] | null;
-}
-
-const DEFAULT_BODY_COLOR = new Color('#8faac8');
-const FACE_HIGHLIGHT_COLOR = new Color('#f59e0b');
-const BLACK = new Color(0, 0, 0);
-const SKIP_AXIS_JOINT_TYPES = new Set(['fixed', 'spherical', 'universal', 'distance']);
-const DATUM_COLOR = new Color('#4ade80');
-const LOAD_COLOR = new Color('#f87171');
-const FOCUS_PADDING = 1.6;
-const MIN_CAMERA_EXTENT = 0.5;
-const EPSILON = 1e-6;
-export const VIEWPORT_PICK_LAYER = 1;
-const BVH_ASYNC_TRI_THRESHOLD = 100_000;
-
-// Scratch objects for joint anchor orientation (avoid per-frame allocations)
-const _anchorYAxis = new Vector3(0, 1, 0);
-const _anchorQuat = new Quaternion();
-const _jointAxisScratch = new Vector3();
-const _datumWorldQuat = new Quaternion();
-const BVH_BUILD_OPTIONS = { indirect: true } as Parameters<
-  BufferGeometry['computeBoundsTree']
->[0] & {
-  indirect: true;
-};
-
-type PendingBvhBuild = {
-  bodyId: string;
-  geometryId: string;
-  geometry: BufferGeometry;
-  workerGeometry: BufferGeometry;
-  buildToken: number;
-};
-
-function cloneColor(color: Color): Color {
-  return new Color(color.r, color.g, color.b);
-}
-
-function getLoadBaseColor(kindTag: LoadMeta['kindTag']): Color {
-  switch (kindTag) {
-    case 'point-torque':
-      return TORQUE_ARROW;
-    case 'spring-damper':
-      return SPRING_NEUTRAL;
-    case 'point-force':
-    case 'unknown':
-    default:
-      return FORCE_ARROW;
-  }
-}
-
-function setPose(target: Object3D, pose: PoseInput): void {
-  target.position.set(pose.position[0], pose.position[1], pose.position[2]);
-  target.quaternion.set(pose.rotation[0], pose.rotation[1], pose.rotation[2], pose.rotation[3]);
-}
-
-function isMeshStandardMaterial(material: unknown): material is MeshStandardMaterial {
-  return material instanceof MeshStandardMaterial;
-}
-
-function applyOpacity(mesh: Mesh, opacity: number): void {
-  if (!isMeshStandardMaterial(mesh.material)) return;
-  mesh.material.transparent = opacity < 0.999;
-  mesh.material.opacity = opacity;
-  mesh.material.depthWrite = opacity >= 0.999;
-}
-
-function createLine(points: Vector3[], color: Color, userData: Record<string, unknown>): Line2 {
-  return createFatLine(points, { color }, userData);
-}
-
-function setLinePoints(line: Line2, points: readonly Vector3[]): void {
-  setFatLinePoints(line, points);
-}
-
-function disposeObject3D(root: Object3D): void {
-  root.traverse((obj) => {
-    if (isFatLine(obj)) {
-      disposeFatLine(obj);
-      return;
-    }
-    if (obj instanceof Mesh) {
-      obj.geometry.disposeBoundsTree?.();
-      obj.geometry.dispose();
-      if (Array.isArray(obj.material)) {
-        for (const mat of obj.material) {
-          mat.dispose();
-        }
-      } else {
-        obj.material.dispose();
-      }
-    }
-    if (obj instanceof Line) {
-      obj.geometry.dispose();
-      obj.material.dispose();
-    }
-  });
-}
-
-function setObjectLayerRecursive(root: Object3D, layer: number): void {
-  root.traverse((obj) => {
-    obj.layers.set(layer);
-  });
-}
-
-function createJointColor(jointType: string): Color {
-  const typeColor = JOINT_TYPE_COLORS[jointType];
-  return cloneColor(typeColor ?? JOINT_STEEL_BLUE);
-}
-
-function getLoadKind(loadState: LoadStateInput | null): LoadMeta['kindTag'] {
-  if (!loadState?.type) return 'unknown';
-  if (
-    loadState.type === 'point-force' ||
-    loadState.type === 'point-torque' ||
-    loadState.type === 'spring-damper'
-  ) {
-    return loadState.type;
-  }
-  return 'unknown';
-}
-
-function getBoxForRoots(roots: Object3D[]): Box3 {
-  const box = new Box3();
-  for (const root of roots) {
-    root.updateMatrixWorld(true);
-    box.expandByObject(root);
-  }
-  return box;
-}
-
-function setCameraToBox(
-  camera: OrthographicCamera,
-  box: Box3,
-  direction: Vector3,
-  canvasAspect: number,
-): void {
-  if (box.isEmpty()) return;
-
-  const center = new Vector3();
-  const size = new Vector3();
-  box.getCenter(center);
-  box.getSize(size);
-
-  const dir =
-    direction.lengthSq() > EPSILON
-      ? direction.clone().normalize()
-      : new Vector3(1, 1, 1).normalize();
-
-  const maxDim = Math.max(size.x, size.y, size.z, MIN_CAMERA_EXTENT);
-  camera.position.copy(center).add(dir.multiplyScalar(maxDim * 2.5));
-  camera.lookAt(center);
-
-  const aspect = Math.max(canvasAspect, EPSILON);
-  const fitHeight = Math.max(size.y, size.z, size.x / aspect, MIN_CAMERA_EXTENT) * FOCUS_PADDING;
-  const fitWidth = fitHeight * aspect;
-
-  camera.top = fitHeight / 2;
-  camera.bottom = -fitHeight / 2;
-  camera.left = -fitWidth / 2;
-  camera.right = fitWidth / 2;
-  camera.near = -Math.max(maxDim * 10, 100);
-  camera.far = Math.max(maxDim * 10, 100);
-  camera.updateProjectionMatrix();
 }
 
 export class SceneGraphManager {
@@ -438,10 +162,6 @@ export class SceneGraphManager {
   private readonly _camera: OrthographicCamera;
   private readonly deps: SceneGraphDeps;
   private readonly entities = new Map<string, SceneEntityInternal>();
-  private readonly datumPreviewRoot = new Group();
-  private readonly jointPreviewRoot = new Group();
-  private readonly dofPreviewRoot = new Group();
-  private readonly loadPreviewRoot = new Group();
   private readonly forceArrowIds = new Set<string>();
   // DOF indication is now merged into joint glyphs — no separate activeDofIndicators map.
   private readonly activeLimitVisuals = new Map<
@@ -456,19 +176,15 @@ export class SceneGraphManager {
   private readonly activeJointAxisLines = new Map<string, Line2>();
   private readonly activeComIndicators = new Map<string, ComIndicatorResult>();
   private readonly _comPositions = new Map<string, Vector3>();
-  private readonly provisionalPreviewRoot = new Group();
-  private _dofPreviewIndicator: JointGlyphResult | null = null;
-  private _provisionalDofIndicator: JointGlyphResult | null = null;
   private readonly jointLineStart = new Vector3();
   private readonly jointLineEnd = new Vector3();
   private readonly jointLineCenter = new Vector3();
+  private readonly lineOrigin = new Vector3();
+  private readonly lineEnd = new Vector3();
+  private readonly loadDirection = new Vector3(0, 1, 0);
+  private readonly loadOrientation = new Quaternion();
   private readonly loadAnchor = new Vector3();
   private readonly loadSecond = new Vector3();
-  private readonly loadDirection = new Vector3();
-  private readonly loadOrientation = new Quaternion();
-  private readonly lineOrigin = new Vector3(0, 0, 0);
-  private readonly lineStart = new Vector3();
-  private readonly lineEnd = new Vector3();
   private readonly faceNormalMatrix = new Matrix4();
   private readonly faceNormalVector = new Vector3();
   private readonly axisWorldVector = new Vector3();
@@ -496,17 +212,14 @@ export class SceneGraphManager {
   private _gizmoRotationSnap = Math.PI / 12;
   private _gizmoSpace: 'local' | 'world' = 'world';
   private _orbitTarget = new Vector3(0, 0, 0);
-  private _datumPreviewBodyId: string | null = null;
   private _originTriad: OriginTriadResult | null = null;
   private mutationDepth = 0;
   private pendingJointRefresh = false;
   private pendingLoadRefresh = false;
   private pendingEntityListChange = false;
   private pendingRender = false;
-  private bvhWorker: GenerateMeshBVHWorker | null = null;
-  private bvhBuildQueue: PendingBvhBuild[] = [];
-  private bvhBuildInFlight = false;
-  private nextBvhBuildToken = 1;
+  private readonly _bvh: BvhManager;
+  private readonly _preview: PreviewManager;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- drei's useBounds return type isn't exported
   private boundsApi: any = null;
@@ -523,32 +236,11 @@ export class SceneGraphManager {
     this._scene = scene;
     this._camera = camera;
     this.deps = deps;
+    this._bvh = new BvhManager(this as unknown as import('./scene-context.js').SceneContext);
+    this._preview = new PreviewManager(
+      this as unknown as import('./scene-context.js').SceneContext,
+    );
     this._camera.layers.enable(VIEWPORT_PICK_LAYER);
-
-    this.datumPreviewRoot.name = 'datum_preview';
-    this.datumPreviewRoot.visible = false;
-    setObjectLayerRecursive(this.datumPreviewRoot, VIEWPORT_PICK_LAYER);
-    this._scene.add(this.datumPreviewRoot);
-
-    this.jointPreviewRoot.name = 'joint_preview';
-    this.jointPreviewRoot.visible = false;
-    setObjectLayerRecursive(this.jointPreviewRoot, VIEWPORT_PICK_LAYER);
-    this._scene.add(this.jointPreviewRoot);
-
-    this.provisionalPreviewRoot.name = 'provisional_joint_preview';
-    this.provisionalPreviewRoot.visible = false;
-    setObjectLayerRecursive(this.provisionalPreviewRoot, VIEWPORT_PICK_LAYER);
-    this._scene.add(this.provisionalPreviewRoot);
-
-    this.dofPreviewRoot.name = 'dof_preview';
-    this.dofPreviewRoot.visible = false;
-    setObjectLayerRecursive(this.dofPreviewRoot, VIEWPORT_PICK_LAYER);
-    this._scene.add(this.dofPreviewRoot);
-
-    this.loadPreviewRoot.name = 'load_preview';
-    this.loadPreviewRoot.visible = false;
-    setObjectLayerRecursive(this.loadPreviewRoot, VIEWPORT_PICK_LAYER);
-    this._scene.add(this.loadPreviewRoot);
 
     this._originTriad = createOriginTriad();
     this._scene.add(this._originTriad.rootNode);
@@ -796,144 +488,6 @@ export class SceneGraphManager {
     }
   }
 
-  private scheduleBodyBvhBuild(
-    bodyId: string,
-    geometryId: string,
-    geometry: BufferGeometry,
-    triangleCount: number,
-  ): void {
-    const entity = this.entities.get(bodyId);
-    if (!this.isBodyEntity(entity)) return;
-    const geometryState = this.getBodyGeometryState(entity, geometryId);
-    if (!geometryState) return;
-
-    const buildToken = this.nextBvhBuildToken++;
-    geometryState.bvhBuildToken = buildToken;
-    geometryState.bvhState = 'building';
-
-    if (triangleCount < BVH_ASYNC_TRI_THRESHOLD) {
-      this.buildBodyBvhSync(bodyId, geometryId, geometry, buildToken);
-      return;
-    }
-
-    const worker = this.getOrCreateBvhWorker();
-    const workerGeometry = worker ? this.cloneGeometryForBvhBuild(geometry) : null;
-    if (!worker || !workerGeometry) {
-      this.buildBodyBvhSync(bodyId, geometryId, geometry, buildToken);
-      return;
-    }
-
-    this.bvhBuildQueue.push({
-      bodyId,
-      geometryId,
-      geometry,
-      workerGeometry,
-      buildToken,
-    });
-    void this.pumpBvhBuildQueue();
-  }
-
-  private buildBodyBvhSync(
-    bodyId: string,
-    geometryId: string,
-    geometry: BufferGeometry,
-    buildToken: number,
-  ): void {
-    try {
-      geometry.computeBoundsTree(BVH_BUILD_OPTIONS);
-      const entity = this.entities.get(bodyId);
-      if (!this.isBodyEntity(entity)) return;
-      const geometryState = this.getBodyGeometryState(entity, geometryId);
-      if (!geometryState || geometryState.bvhBuildToken !== buildToken) return;
-      geometryState.bvhState = 'ready';
-    } catch {
-      const entity = this.entities.get(bodyId);
-      if (!this.isBodyEntity(entity)) return;
-      const geometryState = this.getBodyGeometryState(entity, geometryId);
-      if (!geometryState || geometryState.bvhBuildToken !== buildToken) return;
-      geometryState.bvhState = 'failed';
-    }
-  }
-
-  private getOrCreateBvhWorker(): GenerateMeshBVHWorker | null {
-    if (typeof Worker === 'undefined') return null;
-    if (!this.bvhWorker) {
-      this.bvhWorker = new GenerateMeshBVHWorker();
-    }
-    return this.bvhWorker;
-  }
-
-  private cloneGeometryForBvhBuild(geometry: BufferGeometry): BufferGeometry | null {
-    const position = geometry.getAttribute('position');
-    const index = geometry.getIndex();
-    if (!(position instanceof BufferAttribute) || !index) {
-      return null;
-    }
-
-    const clone = new BufferGeometry();
-    const positionArray = position.array;
-    const positionCopy = new Float32Array(positionArray.length);
-    positionCopy.set(positionArray as ArrayLike<number>);
-    clone.setAttribute(
-      'position',
-      new BufferAttribute(positionCopy, position.itemSize, position.normalized),
-    );
-
-    const indexArray = index.array;
-    const IndexArrayCtor = indexArray.constructor as {
-      new (source: ArrayLike<number>): Uint16Array | Uint32Array;
-    };
-    const indexCopy = new IndexArrayCtor(indexArray as ArrayLike<number>);
-    clone.setIndex(new BufferAttribute(indexCopy, index.itemSize, index.normalized));
-    return clone;
-  }
-
-  private async pumpBvhBuildQueue(): Promise<void> {
-    if (this.bvhBuildInFlight) return;
-
-    const next = this.bvhBuildQueue.shift();
-    if (!next) return;
-
-    const worker = this.getOrCreateBvhWorker();
-    if (!worker) {
-      next.workerGeometry.dispose();
-      this.buildBodyBvhSync(next.bodyId, next.geometryId, next.geometry, next.buildToken);
-      void this.pumpBvhBuildQueue();
-      return;
-    }
-
-    this.bvhBuildInFlight = true;
-
-    try {
-      const bvh = await worker.generate(next.workerGeometry, BVH_BUILD_OPTIONS);
-      const entity = this.entities.get(next.bodyId);
-      const geometryState = this.isBodyEntity(entity)
-        ? this.getBodyGeometryState(entity, next.geometryId)
-        : null;
-      if (
-        geometryState &&
-        geometryState.bvhBuildToken === next.buildToken &&
-        geometryState.mesh.geometry === next.geometry
-      ) {
-        next.geometry.boundsTree = bvh;
-        geometryState.bvhState = 'ready';
-        this.requestRender();
-      }
-    } catch {
-      const entity = this.entities.get(next.bodyId);
-      const geometryState = this.isBodyEntity(entity)
-        ? this.getBodyGeometryState(entity, next.geometryId)
-        : null;
-      if (geometryState && geometryState.bvhBuildToken === next.buildToken) {
-        geometryState.bvhState = 'failed';
-      }
-    } finally {
-      next.workerGeometry.dispose();
-      this.bvhBuildInFlight = false;
-      void this.pumpBvhBuildQueue();
-    }
-  }
-
   private getFaceVertexIndices(
     entity: SceneEntityInternal & { meta: BodyMeta },
     geometryId: string,
@@ -1132,26 +686,11 @@ export class SceneGraphManager {
     attribute.needsUpdate = true;
   }
 
-  private isBodyEntity(
-    entity: SceneEntityInternal | undefined,
-  ): entity is SceneEntityInternal & { meta: BodyMeta } {
-    return Boolean(entity && entity.meta.kind === 'body');
-  }
-
-  private getBodyEdgeLines(entity: SceneEntityInternal & { meta: BodyMeta }): LineSegments[] {
-    const edgeLines: LineSegments[] = [];
-    for (const geometry of entity.meta.geometries.values()) {
-      if (geometry.edgeLines) {
-        edgeLines.push(geometry.edgeLines);
-      }
-    }
-    return edgeLines;
-  }
-
   setCanvasSize(width: number, height: number): void {
     this._canvasSize.width = Math.max(1, width);
     this._canvasSize.height = Math.max(1, height);
     updateFatLineResolution(this._canvasSize.width, this._canvasSize.height);
+    updateSDFLineResolution(this._canvasSize.width, this._canvasSize.height);
   }
 
   /** Injected by BoundsBridge — provides drei Bounds camera-fitting API. */
@@ -1219,7 +758,7 @@ export class SceneGraphManager {
   ): void {
     this.batchMutation(() => {
       const entity = this.entities.get(bodyId);
-      if (!this.isBodyEntity(entity)) {
+      if (!isBodyEntity(entity)) {
         return;
       }
 
@@ -1318,7 +857,7 @@ export class SceneGraphManager {
       if (triangleCount > EDGE_DEFER_THRESHOLD) {
         setTimeout(() => {
           const currentEntity = this.entities.get(bodyId);
-          if (!this.isBodyEntity(currentEntity)) return;
+          if (!isBodyEntity(currentEntity)) return;
           const currentGeometry = this.getBodyGeometryState(currentEntity, geometryId);
           if (!currentGeometry) return;
           if (currentGeometry.mesh.geometry !== geometry) return;
@@ -1343,7 +882,7 @@ export class SceneGraphManager {
         }, 0);
       }
 
-      this.scheduleBodyBvhBuild(bodyId, geometryId, geometry, triangleCount);
+      this._bvh.scheduleBodyBvhBuild(bodyId, geometryId, geometry, triangleCount);
       this.applyVisualState(entity);
       this.markEntityListChanged();
       this.requestRender();
@@ -1452,19 +991,14 @@ export class SceneGraphManager {
 
   clear(): void {
     this.batchMutation(() => {
-      this.bvhBuildQueue.length = 0;
-      this.bvhWorker?.dispose();
-      this.bvhWorker = null;
-      this.bvhBuildInFlight = false;
+      this._bvh.clear();
       for (const entity of this.entities.values()) {
         this._scene.remove(entity.rootNode);
         disposeObject3D(entity.rootNode);
       }
       this.entities.clear();
       this.forceArrowIds.clear();
-      this.clearDatumPreview();
-      this.clearJointPreviewLine();
-      this.clearJointTypePreview();
+      this._preview.clear();
       this.markEntityListChanged();
       this.requestRender();
     });
@@ -1472,14 +1006,7 @@ export class SceneGraphManager {
 
   dispose(): void {
     this.clear();
-    this._scene.remove(this.datumPreviewRoot);
-    disposeObject3D(this.datumPreviewRoot);
-    this._scene.remove(this.jointPreviewRoot);
-    disposeObject3D(this.jointPreviewRoot);
-    this._scene.remove(this.provisionalPreviewRoot);
-    disposeObject3D(this.provisionalPreviewRoot);
-    this._scene.remove(this.dofPreviewRoot);
-    disposeObject3D(this.dofPreviewRoot);
+    this._preview.dispose();
   }
 
   addDatum(
@@ -2114,9 +1641,7 @@ export class SceneGraphManager {
       if (this.boundsApi) {
         this.boundsApi.refresh(box).fit();
       } else {
-        const direction = roots.length === 1
-          ? this._camera.position.clone()
-          : new Vector3();
+        const direction = roots.length === 1 ? this._camera.position.clone() : new Vector3();
         if (roots.length === 1) {
           if (direction.lengthSq() < EPSILON) direction.set(1, 1, 1);
         } else {
@@ -2363,8 +1888,8 @@ export class SceneGraphManager {
       if (!datum || datum.meta.kind !== 'datum') continue;
       const bodyId = datum.meta.parentBodyId;
       const body = this.entities.get(bodyId);
-      if (!this.isBodyEntity(body)) continue;
-      for (const edgeLines of this.getBodyEdgeLines(body)) {
+      if (!isBodyEntity(body)) continue;
+      for (const edgeLines of getBodyEdgeLines(body)) {
         const edgeMat = edgeLines.material as LineBasicMaterial;
         edgeMat.color.copy(JOINT_STEEL_BLUE);
         edgeMat.opacity = 0.4;
@@ -2431,7 +1956,7 @@ export class SceneGraphManager {
 
   highlightFace(bodyId: string, geometryId: string, faceIndex: number): void {
     const entity = this.entities.get(bodyId);
-    if (!this.isBodyEntity(entity)) return;
+    if (!isBodyEntity(entity)) return;
     const geometryState = this.getBodyGeometryState(entity, geometryId);
     const geometryIndex = geometryState?.geometryIndex;
     if (!geometryIndex || faceIndex < 0 || faceIndex >= geometryIndex.faceRanges.length) return;
@@ -2452,7 +1977,7 @@ export class SceneGraphManager {
 
   clearFaceHighlight(bodyId: string): void {
     const entity = this.entities.get(bodyId);
-    if (!this.isBodyEntity(entity)) return;
+    if (!isBodyEntity(entity)) return;
     this.clearFaceHighlightInternal(entity, true);
   }
 
@@ -2655,224 +2180,38 @@ export class SceneGraphManager {
   }
 
   showDatumPreview(config: DatumPreviewConfig): void {
-    const preview = config;
-    this.clearDatumPreview();
-
-    this._datumPreviewBodyId = preview.bodyId;
-
-    // Body ownership indicator — tint edge lines on the target body
-    const ownerEntity = this.entities.get(preview.bodyId);
-    if (this.isBodyEntity(ownerEntity)) {
-      for (const edgeLines of this.getBodyEdgeLines(ownerEntity)) {
-        const edgeMat = edgeLines.material as LineBasicMaterial;
-        edgeMat.color.copy(PREVIEW_OWNERSHIP_EDGE.color);
-        edgeMat.opacity = PREVIEW_OWNERSHIP_EDGE.alpha;
-        edgeMat.needsUpdate = true;
-      }
-    }
-
-    this.datumPreviewRoot.visible = true;
-    this.datumPreviewRoot.position.set(
-      preview.position[0],
-      preview.position[1],
-      preview.position[2],
-    );
-
-    const color = cloneColor(PREVIEW_OWNERSHIP_EDGE.color);
-    const previewOpts: FatLineOptions = { color };
-
-    if (preview.type === 'point') {
-      // Crosshair lines (flat, no 3D geometry)
-      const size = 0.06;
-      this.datumPreviewRoot.add(
-        createFatLine([new Vector3(-size, 0, 0), new Vector3(size, 0, 0)], previewOpts),
-      );
-      this.datumPreviewRoot.add(
-        createFatLine([new Vector3(0, -size, 0), new Vector3(0, size, 0)], previewOpts),
-      );
-      this.datumPreviewRoot.add(
-        createFatLine([new Vector3(0, 0, -size), new Vector3(0, 0, size)], previewOpts),
-      );
-      setObjectLayerRecursive(this.datumPreviewRoot, VIEWPORT_PICK_LAYER);
-      this.requestRender();
-      return;
-    }
-
-    if (preview.type === 'axis') {
-      const dir = new Vector3(...(preview.axisDirection ?? [0, 1, 0])).normalize();
-      const length = 0.6;
-      const tip = dir.clone().multiplyScalar(length);
-
-      // Axis line
-      this.datumPreviewRoot.add(createFatLine([new Vector3(0, 0, 0), tip], previewOpts));
-
-      // V arrowhead at tip
-      const arrowSize = 0.08;
-      const perp = new Vector3();
-      if (Math.abs(dir.y) < 0.9) {
-        perp.crossVectors(dir, new Vector3(0, 1, 0)).normalize();
-      } else {
-        perp.crossVectors(dir, new Vector3(1, 0, 0)).normalize();
-      }
-      const back = tip.clone().sub(dir.clone().multiplyScalar(arrowSize));
-      this.datumPreviewRoot.add(
-        createFatLine(
-          [
-            back.clone().add(perp.clone().multiplyScalar(arrowSize * 0.4)),
-            tip.clone(),
-            back.clone().sub(perp.clone().multiplyScalar(arrowSize * 0.4)),
-          ],
-          previewOpts,
-        ),
-      );
-      setObjectLayerRecursive(this.datumPreviewRoot, VIEWPORT_PICK_LAYER);
-      this.requestRender();
-      return;
-    }
-
-    const plane = createLine(
-      [
-        new Vector3(-0.25, 0, -0.25),
-        new Vector3(0.25, 0, -0.25),
-        new Vector3(0.25, 0, 0.25),
-        new Vector3(-0.25, 0, 0.25),
-        new Vector3(-0.25, 0, -0.25),
-      ],
-      color,
-      { entityId: '__datum_preview__', entityType: 'preview' },
-    );
-    const normal = preview.normal ?? [0, 1, 0];
-    plane.quaternion.copy(
-      new Quaternion().setFromUnitVectors(
-        new Vector3(0, 1, 0),
-        new Vector3(normal[0], normal[1], normal[2]).normalize(),
-      ),
-    );
-    this.datumPreviewRoot.add(plane);
-    setObjectLayerRecursive(this.datumPreviewRoot, VIEWPORT_PICK_LAYER);
-    this.requestRender();
+    this._preview.showDatumPreview(config);
   }
 
-  /** Return the current datum preview world position, or null if not visible. */
   getDatumPreviewPosition(): { x: number; y: number; z: number } | null {
-    if (!this.datumPreviewRoot.visible) return null;
-    const p = this.datumPreviewRoot.position;
-    return { x: p.x, y: p.y, z: p.z };
+    return this._preview.getDatumPreviewPosition();
   }
 
   clearDatumPreview(): void {
-    // Revert body ownership indicator
-    if (this._datumPreviewBodyId) {
-      const prevEntity = this.entities.get(this._datumPreviewBodyId);
-      if (this.isBodyEntity(prevEntity)) {
-        for (const edgeLines of this.getBodyEdgeLines(prevEntity)) {
-          const edgeMat = edgeLines.material as LineBasicMaterial;
-          edgeMat.color.set(0x202028);
-          edgeMat.opacity = 0.3;
-          edgeMat.needsUpdate = true;
-        }
-      }
-    }
-
-    while (this.datumPreviewRoot.children.length > 0) {
-      const child = this.datumPreviewRoot.children[0];
-      this.datumPreviewRoot.remove(child);
-      disposeObject3D(child);
-    }
-    this.datumPreviewRoot.visible = false;
-    this._datumPreviewBodyId = null;
-    this.requestRender();
+    this._preview.clearDatumPreview();
   }
 
   showLoadPreview(loadState: LoadStateInput | null): void {
-    this.clearLoadPreview();
-    if (!loadState) return;
-
-    const kindTag = getLoadKind(loadState);
-    const anchorDatumId = loadState.datumId ?? loadState.parentDatumId;
-    const anchorDatum = anchorDatumId ? this.entities.get(anchorDatumId) : undefined;
-    if (!anchorDatum) return;
-
-    anchorDatum.rootNode.getWorldPosition(this.loadAnchor);
-    this.loadPreviewRoot.visible = true;
-
-    if (kindTag === 'spring-damper') {
-      const secondDatum = loadState.childDatumId
-        ? this.entities.get(loadState.childDatumId)
-        : undefined;
-      if (!secondDatum) return;
-      secondDatum.rootNode.getWorldPosition(this.loadSecond);
-      this.loadPreviewRoot.add(
-        createLine([this.loadAnchor, this.loadSecond], getLoadBaseColor(kindTag), {
-          entityId: '__load_preview__',
-          entityType: 'preview',
-        }),
-      );
-      this.requestRender();
-      return;
-    }
-
-    this.loadDirection.set(
-      loadState.vector?.x ?? 0,
-      loadState.vector?.y ?? 0,
-      loadState.vector?.z ?? 0,
-    );
-    if (loadState.referenceFrame === 'datum-local') {
-      anchorDatum.rootNode.getWorldQuaternion(this.loadOrientation);
-      this.loadDirection.applyQuaternion(this.loadOrientation);
-    }
-
-    const length = Math.max(this.loadDirection.length(), 0.25);
-    if (this.loadDirection.lengthSq() > EPSILON) {
-      this.loadDirection.normalize();
-    } else {
-      this.loadDirection.set(0, 1, 0);
-    }
-    this.lineEnd.copy(this.loadDirection).multiplyScalar(length);
-
-    this.loadPreviewRoot.add(
-      createLine(
-        [this.loadAnchor, this.loadAnchor.clone().add(this.lineEnd)],
-        getLoadBaseColor(kindTag),
-        { entityId: '__load_preview__', entityType: 'preview' },
-      ),
-    );
-    this.loadPreviewRoot.add(
-      new ArrowHelper(
-        this.loadDirection.clone(),
-        this.loadAnchor.clone(),
-        length,
-        getLoadBaseColor(kindTag).getHex(),
-        Math.min(length * 0.25, 0.18),
-        Math.min(length * 0.14, 0.1),
-      ),
-    );
-    this.requestRender();
+    this._preview.showLoadPreview(loadState);
   }
 
   clearLoadPreview(): void {
-    while (this.loadPreviewRoot.children.length > 0) {
-      const child = this.loadPreviewRoot.children[0];
-      this.loadPreviewRoot.remove(child);
-      disposeObject3D(child);
-    }
-    this.loadPreviewRoot.visible = false;
-    this.requestRender();
+    this._preview.clearLoadPreview();
   }
 
   getDatumPreviewBodyId(): string | null {
-    return this._datumPreviewBodyId;
+    return this._preview.getDatumPreviewBodyId();
   }
 
   getBodyMeshNormals(bodyId: string): Float32Array | null {
     const entity = this.entities.get(bodyId);
-    if (!this.isBodyEntity(entity)) return null;
+    if (!isBodyEntity(entity)) return null;
     return this.getPrimaryBodyGeometryState(entity)?.normals ?? null;
   }
 
   getBodyMeshIndices(bodyId: string): Uint32Array | null {
     const entity = this.entities.get(bodyId);
-    if (!this.isBodyEntity(entity)) return null;
+    if (!isBodyEntity(entity)) return null;
     return this.getPrimaryBodyGeometryState(entity)?.indices ?? null;
   }
 
@@ -2919,169 +2258,30 @@ export class SceneGraphManager {
     childDatumId: string,
     alignment?: JointPreviewAlignment | null,
   ): void {
-    const parent = this.entities.get(parentDatumId);
-    const child = this.entities.get(childDatumId);
-    if (!parent || !child) return;
-
-    this.clearJointPreviewLine();
-
-    const start = new Vector3();
-    const end = new Vector3();
-    parent.rootNode.getWorldPosition(start);
-    child.rootNode.getWorldPosition(end);
-
-    const kind = alignment?.kind ?? 'general';
-    const lineOpacity = kind === 'general' ? 0.35 : 0.55;
-
-    const line = createLine(this.resolveJointPreviewLinePoints(start, end, alignment), ACCENT, {});
-    const material = line.material as LineMaterial;
-    material.transparent = true;
-    material.opacity = lineOpacity;
-    this.jointPreviewRoot.add(line);
-
-    // Alignment-specific visual extras
-    if (kind === 'coaxial' && alignment?.axis) {
-      // Show dashed axis-extension lines beyond both datums
-      const axis = new Vector3(alignment.axis.x, alignment.axis.y, alignment.axis.z).normalize();
-      const midpoint = start.clone().add(end).multiplyScalar(0.5);
-      const halfLen = Math.max(alignment.distance * 0.5, 0.12);
-      const extStart = midpoint.clone().addScaledVector(axis, -(halfLen + 0.08));
-      const extEnd = midpoint.clone().addScaledVector(axis, halfLen + 0.08);
-      const ext1 = createFatLine([midpoint.clone().addScaledVector(axis, -halfLen), extStart], {
-        color: ACCENT,
-        lineWidth: 1,
-        transparent: true,
-        opacity: 0.25,
-        dashed: true,
-        dashSize: 0.008,
-        gapSize: 0.008,
-      });
-      const ext2 = createFatLine([midpoint.clone().addScaledVector(axis, halfLen), extEnd], {
-        color: ACCENT,
-        lineWidth: 1,
-        transparent: true,
-        opacity: 0.25,
-        dashed: true,
-        dashSize: 0.008,
-        gapSize: 0.008,
-      });
-      this.jointPreviewRoot.add(ext1);
-      this.jointPreviewRoot.add(ext2);
-    } else if (kind === 'coincident') {
-      // Show a highlight sphere at the shared point
-      const midpoint = start.clone().add(end).multiplyScalar(0.5);
-      const sphere = new Mesh(
-        new SphereGeometry(0.015, 12, 12),
-        new MeshBasicMaterial({
-          color: ACCENT.getHex(),
-          transparent: true,
-          opacity: 0.5,
-          depthTest: false,
-        }),
-      );
-      sphere.position.copy(midpoint);
-      this.jointPreviewRoot.add(sphere);
-    }
-
-    this.jointPreviewRoot.visible = true;
-    setObjectLayerRecursive(this.jointPreviewRoot, VIEWPORT_PICK_LAYER);
-    this.requestRender();
+    this._preview.showJointPreviewLine(parentDatumId, childDatumId, alignment);
   }
 
   clearJointPreviewLine(): void {
-    while (this.jointPreviewRoot.children.length > 0) {
-      const child = this.jointPreviewRoot.children[0];
-      this.jointPreviewRoot.remove(child);
-      disposeObject3D(child);
-    }
-    this.jointPreviewRoot.visible = false;
-    this.requestRender();
+    this._preview.clearJointPreviewLine();
   }
 
-  /**
-   * Show a provisional connector preview from the parent datum to a cursor
-   * world position during the pick-child step. Renders a dashed line + a
-   * small sphere at the cursor end.
-   */
   showProvisionalJointPreview(
     parentDatumId: string,
     cursorWorldPos: { x: number; y: number; z: number },
   ): void {
-    const parent = this.entities.get(parentDatumId);
-    if (!parent) return;
-
-    this.clearProvisionalJointPreview();
-
-    const start = new Vector3();
-    parent.rootNode.getWorldPosition(start);
-    const end = new Vector3(cursorWorldPos.x, cursorWorldPos.y, cursorWorldPos.z);
-
-    const line = createFatLine([start, end], {
-      color: ACCENT,
-      lineWidth: 2,
-      transparent: true,
-      opacity: 0.4,
-      dashed: true,
-      dashSize: 0.015,
-      gapSize: 0.01,
-    });
-    this.provisionalPreviewRoot.add(line);
-
-    // Small sphere at cursor position
-    const sphere = new Mesh(
-      new SphereGeometry(0.008, 12, 12),
-      new MeshBasicMaterial({ color: ACCENT.getHex(), transparent: true, opacity: 0.6 }),
-    );
-    sphere.position.copy(end);
-    this.provisionalPreviewRoot.add(sphere);
-
-    this.provisionalPreviewRoot.visible = true;
-    setObjectLayerRecursive(this.provisionalPreviewRoot, VIEWPORT_PICK_LAYER);
-    this.requestRender();
+    this._preview.showProvisionalJointPreview(parentDatumId, cursorWorldPos);
   }
 
   clearProvisionalJointPreview(): void {
-    while (this.provisionalPreviewRoot.children.length > 0) {
-      const child = this.provisionalPreviewRoot.children[0];
-      this.provisionalPreviewRoot.remove(child);
-      disposeObject3D(child);
-    }
-    this.provisionalPreviewRoot.visible = false;
-    this.clearProvisionalDofPreview();
-    this.requestRender();
+    this._preview.clearProvisionalJointPreview();
   }
 
-  /**
-   * Show a mini DOF indicator at the given world position during pick-child hover,
-   * giving the user a spatial preview of the inferred joint type.
-   */
   showProvisionalDofPreview(
     position: { x: number; y: number; z: number },
     jointType: string,
     axisDirection?: { x: number; y: number; z: number } | null,
   ): void {
-    this.clearProvisionalDofPreview();
-
-    const axis = axisDirection
-      ? new Vector3(axisDirection.x, axisDirection.y, axisDirection.z)
-      : undefined;
-    const glyph = createJointGlyph(jointType, axis);
-    glyph.rootNode.position.set(position.x, position.y, position.z);
-    glyph.rootNode.scale.setScalar(0.5);
-    glyph.setOpacity(0.35);
-
-    this.provisionalPreviewRoot.add(glyph.rootNode);
-    this._provisionalDofIndicator = glyph;
-    setObjectLayerRecursive(this.provisionalPreviewRoot, VIEWPORT_PICK_LAYER);
-    this.requestRender();
-  }
-
-  private clearProvisionalDofPreview(): void {
-    if (this._provisionalDofIndicator) {
-      this._provisionalDofIndicator.rootNode.removeFromParent();
-      this._provisionalDofIndicator.dispose();
-      this._provisionalDofIndicator = null;
-    }
+    this._preview.showProvisionalDofPreview(position, jointType, axisDirection);
   }
 
   showJointTypePreview(
@@ -3090,48 +2290,11 @@ export class SceneGraphManager {
     childDatumId: string,
     alignmentAxis?: { x: number; y: number; z: number } | null,
   ): void {
-    this.clearJointTypePreview();
-
-    const parent = this.entities.get(parentDatumId);
-    const child = this.entities.get(childDatumId);
-    if (!parent || !child) return;
-
-    const start = new Vector3();
-    const end = new Vector3();
-    parent.rootNode.getWorldPosition(start);
-    child.rootNode.getWorldPosition(end);
-    const midpoint = start.clone().add(end).multiplyScalar(0.5);
-    const previewAxis = alignmentAxis
-      ? new Vector3(alignmentAxis.x, alignmentAxis.y, alignmentAxis.z)
-      : end.clone().sub(start);
-    if (previewAxis.lengthSq() < EPSILON) {
-      previewAxis.set(0, 0, 1);
-    }
-    previewAxis.normalize();
-
-    const glyph = createJointGlyph(jointType, previewAxis);
-    glyph.rootNode.position.copy(midpoint);
-    glyph.setOpacity(0.5);
-
-    this.dofPreviewRoot.add(glyph.rootNode);
-    this.dofPreviewRoot.visible = true;
-    this._dofPreviewIndicator = glyph;
-    setObjectLayerRecursive(this.dofPreviewRoot, VIEWPORT_PICK_LAYER);
-    this.requestRender();
+    this._preview.showJointTypePreview(jointType, parentDatumId, childDatumId, alignmentAxis);
   }
 
   clearJointTypePreview(): void {
-    if (this._dofPreviewIndicator) {
-      this._dofPreviewIndicator.dispose();
-      this._dofPreviewIndicator = null;
-    }
-    while (this.dofPreviewRoot.children.length > 0) {
-      const child = this.dofPreviewRoot.children[0];
-      this.dofPreviewRoot.remove(child);
-      disposeObject3D(child);
-    }
-    this.dofPreviewRoot.visible = false;
-    this.requestRender();
+    this._preview.clearJointTypePreview();
   }
 
   /** True when any joint glyph has an active hover animation. */
@@ -3282,46 +2445,30 @@ export class SceneGraphManager {
 
   getGeometryIndex(bodyId: string, geometryId: string): BodyGeometryIndex | undefined {
     const entity = this.entities.get(bodyId);
-    if (!this.isBodyEntity(entity)) return undefined;
+    if (!isBodyEntity(entity)) return undefined;
     return this.getBodyGeometryState(entity, geometryId)?.geometryIndex;
   }
 
   getBodyGeometryIndex(id: string): BodyGeometryIndex | undefined {
     const entity = this.entities.get(id);
-    if (!this.isBodyEntity(entity)) return undefined;
+    if (!isBodyEntity(entity)) return undefined;
     return this.getPrimaryBodyGeometryState(entity)?.geometryIndex;
   }
 
   getGeometryBvhState(bodyId: string, geometryId: string): BodyBvhState {
-    const entity = this.entities.get(bodyId);
-    if (!this.isBodyEntity(entity)) return 'none';
-    return this.getBodyGeometryState(entity, geometryId)?.bvhState ?? 'none';
+    return this._bvh.getGeometryBvhState(bodyId, geometryId);
   }
 
   getBodyBvhState(id: string): BodyBvhState {
-    const entity = this.entities.get(id);
-    if (!this.isBodyEntity(entity)) return 'none';
-    return this.getPrimaryBodyGeometryState(entity)?.bvhState ?? 'none';
+    return this._bvh.getBodyBvhState(id);
   }
 
   hasPendingGeometryBvhs(): boolean {
-    if (this.bvhBuildInFlight || this.bvhBuildQueue.length > 0) {
-      return true;
-    }
-    for (const entity of this.entities.values()) {
-      if (entity.meta.kind === 'body') {
-        for (const geometry of entity.meta.geometries.values()) {
-          if (geometry.bvhState === 'building') {
-            return true;
-          }
-        }
-      }
-    }
-    return false;
+    return this._bvh.hasPendingGeometryBvhs();
   }
 
   hasPendingBodyBvhs(): boolean {
-    return this.hasPendingGeometryBvhs();
+    return this._bvh.hasPendingBodyBvhs();
   }
 
   getGeometryFacePreview(
@@ -3330,7 +2477,7 @@ export class SceneGraphManager {
     faceIndex: number,
   ): FacePreviewData | null {
     const entity = this.entities.get(bodyId);
-    if (!this.isBodyEntity(entity)) return null;
+    if (!isBodyEntity(entity)) return null;
     const geometryState = this.getBodyGeometryState(entity, geometryId);
     const geometryIndex = geometryState?.geometryIndex;
     if (!geometryIndex || faceIndex < 0 || faceIndex >= geometryIndex.faceRanges.length) {
@@ -3363,7 +2510,7 @@ export class SceneGraphManager {
 
   getBodyFacePreview(bodyId: string, faceIndex: number): FacePreviewData | null {
     const entity = this.entities.get(bodyId);
-    if (!this.isBodyEntity(entity) || !entity.meta.primaryGeometryId) return null;
+    if (!isBodyEntity(entity) || !entity.meta.primaryGeometryId) return null;
     return this.getGeometryFacePreview(bodyId, entity.meta.primaryGeometryId, faceIndex);
   }
 
@@ -3377,7 +2524,7 @@ export class SceneGraphManager {
     faceIndex: number,
   ): [number, number, number] | null {
     const entity = this.entities.get(bodyId);
-    if (!this.isBodyEntity(entity)) return null;
+    if (!isBodyEntity(entity)) return null;
 
     const preview = this.getGeometryFacePreview(bodyId, geometryId, faceIndex);
     if (!preview) return null;
@@ -3405,7 +2552,7 @@ export class SceneGraphManager {
 
   getBodyFaceCentroidWorld(bodyId: string, faceIndex: number): [number, number, number] | null {
     const entity = this.entities.get(bodyId);
-    if (!this.isBodyEntity(entity) || !entity.meta.primaryGeometryId) return null;
+    if (!isBodyEntity(entity) || !entity.meta.primaryGeometryId) return null;
     return this.getFaceCentroidWorld(bodyId, entity.meta.primaryGeometryId, faceIndex);
   }
 
@@ -3478,6 +2625,7 @@ export class SceneGraphManager {
           entityId: entity.id,
           entityType: 'joint',
           name: entity.meta.jointName,
+          jointType: entity.meta.jointType,
           worldPosition: { x: pos.x, y: pos.y, z: pos.z },
           screenRadius: 12, // joints are point-like
           isSelected: this.currentSelectedIds.has(entity.id),
@@ -3532,8 +2680,8 @@ export class SceneGraphManager {
       }
     }
 
-    if (this.isBodyEntity(entity)) {
-      for (const edgeLines of this.getBodyEdgeLines(entity)) {
+    if (isBodyEntity(entity)) {
+      for (const edgeLines of getBodyEdgeLines(entity)) {
         const edgeMat = edgeLines.material as LineBasicMaterial;
         if (isSelected) {
           edgeMat.color.set(entityColor.getHex());
@@ -3708,7 +2856,7 @@ export class SceneGraphManager {
   ): void {
     this.batchMutation(() => {
       const entity = this.entities.get(bodyId);
-      if (!this.isBodyEntity(entity)) return;
+      if (!isBodyEntity(entity)) return;
       const geometryState = this.getBodyGeometryState(entity, geometryId);
       if (!geometryState) return;
 
@@ -3767,7 +2915,7 @@ export class SceneGraphManager {
   setCollisionWireframeVisibility(visible: boolean): void {
     this.batchMutation(() => {
       for (const entity of this.entities.values()) {
-        if (!this.isBodyEntity(entity)) continue;
+        if (!isBodyEntity(entity)) continue;
         for (const geometryState of entity.meta.geometries.values()) {
           if (geometryState.collisionWireframe) {
             geometryState.collisionWireframe.visible = visible;

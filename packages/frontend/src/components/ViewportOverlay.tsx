@@ -19,7 +19,6 @@ import { useTraceStore } from '../stores/traces.js';
 import { nearestSample } from '../utils/nearest-sample.js';
 import { getJointCoordinateChannelIds } from '../utils/runtime-channel-ids.js';
 import { FaceTooltip } from './FaceTooltip.js';
-import { JointHoverBadge } from './JointHoverBadge.js';
 import { JointTypeSelectorPanel } from './JointTypeSelectorPanel.js';
 import { LoadCreationCard } from './LoadCreationCard.js';
 import { ModeIndicator } from './ModeIndicator.js';
@@ -396,7 +395,19 @@ export function ViewportOverlay() {
       syncSelectedJointLimits();
     });
     const unsubTrace = useTraceStore.subscribe((state, prev) => {
-      if (state.traces === prev.traces) return;
+      // Only sync when channels relevant to selected joints received new data.
+      // The old `state.traces === prev.traces` guard never short-circuited
+      // because flushPendingTraces creates a new Map each flush.
+      if (state.lastUpdatedChannels.size === 0) return;
+      const { selectedIds } = useSelectionStore.getState();
+      const { joints } = useMechanismStore.getState();
+      let relevant = false;
+      for (const id of selectedIds) {
+        const joint = joints.get(id);
+        const chId = joint ? getJointCoordinateChannelIds(id, joint.type)?.position : null;
+        if (chId && state.lastUpdatedChannels.has(chId)) { relevant = true; break; }
+      }
+      if (!relevant) return;
       syncSelectedJointLimits();
     });
     const unsubSelection = useSelectionStore.subscribe((state, prev) => {
@@ -546,7 +557,6 @@ export function ViewportOverlay() {
         <JointTypeSelectorPanel />
         <LoadCreationCard sceneGraph={sceneGraph} />
         <JointCreationDatumLabels sceneGraph={sceneGraph} />
-        <JointHoverBadge sceneGraph={sceneGraph} />
         <EntityLabelOverlay sceneGraph={sceneGraph} />
       </div>
     </ViewportContextMenu>

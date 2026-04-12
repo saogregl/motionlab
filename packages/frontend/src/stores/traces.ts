@@ -72,7 +72,7 @@ function flushPendingTraces() {
       const existing = next.get(channelId) ?? [];
       next.set(channelId, mergeSamples(existing, incoming));
     }
-    return { traces: next };
+    return { traces: next, lastUpdatedChannels: new Set(batch.keys()) };
   });
 }
 
@@ -94,6 +94,8 @@ interface TraceState {
   channels: Map<string, ChannelDescriptor>;
   traces: Map<string, StoreSample[]>;
   activeChannels: Set<string>;
+  /** Channel IDs that received new data in the most recent batch flush. */
+  lastUpdatedChannels: Set<string>;
 
   setChannels: (descriptors: ChannelDescriptor[]) => void;
   addSamples: (channelId: string, samples: StoreSample[]) => void;
@@ -106,6 +108,7 @@ export const useTraceStore = create<TraceState>()((set) => ({
   channels: new Map(),
   traces: new Map(),
   activeChannels: new Set(),
+  lastUpdatedChannels: new Set(),
 
   setChannels: (descriptors) => {
     const channels = new Map<string, ChannelDescriptor>();

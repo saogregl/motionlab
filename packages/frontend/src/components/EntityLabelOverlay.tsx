@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 
 import type { LabelEntry, SceneGraphManager, ScreenLabel } from '@motionlab/viewport';
-import { computeLabelLayout } from '@motionlab/viewport';
+import { computeLabelLayout, DOF_TABLE } from '@motionlab/viewport';
 
 import { useSelectionStore } from '../stores/selection.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
@@ -20,6 +20,7 @@ const MIN_LEADER_LEN = 8;
 interface LabelDomEntry {
   entityId: string;
   entityType: 'body' | 'joint';
+  jointType?: string;
   name: string;
   pill: HTMLDivElement;
   line: SVGLineElement;
@@ -137,6 +138,7 @@ export function EntityLabelOverlay({ sceneGraph }: EntityLabelOverlayProps) {
       return {
         entityId: label.entityId,
         entityType: label.entityType,
+        jointType: label.jointType,
         name: label.name,
         pill,
         line,
@@ -298,14 +300,21 @@ export function EntityLabelOverlay({ sceneGraph }: EntityLabelOverlayProps) {
           entry.pill.style.border = '1px solid var(--accent-primary, rgba(15, 98, 254, 0.7))';
           entry.pill.style.color = 'var(--foreground, #ffffff)';
           entry.pill.style.opacity = '1';
+          entry.pill.textContent = entry.name;
         } else if (label.isHovered) {
           entry.pill.style.border = 'none';
           entry.pill.style.color = 'var(--foreground, #e0e4ec)';
           entry.pill.style.opacity = '1';
+          // Show DOF info on joint hover (replaces JointHoverBadge)
+          const dof = entry.jointType ? DOF_TABLE[entry.jointType] : undefined;
+          entry.pill.textContent = dof
+            ? `${entry.name} \u00b7 ${dof.label}`
+            : entry.name;
         } else {
           entry.pill.style.border = 'none';
           entry.pill.style.color = 'var(--muted-foreground, #a0a8b8)';
           entry.pill.style.opacity = '0.80';
+          entry.pill.textContent = entry.name;
         }
 
         // Leader line

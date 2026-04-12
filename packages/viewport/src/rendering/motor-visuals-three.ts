@@ -23,11 +23,11 @@ export interface MotorVisualResult {
 
 // ── Constants ──
 
-const RING_RADIUS = 0.065;
+const RING_RADIUS = 0.04;
 const ARC_LINE_WIDTH = 2;
 const ARC_OPACITY = 0.85;
 const ARROW_LINE_WIDTH = 1.5;
-const ARROW_LENGTH = 0.14;
+const ARROW_LENGTH = 0.09;
 const PI = Math.PI;
 
 // ── Helpers ──
