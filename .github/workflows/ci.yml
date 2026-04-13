@@ -20,6 +20,8 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
+      - name: Install protobuf compiler
+        run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Verify generated proto files are fresh
