@@ -8,6 +8,7 @@ import { sendScrub, sendSimulationControl } from '../engine/connection.js';
 import { useChartThemeKey } from '../hooks/useChartTheme.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
+import { getSimTime } from '../stores/sim-clock.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { type StoreSample, useTraceStore } from '../stores/traces.js';
 import { type AxisTheme, computeAxisLayout } from '../utils/chart-axis-assignment.js';
@@ -60,6 +61,10 @@ export { CHART_SERIES_TOKENS, readChartColors };
 // uPlot data helpers
 // ---------------------------------------------------------------------------
 
+// Reusable buffers to reduce GC pressure during high-frequency updates.
+let _cachedXArr: Float64Array | null = null;
+const _cachedLookup = new Map<number, number>();
+
 function buildAlignedData(
   activeIds: string[],
   traces: Map<string, StoreSample[]>,
@@ -77,23 +82,26 @@ function buildAlignedData(
     return [new Float64Array(0)] as unknown as uPlot.AlignedData;
   }
 
-  const xArr = new Float64Array(times.length);
-  for (let i = 0; i < times.length; i++) xArr[i] = times[i];
+  // Reuse Float64Array when length hasn't changed
+  if (!_cachedXArr || _cachedXArr.length !== times.length) {
+    _cachedXArr = new Float64Array(times.length);
+  }
+  for (let i = 0; i < times.length; i++) _cachedXArr[i] = times[i];
 
   const series: (number | null)[][] = [];
   for (const id of activeIds) {
     const samples = traces.get(id) ?? [];
-    const lookup = new Map<number, number>();
-    for (const s of samples) lookup.set(s.time, s.value);
+    _cachedLookup.clear();
+    for (const s of samples) _cachedLookup.set(s.time, s.value);
 
     const yArr: (number | null)[] = new Array(times.length);
     for (let i = 0; i < times.length; i++) {
-      yArr[i] = lookup.get(times[i]) ?? null;
+      yArr[i] = _cachedLookup.get(times[i]) ?? null;
     }
     series.push(yArr);
   }
 
-  return [xArr, ...series] as unknown as uPlot.AlignedData;
+  return [_cachedXArr, ...series] as unknown as uPlot.AlignedData;
 }
 
 // ---------------------------------------------------------------------------
@@ -205,7 +213,7 @@ function buildOpts(
       ],
     },
     legend: { show: false },
-    plugins: [scrubMarkerPlugin(() => useSimulationStore.getState().simTime, scrubColor)],
+    plugins: [scrubMarkerPlugin(getSimTime, scrubColor)],
   };
 }
 
@@ -310,7 +318,7 @@ export function ChartPanel() {
     // Imperative data pump — subscribe to trace store outside React
     let lastLegendUpdate = 0;
     const LEGEND_INTERVAL = 200; // update legend text at ~5fps (imperceptible above this)
-    const unsub = useTraceStore.subscribe((state) => {
+    const unsubTraces = useTraceStore.subscribe((state) => {
       if (rafRef.current) return; // already scheduled
       rafRef.current = requestAnimationFrame(() => {
         rafRef.current = 0;
@@ -335,6 +343,14 @@ export function ChartPanel() {
       });
     });
 
+    // Redraw scrub marker when paused and user scrubs the timeline.
+    // During live simulation the trace data pump already triggers redraws.
+    const unsubScrub = useSimulationStore.subscribe((state, prev) => {
+      if (state.simTime !== prev.simTime && state.state === 'paused') {
+        uplotRef.current?.redraw();
+      }
+    });
+
     // ResizeObserver
     const ro = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -348,7 +364,8 @@ export function ChartPanel() {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = 0;
-      unsub();
+      unsubTraces();
+      unsubScrub();
       ro.disconnect();
       if (uplotRef.current) {
         uplotRef.current.destroy();
@@ -358,12 +375,6 @@ export function ChartPanel() {
     // Recreate when active channel set changes or theme switches
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIds, channels, themeKey]);
-
-  // Redraw chart on simTime changes (scrub marker) when no new data arrives
-  const _simTime = useSimulationStore((s) => s.simTime);
-  useEffect(() => {
-    uplotRef.current?.redraw();
-  }, []);
 
   const handleToggle = useCallback((id: string) => {
     useTraceStore.getState().toggleChannel(id);

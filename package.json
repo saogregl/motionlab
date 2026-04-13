@@ -28,9 +28,11 @@
     "generate:templates": "cmake --build native/engine/build/dev-linux --target generate-templates && native/engine/build/dev-linux/generate-templates apps/desktop/resources/templates",
     "build:engine": "node scripts/build-engine-release.mjs release-linux motionlab-engine",
     "build:engine:win": "node scripts/build-engine-release.mjs release-mingw motionlab-engine.exe",
+    "sync:occt-wasm": "node scripts/sync-occt-wasm-assets.mjs",
+    "verify:desktop-cad-assets": "node scripts/verify-desktop-cad-assets.mjs",
     "install:desktop": "pnpm --dir apps/desktop install --frozen-lockfile",
-    "package:desktop": "pnpm run install:desktop && pnpm run build:engine && pnpm --filter @motionlab/desktop run build",
-    "package:desktop:win": "pnpm run install:desktop && pnpm run build:engine:win && pnpm --filter @motionlab/desktop run build",
+    "package:desktop": "pnpm run install:desktop && pnpm run sync:occt-wasm && pnpm run build:engine && pnpm --filter @motionlab/desktop run build && pnpm run verify:desktop-cad-assets",
+    "package:desktop:win": "pnpm run install:desktop && pnpm run sync:occt-wasm && pnpm run build:engine:win && pnpm --filter @motionlab/desktop run build && pnpm run verify:desktop-cad-assets",
     "release:validate-tag": "node scripts/validate-release-tag.mjs",
     "lint:proto": "buf lint",
     "breaking:proto": "buf breaking --against '.git#branch=main'"

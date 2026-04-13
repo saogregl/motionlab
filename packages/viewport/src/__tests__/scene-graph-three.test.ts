@@ -2,7 +2,7 @@ import { MeshStandardMaterial, OrthographicCamera, Scene, Vector3 } from 'three'
 import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ENTITY_COLORS } from '../rendering/colors-three.js';
+import { ACCENT, ENTITY_COLORS } from '../rendering/colors-three.js';
 import { createMaterialFactory } from '../rendering/materials-three.js';
 import { SceneGraphManager, VIEWPORT_PICK_LAYER } from '../scene-graph-three.js';
 import { createCylinderMeshDataWithTopology } from '../story-helpers.js';
@@ -57,6 +57,25 @@ function countDatumGlyphs(manager: SceneGraphManager, datumId: string, glyph: st
     }
   });
   return count;
+}
+
+type LimitVisualMarker = {
+  visible: boolean;
+  position: { z: number };
+};
+
+type ManagerWithLimitVisuals = {
+  rootNode: { getObjectByName: (name: string) => LimitVisualMarker | null };
+};
+
+function getLimitVisual(
+  manager: SceneGraphManager,
+  id: string,
+): ManagerWithLimitVisuals | undefined {
+  const candidate = manager as unknown as {
+    activeLimitVisuals?: Map<string, ManagerWithLimitVisuals>;
+  };
+  return candidate.activeLimitVisuals?.get(id);
 }
 
 describe('SceneGraphManager', () => {
@@ -442,7 +461,7 @@ describe('SceneGraphManager', () => {
   });
 
   it('uses semantic alignment axes for the joint preview line', () => {
-    const { manager, materialFactory } = makeManager();
+    const { manager, scene, materialFactory } = makeManager();
 
     manager.addBody('body-a', 'A', makeBodyMesh(), {
       position: [0, 0, 0],
@@ -467,16 +486,22 @@ describe('SceneGraphManager', () => {
       distance: 2,
     });
 
-    const previewRoot = (manager as any).jointPreviewRoot;
-    const line = previewRoot.children[0] as Line2;
+    const previewRoot = scene.getObjectByName('joint_preview');
+    expect(previewRoot).toBeTruthy();
+    const line = previewRoot?.children.find((child) => {
+      if (!(child instanceof Line2)) return false;
+      const material = child.material as { opacity?: number } | undefined;
+      return Math.abs((material?.opacity ?? 0) - 0.55) < 1e-6;
+    }) as Line2 | undefined;
+    expect(line).toBeTruthy();
     // Line2 stores segment pairs as instanceStart/instanceEnd
-    const instanceStart = line.geometry.getAttribute('instanceStart');
-    const instanceEnd = line.geometry.getAttribute('instanceEnd');
+    const instanceStart = line?.geometry.getAttribute('instanceStart');
+    const instanceEnd = line?.geometry.getAttribute('instanceEnd');
 
-    expect(instanceStart.getX(0)).toBeCloseTo(-1);
-    expect(instanceStart.getZ(0)).toBeCloseTo(1);
-    expect(instanceEnd.getX(0)).toBeCloseTo(1);
-    expect(instanceEnd.getZ(0)).toBeCloseTo(1);
+    expect(instanceStart?.getX(0)).toBeCloseTo(-1);
+    expect(instanceStart?.getZ(0)).toBeCloseTo(1);
+    expect(instanceEnd?.getX(0)).toBeCloseTo(1);
+    expect(instanceEnd?.getZ(0)).toBeCloseTo(1);
 
     manager.dispose();
     materialFactory.dispose();
@@ -507,11 +532,12 @@ describe('SceneGraphManager', () => {
     manager.flushSelectionOverlays();
     manager.updateJointLimitValue('joint-1', 0.25);
 
-    const visual = (manager as any).activeLimitVisuals.get('joint-1');
-    const marker = visual.rootNode.children[1];
+    const visual = getLimitVisual(manager, 'joint-1');
+    const marker = visual?.rootNode.getObjectByName('prismatic-limit-marker');
 
-    expect(marker.visible).toBe(true);
-    expect(marker.position.z).toBeCloseTo(0.25);
+    expect(marker).toBeTruthy();
+    expect(marker?.visible).toBe(true);
+    expect(marker?.position.z).toBeCloseTo(0.25);
 
     manager.dispose();
     materialFactory.dispose();
@@ -550,13 +576,11 @@ describe('SceneGraphManager', () => {
     // Select the body — should tint toward ENTITY_BODY steel blue (0.29, 0.565, 0.851)
     manager.applySelection(new Set(['body-1']));
 
-    // The tinted color is lerped 30% toward ENTITY_BODY from the original.
-    // ENTITY_BODY.r = 0.29, which is lower than ACCENT.r = 0.06.
-    // So the tinted red channel should be pulled toward 0.29, not toward 0.06.
+    // Selection should apply the entity-type color (not uniform ACCENT).
     const tintedR = mat.color.r;
     const bodyColorR = ENTITY_COLORS.body.r;
-    const expectedR = originalR + (bodyColorR - originalR) * 0.3;
-    expect(tintedR).toBeCloseTo(expectedR, 2);
+    expect(tintedR).toBeCloseTo(bodyColorR, 3);
+    expect(tintedR).not.toBeCloseTo(ACCENT.r, 3);
 
     // Deselect and verify restore
     manager.applySelection(new Set());

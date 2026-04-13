@@ -6,12 +6,7 @@
  * demos — in production the native C++ engine is authoritative for geometry.
  */
 
-import type {
-  OcctBrepFace,
-  OcctImportMesh,
-  OcctImportParams,
-  OcctImporter,
-} from 'occt-import-js';
+import type { OcctBrepFace, OcctImporter, OcctImportMesh, OcctImportParams } from 'occt-import-js';
 
 import type { MeshDataInput } from '../scene-graph-three.js';
 
@@ -47,7 +42,35 @@ let importerPromise: Promise<OcctImporter> | null = null;
  * Default WASM base path — serves from Storybook's static dir.
  * Override via `setWasmBasePath()` if hosting the WASM file elsewhere.
  */
-let wasmBasePath = '/occt-wasm/';
+interface WasmBasePathRuntimeOptions {
+  readonly isDev: boolean;
+  readonly moduleUrl: string;
+}
+
+/**
+ * Resolve the default OCCT WASM base path for the current runtime.
+ *
+ * Dev keeps an absolute `/occt-wasm/` path because Storybook/Vite expose that
+ * mount directly. Production uses a URL relative to the emitted JS chunk so
+ * packaged `file://` installs resolve inside the app bundle.
+ */
+export function resolveDefaultWasmBasePath(options: WasmBasePathRuntimeOptions): string {
+  if (options.isDev) {
+    return '/occt-wasm/';
+  }
+  return new URL('../occt-wasm/', options.moduleUrl).href;
+}
+
+const runtimeEnv = import.meta as ImportMeta & {
+  readonly env?: {
+    readonly DEV?: boolean;
+  };
+};
+
+let wasmBasePath = resolveDefaultWasmBasePath({
+  isDev: runtimeEnv.env?.DEV === true,
+  moduleUrl: import.meta.url,
+});
 
 export function setWasmBasePath(path: string): void {
   if (!path.endsWith('/')) path += '/';
@@ -133,10 +156,7 @@ export function normalizeStepImportParams(params?: OcctImportParams | null): Occ
  * tessellated mesh data and a partIndex for face-level topology. Mesh vertices
  * are normalized to meters to mirror the native import path.
  */
-export async function loadSTEP(
-  url: string,
-  params?: OcctImportParams,
-): Promise<StepLoadResult> {
+export async function loadSTEP(url: string, params?: OcctImportParams): Promise<StepLoadResult> {
   const [importer, buffer] = await Promise.all([
     getImporter(),
     fetch(url).then((r) => {

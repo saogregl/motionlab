@@ -30,6 +30,12 @@ jobs:
         run: pnpm lint
       - name: Typecheck
         run: pnpm typecheck
+      - name: Sync OCCT WASM renderer assets
+        run: pnpm sync:occt-wasm
+      - name: Build desktop renderer bundle
+        run: pnpm --dir apps/desktop exec vite build --config vite.renderer.config.mjs
+      - name: Verify desktop CAD runtime assets
+        run: pnpm verify:desktop-cad-assets
       - name: Workspace tests
         id: js-tests
         run: pnpm turbo run test

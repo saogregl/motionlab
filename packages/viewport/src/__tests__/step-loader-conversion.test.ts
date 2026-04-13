@@ -1,11 +1,11 @@
-import { describe, expect, it } from 'vitest';
-
 import type { OcctBrepFace, OcctImportMesh } from 'occt-import-js';
+import { describe, expect, it } from 'vitest';
 
 import {
   brepFacesToPartIndex,
   convertOcctMesh,
   normalizeStepImportParams,
+  resolveDefaultWasmBasePath,
 } from '../loaders/step-loader.js';
 
 describe('brepFacesToPartIndex', () => {
@@ -43,10 +43,7 @@ describe('brepFacesToPartIndex', () => {
 });
 
 describe('convertOcctMesh', () => {
-  function makeMesh(opts: {
-    triangleCount: number;
-    brepFaces: OcctBrepFace[];
-  }): OcctImportMesh {
+  function makeMesh(opts: { triangleCount: number; brepFaces: OcctBrepFace[] }): OcctImportMesh {
     const vertexCount = opts.triangleCount * 3;
     const positions: number[] = [];
     const normals: number[] = [];
@@ -160,5 +157,30 @@ describe('normalizeStepImportParams', () => {
       linearUnit: 'meter',
       angularDeflection: 0.5,
     });
+  });
+});
+
+describe('resolveDefaultWasmBasePath', () => {
+  it('uses absolute /occt-wasm path in dev', () => {
+    expect(
+      resolveDefaultWasmBasePath({
+        isDev: true,
+        moduleUrl: 'http://localhost:6008/src/loaders/step-loader.ts',
+      }),
+    ).toBe('/occt-wasm/');
+  });
+
+  it('uses module-relative path in production for file URLs', () => {
+    const moduleUrl =
+      'file:///C:/Program%20Files/MotionLab/resources/app/.vite/renderer/main_window/assets/step-loader-abc.js';
+
+    expect(
+      resolveDefaultWasmBasePath({
+        isDev: false,
+        moduleUrl,
+      }),
+    ).toBe(
+      'file:///C:/Program%20Files/MotionLab/resources/app/.vite/renderer/main_window/occt-wasm/',
+    );
   });
 });

@@ -298,6 +298,7 @@ function SceneSetup({
         }}
       />
       <DofAnimator sceneGraph={sceneGraphState} />
+      <DampingDriver />
     </>
   );
 }
@@ -320,6 +321,22 @@ function DofAnimator({ sceneGraph }: { sceneGraph: SceneGraphManager | null }) {
     if (!sceneGraph || !sceneGraph.hasDofAnimations()) return;
     sceneGraph.updateDofAnimations(clock.elapsedTime);
     inv();
+  });
+  return null;
+}
+
+function DampingDriver() {
+  const controls = useThree((s) => s.controls) as {
+    enableDamping: boolean;
+    update(): boolean;
+  } | null;
+  const invalidate = useThree((s) => s.invalidate);
+  useFrame(() => {
+    if (controls?.enableDamping) {
+      if (controls.update()) {
+        invalidate();
+      }
+    }
   });
   return null;
 }
