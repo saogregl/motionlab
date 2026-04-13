@@ -34,11 +34,9 @@ jobs:
           path: native/engine/build/vcpkg_installed
           key: vcpkg-linux-${{ hashFiles('native/engine/vcpkg.json') }}
           restore-keys: vcpkg-linux-
-      - name: Configure native engine (protoc provisioning)
-        working-directory: native/engine
-        env:
-          VCPKG_ROOT: ${{ runner.temp }}/vcpkg
-        run: cmake --preset dev-linux
+      - name: Install protobuf via vcpkg (protoc provisioning)
+        run: |
+          "$RUNNER_TEMP/vcpkg/vcpkg" install protobuf:x64-linux --x-install-root="$GITHUB_WORKSPACE/native/engine/build/vcpkg_installed"
       - name: Verify generated proto files are fresh
         run: |
           pnpm generate:proto
