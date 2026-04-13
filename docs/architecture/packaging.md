@@ -33,6 +33,11 @@ pnpm package:desktop:win
 
 These commands first refresh the hoisted `apps/desktop` install that Electron Forge expects, then build the platform-specific release engine and run `electron-forge make`. Output is in `apps/desktop/out/`.
 
+Desktop packaging also runs CAD WASM guardrails:
+
+- `pnpm sync:occt-wasm` mirrors `occt-import-js` runtime assets into `apps/desktop/src/public/occt-wasm`.
+- `pnpm verify:desktop-cad-assets` validates renderer output wiring and fails on absolute `"/occt-wasm/"` URL regressions.
+
 To build the unpacked desktop bundle without installers:
 
 ```bash

@@ -37,6 +37,7 @@ apps/desktop/release/
 apps/desktop/.vite/
 apps/desktop/dist-electron/
 apps/desktop/dist-react/
+apps/desktop/src/public/occt-wasm/
 
 # Logs
 *.log

@@ -24,9 +24,9 @@ export interface LimitVisual {
 
 // ── Constants ──
 
-const ARC_RADIUS = 0.10;
+const ARC_RADIUS = 0.1;
 const LIMIT_LINE_WIDTH = 2;
-const LIMIT_OPACITY = 0.30;
+const LIMIT_OPACITY = 0.3;
 const MARKER_LINE_WIDTH = 1.5;
 const MARKER_OPACITY = 0.85;
 const MARKER_LENGTH = 0.12;
@@ -111,10 +111,7 @@ export function createRevoluteLimitVisual(
 
   // Current-position marker: radial line from origin to arc radius
   const markerMat = makeLineMat(DOF_FREE, MARKER_LINE_WIDTH, MARKER_OPACITY);
-  const markerLine = makeLine(
-    [new Vector3(0, 0, 0), new Vector3(MARKER_LENGTH, 0, 0)],
-    markerMat,
-  );
+  const markerLine = makeLine([new Vector3(0, 0, 0), new Vector3(MARKER_LENGTH, 0, 0)], markerMat);
   markerLine.visible = false;
   markerLine.renderOrder = 2;
   root.add(markerLine);
@@ -160,11 +157,13 @@ export function createPrismaticLimitVisual(
     [new Vector3(-half, 0, lowerLimit), new Vector3(-half, 0, upperLimit)],
     railMat,
   );
+  leftRail.name = 'prismatic-limit-left-rail';
   const rightMat = makeLineMat(JOINT_STEEL_BLUE, RAIL_LINE_WIDTH, LIMIT_OPACITY);
   const rightRail = makeLine(
     [new Vector3(half, 0, lowerLimit), new Vector3(half, 0, upperLimit)],
     rightMat,
   );
+  rightRail.name = 'prismatic-limit-right-rail';
   root.add(leftRail);
   root.add(rightRail);
 
@@ -174,10 +173,12 @@ export function createPrismaticLimitVisual(
     [new Vector3(-half, 0, lowerLimit), new Vector3(half, 0, lowerLimit)],
     capMat,
   );
+  lowCap.name = 'prismatic-limit-low-cap';
   const highCap = makeLine(
     [new Vector3(-half, 0, upperLimit), new Vector3(half, 0, upperLimit)],
     capMat,
   );
+  highCap.name = 'prismatic-limit-high-cap';
   root.add(lowCap);
   root.add(highCap);
 
@@ -188,6 +189,7 @@ export function createPrismaticLimitVisual(
     [new Vector3(-crossSize, 0, 0), new Vector3(crossSize, 0, 0)],
     markerMat,
   );
+  markerLine.name = 'prismatic-limit-marker';
   markerLine.visible = false;
   markerLine.renderOrder = 2;
   root.add(markerLine);
