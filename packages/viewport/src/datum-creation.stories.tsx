@@ -8,16 +8,16 @@ import type {
   SpatialPickData,
   ViewportTheme,
 } from './index.js';
-import { Viewport, computeDatumLocalPose } from './index.js';
+import { computeDatumLocalPose, Viewport } from './index.js';
 import {
   ACTIVE_BUTTON_STYLE,
   BUTTON_STYLE,
   CAMERA_PRESETS,
-  STATUS_STYLE,
-  TOOLBAR_STYLE,
   createBoxMeshDataWithTopology,
   createCylinderMeshDataWithTopology,
   createSphereMeshDataWithTopology,
+  STATUS_STYLE,
+  TOOLBAR_STYLE,
 } from './story-helpers.js';
 
 const meta: Meta<typeof Viewport> = {
@@ -89,28 +89,50 @@ function DatumCreationScene({ theme = 'dark' }: { theme: ViewportTheme }) {
     sgRef.current = sg;
 
     const box = createBoxMeshDataWithTopology(1.5, 1.5, 1.5);
-    sg.addBody('box', 'Box', box, {
-      position: [-2.5, 0.75, 0],
-      rotation: [0, 0, 0, 1],
-    }, box.partIndex);
+    sg.addBody(
+      'box',
+      'Box',
+      box,
+      {
+        position: [-2.5, 0.75, 0],
+        rotation: [0, 0, 0, 1],
+      },
+      box.partIndex,
+    );
 
     const cyl = createCylinderMeshDataWithTopology(0.6, 0.6, 2, 48);
-    sg.addBody('cylinder', 'Cylinder', cyl, {
-      position: [0, 1, 0],
-      rotation: [0, 0, 0, 1],
-    }, cyl.partIndex);
+    sg.addBody(
+      'cylinder',
+      'Cylinder',
+      cyl,
+      {
+        position: [0, 1, 0],
+        rotation: [0, 0, 0, 1],
+      },
+      cyl.partIndex,
+    );
 
     const sph = createSphereMeshDataWithTopology(0.8, 48, 32);
-    sg.addBody('sphere', 'Sphere', sph, {
-      position: [2.5, 0.8, 0],
-      rotation: [0, 0, 0, 1],
-    }, sph.partIndex);
+    sg.addBody(
+      'sphere',
+      'Sphere',
+      sph,
+      {
+        position: [2.5, 0.8, 0],
+        rotation: [0, 0, 0, 1],
+      },
+      sph.partIndex,
+    );
 
     sg.fitAll();
   }, []);
 
   const handlePick = useCallback(
-    (entityId: string | null, _modifiers: { ctrl: boolean; shift: boolean }, spatial?: SpatialPickData) => {
+    (
+      entityId: string | null,
+      _modifiers: { ctrl: boolean; shift: boolean },
+      spatial?: SpatialPickData,
+    ) => {
       const sg = sgRef.current;
       if (!sg || !entityId || !spatial || mode !== 'create-datum') return;
 
@@ -133,9 +155,10 @@ function DatumCreationScene({ theme = 'dark' }: { theme: ViewportTheme }) {
         ],
       });
 
-      const surfaceType = spatial.faceIndex !== undefined
-        ? (faceInfo?.match(/Type: (\w+)/)?.[1] ?? 'unknown')
-        : 'unknown';
+      const surfaceType =
+        spatial.faceIndex !== undefined
+          ? (faceInfo?.match(/Type: (\w+)/)?.[1] ?? 'unknown')
+          : 'unknown';
 
       setDatums((prev) => [
         ...prev,
@@ -189,11 +212,7 @@ function DatumCreationScene({ theme = 'dark' }: { theme: ViewportTheme }) {
           {mode === 'create-datum' ? 'Create Datum Mode' : 'Select Mode'}
         </button>
         {datums.length > 0 && (
-          <button
-            type="button"
-            style={{ ...BUTTON_STYLE, color: '#f38ba8' }}
-            onClick={clearDatums}
-          >
+          <button type="button" style={{ ...BUTTON_STYLE, color: '#f38ba8' }} onClick={clearDatums}>
             Clear All ({datums.length})
           </button>
         )}
@@ -208,18 +227,10 @@ function DatumCreationScene({ theme = 'dark' }: { theme: ViewportTheme }) {
             {preset}
           </button>
         ))}
-        <button
-          type="button"
-          style={BUTTON_STYLE}
-          onClick={() => sgRef.current?.fitAll()}
-        >
+        <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.fitAll()}>
           fit-all
         </button>
-        <button
-          type="button"
-          style={BUTTON_STYLE}
-          onClick={() => sgRef.current?.toggleGrid()}
-        >
+        <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.toggleGrid()}>
           grid
         </button>
       </div>

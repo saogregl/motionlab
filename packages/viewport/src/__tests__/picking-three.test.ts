@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Intersection, WebGLRenderer } from 'three';
 import {
   BufferAttribute,
   BufferGeometry,
@@ -9,7 +9,7 @@ import {
   Scene,
   Vector3,
 } from 'three';
-import type { Intersection, WebGLRenderer } from 'three';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PickingManager } from '../picking-three.js';
 import type { SceneGraphManager } from '../scene-graph-three.js';
@@ -60,14 +60,7 @@ function makePickMesh(entityId: string, geometryId?: string): Mesh {
   const geometry = new BufferGeometry();
   geometry.setAttribute(
     'position',
-    new BufferAttribute(
-      new Float32Array([
-        0, 0, 0,
-        1, 0, 0,
-        0, 1, 0,
-      ]),
-      3,
-    ),
+    new BufferAttribute(new Float32Array([0, 0, 0, 1, 0, 0, 0, 1, 0]), 3),
   );
   geometry.setIndex([0, 1, 2]);
   const mesh = new Mesh(geometry, new MeshBasicMaterial({ color: 0xffffff }));
@@ -156,9 +149,11 @@ describe('PickingManager', () => {
       face: { normal: new Vector3(0, 0, 1) },
       faceIndex: 0,
     } as unknown as Intersection;
-    const raycaster = (picking as unknown as {
-      raycaster: { intersectObjects: (...args: unknown[]) => unknown };
-    }).raycaster;
+    const raycaster = (
+      picking as unknown as {
+        raycaster: { intersectObjects: (...args: unknown[]) => unknown };
+      }
+    ).raycaster;
     vi.spyOn(raycaster, 'intersectObjects').mockImplementation((...args: unknown[]) => {
       const target = args[2] as Intersection[];
       target.push(hit);
@@ -188,9 +183,11 @@ describe('PickingManager', () => {
       vi.fn(),
     );
 
-    const raycaster = (picking as unknown as {
-      raycaster: { firstHitOnly?: boolean };
-    }).raycaster;
+    const raycaster = (
+      picking as unknown as {
+        raycaster: { firstHitOnly?: boolean };
+      }
+    ).raycaster;
 
     expect(raycaster.firstHitOnly).toBe(true);
 
@@ -218,14 +215,18 @@ describe('PickingManager', () => {
       face: { normal: new Vector3(0, 0, 1) },
       faceIndex: 0,
     } as unknown as Intersection;
-    const raycaster = (picking as unknown as {
-      raycaster: { intersectObjects: (...args: unknown[]) => unknown };
-    }).raycaster;
-    const intersectSpy = vi.spyOn(raycaster, 'intersectObjects').mockImplementation((...args: unknown[]) => {
-      const target = args[2] as Intersection[];
-      target.push(hit);
-      return target;
-    });
+    const raycaster = (
+      picking as unknown as {
+        raycaster: { intersectObjects: (...args: unknown[]) => unknown };
+      }
+    ).raycaster;
+    const intersectSpy = vi
+      .spyOn(raycaster, 'intersectObjects')
+      .mockImplementation((...args: unknown[]) => {
+        const target = args[2] as Intersection[];
+        target.push(hit);
+        return target;
+      });
 
     domElement.dispatch('pointerdown', { clientX: 10, clientY: 10 });
     domElement.dispatch('pointermove', { clientX: 30, clientY: 30 });
@@ -264,14 +265,18 @@ describe('PickingManager', () => {
       face: { normal: new Vector3(0, 0, 1) },
       faceIndex: 0,
     } as unknown as Intersection;
-    const raycaster = (picking as unknown as {
-      raycaster: { intersectObjects: (...args: unknown[]) => unknown };
-    }).raycaster;
-    const intersectSpy = vi.spyOn(raycaster, 'intersectObjects').mockImplementation((...args: unknown[]) => {
-      const target = args[2] as Intersection[];
-      target.push(hit);
-      return target;
-    });
+    const raycaster = (
+      picking as unknown as {
+        raycaster: { intersectObjects: (...args: unknown[]) => unknown };
+      }
+    ).raycaster;
+    const intersectSpy = vi
+      .spyOn(raycaster, 'intersectObjects')
+      .mockImplementation((...args: unknown[]) => {
+        const target = args[2] as Intersection[];
+        target.push(hit);
+        return target;
+      });
 
     picking.setOrbitDragging(true);
     domElement.dispatch('pointermove', { clientX: 20, clientY: 20 });
@@ -308,14 +313,18 @@ describe('PickingManager', () => {
       face: { normal: new Vector3(0, 0, 1) },
       faceIndex: 0,
     } as unknown as Intersection;
-    const raycaster = (picking as unknown as {
-      raycaster: { intersectObjects: (...args: unknown[]) => unknown };
-    }).raycaster;
-    const intersectSpy = vi.spyOn(raycaster, 'intersectObjects').mockImplementation((...args: unknown[]) => {
-      const target = args[2] as Intersection[];
-      target.push(hit);
-      return target;
-    });
+    const raycaster = (
+      picking as unknown as {
+        raycaster: { intersectObjects: (...args: unknown[]) => unknown };
+      }
+    ).raycaster;
+    const intersectSpy = vi
+      .spyOn(raycaster, 'intersectObjects')
+      .mockImplementation((...args: unknown[]) => {
+        const target = args[2] as Intersection[];
+        target.push(hit);
+        return target;
+      });
 
     domElement.dispatch('pointermove', { clientX: 20, clientY: 20 });
     flushAnimationFramesAt(0);
@@ -359,9 +368,11 @@ describe('PickingManager', () => {
       face: { normal: new Vector3(0, 0, 1) },
       faceIndex: 0,
     } as unknown as Intersection;
-    const raycaster = (picking as unknown as {
-      raycaster: { intersectObjects: (...args: unknown[]) => unknown };
-    }).raycaster;
+    const raycaster = (
+      picking as unknown as {
+        raycaster: { intersectObjects: (...args: unknown[]) => unknown };
+      }
+    ).raycaster;
     vi.spyOn(raycaster, 'intersectObjects').mockImplementation((...args: unknown[]) => {
       const target = args[2] as Intersection[];
       target.push(hit);

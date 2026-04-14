@@ -22,6 +22,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useDensity } from '../../hooks/use-density';
 import { HotkeysProvider, useHotkey } from '../../hooks/use-keyboard-shortcuts';
 import { useTheme } from '../../hooks/use-theme';
+import { LayoutProvider } from '../../layout';
 import { SelectionChip } from '../engineering/selection-chip';
 import { AxisColorLabel } from '../primitives/axis-color-label';
 import { DensityToggle } from '../primitives/density-toggle';
@@ -52,8 +53,6 @@ import {
 } from '../ui/command';
 import { Input } from '../ui/input';
 import { TooltipProvider } from '../ui/tooltip';
-
-import { LayoutProvider } from '../../layout';
 import { AppShell } from './app-shell';
 import { BottomPanel } from './bottom-panel';
 import { LeftPanel } from './left-panel';

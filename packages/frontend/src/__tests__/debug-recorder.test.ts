@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createSaveProjectCommand } from '@motionlab/protocol';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@motionlab/protocol', async () => {
   const actual = await vi.importActual<typeof import('@motionlab/protocol')>('@motionlab/protocol');
@@ -7,7 +7,8 @@ vi.mock('@motionlab/protocol', async () => {
     ...actual,
     eventToDebugJson: (event: unknown) =>
       JSON.stringify(event, (_key, value) =>
-        typeof value === 'bigint' ? value.toString() : value),
+        typeof value === 'bigint' ? value.toString() : value,
+      ),
   };
 });
 
@@ -24,10 +25,11 @@ describe('DebugRecorder', () => {
     const { DebugRecorder } = await import('../debug/recorder.js');
     const appended: Array<{ direction: string; sequenceId: string }> = [];
     const recorder = new DebugRecorder({
-      appendProtocolEntry: (entry) => appended.push({
-        direction: entry.direction,
-        sequenceId: entry.sequenceId,
-      }),
+      appendProtocolEntry: (entry) =>
+        appended.push({
+          direction: entry.direction,
+          sequenceId: entry.sequenceId,
+        }),
     });
     recorder.setEnabled(true);
 
@@ -40,12 +42,15 @@ describe('DebugRecorder', () => {
       }),
     ]);
 
-    recorder.recordInboundEvent({
-      sequenceId: 42n,
-      payload: {
-        case: 'handshakeAck',
-      },
-    } as never, 128);
+    recorder.recordInboundEvent(
+      {
+        sequenceId: 42n,
+        payload: {
+          case: 'handshakeAck',
+        },
+      } as never,
+      128,
+    );
 
     expect(recorder.getPendingCommands()).toEqual([]);
     expect(appended).toEqual([
@@ -75,12 +80,15 @@ describe('DebugRecorder', () => {
     const recorder = new DebugRecorder();
     recorder.setEnabled(true);
 
-    recorder.recordInboundEvent({
-      sequenceId: 99n,
-      payload: {
-        case: 'simulationFrame',
-      },
-    } as never, 96);
+    recorder.recordInboundEvent(
+      {
+        sequenceId: 99n,
+        payload: {
+          case: 'simulationFrame',
+        },
+      } as never,
+      96,
+    );
 
     expect(recorder.getRecentEntries()).toHaveLength(0);
     expect(recorder.getRecentStreamEntries()).toHaveLength(1);
@@ -97,12 +105,15 @@ describe('DebugRecorder', () => {
     const recorder = new DebugRecorder();
 
     recorder.recordOutboundCommand(createSaveProjectCommand('Demo', 42n));
-    recorder.recordInboundEvent({
-      sequenceId: 42n,
-      payload: {
-        case: 'simulationFrame',
-      },
-    } as never, 96);
+    recorder.recordInboundEvent(
+      {
+        sequenceId: 42n,
+        payload: {
+          case: 'simulationFrame',
+        },
+      } as never,
+      96,
+    );
 
     expect(recorder.getPendingCommands()).toEqual([]);
     expect(recorder.getRecentEntries()).toEqual([]);

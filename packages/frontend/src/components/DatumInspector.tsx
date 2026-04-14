@@ -43,9 +43,7 @@ export function DatumInspector({ datumId }: { datumId: string }) {
         metadata={[
           {
             label: 'Parent Body',
-            value: (
-              <span className="text-2xs truncate">{parentBody?.name ?? '\u2014'}</span>
-            ),
+            value: <span className="text-2xs truncate">{parentBody?.name ?? '\u2014'}</span>,
           },
         ]}
         disabled={isSimulating}

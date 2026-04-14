@@ -177,7 +177,8 @@ function TreeRow({
             type="button"
             className={cn(
               'ml-0.5 flex size-3.5 shrink-0 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)] group-data-[selected]/tree-row:text-white/70 group-data-[selected]/tree-row:hover:text-white',
-              !isHidden && 'opacity-0 group-hover/tree-row:opacity-100 group-data-[selected]/tree-row:opacity-100',
+              !isHidden &&
+                'opacity-0 group-hover/tree-row:opacity-100 group-data-[selected]/tree-row:opacity-100',
             )}
             onClick={(e) => {
               e.stopPropagation();

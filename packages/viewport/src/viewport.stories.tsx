@@ -7,12 +7,12 @@ import {
   ACTIVE_BUTTON_STYLE,
   BUTTON_STYLE,
   CAMERA_PRESETS,
-  STATUS_STYLE,
-  TOOLBAR_STYLE,
   createBoxMeshData,
   createCylinderMeshData,
   createSphereMeshData,
   createTorusMeshData,
+  STATUS_STYLE,
+  TOOLBAR_STYLE,
 } from './story-helpers.js';
 
 const meta: Meta<typeof Viewport> = {
@@ -83,18 +83,10 @@ function SceneShell({
             {preset}
           </button>
         ))}
-        <button
-          type="button"
-          style={BUTTON_STYLE}
-          onClick={() => sgRef.current?.fitAll()}
-        >
+        <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.fitAll()}>
           fit-all
         </button>
-        <button
-          type="button"
-          style={BUTTON_STYLE}
-          onClick={() => sgRef.current?.toggleGrid()}
-        >
+        <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.toggleGrid()}>
           grid
         </button>
         {extra}
@@ -150,25 +142,49 @@ export const AssemblyOverview: Story = {
         gridVisible
         theme={theme}
         onSceneReady={(sg) => {
-          sg.addBody('base', 'Base', createBoxMeshData(4, 0.4, 3), {
-            position: [0, 0.2, 0],
-            rotation: [0, 0, 0, 1],
-          }, FACE_COUNT_6);
+          sg.addBody(
+            'base',
+            'Base',
+            createBoxMeshData(4, 0.4, 3),
+            {
+              position: [0, 0.2, 0],
+              rotation: [0, 0, 0, 1],
+            },
+            FACE_COUNT_6,
+          );
 
-          sg.addBody('arm', 'Arm', createCylinderMeshData(0.35, 0.35, 2.6, 24), {
-            position: [0, 1.7, 0],
-            rotation: [0, 0, 0, 1],
-          }, FACE_COUNT_6);
+          sg.addBody(
+            'arm',
+            'Arm',
+            createCylinderMeshData(0.35, 0.35, 2.6, 24),
+            {
+              position: [0, 1.7, 0],
+              rotation: [0, 0, 0, 1],
+            },
+            FACE_COUNT_6,
+          );
 
-          sg.addBody('knob', 'Knob', createSphereMeshData(0.45), {
-            position: [1.5, 1.1, 0.5],
-            rotation: [0, 0, 0, 1],
-          }, FACE_COUNT_6);
+          sg.addBody(
+            'knob',
+            'Knob',
+            createSphereMeshData(0.45),
+            {
+              position: [1.5, 1.1, 0.5],
+              rotation: [0, 0, 0, 1],
+            },
+            FACE_COUNT_6,
+          );
 
-          sg.addBody('ring', 'Ring', createTorusMeshData(0.55, 0.14), {
-            position: [-1.6, 0.95, -0.6],
-            rotation: [0, 0, 0, 1],
-          }, FACE_COUNT_6);
+          sg.addBody(
+            'ring',
+            'Ring',
+            createTorusMeshData(0.55, 0.14),
+            {
+              position: [-1.6, 0.95, -0.6],
+              rotation: [0, 0, 0, 1],
+            },
+            FACE_COUNT_6,
+          );
 
           sg.addDatum('d-base', 'base', { position: [0.9, 0.2, 0], rotation: [0, 0, 0, 1] });
           sg.addDatum('d-arm', 'arm', { position: [0, 1.2, 0], rotation: [0, 0, 0, 1] });
@@ -193,7 +209,14 @@ export const AssemblyOverview: Story = {
 // Story: Joint Type Gallery
 // ---------------------------------------------------------------------------
 
-const JOINT_TYPES = ['revolute', 'prismatic', 'fixed', 'spherical', 'cylindrical', 'planar'] as const;
+const JOINT_TYPES = [
+  'revolute',
+  'prismatic',
+  'fixed',
+  'spherical',
+  'cylindrical',
+  'planar',
+] as const;
 
 export const JointTypeGallery: Story = {
   name: 'Joint Type Gallery',
@@ -217,7 +240,11 @@ export const JointTypeGallery: Story = {
           <span key={jt} style={{ display: 'inline-flex', gap: 2 }}>
             <button
               type="button"
-              style={activeId === `j-${jt}` && activeMode === 'hover' ? ACTIVE_BUTTON_STYLE : BUTTON_STYLE}
+              style={
+                activeId === `j-${jt}` && activeMode === 'hover'
+                  ? ACTIVE_BUTTON_STYLE
+                  : BUTTON_STYLE
+              }
               onClick={() => {
                 const id = `j-${jt}`;
                 const mode = 'hover';
@@ -230,7 +257,11 @@ export const JointTypeGallery: Story = {
             </button>
             <button
               type="button"
-              style={activeId === `j-${jt}` && activeMode === 'select' ? ACTIVE_BUTTON_STYLE : BUTTON_STYLE}
+              style={
+                activeId === `j-${jt}` && activeMode === 'select'
+                  ? ACTIVE_BUTTON_STYLE
+                  : BUTTON_STYLE
+              }
               onClick={() => {
                 const id = `j-${jt}`;
                 const mode = 'select';
@@ -378,7 +409,9 @@ export const JointStates: Story = {
     return (
       <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
         <div style={TOOLBAR_STYLE}>
-          <span style={STATUS_STYLE}>Revolute joint — idle / hover / selected with ±70° limits</span>
+          <span style={STATUS_STYLE}>
+            Revolute joint — idle / hover / selected with ±70° limits
+          </span>
           <span style={{ ...BUTTON_STYLE, cursor: 'default', opacity: 0.6 }}>|</span>
           {CAMERA_PRESETS.map((preset) => (
             <button
@@ -402,15 +435,27 @@ export const JointStates: Story = {
           onSceneReady={(sg) => {
             sgRef.current = sg;
 
-            sg.addBody('base', 'Base', createBoxMeshData(2, 0.4, 2), {
-              position: [0, 0.2, 0],
-              rotation: [0, 0, 0, 1],
-            }, FACE_COUNT_6);
+            sg.addBody(
+              'base',
+              'Base',
+              createBoxMeshData(2, 0.4, 2),
+              {
+                position: [0, 0.2, 0],
+                rotation: [0, 0, 0, 1],
+              },
+              FACE_COUNT_6,
+            );
 
-            sg.addBody('arm', 'Arm', createCylinderMeshData(0.25, 0.25, 1.6, 20), {
-              position: [0, 1.2, 0],
-              rotation: [0, 0, 0, 1],
-            }, FACE_COUNT_6);
+            sg.addBody(
+              'arm',
+              'Arm',
+              createCylinderMeshData(0.25, 0.25, 1.6, 20),
+              {
+                position: [0, 1.2, 0],
+                rotation: [0, 0, 0, 1],
+              },
+              FACE_COUNT_6,
+            );
 
             sg.addDatum('d-base', 'base', { position: [0, 0.4, 0], rotation: [0, 0, 0, 1] });
             sg.addDatum('d-arm', 'arm', { position: [0, 0.4, 0], rotation: [0, 0, 0, 1] });
@@ -446,10 +491,16 @@ export const DatumShowcase: Story = {
         theme={theme}
         onSceneReady={(sg) => {
           // Large body to host datums
-          sg.addBody('block', 'Block', createBoxMeshData(3, 2, 2), {
-            position: [0, 1, 0],
-            rotation: [0, 0, 0, 1],
-          }, FACE_COUNT_6);
+          sg.addBody(
+            'block',
+            'Block',
+            createBoxMeshData(3, 2, 2),
+            {
+              position: [0, 1, 0],
+              rotation: [0, 0, 0, 1],
+            },
+            FACE_COUNT_6,
+          );
 
           // Datum at top face (identity orientation)
           sg.addDatum('d-top', 'block', {
@@ -499,15 +550,27 @@ export const LoadVisuals: Story = {
         theme={theme}
         onSceneReady={(sg) => {
           // Two bodies with datums
-          sg.addBody('a', 'Body A', createBoxMeshData(1.5, 1.5, 1.5), {
-            position: [-2, 0.75, 0],
-            rotation: [0, 0, 0, 1],
-          }, FACE_COUNT_6);
+          sg.addBody(
+            'a',
+            'Body A',
+            createBoxMeshData(1.5, 1.5, 1.5),
+            {
+              position: [-2, 0.75, 0],
+              rotation: [0, 0, 0, 1],
+            },
+            FACE_COUNT_6,
+          );
 
-          sg.addBody('b', 'Body B', createBoxMeshData(1.5, 1.5, 1.5), {
-            position: [2, 0.75, 0],
-            rotation: [0, 0, 0, 1],
-          }, FACE_COUNT_6);
+          sg.addBody(
+            'b',
+            'Body B',
+            createBoxMeshData(1.5, 1.5, 1.5),
+            {
+              position: [2, 0.75, 0],
+              rotation: [0, 0, 0, 1],
+            },
+            FACE_COUNT_6,
+          );
 
           sg.addDatum('da', 'a', { position: [0, 0.75, 0], rotation: [0, 0, 0, 1] });
           sg.addDatum('db', 'b', { position: [0, 0.75, 0], rotation: [0, 0, 0, 1] });
@@ -554,28 +617,25 @@ export const SelectionStates: Story = {
     );
     const sgRef = useRef<SceneGraphManager | null>(null);
 
-    const applyMode = useCallback(
-      (sg: SceneGraphManager, m: typeof mode) => {
-        switch (m) {
-          case 'select-box':
-            sg.applySelection(new Set(['box']));
-            sg.applyHover(null);
-            break;
-          case 'select-cyl':
-            sg.applySelection(new Set(['cyl']));
-            sg.applyHover(null);
-            break;
-          case 'hover-sphere':
-            sg.applySelection(new Set());
-            sg.applyHover('sph');
-            break;
-          default:
-            sg.applySelection(new Set());
-            sg.applyHover(null);
-        }
-      },
-      [],
-    );
+    const applyMode = useCallback((sg: SceneGraphManager, m: typeof mode) => {
+      switch (m) {
+        case 'select-box':
+          sg.applySelection(new Set(['box']));
+          sg.applyHover(null);
+          break;
+        case 'select-cyl':
+          sg.applySelection(new Set(['cyl']));
+          sg.applyHover(null);
+          break;
+        case 'hover-sphere':
+          sg.applySelection(new Set());
+          sg.applyHover('sph');
+          break;
+        default:
+          sg.applySelection(new Set());
+          sg.applyHover(null);
+      }
+    }, []);
 
     const handlePick = useCallback((entityId: string | null) => {
       if (!sgRef.current) return;
@@ -607,18 +667,10 @@ export const SelectionStates: Story = {
               {preset}
             </button>
           ))}
-          <button
-            type="button"
-            style={BUTTON_STYLE}
-            onClick={() => sgRef.current?.fitAll()}
-          >
+          <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.fitAll()}>
             fit-all
           </button>
-          <button
-            type="button"
-            style={BUTTON_STYLE}
-            onClick={() => sgRef.current?.toggleGrid()}
-          >
+          <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.toggleGrid()}>
             grid
           </button>
           <span style={{ ...BUTTON_STYLE, cursor: 'default', opacity: 0.6 }}>|</span>
@@ -647,20 +699,38 @@ export const SelectionStates: Story = {
           onSceneReady={(sceneGraph) => {
             sgRef.current = sceneGraph;
 
-            sceneGraph.addBody('box', 'Box', createBoxMeshData(1.5, 1.5, 1.5), {
-              position: [-2, 0.75, 0],
-              rotation: [0, 0, 0, 1],
-            }, FACE_COUNT_6);
+            sceneGraph.addBody(
+              'box',
+              'Box',
+              createBoxMeshData(1.5, 1.5, 1.5),
+              {
+                position: [-2, 0.75, 0],
+                rotation: [0, 0, 0, 1],
+              },
+              FACE_COUNT_6,
+            );
 
-            sceneGraph.addBody('cyl', 'Cylinder', createCylinderMeshData(0.5, 0.5, 2, 24), {
-              position: [0, 1, 0],
-              rotation: [0, 0, 0, 1],
-            }, FACE_COUNT_6);
+            sceneGraph.addBody(
+              'cyl',
+              'Cylinder',
+              createCylinderMeshData(0.5, 0.5, 2, 24),
+              {
+                position: [0, 1, 0],
+                rotation: [0, 0, 0, 1],
+              },
+              FACE_COUNT_6,
+            );
 
-            sceneGraph.addBody('sph', 'Sphere', createSphereMeshData(0.7), {
-              position: [2, 0.7, 0],
-              rotation: [0, 0, 0, 1],
-            }, FACE_COUNT_6);
+            sceneGraph.addBody(
+              'sph',
+              'Sphere',
+              createSphereMeshData(0.7),
+              {
+                position: [2, 0.7, 0],
+                rotation: [0, 0, 0, 1],
+              },
+              FACE_COUNT_6,
+            );
 
             applyMode(sceneGraph, mode);
             sceneGraph.fitAll();
@@ -689,10 +759,16 @@ export const CameraAndGrid: Story = {
         gridVisible
         theme={theme}
         onSceneReady={(sg) => {
-          sg.addBody('plate', 'Plate', createBoxMeshData(6, 0.25, 4), {
-            position: [0, 0.125, 0],
-            rotation: [0, 0, 0, 1],
-          }, FACE_COUNT_6);
+          sg.addBody(
+            'plate',
+            'Plate',
+            createBoxMeshData(6, 0.25, 4),
+            {
+              position: [0, 0.125, 0],
+              rotation: [0, 0, 0, 1],
+            },
+            FACE_COUNT_6,
+          );
 
           addPillar(sg, 'p1', -1.5, -0.5);
           addPillar(sg, 'p2', 1.5, -0.5);

@@ -1,9 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@motionlab/ui';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@motionlab/ui';
 
 import { getAllCommands } from '../commands/registry.js';
 import type { CommandCategory } from '../commands/types.js';
@@ -48,31 +43,37 @@ export function KeyboardShortcutsDialog({ open, onClose }: KeyboardShortcutsDial
   const grouped = open ? getShortcutGroups() : null;
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) onClose();
+      }}
+    >
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
           <DialogTitle>Keyboard Shortcuts</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-3 py-2">
-          {grouped && CATEGORY_ORDER.map((cat) => {
-            const cmds = grouped.get(cat);
-            if (!cmds || cmds.length === 0) return null;
-            return (
-              <div key={cat}>
-                <h4 className="text-xs font-medium text-text-secondary mb-1 px-1">
-                  {CATEGORY_HEADINGS[cat]}
-                </h4>
-                {cmds.map((cmd) => (
-                  <div key={cmd.id} className="flex items-center justify-between px-1 py-1.5">
-                    <span className="text-xs text-text-secondary">{cmd.label}</span>
-                    <kbd className="rounded border border-border bg-layer-elevated px-1.5 py-0.5 font-mono text-2xs text-text-primary">
-                      {cmd.shortcut}
-                    </kbd>
-                  </div>
-                ))}
-              </div>
-            );
-          })}
+          {grouped &&
+            CATEGORY_ORDER.map((cat) => {
+              const cmds = grouped.get(cat);
+              if (!cmds || cmds.length === 0) return null;
+              return (
+                <div key={cat}>
+                  <h4 className="text-xs font-medium text-text-secondary mb-1 px-1">
+                    {CATEGORY_HEADINGS[cat]}
+                  </h4>
+                  {cmds.map((cmd) => (
+                    <div key={cmd.id} className="flex items-center justify-between px-1 py-1.5">
+                      <span className="text-xs text-text-secondary">{cmd.label}</span>
+                      <kbd className="rounded border border-border bg-layer-elevated px-1.5 py-0.5 font-mono text-2xs text-text-primary">
+                        {cmd.shortcut}
+                      </kbd>
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
         </div>
       </DialogContent>
     </Dialog>

@@ -59,7 +59,12 @@ export function AttachGeometryDialog({
         <div className="flex flex-col gap-3 py-2">
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">Target Body</label>
-            <Select value={selectedBodyId} onValueChange={(v) => { if (v) setSelectedBodyId(v); }}>
+            <Select
+              value={selectedBodyId}
+              onValueChange={(v) => {
+                if (v) setSelectedBodyId(v);
+              }}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select a body..." />
               </SelectTrigger>

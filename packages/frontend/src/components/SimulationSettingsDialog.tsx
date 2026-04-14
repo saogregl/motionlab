@@ -52,7 +52,9 @@ export function SimulationSettingsDialog({ open, onClose }: SimulationSettingsDi
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
           <DialogTitle>Simulation Settings</DialogTitle>
-          <DialogDescription>Configure solver parameters for the next compilation.</DialogDescription>
+          <DialogDescription>
+            Configure solver parameters for the next compilation.
+          </DialogDescription>
         </DialogHeader>
 
         {/* Preset row */}
@@ -125,8 +127,15 @@ function BasicTab() {
 
       <div className="flex flex-col gap-1">
         <label className="text-xs text-muted-foreground">Timestep (s)</label>
-        <Select value={timestepStr} onValueChange={(v) => { if (v) setTimestep(parseFloat(v)); }}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
+        <Select
+          value={timestepStr}
+          onValueChange={(v) => {
+            if (v) setTimestep(parseFloat(v));
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="0.01">10 ms (fast)</SelectItem>
             <SelectItem value="0.001">1 ms (default)</SelectItem>
@@ -139,10 +148,18 @@ function BasicTab() {
       <div className="flex flex-col gap-1">
         <label className="text-xs text-muted-foreground">Gravity Preset</label>
         <div className="flex gap-1">
-          <Button size="sm" variant="outline" onClick={() => applyPreset('earth')}>Earth</Button>
-          <Button size="sm" variant="outline" onClick={() => applyPreset('moon')}>Moon</Button>
-          <Button size="sm" variant="outline" onClick={() => applyPreset('mars')}>Mars</Button>
-          <Button size="sm" variant="outline" onClick={() => applyPreset('zero-g')}>Zero-G</Button>
+          <Button size="sm" variant="outline" onClick={() => applyPreset('earth')}>
+            Earth
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => applyPreset('moon')}>
+            Moon
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => applyPreset('mars')}>
+            Mars
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => applyPreset('zero-g')}>
+            Zero-G
+          </Button>
         </div>
       </div>
 
@@ -151,15 +168,33 @@ function BasicTab() {
         <div className="grid grid-cols-3 gap-1">
           <div className="flex flex-col gap-0.5">
             <span className="text-2xs text-muted-foreground">X</span>
-            <NumericInput variant="field" value={gravity.x} onChange={(v) => setGravity({ ...gravity, x: v })} step={0.1} precision={2} />
+            <NumericInput
+              variant="field"
+              value={gravity.x}
+              onChange={(v) => setGravity({ ...gravity, x: v })}
+              step={0.1}
+              precision={2}
+            />
           </div>
           <div className="flex flex-col gap-0.5">
             <span className="text-2xs text-muted-foreground">Y</span>
-            <NumericInput variant="field" value={gravity.y} onChange={(v) => setGravity({ ...gravity, y: v })} step={0.1} precision={2} />
+            <NumericInput
+              variant="field"
+              value={gravity.y}
+              onChange={(v) => setGravity({ ...gravity, y: v })}
+              step={0.1}
+              precision={2}
+            />
           </div>
           <div className="flex flex-col gap-0.5">
             <span className="text-2xs text-muted-foreground">Z</span>
-            <NumericInput variant="field" value={gravity.z} onChange={(v) => setGravity({ ...gravity, z: v })} step={0.1} precision={2} />
+            <NumericInput
+              variant="field"
+              value={gravity.z}
+              onChange={(v) => setGravity({ ...gravity, z: v })}
+              step={0.1}
+              precision={2}
+            />
           </div>
         </div>
       </div>
@@ -193,9 +228,13 @@ function SolverSection() {
           <label className="text-xs text-muted-foreground">Solver Type</label>
           <Select
             value={solverType}
-            onValueChange={(v) => { if (v) setSolverType(v as SolverType); }}
+            onValueChange={(v) => {
+              if (v) setSolverType(v as SolverType);
+            }}
           >
-            <SelectTrigger size="sm"><SelectValue /></SelectTrigger>
+            <SelectTrigger size="sm">
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="psor">PSOR (fast, general purpose)</SelectItem>
               <SelectItem value="barzilai-borwein">Barzilai-Borwein (ill-conditioned)</SelectItem>
@@ -236,11 +275,17 @@ function SolverSection() {
           <label className="text-xs text-muted-foreground">Integrator</label>
           <Select
             value={integratorType}
-            onValueChange={(v) => { if (v) setIntegratorType(v as IntegratorType); }}
+            onValueChange={(v) => {
+              if (v) setIntegratorType(v as IntegratorType);
+            }}
           >
-            <SelectTrigger size="sm"><SelectValue /></SelectTrigger>
+            <SelectTrigger size="sm">
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
-              <SelectItem value="euler-implicit-linearized">Euler Implicit (fast, stable)</SelectItem>
+              <SelectItem value="euler-implicit-linearized">
+                Euler Implicit (fast, stable)
+              </SelectItem>
               <SelectItem value="hht">HHT (second-order, stiff systems)</SelectItem>
               <SelectItem value="newmark">Newmark (structural dynamics)</SelectItem>
             </SelectContent>

@@ -10,7 +10,7 @@ import { useUILayoutStore } from '../../stores/ui-layout.js';
 import type { RecentProject, TemplateInfo } from '../../types/motionlab.js';
 import { GettingStartedSection } from './GettingStartedSection.js';
 import { HomeProjectGrid } from './HomeProjectGrid.js';
-import { HomeSidebar, type HomeNavItem } from './HomeSidebar.js';
+import { type HomeNavItem, HomeSidebar } from './HomeSidebar.js';
 import { HomeTemplateSection } from './HomeTemplateSection.js';
 
 const NAV_META: Record<HomeNavItem, { label: string; icon: LucideIcon }> = {
@@ -183,10 +183,7 @@ export function HomeScreen() {
           )}
           {activeNav === 'templates' && (
             <div className="ps-6 pe-6 py-5">
-              <HomeTemplateSection
-                templates={templates}
-                onOpenTemplate={handleOpenTemplate}
-              />
+              <HomeTemplateSection templates={templates} onOpenTemplate={handleOpenTemplate} />
             </div>
           )}
           {activeNav === 'examples' && (
@@ -222,7 +219,9 @@ export function HomeScreen() {
         {/* Footer */}
         <footer className="mt-auto flex items-center justify-between border-t border-border-default bg-layer-recessed ps-4 pe-4 py-2 text-[length:var(--text-2xs)] text-text-tertiary">
           <span>MotionLab — Mechanism Workbench</span>
-          {appVersion && <span className="font-mono text-[length:var(--text-3xs)]">{`v${appVersion}`}</span>}
+          {appVersion && (
+            <span className="font-mono text-[length:var(--text-3xs)]">{`v${appVersion}`}</span>
+          )}
         </footer>
       </main>
     </div>
@@ -243,12 +242,8 @@ function PlaceholderPage({
       <div className="mb-4 flex size-12 items-center justify-center rounded-lg bg-layer-base">
         <Icon className="size-6 text-text-tertiary" />
       </div>
-      <h3 className="mb-1 text-[length:var(--text-sm)] font-medium text-text-primary">
-        {title}
-      </h3>
-      <p className="max-w-xs text-[length:var(--text-xs)] text-text-tertiary">
-        {description}
-      </p>
+      <h3 className="mb-1 text-[length:var(--text-sm)] font-medium text-text-primary">{title}</h3>
+      <p className="max-w-xs text-[length:var(--text-xs)] text-text-tertiary">{description}</p>
     </div>
   );
 }

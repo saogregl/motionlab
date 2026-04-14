@@ -154,22 +154,21 @@ function StatusBar({
               </span>
             </>
           )}
-          {diagnosticSummary != null && (diagnosticSummary.errors > 0 || diagnosticSummary.warnings > 0) && (
-            <>
-              <Separator />
-              <span
-                className={cn(
-                  diagnosticSummary.errors > 0
-                    ? 'text-[var(--danger)]'
-                    : 'text-[var(--warning)]',
-                )}
-              >
-                {diagnosticSummary.errors > 0
-                  ? `${diagnosticSummary.errors} error${diagnosticSummary.errors > 1 ? 's' : ''}`
-                  : `${diagnosticSummary.warnings} warning${diagnosticSummary.warnings > 1 ? 's' : ''}`}
-              </span>
-            </>
-          )}
+          {diagnosticSummary != null &&
+            (diagnosticSummary.errors > 0 || diagnosticSummary.warnings > 0) && (
+              <>
+                <Separator />
+                <span
+                  className={cn(
+                    diagnosticSummary.errors > 0 ? 'text-[var(--danger)]' : 'text-[var(--warning)]',
+                  )}
+                >
+                  {diagnosticSummary.errors > 0
+                    ? `${diagnosticSummary.errors} error${diagnosticSummary.errors > 1 ? 's' : ''}`
+                    : `${diagnosticSummary.warnings} warning${diagnosticSummary.warnings > 1 ? 's' : ''}`}
+                </span>
+              </>
+            )}
         </div>
       )}
     </div>

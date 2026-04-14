@@ -103,7 +103,10 @@ const COPLANAR_THRESHOLD = 0.001;
  * World position = body.position + rotate(datum.localPosition, body.rotation)
  * World Z-axis = rotate([0,0,1], body.rotation * datum.localRotation)
  */
-export function computeDatumWorldPose(bodyPose: BodyPose, datumLocalPose: BodyPose): DatumWorldPose {
+export function computeDatumWorldPose(
+  bodyPose: BodyPose,
+  datumLocalPose: BodyPose,
+): DatumWorldPose {
   const worldPose = composeWorldPose(bodyPose, datumLocalPose);
   const zAxis = rotateVector({ x: 0, y: 0, z: 1 }, worldPose.rotation);
 

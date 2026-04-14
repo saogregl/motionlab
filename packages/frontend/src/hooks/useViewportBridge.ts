@@ -227,7 +227,13 @@ export function useViewportBridge() {
 
     // Initial sync: add any joints already in the store (after datums)
     for (const joint of joints.values()) {
-      sceneGraph.addJoint(joint.id, joint.parentDatumId, joint.childDatumId, joint.type, joint.name);
+      sceneGraph.addJoint(
+        joint.id,
+        joint.parentDatumId,
+        joint.childDatumId,
+        joint.type,
+        joint.name,
+      );
     }
 
     // Initial sync: add any loads already in the store (after datums)

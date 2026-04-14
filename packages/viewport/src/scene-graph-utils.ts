@@ -20,20 +20,20 @@ import {
   Vector3,
 } from 'three';
 import {
-  createFatLine,
-  disposeFatLine,
-  isFatLine,
-  setFatLinePoints,
-  type FatLineOptions,
-  type Line2,
-} from './rendering/fat-line-three.js';
-import {
   FORCE_ARROW,
   JOINT_STEEL_BLUE,
   JOINT_TYPE_COLORS,
   SPRING_NEUTRAL,
   TORQUE_ARROW,
 } from './rendering/colors-three.js';
+import {
+  createFatLine,
+  disposeFatLine,
+  type FatLineOptions,
+  isFatLine,
+  type Line2,
+  setFatLinePoints,
+} from './rendering/fat-line-three.js';
 import type { BodyMeta, LoadMeta, SceneEntityInternal } from './scene-context.js';
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -101,7 +101,10 @@ export function getLoadKind(
 
 // ── Three.js Object helpers ────────────────────────────────────────────────
 
-export function setPose(target: Object3D, pose: { position: [number, number, number]; rotation: [number, number, number, number] }): void {
+export function setPose(
+  target: Object3D,
+  pose: { position: [number, number, number]; rotation: [number, number, number, number] },
+): void {
   target.position.set(pose.position[0], pose.position[1], pose.position[2]);
   target.quaternion.set(pose.rotation[0], pose.rotation[1], pose.rotation[2], pose.rotation[3]);
 }
@@ -163,9 +166,7 @@ export function setLinePoints(line: Line2, points: readonly Vector3[]): void {
 
 // ── Body helpers ───────────────────────────────────────────────────────────
 
-export function getBodyEdgeLines(
-  entity: SceneEntityInternal & { meta: BodyMeta },
-): LineSegments[] {
+export function getBodyEdgeLines(entity: SceneEntityInternal & { meta: BodyMeta }): LineSegments[] {
   const edgeLines: LineSegments[] = [];
   for (const geometry of entity.meta.geometries.values()) {
     if (geometry.edgeLines) {

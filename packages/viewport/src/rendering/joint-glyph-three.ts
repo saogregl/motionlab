@@ -28,7 +28,6 @@ import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 
 import { AXIS_X, AXIS_Y, AXIS_Z, JOINT_STEEL_BLUE } from './colors-three.js';
 import { trackMaterial, untrackMaterial } from './fat-line-three.js';
-import { createSDFLine, disposeSDFLine } from './sdf-line-three.js';
 import {
   buildArcPoints,
   buildArrowChevron,
@@ -40,6 +39,7 @@ import {
   buildSquare,
   buildTickMark,
 } from './line-primitives-three.js';
+import { createSDFLine, disposeSDFLine } from './sdf-line-three.js';
 
 // ── Re-exported DOF table ──────────────────────────────────────────────────
 
@@ -119,9 +119,9 @@ interface SDFGlyphLine {
 }
 
 const OPACITY: Record<GlyphMode, Record<LineRole, number>> = {
-  idle: { primary: 0.30, secondary: 0.20, accent: 0.25 },
-  hover: { primary: 0.70, secondary: 0.50, accent: 0.65 },
-  selected: { primary: 1.0, secondary: 0.80, accent: 0.90 },
+  idle: { primary: 0.3, secondary: 0.2, accent: 0.25 },
+  hover: { primary: 0.7, secondary: 0.5, accent: 0.65 },
+  selected: { primary: 1.0, secondary: 0.8, accent: 0.9 },
 };
 
 // ── Material helpers (owned, not cached) ───────────────────────────────────
@@ -490,11 +490,7 @@ function buildSphericalGlyph(): JointGlyphResult {
   // XZ plane — animated dash (SDF)
   b.addSDFLine(buildArcPoints(arcR, offset, offset + sweep, segs, 'xz'), 2.0, 'primary');
   // XY plane — short-dash
-  const xyArc = b.addLine(
-    buildArcPoints(arcR, offset, offset + sweep, segs, 'xy'),
-    1.5,
-    'primary',
-  );
+  const xyArc = b.addLine(buildArcPoints(arcR, offset, offset + sweep, segs, 'xy'), 1.5, 'primary');
   // Apply different dash pattern after creation
   const xyMat = xyArc.material as LineMaterial;
   xyMat.dashed = true;
@@ -503,11 +499,7 @@ function buildSphericalGlyph(): JointGlyphResult {
   xyMat.needsUpdate = true;
 
   // YZ plane — long-dash
-  const yzArc = b.addLine(
-    buildArcPoints(arcR, offset, offset + sweep, segs, 'yz'),
-    1.5,
-    'primary',
-  );
+  const yzArc = b.addLine(buildArcPoints(arcR, offset, offset + sweep, segs, 'yz'), 1.5, 'primary');
   const yzMat = yzArc.material as LineMaterial;
   yzMat.dashed = true;
   yzMat.dashSize = 0.01;
@@ -612,20 +604,12 @@ function buildPlanarGlyph(alignmentAxis?: Vector3): JointGlyphResult {
   // X axis arrows
   b.addLine([new Vector3(-arrowHalf, 0, 0), new Vector3(arrowHalf, 0, 0)], 1.0, 'primary');
   b.addLine(buildArrowChevron(new Vector3(arrowHalf, 0, 0), xDir, yPerp, 0.005), 1.0, 'accent');
-  b.addLine(
-    buildArrowChevron(new Vector3(-arrowHalf, 0, 0), xNeg, yPerp, 0.005),
-    1.0,
-    'accent',
-  );
+  b.addLine(buildArrowChevron(new Vector3(-arrowHalf, 0, 0), xNeg, yPerp, 0.005), 1.0, 'accent');
 
   // Z axis arrows
   b.addLine([new Vector3(0, 0, -arrowHalf), new Vector3(0, 0, arrowHalf)], 1.0, 'primary');
   b.addLine(buildArrowChevron(new Vector3(0, 0, arrowHalf), zDir, xPerp, 0.005), 1.0, 'accent');
-  b.addLine(
-    buildArrowChevron(new Vector3(0, 0, -arrowHalf), zNeg, xPerp, 0.005),
-    1.0,
-    'accent',
-  );
+  b.addLine(buildArrowChevron(new Vector3(0, 0, -arrowHalf), zNeg, xPerp, 0.005), 1.0, 'accent');
 
   // Faint grid in XZ plane
   const gridLines = buildMiniGrid(0.03);
@@ -655,10 +639,7 @@ function buildDefaultGlyph(alignmentAxis?: Vector3): JointGlyphResult {
  * @param jointType One of: 'revolute', 'prismatic', 'fixed', 'spherical', etc.
  * @param alignmentAxis Optional axis direction to orient the glyph to.
  */
-export function createJointGlyph(
-  jointType: string,
-  alignmentAxis?: Vector3,
-): JointGlyphResult {
+export function createJointGlyph(jointType: string, alignmentAxis?: Vector3): JointGlyphResult {
   switch (jointType) {
     case 'revolute':
       return buildRevoluteGlyph(alignmentAxis);

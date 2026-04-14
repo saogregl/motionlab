@@ -11,8 +11,5 @@ export function useMechanismDof(): MechanismDofResult {
   const bodies = useMechanismStore((s) => s.bodies);
   const joints = useMechanismStore((s) => s.joints);
 
-  return useMemo(
-    () => computeMechanismDof(bodies.size, joints.values()),
-    [bodies, joints],
-  );
+  return useMemo(() => computeMechanismDof(bodies.size, joints.values()), [bodies, joints]);
 }

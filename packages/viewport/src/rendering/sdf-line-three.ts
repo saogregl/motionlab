@@ -192,17 +192,17 @@ function buildGeometry(points: readonly Vector3[]): BufferGeometry {
   }
 
   const vertCount = segCount * 4;
-  const idxCount  = segCount * 6;
+  const idxCount = segCount * 6;
 
-  const posA     = new Float32Array(vertCount * 3);
-  const posB     = new Float32Array(vertCount * 3);
-  const sides    = new Float32Array(vertCount);
-  const capTs    = new Float32Array(vertCount);
+  const posA = new Float32Array(vertCount * 3);
+  const posB = new Float32Array(vertCount * 3);
+  const sides = new Float32Array(vertCount);
+  const capTs = new Float32Array(vertCount);
   const capFlatA = new Float32Array(vertCount);
   const capFlatB = new Float32Array(vertCount);
-  const distA    = new Float32Array(vertCount);
-  const distB    = new Float32Array(vertCount);
-  const idx      = new Uint16Array(idxCount);
+  const distA = new Float32Array(vertCount);
+  const distB = new Float32Array(vertCount);
+  const idx = new Uint16Array(idxCount);
 
   // Cumulative arc lengths in world units (matches LineMaterial dash convention).
   const arcLen = new Float32Array(points.length);
@@ -224,29 +224,37 @@ function buildGeometry(points: readonly Vector3[]): BufferGeometry {
   //   past the last point.  This prevents adjacent capsule caps from overlapping
   //   and creating doubled-alpha bright dots at interior joins.
   for (let si = 0; si < segCount; si++) {
-    const A   = points[si];
-    const B   = points[si + 1];
-    const lA  = arcLen[si];
-    const lB  = arcLen[si + 1];
-    const vb  = si * 4;
-    const ib  = si * 6;
+    const A = points[si];
+    const B = points[si + 1];
+    const lA = arcLen[si];
+    const lB = arcLen[si + 1];
+    const vb = si * 4;
+    const ib = si * 6;
 
     const flatA = si > 0 ? 1 : 0;
     const flatB = si < segCount - 1 ? 1 : 0;
 
     for (let vi = 0; vi < 4; vi++) {
       const pi = (vb + vi) * 3;
-      posA[pi] = A.x; posA[pi + 1] = A.y; posA[pi + 2] = A.z;
-      posB[pi] = B.x; posB[pi + 1] = B.y; posB[pi + 2] = B.z;
+      posA[pi] = A.x;
+      posA[pi + 1] = A.y;
+      posA[pi + 2] = A.z;
+      posB[pi] = B.x;
+      posB[pi + 1] = B.y;
+      posB[pi + 2] = B.z;
       capFlatA[vb + vi] = flatA;
       capFlatB[vb + vi] = flatB;
       distA[vb + vi] = lA;
       distB[vb + vi] = lB;
     }
-    sides[vb + 0] = +1; capTs[vb + 0] = 0;
-    sides[vb + 1] = -1; capTs[vb + 1] = 0;
-    sides[vb + 2] = +1; capTs[vb + 2] = 1;
-    sides[vb + 3] = -1; capTs[vb + 3] = 1;
+    sides[vb + 0] = +1;
+    capTs[vb + 0] = 0;
+    sides[vb + 1] = -1;
+    capTs[vb + 1] = 0;
+    sides[vb + 2] = +1;
+    capTs[vb + 2] = 1;
+    sides[vb + 3] = -1;
+    capTs[vb + 3] = 1;
 
     idx[ib + 0] = vb + 0;
     idx[ib + 1] = vb + 1;
@@ -257,15 +265,15 @@ function buildGeometry(points: readonly Vector3[]): BufferGeometry {
   }
 
   // Dummy position attribute — frustumCulled=false so the zero-sphere is harmless.
-  geo.setAttribute('position',   new BufferAttribute(new Float32Array(vertCount * 3), 3));
-  geo.setAttribute('aPointA',    new BufferAttribute(posA,      3));
-  geo.setAttribute('aPointB',    new BufferAttribute(posB,      3));
-  geo.setAttribute('aSide',      new BufferAttribute(sides,     1));
-  geo.setAttribute('aCapT',      new BufferAttribute(capTs,     1));
-  geo.setAttribute('aCapFlatA',  new BufferAttribute(capFlatA,  1));
-  geo.setAttribute('aCapFlatB',  new BufferAttribute(capFlatB,  1));
-  geo.setAttribute('aLineDistA', new BufferAttribute(distA,     1));
-  geo.setAttribute('aLineDistB', new BufferAttribute(distB,     1));
+  geo.setAttribute('position', new BufferAttribute(new Float32Array(vertCount * 3), 3));
+  geo.setAttribute('aPointA', new BufferAttribute(posA, 3));
+  geo.setAttribute('aPointB', new BufferAttribute(posB, 3));
+  geo.setAttribute('aSide', new BufferAttribute(sides, 1));
+  geo.setAttribute('aCapT', new BufferAttribute(capTs, 1));
+  geo.setAttribute('aCapFlatA', new BufferAttribute(capFlatA, 1));
+  geo.setAttribute('aCapFlatB', new BufferAttribute(capFlatB, 1));
+  geo.setAttribute('aLineDistA', new BufferAttribute(distA, 1));
+  geo.setAttribute('aLineDistB', new BufferAttribute(distB, 1));
   geo.setIndex(new BufferAttribute(idx, 1));
 
   return geo;
@@ -282,15 +290,15 @@ function buildMaterial(opts: SDFLineOptions): ShaderMaterial {
     depthWrite: false,
     toneMapped: opts.toneMapped ?? false,
     uniforms: {
-      uResolution:  { value: _sharedResolution.clone() },
-      uColor:       { value: new Color().copy(opts.color) },
-      uHalfWidth:   { value: (opts.lineWidth ?? 2) * 0.5 },
-      uOpacity:     { value: opts.opacity ?? 1 },
-      uDashed:      { value: (opts.dashed ?? false) ? 1.0 : 0.0 },
-      uDashSize:    { value: opts.dashSize ?? 0.008 },
-      uGapSize:     { value: opts.gapSize ?? 0.004 },
-      uDashOffset:  { value: 0 },
-      uGlowStrength:{ value: opts.glow ? (opts.glowStrength ?? 0.25) : 0.0 },
+      uResolution: { value: _sharedResolution.clone() },
+      uColor: { value: new Color().copy(opts.color) },
+      uHalfWidth: { value: (opts.lineWidth ?? 2) * 0.5 },
+      uOpacity: { value: opts.opacity ?? 1 },
+      uDashed: { value: (opts.dashed ?? false) ? 1.0 : 0.0 },
+      uDashSize: { value: opts.dashSize ?? 0.008 },
+      uGapSize: { value: opts.gapSize ?? 0.004 },
+      uDashOffset: { value: 0 },
+      uGlowStrength: { value: opts.glow ? (opts.glowStrength ?? 0.25) : 0.0 },
       uGlowFalloff: { value: opts.glowFalloff ?? 0.4 },
     },
   });
@@ -308,11 +316,11 @@ export function createSDFLine(
   opts: SDFLineOptions,
   userData?: Record<string, unknown>,
 ): Mesh {
-  const geo  = buildGeometry(points);
-  const mat  = buildMaterial(opts);
+  const geo = buildGeometry(points);
+  const mat = buildMaterial(opts);
   const mesh = new Mesh(geo, mat);
   mesh.frustumCulled = false;
-  mesh.renderOrder   = 5;
+  mesh.renderOrder = 5;
   mesh.userData = { ...userData, __sdfLine: true };
   _trackedMeshes.add(mesh);
   return mesh;

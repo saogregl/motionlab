@@ -1,6 +1,11 @@
 import { FilePlus, FolderOpen, Import, Save, SaveAll } from 'lucide-react';
 
-import { sendLoadProject, sendNewProject, sendSaveProject, sendSaveProjectAs } from '../../engine/connection.js';
+import {
+  sendLoadProject,
+  sendNewProject,
+  sendSaveProject,
+  sendSaveProjectAs,
+} from '../../engine/connection.js';
 import { useEngineConnection } from '../../stores/engine-connection.js';
 import { beginImportFlow } from '../../stores/import-flow.js';
 import { useMechanismStore } from '../../stores/mechanism.js';

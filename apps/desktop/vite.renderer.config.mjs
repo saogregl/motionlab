@@ -11,11 +11,26 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: [
-      { find: '@motionlab/frontend', replacement: path.resolve(__dirname, '../../packages/frontend/src/index.ts') },
-      { find: '@motionlab/protocol', replacement: path.resolve(__dirname, '../../packages/protocol/src/index.ts') },
-      { find: '@motionlab/ui/globals.css', replacement: path.resolve(__dirname, '../../packages/ui/src/globals.css') },
-      { find: '@motionlab/ui', replacement: path.resolve(__dirname, '../../packages/ui/src/index.ts') },
-      { find: '@motionlab/viewport', replacement: path.resolve(__dirname, '../../packages/viewport/src/index.ts') },
+      {
+        find: '@motionlab/frontend',
+        replacement: path.resolve(__dirname, '../../packages/frontend/src/index.ts'),
+      },
+      {
+        find: '@motionlab/protocol',
+        replacement: path.resolve(__dirname, '../../packages/protocol/src/index.ts'),
+      },
+      {
+        find: '@motionlab/ui/globals.css',
+        replacement: path.resolve(__dirname, '../../packages/ui/src/globals.css'),
+      },
+      {
+        find: '@motionlab/ui',
+        replacement: path.resolve(__dirname, '../../packages/ui/src/index.ts'),
+      },
+      {
+        find: '@motionlab/viewport',
+        replacement: path.resolve(__dirname, '../../packages/viewport/src/index.ts'),
+      },
       { find: '@/', replacement: `${path.resolve(__dirname, '../../packages/ui/src')}/` },
     ],
   },

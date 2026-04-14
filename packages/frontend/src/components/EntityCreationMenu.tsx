@@ -42,9 +42,7 @@ export function EntityCreationMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <button
-            className="flex size-8 items-center justify-center rounded-[var(--panel-radius)] bg-[var(--layer-raised)] text-text-tertiary hover:bg-[var(--layer-raised-hover)] hover:text-text-primary"
-          >
+          <button className="flex size-8 items-center justify-center rounded-[var(--panel-radius)] bg-[var(--layer-raised)] text-text-tertiary hover:bg-[var(--layer-raised-hover)] hover:text-text-primary">
             <Plus className="size-3.5" />
           </button>
         }
@@ -68,10 +66,7 @@ export function EntityCreationMenu() {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem
-          disabled={datumDisabled}
-          onSelect={() => executeCommand('create.datum')}
-        >
+        <DropdownMenuItem disabled={datumDisabled} onSelect={() => executeCommand('create.datum')}>
           <Crosshair className="size-4" />
           Create Datum
           <DropdownMenuShortcut>D</DropdownMenuShortcut>

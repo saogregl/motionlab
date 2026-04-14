@@ -7,14 +7,14 @@ export interface ImportOptions {
 }
 
 export interface AssetEntry {
-  id: string;                    // UUID for the store entry
-  assetId: string;               // engine cache_key — used for PlaceAssetInScene
-  filename: string;              // original filename
-  contentHash: string;           // file content hash
-  importedAt: number;            // timestamp
-  partCount: number;             // number of geometries
+  id: string; // UUID for the store entry
+  assetId: string; // engine cache_key — used for PlaceAssetInScene
+  filename: string; // original filename
+  contentHash: string; // file content hash
+  importedAt: number; // timestamp
+  partCount: number; // number of geometries
   type: 'cad-import' | 'primitive';
-  importFilePath: string;        // fallback for re-import if cache cleared
+  importFilePath: string; // fallback for re-import if cache cleared
   importOptions?: ImportOptions;
 }
 

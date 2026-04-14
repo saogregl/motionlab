@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
+import { spawnSync } from 'node:child_process';
 import { copyFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
 import process from 'node:process';
 
 const [preset, binaryName] = process.argv.slice(2);

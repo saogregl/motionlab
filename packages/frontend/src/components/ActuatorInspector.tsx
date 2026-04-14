@@ -14,14 +14,23 @@ import { Cog, Settings2 } from 'lucide-react';
 import { useMemo } from 'react';
 
 import { sendUpdateActuator } from '../engine/connection.js';
-import type { ActuatorState, ActuatorTypeId, CommandFunctionShape, ControlModeId } from '../stores/mechanism.js';
+import type {
+  ActuatorState,
+  ActuatorTypeId,
+  CommandFunctionShape,
+  ControlModeId,
+} from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { useTraceStore } from '../stores/traces.js';
 import { getActuatorUnit } from '../utils/actuator-units.js';
 import { getJointCoordinateChannelIds } from '../utils/runtime-channel-ids.js';
-import { CommandFunctionSection, IdentitySection, SimulationValuesSection } from './inspector/sections/index.js';
+import {
+  CommandFunctionSection,
+  IdentitySection,
+  SimulationValuesSection,
+} from './inspector/sections/index.js';
 
 function updateActuator(actuator: ActuatorState, updates: Partial<ActuatorState>): void {
   sendUpdateActuator({ ...actuator, ...updates });
@@ -29,9 +38,7 @@ function updateActuator(actuator: ActuatorState, updates: Partial<ActuatorState>
 
 export function ActuatorInspector({ actuatorId }: { actuatorId: string }) {
   const actuator = useMechanismStore((s) => s.actuators.get(actuatorId));
-  const joint = useMechanismStore((s) =>
-    actuator ? s.joints.get(actuator.jointId) : undefined,
-  );
+  const joint = useMechanismStore((s) => (actuator ? s.joints.get(actuator.jointId) : undefined));
 
   const simState = useSimulationStore((s) => s.state);
   const channels = useTraceStore((s) => s.channels);
@@ -48,20 +55,24 @@ export function ActuatorInspector({ actuatorId }: { actuatorId: string }) {
     const coordChannels = getJointCoordinateChannelIds(actuator.jointId, joint.type);
     return [
       ...(coordChannels?.position
-        ? [{
-            channelId: coordChannels.position,
-            label: 'Actual Position',
-            unit: channels.get(coordChannels.position)?.unit ?? '',
-            type: 'scalar' as const,
-          }]
+        ? [
+            {
+              channelId: coordChannels.position,
+              label: 'Actual Position',
+              unit: channels.get(coordChannels.position)?.unit ?? '',
+              type: 'scalar' as const,
+            },
+          ]
         : []),
       ...(coordChannels?.velocity
-        ? [{
-            channelId: coordChannels.velocity,
-            label: 'Actual Velocity',
-            unit: channels.get(coordChannels.velocity)?.unit ?? '',
-            type: 'scalar' as const,
-          }]
+        ? [
+            {
+              channelId: coordChannels.velocity,
+              label: 'Actual Velocity',
+              unit: channels.get(coordChannels.velocity)?.unit ?? '',
+              type: 'scalar' as const,
+            },
+          ]
         : []),
       {
         channelId: `actuator/${actuatorId}/command`,
@@ -127,9 +138,7 @@ export function ActuatorInspector({ actuatorId }: { actuatorId: string }) {
         <PropertyRow label="Control Mode">
           <Select
             value={actuator.controlMode}
-            onValueChange={(v) =>
-              updateActuator(actuator, { controlMode: v as ControlModeId })
-            }
+            onValueChange={(v) => updateActuator(actuator, { controlMode: v as ControlModeId })}
           >
             <SelectTrigger size="sm" disabled={isSimulating}>
               <SelectValue />
@@ -147,7 +156,7 @@ export function ActuatorInspector({ actuatorId }: { actuatorId: string }) {
               checked={hasEffortLimit}
               onCheckedChange={(checked) =>
                 updateActuator(actuator, {
-                  effortLimit: checked ? actuator.effortLimit ?? 100 : undefined,
+                  effortLimit: checked ? (actuator.effortLimit ?? 100) : undefined,
                 })
               }
               disabled={isSimulating}
@@ -171,7 +180,8 @@ export function ActuatorInspector({ actuatorId }: { actuatorId: string }) {
       <CommandFunctionSection
         fn={actuator.commandFunction}
         onChange={(commandFunction: CommandFunctionShape) => {
-          const commandValue = commandFunction.shape === 'constant' ? commandFunction.value : actuator.commandValue;
+          const commandValue =
+            commandFunction.shape === 'constant' ? commandFunction.value : actuator.commandValue;
           updateActuator(actuator, { commandFunction, commandValue });
         }}
         unit={commandUnit}

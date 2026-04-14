@@ -27,7 +27,7 @@ export interface BodyState {
   name: string;
   massProperties: BodyMassProperties;
   pose: BodyPose;
-  isFixed?: boolean;           // deprecated — use motionType
+  isFixed?: boolean; // deprecated — use motionType
   motionType: 'dynamic' | 'fixed';
   massOverride?: boolean;
 }
@@ -86,7 +86,17 @@ export interface DatumState {
   faceGeometry?: FaceGeometryInfo;
 }
 
-export type JointTypeId = 'revolute' | 'prismatic' | 'fixed' | 'spherical' | 'cylindrical' | 'planar' | 'universal' | 'distance' | 'point-line' | 'point-plane';
+export type JointTypeId =
+  | 'revolute'
+  | 'prismatic'
+  | 'fixed'
+  | 'spherical'
+  | 'cylindrical'
+  | 'planar'
+  | 'universal'
+  | 'distance'
+  | 'point-line'
+  | 'point-plane';
 
 export interface JointState {
   id: string;
@@ -129,7 +139,14 @@ export type CommandFunctionShape =
   | { shape: 'ramp'; initialValue: number; slope: number }
   | { shape: 'sine'; amplitude: number; frequency: number; phase: number; offset: number }
   | { shape: 'piecewise-linear'; times: number[]; values: number[] }
-  | { shape: 'smooth-step'; displacement: number; duration: number; profile: 'cycloidal' | 'trapezoidal'; accelFraction: number; decelFraction: number };
+  | {
+      shape: 'smooth-step';
+      displacement: number;
+      duration: number;
+      profile: 'cycloidal' | 'trapezoidal';
+      accelFraction: number;
+      decelFraction: number;
+    };
 
 export type CommandFunctionShapeId = CommandFunctionShape['shape'];
 
@@ -152,8 +169,8 @@ export interface SensorState {
   name: string;
   type: SensorTypeId;
   datumId: string;
-  axis?: SensorAxisId;   // tachometer axis
-  jointId?: string;       // encoder target joint
+  axis?: SensorAxisId; // tachometer axis
+  jointId?: string; // encoder target joint
 }
 
 export interface MechanismState {
@@ -454,11 +471,12 @@ export const useMechanismStore = create<MechanismState>()((set) => ({
 
   setImportError: (e) => set({ importError: e }),
 
-  setProjectMeta: (name, filePath) => set({
-    hasActiveProject: true,
-    projectName: name,
-    projectFilePath: filePath,
-  }),
+  setProjectMeta: (name, filePath) =>
+    set({
+      hasActiveProject: true,
+      projectName: name,
+      projectFilePath: filePath,
+    }),
 
   markDirty: () => set({ isDirty: true }),
 

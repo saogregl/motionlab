@@ -51,7 +51,9 @@ function ViewportHUD({
         <div
           data-slot="viewport-hud-top-center"
           className="absolute top-3 -translate-x-1/2 pointer-events-auto"
-          style={{ left: 'calc(var(--vp-inset-left, 0px) + (100% - var(--vp-inset-left, 0px) - var(--vp-inset-right, 0px)) / 2)' }}
+          style={{
+            left: 'calc(var(--vp-inset-left, 0px) + (100% - var(--vp-inset-left, 0px) - var(--vp-inset-right, 0px)) / 2)',
+          }}
         >
           {topCenter}
         </div>
@@ -73,7 +75,10 @@ function ViewportHUD({
         <div
           data-slot="viewport-hud-bottom-left"
           className="absolute pointer-events-auto"
-          style={{ left: 'calc(var(--vp-inset-left, 0px) + 12px)', bottom: 'calc(var(--vp-inset-bottom, 0px) + 12px)' }}
+          style={{
+            left: 'calc(var(--vp-inset-left, 0px) + 12px)',
+            bottom: 'calc(var(--vp-inset-bottom, 0px) + 12px)',
+          }}
         >
           {bottomLeft}
         </div>
@@ -84,7 +89,10 @@ function ViewportHUD({
         <div
           data-slot="viewport-hud-bottom-center"
           className="absolute -translate-x-1/2 pointer-events-auto"
-          style={{ left: 'calc(var(--vp-inset-left, 0px) + (100% - var(--vp-inset-left, 0px) - var(--vp-inset-right, 0px)) / 2)', bottom: 'calc(var(--vp-inset-bottom, 0px) + 12px)' }}
+          style={{
+            left: 'calc(var(--vp-inset-left, 0px) + (100% - var(--vp-inset-left, 0px) - var(--vp-inset-right, 0px)) / 2)',
+            bottom: 'calc(var(--vp-inset-bottom, 0px) + 12px)',
+          }}
         >
           {bottomCenter}
         </div>
@@ -95,7 +103,10 @@ function ViewportHUD({
         <div
           data-slot="viewport-hud-bottom-right"
           className="absolute pointer-events-auto"
-          style={{ right: 'calc(var(--vp-inset-right, 0px) + 12px)', bottom: 'calc(var(--vp-inset-bottom, 0px) + 12px)' }}
+          style={{
+            right: 'calc(var(--vp-inset-right, 0px) + 12px)',
+            bottom: 'calc(var(--vp-inset-bottom, 0px) + 12px)',
+          }}
         >
           {bottomRight}
         </div>

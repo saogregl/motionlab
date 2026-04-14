@@ -8,7 +8,12 @@
 import { Group, Vector3 } from 'three';
 
 import { AXIS_X, AXIS_Y, AXIS_Z } from './colors-three.js';
-import { createFatLine, disposeFatLine, isFatLine, INDICATOR_LINE_WIDTH } from './fat-line-three.js';
+import {
+  createFatLine,
+  disposeFatLine,
+  INDICATOR_LINE_WIDTH,
+  isFatLine,
+} from './fat-line-three.js';
 
 const RENDER_ORDER = 8;
 const ARROW_RATIO = 0.2; // arrowhead = 20% of axis length
@@ -42,13 +47,17 @@ export function createFrameTriad(opts: FrameTriadOptions): FrameTriadResult {
 
   for (const [axisEnd, color] of axes) {
     // Axis line
-    const line = createFatLine([origin, axisEnd], {
-      color,
-      lineWidth,
-      transparent: true,
-      opacity,
-      depthTest: false,
-    }, { isPickable: false });
+    const line = createFatLine(
+      [origin, axisEnd],
+      {
+        color,
+        lineWidth,
+        transparent: true,
+        opacity,
+        depthTest: false,
+      },
+      { isPickable: false },
+    );
     line.renderOrder = RENDER_ORDER;
     root.add(line);
 
@@ -61,17 +70,21 @@ export function createFrameTriad(opts: FrameTriadOptions): FrameTriadResult {
       perp.crossVectors(dir, new Vector3(1, 0, 0)).normalize();
     }
     const back = axisEnd.clone().sub(dir.clone().multiplyScalar(arrowSize));
-    const arrow = createFatLine([
-      back.clone().add(perp.clone().multiplyScalar(arrowSize * 0.4)),
-      axisEnd.clone(),
-      back.clone().sub(perp.clone().multiplyScalar(arrowSize * 0.4)),
-    ], {
-      color,
-      lineWidth,
-      transparent: true,
-      opacity,
-      depthTest: false,
-    }, { isPickable: false });
+    const arrow = createFatLine(
+      [
+        back.clone().add(perp.clone().multiplyScalar(arrowSize * 0.4)),
+        axisEnd.clone(),
+        back.clone().sub(perp.clone().multiplyScalar(arrowSize * 0.4)),
+      ],
+      {
+        color,
+        lineWidth,
+        transparent: true,
+        opacity,
+        depthTest: false,
+      },
+      { isPickable: false },
+    );
     arrow.renderOrder = RENDER_ORDER;
     root.add(arrow);
   }

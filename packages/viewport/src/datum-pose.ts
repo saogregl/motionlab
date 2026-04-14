@@ -30,10 +30,22 @@ export function computeDatumLocalPose(
 
   // Build datum world matrix (column-major — Three.js Matrix4 stores column-major)
   const datumWorld = new Matrix4().set(
-    x.x, y.x, z.x, worldPoint.x,
-    x.y, y.y, z.y, worldPoint.y,
-    x.z, y.z, z.z, worldPoint.z,
-    0,   0,   0,   1,
+    x.x,
+    y.x,
+    z.x,
+    worldPoint.x,
+    x.y,
+    y.y,
+    z.y,
+    worldPoint.y,
+    x.z,
+    y.z,
+    z.z,
+    worldPoint.z,
+    0,
+    0,
+    0,
+    1,
   );
 
   // bodyInverse * datumWorld → local matrix

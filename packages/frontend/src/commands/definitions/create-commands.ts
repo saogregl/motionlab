@@ -1,19 +1,19 @@
 import {
+  Activity,
+  ArrowUpDown,
   Box,
+  Circle,
   Crosshair,
+  Cylinder,
+  Gauge,
   Import,
   Link2,
   Lock,
   MoveHorizontal,
-  RotateCw,
-  Circle,
-  Cylinder,
-  Zap,
-  RotateCcw,
-  ArrowUpDown,
-  Activity,
-  Gauge,
   Radio,
+  RotateCcw,
+  RotateCw,
+  Zap,
 } from 'lucide-react';
 
 import { useEngineConnection } from '../../stores/engine-connection.js';
@@ -37,7 +37,8 @@ export function createCreateCommands(): CommandDef[] {
     return s !== 'running' && s !== 'paused';
   };
 
-  const canImport = () => isBuildWorkspace() && isEngineReady() && !useMechanismStore.getState().importing;
+  const canImport = () =>
+    isBuildWorkspace() && isEngineReady() && !useMechanismStore.getState().importing;
 
   const enterJointMode = (preselectedType?: string) => {
     useToolModeStore.getState().setMode('create-joint');

@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-
 import type { DatumPreviewType } from '@motionlab/viewport';
+import { useEffect, useRef, useState } from 'react';
 
 interface FaceTooltipProps {
   /** The viewport container to track pointer position within. */
@@ -27,7 +26,11 @@ const JOINT_LABELS: Record<DatumPreviewType, string> = {
  * Floating tooltip that follows the cursor and shows the hovered face index
  * and estimated surface type during create-datum mode.
  */
-export function FaceTooltip({ containerRef, hoveredFace, mode = 'create-datum' }: FaceTooltipProps) {
+export function FaceTooltip({
+  containerRef,
+  hoveredFace,
+  mode = 'create-datum',
+}: FaceTooltipProps) {
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const rafRef = useRef(0);
 

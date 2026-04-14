@@ -1,12 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import {
-  Box,
-  FilePlus,
-  GitBranch,
-  Layout,
-  MoveHorizontal,
-  RotateCcw,
-} from 'lucide-react';
+import { Box, FilePlus, GitBranch, Layout, MoveHorizontal, RotateCcw } from 'lucide-react';
 import type { TemplateInfo } from '../../types/motionlab.js';
 
 const TEMPLATE_ICONS: Record<string, LucideIcon> = {

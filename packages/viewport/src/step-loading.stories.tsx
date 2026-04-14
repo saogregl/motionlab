@@ -48,10 +48,16 @@ function StepAssemblyScene({ theme = 'dark' }: { theme: ViewportTheme }) {
           const body = result.bodies[i];
           const id = `body-${i}`;
 
-          sg.addBody(id, body.name, body.mesh, {
-            position: [0, 0, 0],
-            rotation: [0, 0, 0, 1],
-          }, body.partIndex);
+          sg.addBody(
+            id,
+            body.name,
+            body.mesh,
+            {
+              position: [0, 0, 0],
+              rotation: [0, 0, 0, 1],
+            },
+            body.partIndex,
+          );
 
           totalFaces += body.partIndex.length;
           totalTris += body.mesh.indices.length / 3;
@@ -61,8 +67,8 @@ function StepAssemblyScene({ theme = 'dark' }: { theme: ViewportTheme }) {
         setStatus(`${result.rootName}: ${result.bodies.length} bodies loaded`);
         setStats(
           `${totalFaces.toLocaleString()} faces, ` +
-          `${totalTris.toLocaleString()} tris, ` +
-          `${totalVerts.toLocaleString()} verts`,
+            `${totalTris.toLocaleString()} tris, ` +
+            `${totalVerts.toLocaleString()} verts`,
         );
         sg.fitAll();
       })
@@ -99,18 +105,10 @@ function StepAssemblyScene({ theme = 'dark' }: { theme: ViewportTheme }) {
             {preset}
           </button>
         ))}
-        <button
-          type="button"
-          style={BUTTON_STYLE}
-          onClick={() => sgRef.current?.fitAll()}
-        >
+        <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.fitAll()}>
           fit-all
         </button>
-        <button
-          type="button"
-          style={BUTTON_STYLE}
-          onClick={() => sgRef.current?.toggleGrid()}
-        >
+        <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.toggleGrid()}>
           grid
         </button>
         <span style={{ ...BUTTON_STYLE, cursor: 'default', opacity: 0.6 }}>|</span>

@@ -52,11 +52,15 @@ export function createComIndicator(): ComIndicatorResult {
   ];
 
   for (const [start, end] of axes) {
-    const line = createFatLine([start, end], {
-      color: COM_INDICATOR,
-      lineWidth: LINE_WIDTH,
-      depthTest: false,
-    }, { isPickable: false });
+    const line = createFatLine(
+      [start, end],
+      {
+        color: COM_INDICATOR,
+        lineWidth: LINE_WIDTH,
+        depthTest: false,
+      },
+      { isPickable: false },
+    );
     line.renderOrder = RENDER_ORDER;
     root.add(line);
   }

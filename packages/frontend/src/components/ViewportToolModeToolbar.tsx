@@ -14,10 +14,10 @@ import {
   Globe,
   Grid3x3,
   Link2,
-  Type,
   MousePointer2,
   Move,
   RotateCw,
+  Type,
   X,
 } from 'lucide-react';
 

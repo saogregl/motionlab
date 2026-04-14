@@ -46,15 +46,18 @@ function BottomPanel({
   const [isResizing, setIsResizing] = useState(false);
   const dragStartRef = useRef<{ startY: number; startHeight: number } | null>(null);
 
-  const handleResizePointerDown = useCallback((e: React.PointerEvent) => {
-    if (!expanded) return;
-    e.preventDefault();
-    const panel = panelRef.current;
-    if (!panel) return;
-    dragStartRef.current = { startY: e.clientY, startHeight: panel.offsetHeight };
-    setIsResizing(true);
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-  }, [expanded]);
+  const handleResizePointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      if (!expanded) return;
+      e.preventDefault();
+      const panel = panelRef.current;
+      if (!panel) return;
+      dragStartRef.current = { startY: e.clientY, startHeight: panel.offsetHeight };
+      setIsResizing(true);
+      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    },
+    [expanded],
+  );
 
   const handleResizePointerMove = useCallback((e: React.PointerEvent) => {
     if (!dragStartRef.current) return;
@@ -142,11 +145,7 @@ function BottomPanel({
       </div>
 
       {/* Content area — only rendered when expanded */}
-      {expanded && (
-        <div className="min-h-0 flex-1 overflow-auto">
-          {children}
-        </div>
-      )}
+      {expanded && <div className="min-h-0 flex-1 overflow-auto">{children}</div>}
     </div>
   );
 }

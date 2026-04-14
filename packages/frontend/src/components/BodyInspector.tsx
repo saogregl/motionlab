@@ -56,18 +56,14 @@ export function BodyInspector() {
     [],
   );
 
-  if (!body) {
-    return <InspectorPanel />;
-  }
-
-  const { massProperties: mp } = body;
   const childGeometries = useMemo(() => {
+    if (!body) return [];
     const result: GeometryState[] = [];
     for (const g of geometries.values()) {
       if (g.parentBodyId === body.id) result.push(g);
     }
     return result;
-  }, [geometries, body.id]);
+  }, [geometries, body]);
 
   const geometryLabel = useMemo(() => {
     if (childGeometries.length === 0) return '\u2014';
@@ -80,6 +76,12 @@ export function BodyInspector() {
     }
     return `${childGeometries.length} geometries`;
   }, [childGeometries]);
+
+  if (!body) {
+    return <InspectorPanel />;
+  }
+
+  const { massProperties: mp } = body;
 
   return (
     <InspectorPanel
@@ -137,9 +139,7 @@ export function BodyInspector() {
           geometryId={childGeometries[0].id}
           collisionConfig={childGeometries[0].collisionConfig}
           isSimulating={isSimulating}
-          onConfigChange={(config) =>
-            sendUpdateCollisionConfig(childGeometries[0].id, config)
-          }
+          onConfigChange={(config) => sendUpdateCollisionConfig(childGeometries[0].id, config)}
         />
       )}
 
@@ -164,9 +164,7 @@ export function BodyInspector() {
             sendUpdateMassProperties(body.id, false);
           }
         }}
-        onMassPropertiesChange={(newMp) =>
-          debouncedMassUpdate(body.id, true, newMp)
-        }
+        onMassPropertiesChange={(newMp) => debouncedMassUpdate(body.id, true, newMp)}
       />
 
       {body.massOverride && (

@@ -47,7 +47,12 @@ export function ImportSettingsDialog({
   const fileName = filePath.split(/[/\\]/).pop() ?? filePath;
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) onCancel(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) onCancel();
+      }}
+    >
       <DialogContent className="sm:max-w-[360px]">
         <DialogHeader>
           <DialogTitle>Import Settings</DialogTitle>
@@ -56,12 +61,25 @@ export function ImportSettingsDialog({
         <div className="flex flex-col gap-3 py-2">
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">Density (kg/m³)</label>
-            <NumericInput variant="field" value={density} onChange={setDensity} step={100} precision={0} />
+            <NumericInput
+              variant="field"
+              value={density}
+              onChange={setDensity}
+              step={100}
+              precision={0}
+            />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">Tessellation Quality</label>
-            <Select value={quality} onValueChange={(v) => { if (v) setQuality(v); }}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+            <Select
+              value={quality}
+              onValueChange={(v) => {
+                if (v) setQuality(v);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="0.5">Coarse</SelectItem>
                 <SelectItem value="0.1">Standard</SelectItem>
@@ -71,8 +89,15 @@ export function ImportSettingsDialog({
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">Unit System</label>
-            <Select value={units} onValueChange={(v) => { if (v) setUnits(v); }}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+            <Select
+              value={units}
+              onValueChange={(v) => {
+                if (v) setUnits(v);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="millimeter">Millimeter</SelectItem>
                 <SelectItem value="meter">Meter</SelectItem>
@@ -82,8 +107,15 @@ export function ImportSettingsDialog({
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">Placement Mode</label>
-            <Select value={importMode} onValueChange={(v) => { if (v) setImportMode(v as ImportMode); }}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+            <Select
+              value={importMode}
+              onValueChange={(v) => {
+                if (v) setImportMode(v as ImportMode);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="auto-body">Auto-body</SelectItem>
                 <SelectItem value="visual-only">Visual only</SelectItem>
@@ -97,16 +129,22 @@ export function ImportSettingsDialog({
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onCancel}>Cancel</Button>
-          <Button onClick={() => {
-            useUILayoutStore.getState().setImportMode(importMode);
-            onConfirm({
-              densityOverride: density,
-              tessellationQuality: parseFloat(quality),
-              unitSystem: units,
-              importMode,
-            });
-          }}>Import</Button>
+          <Button variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              useUILayoutStore.getState().setImportMode(importMode);
+              onConfirm({
+                densityOverride: density,
+                tessellationQuality: parseFloat(quality),
+                unitSystem: units,
+                importMode,
+              });
+            }}
+          >
+            Import
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -1,8 +1,4 @@
-import {
-  sendDetachGeometry,
-  sendMakeCompoundBody,
-  sendSplitBody,
-} from '../engine/connection.js';
+import { sendDetachGeometry, sendMakeCompoundBody, sendSplitBody } from '../engine/connection.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useToastStore } from '../stores/toast.js';
@@ -72,7 +68,7 @@ function longestCommonPrefix(strings: string[]): string {
 
 function titleCase(s: string): string {
   return s
-    .replace(/[_\-]/g, ' ')
+    .replace(/[_-]/g, ' ')
     .replace(/\b\w/g, (c) => c.toUpperCase())
     .trim();
 }
@@ -209,9 +205,7 @@ export function executeDetachGeometry(geometryId: string): void {
   useToastStore.getState().addToast({
     variant: 'success',
     title: 'Detached',
-    description: parentBody
-      ? `${geom.name} removed from ${parentBody.name}`
-      : geom.name,
+    description: parentBody ? `${geom.name} removed from ${parentBody.name}` : geom.name,
     duration: 3000,
   });
 }
@@ -225,10 +219,7 @@ export function executeDetachGeometry(geometryId: string): void {
  * detach, body creation at centroid, and attach with world-position-
  * preserving local poses.
  */
-export function executeSplitBody(
-  selectedGeometryIds: Set<string>,
-  sourceBodyId: string,
-): void {
+export function executeSplitBody(selectedGeometryIds: Set<string>, sourceBodyId: string): void {
   const mech = useMechanismStore.getState();
 
   // Validate: all selected geometries belong to sourceBodyId

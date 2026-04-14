@@ -18,7 +18,9 @@ export class SaveIntentTracker {
     return true;
   }
 
-  consumeProjectData(projectFilePath: string | null): { kind: 'autosave' } | { kind: 'manual'; existingPath: string | null } {
+  consumeProjectData(
+    projectFilePath: string | null,
+  ): { kind: 'autosave' } | { kind: 'manual'; existingPath: string | null } {
     if (this.pendingAutoSaveCount > 0) {
       this.pendingAutoSaveCount -= 1;
       return { kind: 'autosave' };

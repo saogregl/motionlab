@@ -60,7 +60,10 @@ function PropertyRow({
       </span>
 
       {/* Value slot */}
-      <div data-slot="property-row-value" className="min-w-0 truncate text-[length:var(--text-xs)] text-[var(--text-primary)]">
+      <div
+        data-slot="property-row-value"
+        className="min-w-0 truncate text-[length:var(--text-xs)] text-[var(--text-primary)]"
+      >
         {children}
       </div>
 

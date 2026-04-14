@@ -1,8 +1,8 @@
+import { formatEngValue } from '../../lib/format';
+import { cn } from '../../lib/utils';
 import type { Axis } from '../primitives/axis-color-label';
 import { AxisColorLabel } from '../primitives/axis-color-label';
 import { NumericInput } from '../primitives/numeric-input';
-import { cn } from '../../lib/utils';
-import { formatEngValue } from '../../lib/format';
 
 interface Vec3DisplayProps {
   /** The vector values */
@@ -45,9 +45,7 @@ function Vec3Display({
         <span className="text-[length:var(--text-2xs)] font-semibold text-[var(--text-secondary)]">
           {label}
         </span>
-        {unit && (
-          <span className="ml-auto text-[10px] text-[var(--text-tertiary)]">{unit}</span>
-        )}
+        {unit && <span className="ml-auto text-[10px] text-[var(--text-tertiary)]">{unit}</span>}
       </div>
       {/* 3-column axis values */}
       <div className="grid grid-cols-3 gap-1 px-1.5 pb-1">

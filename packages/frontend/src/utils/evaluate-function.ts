@@ -97,8 +97,8 @@ function evalConstAcc(
 
   const h = displacement;
   const T = duration;
-  const ta = accelFraction * T;  // end of accel phase
-  const td = (1 - decelFraction) * T;  // start of decel phase
+  const ta = accelFraction * T; // end of accel phase
+  const td = (1 - decelFraction) * T; // start of decel phase
 
   // Compute velocity during constant phase from area balance:
   // h = 0.5*v*ta + v*(td-ta) + 0.5*v*(T-td)

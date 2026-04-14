@@ -18,13 +18,13 @@ import { useToolModeStore } from '../stores/tool-mode.js';
 import { useTraceStore } from '../stores/traces.js';
 import { nearestSample } from '../utils/nearest-sample.js';
 import { getJointCoordinateChannelIds } from '../utils/runtime-channel-ids.js';
+import { EntityLabelOverlay } from './EntityLabelOverlay.js';
 import { FaceTooltip } from './FaceTooltip.js';
 import { JointTypeSelectorPanel } from './JointTypeSelectorPanel.js';
 import { LoadCreationCard } from './LoadCreationCard.js';
 import { ModeIndicator } from './ModeIndicator.js';
 import { ViewportContextMenu } from './ViewportContextMenu.js';
 import { ViewportToolModeToolbar } from './ViewportToolModeToolbar.js';
-import { EntityLabelOverlay } from './EntityLabelOverlay.js';
 import { WorldSpaceOverlay } from './WorldSpaceOverlay.js';
 
 function SelectionIcon({
@@ -405,7 +405,10 @@ export function ViewportOverlay() {
       for (const id of selectedIds) {
         const joint = joints.get(id);
         const chId = joint ? getJointCoordinateChannelIds(id, joint.type)?.position : null;
-        if (chId && state.lastUpdatedChannels.has(chId)) { relevant = true; break; }
+        if (chId && state.lastUpdatedChannels.has(chId)) {
+          relevant = true;
+          break;
+        }
       }
       if (!relevant) return;
       syncSelectedJointLimits();

@@ -1,6 +1,6 @@
+import crypto from 'node:crypto';
 import fsPromises from 'node:fs/promises';
 import path from 'node:path';
-import crypto from 'node:crypto';
 import type { BrowserWindow } from 'electron';
 
 export interface DebugCaptureLimits {

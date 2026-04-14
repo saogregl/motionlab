@@ -25,8 +25,10 @@ function mergeSamples(existing: StoreSample[], incoming: StoreSample[]): StoreSa
   let merged: StoreSample[];
 
   if (firstIncomingTime > lastExistingTime) {
-    // Fast path: pure append (live sim hot path — no dedup, no sort needed)
-    merged = existing.concat(incoming);
+    // Fast path: mutate existing in place. Outer Map identity still changes
+    // in flushPendingTraces/addSamples, so Zustand subscribers re-render.
+    for (let i = 0; i < incoming.length; i++) existing.push(incoming[i]);
+    merged = existing;
   } else {
     // Overlap detected (scrub / replay): full dedup via last-write-wins
     merged = existing.concat(incoming);

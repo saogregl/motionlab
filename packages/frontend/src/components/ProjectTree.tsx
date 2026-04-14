@@ -1,5 +1,6 @@
 import {
   BodyContextMenu,
+  Button,
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
@@ -15,33 +16,42 @@ import {
   TreeRow,
   type TreeRowRenderProps,
   TreeView,
-  Button,
 } from '@motionlab/ui';
-import { Activity, Box, Cog, Crosshair, Hexagon, Import, Link2, Plus, Radio, RotateCcw, Zap } from 'lucide-react';
+import {
+  Activity,
+  Box,
+  Cog,
+  Crosshair,
+  Hexagon,
+  Import,
+  Link2,
+  Plus,
+  Radio,
+  RotateCcw,
+  Zap,
+} from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { executeCommand } from '../commands/registry.js';
 import {
   getSceneGraph,
+  sendDeleteActuator,
   sendDeleteBody,
   sendDeleteDatum,
   sendDeleteGeometry,
   sendDeleteJoint,
-  sendDeleteActuator,
   sendDeleteLoad,
   sendDeleteSensor,
-  sendUpdateSensor,
   sendDetachGeometry,
   sendRenameDatum,
   sendRenameGeometry,
+  sendReparentGeometry,
   sendUpdateActuator,
   sendUpdateBody,
   sendUpdateJoint,
   sendUpdateLoad,
-  sendReparentGeometry,
+  sendUpdateSensor,
 } from '../engine/connection.js';
-import { AttachGeometryDialog } from './AttachGeometryDialog.js';
-import { CreateBodyDialog } from './CreateBodyDialog.js';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useLoadCreationStore } from '../stores/load-creation.js';
@@ -56,6 +66,8 @@ import {
   resolveViewportEntityId,
   resolveViewportEntityIds,
 } from '../utils/viewport-entity-resolution.js';
+import { AttachGeometryDialog } from './AttachGeometryDialog.js';
+import { CreateBodyDialog } from './CreateBodyDialog.js';
 
 // ── Sentinel IDs for group / structural nodes ──
 
@@ -72,7 +84,16 @@ function isStructuralId(id: string) {
 
 // ── Node type discriminator ──
 
-type NodeType = 'root' | 'group' | 'body' | 'geometry' | 'datum' | 'joint' | 'load' | 'actuator' | 'sensor';
+type NodeType =
+  | 'root'
+  | 'group'
+  | 'body'
+  | 'geometry'
+  | 'datum'
+  | 'joint'
+  | 'load'
+  | 'actuator'
+  | 'sensor';
 
 // ── Icons ──
 
@@ -129,8 +150,10 @@ export function ProjectTree() {
       const parentBody = parentDatum ? bodies.get(parentDatum.parentBodyId) : undefined;
       const childBody = childDatum ? bodies.get(childDatum.parentBodyId) : undefined;
 
-      if (parentBody) bodyJointCount.set(parentBody.id, (bodyJointCount.get(parentBody.id) ?? 0) + 1);
-      if (childBody && childBody.id !== parentBody?.id) bodyJointCount.set(childBody.id, (bodyJointCount.get(childBody.id) ?? 0) + 1);
+      if (parentBody)
+        bodyJointCount.set(parentBody.id, (bodyJointCount.get(parentBody.id) ?? 0) + 1);
+      if (childBody && childBody.id !== parentBody?.id)
+        bodyJointCount.set(childBody.id, (bodyJointCount.get(childBody.id) ?? 0) + 1);
 
       jointBodies.set(jid, [parentBody?.name ?? '?', childBody?.name ?? '?']);
     }
@@ -144,27 +167,45 @@ export function ProjectTree() {
     const result: TreeNode[] = [];
 
     // ── Single-pass parent-ID indexes ──
-    const geosByBody = new Map<string, typeof geometries extends Map<string, infer V> ? V[] : never>();
+    const geosByBody = new Map<
+      string,
+      typeof geometries extends Map<string, infer V> ? V[] : never
+    >();
     const unparentedGeometries: (typeof geometries extends Map<string, infer V> ? V : never)[] = [];
     for (const g of geometries.values()) {
       if (g.parentBodyId) {
         let bucket = geosByBody.get(g.parentBodyId);
-        if (!bucket) { bucket = []; geosByBody.set(g.parentBodyId, bucket); }
+        if (!bucket) {
+          bucket = [];
+          geosByBody.set(g.parentBodyId, bucket);
+        }
         bucket.push(g);
       } else {
         unparentedGeometries.push(g);
       }
     }
-    const datumsByBody = new Map<string, typeof datums extends Map<string, infer V> ? V[] : never>();
+    const datumsByBody = new Map<
+      string,
+      typeof datums extends Map<string, infer V> ? V[] : never
+    >();
     for (const d of datums.values()) {
       let bucket = datumsByBody.get(d.parentBodyId);
-      if (!bucket) { bucket = []; datumsByBody.set(d.parentBodyId, bucket); }
+      if (!bucket) {
+        bucket = [];
+        datumsByBody.set(d.parentBodyId, bucket);
+      }
       bucket.push(d);
     }
-    const actuatorsByJoint = new Map<string, typeof actuators extends Map<string, infer V> ? V[] : never>();
+    const actuatorsByJoint = new Map<
+      string,
+      typeof actuators extends Map<string, infer V> ? V[] : never
+    >();
     for (const a of actuators.values()) {
       let bucket = actuatorsByJoint.get(a.jointId);
-      if (!bucket) { bucket = []; actuatorsByJoint.set(a.jointId, bucket); }
+      if (!bucket) {
+        bucket = [];
+        actuatorsByJoint.set(a.jointId, bucket);
+      }
       bucket.push(a);
     }
 
@@ -388,11 +429,7 @@ export function ProjectTree() {
       const entity = [...ids].filter((id) => !isStructuralId(id));
       setSelection(entity);
 
-      const viewportIds = resolveViewportEntityIds(
-        new Set(entity),
-        bodies,
-        geometries,
-      );
+      const viewportIds = resolveViewportEntityIds(new Set(entity), bodies, geometries);
 
       // Focus viewport on selected entity/entities
       if (viewportIds.size === 1) {
@@ -412,7 +449,15 @@ export function ProjectTree() {
   const handleDelete = useCallback(
     (ids: Set<string>) => {
       if (isSimulating) return;
-      const { bodies: bm, geometries: gm, datums: dm, joints: jm, loads: lm, actuators: am, sensors: sm } = useMechanismStore.getState();
+      const {
+        bodies: bm,
+        geometries: gm,
+        datums: dm,
+        joints: jm,
+        loads: lm,
+        actuators: am,
+        sensors: sm,
+      } = useMechanismStore.getState();
       for (const id of ids) {
         if (bm.has(id)) {
           sendDeleteBody(id);
@@ -437,7 +482,15 @@ export function ProjectTree() {
   // ── Rename commit ──
 
   const handleRenameCommit = useCallback((id: string, newName: string) => {
-    const { bodies: bm, geometries: gm, datums: dm, joints: jm, loads: lm, actuators: am, sensors: sm } = useMechanismStore.getState();
+    const {
+      bodies: bm,
+      geometries: gm,
+      datums: dm,
+      joints: jm,
+      loads: lm,
+      actuators: am,
+      sensors: sm,
+    } = useMechanismStore.getState();
     if (bm.has(id)) {
       sendUpdateBody(id, { name: newName });
     } else if (gm.has(id)) {
@@ -491,11 +544,12 @@ export function ProjectTree() {
       }
 
       // Entity rows
-      const icon = nodeType === 'load'
-        ? (LOAD_TYPE_ICONS[node._loadType as string] ?? ICONS.load)
-        : nodeType === 'actuator'
-          ? ICONS.actuator
-          : ICONS[nodeType];
+      const icon =
+        nodeType === 'load'
+          ? (LOAD_TYPE_ICONS[node._loadType as string] ?? ICONS.load)
+          : nodeType === 'actuator'
+            ? ICONS.actuator
+            : ICONS[nodeType];
       let secondary: string | undefined;
       if (nodeType === 'joint') {
         const jBodies = connectionIndex.jointBodies.get(node.id);
@@ -517,7 +571,7 @@ export function ProjectTree() {
       }
       const isEditing = editingId === node.id;
       const isHidden = hiddenIds.has(node.id);
-      const bodyStatus = nodeType === 'body' && node._noGeometry ? 'warning' as const : undefined;
+      const bodyStatus = nodeType === 'body' && node._noGeometry ? ('warning' as const) : undefined;
       const row = isEditing ? (
         <div
           className="flex h-[var(--tree-row-h)] items-center"
@@ -525,9 +579,7 @@ export function ProjectTree() {
         >
           <span className="size-4 shrink-0" />
           {icon && (
-            <span className="mr-1 flex size-3.5 shrink-0 items-center justify-center">
-              {icon}
-            </span>
+            <span className="mr-1 flex size-3.5 shrink-0 items-center justify-center">{icon}</span>
           )}
           <InlineEditableName
             value={node.name}
@@ -576,8 +628,8 @@ export function ProjectTree() {
           .map(([type, count]) => `${count} ${pluralize(type, count)}`)
           .join(', ');
 
-        const canMakeBody = !isSimulating &&
-          [...selectedIds].some((id) => geometries.has(id) || bodies.has(id));
+        const canMakeBody =
+          !isSimulating && [...selectedIds].some((id) => geometries.has(id) || bodies.has(id));
 
         // Split: enabled when all selected items are child geometries of the same body
         // and the body has other children not in the selection
@@ -603,14 +655,20 @@ export function ProjectTree() {
             selectionSummary={summary}
             onMakeBody={canMakeBody ? () => executeMakeBody(selectedIds) : undefined}
             makeBodyDisabledReason={
-              isSimulating ? 'Not available during simulation' : !canMakeBody ? 'Select geometries or bodies' : undefined
+              isSimulating
+                ? 'Not available during simulation'
+                : !canMakeBody
+                  ? 'Select geometries or bodies'
+                  : undefined
             }
             onSplitFromBody={
               splitSourceBodyId && !isSimulating
                 ? () => executeSplitBody(new Set(selectedGeomIds), splitSourceBodyId!)
                 : undefined
             }
-            splitFromBodyDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
+            splitFromBodyDisabledReason={
+              isSimulating ? 'Not available during simulation' : undefined
+            }
             onDelete={
               isSimulating
                 ? undefined
@@ -678,9 +736,9 @@ export function ProjectTree() {
                     if (bodyDatums.length > 0) {
                       store.setParentDatum(bodyDatums[0].id);
                     } else {
-                      useAuthoringStatusStore.getState().setMessage(
-                        'Click a face on this body to place the parent datum',
-                      );
+                      useAuthoringStatusStore
+                        .getState()
+                        .setMessage('Click a face on this body to place the parent datum');
                     }
                   }
             }
@@ -728,9 +786,7 @@ export function ProjectTree() {
             isParented={!!geom?.parentBodyId}
             onSelectInViewport={() => setSelection([node.id])}
             onFocusViewport={
-              focusTargetId
-                ? () => getSceneGraph()?.focusOnEntity(focusTargetId)
-                : undefined
+              focusTargetId ? () => getSceneGraph()?.focusOnEntity(focusTargetId) : undefined
             }
             focusDisabledReason={!focusTargetId ? 'Geometry is not attached to a body' : undefined}
             onMakeBody={
@@ -739,21 +795,26 @@ export function ProjectTree() {
                 : () => {
                     const currentSelection = useSelectionStore.getState().selectedIds;
                     // If multiple items are selected, use the full selection; otherwise just this geometry
-                    const ids = currentSelection.size > 0 && currentSelection.has(node.id)
-                      ? currentSelection
-                      : new Set([node.id]);
+                    const ids =
+                      currentSelection.size > 0 && currentSelection.has(node.id)
+                        ? currentSelection
+                        : new Set([node.id]);
                     executeMakeBody(ids);
                   }
             }
             makeBodyDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
-            bodyList={isSimulating ? undefined : [...bodies.values()].map((b) => ({ id: b.id, name: b.name }))}
-            onMoveToBody={isSimulating ? undefined : (bodyId) => sendReparentGeometry(node.id, bodyId)}
+            bodyList={
+              isSimulating
+                ? undefined
+                : [...bodies.values()].map((b) => ({ id: b.id, name: b.name }))
+            }
+            onMoveToBody={
+              isSimulating ? undefined : (bodyId) => sendReparentGeometry(node.id, bodyId)
+            }
             onAttachToBody={isSimulating ? undefined : () => setAttachGeomId(node.id)}
             attachDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
             onDetachFromBody={
-              isSimulating || !geom?.parentBodyId
-                ? undefined
-                : () => sendDetachGeometry(node.id)
+              isSimulating || !geom?.parentBodyId ? undefined : () => sendDetachGeometry(node.id)
             }
             detachDisabledReason={
               isSimulating
@@ -860,28 +921,27 @@ export function ProjectTree() {
                     }
                   }
             }
-            onAddMotor={
-              (() => {
-                if (isSimulating) return undefined;
-                const joint = joints.get(node.id);
-                if (!joint) return undefined;
-                // Only revolute and prismatic joints support motors
-                if (joint.type !== 'revolute' && joint.type !== 'prismatic') return undefined;
-                // Check if this joint already has an actuator
-                for (const a of actuators.values()) {
-                  if (a.jointId === node.id) return undefined;
-                }
-                // Select joint → opens JointInspector with "Add Motor" button
-                return () => useSelectionStore.getState().select(node.id);
-              })()
-            }
+            onAddMotor={(() => {
+              if (isSimulating) return undefined;
+              const joint = joints.get(node.id);
+              if (!joint) return undefined;
+              // Only revolute and prismatic joints support motors
+              if (joint.type !== 'revolute' && joint.type !== 'prismatic') return undefined;
+              // Check if this joint already has an actuator
+              for (const a of actuators.values()) {
+                if (a.jointId === node.id) return undefined;
+              }
+              // Select joint → opens JointInspector with "Add Motor" button
+              return () => useSelectionStore.getState().select(node.id);
+            })()}
             addMotorDisabledReason={
               isSimulating
                 ? 'Not available during simulation'
                 : (() => {
                     const joint = joints.get(node.id);
                     if (!joint) return undefined;
-                    if (joint.type !== 'revolute' && joint.type !== 'prismatic') return 'Only revolute and prismatic joints support motors';
+                    if (joint.type !== 'revolute' && joint.type !== 'prismatic')
+                      return 'Only revolute and prismatic joints support motors';
                     for (const a of actuators.values()) {
                       if (a.jointId === node.id) return 'Joint already has a motor';
                     }
@@ -926,7 +986,9 @@ export function ProjectTree() {
             renameDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
             changeTypeDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
             swapBodiesDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
-            reverseDirectionDisabledReason={isSimulating ? 'Not available during simulation' : undefined}
+            reverseDirectionDisabledReason={
+              isSimulating ? 'Not available during simulation' : undefined
+            }
             onProperties={() => {
               useSelectionStore.getState().select(node.id);
             }}
@@ -950,9 +1012,7 @@ export function ProjectTree() {
                 Focus Viewport on Load
               </ContextMenuItem>
               {!isSimulating && (
-                <ContextMenuItem onSelect={() => setEditingId(node.id)}>
-                  Rename
-                </ContextMenuItem>
+                <ContextMenuItem onSelect={() => setEditingId(node.id)}>Rename</ContextMenuItem>
               )}
               <ContextMenuItem onSelect={() => useSelectionStore.getState().select(node.id)}>
                 Properties
@@ -975,13 +1035,9 @@ export function ProjectTree() {
           <ContextMenu>
             <ContextMenuTrigger>{row}</ContextMenuTrigger>
             <ContextMenuContent>
-              <ContextMenuItem onSelect={() => setSelection([node.id])}>
-                Select
-              </ContextMenuItem>
+              <ContextMenuItem onSelect={() => setSelection([node.id])}>Select</ContextMenuItem>
               {!isSimulating && (
-                <ContextMenuItem onSelect={() => setEditingId(node.id)}>
-                  Rename
-                </ContextMenuItem>
+                <ContextMenuItem onSelect={() => setEditingId(node.id)}>Rename</ContextMenuItem>
               )}
               <ContextMenuItem onSelect={() => useSelectionStore.getState().select(node.id)}>
                 Properties
@@ -1001,7 +1057,21 @@ export function ProjectTree() {
 
       return row;
     },
-    [editingId, isSimulating, handleRenameCommit, hiddenIds, bodies, geometries, datums, joints, loads, actuators, setSelection, connectionIndex, selectedIds],
+    [
+      editingId,
+      isSimulating,
+      handleRenameCommit,
+      hiddenIds,
+      bodies,
+      geometries,
+      datums,
+      joints,
+      loads,
+      actuators,
+      setSelection,
+      connectionIndex,
+      selectedIds,
+    ],
   );
 
   // ── Empty state ──
@@ -1014,11 +1084,7 @@ export function ProjectTree() {
         hint="Import a STEP or IGES file to get started"
         action={
           window.motionlab?.openFileDialog ? (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => executeCommand('create.import')}
-            >
+            <Button variant="outline" size="sm" onClick={() => executeCommand('create.import')}>
               <Import className="size-3.5 mr-1" />
               Import
             </Button>

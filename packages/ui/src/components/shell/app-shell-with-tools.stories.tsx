@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Box, Crosshair, Link2, MoreHorizontal, Plus } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { LayoutProvider } from '../../layout';
 import { SelectionChip } from '../engineering/selection-chip';
 import { BodyContextMenu } from '../primitives/context-menus';
 import { FloatingToolCard } from '../primitives/floating-tool-card';
@@ -13,8 +14,6 @@ import { TimelineTransport } from '../primitives/timeline-transport';
 import { GroupHeaderRow, TreeRow } from '../primitives/tree-row';
 import { Button } from '../ui/button';
 import { TooltipProvider } from '../ui/tooltip';
-
-import { LayoutProvider } from '../../layout';
 import { AppShell } from './app-shell';
 import { BottomPanel } from './bottom-panel';
 import { LeftPanel } from './left-panel';
@@ -84,10 +83,7 @@ function FullIntegrationDemo() {
     <TooltipProvider>
       <AppShell
         topBar={
-          <TopBar
-            projectName="Water Pump Assembly"
-            status={<StatusBadge status="compiled" />}
-          />
+          <TopBar projectName="Water Pump Assembly" status={<StatusBadge status="compiled" />} />
         }
         leftPanelOpen
         leftPanelWidth={leftWidth}

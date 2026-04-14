@@ -6,12 +6,12 @@ import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { executeMakeBody } from '../utils/body-merge.js';
 import { ActuatorInspector } from './ActuatorInspector.js';
-import { SensorInspector } from './SensorInspector.js';
 import { BodyInspector } from './BodyInspector.js';
 import { DatumInspector } from './DatumInspector.js';
 import { GeometryInspector } from './GeometryInspector.js';
 import { JointInspector } from './JointInspector.js';
 import { LoadInspector } from './LoadInspector.js';
+import { SensorInspector } from './SensorInspector.js';
 import { SimulationMetadataSection } from './SimulationMetadataSection.js';
 
 /**

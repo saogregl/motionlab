@@ -1,10 +1,10 @@
-import type { ChannelDescriptor } from '../stores/simulation.js';
 import { getBodyPoseCount } from '../stores/body-poses.js';
 import { useDialogStore } from '../stores/dialogs.js';
 import { useEngineConnection } from '../stores/engine-connection.js';
 import { useImportFlowStore } from '../stores/import-flow.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
+import type { ChannelDescriptor } from '../stores/simulation.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { useTraceStore } from '../stores/traces.js';
 import { useUILayoutStore } from '../stores/ui-layout.js';
@@ -19,9 +19,12 @@ import type {
 
 const eventListeners = new Set<(event: DebugEvent) => void>();
 const recorder = new DebugRecorder({
-  appendProtocolEntry: (entry) => window.motionlab?.appendDebugProtocolEntry?.(entry as unknown as Record<string, unknown>),
-  appendConsoleEntry: (entry) => window.motionlab?.appendDebugConsoleEntry?.(entry as unknown as Record<string, unknown>),
-  appendAnomaly: (anomaly) => window.motionlab?.appendDebugAnomaly?.(anomaly as unknown as Record<string, unknown>),
+  appendProtocolEntry: (entry) =>
+    window.motionlab?.appendDebugProtocolEntry?.(entry as unknown as Record<string, unknown>),
+  appendConsoleEntry: (entry) =>
+    window.motionlab?.appendDebugConsoleEntry?.(entry as unknown as Record<string, unknown>),
+  appendAnomaly: (anomaly) =>
+    window.motionlab?.appendDebugAnomaly?.(anomaly as unknown as Record<string, unknown>),
 });
 
 let installed = false;
@@ -40,8 +43,10 @@ function emit(event: DebugEvent): void {
 }
 
 function isEnabled(): boolean {
-  return typeof window.motionlab?.getDebugSessionInfo === 'function'
-    && typeof window.motionlab?.exportDebugBundle === 'function';
+  return (
+    typeof window.motionlab?.getDebugSessionInfo === 'function' &&
+    typeof window.motionlab?.exportDebugBundle === 'function'
+  );
 }
 
 async function getSessionInfo(): Promise<DebugSessionInfo | null> {
@@ -53,7 +58,10 @@ async function getSessionInfo(): Promise<DebugSessionInfo | null> {
   }
 }
 
-function summarizeChannel(descriptor: ChannelDescriptor, samples: Array<{ time: number; value: number; vec?: { x: number; y: number; z: number } }>) {
+function summarizeChannel(
+  descriptor: ChannelDescriptor,
+  samples: Array<{ time: number; value: number; vec?: { x: number; y: number; z: number } }>,
+) {
   const last = samples.at(-1);
   return {
     channelId: descriptor.channelId,
@@ -156,7 +164,8 @@ function serializeUILayoutStore() {
 function serializeTraceRuntime() {
   const state = useTraceStore.getState();
   const summaries = [...state.channels.values()].map((descriptor) =>
-    summarizeChannel(descriptor, state.traces.get(descriptor.channelId) ?? []));
+    summarizeChannel(descriptor, state.traces.get(descriptor.channelId) ?? []),
+  );
   return {
     bodyPoseCount: getBodyPoseCount(),
     traceChannelCount: state.channels.size,
@@ -178,9 +187,8 @@ function checkSelectionInvariant(): void {
     ...mechanism.actuators.keys(),
   ]);
   const invalidSelectedIds = [...selection.selectedIds].filter((id) => !validIds.has(id));
-  const hoveredMissing = selection.hoveredId && !validIds.has(selection.hoveredId)
-    ? selection.hoveredId
-    : null;
+  const hoveredMissing =
+    selection.hoveredId && !validIds.has(selection.hoveredId) ? selection.hoveredId : null;
   const signature = `${invalidSelectedIds.sort().join(',')}|${hoveredMissing ?? ''}`;
   if (!signature || signature === '|') {
     lastSelectionSignature = '';

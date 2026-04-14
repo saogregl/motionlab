@@ -36,18 +36,9 @@ declare module 'occt-import-js' {
   }
 
   export interface OcctImporter {
-    ReadStepFile(
-      content: Uint8Array,
-      params?: OcctImportParams | null,
-    ): OcctImportResult;
-    ReadIgesFile(
-      content: Uint8Array,
-      params?: OcctImportParams | null,
-    ): OcctImportResult;
-    ReadBrepFile(
-      content: Uint8Array,
-      params?: OcctImportParams | null,
-    ): OcctImportResult;
+    ReadStepFile(content: Uint8Array, params?: OcctImportParams | null): OcctImportResult;
+    ReadIgesFile(content: Uint8Array, params?: OcctImportParams | null): OcctImportResult;
+    ReadBrepFile(content: Uint8Array, params?: OcctImportParams | null): OcctImportResult;
   }
 
   export default function occtimportjs(options?: {

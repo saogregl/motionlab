@@ -146,11 +146,17 @@ function buildRevoluteGeometry(root: Group, meshes: Mesh[], color: Color): void 
   const raceTube = 0.0025;
 
   // Outer disc (housing)
-  const disc = cached('rev_disc', () => new CylinderGeometry(discRadius, discRadius, discHeight, RSEG));
+  const disc = cached(
+    'rev_disc',
+    () => new CylinderGeometry(discRadius, discRadius, discHeight, RSEG),
+  );
   addMesh(root, meshes, disc, makeAnchorMaterial(color));
 
   // Axle through center
-  const axle = cached('rev_axle', () => new CylinderGeometry(axleRadius, axleRadius, axleLength, RSEG));
+  const axle = cached(
+    'rev_axle',
+    () => new CylinderGeometry(axleRadius, axleRadius, axleLength, RSEG),
+  );
   addMesh(root, meshes, axle, makeAnchorMaterial(color));
 
   // Top bearing race
@@ -178,7 +184,10 @@ function buildPrismaticGeometry(root: Group, meshes: Mesh[], color: Color): void
   const arrowH = 0.016;
 
   // Rail cylinder
-  const rail = cached('pri_rail', () => new CylinderGeometry(railRadius, railRadius, railLength, RSEG));
+  const rail = cached(
+    'pri_rail',
+    () => new CylinderGeometry(railRadius, railRadius, railLength, RSEG),
+  );
   addMesh(root, meshes, rail, makeAnchorMaterial(color));
 
   // Slider block
@@ -224,8 +233,9 @@ function buildSphericalGeometry(root: Group, meshes: Mesh[], color: Color): void
   addMesh(root, meshes, ball, makeAnchorMaterial(color));
 
   // Outer cup (hemisphere) — phiStart=0, phiLength=2*PI, thetaStart=0, thetaLength=PI/2
-  const cup = cached('sph_cup', () =>
-    new SphereGeometry(cupRadius, SEG, SEG / 2, 0, Math.PI * 2, 0, Math.PI * 0.55),
+  const cup = cached(
+    'sph_cup',
+    () => new SphereGeometry(cupRadius, SEG, SEG / 2, 0, Math.PI * 2, 0, Math.PI * 0.55),
   );
   const cupMesh = addMesh(root, meshes, cup, makeLowOpacityMaterial(color));
   cupMesh.rotation.x = Math.PI; // cup opens upward
@@ -245,11 +255,17 @@ function buildCylindricalGeometry(root: Group, meshes: Mesh[], color: Color): vo
   const arrowH = 0.014;
 
   // Housing disc
-  const disc = cached('cyl_disc', () => new CylinderGeometry(discRadius, discRadius, discHeight, RSEG));
+  const disc = cached(
+    'cyl_disc',
+    () => new CylinderGeometry(discRadius, discRadius, discHeight, RSEG),
+  );
   addMesh(root, meshes, disc, makeAnchorMaterial(color));
 
   // Extended axle
-  const axle = cached('cyl_axle', () => new CylinderGeometry(axleRadius, axleRadius, axleLength, RSEG));
+  const axle = cached(
+    'cyl_axle',
+    () => new CylinderGeometry(axleRadius, axleRadius, axleLength, RSEG),
+  );
   addMesh(root, meshes, axle, makeAnchorMaterial(color));
 
   // Bearing race
@@ -300,7 +316,10 @@ function buildPlanarGeometry(root: Group, meshes: Mesh[], color: Color): void {
   const crossL = 0.04;
 
   // Platform disc
-  const disc = cached('pla_disc', () => new CylinderGeometry(discRadius, discRadius, discHeight, RSEG));
+  const disc = cached(
+    'pla_disc',
+    () => new CylinderGeometry(discRadius, discRadius, discHeight, RSEG),
+  );
   addMesh(root, meshes, disc, makeLowOpacityMaterial(color));
 
   // Cross bar X (on top surface)

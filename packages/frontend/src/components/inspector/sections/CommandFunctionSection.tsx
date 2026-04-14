@@ -23,24 +23,41 @@ interface CommandFunctionSectionProps {
 }
 
 const SHAPE_LABELS: Record<CommandFunctionShapeId, string> = {
-  'constant': 'Constant',
-  'ramp': 'Ramp',
-  'sine': 'Sine',
+  constant: 'Constant',
+  ramp: 'Ramp',
+  sine: 'Sine',
   'piecewise-linear': 'Piecewise Linear',
   'smooth-step': 'Smooth Step',
 };
 
 function defaultForShape(shape: CommandFunctionShapeId): CommandFunctionShape {
   switch (shape) {
-    case 'constant': return { shape: 'constant', value: 0 };
-    case 'ramp': return { shape: 'ramp', initialValue: 0, slope: 1 };
-    case 'sine': return { shape: 'sine', amplitude: 1, frequency: 1, phase: 0, offset: 0 };
-    case 'piecewise-linear': return { shape: 'piecewise-linear', times: [0, 1], values: [0, 1] };
-    case 'smooth-step': return { shape: 'smooth-step', displacement: 1, duration: 1, profile: 'cycloidal', accelFraction: 0.3, decelFraction: 0.3 };
+    case 'constant':
+      return { shape: 'constant', value: 0 };
+    case 'ramp':
+      return { shape: 'ramp', initialValue: 0, slope: 1 };
+    case 'sine':
+      return { shape: 'sine', amplitude: 1, frequency: 1, phase: 0, offset: 0 };
+    case 'piecewise-linear':
+      return { shape: 'piecewise-linear', times: [0, 1], values: [0, 1] };
+    case 'smooth-step':
+      return {
+        shape: 'smooth-step',
+        displacement: 1,
+        duration: 1,
+        profile: 'cycloidal',
+        accelFraction: 0.3,
+        decelFraction: 0.3,
+      };
   }
 }
 
-export function CommandFunctionSection({ fn, onChange, unit, disabled }: CommandFunctionSectionProps) {
+export function CommandFunctionSection({
+  fn,
+  onChange,
+  unit,
+  disabled,
+}: CommandFunctionSectionProps) {
   const simDuration = useSimulationSettingsStore((s) => s.duration);
 
   const handleShapeChange = (shape: string | null) => {
@@ -56,7 +73,9 @@ export function CommandFunctionSection({ fn, onChange, unit, disabled }: Command
           </SelectTrigger>
           <SelectContent>
             {Object.entries(SHAPE_LABELS).map(([id, label]) => (
-              <SelectItem key={id} value={id}>{label}</SelectItem>
+              <SelectItem key={id} value={id}>
+                {label}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -184,7 +203,10 @@ export function CommandFunctionSection({ fn, onChange, unit, disabled }: Command
             />
           </PropertyRow>
           <PropertyRow label="Profile">
-            <Select value={fn.profile} onValueChange={(v) => onChange({ ...fn, profile: v as 'cycloidal' | 'trapezoidal' })}>
+            <Select
+              value={fn.profile}
+              onValueChange={(v) => onChange({ ...fn, profile: v as 'cycloidal' | 'trapezoidal' })}
+            >
               <SelectTrigger size="sm" disabled={disabled}>
                 <SelectValue />
               </SelectTrigger>
@@ -200,7 +222,9 @@ export function CommandFunctionSection({ fn, onChange, unit, disabled }: Command
                 <NumericInput
                   variant="inline"
                   value={fn.accelFraction * 100}
-                  onChange={(v) => onChange({ ...fn, accelFraction: Math.max(0, Math.min(1, v / 100)) })}
+                  onChange={(v) =>
+                    onChange({ ...fn, accelFraction: Math.max(0, Math.min(1, v / 100)) })
+                  }
                   step={5}
                   min={0}
                   max={100}
@@ -212,7 +236,9 @@ export function CommandFunctionSection({ fn, onChange, unit, disabled }: Command
                 <NumericInput
                   variant="inline"
                   value={fn.decelFraction * 100}
-                  onChange={(v) => onChange({ ...fn, decelFraction: Math.max(0, Math.min(1, v / 100)) })}
+                  onChange={(v) =>
+                    onChange({ ...fn, decelFraction: Math.max(0, Math.min(1, v / 100)) })
+                  }
                   step={5}
                   min={0}
                   max={100}

@@ -34,9 +34,7 @@ export function DataPointTable({
 
   const updateCell = (rowIndex: number, colIndex: number, value: number) => {
     const newRows = rows.map((row, i) =>
-      i === rowIndex
-        ? row.map((cell, j) => (j === colIndex ? value : cell))
-        : row,
+      i === rowIndex ? row.map((cell, j) => (j === colIndex ? value : cell)) : row,
     );
     onChange(newRows);
   };
@@ -69,18 +67,15 @@ export function DataPointTable({
         style={{ gridTemplateColumns: gridCols }}
       >
         {columns.map((col, i) => (
-          <span key={i} className="ps-1">{col.header}</span>
+          <span key={i} className="ps-1">
+            {col.header}
+          </span>
         ))}
         <span />
       </div>
 
       {/* Rows */}
-      <div
-        className={cn(
-          'flex flex-col gap-0.5',
-          count > 6 && 'max-h-[168px] overflow-y-auto',
-        )}
-      >
+      <div className={cn('flex flex-col gap-0.5', count > 6 && 'max-h-[168px] overflow-y-auto')}>
         {rows.map((row, rowIndex) => (
           <div
             key={rowIndex}

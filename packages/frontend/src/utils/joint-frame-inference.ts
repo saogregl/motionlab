@@ -1,5 +1,5 @@
-import type { JointTypeId, FaceGeometryInfo } from '../stores/mechanism.js';
 import type { DatumPreviewType } from '@motionlab/viewport';
+import type { FaceGeometryInfo, JointTypeId } from '../stores/mechanism.js';
 
 export type InferenceConfidence = 'high' | 'medium' | 'low';
 
@@ -23,7 +23,14 @@ export interface JointFrameProposal {
  * - Other → general types (low confidence)
  */
 export function inferJointFrame(
-  surfaceClass: 'planar' | 'cylindrical' | 'conical' | 'spherical' | 'toroidal' | 'other' | undefined,
+  surfaceClass:
+    | 'planar'
+    | 'cylindrical'
+    | 'conical'
+    | 'spherical'
+    | 'toroidal'
+    | 'other'
+    | undefined,
   previewType: DatumPreviewType | undefined,
   faceGeometry?: FaceGeometryInfo,
 ): JointFrameProposal {
@@ -101,7 +108,15 @@ export function inferJointFrame(
   };
 }
 
-export type PairSurfaceClass = 'planar' | 'cylindrical' | 'conical' | 'spherical' | 'toroidal' | 'other' | null | undefined;
+export type PairSurfaceClass =
+  | 'planar'
+  | 'cylindrical'
+  | 'conical'
+  | 'spherical'
+  | 'toroidal'
+  | 'other'
+  | null
+  | undefined;
 
 /**
  * Determine whether a pair of face picks should auto-commit (skip the type selector).

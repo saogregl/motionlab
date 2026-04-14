@@ -83,10 +83,7 @@ async function main() {
         fileName: () => 'main.js',
       },
       rollupOptions: {
-        external: [
-          'electron',
-          /^node:.*/,
-        ],
+        external: ['electron', /^node:.*/],
       },
       minify: false,
       sourcemap: true,

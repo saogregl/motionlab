@@ -1,6 +1,11 @@
 import { Box, BoxSelect, Redo2, Trash2, Undo2, X } from 'lucide-react';
 
-import { sendDeleteActuator, sendDeleteDatum, sendDeleteJoint, sendDeleteLoad } from '../../engine/connection.js';
+import {
+  sendDeleteActuator,
+  sendDeleteDatum,
+  sendDeleteJoint,
+  sendDeleteLoad,
+} from '../../engine/connection.js';
 import { useAuthoringStatusStore } from '../../stores/authoring-status.js';
 import { useJointCreationStore } from '../../stores/joint-creation.js';
 import { useLoadCreationStore } from '../../stores/load-creation.js';
@@ -80,7 +85,13 @@ export function createEditCommands(): CommandDef[] {
       shortcut: 'Ctrl+A',
       execute: () => {
         const { bodies, datums, joints, loads, actuators } = useMechanismStore.getState();
-        const allIds = [...bodies.keys(), ...datums.keys(), ...joints.keys(), ...loads.keys(), ...actuators.keys()];
+        const allIds = [
+          ...bodies.keys(),
+          ...datums.keys(),
+          ...joints.keys(),
+          ...loads.keys(),
+          ...actuators.keys(),
+        ];
         useSelectionStore.getState().selectAll(allIds);
       },
     },

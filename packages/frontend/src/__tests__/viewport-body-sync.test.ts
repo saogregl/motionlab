@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
-
-import type { BodyState } from '../stores/mechanism.js';
 import { bodyPoseSignature } from '../hooks/useViewportBridge.js';
+import type { BodyState } from '../stores/mechanism.js';
 
 function makeBody(): BodyState {
   return {

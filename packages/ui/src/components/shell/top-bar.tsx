@@ -79,7 +79,15 @@ function WindowControls() {
   );
 }
 
-function TopBar({ projectName, isDirty, status, actions, transportControls, onLogoClick, className }: TopBarProps) {
+function TopBar({
+  projectName,
+  isDirty,
+  status,
+  actions,
+  transportControls,
+  onLogoClick,
+  className,
+}: TopBarProps) {
   const hasProject = projectName != null;
 
   return (
@@ -100,14 +108,22 @@ function TopBar({ projectName, isDirty, status, actions, transportControls, onLo
           >
             <span className="font-semibold">MotionLab</span>
             {hasProject && (
-              <span className="text-text-tertiary"> / {projectName}{isDirty ? '*' : ''}</span>
+              <span className="text-text-tertiary">
+                {' '}
+                / {projectName}
+                {isDirty ? '*' : ''}
+              </span>
             )}
           </button>
         ) : (
           <span className="max-w-[280px] truncate text-[length:var(--text-base)] text-text-primary">
             <span className="font-semibold">MotionLab</span>
             {hasProject && (
-              <span className="text-text-tertiary"> / {projectName}{isDirty ? '*' : ''}</span>
+              <span className="text-text-tertiary">
+                {' '}
+                / {projectName}
+                {isDirty ? '*' : ''}
+              </span>
             )}
           </span>
         )}

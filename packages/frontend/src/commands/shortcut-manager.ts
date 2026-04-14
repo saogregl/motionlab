@@ -13,8 +13,8 @@
  * - Context-dependent shortcuts via enabled() checks (e.g., Space toggles play/pause)
  */
 
-import type { CommandDef } from './types.js';
 import { getAllCommands, getCommand } from './registry.js';
+import type { CommandDef } from './types.js';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -105,7 +105,13 @@ export function parseShortcut(str: string): ParsedShortcut {
 // Lookup key construction
 // ---------------------------------------------------------------------------
 
-function lookupKey(ctrl: boolean, shift: boolean, alt: boolean, key: string, code?: string): string {
+function lookupKey(
+  ctrl: boolean,
+  shift: boolean,
+  alt: boolean,
+  key: string,
+  code?: string,
+): string {
   if (code) return code.toLowerCase();
   const parts: string[] = [];
   if (ctrl) parts.push('ctrl');
@@ -143,7 +149,9 @@ const EXCLUDED_COMMANDS = new Set(['help.command-palette']);
 
 let shortcutMap = new Map<string, ShortcutBinding[]>();
 
-export function buildShortcutMapForCommands(commands: CommandDef[]): Map<string, ShortcutBinding[]> {
+export function buildShortcutMapForCommands(
+  commands: CommandDef[],
+): Map<string, ShortcutBinding[]> {
   const map = new Map<string, ShortcutBinding[]>();
   const seen = new Map<string, string>(); // lookupKey → first commandId (for conflict warnings)
 
@@ -211,7 +219,11 @@ export function resolveShortcutCommand(event: ShortcutEventLike): string | undef
   if (!bindings[0].hasModifier && isInputFocused(event)) return undefined;
 
   // Standard text-editing shortcuts (Ctrl+A) should not be intercepted in inputs
-  if (isInputFocused(event) && (event.ctrlKey || event.metaKey) && (event.key === 'a' || event.key === 'A')) {
+  if (
+    isInputFocused(event) &&
+    (event.ctrlKey || event.metaKey) &&
+    (event.key === 'a' || event.key === 'A')
+  ) {
     return undefined;
   }
 

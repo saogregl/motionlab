@@ -1,9 +1,5 @@
-import {
-  commandToDebugJson,
-  eventToDebugJson,
-  parseCommand,
-} from '@motionlab/protocol';
 import type { Event } from '@motionlab/protocol';
+import { commandToDebugJson, eventToDebugJson, parseCommand } from '@motionlab/protocol';
 import type {
   DebugAnomaly,
   DebugCaptureLimits,

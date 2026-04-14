@@ -1,10 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import {
-  Box,
-  Settings,
-} from 'lucide-react';
+import { Box, Settings } from 'lucide-react';
 import { useState } from 'react';
-
+import { LayoutProvider } from '../../layout';
 import { InspectorPanel } from '../primitives/inspector-panel';
 import { InspectorSection } from '../primitives/inspector-section';
 import { PropertyRow } from '../primitives/property-row';
@@ -14,8 +11,6 @@ import { type TreeNode, TreeView } from '../primitives/tree-view';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { TooltipProvider } from '../ui/tooltip';
-
-import { LayoutProvider } from '../../layout';
 import { AppShell } from './app-shell';
 import { BottomPanel } from './bottom-panel';
 import { LeftPanel } from './left-panel';

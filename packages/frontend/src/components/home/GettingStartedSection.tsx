@@ -1,7 +1,6 @@
+import { CollapsibleSection } from '@motionlab/ui';
 import type { LucideIcon } from 'lucide-react';
 import { Compass, Import, Play, Plus } from 'lucide-react';
-
-import { CollapsibleSection } from '@motionlab/ui';
 
 interface GettingStartedCard {
   title: string;

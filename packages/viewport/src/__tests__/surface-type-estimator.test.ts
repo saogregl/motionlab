@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  estimateAxisDirection,
-  estimateSurfaceType,
-} from '../rendering/surface-type-estimator.js';
+import { estimateAxisDirection, estimateSurfaceType } from '../rendering/surface-type-estimator.js';
 
 // ---------------------------------------------------------------------------
 // Test data helpers

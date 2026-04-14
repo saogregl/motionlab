@@ -6,23 +6,25 @@
  */
 
 export type { VariantProps } from 'class-variance-authority';
-export type { SelectionChipProps } from './components/engineering/selection-chip';
-// Engineering
-export { SelectionChip } from './components/engineering/selection-chip';
 export type { CopyableIdProps } from './components/engineering/copyable-id';
 export { CopyableId } from './components/engineering/copyable-id';
 export type { EditableInertiaMatrixProps } from './components/engineering/editable-inertia-matrix';
 export { EditableInertiaMatrix } from './components/engineering/editable-inertia-matrix';
 export type { InertiaMatrixDisplayProps } from './components/engineering/inertia-matrix-display';
 export { InertiaMatrixDisplay } from './components/engineering/inertia-matrix-display';
-export type { QuatDisplayProps, OrientationMode } from './components/engineering/quat-display';
+export type { OrientationMode, QuatDisplayProps } from './components/engineering/quat-display';
 export { QuatDisplay } from './components/engineering/quat-display';
+export type { SelectionChipProps } from './components/engineering/selection-chip';
+// Engineering
+export { SelectionChip } from './components/engineering/selection-chip';
 export type { Vec3DisplayProps } from './components/engineering/vec3-display';
 export { Vec3Display } from './components/engineering/vec3-display';
-export { formatEngValue } from './lib/format';
-export { quatToEulerDeg, eulerDegToQuat, isNearGimbalLock } from './lib/quat-math';
 export type { Axis, AxisColorLabelProps } from './components/primitives/axis-color-label';
 export { AxisColorLabel } from './components/primitives/axis-color-label';
+export type { CollapsibleSectionProps } from './components/primitives/collapsible-section';
+export { CollapsibleSection } from './components/primitives/collapsible-section';
+export type { ConnectionBannerProps } from './components/primitives/connection-banner';
+export { ConnectionBanner } from './components/primitives/connection-banner';
 export type {
   BodyContextMenuProps,
   DatumContextMenuProps,
@@ -42,10 +44,13 @@ export {
   MultiSelectContextMenu,
   MultiSelectContextMenuItems,
 } from './components/primitives/context-menus';
+export type {
+  DataPointTableColumn,
+  DataPointTableProps,
+} from './components/primitives/data-point-table';
+export { DataPointTable } from './components/primitives/data-point-table';
 export type { DensityToggleProps } from './components/primitives/density-toggle';
 export { DensityToggle } from './components/primitives/density-toggle';
-export type { ConnectionBannerProps } from './components/primitives/connection-banner';
-export { ConnectionBanner } from './components/primitives/connection-banner';
 export type { EmptyStateProps } from './components/primitives/empty-state';
 export { EmptyState } from './components/primitives/empty-state';
 export type { FloatingToolCardProps } from './components/primitives/floating-tool-card';
@@ -53,14 +58,14 @@ export { FloatingToolCard } from './components/primitives/floating-tool-card';
 export type { InlineEditableNameProps } from './components/primitives/inline-editable-name';
 export { InlineEditableName } from './components/primitives/inline-editable-name';
 export { InspectorPanel } from './components/primitives/inspector-panel';
+export { InspectorSection } from './components/primitives/inspector-section';
 export type { SkeletonRowProps } from './components/primitives/loading-skeleton';
 export { LoadingSkeleton } from './components/primitives/loading-skeleton';
-export { InspectorSection } from './components/primitives/inspector-section';
-export type { SliderProps } from './components/primitives/slider';
-export { Slider } from './components/primitives/slider';
 export type { NumericInputProps } from './components/primitives/numeric-input';
 export { NumericInput } from './components/primitives/numeric-input';
 export { PropertyRow } from './components/primitives/property-row';
+export type { SliderProps } from './components/primitives/slider';
+export { Slider } from './components/primitives/slider';
 export type { StatusBadgeProps, StatusType } from './components/primitives/status-badge';
 export { StatusBadge } from './components/primitives/status-badge';
 export type { StatusBarProps } from './components/primitives/status-bar';
@@ -77,10 +82,6 @@ export type { ToolbarGroupProps } from './components/primitives/toolbar-group';
 export { ToolbarGroup } from './components/primitives/toolbar-group';
 export type { ToolbarSplitButtonProps } from './components/primitives/toolbar-split-button';
 export { ToolbarSplitButton } from './components/primitives/toolbar-split-button';
-export type { CollapsibleSectionProps } from './components/primitives/collapsible-section';
-export { CollapsibleSection } from './components/primitives/collapsible-section';
-export type { DataPointTableProps, DataPointTableColumn } from './components/primitives/data-point-table';
-export { DataPointTable } from './components/primitives/data-point-table';
 // Primitives
 export { GroupHeaderRow, TreeRow } from './components/primitives/tree-row';
 export type { TreeRowRenderProps } from './components/primitives/tree-view';
@@ -89,17 +90,16 @@ export type { ViewCubeProps } from './components/primitives/view-cube';
 export { ViewCube } from './components/primitives/view-cube';
 export type { ViewportToolbarProps } from './components/primitives/viewport-toolbar';
 export { ViewportToolbar } from './components/primitives/viewport-toolbar';
-// Layout engine
-export { LayoutProvider, useLayoutManager } from './layout';
-export { useLayoutRoot, useLayoutSlot, useViewportInsets } from './layout';
-export type { PanelSide, PanelSlot, ViewportInsets } from './layout';
 export type { AppShellProps } from './components/shell/app-shell';
 // Shell
 export { AppShell } from './components/shell/app-shell';
-export type { FloatingPanelProps, FloatingPanelHeaderProps } from './components/shell/floating-panel';
-export { FloatingPanel, FloatingPanelHeader } from './components/shell/floating-panel';
 export type { BottomPanelProps, DockTab } from './components/shell/bottom-panel';
 export { BottomPanel } from './components/shell/bottom-panel';
+export type {
+  FloatingPanelHeaderProps,
+  FloatingPanelProps,
+} from './components/shell/floating-panel';
+export { FloatingPanel, FloatingPanelHeader } from './components/shell/floating-panel';
 export type { LeftPanelProps } from './components/shell/left-panel';
 export { LeftPanel } from './components/shell/left-panel';
 export type { RightPanelProps } from './components/shell/right-panel';
@@ -112,8 +112,6 @@ export type { WorkspaceTab, WorkspaceTabBarProps } from './components/shell/work
 export { WorkspaceTabBar } from './components/shell/workspace-tab-bar';
 // Components
 export { Badge, badgeVariants } from './components/ui/badge';
-// Sonner toast
-export { Toaster } from './components/ui/sonner';
 export { Button, buttonVariants } from './components/ui/button';
 export {
   Command,
@@ -203,6 +201,8 @@ export {
   SelectValue,
 } from './components/ui/select';
 export { Separator } from './components/ui/separator';
+// Sonner toast
+export { Toaster } from './components/ui/sonner';
 export { Switch } from './components/ui/switch';
 export { Tabs, TabsContent, TabsList, TabsTrigger, tabsListVariants } from './components/ui/tabs';
 export { Textarea } from './components/ui/textarea';
@@ -214,4 +214,15 @@ export { HotkeysProvider, useHotkey } from './hooks/use-keyboard-shortcuts';
 export type { Theme } from './hooks/use-theme';
 // Hooks
 export { useTheme } from './hooks/use-theme';
+export type { PanelSide, PanelSlot, ViewportInsets } from './layout';
+// Layout engine
+export {
+  LayoutProvider,
+  useLayoutManager,
+  useLayoutRoot,
+  useLayoutSlot,
+  useViewportInsets,
+} from './layout';
+export { formatEngValue } from './lib/format';
+export { eulerDegToQuat, isNearGimbalLock, quatToEulerDeg } from './lib/quat-math';
 export { cn } from './lib/utils';

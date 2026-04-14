@@ -126,7 +126,11 @@ describe('Epic 12 command regressions', () => {
     store.exitMode();
     store.startCreation();
     store.setParentDatum('d1');
-    store.setChildDatum('d2', { kind: 'coaxial', recommendedTypes: ['revolute', 'cylindrical'], distance: 1 });
+    store.setChildDatum('d2', {
+      kind: 'coaxial',
+      recommendedTypes: ['revolute', 'cylindrical'],
+      distance: 1,
+    });
     // Without preselection, first recommendation is used
     expect(useJointCreationStore.getState().selectedJointType).toBe('revolute');
   });

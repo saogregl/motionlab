@@ -13,13 +13,13 @@ import {
   JointType,
   LinearSpringDamperLoadSchema,
   LoadSchema,
-  PointForceLoadSchema,
-  PointTorqueLoadSchema,
-  PrismaticJointConfigSchema,
-  PrismaticMotorActuatorSchema,
   MassPropertiesSchema,
   MechanismSchema,
+  PointForceLoadSchema,
+  PointTorqueLoadSchema,
   PoseSchema,
+  PrismaticJointConfigSchema,
+  PrismaticMotorActuatorSchema,
   ProjectFileSchema,
   ProjectMetadataSchema,
   QuatSchema,
@@ -971,9 +971,15 @@ describe('Load and actuator CRUD round-trip', () => {
       },
     });
 
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe('createLoad');
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe('updateLoad');
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe('deleteLoad');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe(
+      'createLoad',
+    );
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe(
+      'updateLoad',
+    );
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe(
+      'deleteLoad',
+    );
 
     const createEvent = create(EventSchema, {
       sequenceId: 86n,
@@ -1053,9 +1059,15 @@ describe('Load and actuator CRUD round-trip', () => {
       },
     });
 
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe('createLoad');
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe('updateLoad');
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe('deleteLoad');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe(
+      'createLoad',
+    );
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe(
+      'updateLoad',
+    );
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe(
+      'deleteLoad',
+    );
 
     const createEvent = create(EventSchema, {
       sequenceId: 92n,
@@ -1137,9 +1149,15 @@ describe('Load and actuator CRUD round-trip', () => {
       },
     });
 
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe('createLoad');
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe('updateLoad');
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe('deleteLoad');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe(
+      'createLoad',
+    );
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe(
+      'updateLoad',
+    );
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe(
+      'deleteLoad',
+    );
 
     const createEvent = create(EventSchema, {
       sequenceId: 95n,
@@ -1220,9 +1238,15 @@ describe('Load and actuator CRUD round-trip', () => {
       },
     });
 
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe('createActuator');
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe('updateActuator');
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe('deleteActuator');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe(
+      'createActuator',
+    );
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe(
+      'updateActuator',
+    );
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe(
+      'deleteActuator',
+    );
 
     const createEvent = create(EventSchema, {
       sequenceId: 89n,
@@ -1303,9 +1327,15 @@ describe('Load and actuator CRUD round-trip', () => {
       },
     });
 
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe('createActuator');
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe('updateActuator');
-    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe('deleteActuator');
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, createCmd)).payload.case).toBe(
+      'createActuator',
+    );
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, updateCmd)).payload.case).toBe(
+      'updateActuator',
+    );
+    expect(fromBinary(CommandSchema, toBinary(CommandSchema, deleteCmd)).payload.case).toBe(
+      'deleteActuator',
+    );
 
     const createEvent = create(EventSchema, {
       sequenceId: 98n,
@@ -2222,9 +2252,9 @@ describe('Project save/load round-trip (Epic 6.4)', () => {
 // Epic 13: New command builder round-trips
 // ---------------------------------------------------------------------------
 import {
+  createAttachGeometryCommand,
   createCreateBodyCommand,
   createDeleteBodyCommand,
-  createAttachGeometryCommand,
   createDetachGeometryCommand,
   createUpdateBodyCommand,
   createUpdateMassPropertiesCommand,
@@ -2237,7 +2267,12 @@ describe('Epic 13 command builder round-trips', () => {
       massProperties: {
         mass: 2.5,
         centerOfMass: { x: 1, y: 0, z: 0 },
-        ixx: 1, iyy: 2, izz: 3, ixy: 0, ixz: 0, iyz: 0,
+        ixx: 1,
+        iyy: 2,
+        izz: 3,
+        ixy: 0,
+        ixz: 0,
+        iyz: 0,
       },
       pose: {
         position: { x: 0, y: 0, z: 1 },
@@ -2346,7 +2381,12 @@ describe('Epic 13 command builder round-trips', () => {
     const bytes = createUpdateMassPropertiesCommand('body-1', true, {
       mass: 10,
       centerOfMass: { x: 0, y: 0, z: 0 },
-      ixx: 5, iyy: 5, izz: 5, ixy: 0, ixz: 0, iyz: 0,
+      ixx: 5,
+      iyy: 5,
+      izz: 5,
+      ixy: 0,
+      ixz: 0,
+      iyz: 0,
     });
     const cmd = fromBinary(CommandSchema, bytes);
     expect(cmd.payload.case).toBe('updateMassProperties');
@@ -2369,13 +2409,6 @@ describe('Epic 13 command builder round-trips', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// Phase 3: CreatePrimitiveBody + ImportMode round-trips
-// ---------------------------------------------------------------------------
-import {
-  createCreatePrimitiveBodyCommand,
-  createImportAssetCommand,
-} from '../transport.js';
 import {
   BoxParamsSchema,
   GeometrySchema,
@@ -2384,6 +2417,10 @@ import {
   PrimitiveSourceSchema,
 } from '../generated/mechanism/mechanism_pb.js';
 import { ImportMode } from '../generated/protocol/transport_pb.js';
+// ---------------------------------------------------------------------------
+// Phase 3: CreatePrimitiveBody + ImportMode round-trips
+// ---------------------------------------------------------------------------
+import { createCreatePrimitiveBodyCommand, createImportAssetCommand } from '../transport.js';
 
 describe('Phase 3: CreatePrimitiveBody command round-trips', () => {
   it('createCreatePrimitiveBodyCommand with box params', () => {

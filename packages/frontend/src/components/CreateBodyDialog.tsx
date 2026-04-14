@@ -63,7 +63,8 @@ export function CreateBodyDialog({ open, onOpenChange }: CreateBodyDialogProps) 
         <DialogHeader>
           <DialogTitle>Create Body</DialogTitle>
           <DialogDescription>
-            Create an empty body. Enable manual mass only when the body should start in override mode.
+            Create an empty body. Enable manual mass only when the body should start in override
+            mode.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-3 py-2">
@@ -77,11 +78,7 @@ export function CreateBodyDialog({ open, onOpenChange }: CreateBodyDialogProps) 
           </div>
           <div className="flex items-center justify-between">
             <label className="text-xs text-muted-foreground">Manual Mass Override</label>
-            <Switch
-
-              checked={manualMassOverride}
-              onCheckedChange={setManualMassOverride}
-            />
+            <Switch checked={manualMassOverride} onCheckedChange={setManualMassOverride} />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">Mass (kg)</label>
@@ -97,7 +94,10 @@ export function CreateBodyDialog({ open, onOpenChange }: CreateBodyDialogProps) 
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">Motion Type</label>
-            <Select value={motionType} onValueChange={(v) => setMotionType(v as 'dynamic' | 'fixed')}>
+            <Select
+              value={motionType}
+              onValueChange={(v) => setMotionType(v as 'dynamic' | 'fixed')}
+            >
               <SelectTrigger size="sm">
                 <SelectValue />
               </SelectTrigger>
