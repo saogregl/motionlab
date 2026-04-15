@@ -97,9 +97,29 @@ export class EngineSupervisor {
     }
     const ext = process.platform === 'win32' ? '.exe' : '';
 
-    // Try common build directory names
-    const buildDirs = ['dev', 'dev-linux', 'msvc-dev', 'Release', 'Debug'];
+    // Build-directory preference order. Release builds run Chrono ~70× faster
+    // than Debug for our workloads, so prefer them by default. `release` is the
+    // canonical packaged location populated by `pnpm build:engine`. Override
+    // with MOTIONLAB_ENGINE_BUILD=debug when you specifically need a Debug
+    // engine (asserts, GDB, ASAN), or =release to refuse Debug fallback.
+    const releaseDirs = ['release', 'release-linux', 'release-mingw', 'msvc-release', 'Release'];
+    const debugDirs = ['dev-linux', 'dev-mingw', 'msvc-dev', 'dev', 'Debug'];
+    const buildPref = (process.env.MOTIONLAB_ENGINE_BUILD ?? 'auto').toLowerCase();
+    let buildDirs: string[];
+    switch (buildPref) {
+      case 'debug':
+        buildDirs = [...debugDirs, ...releaseDirs];
+        break;
+      case 'release':
+        buildDirs = releaseDirs;
+        break;
+      default:
+        buildDirs = [...releaseDirs, ...debugDirs];
+        break;
+    }
+
     let devBin = '';
+    let devBinDir = '';
     for (const dir of buildDirs) {
       const candidate = path.join(
         repoRoot,
@@ -111,6 +131,7 @@ export class EngineSupervisor {
       );
       if (fs.existsSync(candidate)) {
         devBin = candidate;
+        devBinDir = dir;
         break;
       }
     }
@@ -120,6 +141,10 @@ export class EngineSupervisor {
 
     try {
       fs.accessSync(devBin);
+      const flavor = releaseDirs.includes(devBinDir) ? 'release' : 'debug';
+      this.supervisorLog(
+        `Engine binary: ${devBin} (build=${devBinDir || 'unknown'}, flavor=${flavor}, MOTIONLAB_ENGINE_BUILD=${buildPref})`,
+      );
       return { command: devBin, args: [] };
     } catch {
       // Fallback to mock engine (lives in source, not in Vite output)

@@ -225,6 +225,15 @@ void RuntimeSession::simulation_loop() {
     try {
     bool playing = false;
 
+    // Real-time-ratio window: counts wall + sim time over a fixed number of
+    // live frames, then logs steps_per_sec, ms/frame, and rt_ratio. A ratio
+    // below 1.0 means physics can't keep up with wall time at the current dt.
+    constexpr int RT_WINDOW_FRAMES = 60; // ~1 s at 60 Hz when keeping up
+    int    rt_window_frames    = 0;
+    double rt_window_sim_time  = 0.0;
+    double rt_window_work_secs = 0.0; // time spent inside step+publish, no sleep
+    auto   rt_window_wall_start = std::chrono::steady_clock::now();
+
     while (true) {
         std::unique_lock<std::mutex> lock(sim_mutex_);
 
@@ -346,6 +355,39 @@ void RuntimeSession::simulation_loop() {
                     trace_batch_step_ >= static_cast<uint64_t>(TRACE_BATCH_INTERVAL)) {
                     trace_batch_step_ = 0;
                     send_trace_batch();
+                }
+
+                // Real-time-ratio window accounting. Work-time excludes the
+                // throttling sleep so we can distinguish "headroom" from
+                // "falling behind".
+                const auto work_end = std::chrono::steady_clock::now();
+                rt_window_work_secs += std::chrono::duration<double>(work_end - frame_start).count();
+                rt_window_sim_time  += accumulated;
+                rt_window_frames    += 1;
+                if (rt_window_frames >= RT_WINDOW_FRAMES) {
+                    const double wall_elapsed =
+                        std::chrono::duration<double>(work_end - rt_window_wall_start).count();
+                    const double rt_ratio =
+                        wall_elapsed > 0.0 ? (rt_window_sim_time / wall_elapsed) : 0.0;
+                    const double headroom =
+                        rt_window_sim_time > 0.0
+                            ? (rt_window_sim_time - rt_window_work_secs) / rt_window_sim_time
+                            : 0.0;
+                    const double ms_per_frame =
+                        (rt_window_work_secs * 1000.0) / static_cast<double>(rt_window_frames);
+                    const double steps_per_sec =
+                        rt_window_work_secs > 0.0
+                            ? (rt_window_sim_time / sim_dt_) / rt_window_work_secs
+                            : 0.0;
+                    spdlog::info(
+                        "sim_loop: rt_ratio={:.3f} headroom={:+.1f}% work={:.2f}ms/frame "
+                        "steps/s={:.0f} (window={} frames, dt={:.4f})",
+                        rt_ratio, headroom * 100.0, ms_per_frame, steps_per_sec,
+                        rt_window_frames, sim_dt_);
+                    rt_window_frames     = 0;
+                    rt_window_sim_time   = 0.0;
+                    rt_window_work_secs  = 0.0;
+                    rt_window_wall_start = work_end;
                 }
             }
 

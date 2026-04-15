@@ -242,6 +242,16 @@ target_link_libraries(generate-templates PRIVATE
 motionlab_target_warnings(generate-templates)
 
 # ──────────────────────────────────────────────
+# Benchmarks
+# ──────────────────────────────────────────────
+add_executable(motionlab-sim-bench
+  bench/sim_bench.cpp
+)
+target_link_libraries(motionlab-sim-bench PRIVATE motionlab-engine-lib)
+motionlab_target_warnings(motionlab-sim-bench)
+motionlab_target_sanitizers(motionlab-sim-bench)
+
+# ──────────────────────────────────────────────
 # Tests
 # ──────────────────────────────────────────────
 option(BUILD_TESTS "Build engine tests" ON)
