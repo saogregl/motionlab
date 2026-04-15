@@ -70,14 +70,16 @@ private:
     std::thread sim_thread_;
     std::mutex sim_mutex_;
     std::condition_variable sim_cv_;
-    SimCommand sim_command_{SimCommand::NONE};
+    std::condition_variable sim_paused_cv_;
+    std::atomic<SimCommand> sim_command_{SimCommand::NONE};
     mutable std::mutex ws_mutex_;
     ix::WebSocket* active_ws_ = nullptr;
     std::atomic<engine::SimState> published_sim_state_{engine::SimState::IDLE};
     engine::SimulationRingBuffer ring_buffer_;
     uint64_t trace_batch_step_ = 0;
     std::vector<engine::ChannelDescriptor> channel_descriptors_;
-    std::unordered_map<std::string, double> channel_last_sent_time_;
+    std::unordered_map<std::string, size_t> channel_index_by_id_;
+    double traces_last_sent_time_ = -1.0;
     double sim_dt_ = 0.001;
 
     // Scrub / replay state

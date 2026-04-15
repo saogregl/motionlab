@@ -9,9 +9,9 @@ namespace motionlab::engine {
 SimulationRingBuffer::SimulationRingBuffer(double max_duration)
     : max_duration_(max_duration) {}
 
-void SimulationRingBuffer::push(const BufferedFrame& frame) {
+void SimulationRingBuffer::push(BufferedFrame&& frame) {
     std::unique_lock lock(mutex_);
-    frames_.push_back(frame);
+    frames_.push_back(std::move(frame));
 
     // Evict oldest frames when duration exceeds max
     while (frames_.size() > 1 &&
