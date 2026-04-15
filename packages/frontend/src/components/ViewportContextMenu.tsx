@@ -19,8 +19,8 @@ import {
   FlipVertical,
   Focus,
   Grid3x3,
-  Layers,
   Hexagon,
+  Layers,
   Link2,
   MousePointerClick,
   RefreshCw,
@@ -35,7 +35,14 @@ import {
 import type { ReactNode } from 'react';
 import { useMemo, useState } from 'react';
 
-import { sendDeleteActuator, sendDeleteDatum, sendDeleteJoint, sendDeleteLoad, sendDetachGeometry, sendUpdateJoint } from '../engine/connection.js';
+import {
+  sendDeleteActuator,
+  sendDeleteDatum,
+  sendDeleteJoint,
+  sendDeleteLoad,
+  sendDetachGeometry,
+  sendUpdateJoint,
+} from '../engine/connection.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import type { JointTypeId } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
@@ -48,7 +55,14 @@ import { resolveViewportEntityId } from '../utils/viewport-entity-resolution.js'
 const itemCls = 'h-7 px-3';
 const iconCls = 'size-3.5 shrink-0 text-text-tertiary';
 
-const jointTypes = ['Revolute', 'Prismatic', 'Cylindrical', 'Spherical', 'Planar', 'Fixed'] as const;
+const jointTypes = [
+  'Revolute',
+  'Prismatic',
+  'Cylindrical',
+  'Spherical',
+  'Planar',
+  'Fixed',
+] as const;
 
 interface ViewportContextMenuProps {
   sceneGraph: SceneGraphManager | null;
@@ -355,10 +369,7 @@ function LoadMenuContent({ entityId }: { entityId: string }) {
         Select
       </ContextMenuItem>
       <ContextMenuSeparator />
-      <ContextMenuItem
-        className={itemCls}
-        onSelect={() => sendDeleteLoad(entityId)}
-      >
+      <ContextMenuItem className={itemCls} onSelect={() => sendDeleteLoad(entityId)}>
         <Trash2 className={`${iconCls} text-destructive`} />
         Delete
       </ContextMenuItem>
@@ -377,10 +388,7 @@ function ActuatorMenuContent({ entityId }: { entityId: string }) {
         Select
       </ContextMenuItem>
       <ContextMenuSeparator />
-      <ContextMenuItem
-        className={itemCls}
-        onSelect={() => sendDeleteActuator(entityId)}
-      >
+      <ContextMenuItem className={itemCls} onSelect={() => sendDeleteActuator(entityId)}>
         <Trash2 className={`${iconCls} text-destructive`} />
         Delete
       </ContextMenuItem>
@@ -403,34 +411,19 @@ function BackgroundMenuContent({ sceneGraph }: { sceneGraph: SceneGraphManager |
             Isometric <ContextMenuShortcut>0</ContextMenuShortcut>
           </ContextMenuItem>
           <ContextMenuSeparator />
-          <ContextMenuItem
-            className={itemCls}
-            onClick={() => sceneGraph?.setCameraPreset('front')}
-          >
+          <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.setCameraPreset('front')}>
             Front <ContextMenuShortcut>1</ContextMenuShortcut>
           </ContextMenuItem>
-          <ContextMenuItem
-            className={itemCls}
-            onClick={() => sceneGraph?.setCameraPreset('back')}
-          >
+          <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.setCameraPreset('back')}>
             Back <ContextMenuShortcut>3</ContextMenuShortcut>
           </ContextMenuItem>
-          <ContextMenuItem
-            className={itemCls}
-            onClick={() => sceneGraph?.setCameraPreset('left')}
-          >
+          <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.setCameraPreset('left')}>
             Left <ContextMenuShortcut>4</ContextMenuShortcut>
           </ContextMenuItem>
-          <ContextMenuItem
-            className={itemCls}
-            onClick={() => sceneGraph?.setCameraPreset('right')}
-          >
+          <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.setCameraPreset('right')}>
             Right <ContextMenuShortcut>6</ContextMenuShortcut>
           </ContextMenuItem>
-          <ContextMenuItem
-            className={itemCls}
-            onClick={() => sceneGraph?.setCameraPreset('top')}
-          >
+          <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.setCameraPreset('top')}>
             Top <ContextMenuShortcut>7</ContextMenuShortcut>
           </ContextMenuItem>
           <ContextMenuItem
@@ -457,28 +450,34 @@ function BackgroundMenuContent({ sceneGraph }: { sceneGraph: SceneGraphManager |
             <ContextMenuShortcut>G</ContextMenuShortcut>
           </ContextMenuItem>
           <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.toggleDatums()}>
-            <Crosshair className={iconCls} /> {sceneGraph?.datumsVisible ? 'Hide Datums' : 'Show Datums'}
+            <Crosshair className={iconCls} />{' '}
+            {sceneGraph?.datumsVisible ? 'Hide Datums' : 'Show Datums'}
             <ContextMenuShortcut>D</ContextMenuShortcut>
           </ContextMenuItem>
           <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.toggleJointAnchors()}>
-            <Link2 className={iconCls} /> {sceneGraph?.jointAnchorsVisible ? 'Hide Joint Anchors' : 'Show Joint Anchors'}
+            <Link2 className={iconCls} />{' '}
+            {sceneGraph?.jointAnchorsVisible ? 'Hide Joint Anchors' : 'Show Joint Anchors'}
             <ContextMenuShortcut>J</ContextMenuShortcut>
           </ContextMenuItem>
-          <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.toggleCollisionWireframes()}>
-            <Hexagon className={iconCls} /> {sceneGraph?.collisionWireframesVisible ? 'Hide Collision Shapes' : 'Show Collision Shapes'}
+          <ContextMenuItem
+            className={itemCls}
+            onClick={() => sceneGraph?.toggleCollisionWireframes()}
+          >
+            <Hexagon className={iconCls} />{' '}
+            {sceneGraph?.collisionWireframesVisible
+              ? 'Hide Collision Shapes'
+              : 'Show Collision Shapes'}
             <ContextMenuShortcut>C</ContextMenuShortcut>
           </ContextMenuItem>
           <ContextMenuItem className={itemCls} onClick={() => sceneGraph?.toggleCom()}>
-            <Target className={iconCls} /> {sceneGraph?.comVisible ? 'Hide Center of Mass' : 'Show Center of Mass'}
+            <Target className={iconCls} />{' '}
+            {sceneGraph?.comVisible ? 'Hide Center of Mass' : 'Show Center of Mass'}
             <ContextMenuShortcut>M</ContextMenuShortcut>
           </ContextMenuItem>
         </ContextMenuSubContent>
       </ContextMenuSub>
       <ContextMenuSeparator />
-      <ContextMenuItem
-        className={itemCls}
-        onClick={() => useVisibilityStore.getState().showAll()}
-      >
+      <ContextMenuItem className={itemCls} onClick={() => useVisibilityStore.getState().showAll()}>
         <Eye className={iconCls} /> Show All Hidden
       </ContextMenuItem>
     </>
@@ -511,12 +510,8 @@ export function ViewportContextMenu({ sceneGraph, children }: ViewportContextMen
         {target?.type === 'joint' && (
           <JointMenuContent entityId={target.id} sceneGraph={sceneGraph} />
         )}
-        {target?.type === 'load' && (
-          <LoadMenuContent entityId={target.id} />
-        )}
-        {target?.type === 'actuator' && (
-          <ActuatorMenuContent entityId={target.id} />
-        )}
+        {target?.type === 'load' && <LoadMenuContent entityId={target.id} />}
+        {target?.type === 'actuator' && <ActuatorMenuContent entityId={target.id} />}
         {!target && <BackgroundMenuContent sceneGraph={sceneGraph} />}
       </ContextMenuContent>
     </ContextMenu>

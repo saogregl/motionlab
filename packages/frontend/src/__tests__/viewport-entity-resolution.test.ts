@@ -72,11 +72,7 @@ describe('viewport entity resolution', () => {
   });
 
   it('deduplicates resolved viewport selection ids', () => {
-    const resolved = resolveViewportEntityIds(
-      new Set(['body-1', 'geom-1']),
-      bodies,
-      geometries,
-    );
+    const resolved = resolveViewportEntityIds(new Set(['body-1', 'geom-1']), bodies, geometries);
     expect(resolved).toEqual(new Set(['body-1']));
   });
 });

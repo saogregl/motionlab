@@ -20,8 +20,23 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
+      - name: Install native toolchain
+        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build g++
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Prepare vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git "$RUNNER_TEMP/vcpkg"
+          "$RUNNER_TEMP/vcpkg/bootstrap-vcpkg.sh"
+      - name: Cache vcpkg installed packages
+        uses: actions/cache@v4
+        with:
+          path: native/engine/build/vcpkg_installed
+          key: vcpkg-linux-${{ hashFiles('native/engine/vcpkg.json') }}
+          restore-keys: vcpkg-linux-
+      - name: Install protobuf via vcpkg (protoc provisioning)
+        run: |
+          "$RUNNER_TEMP/vcpkg/vcpkg" install protobuf:x64-linux --x-install-root="$GITHUB_WORKSPACE/native/engine/build/vcpkg_installed"
       - name: Verify generated proto files are fresh
         run: |
           pnpm generate:proto

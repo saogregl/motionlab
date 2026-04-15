@@ -7,7 +7,7 @@ vi.mock('../engine/connection.js', () => ({
 }));
 
 import { sendMakeCompoundBody } from '../engine/connection.js';
-import { useMechanismStore, type BodyState, type GeometryState } from '../stores/mechanism.js';
+import { type BodyState, type GeometryState, useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { executeMakeBody, resolveMakeBodyReferenceBodyId } from '../utils/body-merge.js';
 
@@ -93,15 +93,11 @@ describe('body merge utilities', () => {
 
     executeMakeBody(selectedIds);
 
-    expect(sendMakeCompoundBody).toHaveBeenCalledWith(
-      ['g1', 'g2'],
-      'Frame Body',
-      {
-        dissolveEmptyBodies: true,
-        motionType: 'fixed',
-        referenceBodyId: 'b2',
-      },
-    );
+    expect(sendMakeCompoundBody).toHaveBeenCalledWith(['g1', 'g2'], 'Frame Body', {
+      dissolveEmptyBodies: true,
+      motionType: 'fixed',
+      referenceBodyId: 'b2',
+    });
   });
 
   it('resolves a geometry selection to its parent body frame', () => {

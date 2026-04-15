@@ -1,20 +1,20 @@
-import { InspectorSection, PropertyRow, formatEngValue } from '@motionlab/ui';
+import { formatEngValue, InspectorSection, PropertyRow } from '@motionlab/ui';
 import { Activity } from 'lucide-react';
 import { getMeasuredFps } from '../engine/connection.js';
-import { useSimulationSettingsStore } from '../stores/simulation-settings.js';
 import { useSimulationStore } from '../stores/simulation.js';
+import { useSimulationSettingsStore } from '../stores/simulation-settings.js';
 
 const SOLVER_LABELS: Record<string, string> = {
-  'psor': 'PSOR',
+  psor: 'PSOR',
   'barzilai-borwein': 'BB',
-  'apgd': 'APGD',
-  'minres': 'MINRES',
+  apgd: 'APGD',
+  minres: 'MINRES',
 };
 
 const INTEGRATOR_LABELS: Record<string, string> = {
   'euler-implicit-linearized': 'Euler Implicit',
-  'hht': 'HHT',
-  'newmark': 'Newmark',
+  hht: 'HHT',
+  newmark: 'Newmark',
 };
 
 export function SimulationMetadataSection() {

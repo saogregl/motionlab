@@ -9,10 +9,10 @@
  */
 
 import {
+  type Camera,
   Color,
   Group,
   MeshBasicMaterial,
-  type Camera,
   type Scene,
   type WebGLRenderer,
 } from 'three';

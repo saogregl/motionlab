@@ -12,7 +12,12 @@ interface AxisPresetBarProps {
  * Quaternion that rotates the datum Z-axis to align with the given world direction.
  * Datum Z-axis = [0,0,1] in local frame. We compute the rotation from [0,0,1] to the target.
  */
-function quaternionForZAxis(target: [number, number, number]): { x: number; y: number; z: number; w: number } {
+function quaternionForZAxis(target: [number, number, number]): {
+  x: number;
+  y: number;
+  z: number;
+  w: number;
+} {
   // Rotation from [0,0,1] to target using the shortest arc quaternion
   const [tx, ty, tz] = target;
   // dot([0,0,1], target) = tz

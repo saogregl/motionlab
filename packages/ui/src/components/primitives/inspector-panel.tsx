@@ -87,7 +87,12 @@ function InspectorPanel({
 
       {/* Body */}
       <ScrollArea className="flex-1">
-        <div data-slot="inspector-panel-body" className="flex flex-col gap-[var(--inspector-section-gap)] p-[5px]">{children}</div>
+        <div
+          data-slot="inspector-panel-body"
+          className="flex flex-col gap-[var(--inspector-section-gap)] p-[5px]"
+        >
+          {children}
+        </div>
       </ScrollArea>
 
       {/* Footer */}

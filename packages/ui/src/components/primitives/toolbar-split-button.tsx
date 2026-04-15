@@ -1,13 +1,9 @@
-import { Button } from '../ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-import { ChevronDown } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { Button } from '../ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export interface ToolbarSplitButtonProps {
   /** Tooltip for the main button */
@@ -78,9 +74,7 @@ export function ToolbarSplitButton({
         >
           <ChevronDown className="size-3" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-          {children}
-        </DropdownMenuContent>
+        <DropdownMenuContent align="start">{children}</DropdownMenuContent>
       </DropdownMenu>
     </div>
   );

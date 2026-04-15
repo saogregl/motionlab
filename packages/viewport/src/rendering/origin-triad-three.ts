@@ -36,13 +36,17 @@ export function createOriginTriad(): OriginTriadResult {
 
   for (const [axisEnd, color] of axes) {
     // Axis line
-    const line = createFatLine([origin, axisEnd], {
-      color,
-      lineWidth: LINE_WIDTH,
-      transparent: true,
-      opacity: OPACITY,
-      depthTest: false,
-    }, { isPickable: false });
+    const line = createFatLine(
+      [origin, axisEnd],
+      {
+        color,
+        lineWidth: LINE_WIDTH,
+        transparent: true,
+        opacity: OPACITY,
+        depthTest: false,
+      },
+      { isPickable: false },
+    );
     line.renderOrder = RENDER_ORDER;
     root.add(line);
 
@@ -55,17 +59,21 @@ export function createOriginTriad(): OriginTriadResult {
       perp.crossVectors(dir, new Vector3(1, 0, 0)).normalize();
     }
     const back = axisEnd.clone().sub(dir.clone().multiplyScalar(ARROW_SIZE));
-    const arrow = createFatLine([
-      back.clone().add(perp.clone().multiplyScalar(ARROW_SIZE * 0.4)),
-      axisEnd.clone(),
-      back.clone().sub(perp.clone().multiplyScalar(ARROW_SIZE * 0.4)),
-    ], {
-      color,
-      lineWidth: LINE_WIDTH,
-      transparent: true,
-      opacity: OPACITY,
-      depthTest: false,
-    }, { isPickable: false });
+    const arrow = createFatLine(
+      [
+        back.clone().add(perp.clone().multiplyScalar(ARROW_SIZE * 0.4)),
+        axisEnd.clone(),
+        back.clone().sub(perp.clone().multiplyScalar(ARROW_SIZE * 0.4)),
+      ],
+      {
+        color,
+        lineWidth: LINE_WIDTH,
+        transparent: true,
+        opacity: OPACITY,
+        depthTest: false,
+      },
+      { isPickable: false },
+    );
     arrow.renderOrder = RENDER_ORDER;
     root.add(arrow);
   }

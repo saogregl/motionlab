@@ -1,10 +1,4 @@
-import {
-  Button,
-  FloatingToolCard,
-  Input,
-  NumericInput,
-  PropertyRow,
-} from '@motionlab/ui';
+import { Button, FloatingToolCard, Input, NumericInput, PropertyRow } from '@motionlab/ui';
 import {
   ArrowLeftRight,
   Check,
@@ -20,21 +14,26 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { sendCreateJoint, sendUpdateJoint } from '../engine/connection.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
-import type { AlignmentKind } from '../utils/datum-alignment.js';
 import type { JointTypeId } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
+import type { AlignmentKind } from '../utils/datum-alignment.js';
 import { nextJointName } from '../utils/joint-naming.js';
 
 /* ── Helpers ── */
 
 function alignmentKindLabel(kind: AlignmentKind): string {
   switch (kind) {
-    case 'coaxial': return 'Coaxial';
-    case 'coplanar': return 'Coplanar';
-    case 'coincident': return 'Coincident';
-    case 'perpendicular': return 'Perpendicular';
-    case 'general': return 'General';
+    case 'coaxial':
+      return 'Coaxial';
+    case 'coplanar':
+      return 'Coplanar';
+    case 'coincident':
+      return 'Coincident';
+    case 'perpendicular':
+      return 'Perpendicular';
+    case 'general':
+      return 'General';
   }
 }
 
@@ -61,16 +60,86 @@ interface JointTypeOption {
 }
 
 const JOINT_TYPE_OPTIONS: JointTypeOption[] = [
-  { type: 'revolute', label: 'Revolute', description: 'Hinge — 1 rotational DOF', dof: '1R', icon: <RotateCw className="size-3.5" />, hasLimits: true },
-  { type: 'prismatic', label: 'Prismatic', description: 'Slider — 1 translational DOF', dof: '1T', icon: <ArrowLeftRight className="size-3.5" />, hasLimits: true },
-  { type: 'fixed', label: 'Fixed', description: 'Rigid — no relative motion', dof: '0', icon: <Lock className="size-3.5" />, hasLimits: false },
-  { type: 'spherical', label: 'Spherical', description: 'Ball joint — 3 rotational DOF', dof: '3R', icon: <Circle className="size-3.5" />, hasLimits: false },
-  { type: 'cylindrical', label: 'Cylindrical', description: 'Rotation + translation on axis', dof: '1R+1T', icon: <Cylinder className="size-3.5" />, hasLimits: true },
-  { type: 'planar', label: 'Planar', description: 'Slide on a plane', dof: '1R+2T', icon: <Move className="size-3.5" />, hasLimits: false },
-  { type: 'universal', label: 'Universal', description: 'Two-axis hinge', dof: '2R', icon: <RotateCw className="size-3.5" />, hasLimits: false },
-  { type: 'distance', label: 'Distance', description: 'Constrains separation distance', dof: '5', icon: <Link2 className="size-3.5" />, hasLimits: true },
-  { type: 'point-line', label: 'Point-Line', description: 'Point constrained to a line', dof: '4', icon: <ArrowLeftRight className="size-3.5" />, hasLimits: false },
-  { type: 'point-plane', label: 'Point-Plane', description: 'Point constrained to a plane', dof: '3', icon: <Move className="size-3.5" />, hasLimits: false },
+  {
+    type: 'revolute',
+    label: 'Revolute',
+    description: 'Hinge — 1 rotational DOF',
+    dof: '1R',
+    icon: <RotateCw className="size-3.5" />,
+    hasLimits: true,
+  },
+  {
+    type: 'prismatic',
+    label: 'Prismatic',
+    description: 'Slider — 1 translational DOF',
+    dof: '1T',
+    icon: <ArrowLeftRight className="size-3.5" />,
+    hasLimits: true,
+  },
+  {
+    type: 'fixed',
+    label: 'Fixed',
+    description: 'Rigid — no relative motion',
+    dof: '0',
+    icon: <Lock className="size-3.5" />,
+    hasLimits: false,
+  },
+  {
+    type: 'spherical',
+    label: 'Spherical',
+    description: 'Ball joint — 3 rotational DOF',
+    dof: '3R',
+    icon: <Circle className="size-3.5" />,
+    hasLimits: false,
+  },
+  {
+    type: 'cylindrical',
+    label: 'Cylindrical',
+    description: 'Rotation + translation on axis',
+    dof: '1R+1T',
+    icon: <Cylinder className="size-3.5" />,
+    hasLimits: true,
+  },
+  {
+    type: 'planar',
+    label: 'Planar',
+    description: 'Slide on a plane',
+    dof: '1R+2T',
+    icon: <Move className="size-3.5" />,
+    hasLimits: false,
+  },
+  {
+    type: 'universal',
+    label: 'Universal',
+    description: 'Two-axis hinge',
+    dof: '2R',
+    icon: <RotateCw className="size-3.5" />,
+    hasLimits: false,
+  },
+  {
+    type: 'distance',
+    label: 'Distance',
+    description: 'Constrains separation distance',
+    dof: '5',
+    icon: <Link2 className="size-3.5" />,
+    hasLimits: true,
+  },
+  {
+    type: 'point-line',
+    label: 'Point-Line',
+    description: 'Point constrained to a line',
+    dof: '4',
+    icon: <ArrowLeftRight className="size-3.5" />,
+    hasLimits: false,
+  },
+  {
+    type: 'point-plane',
+    label: 'Point-Plane',
+    description: 'Point constrained to a plane',
+    dof: '3',
+    icon: <Move className="size-3.5" />,
+    hasLimits: false,
+  },
 ];
 
 /* ── Connection slot ── */
@@ -170,6 +239,16 @@ export function JointTypeSelectorPanel() {
     }
   }, [step, editingJoint]);
 
+  // Sort: recommended first
+  const recommendedSet = useMemo(() => new Set(recommendedTypes), [recommendedTypes]);
+  const sortedOptions = useMemo(
+    () => [
+      ...JOINT_TYPE_OPTIONS.filter((o) => recommendedSet.has(o.type)),
+      ...JOINT_TYPE_OPTIONS.filter((o) => !recommendedSet.has(o.type)),
+    ],
+    [recommendedSet],
+  );
+
   // Show for all active steps, not just select-type
   if (step === 'idle') return null;
 
@@ -177,13 +256,6 @@ export function JointTypeSelectorPanel() {
   const currentOption = JOINT_TYPE_OPTIONS.find((o) => o.type === currentType);
   const showLimits = currentOption?.hasLimits ?? false;
   const canCreate = !!parentDatumId && !!childDatumId && !!currentType;
-
-  // Sort: recommended first
-  const recommendedSet = useMemo(() => new Set(recommendedTypes), [recommendedTypes]);
-  const sortedOptions = useMemo(() => [
-    ...JOINT_TYPE_OPTIONS.filter((o) => recommendedSet.has(o.type)),
-    ...JOINT_TYPE_OPTIONS.filter((o) => !recommendedSet.has(o.type)),
-  ], [recommendedSet]);
 
   const handleCommit = () => {
     if (!parentDatumId || !childDatumId || !currentType) return;
@@ -262,7 +334,10 @@ export function JointTypeSelectorPanel() {
           <span className="text-[10px] text-[var(--text-secondary)]">
             {alignmentKindLabel(alignmentKind)}
             {alignment && alignment.distance > 0.001 && (
-              <span className="text-[var(--text-muted)]"> — {formatDistance(alignment.distance)}</span>
+              <span className="text-[var(--text-muted)]">
+                {' '}
+                — {formatDistance(alignment.distance)}
+              </span>
             )}
           </span>
         </div>
@@ -282,9 +357,10 @@ export function JointTypeSelectorPanel() {
                 key={option.type}
                 type="button"
                 className={`flex items-center gap-2 ps-2 pe-1.5 h-7 text-xs transition-colors
-                  ${isSelected
-                    ? 'bg-[var(--accent-primary)]/10 text-[var(--text-primary)]'
-                    : 'text-[var(--text-secondary)] hover:bg-[var(--layer-hover)]'
+                  ${
+                    isSelected
+                      ? 'bg-[var(--accent-primary)]/10 text-[var(--text-primary)]'
+                      : 'text-[var(--text-secondary)] hover:bg-[var(--layer-hover)]'
                   }`}
                 onClick={() => selectJointType(option.type)}
                 onMouseEnter={() => setPreviewJointType(option.type)}
@@ -343,10 +419,7 @@ export function JointTypeSelectorPanel() {
             </label>
             {limitsEnabled && (
               <div className="flex flex-col gap-1">
-                <PropertyRow
-                  label="Lower"
-                  unit={currentType === 'revolute' ? 'rad' : 'm'}
-                >
+                <PropertyRow label="Lower" unit={currentType === 'revolute' ? 'rad' : 'm'}>
                   <NumericInput
                     value={lowerLimit}
                     onChange={setLowerLimit}
@@ -354,10 +427,7 @@ export function JointTypeSelectorPanel() {
                     precision={4}
                   />
                 </PropertyRow>
-                <PropertyRow
-                  label="Upper"
-                  unit={currentType === 'revolute' ? 'rad' : 'm'}
-                >
+                <PropertyRow label="Upper" unit={currentType === 'revolute' ? 'rad' : 'm'}>
                   <NumericInput
                     value={upperLimit}
                     onChange={setUpperLimit}

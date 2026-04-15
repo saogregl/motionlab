@@ -64,13 +64,7 @@ export function HomeSidebar({
       <div className="flex flex-col gap-1.5 p-3 pb-2">
         <DropdownMenu>
           <DropdownMenuTrigger
-            render={
-              <Button
-                size="default"
-                disabled={!engineReady}
-                className="w-full gap-1.5"
-              />
-            }
+            render={<Button size="default" disabled={!engineReady} className="w-full gap-1.5" />}
           >
             Create
             <ChevronDown className="size-3 ms-auto" />
@@ -107,18 +101,20 @@ export function HomeSidebar({
                   type="button"
                   className={cn(
                     'flex w-full items-center gap-2 ps-3 pe-3 py-1.5 text-[length:var(--text-sm)] text-left transition-colors hover:bg-layer-base-hover',
-                    isActive && 'border-s-2 border-border-strong bg-layer-base-active text-text-primary font-medium',
+                    isActive &&
+                      'border-s-2 border-border-strong bg-layer-base-active text-text-primary font-medium',
                   )}
                   onClick={() => onNavigate(item.id)}
                 >
                   <Icon
-                    className={cn('size-4 shrink-0', isActive ? 'text-text-secondary' : 'text-text-tertiary')}
+                    className={cn(
+                      'size-4 shrink-0',
+                      isActive ? 'text-text-secondary' : 'text-text-tertiary',
+                    )}
                     strokeWidth={1.5}
                   />
                   <span className="truncate">{item.label}</span>
-                  {Trailing && (
-                    <Trailing className="ms-auto size-3 shrink-0 text-text-tertiary" />
-                  )}
+                  {Trailing && <Trailing className="ms-auto size-3 shrink-0 text-text-tertiary" />}
                 </button>
               </li>
             );
@@ -131,9 +127,7 @@ export function HomeSidebar({
         <p className="text-[length:var(--text-2xs)] font-medium text-text-secondary">
           {appVersion ? `MotionLab v${appVersion}` : 'MotionLab'}
         </p>
-        <p className="text-[length:var(--text-2xs)] text-text-tertiary">
-          Mechanism Workbench
-        </p>
+        <p className="text-[length:var(--text-2xs)] text-text-tertiary">Mechanism Workbench</p>
       </div>
     </aside>
   );

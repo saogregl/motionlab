@@ -12,18 +12,11 @@
  *   POINTERMOVE  -> RAF-gated hover
  */
 
-import {
-  Matrix4,
-  Mesh,
-  Object3D,
-  Raycaster,
-  Vector2,
-  Vector3,
-} from 'three';
 import type { Camera, Intersection, Scene, WebGLRenderer } from 'three';
+import { Matrix4, Mesh, Object3D, Raycaster, Vector2, Vector3 } from 'three';
 
 import type { DatumPreviewType } from './rendering/surface-type-estimator.js';
-import { VIEWPORT_PICK_LAYER, type SceneGraphManager } from './scene-graph-three.js';
+import { type SceneGraphManager, VIEWPORT_PICK_LAYER } from './scene-graph-three.js';
 
 // ---------------------------------------------------------------------------
 // Re-exported types (canonical definitions live in R3FViewport.tsx)
@@ -49,7 +42,12 @@ export type PickCallback = (
 export type HoverCallback = (entityId: string | null) => void;
 
 export type FaceHoverCallback = (
-  face: { bodyId: string; geometryId?: string; faceIndex: number; previewType?: DatumPreviewType } | null,
+  face: {
+    bodyId: string;
+    geometryId?: string;
+    faceIndex: number;
+    previewType?: DatumPreviewType;
+  } | null,
 ) => void;
 
 // ---------------------------------------------------------------------------
@@ -120,11 +118,7 @@ function resolveGeometryId(object: Object3D | null): string | null {
  * Convert a PointerEvent's clientX/clientY into normalised device
  * coordinates (-1..+1) relative to the renderer's canvas.
  */
-function pointerToNDC(
-  event: PointerEvent,
-  domElement: HTMLElement,
-  out: Vector2,
-): Vector2 {
+function pointerToNDC(event: PointerEvent, domElement: HTMLElement, out: Vector2): Vector2 {
   const rect = domElement.getBoundingClientRect();
   out.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
   out.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -134,18 +128,12 @@ function pointerToNDC(
 /**
  * Transform a face normal from object-local space to world space.
  */
-function faceNormalToWorld(
-  normal: Vector3,
-  objectMatrixWorld: Matrix4,
-): Vector3 {
+function faceNormalToWorld(normal: Vector3, objectMatrixWorld: Matrix4): Vector3 {
   const normalMatrix = new Matrix4().extractRotation(objectMatrixWorld);
   return normal.clone().applyMatrix4(normalMatrix).normalize();
 }
 
-function distanceSquared(
-  a: { x: number; y: number },
-  b: { x: number; y: number },
-): number {
+function distanceSquared(a: { x: number; y: number }, b: { x: number; y: number }): number {
   const dx = a.x - b.x;
   const dy = a.y - b.y;
   return dx * dx + dy * dy;
@@ -183,7 +171,8 @@ export class PickingManager {
   private hoverRafPending = false;
   private hoverRafId: number | null = null;
   private lastHoverEntityId: string | null = null;
-  private lastHoverFace: { bodyId: string; geometryId: string | null; faceIndex: number } | null = null;
+  private lastHoverFace: { bodyId: string; geometryId: string | null; faceIndex: number } | null =
+    null;
   private lastPointerPos: { x: number; y: number } | null = null;
   private lastPreciseHoverAt = Number.NEGATIVE_INFINITY;
   private pointerDragSuppressed = false;
@@ -219,9 +208,7 @@ export class PickingManager {
     this.raycaster.firstHitOnly = true;
 
     // Invalidate mesh cache when entities change
-    this.unsubEntityList = this.sceneGraph.onEntityListChanged(
-      this.invalidateCache.bind(this),
-    );
+    this.unsubEntityList = this.sceneGraph.onEntityListChanged(this.invalidateCache.bind(this));
 
     // Bind handlers
     this.boundOnPointerDown = this.handlePointerDown.bind(this);
@@ -309,9 +296,7 @@ export class PickingManager {
     if (!this.pointerDownPos) return;
 
     this.lastPointerPos = { x: event.clientX, y: event.clientY };
-    const distance = Math.sqrt(
-      distanceSquared(this.pointerDownPos, this.lastPointerPos),
-    );
+    const distance = Math.sqrt(distanceSquared(this.pointerDownPos, this.lastPointerPos));
     const wasPointerDrag = this.pointerDragSuppressed;
 
     this.pointerDownPos = null;
@@ -405,10 +390,7 @@ export class PickingManager {
   // Pick (click)
   // -----------------------------------------------------------------------
 
-  private performPick(
-    event: PointerEvent,
-    modifiers: { ctrl: boolean; shift: boolean },
-  ): void {
+  private performPick(event: PointerEvent, modifiers: { ctrl: boolean; shift: boolean }): void {
     const hit = this.raycast(event);
 
     if (!hit) {
@@ -442,10 +424,7 @@ export class PickingManager {
     const geometryId = resolveGeometryId(hit.object) ?? undefined;
 
     // Face normal transformed to world space
-    const worldNormal3 = faceNormalToWorld(
-      hit.face.normal.clone(),
-      hit.object.matrixWorld,
-    );
+    const worldNormal3 = faceNormalToWorld(hit.face.normal.clone(), hit.object.matrixWorld);
     const worldNormal = {
       x: worldNormal3.x,
       y: worldNormal3.y,
@@ -532,10 +511,7 @@ export class PickingManager {
    * Face-level hover for create-datum mode. Determines the face index from
    * the triangle hit, estimates surface type, updates highlights and preview.
    */
-  private updateFaceHoverFromHit(
-    hit: Intersection,
-    entityId: string | null,
-  ): void {
+  private updateFaceHoverFromHit(hit: Intersection, entityId: string | null): void {
     if (!entityId || hit.faceIndex === undefined || hit.faceIndex === null) {
       this.updateFaceHover(null, null, null, null);
       return;
@@ -570,30 +546,22 @@ export class PickingManager {
     }
 
     // Estimate surface type for this face
-    const facePreview = geoIndex && geometryId
-      ? this.sceneGraph.getGeometryFacePreview(entityId, geometryId, faceIndex)
-      : geoIndex
-        ? this.sceneGraph.getBodyFacePreview(entityId, faceIndex)
-        : null;
+    const facePreview =
+      geoIndex && geometryId
+        ? this.sceneGraph.getGeometryFacePreview(entityId, geometryId, faceIndex)
+        : geoIndex
+          ? this.sceneGraph.getBodyFacePreview(entityId, faceIndex)
+          : null;
     const previewType = facePreview?.previewType;
 
     if (geoIndex && previewType) {
-      if (
-        this.lastHoverFace &&
-        this.lastHoverFace.bodyId !== entityId
-      ) {
+      if (this.lastHoverFace && this.lastHoverFace.bodyId !== entityId) {
         this.sceneGraph.clearFaceHighlight(this.lastHoverFace.bodyId);
       }
       this.sceneGraph.highlightFace(entityId, geometryId ?? entityId, faceIndex);
 
       // Show datum preview
-      this.updateDatumPreview(
-        hit,
-        entityId,
-        previewType,
-        facePreview.axisDirection,
-        null,
-      );
+      this.updateDatumPreview(hit, entityId, previewType, facePreview.axisDirection, null);
     }
 
     this.updateFaceHover(entityId, geometryId, faceIndex, previewType ?? null);
@@ -618,25 +586,22 @@ export class PickingManager {
     // Surface normal in world space
     let normal: [number, number, number] = [0, 1, 0];
     if (hit.face) {
-      const wn = faceNormalToWorld(
-        hit.face.normal.clone(),
-        hit.object.matrixWorld,
-      );
+      const wn = faceNormalToWorld(hit.face.normal.clone(), hit.object.matrixWorld);
       normal = [wn.x, wn.y, wn.z];
     }
 
     // Axis direction (for cylindrical surfaces)
     let axisDir: [number, number, number] | null = null;
     if (previewType === 'axis' && axisDirectionLocal) {
-        // Transform axis direction from object-local to world space
-        const axisMat = new Matrix4().extractRotation(hit.object.matrixWorld);
-        const axisVec = new Vector3(
-          axisDirectionLocal[0],
-          axisDirectionLocal[1],
-          axisDirectionLocal[2],
-        );
-        axisVec.applyMatrix4(axisMat).normalize();
-        axisDir = [axisVec.x, axisVec.y, axisVec.z];
+      // Transform axis direction from object-local to world space
+      const axisMat = new Matrix4().extractRotation(hit.object.matrixWorld);
+      const axisVec = new Vector3(
+        axisDirectionLocal[0],
+        axisDirectionLocal[1],
+        axisDirectionLocal[2],
+      );
+      axisVec.applyMatrix4(axisMat).normalize();
+      axisDir = [axisVec.x, axisVec.y, axisVec.z];
     }
 
     this.sceneGraph.showDatumPreview({
@@ -655,8 +620,7 @@ export class PickingManager {
     previewType: DatumPreviewType | null,
   ): void {
     const prev = this.lastHoverFace;
-    const next =
-      bodyId !== null && faceIndex !== null ? { bodyId, geometryId, faceIndex } : null;
+    const next = bodyId !== null && faceIndex !== null ? { bodyId, geometryId, faceIndex } : null;
 
     // No change
     if (
@@ -704,11 +668,7 @@ export class PickingManager {
   }
 
   private isHoverSuppressed(): boolean {
-    return (
-      this.pointerDragSuppressed ||
-      this.orbitDragSuppressed ||
-      this.transformDragSuppressed
-    );
+    return this.pointerDragSuppressed || this.orbitDragSuppressed || this.transformDragSuppressed;
   }
 
   private syncHoverSuppression(): void {

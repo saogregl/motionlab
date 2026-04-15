@@ -1,4 +1,5 @@
 import {
+  formatEngValue,
   InspectorPanel,
   InspectorSection,
   NumericInput,
@@ -9,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
   Vec3Display,
-  formatEngValue,
 } from '@motionlab/ui';
 import { Activity, MapPin, Zap } from 'lucide-react';
 import { useMemo } from 'react';
@@ -53,9 +53,7 @@ function updateLoad(load: LoadState, updates: Partial<LoadState>): void {
 
 export function LoadInspector({ loadId }: { loadId: string }) {
   const load = useMechanismStore((s) => s.loads.get(loadId));
-  const datum = useMechanismStore((s) =>
-    load?.datumId ? s.datums.get(load.datumId) : undefined,
-  );
+  const datum = useMechanismStore((s) => (load?.datumId ? s.datums.get(load.datumId) : undefined));
   const parentDatum = useMechanismStore((s) =>
     load?.parentDatumId ? s.datums.get(load.parentDatumId) : undefined,
   );
@@ -95,9 +93,7 @@ export function LoadInspector({ loadId }: { loadId: string }) {
         metadata={[
           {
             label: 'Type',
-            value: (
-              <span className="text-2xs">{LOAD_TYPE_LABELS[load.type] ?? load.type}</span>
-            ),
+            value: <span className="text-2xs">{LOAD_TYPE_LABELS[load.type] ?? load.type}</span>,
           },
         ]}
         disabled={isSimulating}
@@ -115,9 +111,7 @@ export function LoadInspector({ loadId }: { loadId: string }) {
             <NumericInput
               variant="inline"
               value={load.vector?.x ?? 0}
-              onChange={(v) =>
-                updateLoad(load, { vector: { ...load.vector!, x: v } })
-              }
+              onChange={(v) => updateLoad(load, { vector: { ...load.vector!, x: v } })}
               step={1}
               precision={3}
               disabled={isSimulating}
@@ -127,9 +121,7 @@ export function LoadInspector({ loadId }: { loadId: string }) {
             <NumericInput
               variant="inline"
               value={load.vector?.y ?? 0}
-              onChange={(v) =>
-                updateLoad(load, { vector: { ...load.vector!, y: v } })
-              }
+              onChange={(v) => updateLoad(load, { vector: { ...load.vector!, y: v } })}
               step={1}
               precision={3}
               disabled={isSimulating}
@@ -139,9 +131,7 @@ export function LoadInspector({ loadId }: { loadId: string }) {
             <NumericInput
               variant="inline"
               value={load.vector?.z ?? 0}
-              onChange={(v) =>
-                updateLoad(load, { vector: { ...load.vector!, z: v } })
-              }
+              onChange={(v) => updateLoad(load, { vector: { ...load.vector!, z: v } })}
               step={1}
               precision={3}
               disabled={isSimulating}
@@ -155,9 +145,7 @@ export function LoadInspector({ loadId }: { loadId: string }) {
           <PropertyRow label="Reference Frame">
             <Select
               value={load.referenceFrame ?? 'world'}
-              onValueChange={(v) =>
-                updateLoad(load, { referenceFrame: v as ReferenceFrameId })
-              }
+              onValueChange={(v) => updateLoad(load, { referenceFrame: v as ReferenceFrameId })}
             >
               <SelectTrigger size="sm" disabled={isSimulating}>
                 <SelectValue />
@@ -241,7 +229,9 @@ export function LoadInspector({ loadId }: { loadId: string }) {
                     unit={unit}
                   />
                 ) : (
-                  <PropertyRow label={load.type === 'point-force' ? 'Applied Force' : 'Applied Torque'}>
+                  <PropertyRow
+                    label={load.type === 'point-force' ? 'Applied Force' : 'Applied Torque'}
+                  >
                     <span className="text-2xs text-text-tertiary">Awaiting data...</span>
                   </PropertyRow>
                 )}
@@ -250,14 +240,20 @@ export function LoadInspector({ loadId }: { loadId: string }) {
           }
 
           if (isSpringDamper) {
-            const { length: lengthId, force: springForceId, lengthRate } = getLoadChannelIds(loadId, load.type);
+            const {
+              length: lengthId,
+              force: springForceId,
+              lengthRate,
+            } = getLoadChannelIds(loadId, load.type);
             if (!lengthId || !springForceId) return null;
             const lengthSamples = traces.get(lengthId);
             const forceSamples = traces.get(springForceId);
             const lengthRateSamples = lengthRate ? traces.get(lengthRate) : undefined;
             const lengthVal = lengthSamples ? nearestSample(lengthSamples, simTime) : undefined;
             const forceVal = forceSamples ? nearestSample(forceSamples, simTime) : undefined;
-            const lengthRateVal = lengthRateSamples ? nearestSample(lengthRateSamples, simTime) : undefined;
+            const lengthRateVal = lengthRateSamples
+              ? nearestSample(lengthRateSamples, simTime)
+              : undefined;
             const hasAny =
               channels.has(lengthId) ||
               channels.has(springForceId) ||

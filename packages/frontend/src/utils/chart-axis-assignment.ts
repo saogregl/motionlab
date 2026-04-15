@@ -32,8 +32,10 @@ export interface AxisTheme {
 }
 
 /** Font string matching the app's design system (IBM Plex Sans, --text-2xs). */
-const AXIS_FONT = '11px "IBM Plex Sans Variable", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
-const AXIS_LABEL_FONT = '500 11px "IBM Plex Sans Variable", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
+const AXIS_FONT =
+  '11px "IBM Plex Sans Variable", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
+const AXIS_LABEL_FONT =
+  '500 11px "IBM Plex Sans Variable", -apple-system, BlinkMacSystemFont, system-ui, sans-serif';
 
 /** Applies theme colors to a single axis config in-place. */
 function applyAxisTheme(axis: uPlot.Axis, theme: AxisTheme): uPlot.Axis {

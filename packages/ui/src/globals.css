@@ -221,21 +221,21 @@
   --status-warning: #ff832b;
 
   /* ── Chart series colors — Carbon g10 (light) 14-color palette ── */
-  --chart-series-1:  #6929c4; /* Purple 70  */
-  --chart-series-2:  #1192e8; /* Cyan 50    */
-  --chart-series-3:  #005d5d; /* Teal 70    */
-  --chart-series-4:  #9f1853; /* Magenta 70 */
-  --chart-series-5:  #fa4d56; /* Red 50     */
-  --chart-series-6:  #520408; /* Red 90     */
-  --chart-series-7:  #198038; /* Green 60   */
-  --chart-series-8:  #002d9c; /* Blue 80    */
-  --chart-series-9:  #ee5396; /* Magenta 50 */
+  --chart-series-1: #6929c4; /* Purple 70  */
+  --chart-series-2: #1192e8; /* Cyan 50    */
+  --chart-series-3: #005d5d; /* Teal 70    */
+  --chart-series-4: #9f1853; /* Magenta 70 */
+  --chart-series-5: #fa4d56; /* Red 50     */
+  --chart-series-6: #520408; /* Red 90     */
+  --chart-series-7: #198038; /* Green 60   */
+  --chart-series-8: #002d9c; /* Blue 80    */
+  --chart-series-9: #ee5396; /* Magenta 50 */
   --chart-series-10: #b28600; /* Yellow 50  */
   --chart-series-11: #009d9a; /* Teal 50    */
   --chart-series-12: #012749; /* Cyan 90    */
   --chart-series-13: #8a3800; /* Orange 70  */
   --chart-series-14: #a56eff; /* Purple 50  */
-  --chart-grid:      #e0e0e0; /* gray-20    */
+  --chart-grid: #e0e0e0; /* gray-20    */
   --chart-axis-text: #525252; /* gray-70    */
   --chart-scrub: rgba(0, 0, 0, 0.5);
 
@@ -381,21 +381,21 @@
   --axis-z: #007aff;
 
   /* ── Chart series colors — Carbon g100 (dark) 14-color palette ── */
-  --chart-series-1:  #8a3ffc; /* Purple 60  */
-  --chart-series-2:  #33b1ff; /* Cyan 40    */
-  --chart-series-3:  #007d79; /* Teal 60    */
-  --chart-series-4:  #ff7eb6; /* Magenta 40 */
-  --chart-series-5:  #fa4d56; /* Red 50     */
-  --chart-series-6:  #fff1f1; /* Red 10     */
-  --chart-series-7:  #6fdc8c; /* Green 30   */
-  --chart-series-8:  #4589ff; /* Blue 50    */
-  --chart-series-9:  #d02670; /* Magenta 60 */
+  --chart-series-1: #8a3ffc; /* Purple 60  */
+  --chart-series-2: #33b1ff; /* Cyan 40    */
+  --chart-series-3: #007d79; /* Teal 60    */
+  --chart-series-4: #ff7eb6; /* Magenta 40 */
+  --chart-series-5: #fa4d56; /* Red 50     */
+  --chart-series-6: #fff1f1; /* Red 10     */
+  --chart-series-7: #6fdc8c; /* Green 30   */
+  --chart-series-8: #4589ff; /* Blue 50    */
+  --chart-series-9: #d02670; /* Magenta 60 */
   --chart-series-10: #d2a106; /* Yellow 40  */
   --chart-series-11: #08bdba; /* Teal 40    */
   --chart-series-12: #bae6ff; /* Cyan 20    */
   --chart-series-13: #ba4e00; /* Orange 60  */
   --chart-series-14: #d4bbff; /* Purple 30  */
-  --chart-grid:      #3d3d3d;
+  --chart-grid: #3d3d3d;
   --chart-axis-text: #acabab;
   --chart-scrub: rgba(255, 255, 255, 0.6);
 
@@ -633,16 +633,28 @@
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 @keyframes selection-pulse {
-  0% { background-color: var(--selection-fill-strong); }
-  100% { background-color: var(--selection-row); }
+  0% {
+    background-color: var(--selection-fill-strong);
+  }
+  100% {
+    background-color: var(--selection-row);
+  }
 }
 
 @keyframes value-flash {
-  0% { background-color: var(--accent-soft); }
-  100% { background-color: transparent; }
+  0% {
+    background-color: var(--accent-soft);
+  }
+  100% {
+    background-color: transparent;
+  }
 }

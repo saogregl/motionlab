@@ -1,6 +1,6 @@
-import { DOF_TABLE } from '@motionlab/viewport';
 import {
   Button,
+  formatEngValue,
   InspectorPanel,
   InspectorSection,
   NumericInput,
@@ -12,28 +12,26 @@ import {
   SelectTrigger,
   SelectValue,
   Vec3Display,
-  formatEngValue,
 } from '@motionlab/ui';
+import { DOF_TABLE } from '@motionlab/viewport';
 import { Link2 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
 import { sendDeleteActuator, sendUpdateJoint } from '../engine/connection.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
+import type { JointTypeId } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
 import { useSimulationStore } from '../stores/simulation.js';
-import { useTraceStore } from '../stores/traces.js';
 import { useToastStore } from '../stores/toast.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
+import { useTraceStore } from '../stores/traces.js';
+import { getActuatorUnit } from '../utils/actuator-units.js';
 import { composeWorldPose } from '../utils/pose-composition.js';
 import { getJointCoordinateChannelIds } from '../utils/runtime-channel-ids.js';
-
 import { CreateActuatorDialog } from './CreateActuatorDialog.js';
-import { JointConnectionDiagram } from './JointConnectionDiagram.js';
 import { IdentitySection, SimulationValuesSection } from './inspector/sections/index.js';
-
-import type { JointTypeId } from '../stores/mechanism.js';
-import { getActuatorUnit } from '../utils/actuator-units.js';
+import { JointConnectionDiagram } from './JointConnectionDiagram.js';
 
 type JointType = JointTypeId;
 
@@ -115,20 +113,24 @@ export function JointInspector({ jointId }: { jointId: string }) {
     const coordChannels = getJointCoordinateChannelIds(jointId, joint.type);
     return [
       ...(coordChannels?.position
-        ? [{
-            channelId: coordChannels.position,
-            label: 'Position',
-            unit: channels.get(coordChannels.position)?.unit ?? '',
-            type: 'scalar' as const,
-          }]
+        ? [
+            {
+              channelId: coordChannels.position,
+              label: 'Position',
+              unit: channels.get(coordChannels.position)?.unit ?? '',
+              type: 'scalar' as const,
+            },
+          ]
         : []),
       ...(coordChannels?.velocity
-        ? [{
-            channelId: coordChannels.velocity,
-            label: 'Velocity',
-            unit: channels.get(coordChannels.velocity)?.unit ?? '',
-            type: 'scalar' as const,
-          }]
+        ? [
+            {
+              channelId: coordChannels.velocity,
+              label: 'Velocity',
+              unit: channels.get(coordChannels.velocity)?.unit ?? '',
+              type: 'scalar' as const,
+            },
+          ]
         : []),
       {
         channelId: `joint/${jointId}/reaction_force`,
@@ -185,14 +187,16 @@ export function JointInspector({ jointId }: { jointId: string }) {
             ),
           },
           ...(DOF_TABLE[joint.type]
-            ? [{
-                label: 'DOF',
-                value: (
-                  <span className="text-2xs">
-                    {DOF_TABLE[joint.type].label} ({DOF_TABLE[joint.type].total} of 6 free)
-                  </span>
-                ),
-              }]
+            ? [
+                {
+                  label: 'DOF',
+                  value: (
+                    <span className="text-2xs">
+                      {DOF_TABLE[joint.type].label} ({DOF_TABLE[joint.type].total} of 6 free)
+                    </span>
+                  ),
+                },
+              ]
             : []),
         ]}
         disabled={isSimulating}
@@ -316,7 +320,9 @@ export function JointInspector({ jointId }: { jointId: string }) {
         )}
       </InspectorSection>
 
-      {(joint.type === 'revolute' || joint.type === 'prismatic' || joint.type === 'cylindrical') && (
+      {(joint.type === 'revolute' ||
+        joint.type === 'prismatic' ||
+        joint.type === 'cylindrical') && (
         <InspectorSection title="Limits">
           <PropertyRow label="Lower" numeric>
             <NumericInput
@@ -339,7 +345,9 @@ export function JointInspector({ jointId }: { jointId: string }) {
         </InspectorSection>
       )}
 
-      {(joint.type === 'revolute' || joint.type === 'prismatic' || joint.type === 'cylindrical') && (
+      {(joint.type === 'revolute' ||
+        joint.type === 'prismatic' ||
+        joint.type === 'cylindrical') && (
         <InspectorSection title="Dynamics" defaultOpen={false}>
           {joint.type === 'cylindrical' ? (
             <>

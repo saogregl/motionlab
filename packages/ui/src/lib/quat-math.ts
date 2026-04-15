@@ -2,12 +2,11 @@
  * Convert a quaternion to Euler angles in degrees (intrinsic ZYX convention).
  * Returns { x: roll, y: pitch, z: yaw } in degrees.
  */
-export function quatToEulerDeg(q: {
+export function quatToEulerDeg(q: { x: number; y: number; z: number; w: number }): {
   x: number;
   y: number;
   z: number;
-  w: number;
-}): { x: number; y: number; z: number } {
+} {
   const sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
   const cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
   const roll = Math.atan2(sinr_cosp, cosr_cosp);
@@ -27,11 +26,12 @@ export function quatToEulerDeg(q: {
  * Convert Euler angles in degrees to a quaternion (intrinsic ZYX convention).
  * Inverse of `quatToEulerDeg` — round-tripping is consistent.
  */
-export function eulerDegToQuat(euler: {
+export function eulerDegToQuat(euler: { x: number; y: number; z: number }): {
   x: number;
   y: number;
   z: number;
-}): { x: number; y: number; z: number; w: number } {
+  w: number;
+} {
   const DEG2RAD = Math.PI / 180;
   const halfRoll = (euler.x * DEG2RAD) / 2;
   const halfPitch = (euler.y * DEG2RAD) / 2;

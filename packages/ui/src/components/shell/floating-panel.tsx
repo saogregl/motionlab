@@ -1,8 +1,6 @@
 import type { ReactNode } from 'react';
 import { useCallback, useRef, useState } from 'react';
-
-import { useLayoutManager } from '../../layout';
-import { useLayoutSlot } from '../../layout';
+import { useLayoutManager, useLayoutSlot } from '../../layout';
 import { cn } from '../../lib/utils';
 
 interface FloatingPanelProps {

@@ -1,7 +1,12 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { clearRegistry, registerCommands } from '../commands/registry.js';
-import { buildShortcutMapForCommands, parseShortcut, rebuildShortcutMap, resolveShortcutCommand } from '../commands/shortcut-manager.js';
+import {
+  buildShortcutMapForCommands,
+  parseShortcut,
+  rebuildShortcutMap,
+  resolveShortcutCommand,
+} from '../commands/shortcut-manager.js';
 import type { CommandDef } from '../commands/types.js';
 
 function shortcutEvent(overrides?: Partial<Parameters<typeof resolveShortcutCommand>[0]>) {
@@ -106,11 +111,13 @@ describe('Shortcut manager', () => {
       rebuildShortcutMap();
 
       expect(
-        resolveShortcutCommand(shortcutEvent({
-          key: 'd',
-          code: 'KeyD',
-          target: { tagName: 'INPUT' } as unknown as EventTarget,
-        })),
+        resolveShortcutCommand(
+          shortcutEvent({
+            key: 'd',
+            code: 'KeyD',
+            target: { tagName: 'INPUT' } as unknown as EventTarget,
+          }),
+        ),
       ).toBeUndefined();
     });
 
@@ -127,12 +134,14 @@ describe('Shortcut manager', () => {
       rebuildShortcutMap();
 
       expect(
-        resolveShortcutCommand(shortcutEvent({
-          ctrlKey: true,
-          key: 'a',
-          code: 'KeyA',
-          target: { tagName: 'INPUT' } as unknown as EventTarget,
-        })),
+        resolveShortcutCommand(
+          shortcutEvent({
+            ctrlKey: true,
+            key: 'a',
+            code: 'KeyA',
+            target: { tagName: 'INPUT' } as unknown as EventTarget,
+          }),
+        ),
       ).toBeUndefined();
     });
   });

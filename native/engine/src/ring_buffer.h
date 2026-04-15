@@ -4,7 +4,6 @@
 
 #include <deque>
 #include <shared_mutex>
-#include <unordered_map>
 #include <vector>
 
 namespace motionlab::engine {
@@ -14,14 +13,13 @@ struct BufferedFrame {
     uint64_t step_count;
     std::vector<BodyPose> body_poses;
     std::vector<ChannelValue> channel_values;
-    std::unordered_map<std::string, size_t> channel_index_by_id;
 };
 
 class SimulationRingBuffer {
 public:
     explicit SimulationRingBuffer(double max_duration = 60.0);
 
-    void push(const BufferedFrame& frame);
+    void push(BufferedFrame&& frame);
     const BufferedFrame* find_nearest(double target_time) const;
     std::vector<const BufferedFrame*> find_window(double center, double half_width) const;
     // Returns the first frame with sim_time strictly greater than after_time, or nullptr.

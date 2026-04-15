@@ -122,65 +122,65 @@ function NumericInput({
 
   return (
     <>
-    <div
-      data-slot="numeric-input"
-      className={cn(
-        'group/numeric-input relative flex items-center',
-        'rounded-[var(--radius-md)] border',
-        ...variantStyles[variant],
-        error && 'border-[var(--danger)]',
-        error && variant === 'inline' && 'bg-[var(--danger-soft)]',
-        isFlashing && 'animate-value-flash',
-        disabled && 'pointer-events-none opacity-50',
-        className,
-      )}
-      style={accentColor ? { borderLeftWidth: '2px', borderLeftColor: accentColor } : undefined}
-    >
-      <input
-        ref={inputRef}
-        id={id}
-        type="text"
-        inputMode="decimal"
-        value={isEditing ? editValue : value.toFixed(precision)}
-        onChange={(e) => setEditValue(e.target.value)}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
-        disabled={disabled}
-        className="h-full w-full min-w-0 cursor-ew-resize bg-transparent ps-1 pe-0.5 text-right font-[family-name:var(--font-mono)] text-[11px] tabular-nums text-[var(--text-primary)] outline-none"
-      />
-      {unit && (
-        <span className="shrink-0 pr-1 text-[10px] text-[var(--text-tertiary)]">{unit}</span>
-      )}
-      {/* Stepper arrows — visible on hover */}
-      <div className="absolute right-0 top-0 flex h-full flex-col opacity-0 group-hover/numeric-input:opacity-100">
-        <button
-          type="button"
-          tabIndex={-1}
-          className="flex h-1/2 w-2.5 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
-          onMouseDown={(e) => {
-            e.preventDefault();
-            increment(1);
-          }}
-        >
-          <ChevronUp className="size-2.5" />
-        </button>
-        <button
-          type="button"
-          tabIndex={-1}
-          className="flex h-1/2 w-2.5 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
-          onMouseDown={(e) => {
-            e.preventDefault();
-            increment(-1);
-          }}
-        >
-          <ChevronDown className="size-2.5" />
-        </button>
+      <div
+        data-slot="numeric-input"
+        className={cn(
+          'group/numeric-input relative flex items-center',
+          'rounded-[var(--radius-md)] border',
+          ...variantStyles[variant],
+          error && 'border-[var(--danger)]',
+          error && variant === 'inline' && 'bg-[var(--danger-soft)]',
+          isFlashing && 'animate-value-flash',
+          disabled && 'pointer-events-none opacity-50',
+          className,
+        )}
+        style={accentColor ? { borderLeftWidth: '2px', borderLeftColor: accentColor } : undefined}
+      >
+        <input
+          ref={inputRef}
+          id={id}
+          type="text"
+          inputMode="decimal"
+          value={isEditing ? editValue : value.toFixed(precision)}
+          onChange={(e) => setEditValue(e.target.value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          disabled={disabled}
+          className="h-full w-full min-w-0 cursor-ew-resize bg-transparent ps-1 pe-0.5 text-right font-[family-name:var(--font-mono)] text-[11px] tabular-nums text-[var(--text-primary)] outline-none"
+        />
+        {unit && (
+          <span className="shrink-0 pr-1 text-[10px] text-[var(--text-tertiary)]">{unit}</span>
+        )}
+        {/* Stepper arrows — visible on hover */}
+        <div className="absolute right-0 top-0 flex h-full flex-col opacity-0 group-hover/numeric-input:opacity-100">
+          <button
+            type="button"
+            tabIndex={-1}
+            className="flex h-1/2 w-2.5 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              increment(1);
+            }}
+          >
+            <ChevronUp className="size-2.5" />
+          </button>
+          <button
+            type="button"
+            tabIndex={-1}
+            className="flex h-1/2 w-2.5 items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              increment(-1);
+            }}
+          >
+            <ChevronDown className="size-2.5" />
+          </button>
+        </div>
       </div>
-    </div>
-    {error && variant === 'field' && (
-      <span className="mt-0.5 text-[length:var(--text-3xs)] text-[var(--danger)]">{error}</span>
-    )}
+      {error && variant === 'field' && (
+        <span className="mt-0.5 text-[length:var(--text-3xs)] text-[var(--danger)]">{error}</span>
+      )}
     </>
   );
 }

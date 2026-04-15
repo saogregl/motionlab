@@ -1,8 +1,8 @@
-import { cn, CollapsibleSection } from '@motionlab/ui';
+import { CollapsibleSection, cn } from '@motionlab/ui';
 import { ChevronDown, Clock, Folder, FolderOpen, Trash2 } from 'lucide-react';
 import type { RecentProject } from '../../types/motionlab.js';
-import { MechanismThumbnail } from './MechanismThumbnail.js';
 import { formatRelativeTime, truncatePath } from '../../utils/format.js';
+import { MechanismThumbnail } from './MechanismThumbnail.js';
 
 interface HomeProjectGridProps {
   projects: RecentProject[];
@@ -10,7 +10,11 @@ interface HomeProjectGridProps {
   onRemoveProject: (filePath: string) => void;
 }
 
-export function HomeProjectGrid({ projects, onOpenProject, onRemoveProject }: HomeProjectGridProps) {
+export function HomeProjectGrid({
+  projects,
+  onOpenProject,
+  onRemoveProject,
+}: HomeProjectGridProps) {
   if (projects.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -120,9 +124,7 @@ export function HomeProjectGrid({ projects, onOpenProject, onRemoveProject }: Ho
               </span>
             </div>
             <div className="flex items-center border-e border-border-default ps-4 pe-4 py-2.5">
-              <span className="text-[length:var(--text-xs)] text-text-primary">
-                You
-              </span>
+              <span className="text-[length:var(--text-xs)] text-text-primary">You</span>
             </div>
             <div className="flex items-center ps-4 pe-4 py-2.5 min-w-0">
               <span className="truncate text-[length:var(--text-xs)] text-text-tertiary">

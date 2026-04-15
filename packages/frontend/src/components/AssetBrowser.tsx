@@ -2,7 +2,11 @@ import { Button, Input } from '@motionlab/ui';
 import { Box, Circle, Cylinder, Package, Plus, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
-import { getSceneGraph, sendCreatePrimitiveBody, sendPlaceAssetInScene } from '../engine/connection.js';
+import {
+  getSceneGraph,
+  sendCreatePrimitiveBody,
+  sendPlaceAssetInScene,
+} from '../engine/connection.js';
 import type { AssetEntry } from '../stores/asset-library.js';
 import { useAssetLibraryStore } from '../stores/asset-library.js';
 
@@ -21,7 +25,12 @@ interface PrimitiveDef {
 
 const PRIMITIVES: PrimitiveDef[] = [
   { label: 'Box', shape: 'box', icon: Box, params: { box: { width: 1, height: 1, depth: 1 } } },
-  { label: 'Cylinder', shape: 'cylinder', icon: Cylinder, params: { cylinder: { radius: 0.5, height: 1 } } },
+  {
+    label: 'Cylinder',
+    shape: 'cylinder',
+    icon: Cylinder,
+    params: { cylinder: { radius: 0.5, height: 1 } },
+  },
   { label: 'Sphere', shape: 'sphere', icon: Circle, params: { sphere: { radius: 0.5 } } },
 ];
 
@@ -71,13 +80,7 @@ function AssetCard({
   );
 }
 
-function PrimitiveCard({
-  primitive,
-  onCreate,
-}: {
-  primitive: PrimitiveDef;
-  onCreate: () => void;
-}) {
+function PrimitiveCard({ primitive, onCreate }: { primitive: PrimitiveDef; onCreate: () => void }) {
   const { label, icon: Icon } = primitive;
   return (
     <button

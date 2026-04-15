@@ -62,9 +62,13 @@ export class EngineSupervisor {
           if (stat.isFile() && stat.mtimeMs < cutoff) {
             fs.unlinkSync(filePath);
           }
-        } catch { /* ignore individual file errors */ }
+        } catch {
+          /* ignore individual file errors */
+        }
       }
-    } catch { /* ignore rotation errors */ }
+    } catch {
+      /* ignore rotation errors */
+    }
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     this.logPath = path.join(this.logDir, `motionlab-${timestamp}.log`);

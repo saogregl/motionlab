@@ -1,4 +1,4 @@
-export type { CommandCategory, CommandDef, CommandGroup } from './types.js';
+export { initCommands } from './init.js';
 export {
   clearRegistry,
   executeCommand,
@@ -8,6 +8,6 @@ export {
   registerCommand,
   registerCommands,
 } from './registry.js';
-export { useCommand, useCommandGroups, useCommandsByCategory } from './use-commands.js';
-export { initCommands } from './init.js';
 export { initShortcutManager } from './shortcut-manager.js';
+export type { CommandCategory, CommandDef, CommandGroup } from './types.js';
+export { useCommand, useCommandGroups, useCommandsByCategory } from './use-commands.js';

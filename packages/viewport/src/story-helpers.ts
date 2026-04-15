@@ -30,17 +30,83 @@ export function createBoxMeshData(sx = 1, sy = 1, sz = 1) {
   // prettier-ignore
   const positions = [
     // Front face
-    -hx, -hy, hz, hx, -hy, hz, hx, hy, hz, -hx, hy, hz,
+    -hx,
+    -hy,
+    hz,
+    hx,
+    -hy,
+    hz,
+    hx,
+    hy,
+    hz,
+    -hx,
+    hy,
+    hz,
     // Back face
-    -hx, -hy, -hz, -hx, hy, -hz, hx, hy, -hz, hx, -hy, -hz,
+    -hx,
+    -hy,
+    -hz,
+    -hx,
+    hy,
+    -hz,
+    hx,
+    hy,
+    -hz,
+    hx,
+    -hy,
+    -hz,
     // Top face
-    -hx, hy, -hz, -hx, hy, hz, hx, hy, hz, hx, hy, -hz,
+    -hx,
+    hy,
+    -hz,
+    -hx,
+    hy,
+    hz,
+    hx,
+    hy,
+    hz,
+    hx,
+    hy,
+    -hz,
     // Bottom face
-    -hx, -hy, -hz, hx, -hy, -hz, hx, -hy, hz, -hx, -hy, hz,
+    -hx,
+    -hy,
+    -hz,
+    hx,
+    -hy,
+    -hz,
+    hx,
+    -hy,
+    hz,
+    -hx,
+    -hy,
+    hz,
     // Right face
-    hx, -hy, -hz, hx, hy, -hz, hx, hy, hz, hx, -hy, hz,
+    hx,
+    -hy,
+    -hz,
+    hx,
+    hy,
+    -hz,
+    hx,
+    hy,
+    hz,
+    hx,
+    -hy,
+    hz,
     // Left face
-    -hx, -hy, -hz, -hx, -hy, hz, -hx, hy, hz, -hx, hy, -hz,
+    -hx,
+    -hy,
+    -hz,
+    -hx,
+    -hy,
+    hz,
+    -hx,
+    hy,
+    hz,
+    -hx,
+    hy,
+    -hz,
   ];
 
   // prettier-ignore
@@ -129,7 +195,12 @@ export function createSphereMeshDataWithTopology(
 /**
  * Generate a cylinder mesh.
  */
-export function createCylinderMeshData(radiusTop = 0.5, radiusBottom = 0.5, height = 2, segments = 48) {
+export function createCylinderMeshData(
+  radiusTop = 0.5,
+  radiusBottom = 0.5,
+  height = 2,
+  segments = 48,
+) {
   const positions: number[] = [];
   const normals: number[] = [];
   const indices: number[] = [];

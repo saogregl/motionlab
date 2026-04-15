@@ -22,7 +22,11 @@ const STATUS_BG: Record<BannerStatus, string> = {
   error: 'bg-[var(--danger-soft)]',
 };
 
-function getMessage(status: BannerStatus, reconnectAttempt?: number, errorMessage?: string): string {
+function getMessage(
+  status: BannerStatus,
+  reconnectAttempt?: number,
+  errorMessage?: string,
+): string {
   if (status === 'error' && errorMessage) {
     return `Engine error: ${errorMessage}`;
   }

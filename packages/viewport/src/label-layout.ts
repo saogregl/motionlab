@@ -45,14 +45,14 @@ const RADIUS_PAD = 16;
 
 /** 8 compass directions as unit vectors [dx, dy]. Y points downward in screen space. */
 const COMPASS: ReadonlyArray<[number, number]> = [
-  [0, -1],    // N  (above — preferred)
-  [0.707, -0.707],  // NE
+  [0, -1], // N  (above — preferred)
+  [0.707, -0.707], // NE
   [-0.707, -0.707], // NW
-  [1, 0],     // E
-  [-1, 0],    // W
-  [0.707, 0.707],   // SE
-  [-0.707, 0.707],  // SW
-  [0, 1],     // S  (below — least preferred)
+  [1, 0], // E
+  [-1, 0], // W
+  [0.707, 0.707], // SE
+  [-0.707, 0.707], // SW
+  [0, 1], // S  (below — least preferred)
 ];
 
 /** Preference bonus for "above" directions (N, NE, NW). */
@@ -140,7 +140,12 @@ export function computeLabelLayout(
       if (i <= 2) score += ABOVE_BONUS;
 
       // Viewport edge clipping
-      if (rect.left < 0 || rect.top < 0 || rect.right > viewportWidth || rect.bottom > viewportHeight) {
+      if (
+        rect.left < 0 ||
+        rect.top < 0 ||
+        rect.right > viewportWidth ||
+        rect.bottom > viewportHeight
+      ) {
         score += EDGE_CLIP_PENALTY;
       }
 

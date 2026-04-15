@@ -1,11 +1,16 @@
 import { create } from 'zustand';
-
-import type { JointTypeId } from './mechanism.js';
 import type { AlignmentKind, DatumAlignment } from '../utils/datum-alignment.js';
+import type { JointTypeId } from './mechanism.js';
 
 export type JointCreationStep = 'idle' | 'pick-parent' | 'pick-child' | 'select-type' | 'configure';
 
-export type SurfaceClassId = 'planar' | 'cylindrical' | 'conical' | 'spherical' | 'toroidal' | 'other';
+export type SurfaceClassId =
+  | 'planar'
+  | 'cylindrical'
+  | 'conical'
+  | 'spherical'
+  | 'toroidal'
+  | 'other';
 
 export interface JointCreationState {
   step: JointCreationStep;
@@ -37,8 +42,17 @@ export interface JointCreationState {
   editingJointId: string | null;
 
   startCreation: () => void;
-  setParentDatum: (id: string, surfaceClass?: SurfaceClassId | null, geometryId?: string | null, faceIndex?: number | null) => void;
-  setChildDatum: (id: string, alignment?: DatumAlignment, surfaceClass?: SurfaceClassId | null) => void;
+  setParentDatum: (
+    id: string,
+    surfaceClass?: SurfaceClassId | null,
+    geometryId?: string | null,
+    faceIndex?: number | null,
+  ) => void;
+  setChildDatum: (
+    id: string,
+    alignment?: DatumAlignment,
+    surfaceClass?: SurfaceClassId | null,
+  ) => void;
   setPreselectedJointType: (type: string | null) => void;
   setPreviewJointType: (type: JointTypeId | null) => void;
   selectJointType: (type: JointTypeId) => void;
@@ -50,7 +64,12 @@ export interface JointCreationState {
   /** Full exit: reset everything to idle. */
   exitMode: () => void;
   /** Enter edit mode for an existing joint — skips to select-type with pre-populated data. */
-  editExisting: (jointId: string, parentDatumId: string, childDatumId: string, currentType: JointTypeId) => void;
+  editExisting: (
+    jointId: string,
+    parentDatumId: string,
+    childDatumId: string,
+    currentType: JointTypeId,
+  ) => void;
 }
 
 const initialState = {
@@ -92,13 +111,14 @@ export const useJointCreationStore = create<JointCreationState>()((set, get) => 
       editingJointId: null,
     }),
 
-  setParentDatum: (id, surfaceClass?, geometryId?, faceIndex?) => set({
-    step: 'pick-child',
-    parentDatumId: id,
-    parentSurfaceClass: surfaceClass ?? null,
-    parentGeometryId: geometryId ?? null,
-    parentFaceIndex: faceIndex ?? null,
-  }),
+  setParentDatum: (id, surfaceClass?, geometryId?, faceIndex?) =>
+    set({
+      step: 'pick-child',
+      parentDatumId: id,
+      parentSurfaceClass: surfaceClass ?? null,
+      parentGeometryId: geometryId ?? null,
+      parentFaceIndex: faceIndex ?? null,
+    }),
 
   setChildDatum: (id, alignment?, surfaceClass?) => {
     const { preselectedJointType } = get();
@@ -145,7 +165,13 @@ export const useJointCreationStore = create<JointCreationState>()((set, get) => 
         break;
       case 'pick-child':
         // Back to pick-parent: clear parent
-        set({ step: 'pick-parent', parentDatumId: null, parentSurfaceClass: null, parentGeometryId: null, parentFaceIndex: null });
+        set({
+          step: 'pick-parent',
+          parentDatumId: null,
+          parentSurfaceClass: null,
+          parentGeometryId: null,
+          parentFaceIndex: null,
+        });
         break;
       default:
         // pick-parent or idle: no-op (edit.cancel handles exiting mode)

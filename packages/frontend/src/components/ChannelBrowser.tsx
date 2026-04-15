@@ -1,6 +1,7 @@
 import { Input, ScrollArea } from '@motionlab/ui';
 import { ChevronDown, ChevronRight, Search } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
+import { useChartThemeKey } from '../hooks/useChartTheme.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSimulationStore } from '../stores/simulation.js';
 import { useTraceStore } from '../stores/traces.js';
@@ -9,7 +10,6 @@ import {
   buildChannelGroups,
   collectEntityNames,
 } from '../utils/channel-grouping.js';
-import { useChartThemeKey } from '../hooks/useChartTheme.js';
 import { readChartColors } from './ChartPanel.js';
 
 interface ChannelBrowserProps {

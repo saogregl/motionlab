@@ -3,10 +3,10 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import {
+  type DebugBundleRequest,
   DebugSession,
   isDebugModeEnabled,
   resolveDebugCdpPort,
-  type DebugBundleRequest,
 } from './debug-session';
 import { type EngineEndpoint, EngineSupervisor } from './engine-supervisor';
 
@@ -377,7 +377,10 @@ app.whenReady().then(async () => {
     if (!debugSession) {
       throw new Error('Debug session is not enabled');
     }
-    const result = await debugSession.exportBundle(request, BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0] ?? null);
+    const result = await debugSession.exportBundle(
+      request,
+      BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0] ?? null,
+    );
     broadcastDebugEvent({
       type: 'bundle-exported',
       bundlePath: result.bundlePath,
@@ -485,21 +488,27 @@ app.whenReady().then(async () => {
 
   // Recent projects (Epic 20.1)
   ipcMain.handle('get-recent-projects', () => readRecentProjects());
-  ipcMain.handle('add-recent-project', async (_event, project: { name: string; filePath: string }) => {
-    await addRecentProject(project);
-  });
+  ipcMain.handle(
+    'add-recent-project',
+    async (_event, project: { name: string; filePath: string }) => {
+      await addRecentProject(project);
+    },
+  );
   ipcMain.handle('remove-recent-project', async (_event, filePath: string) => {
     const list = await readRecentProjects();
     await writeRecentProjects(list.filter((p) => p.filePath !== filePath));
   });
 
   // Auto-save IPC (Epic 20.2)
-  ipcMain.handle('auto-save-write', async (_event, data: Uint8Array, projectPath: string | null) => {
-    const savePath = getAutoSavePath(projectPath);
-    await fs.mkdir(path.dirname(savePath), { recursive: true });
-    await fs.writeFile(savePath, Buffer.from(data));
-    return { saved: true, path: savePath };
-  });
+  ipcMain.handle(
+    'auto-save-write',
+    async (_event, data: Uint8Array, projectPath: string | null) => {
+      const savePath = getAutoSavePath(projectPath);
+      await fs.mkdir(path.dirname(savePath), { recursive: true });
+      await fs.writeFile(savePath, Buffer.from(data));
+      return { saved: true, path: savePath };
+    },
+  );
 
   ipcMain.handle('auto-save-cleanup', async (_event, projectPath: string | null) => {
     await deleteAutoSaveFile(projectPath);
@@ -585,23 +594,26 @@ app.whenReady().then(async () => {
       const win = BrowserWindow.getAllWindows()[0] ?? null;
       const session = debugSession;
       if (session) {
-        void collectRendererDebugSnapshot(win).then((snapshot) => {
-          if (!snapshot) return;
-          return session.exportBundle(
-            {
+        void collectRendererDebugSnapshot(win)
+          .then((snapshot) => {
+            if (!snapshot) return;
+            return session.exportBundle(
+              {
+                reason: 'engine-fatal',
+                snapshot,
+              },
+              win,
+            );
+          })
+          .then((result) => {
+            if (!result) return;
+            broadcastDebugEvent({
+              type: 'bundle-exported',
+              bundlePath: result.bundlePath,
               reason: 'engine-fatal',
-              snapshot,
-            },
-            win,
-          );
-        }).then((result) => {
-          if (!result) return;
-          broadcastDebugEvent({
-            type: 'bundle-exported',
-            bundlePath: result.bundlePath,
-            reason: 'engine-fatal',
-          });
-        }).catch(() => {});
+            });
+          })
+          .catch(() => {});
       }
       dialog
         .showMessageBox({

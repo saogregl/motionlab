@@ -1,7 +1,6 @@
-import { useEffect, useRef, useCallback } from 'react';
-
 import type { LabelEntry, SceneGraphManager, ScreenLabel } from '@motionlab/viewport';
 import { computeLabelLayout, DOF_TABLE } from '@motionlab/viewport';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { useSelectionStore } from '../stores/selection.js';
 import { useToolModeStore } from '../stores/tool-mode.js';
@@ -307,9 +306,7 @@ export function EntityLabelOverlay({ sceneGraph }: EntityLabelOverlayProps) {
           entry.pill.style.opacity = '1';
           // Show DOF info on joint hover (replaces JointHoverBadge)
           const dof = entry.jointType ? DOF_TABLE[entry.jointType] : undefined;
-          entry.pill.textContent = dof
-            ? `${entry.name} \u00b7 ${dof.label}`
-            : entry.name;
+          entry.pill.textContent = dof ? `${entry.name} \u00b7 ${dof.label}` : entry.name;
         } else {
           entry.pill.style.border = 'none';
           entry.pill.style.color = 'var(--muted-foreground, #a0a8b8)';
@@ -385,10 +382,7 @@ export function EntityLabelOverlay({ sceneGraph }: EntityLabelOverlayProps) {
       className="absolute inset-0 pointer-events-none overflow-hidden"
       style={{ zIndex: 15 }}
     >
-      <svg
-        ref={svgRef}
-        className="absolute inset-0 w-full h-full pointer-events-none"
-      />
+      <svg ref={svgRef} className="absolute inset-0 w-full h-full pointer-events-none" />
       <div ref={pillContainerRef} className="absolute inset-0 pointer-events-none" />
       <div
         ref={culledBadgeRef}

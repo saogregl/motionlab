@@ -1,3 +1,4 @@
+import type { MissingAssetInfo } from '@motionlab/protocol';
 import {
   Button,
   Dialog,
@@ -7,10 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@motionlab/ui';
-import type { MissingAssetInfo } from '@motionlab/protocol';
 import { useCallback, useEffect, useState } from 'react';
-import { sendRelocateAsset } from '../engine/connection.js';
-import { onRelocateAssetResult } from '../engine/connection.js';
+import { onRelocateAssetResult, sendRelocateAsset } from '../engine/connection.js';
 
 interface MissingAssetsDialogProps {
   open: boolean;
@@ -81,13 +80,18 @@ export function MissingAssetsDialog({ open, onClose, missingAssets }: MissingAss
   };
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) onClose();
+      }}
+    >
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
           <DialogTitle>Missing Assets</DialogTitle>
           <DialogDescription>
-            {remaining.length} asset{remaining.length !== 1 ? 's' : ''} could not be found.
-            Locate the files to restore geometry, or continue without them.
+            {remaining.length} asset{remaining.length !== 1 ? 's' : ''} could not be found. Locate
+            the files to restore geometry, or continue without them.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2 py-2 max-h-[300px] overflow-y-auto">
@@ -103,9 +107,7 @@ export function MissingAssetsDialog({ open, onClose, missingAssets }: MissingAss
                 <span className="text-xs text-muted-foreground truncate font-mono">
                   {asset.expectedAsset?.originalFilename ?? 'unknown'}
                 </span>
-                <span className="text-xs text-muted-foreground">
-                  {reasonLabel(asset.reason)}
-                </span>
+                <span className="text-xs text-muted-foreground">{reasonLabel(asset.reason)}</span>
               </div>
               <Button
                 variant="outline"

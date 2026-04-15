@@ -1,4 +1,5 @@
 import { create, fromBinary, toBinary, toJsonString } from '@bufbuild/protobuf';
+import type { Actuator, Joint, Load, Sensor } from './generated/mechanism/mechanism_pb.js';
 import {
   ActuatorSchema,
   BoxParamsSchema,
@@ -21,11 +22,14 @@ import {
   SphereParamsSchema,
   Vec3Schema,
 } from './generated/mechanism/mechanism_pb.js';
-import type { Actuator, Joint, Load, Sensor } from './generated/mechanism/mechanism_pb.js';
 import type { Command, Event, SimulationAction } from './generated/protocol/transport_pb.js';
 import {
+  AnalyzeFacePairCommandSchema,
+  AttachGeometryCommandSchema,
   CommandSchema,
+  CompilationDiagnosticSchema,
   CompileMechanismCommandSchema,
+  ContactSettingsSchema,
   CreateActuatorCommandSchema,
   CreateBodyCommandSchema,
   CreateDatumCommandSchema,
@@ -33,13 +37,16 @@ import {
   CreateJointCommandSchema,
   CreateLoadCommandSchema,
   CreatePrimitiveBodyCommandSchema,
-  DeleteDatumCommandSchema,
+  CreateSensorCommandSchema,
   DeleteActuatorCommandSchema,
   DeleteBodyCommandSchema,
+  DeleteDatumCommandSchema,
   DeleteGeometryCommandSchema,
   DeleteJointCommandSchema,
   DeleteLoadCommandSchema,
+  DeleteSensorCommandSchema,
   DetachGeometryCommandSchema,
+  DiagnosticSeverity,
   EngineStatus_State,
   EventSchema,
   FacePairAlignment,
@@ -47,42 +54,35 @@ import {
   ImportAssetCommandSchema,
   ImportMode,
   ImportOptionsSchema,
-  PlaceAssetInSceneCommandSchema,
+  IntegratorType,
   LoadProjectCommandSchema,
+  MakeCompoundBodyCommandSchema,
   NewProjectCommandSchema,
-  PrepareFacePickingCommandSchema,
   PingSchema,
-  RelocateAssetCommandSchema,
+  PlaceAssetInSceneCommandSchema,
+  PrepareFacePickingCommandSchema,
   ProtocolVersionSchema,
+  RelocateAssetCommandSchema,
   RenameDatumCommandSchema,
   RenameGeometryCommandSchema,
+  ReparentGeometryCommandSchema,
   SaveProjectCommandSchema,
   ScrubCommandSchema,
   SimulationControlCommandSchema,
   SimulationSettingsSchema,
   SolverSettingsSchema,
   SolverType,
-  ContactSettingsSchema,
-  IntegratorType,
-  CompilationDiagnosticSchema,
-  DiagnosticSeverity,
-  AnalyzeFacePairCommandSchema,
-  AttachGeometryCommandSchema,
-  CreateSensorCommandSchema,
-  DeleteSensorCommandSchema,
+  SplitBodyCommandSchema,
   UpdateActuatorCommandSchema,
   UpdateBodyCommandSchema,
-  UpdateSensorCommandSchema,
+  UpdateCollisionConfigCommandSchema,
   UpdateDatumPoseCommandSchema,
+  UpdateGeometryPoseCommandSchema,
   UpdateJointCommandSchema,
   UpdateLoadCommandSchema,
-  MakeCompoundBodyCommandSchema,
-  SplitBodyCommandSchema,
-  ReparentGeometryCommandSchema,
-  UpdateCollisionConfigCommandSchema,
-  UpdateGeometryPoseCommandSchema,
   UpdateMassPropertiesCommandSchema,
   UpdatePrimitiveCommandSchema,
+  UpdateSensorCommandSchema,
 } from './generated/protocol/transport_pb.js';
 import { PROTOCOL_NAME, PROTOCOL_VERSION } from './version.js';
 
@@ -129,7 +129,12 @@ export type ImportModeType = 'auto-body' | 'visual-only';
 
 export function createImportAssetCommand(
   filePath: string,
-  options?: { densityOverride?: number; tessellationQuality?: number; unitSystem?: string; importMode?: ImportModeType },
+  options?: {
+    densityOverride?: number;
+    tessellationQuality?: number;
+    unitSystem?: string;
+    importMode?: ImportModeType;
+  },
   sequenceId?: bigint,
 ): Uint8Array {
   const cmd = create(CommandSchema, {
@@ -143,9 +148,10 @@ export function createImportAssetCommand(
               densityOverride: options.densityOverride ?? 0,
               tessellationQuality: options.tessellationQuality ?? 0,
               unitSystem: options.unitSystem ?? '',
-              importMode: options.importMode === 'visual-only'
-                ? ImportMode.VISUAL_ONLY
-                : ImportMode.AUTO_BODY,
+              importMode:
+                options.importMode === 'visual-only'
+                  ? ImportMode.VISUAL_ONLY
+                  : ImportMode.AUTO_BODY,
             })
           : undefined,
       }),
@@ -186,10 +192,7 @@ export function parseEvent(data: ArrayBuffer): Event {
  * Parses a binary Command envelope from an ArrayBuffer or Uint8Array.
  */
 export function parseCommand(data: ArrayBuffer | Uint8Array): Command {
-  return fromBinary(
-    CommandSchema,
-    data instanceof Uint8Array ? data : new Uint8Array(data),
-  );
+  return fromBinary(CommandSchema, data instanceof Uint8Array ? data : new Uint8Array(data));
 }
 
 /**
@@ -415,10 +418,7 @@ export function createUpdateGeometryPoseCommand(
 /**
  * Creates a binary-encoded Command envelope containing a CreateJoint payload.
  */
-export function createCreateJointCommand(
-  draft: Joint,
-  sequenceId?: bigint,
-): Uint8Array {
+export function createCreateJointCommand(draft: Joint, sequenceId?: bigint): Uint8Array {
   const cmd = create(CommandSchema, {
     sequenceId: sequenceId ?? 0n,
     payload: {
@@ -434,10 +434,7 @@ export function createCreateJointCommand(
 /**
  * Creates a binary-encoded Command envelope containing an UpdateJoint payload.
  */
-export function createUpdateJointCommand(
-  joint: Joint,
-  sequenceId?: bigint,
-): Uint8Array {
+export function createUpdateJointCommand(joint: Joint, sequenceId?: bigint): Uint8Array {
   const cmd = create(CommandSchema, {
     sequenceId: sequenceId ?? 0n,
     payload: {
@@ -533,10 +530,7 @@ export function createCreateActuatorCommand(draft: Actuator, sequenceId?: bigint
 /**
  * Creates a binary-encoded Command envelope containing an UpdateActuator payload.
  */
-export function createUpdateActuatorCommand(
-  actuator: Actuator,
-  sequenceId?: bigint,
-): Uint8Array {
+export function createUpdateActuatorCommand(actuator: Actuator, sequenceId?: bigint): Uint8Array {
   const cmd = create(CommandSchema, {
     sequenceId: sequenceId ?? 0n,
     payload: {
@@ -552,10 +546,7 @@ export function createUpdateActuatorCommand(
 /**
  * Creates a binary-encoded Command envelope containing a DeleteActuator payload.
  */
-export function createDeleteActuatorCommand(
-  actuatorId: string,
-  sequenceId?: bigint,
-): Uint8Array {
+export function createDeleteActuatorCommand(actuatorId: string, sequenceId?: bigint): Uint8Array {
   const cmd = create(CommandSchema, {
     sequenceId: sequenceId ?? 0n,
     payload: {
@@ -585,10 +576,7 @@ export function createCreateSensorCommand(draft: Sensor, sequenceId?: bigint): U
   return toBinary(CommandSchema, cmd);
 }
 
-export function createUpdateSensorCommand(
-  sensor: Sensor,
-  sequenceId?: bigint,
-): Uint8Array {
+export function createUpdateSensorCommand(sensor: Sensor, sequenceId?: bigint): Uint8Array {
   const cmd = create(CommandSchema, {
     sequenceId: sequenceId ?? 0n,
     payload: {
@@ -601,10 +589,7 @@ export function createUpdateSensorCommand(
   return toBinary(CommandSchema, cmd);
 }
 
-export function createDeleteSensorCommand(
-  sensorId: string,
-  sequenceId?: bigint,
-): Uint8Array {
+export function createDeleteSensorCommand(sensorId: string, sequenceId?: bigint): Uint8Array {
   const cmd = create(CommandSchema, {
     sequenceId: sequenceId ?? 0n,
     payload: {
@@ -746,7 +731,12 @@ export function toProtoJointType(type: string): JointType {
 /**
  * Maps a proto FacePairAlignment enum to a store-friendly string.
  */
-export type FacePairAlignmentId = 'coaxial' | 'coplanar' | 'coincident' | 'perpendicular' | 'general';
+export type FacePairAlignmentId =
+  | 'coaxial'
+  | 'coplanar'
+  | 'coincident'
+  | 'perpendicular'
+  | 'general';
 
 export function mapFacePairAlignment(alignment: FacePairAlignment): FacePairAlignmentId {
   switch (alignment) {
@@ -788,8 +778,10 @@ export function mapMotionType(proto: number): MotionTypeId {
  */
 export function toProtoMotionType(id: MotionTypeId): MotionType {
   switch (id) {
-    case 'fixed': return MotionType.FIXED;
-    case 'dynamic': return MotionType.DYNAMIC;
+    case 'fixed':
+      return MotionType.FIXED;
+    case 'dynamic':
+      return MotionType.DYNAMIC;
   }
 }
 
@@ -838,18 +830,27 @@ export interface SimulationSettingsInput {
 
 function mapSolverType(type: SolverSettingsInput['type']): SolverType {
   switch (type) {
-    case 'barzilai-borwein': return SolverType.SOLVER_BARZILAI_BORWEIN;
-    case 'apgd': return SolverType.SOLVER_APGD;
-    case 'minres': return SolverType.SOLVER_MINRES;
-    case 'psor': default: return SolverType.SOLVER_PSOR;
+    case 'barzilai-borwein':
+      return SolverType.SOLVER_BARZILAI_BORWEIN;
+    case 'apgd':
+      return SolverType.SOLVER_APGD;
+    case 'minres':
+      return SolverType.SOLVER_MINRES;
+    case 'psor':
+    default:
+      return SolverType.SOLVER_PSOR;
   }
 }
 
 function mapIntegratorType(type: SolverSettingsInput['integrator']): IntegratorType {
   switch (type) {
-    case 'hht': return IntegratorType.INTEGRATOR_HHT;
-    case 'newmark': return IntegratorType.INTEGRATOR_NEWMARK;
-    case 'euler-implicit-linearized': default: return IntegratorType.INTEGRATOR_EULER_IMPLICIT_LINEARIZED;
+    case 'hht':
+      return IntegratorType.INTEGRATOR_HHT;
+    case 'newmark':
+      return IntegratorType.INTEGRATOR_NEWMARK;
+    case 'euler-implicit-linearized':
+    default:
+      return IntegratorType.INTEGRATOR_EULER_IMPLICIT_LINEARIZED;
   }
 }
 
@@ -986,9 +987,8 @@ export function createUpdateBodyCommand(
   sequenceId?: bigint,
 ): Uint8Array {
   // Dual-write: set isFixed from motionType for backward compat with C++ engine
-  const isFixed = updates.motionType !== undefined
-    ? updates.motionType === 'fixed'
-    : updates.isFixed;
+  const isFixed =
+    updates.motionType !== undefined ? updates.motionType === 'fixed' : updates.isFixed;
 
   const cmd = create(CommandSchema, {
     sequenceId: sequenceId ?? 0n,
@@ -1009,9 +1009,8 @@ export function createUpdateBodyCommand(
               }),
             })
           : undefined,
-        motionType: updates.motionType !== undefined
-          ? toProtoMotionType(updates.motionType)
-          : undefined,
+        motionType:
+          updates.motionType !== undefined ? toProtoMotionType(updates.motionType) : undefined,
         pinDatumsInWorld: updates.pinDatumsInWorld ?? false,
       }),
     },
@@ -1054,17 +1053,30 @@ export function createRelocateAssetCommand(
 export function createCreateBodyCommand(
   name: string,
   options?: {
-    massProperties?: { mass: number; centerOfMass: { x: number; y: number; z: number }; ixx: number; iyy: number; izz: number; ixy: number; ixz: number; iyz: number };
-    pose?: { position: { x: number; y: number; z: number }; orientation: { x: number; y: number; z: number; w: number } };
+    massProperties?: {
+      mass: number;
+      centerOfMass: { x: number; y: number; z: number };
+      ixx: number;
+      iyy: number;
+      izz: number;
+      ixy: number;
+      ixz: number;
+      iyz: number;
+    };
+    pose?: {
+      position: { x: number; y: number; z: number };
+      orientation: { x: number; y: number; z: number; w: number };
+    };
     isFixed?: boolean;
     motionType?: MotionTypeId;
   },
   sequenceId?: bigint,
 ): Uint8Array {
   // Dual-write: set isFixed from motionType for backward compat with C++ engine
-  const isFixed = options?.motionType !== undefined
-    ? options.motionType === 'fixed'
-    : (options?.isFixed ?? false);
+  const isFixed =
+    options?.motionType !== undefined
+      ? options.motionType === 'fixed'
+      : (options?.isFixed ?? false);
 
   const cmd = create(CommandSchema, {
     sequenceId: sequenceId ?? 0n,
@@ -1091,9 +1103,10 @@ export function createCreateBodyCommand(
             })
           : undefined,
         isFixed,
-        motionType: options?.motionType !== undefined
-          ? toProtoMotionType(options.motionType)
-          : MotionType.DYNAMIC,
+        motionType:
+          options?.motionType !== undefined
+            ? toProtoMotionType(options.motionType)
+            : MotionType.DYNAMIC,
       }),
     },
   });
@@ -1103,10 +1116,7 @@ export function createCreateBodyCommand(
 /**
  * Creates a binary-encoded Command envelope containing a DeleteBody payload.
  */
-export function createDeleteBodyCommand(
-  bodyId: string,
-  sequenceId?: bigint,
-): Uint8Array {
+export function createDeleteBodyCommand(bodyId: string, sequenceId?: bigint): Uint8Array {
   const cmd = create(CommandSchema, {
     sequenceId: sequenceId ?? 0n,
     payload: {
@@ -1125,7 +1135,10 @@ export function createDeleteBodyCommand(
 export function createAttachGeometryCommand(
   geometryId: string,
   targetBodyId: string,
-  localPose?: { position: { x: number; y: number; z: number }; orientation: { x: number; y: number; z: number; w: number } },
+  localPose?: {
+    position: { x: number; y: number; z: number };
+    orientation: { x: number; y: number; z: number; w: number };
+  },
   sequenceId?: bigint,
 ): Uint8Array {
   const cmd = create(CommandSchema, {
@@ -1150,10 +1163,7 @@ export function createAttachGeometryCommand(
 /**
  * Creates a binary-encoded Command envelope containing a DetachGeometry payload.
  */
-export function createDetachGeometryCommand(
-  geometryId: string,
-  sequenceId?: bigint,
-): Uint8Array {
+export function createDetachGeometryCommand(geometryId: string, sequenceId?: bigint): Uint8Array {
   const cmd = create(CommandSchema, {
     sequenceId: sequenceId ?? 0n,
     payload: {
@@ -1209,7 +1219,16 @@ export function createRenameGeometryCommand(
 export function createUpdateMassPropertiesCommand(
   bodyId: string,
   massOverride: boolean,
-  massProperties?: { mass: number; centerOfMass: { x: number; y: number; z: number }; ixx: number; iyy: number; izz: number; ixy: number; ixz: number; iyz: number },
+  massProperties?: {
+    mass: number;
+    centerOfMass: { x: number; y: number; z: number };
+    ixx: number;
+    iyy: number;
+    izz: number;
+    ixy: number;
+    ixz: number;
+    iyz: number;
+  },
   sequenceId?: bigint,
 ): Uint8Array {
   const cmd = create(CommandSchema, {
@@ -1247,9 +1266,12 @@ export interface PrimitiveParamsInput {
 
 function mapPrimitiveShape(shape: PrimitiveShapeType): PrimitiveShape {
   switch (shape) {
-    case 'box': return PrimitiveShape.BOX;
-    case 'cylinder': return PrimitiveShape.CYLINDER;
-    case 'sphere': return PrimitiveShape.SPHERE;
+    case 'box':
+      return PrimitiveShape.BOX;
+    case 'cylinder':
+      return PrimitiveShape.CYLINDER;
+    case 'sphere':
+      return PrimitiveShape.SPHERE;
   }
 }
 
@@ -1337,11 +1359,16 @@ export interface CollisionConfigInput {
 
 function mapCollisionShapeType(type: CollisionShapeTypeId): CollisionShapeType {
   switch (type) {
-    case 'none': return CollisionShapeType.NONE;
-    case 'box': return CollisionShapeType.BOX;
-    case 'sphere': return CollisionShapeType.SPHERE;
-    case 'cylinder': return CollisionShapeType.CYLINDER;
-    case 'convex-hull': return CollisionShapeType.CONVEX_HULL;
+    case 'none':
+      return CollisionShapeType.NONE;
+    case 'box':
+      return CollisionShapeType.BOX;
+    case 'sphere':
+      return CollisionShapeType.SPHERE;
+    case 'cylinder':
+      return CollisionShapeType.CYLINDER;
+    case 'convex-hull':
+      return CollisionShapeType.CONVEX_HULL;
   }
 }
 
@@ -1392,9 +1419,10 @@ export function createMakeCompoundBodyCommand(
       value: create(MakeCompoundBodyCommandSchema, {
         geometryIds: geometryIds.map((id) => create(ElementIdSchema, { id })),
         name,
-        motionType: options?.motionType !== undefined
-          ? toProtoMotionType(options.motionType)
-          : MotionType.DYNAMIC,
+        motionType:
+          options?.motionType !== undefined
+            ? toProtoMotionType(options.motionType)
+            : MotionType.DYNAMIC,
         dissolveEmptyBodies: options?.dissolveEmptyBodies ?? false,
         referenceBodyId: options?.referenceBodyId
           ? create(ElementIdSchema, { id: options.referenceBodyId })
@@ -1425,9 +1453,10 @@ export function createSplitBodyCommand(
         sourceBodyId: create(ElementIdSchema, { id: sourceBodyId }),
         geometryIds: geometryIds.map((id) => create(ElementIdSchema, { id })),
         name,
-        motionType: options?.motionType !== undefined
-          ? toProtoMotionType(options.motionType)
-          : MotionType.DYNAMIC,
+        motionType:
+          options?.motionType !== undefined
+            ? toProtoMotionType(options.motionType)
+            : MotionType.DYNAMIC,
       }),
     },
   });

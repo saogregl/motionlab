@@ -1,9 +1,7 @@
 import { PropertyRow } from '@motionlab/ui';
 import { useCallback } from 'react';
-
-import { useSelectionStore } from '../stores/selection.js';
-
 import type { JointTypeId } from '../stores/mechanism.js';
+import { useSelectionStore } from '../stores/selection.js';
 
 const JOINT_TYPE_LABELS: Record<JointTypeId, string> = {
   revolute: 'Rev',
@@ -44,17 +42,12 @@ export function JointConnectionDiagram({
   const select = useSelectionStore((s) => s.select);
   const setHovered = useSelectionStore((s) => s.setHovered);
 
-  const handleHover = useCallback(
-    (id: string | null) => setHovered(id),
-    [setHovered],
-  );
+  const handleHover = useCallback((id: string | null) => setHovered(id), [setHovered]);
 
   return (
     <>
       <PropertyRow label="Type">
-        <span className="text-2xs font-medium">
-          {JOINT_TYPE_LABELS[jointType] ?? jointType}
-        </span>
+        <span className="text-2xs font-medium">{JOINT_TYPE_LABELS[jointType] ?? jointType}</span>
       </PropertyRow>
 
       <div className="px-1.5 pt-1.5">

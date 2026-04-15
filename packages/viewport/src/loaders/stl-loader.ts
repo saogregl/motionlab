@@ -25,9 +25,7 @@ export async function loadSTL(url: string): Promise<MeshDataInput> {
   const normals = geometry.getAttribute('normal');
 
   const vertices = new Float32Array(positions.array);
-  const normalData = normals
-    ? new Float32Array(normals.array)
-    : new Float32Array(vertices.length);
+  const normalData = normals ? new Float32Array(normals.array) : new Float32Array(vertices.length);
 
   // STL has no index buffer — generate sequential indices
   const vertexCount = vertices.length / 3;

@@ -115,10 +115,7 @@ function createPrismaticMotorVisual(): MotorVisualResult {
 
   // Shaft line along Y
   const shaftMat = makeMotorMat(ARROW_LINE_WIDTH);
-  const shaftLine = makeLine(
-    [new Vector3(0, -halfLen, 0), new Vector3(0, halfLen, 0)],
-    shaftMat,
-  );
+  const shaftLine = makeLine([new Vector3(0, -halfLen, 0), new Vector3(0, halfLen, 0)], shaftMat);
   root.add(shaftLine);
 
   // Arrow chevrons at both ends

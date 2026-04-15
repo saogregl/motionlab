@@ -28,9 +28,7 @@
       "args": ["--port", "9090", "--session-token", "debug", "--log-level", "trace"],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
-      "environment": [
-        { "name": "ASAN_OPTIONS", "value": "detect_leaks=1:halt_on_error=0" }
-      ],
+      "environment": [{ "name": "ASAN_OPTIONS", "value": "detect_leaks=1:halt_on_error=0" }],
       "externalConsole": false,
       "MIMode": "gdb",
       "setupCommands": [
@@ -49,9 +47,7 @@
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/native/engine",
-      "environment": [
-        { "name": "MOTIONLAB_LOG_LEVEL", "value": "debug" }
-      ],
+      "environment": [{ "name": "MOTIONLAB_LOG_LEVEL", "value": "debug" }],
       "externalConsole": false,
       "MIMode": "gdb",
       "setupCommands": [
@@ -70,9 +66,7 @@
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/native/engine",
-      "environment": [
-        { "name": "MOTIONLAB_LOG_LEVEL", "value": "debug" }
-      ],
+      "environment": [{ "name": "MOTIONLAB_LOG_LEVEL", "value": "debug" }],
       "externalConsole": false,
       "MIMode": "gdb",
       "setupCommands": [

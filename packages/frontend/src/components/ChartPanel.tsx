@@ -309,7 +309,16 @@ export function ChartPanel() {
     chartColorsRef.current = colors;
     const scrubColor = readChartScrubColor();
     const axisTheme = readAxisTheme();
-    const opts = buildOpts(width, height, activeIds, channels, colors, scrubColor, zoomedRef, axisTheme);
+    const opts = buildOpts(
+      width,
+      height,
+      activeIds,
+      channels,
+      colors,
+      scrubColor,
+      zoomedRef,
+      axisTheme,
+    );
     const data = buildAlignedData(activeIds, useTraceStore.getState().traces);
 
     const uplot = new uPlot(opts, data, container);

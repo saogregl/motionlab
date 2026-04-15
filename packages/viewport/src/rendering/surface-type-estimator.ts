@@ -34,11 +34,7 @@ function cross3(
   a: [number, number, number],
   b: [number, number, number],
 ): [number, number, number] {
-  return [
-    a[1] * b[2] - a[2] * b[1],
-    a[2] * b[0] - a[0] * b[2],
-    a[0] * b[1] - a[1] * b[0],
-  ];
+  return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
 }
 
 function vecLength(v: [number, number, number]): number {
@@ -48,10 +44,7 @@ function vecLength(v: [number, number, number]): number {
 /**
  * Read the normal for a given vertex index from the flat normals array.
  */
-function readNormal(
-  normals: Float32Array,
-  vertexIndex: number,
-): [number, number, number] {
+function readNormal(normals: Float32Array, vertexIndex: number): [number, number, number] {
   const base = vertexIndex * 3;
   return [normals[base], normals[base + 1], normals[base + 2]];
 }
@@ -82,9 +75,7 @@ function collectFaceNormals(
  * Compute the average normal from an array of normal vectors.
  * Returns a normalized average, or [0,0,0] if degenerate.
  */
-function averageNormal(
-  faceNormals: [number, number, number][],
-): [number, number, number] {
+function averageNormal(faceNormals: [number, number, number][]): [number, number, number] {
   let sx = 0;
   let sy = 0;
   let sz = 0;

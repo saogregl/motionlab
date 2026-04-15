@@ -6,11 +6,10 @@
  * Finds protoc from whichever vcpkg triplet is installed, writes a temporary
  * buf config with the resolved protoc_path, runs buf generate, then cleans up.
  *
- * Falls back to buf's bundled protoc when vcpkg protoc is not available
- * (e.g. in CI before a native build).
+ * If vcpkg protoc is not available, uses protoc from PATH.
  */
 
-import { execSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
@@ -67,10 +66,24 @@ if (protocPath) {
     rmSync(tempDir, { recursive: true, force: true });
   }
 } else {
-  // Fall back to buf's bundled protoc (e.g. CI without a native build)
-  console.log('vcpkg protoc not found — falling back to buf bundled protoc');
-  execSync('npx buf generate', {
-    cwd: ROOT,
-    stdio: 'inherit',
-  });
+  let hasSystemProtoc = false;
+  try {
+    execFileSync('protoc', ['--version'], { stdio: ['ignore', 'ignore', 'ignore'] });
+    hasSystemProtoc = true;
+  } catch {
+    // ignore
+  }
+
+  if (hasSystemProtoc) {
+    console.log('vcpkg protoc not found - using protoc from PATH');
+    execSync('npx buf generate', {
+      cwd: ROOT,
+      stdio: 'inherit',
+    });
+  } else {
+    console.error(
+      'No protoc compiler found. Install protobuf-compiler (Linux) or build native/engine once so vcpkg provisions protoc under native/engine/build/vcpkg_installed.',
+    );
+    process.exit(1);
+  }
 }

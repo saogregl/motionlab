@@ -27,8 +27,8 @@ import {
 } from 'lucide-react';
 
 import { executeCommand } from '../commands/registry.js';
-import { useSimulationStore } from '../stores/simulation.js';
 import { useCmdDisabled } from '../hooks/use-cmd-disabled.js';
+import { useSimulationStore } from '../stores/simulation.js';
 
 // ---------------------------------------------------------------------------
 // MainToolbar — centered floating bar

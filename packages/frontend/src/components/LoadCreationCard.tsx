@@ -1,4 +1,3 @@
-import type { SceneGraphManager } from '@motionlab/viewport';
 import {
   Button,
   FloatingToolCard,
@@ -10,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@motionlab/ui';
+import type { SceneGraphManager } from '@motionlab/viewport';
 import { Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -30,7 +30,9 @@ export function LoadCreationCard({ sceneGraph }: { sceneGraph: SceneGraphManager
   const exitMode = useLoadCreationStore((s) => s.exitMode);
   const reset = useLoadCreationStore((s) => s.reset);
   const anchorDatum = useMechanismStore((s) => (datumId ? s.datums.get(datumId) : undefined));
-  const secondDatum = useMechanismStore((s) => (secondDatumId ? s.datums.get(secondDatumId) : undefined));
+  const secondDatum = useMechanismStore((s) =>
+    secondDatumId ? s.datums.get(secondDatumId) : undefined,
+  );
 
   const [loadType, setLoadType] = useState<LoadTypeId>('point-force');
   const [name, setName] = useState('');
@@ -76,7 +78,7 @@ export function LoadCreationCard({ sceneGraph }: { sceneGraph: SceneGraphManager
       type: loadType,
       datumId,
       parentDatumId: loadType === 'spring-damper' ? datumId : undefined,
-      childDatumId: loadType === 'spring-damper' ? secondDatumId ?? undefined : undefined,
+      childDatumId: loadType === 'spring-damper' ? (secondDatumId ?? undefined) : undefined,
       vector:
         loadType === 'point-force' || loadType === 'point-torque'
           ? { x: vx, y: vy, z: vz }
@@ -159,11 +161,14 @@ export function LoadCreationCard({ sceneGraph }: { sceneGraph: SceneGraphManager
       >
         <div className="flex min-w-[280px] flex-col gap-2 ps-2 pe-2 py-2">
           <div className="rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[var(--layer-base)] px-2 py-1 text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
-            Anchor datum: <span className="text-[var(--text-primary)]">{anchorDatum?.name ?? datumId}</span>
+            Anchor datum:{' '}
+            <span className="text-[var(--text-primary)]">{anchorDatum?.name ?? datumId}</span>
           </div>
 
           <div className="flex flex-col gap-0.5">
-            <label className="text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">Name</label>
+            <label className="text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
+              Name
+            </label>
             <input
               className="h-6 rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--layer-base)] ps-1.5 pe-1.5 text-[length:var(--text-xs)] text-[var(--text-primary)] outline-none focus:border-[var(--accent-primary)]"
               value={name}
@@ -175,7 +180,9 @@ export function LoadCreationCard({ sceneGraph }: { sceneGraph: SceneGraphManager
           </div>
 
           <div className="flex flex-col gap-0.5">
-            <label className="text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">Type</label>
+            <label className="text-[length:var(--text-2xs)] text-[var(--text-tertiary)]">
+              Type
+            </label>
             <Select
               value={loadType}
               onValueChange={(value) => {

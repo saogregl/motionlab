@@ -278,4 +278,3 @@ export function isBodyEntity(
 ): entity is SceneEntityInternal & { meta: BodyMeta } {
   return Boolean(entity && entity.meta.kind === 'body');
 }
-

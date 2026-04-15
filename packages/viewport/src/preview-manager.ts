@@ -17,10 +17,7 @@ import {
   Vector3,
 } from 'three';
 
-import {
-  ACCENT,
-  PREVIEW_OWNERSHIP_EDGE,
-} from './rendering/colors-three.js';
+import { ACCENT, PREVIEW_OWNERSHIP_EDGE } from './rendering/colors-three.js';
 import {
   createFatLine,
   type FatLineOptions,
@@ -29,13 +26,13 @@ import {
 import { createJointGlyph, type JointGlyphResult } from './rendering/joint-glyph-three.js';
 
 import {
-  isBodyEntity,
   type DatumPreviewConfig,
+  isBodyEntity,
   type JointPreviewAlignment,
   type LoadStateInput,
   type SceneContext,
 } from './scene-context.js';
-
+import { VIEWPORT_PICK_LAYER } from './scene-graph-three.js';
 import {
   cloneColor,
   createLine,
@@ -46,8 +43,6 @@ import {
   getLoadKind,
   setObjectLayerRecursive,
 } from './scene-graph-utils.js';
-
-import { VIEWPORT_PICK_LAYER } from './scene-graph-three.js';
 
 // ── PreviewManager ────────────────────────────────────────────────────────
 

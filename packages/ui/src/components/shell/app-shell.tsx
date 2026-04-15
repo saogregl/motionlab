@@ -62,6 +62,7 @@ function AppShell({
   const bottomContainerRef = useRef<HTMLDivElement>(null);
   const hasBottomPanel = !!bottomPanel;
 
+  // TODO: Is this really the way to do this? Can't we eliminate the effects and live with proper event handlers?
   useEffect(() => {
     const el = bottomContainerRef.current;
     if (!el || !hasBottomPanel) {
@@ -91,11 +92,7 @@ function AppShell({
       {topBar}
 
       {/* Row 2: Main area — viewport + floating panels */}
-      <div
-        ref={layoutRef}
-        data-slot="main-area"
-        className="relative flex-1 overflow-hidden"
-      >
+      <div ref={layoutRef} data-slot="main-area" className="relative flex-1 overflow-hidden">
         {/* Viewport layer */}
         <div className="absolute inset-0 z-[var(--z-base)]">{viewport}</div>
 

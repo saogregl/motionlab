@@ -29,7 +29,8 @@ export const useLoadCreationStore = create<LoadCreationState>()((set, get) => ({
   secondDatumId: null,
   creatingDatum: false,
 
-  startCreation: () => set({ step: 'pick-datum', datumId: null, secondDatumId: null, creatingDatum: false }),
+  startCreation: () =>
+    set({ step: 'pick-datum', datumId: null, secondDatumId: null, creatingDatum: false }),
 
   setDatum: (id) => {
     const type = get().preselectedLoadType;

@@ -1,8 +1,8 @@
 import { AlertTriangle, CircleX, Info } from 'lucide-react';
-import type { StructuredDiagnostic } from '../stores/simulation.js';
-import { useSimulationStore } from '../stores/simulation.js';
 import { useEngineConnection } from '../stores/engine-connection.js';
 import { useSelectionStore } from '../stores/selection.js';
+import type { StructuredDiagnostic } from '../stores/simulation.js';
+import { useSimulationStore } from '../stores/simulation.js';
 
 const severityIcon: Record<StructuredDiagnostic['severity'], React.ReactNode> = {
   error: <CircleX className="size-3.5 shrink-0 text-red-400" />,
@@ -40,9 +40,7 @@ function DiagnosticRow({ d }: { d: StructuredDiagnostic }) {
             {d.message}
           </span>
         </div>
-        {d.suggestion && (
-          <div className="mt-0.5 text-text-tertiary">{d.suggestion}</div>
-        )}
+        {d.suggestion && <div className="mt-0.5 text-text-tertiary">{d.suggestion}</div>}
       </div>
     </button>
   );
@@ -103,9 +101,7 @@ export function DiagnosticsPanel() {
           </div>
         )}
         {engineStatus && !engineError && (
-          <div className="ps-2 pe-2 py-0.5 text-2xs text-text-tertiary">
-            Engine: {engineStatus}
-          </div>
+          <div className="ps-2 pe-2 py-0.5 text-2xs text-text-tertiary">Engine: {engineStatus}</div>
         )}
         {structuredDiagnostics.map((d, i) => (
           <DiagnosticRow key={`${d.code}-${i}`} d={d} />

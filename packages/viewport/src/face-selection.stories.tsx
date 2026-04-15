@@ -13,12 +13,12 @@ import {
   ACTIVE_BUTTON_STYLE,
   BUTTON_STYLE,
   CAMERA_PRESETS,
-  STATUS_STYLE,
-  TOOLBAR_STYLE,
   createBoxMeshDataWithTopology,
   createCylinderMeshDataWithTopology,
   createSphereMeshDataWithTopology,
   createTorusMeshDataWithTopology,
+  STATUS_STYLE,
+  TOOLBAR_STYLE,
 } from './story-helpers.js';
 
 const meta: Meta<typeof Viewport> = {
@@ -64,28 +64,52 @@ function ProceduralFaceScene({ theme = 'dark' }: { theme: ViewportTheme }) {
     sgRef.current = sg;
 
     const box = createBoxMeshDataWithTopology(1.2, 1.2, 1.2);
-    sg.addBody('box', 'Box', box, {
-      position: [-2, 0.6, 0],
-      rotation: [0, 0, 0, 1],
-    }, box.partIndex);
+    sg.addBody(
+      'box',
+      'Box',
+      box,
+      {
+        position: [-2, 0.6, 0],
+        rotation: [0, 0, 0, 1],
+      },
+      box.partIndex,
+    );
 
     const cyl = createCylinderMeshDataWithTopology(0.5, 0.5, 1.5, 48);
-    sg.addBody('cylinder', 'Cylinder', cyl, {
-      position: [0, 0.75, 0],
-      rotation: [0, 0, 0, 1],
-    }, cyl.partIndex);
+    sg.addBody(
+      'cylinder',
+      'Cylinder',
+      cyl,
+      {
+        position: [0, 0.75, 0],
+        rotation: [0, 0, 0, 1],
+      },
+      cyl.partIndex,
+    );
 
     const sph = createSphereMeshDataWithTopology(0.7, 48, 32);
-    sg.addBody('sphere', 'Sphere', sph, {
-      position: [2, 0.7, 0],
-      rotation: [0, 0, 0, 1],
-    }, sph.partIndex);
+    sg.addBody(
+      'sphere',
+      'Sphere',
+      sph,
+      {
+        position: [2, 0.7, 0],
+        rotation: [0, 0, 0, 1],
+      },
+      sph.partIndex,
+    );
 
     const tor = createTorusMeshDataWithTopology(0.6, 0.2, 48, 24);
-    sg.addBody('torus', 'Torus', tor, {
-      position: [4, 0.6, 0],
-      rotation: [0, 0, 0, 1],
-    }, tor.partIndex);
+    sg.addBody(
+      'torus',
+      'Torus',
+      tor,
+      {
+        position: [4, 0.6, 0],
+        rotation: [0, 0, 0, 1],
+      },
+      tor.partIndex,
+    );
 
     sg.fitAll();
   }, []);
@@ -137,18 +161,10 @@ function ProceduralFaceScene({ theme = 'dark' }: { theme: ViewportTheme }) {
             {preset}
           </button>
         ))}
-        <button
-          type="button"
-          style={BUTTON_STYLE}
-          onClick={() => sgRef.current?.fitAll()}
-        >
+        <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.fitAll()}>
           fit-all
         </button>
-        <button
-          type="button"
-          style={BUTTON_STYLE}
-          onClick={() => sgRef.current?.toggleGrid()}
-        >
+        <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.toggleGrid()}>
           grid
         </button>
       </div>
@@ -195,15 +211,19 @@ function StepFaceScene({ theme = 'dark' }: { theme: ViewportTheme }) {
         let totalFaces = 0;
         for (let i = 0; i < result.bodies.length; i++) {
           const body = result.bodies[i];
-          sg.addBody(`body-${i}`, body.name, body.mesh, {
-            position: [0, 0, 0],
-            rotation: [0, 0, 0, 1],
-          }, body.partIndex);
+          sg.addBody(
+            `body-${i}`,
+            body.name,
+            body.mesh,
+            {
+              position: [0, 0, 0],
+              rotation: [0, 0, 0, 1],
+            },
+            body.partIndex,
+          );
           totalFaces += body.partIndex.length;
         }
-        setStatus(
-          `${result.bodies.length} bodies, ${totalFaces} faces`,
-        );
+        setStatus(`${result.bodies.length} bodies, ${totalFaces} faces`);
         sg.fitAll();
       })
       .catch((err) => {
@@ -258,18 +278,10 @@ function StepFaceScene({ theme = 'dark' }: { theme: ViewportTheme }) {
             {preset}
           </button>
         ))}
-        <button
-          type="button"
-          style={BUTTON_STYLE}
-          onClick={() => sgRef.current?.fitAll()}
-        >
+        <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.fitAll()}>
           fit-all
         </button>
-        <button
-          type="button"
-          style={BUTTON_STYLE}
-          onClick={() => sgRef.current?.toggleGrid()}
-        >
+        <button type="button" style={BUTTON_STYLE} onClick={() => sgRef.current?.toggleGrid()}>
           grid
         </button>
       </div>

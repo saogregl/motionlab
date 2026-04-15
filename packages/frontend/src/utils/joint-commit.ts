@@ -1,8 +1,8 @@
 import { sendCreateJoint } from '../engine/connection.js';
+import { useAuthoringStatusStore } from '../stores/authoring-status.js';
+import { useJointCreationStore } from '../stores/joint-creation.js';
 import type { JointTypeId } from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
-import { useJointCreationStore } from '../stores/joint-creation.js';
-import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { nextJointName } from './joint-naming.js';
 
 /**

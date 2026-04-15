@@ -1,11 +1,10 @@
 import { describe, expect, it } from 'vitest';
-
+import type { BodyPose } from '../stores/mechanism.js';
 import {
-  type DatumWorldPose,
   analyzeDatumAlignment,
   computeDatumWorldPose,
+  type DatumWorldPose,
 } from '../utils/datum-alignment.js';
-import type { BodyPose } from '../stores/mechanism.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -20,10 +19,7 @@ const ROT_Y_90 = { x: 0, y: Math.sin(Math.PI / 4), z: 0, w: Math.cos(Math.PI / 4
 /** 90-degree rotation around X: axis=[1,0,0], angle=pi/2 */
 const ROT_X_90 = { x: Math.sin(Math.PI / 4), y: 0, z: 0, w: Math.cos(Math.PI / 4) };
 
-function pose(
-  pos: { x: number; y: number; z: number } = ORIGIN,
-  rot = IDENTITY_Q,
-): BodyPose {
+function pose(pos: { x: number; y: number; z: number } = ORIGIN, rot = IDENTITY_Q): BodyPose {
   return { position: pos, rotation: rot };
 }
 

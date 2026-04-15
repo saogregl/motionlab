@@ -12,10 +12,10 @@ import { BufferAttribute, BufferGeometry } from 'three';
 import { GenerateMeshBVHWorker } from 'three-mesh-bvh/src/workers/GenerateMeshBVHWorker.js';
 
 import {
-  isBodyEntity,
   type BodyBvhState,
   type BodyGeometryRenderState,
   type BodyMeta,
+  isBodyEntity,
   type PendingBvhBuild,
   type SceneContext,
   type SceneEntityInternal,

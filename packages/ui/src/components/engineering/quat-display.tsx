@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-
-import { cn } from '../../lib/utils';
 import { formatEngValue } from '../../lib/format';
-import { quatToEulerDeg, eulerDegToQuat, isNearGimbalLock } from '../../lib/quat-math';
+import { eulerDegToQuat, isNearGimbalLock, quatToEulerDeg } from '../../lib/quat-math';
+import { cn } from '../../lib/utils';
+import type { Axis } from '../primitives/axis-color-label';
 import { AxisColorLabel } from '../primitives/axis-color-label';
 import { NumericInput } from '../primitives/numeric-input';
-import type { Axis } from '../primitives/axis-color-label';
 
 type OrientationMode = 'euler' | 'quaternion';
 
@@ -136,7 +135,9 @@ function QuatDisplay({
                 />
               ) : (
                 <span className="flex-1 text-right font-[family-name:var(--font-mono)] text-[length:var(--text-xs)] tabular-nums text-[var(--text-primary)]">
-                  {sf != null ? `${formatEngValue(euler[axis], sf)}°` : `${euler[axis].toFixed(precision!)}°`}
+                  {sf != null
+                    ? `${formatEngValue(euler[axis], sf)}°`
+                    : `${euler[axis].toFixed(precision!)}°`}
                 </span>
               )}
             </div>

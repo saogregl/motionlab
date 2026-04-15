@@ -1,3 +1,4 @@
+import type { Color } from 'three';
 import {
   BufferGeometry,
   ConeGeometry,
@@ -11,8 +12,6 @@ import {
   TorusGeometry,
   Vector3,
 } from 'three';
-
-import type { Color } from 'three';
 
 import { JOINT_STEEL_BLUE } from './colors-three.js';
 
@@ -54,7 +53,7 @@ const ARC_RADIUS = 0.12;
 const ARC_TUBE = 0.005;
 const ARC_RADIAL_SEGMENTS = 16;
 const ARC_TUBULAR_SEGMENTS = 64;
-const ARROW_LENGTH = 0.20;
+const ARROW_LENGTH = 0.2;
 const ARROWHEAD_RADIUS = 0.012;
 const ARROWHEAD_HEIGHT = 0.025;
 const ARROWHEAD_SEGMENTS = 16;
@@ -112,7 +111,13 @@ function createArcArrow(color: Color, arcAngle = Math.PI * 1.5): Group {
   const arcGeo =
     arcAngle === Math.PI * 1.5
       ? getArcGeometry().clone()
-      : new TorusGeometry(ARC_RADIUS, ARC_TUBE, ARC_RADIAL_SEGMENTS, ARC_TUBULAR_SEGMENTS, arcAngle);
+      : new TorusGeometry(
+          ARC_RADIUS,
+          ARC_TUBE,
+          ARC_RADIAL_SEGMENTS,
+          ARC_TUBULAR_SEGMENTS,
+          arcAngle,
+        );
   const arc = new Mesh(arcGeo, makeIndicatorMaterial(color));
   arc.userData = { entityType: 'indicator' };
   group.add(arc);
@@ -121,11 +126,7 @@ function createArcArrow(color: Color, arcAngle = Math.PI * 1.5): Group {
   const arrowhead = new Mesh(getArrowheadGeometry().clone(), makeIndicatorMaterial(color));
   arrowhead.userData = { entityType: 'indicator' };
   const endAngle = arcAngle;
-  arrowhead.position.set(
-    Math.cos(endAngle) * ARC_RADIUS,
-    Math.sin(endAngle) * ARC_RADIUS,
-    0,
-  );
+  arrowhead.position.set(Math.cos(endAngle) * ARC_RADIUS, Math.sin(endAngle) * ARC_RADIUS, 0);
   arrowhead.rotation.z = endAngle;
   group.add(arrowhead);
 
@@ -356,7 +357,10 @@ function disposeChildren(root: Group): void {
   root.traverse((child) => {
     if (child instanceof Mesh || child instanceof Line) {
       child.geometry.dispose();
-      if (child.material instanceof MeshBasicMaterial || child.material instanceof LineBasicMaterial) {
+      if (
+        child.material instanceof MeshBasicMaterial ||
+        child.material instanceof LineBasicMaterial
+      ) {
         child.material.dispose();
       }
     }

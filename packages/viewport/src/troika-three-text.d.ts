@@ -6,7 +6,15 @@ declare module 'troika-three-text' {
     fontSize: number;
     color: number | string | Color;
     anchorX: 'left' | 'center' | 'right' | number;
-    anchorY: 'top' | 'top-baseline' | 'top-cap' | 'top-ex' | 'middle' | 'bottom-baseline' | 'bottom' | number;
+    anchorY:
+      | 'top'
+      | 'top-baseline'
+      | 'top-cap'
+      | 'top-ex'
+      | 'middle'
+      | 'bottom-baseline'
+      | 'bottom'
+      | number;
     font: string | null;
     depthOffset: number;
     maxWidth: number;

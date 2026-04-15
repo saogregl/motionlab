@@ -17,7 +17,12 @@ import {
 import { useEffect, useState } from 'react';
 
 import { sendCreateActuator, sendUpdateActuator } from '../engine/connection.js';
-import type { ActuatorState, ActuatorTypeId, ControlModeId, JointTypeId } from '../stores/mechanism.js';
+import type {
+  ActuatorState,
+  ActuatorTypeId,
+  ControlModeId,
+  JointTypeId,
+} from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { getActuatorUnit as getCommandUnit, getEffortUnit } from '../utils/actuator-units.js';
 
@@ -76,7 +81,10 @@ export function CreateActuatorDialog({
       jointId,
       controlMode,
       commandValue,
-      commandFunction: initialActuator?.commandFunction ?? { shape: 'constant', value: commandValue },
+      commandFunction: initialActuator?.commandFunction ?? {
+        shape: 'constant',
+        value: commandValue,
+      },
       effortLimit: hasEffortLimit ? (effortLimit ?? 0) : undefined,
     };
     if (isEdit) {
@@ -88,7 +96,12 @@ export function CreateActuatorDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) onClose();
+      }}
+    >
       <DialogContent className="sm:max-w-[360px]">
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Edit Motor' : 'Add Motor'}</DialogTitle>

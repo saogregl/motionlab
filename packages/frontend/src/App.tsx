@@ -1,5 +1,5 @@
-import { PROTOCOL_VERSION } from '@motionlab/protocol';
 import type { MissingAssetInfo } from '@motionlab/protocol';
+import { PROTOCOL_VERSION } from '@motionlab/protocol';
 import type { StatusType } from '@motionlab/ui';
 import {
   AppShell,
@@ -14,9 +14,9 @@ import {
   Toaster,
   TooltipProvider,
   TopBar,
-  WorkspaceTabBar,
   useDensity,
   useTheme,
+  WorkspaceTabBar,
 } from '@motionlab/ui';
 import { FolderOpen, Import, Save } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -24,32 +24,37 @@ import { initCommands } from './commands/init.js';
 import { executeCommand } from './commands/registry.js';
 import { initShortcutManager } from './commands/shortcut-manager.js';
 import { AboutDialog } from './components/AboutDialog.js';
+import { BuildBottomPanel } from './components/BuildBottomPanel.js';
 import { CommandPalette } from './components/CommandPalette.js';
 import { CrashRecoveryDialog } from './components/CrashRecoveryDialog.js';
-import { MissingAssetsDialog } from './components/MissingAssetsDialog.js';
 import { EntityCreationMenu } from './components/EntityCreationMenu.js';
 import { EntityInspector } from './components/EntityInspector.js';
+import { HomeScreen } from './components/home/HomeScreen.js';
 import { ImportSettingsDialog } from './components/ImportSettingsDialog.js';
 import { KeyboardShortcutsDialog } from './components/KeyboardShortcutsDialog.js';
-import { ProjectTree } from './components/ProjectTree.js';
-import { SimulationSettingsDialog } from './components/SimulationSettingsDialog.js';
 import { MainToolbar } from './components/MainToolbar.js';
-import { HomeScreen } from './components/home/HomeScreen.js';
-import { ResultsLeftPanel } from './components/ResultsLeftPanel.js';
+import { MissingAssetsDialog } from './components/MissingAssetsDialog.js';
+import { ProjectTree } from './components/ProjectTree.js';
 import { ResultsBottomDock } from './components/ResultsBottomDock.js';
+import { ResultsLeftPanel } from './components/ResultsLeftPanel.js';
 import { ResultsToolbar } from './components/ResultsToolbar.js';
-import { BuildBottomPanel } from './components/BuildBottomPanel.js';
+import { SimulationSettingsDialog } from './components/SimulationSettingsDialog.js';
 import { ViewportOverlay } from './components/ViewportOverlay.js';
-import { onMissingAssets, sendAutoSave, sendImportAsset, sendLoadProject } from './engine/connection.js';
+import {
+  onMissingAssets,
+  sendAutoSave,
+  sendImportAsset,
+  sendLoadProject,
+} from './engine/connection.js';
+import { useMechanismDof } from './hooks/useMechanismDof.js';
 import { useDialogStore } from './stores/dialogs.js';
-import { useUILayoutStore } from './stores/ui-layout.js';
 import type { ConnectionStatus } from './stores/engine-connection.js';
 import { useEngineConnection } from './stores/engine-connection.js';
 import { useImportFlowStore } from './stores/import-flow.js';
 import { useMechanismStore } from './stores/mechanism.js';
-import { useSimulationStore } from './stores/simulation.js';
-import { useMechanismDof } from './hooks/useMechanismDof.js';
 import { useSelectionStore } from './stores/selection.js';
+import { useSimulationStore } from './stores/simulation.js';
+import { useUILayoutStore } from './stores/ui-layout.js';
 import type { RecoverableProject } from './types/motionlab.js';
 
 type StatusBarConnectionState = 'connected' | 'connecting' | 'disconnected' | 'error';
@@ -106,8 +111,9 @@ function EngineStatusBadge() {
 
 function ImportButton() {
   const importing = useMechanismStore((s) => s.importing);
+  const engineReady = useEngineConnection((s) => s.status === 'ready');
   const isDesktop = !!window.motionlab?.openFileDialog;
-  const disabled = !isDesktop || useEngineConnection((s) => s.status !== 'ready') || importing;
+  const disabled = !isDesktop || !engineReady || importing;
 
   return (
     <Button
@@ -200,7 +206,11 @@ function StatusBarContainer() {
         bodies: bodies.size,
         joints: joints.size,
       }}
-      dof={bodies.size > 0 ? { value: mechanismDof.dof, overConstrained: mechanismDof.overConstrained } : undefined}
+      dof={
+        bodies.size > 0
+          ? { value: mechanismDof.dof, overConstrained: mechanismDof.overConstrained }
+          : undefined
+      }
       diagnosticSummary={diagnosticSummary}
     />
   );
@@ -248,7 +258,8 @@ export function App() {
 
   // Check for crash recovery autosave files on mount (Epic 20.2)
   useEffect(() => {
-    window.motionlab?.checkAutoSaveRecovery?.()
+    window.motionlab
+      ?.checkAutoSaveRecovery?.()
       .then((projects) => {
         if (projects && projects.length > 0) {
           setRecoverableProjects(projects);
@@ -266,23 +277,27 @@ export function App() {
     }
     // Register auto-save tick handler (Epic 20.2)
     if (typeof window.motionlab?.onAutoSaveTick === 'function') {
-      cleanups.push(window.motionlab.onAutoSaveTick(() => {
-        const { isDirty, projectName } = useMechanismStore.getState();
-        if (!isDirty) return;
-        sendAutoSave(projectName);
-      }));
+      cleanups.push(
+        window.motionlab.onAutoSaveTick(() => {
+          const { isDirty, projectName } = useMechanismStore.getState();
+          if (!isDirty) return;
+          sendAutoSave(projectName);
+        }),
+      );
     }
     // Register file-open handler for file associations / CLI args (Epic 20.2)
     if (typeof window.motionlab?.onOpenFileRequest === 'function') {
-      cleanups.push(window.motionlab.onOpenFileRequest(async (filePath: string) => {
-        const { isDirty } = useMechanismStore.getState();
-        if (isDirty) {
-          const confirmed = window.confirm('You have unsaved changes. Discard them?');
-          if (!confirmed) return;
-        }
-        const file = await window.motionlab!.readFileByPath!(filePath);
-        if (file) sendLoadProject(file.data);
-      }));
+      cleanups.push(
+        window.motionlab.onOpenFileRequest(async (filePath: string) => {
+          const { isDirty } = useMechanismStore.getState();
+          if (isDirty) {
+            const confirmed = window.confirm('You have unsaved changes. Discard them?');
+            if (!confirmed) return;
+          }
+          const file = await window.motionlab!.readFileByPath!(filePath);
+          if (file) sendLoadProject(file.data);
+        }),
+      );
     }
     return () => {
       for (const cleanup of cleanups) cleanup();
@@ -295,7 +310,9 @@ export function App() {
       setMissingAssets(assets);
       openDialogFn('missing-assets');
     });
-    return () => { onMissingAssets(null); };
+    return () => {
+      onMissingAssets(null);
+    };
   }, [openDialogFn]);
 
   // Sync native window title with project name and dirty state
@@ -311,7 +328,8 @@ export function App() {
   useEffect(() => {
     return useSelectionStore.subscribe((state, prevState) => {
       if (state.selectedIds === prevState.selectedIds) return;
-      const { activeWorkspace, rightPanelAutoShow, setRightPanelOpen } = useUILayoutStore.getState();
+      const { activeWorkspace, rightPanelAutoShow, setRightPanelOpen } =
+        useUILayoutStore.getState();
       if (activeWorkspace !== 'build') return;
       if (state.selectedIds.size > 0 && rightPanelAutoShow) {
         setRightPanelOpen(true);
@@ -345,7 +363,9 @@ export function App() {
             }
             leftPanelOpen={activeWorkspace === 'build' ? leftPanelOpen : resultsLeftPanelOpen}
             leftPanelWidth={activeWorkspace === 'build' ? leftPanelWidth : resultsLeftPanelWidth}
-            onLeftPanelWidthChange={activeWorkspace === 'build' ? setLeftPanelWidth : setResultsLeftPanelWidth}
+            onLeftPanelWidthChange={
+              activeWorkspace === 'build' ? setLeftPanelWidth : setResultsLeftPanelWidth
+            }
             rightPanel={
               activeWorkspace === 'build' ? (
                 <RightPanel>

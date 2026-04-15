@@ -33,7 +33,8 @@ function Slider({
             {label}
           </span>
           <span className="text-[length:var(--text-2xs)] tabular-nums text-[var(--text-primary)]">
-            {value}{unit ? ` ${unit}` : ''}
+            {value}
+            {unit ? ` ${unit}` : ''}
           </span>
         </div>
       )}

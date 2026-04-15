@@ -1,5 +1,5 @@
+import { eulerDegToQuat, isNearGimbalLock, quatToEulerDeg } from '@motionlab/ui';
 import { describe, expect, it } from 'vitest';
-import { eulerDegToQuat, quatToEulerDeg, isNearGimbalLock } from '@motionlab/ui';
 
 function expectQuatClose(
   actual: { x: number; y: number; z: number; w: number },

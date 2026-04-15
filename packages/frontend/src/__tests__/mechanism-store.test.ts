@@ -174,7 +174,9 @@ describe('Mechanism store', () => {
   // --- Geometries ---
 
   it('addGeometries adds to map', () => {
-    useMechanismStore.getState().addGeometries([makeGeometry('g1', 'b1'), makeGeometry('g2', 'b1')]);
+    useMechanismStore
+      .getState()
+      .addGeometries([makeGeometry('g1', 'b1'), makeGeometry('g2', 'b1')]);
     const { geometries } = useMechanismStore.getState();
     expect(geometries.size).toBe(2);
     expect(geometries.has('g1')).toBe(true);
@@ -201,7 +203,16 @@ describe('Mechanism store', () => {
 
   it('updateBodyMass updates mass and override flag', () => {
     useMechanismStore.getState().addBodies([makeBody('b1')]);
-    const newMass = { mass: 5, centerOfMass: { x: 1, y: 0, z: 0 }, ixx: 2, iyy: 2, izz: 2, ixy: 0, ixz: 0, iyz: 0 };
+    const newMass = {
+      mass: 5,
+      centerOfMass: { x: 1, y: 0, z: 0 },
+      ixx: 2,
+      iyy: 2,
+      izz: 2,
+      ixy: 0,
+      ixz: 0,
+      iyz: 0,
+    };
     useMechanismStore.getState().updateBodyMass('b1', newMass, true);
     const body = useMechanismStore.getState().bodies.get('b1');
     expect(body?.massProperties.mass).toBe(5);
@@ -209,10 +220,9 @@ describe('Mechanism store', () => {
   });
 
   it('addBodiesWithGeometries adds both atomically', () => {
-    useMechanismStore.getState().addBodiesWithGeometries(
-      [makeBody('b1')],
-      [makeGeometry('g1', 'b1')],
-    );
+    useMechanismStore
+      .getState()
+      .addBodiesWithGeometries([makeBody('b1')], [makeGeometry('g1', 'b1')]);
     const { bodies, geometries } = useMechanismStore.getState();
     expect(bodies.size).toBe(1);
     expect(geometries.size).toBe(1);

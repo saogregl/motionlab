@@ -1,4 +1,4 @@
-import { Copy, Check } from 'lucide-react';
+import { Check, Copy } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
 
 import { cn } from '../../lib/utils';
@@ -45,9 +45,7 @@ function CopyableId({ value, truncateAt = 12, className }: CopyableIdProps) {
           <Copy className="size-3 shrink-0 opacity-0 group-hover/copyid:opacity-100 text-[var(--text-tertiary)]" />
         )}
       </TooltipTrigger>
-      <TooltipContent side="left">
-        {copied ? 'Copied!' : 'Click to copy full ID'}
-      </TooltipContent>
+      <TooltipContent side="left">{copied ? 'Copied!' : 'Click to copy full ID'}</TooltipContent>
     </Tooltip>
   );
 }

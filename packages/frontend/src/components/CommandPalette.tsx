@@ -9,9 +9,8 @@ import {
   CommandShortcut,
 } from '@motionlab/ui';
 import { Fragment, useCallback, useEffect } from 'react';
-
-import { useCommandGroups } from '../commands/use-commands.js';
 import type { CommandDef } from '../commands/types.js';
+import { useCommandGroups } from '../commands/use-commands.js';
 import { useCommandPaletteStore } from '../stores/command-palette.js';
 
 export function CommandPalette() {
@@ -49,11 +48,7 @@ export function CommandPalette() {
               {group.commands.map((cmd) => {
                 const disabled = cmd.enabled ? !cmd.enabled() : false;
                 return (
-                  <CommandItem
-                    key={cmd.id}
-                    disabled={disabled}
-                    onSelect={() => runCommand(cmd)}
-                  >
+                  <CommandItem key={cmd.id} disabled={disabled} onSelect={() => runCommand(cmd)}>
                     {cmd.icon && <cmd.icon className="size-5" />}
                     {cmd.label}
                     {cmd.shortcut && <CommandShortcut>{cmd.shortcut}</CommandShortcut>}

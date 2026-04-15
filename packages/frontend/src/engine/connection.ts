@@ -1,624 +1,174 @@
+import type {
+  AnalyzeFacePairSuccess,
+  CreateDatumFromFaceSuccess,
+  ElementId,
+  Joint,
+  MissingAssetInfo,
+} from '@motionlab/protocol';
 import {
+  type Actuator,
+  ActuatorControlMode,
   ChannelDataType,
+  type CollisionConfigInput,
+  type CommandFunction,
   createAnalyzeFacePairCommand,
+  createAttachGeometryCommand,
   createCompileMechanismCommand,
+  createCreateActuatorCommand,
+  createCreateBodyCommand,
   createCreateDatumCommand,
   createCreateDatumFromFaceCommand,
   createCreateJointCommand,
+  createCreateLoadCommand,
+  createCreatePrimitiveBodyCommand,
+  createCreateSensorCommand,
+  createDeleteActuatorCommand,
+  createDeleteBodyCommand,
   createDeleteDatumCommand,
   createDeleteGeometryCommand,
   createDeleteJointCommand,
-  createCreateActuatorCommand,
-  createUpdateActuatorCommand,
-  createDeleteActuatorCommand,
-  createCreateSensorCommand,
-  createUpdateSensorCommand,
-  createDeleteSensorCommand,
-  mapSensorType,
-  mapSensorAxis,
-  toProtoSensorType,
-  toProtoSensorAxis,
-  createCreateLoadCommand,
-  createUpdateLoadCommand,
   createDeleteLoadCommand,
+  createDeleteSensorCommand,
+  createDetachGeometryCommand,
   createHandshakeCommand,
   createImportAssetCommand,
+  createLoadProjectCommand,
+  createMakeCompoundBodyCommand,
+  createNewProjectCommand,
   createPlaceAssetInSceneCommand,
   createPrepareFacePickingCommand,
-  createCreatePrimitiveBodyCommand,
-  createLoadProjectCommand,
-  createNewProjectCommand,
   createRelocateAssetCommand,
   createRenameDatumCommand,
   createRenameGeometryCommand,
-  createUpdateDatumPoseCommand,
-  createUpdateGeometryPoseCommand,
+  createReparentGeometryCommand,
   createSaveProjectCommand,
   createScrubCommand,
   createSimulationControlCommand,
-  createAttachGeometryCommand,
-  createCreateBodyCommand,
-  createDeleteBodyCommand,
-  createDetachGeometryCommand,
+  createSplitBodyCommand,
+  createUpdateActuatorCommand,
   createUpdateBodyCommand,
+  createUpdateCollisionConfigCommand,
+  createUpdateDatumPoseCommand,
+  createUpdateGeometryPoseCommand,
   createUpdateJointCommand,
+  createUpdateLoadCommand,
   createUpdateMassPropertiesCommand,
   createUpdatePrimitiveCommand,
-  createUpdateCollisionConfigCommand,
-  createMakeCompoundBodyCommand,
-  createSplitBodyCommand,
-  createReparentGeometryCommand,
-  type CollisionConfigInput,
-  type PrimitiveParamsInput,
-  type SimulationSettingsInput,
+  createUpdateSensorCommand,
+  DatumSurfaceClass,
+  DiagnosticSeverity,
   engineStateToString,
   eventToDebugJson,
   FacePairAlignment,
   FaceSurfaceClass,
+  type LinearSpringDamperLoad,
+  type Load,
   mapFacePairAlignment,
   mapJointType,
-  parseEvent,
-  SimStateEnum,
-  SimulationAction,
-  toProtoJointType,
-  PROTOCOL_VERSION,
-  ReferenceFrame,
-  ActuatorControlMode,
-  type Load,
+  mapSensorAxis,
+  mapSensorType,
   type PointForceLoad,
   type PointTorqueLoad,
-  type LinearSpringDamperLoad,
-  type Actuator,
-  type RevoluteMotorActuator,
+  PROTOCOL_VERSION,
+  type PrimitiveParamsInput,
   type PrismaticMotorActuator,
-  type CommandFunction,
-  SmoothStepProfile,
-  DatumSurfaceClass,
-  DiagnosticSeverity,
-  SensorType,
-  SensorAxis,
+  parseEvent,
+  ReferenceFrame,
+  type RevoluteMotorActuator,
   type Sensor,
+  SensorAxis,
+  SensorType,
+  SimStateEnum,
+  SimulationAction,
+  type SimulationSettingsInput,
+  SmoothStepProfile,
+  toProtoJointType,
+  toProtoSensorAxis,
+  toProtoSensorType,
 } from '@motionlab/protocol';
-import type { AnalyzeFacePairSuccess, CreateDatumFromFaceSuccess, ElementId, Joint, MissingAssetInfo } from '@motionlab/protocol';
-import type { SceneGraphManager } from '@motionlab/viewport';
+import type { BodyTransformUpdate, JointForceUpdate, SceneGraphManager } from '@motionlab/viewport';
+import { getDebugRecorder } from '../debug/api.js';
 import { useAssetLibraryStore } from '../stores/asset-library.js';
 import { useAuthoringStatusStore } from '../stores/authoring-status.js';
 import { clearBodyPoses, setBodyPose } from '../stores/body-poses.js';
-import { resetSimClock, scheduleReactBroadcast, setSimClock } from '../stores/sim-clock.js';
 import type { EngineConnectionState } from '../stores/engine-connection.js';
 import { useImportFlowStore } from '../stores/import-flow.js';
 import { useJointCreationStore } from '../stores/joint-creation.js';
 import { useLoadCreationStore } from '../stores/load-creation.js';
-import type { ActuatorState, ActuatorTypeId, CommandFunctionShape, ControlModeId, BodyMassProperties, BodyPose, BodyState, DatumState, FaceGeometryInfo, GeometryState, JointTypeId, LoadState, LoadTypeId, ReferenceFrameId, MeshData, SensorState, SensorTypeId, SensorAxisId } from '../stores/mechanism.js';
+import type {
+  ActuatorState,
+  ActuatorTypeId,
+  BodyMassProperties,
+  BodyPose,
+  BodyState,
+  CommandFunctionShape,
+  ControlModeId,
+  DatumState,
+  FaceGeometryInfo,
+  GeometryState,
+  JointTypeId,
+  LoadState,
+  LoadTypeId,
+  MeshData,
+  ReferenceFrameId,
+  SensorAxisId,
+  SensorState,
+  SensorTypeId,
+} from '../stores/mechanism.js';
 import { useMechanismStore } from '../stores/mechanism.js';
 import { useSelectionStore } from '../stores/selection.js';
-import { type ChannelDescriptor, type StructuredDiagnostic, useSimulationStore } from '../stores/simulation.js';
+import { resetSimClock, scheduleReactBroadcast, setSimClock } from '../stores/sim-clock.js';
+import {
+  type ChannelDescriptor,
+  type StructuredDiagnostic,
+  useSimulationStore,
+} from '../stores/simulation.js';
 import { useSimulationSettingsStore } from '../stores/simulation-settings.js';
-import { useUILayoutStore } from '../stores/ui-layout.js';
-import { useToolModeStore } from '../stores/tool-mode.js';
 import { useToastStore } from '../stores/toast.js';
-import { type StoreSample, addSamplesBatched, useTraceStore } from '../stores/traces.js';
-import { alignmentFromEngineAnalysis, analyzeDatumAlignment, computeDatumWorldPose } from '../utils/datum-alignment.js';
-import { getDebugRecorder } from '../debug/api.js';
-import { SaveIntentTracker } from './save-intent.js';
+import { useToolModeStore } from '../stores/tool-mode.js';
+import { addSamplesBatched, type StoreSample, useTraceStore } from '../stores/traces.js';
+import { useUILayoutStore } from '../stores/ui-layout.js';
+import {
+  alignmentFromEngineAnalysis,
+  analyzeDatumAlignment,
+  computeDatumWorldPose,
+} from '../utils/datum-alignment.js';
 
-// ---------------------------------------------------------------------------
-// Proto extraction helpers — reduce duplication across import/load/relocate
-// ---------------------------------------------------------------------------
-
-function extractMassProperties(
-  mp: { mass?: number; centerOfMass?: { x?: number; y?: number; z?: number }; ixx?: number; iyy?: number; izz?: number; ixy?: number; ixz?: number; iyz?: number } | undefined,
-): BodyMassProperties {
-  return {
-    mass: mp?.mass ?? 0,
-    centerOfMass: {
-      x: mp?.centerOfMass?.x ?? 0,
-      y: mp?.centerOfMass?.y ?? 0,
-      z: mp?.centerOfMass?.z ?? 0,
-    },
-    ixx: mp?.ixx ?? 0,
-    iyy: mp?.iyy ?? 0,
-    izz: mp?.izz ?? 0,
-    ixy: mp?.ixy ?? 0,
-    ixz: mp?.ixz ?? 0,
-    iyz: mp?.iyz ?? 0,
-  };
-}
-
-function extractPose(
-  pose: { position?: { x?: number; y?: number; z?: number }; orientation?: { x?: number; y?: number; z?: number; w?: number } } | undefined,
-): BodyPose {
-  return {
-    position: {
-      x: pose?.position?.x ?? 0,
-      y: pose?.position?.y ?? 0,
-      z: pose?.position?.z ?? 0,
-    },
-    rotation: {
-      x: pose?.orientation?.x ?? 0,
-      y: pose?.orientation?.y ?? 0,
-      z: pose?.orientation?.z ?? 0,
-      w: pose?.orientation?.w ?? 1,
-    },
-  };
-}
-
-function mapDatumSurfaceClass(surfaceClass: DatumSurfaceClass | undefined): DatumState['surfaceClass'] | undefined {
-  switch (surfaceClass) {
-    case DatumSurfaceClass.PLANAR:
-      return 'planar';
-    case DatumSurfaceClass.CYLINDRICAL:
-      return 'cylindrical';
-    case DatumSurfaceClass.CONICAL:
-      return 'conical';
-    case DatumSurfaceClass.SPHERICAL:
-      return 'spherical';
-    case DatumSurfaceClass.TOROIDAL:
-      return 'toroidal';
-    case DatumSurfaceClass.OTHER:
-      return 'other';
-    default:
-      return undefined;
-  }
-}
-
-function extractMeshData(
-  dm: { vertices?: number[]; indices?: number[]; normals?: number[] } | undefined,
-): MeshData {
-  return {
-    vertices: new Float32Array(dm?.vertices ?? []),
-    indices: new Uint32Array(dm?.indices ?? []),
-    normals: new Float32Array(dm?.normals ?? []),
-  };
-}
-
-function extractAssetRef(
-  ref: { contentHash?: string; originalFilename?: string } | undefined,
-): { contentHash: string; originalFilename: string } {
-  return {
-    contentHash: ref?.contentHash ?? '',
-    originalFilename: ref?.originalFilename ?? '',
-  };
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- proto types are complex; extract values by key
-function extractPrimitiveSource(
-  ps: any,
-): GeometryState['primitiveSource'] | undefined {
-  if (!ps || !ps.shape) return undefined;
-  const shapeMap: Record<number, 'box' | 'cylinder' | 'sphere'> = {
-    1: 'box',
-    2: 'cylinder',
-    3: 'sphere',
-  };
-  const shape = shapeMap[ps.shape as number];
-  if (!shape) return undefined;
-  const p = ps.params?.shapeParams;
-  const params: NonNullable<GeometryState['primitiveSource']>['params'] = {};
-  if (p?.case === 'box') {
-    params.box = { width: p.value.width ?? 0, height: p.value.height ?? 0, depth: p.value.depth ?? 0 };
-  } else if (p?.case === 'cylinder') {
-    params.cylinder = { radius: p.value.radius ?? 0, height: p.value.height ?? 0 };
-  } else if (p?.case === 'sphere') {
-    params.sphere = { radius: p.value.radius ?? 0 };
-  }
-  return { shape, params };
-}
-
-type CollisionConfigState = GeometryState['collisionConfig'];
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- proto types are complex; extract values by key
-function extractCollisionConfig(
-  cc: any,
-): CollisionConfigState {
-  if (!cc || !cc.shapeType) return undefined;
-  const typeMap: Record<number, NonNullable<CollisionConfigState>['shapeType']> = {
-    0: 'none',
-    1: 'box',
-    2: 'sphere',
-    3: 'cylinder',
-    4: 'convex-hull',
-  };
-  return {
-    shapeType: typeMap[cc.shapeType as number] ?? 'none',
-    halfExtents: { x: cc.halfExtents?.x ?? 0, y: cc.halfExtents?.y ?? 0, z: cc.halfExtents?.z ?? 0 },
-    radius: cc.radius ?? 0,
-    height: cc.height ?? 0,
-    offset: { x: cc.offset?.x ?? 0, y: cc.offset?.y ?? 0, z: cc.offset?.z ?? 0 },
-  };
-}
-
-function mapReferenceFrame(rf: ReferenceFrame): ReferenceFrameId {
-  switch (rf) {
-    case ReferenceFrame.DATUM_LOCAL:
-      return 'datum-local';
-    case ReferenceFrame.WORLD:
-      return 'world';
-    default:
-      return 'world';
-  }
-}
-
-function toProtoReferenceFrame(rf: ReferenceFrameId | undefined): ReferenceFrame {
-  switch (rf) {
-    case 'datum-local':
-      return ReferenceFrame.DATUM_LOCAL;
-    case 'world':
-      return ReferenceFrame.WORLD;
-    default:
-      return ReferenceFrame.WORLD;
-  }
-}
-
-function extractLoadState(load: Load): LoadState {
-  const base = {
-    id: load.id?.id ?? '',
-    name: load.name,
-  };
-  switch (load.config.case) {
-    case 'pointForce':
-      return {
-        ...base,
-        type: 'point-force' as LoadTypeId,
-        datumId: load.config.value.datumId?.id ?? '',
-        vector: {
-          x: load.config.value.vector?.x ?? 0,
-          y: load.config.value.vector?.y ?? 0,
-          z: load.config.value.vector?.z ?? 0,
-        },
-        referenceFrame: mapReferenceFrame(load.config.value.referenceFrame),
-      };
-    case 'pointTorque':
-      return {
-        ...base,
-        type: 'point-torque' as LoadTypeId,
-        datumId: load.config.value.datumId?.id ?? '',
-        vector: {
-          x: load.config.value.vector?.x ?? 0,
-          y: load.config.value.vector?.y ?? 0,
-          z: load.config.value.vector?.z ?? 0,
-        },
-        referenceFrame: mapReferenceFrame(load.config.value.referenceFrame),
-      };
-    case 'linearSpringDamper':
-      return {
-        ...base,
-        type: 'spring-damper' as LoadTypeId,
-        parentDatumId: load.config.value.parentDatumId?.id ?? '',
-        childDatumId: load.config.value.childDatumId?.id ?? '',
-        restLength: load.config.value.restLength,
-        stiffness: load.config.value.stiffness,
-        damping: load.config.value.damping,
-      };
-    default:
-      return { ...base, type: 'point-force' as LoadTypeId };
-  }
-}
-
-function loadStateToProto(s: LoadState): Load {
-  const id = s.id
-    ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.id } as ElementId)
-    : undefined;
-  switch (s.type) {
-    case 'point-force':
-      return {
-        $typeName: 'motionlab.mechanism.Load',
-        id,
-        name: s.name,
-        config: {
-          case: 'pointForce',
-          value: {
-            $typeName: 'motionlab.mechanism.PointForceLoad',
-            datumId: s.datumId
-              ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.datumId } as ElementId)
-              : undefined,
-            vector: { $typeName: 'motionlab.mechanism.Vec3', x: s.vector?.x ?? 0, y: s.vector?.y ?? 0, z: s.vector?.z ?? 0 },
-            referenceFrame: toProtoReferenceFrame(s.referenceFrame),
-          } as PointForceLoad,
-        },
-      } as Load;
-    case 'point-torque':
-      return {
-        $typeName: 'motionlab.mechanism.Load',
-        id,
-        name: s.name,
-        config: {
-          case: 'pointTorque',
-          value: {
-            $typeName: 'motionlab.mechanism.PointTorqueLoad',
-            datumId: s.datumId
-              ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.datumId } as ElementId)
-              : undefined,
-            vector: { $typeName: 'motionlab.mechanism.Vec3', x: s.vector?.x ?? 0, y: s.vector?.y ?? 0, z: s.vector?.z ?? 0 },
-            referenceFrame: toProtoReferenceFrame(s.referenceFrame),
-          } as PointTorqueLoad,
-        },
-      } as Load;
-    case 'spring-damper':
-      return {
-        $typeName: 'motionlab.mechanism.Load',
-        id,
-        name: s.name,
-        config: {
-          case: 'linearSpringDamper',
-          value: {
-            $typeName: 'motionlab.mechanism.LinearSpringDamperLoad',
-            parentDatumId: s.parentDatumId
-              ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.parentDatumId } as ElementId)
-              : undefined,
-            childDatumId: s.childDatumId
-              ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.childDatumId } as ElementId)
-              : undefined,
-            restLength: s.restLength ?? 0,
-            stiffness: s.stiffness ?? 0,
-            damping: s.damping ?? 0,
-          } as LinearSpringDamperLoad,
-        },
-      } as Load;
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Actuator proto ↔ store helpers
-// ---------------------------------------------------------------------------
-
-function mapControlMode(mode: ActuatorControlMode): ControlModeId {
-  switch (mode) {
-    case ActuatorControlMode.POSITION:
-      return 'position';
-    case ActuatorControlMode.SPEED:
-      return 'speed';
-    case ActuatorControlMode.EFFORT:
-      return 'effort';
-    default:
-      return 'position';
-  }
-}
-
-function toProtoControlMode(mode: ControlModeId): ActuatorControlMode {
-  switch (mode) {
-    case 'position':
-      return ActuatorControlMode.POSITION;
-    case 'speed':
-      return ActuatorControlMode.SPEED;
-    case 'effort':
-      return ActuatorControlMode.EFFORT;
-  }
-}
-
-function extractCommandFunction(cf: CommandFunction | undefined, legacyValue: number): CommandFunctionShape {
-  if (!cf) return { shape: 'constant', value: legacyValue };
-  switch (cf.shape.case) {
-    case 'constant':
-      return { shape: 'constant', value: cf.shape.value.value };
-    case 'ramp':
-      return { shape: 'ramp', initialValue: cf.shape.value.initialValue, slope: cf.shape.value.slope };
-    case 'sine':
-      return { shape: 'sine', amplitude: cf.shape.value.amplitude, frequency: cf.shape.value.frequency, phase: cf.shape.value.phase, offset: cf.shape.value.offset };
-    case 'piecewiseLinear':
-      return { shape: 'piecewise-linear', times: [...cf.shape.value.times], values: [...cf.shape.value.values] };
-    case 'smoothStep':
-      return {
-        shape: 'smooth-step',
-        displacement: cf.shape.value.displacement,
-        duration: cf.shape.value.duration,
-        profile: cf.shape.value.profile === SmoothStepProfile.TRAPEZOIDAL ? 'trapezoidal' : 'cycloidal',
-        accelFraction: cf.shape.value.accelFraction,
-        decelFraction: cf.shape.value.decelFraction,
-      };
-    default:
-      return { shape: 'constant', value: legacyValue };
-  }
-}
-
-function commandFunctionToProto(fn: CommandFunctionShape): CommandFunction {
-  switch (fn.shape) {
-    case 'constant':
-      return { $typeName: 'motionlab.mechanism.CommandFunction', shape: { case: 'constant', value: { $typeName: 'motionlab.mechanism.ConstantFunction', value: fn.value } } } as CommandFunction;
-    case 'ramp':
-      return { $typeName: 'motionlab.mechanism.CommandFunction', shape: { case: 'ramp', value: { $typeName: 'motionlab.mechanism.RampFunction', initialValue: fn.initialValue, slope: fn.slope } } } as CommandFunction;
-    case 'sine':
-      return { $typeName: 'motionlab.mechanism.CommandFunction', shape: { case: 'sine', value: { $typeName: 'motionlab.mechanism.SineFunction', amplitude: fn.amplitude, frequency: fn.frequency, phase: fn.phase, offset: fn.offset } } } as CommandFunction;
-    case 'piecewise-linear':
-      return { $typeName: 'motionlab.mechanism.CommandFunction', shape: { case: 'piecewiseLinear', value: { $typeName: 'motionlab.mechanism.PiecewiseLinearFunction', times: fn.times, values: fn.values } } } as CommandFunction;
-    case 'smooth-step':
-      return { $typeName: 'motionlab.mechanism.CommandFunction', shape: { case: 'smoothStep', value: { $typeName: 'motionlab.mechanism.SmoothStepFunction', displacement: fn.displacement, duration: fn.duration, profile: fn.profile === 'trapezoidal' ? SmoothStepProfile.TRAPEZOIDAL : SmoothStepProfile.CYCLOIDAL, accelFraction: fn.accelFraction, decelFraction: fn.decelFraction } } } as CommandFunction;
-  }
-}
-
-function extractActuatorState(actuator: Actuator): ActuatorState {
-  const base = {
-    id: actuator.id?.id ?? '',
-    name: actuator.name,
-  };
-  switch (actuator.config.case) {
-    case 'revoluteMotor': {
-      const commandFunction = extractCommandFunction(actuator.config.value.commandFunction, actuator.config.value.commandValue);
-      return {
-        ...base,
-        type: 'revolute-motor' as ActuatorTypeId,
-        jointId: actuator.config.value.jointId?.id ?? '',
-        controlMode: mapControlMode(actuator.config.value.controlMode),
-        commandValue: actuator.config.value.commandValue,
-        commandFunction,
-        effortLimit: actuator.config.value.effortLimit,
-      };
-    }
-    case 'prismaticMotor': {
-      const commandFunction = extractCommandFunction(actuator.config.value.commandFunction, actuator.config.value.commandValue);
-      return {
-        ...base,
-        type: 'prismatic-motor' as ActuatorTypeId,
-        jointId: actuator.config.value.jointId?.id ?? '',
-        controlMode: mapControlMode(actuator.config.value.controlMode),
-        commandValue: actuator.config.value.commandValue,
-        commandFunction,
-        effortLimit: actuator.config.value.effortLimit,
-      };
-    }
-    default:
-      return { ...base, type: 'revolute-motor' as ActuatorTypeId, jointId: '', controlMode: 'position', commandValue: 0, commandFunction: { shape: 'constant', value: 0 } };
-  }
-}
-
-function actuatorStateToProto(s: ActuatorState): Actuator {
-  const id = s.id
-    ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.id } as ElementId)
-    : undefined;
-  const jointId = s.jointId
-    ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.jointId } as ElementId)
-    : undefined;
-  const controlMode = toProtoControlMode(s.controlMode);
-  const commandFunction = commandFunctionToProto(s.commandFunction);
-  const motorFields = {
-    jointId,
-    controlMode,
-    commandValue: s.commandValue,
-    effortLimit: s.effortLimit,
-    commandFunction,
-  };
-  switch (s.type) {
-    case 'revolute-motor':
-      return {
-        $typeName: 'motionlab.mechanism.Actuator',
-        id,
-        name: s.name,
-        config: {
-          case: 'revoluteMotor',
-          value: {
-            $typeName: 'motionlab.mechanism.RevoluteMotorActuator',
-            ...motorFields,
-          } as RevoluteMotorActuator,
-        },
-      } as Actuator;
-    case 'prismatic-motor':
-      return {
-        $typeName: 'motionlab.mechanism.Actuator',
-        id,
-        name: s.name,
-        config: {
-          case: 'prismaticMotor',
-          value: {
-            $typeName: 'motionlab.mechanism.PrismaticMotorActuator',
-            ...motorFields,
-          } as PrismaticMotorActuator,
-        },
-      } as Actuator;
-  }
-}
-
-function extractSensorState(sensor: Sensor): SensorState {
-  const base: SensorState = {
-    id: sensor.id?.id ?? '',
-    name: sensor.name,
-    type: mapSensorType(sensor.type) as SensorTypeId,
-    datumId: sensor.datumId?.id ?? '',
-  };
-  switch (sensor.config.case) {
-    case 'tachometer':
-      return { ...base, axis: mapSensorAxis(sensor.config.value.axis) as SensorAxisId };
-    case 'encoder':
-      return { ...base, jointId: sensor.config.value.jointId?.id ?? '' };
-    default:
-      return base;
-  }
-}
-
-function sensorStateToProto(s: SensorState): Sensor {
-  const id = s.id
-    ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.id } as ElementId)
-    : undefined;
-  const datumId = s.datumId
-    ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.datumId } as ElementId)
-    : undefined;
-  const sensorType = toProtoSensorType(s.type);
-
-  let config: Sensor['config'];
-  switch (s.type) {
-    case 'accelerometer':
-      config = { case: 'accelerometer' as const, value: { $typeName: 'motionlab.mechanism.AccelerometerConfig' } as any };
-      break;
-    case 'gyroscope':
-      config = { case: 'gyroscope' as const, value: { $typeName: 'motionlab.mechanism.GyroscopeConfig' } as any };
-      break;
-    case 'tachometer':
-      config = {
-        case: 'tachometer' as const,
-        value: { $typeName: 'motionlab.mechanism.TachometerConfig', axis: toProtoSensorAxis(s.axis ?? 'z') } as any,
-      };
-      break;
-    case 'encoder':
-      config = {
-        case: 'encoder' as const,
-        value: {
-          $typeName: 'motionlab.mechanism.EncoderConfig',
-          jointId: s.jointId ? ({ $typeName: 'motionlab.mechanism.ElementId', id: s.jointId } as ElementId) : undefined,
-        } as any,
-      };
-      break;
-  }
-
-  return {
-    $typeName: 'motionlab.mechanism.Sensor',
-    id,
-    name: s.name,
-    type: sensorType,
-    datumId,
-    config,
-  } as Sensor;
-}
-
-function extractBodyState(
-  body: {
-    id?: { id?: string };
-    name?: string;
-    massProperties?: {
-      mass?: number;
-      centerOfMass?: { x?: number; y?: number; z?: number };
-      ixx?: number;
-      iyy?: number;
-      izz?: number;
-      ixy?: number;
-      ixz?: number;
-      iyz?: number;
-    };
-    pose?: {
-      position?: { x?: number; y?: number; z?: number };
-      orientation?: { x?: number; y?: number; z?: number; w?: number };
-    };
-    isFixed?: boolean;
-    massOverride?: boolean;
-    motionType?: number;
-  },
-): BodyState {
-  // Read motionType, fall back to isFixed for old projects
-  const motionType: 'dynamic' | 'fixed' = body.motionType === 2 ? 'fixed'
-    : body.motionType === 1 ? 'dynamic'
-    : body.isFixed ? 'fixed' : 'dynamic';
-
-  return {
-    id: body.id?.id ?? '',
-    name: body.name ?? '',
-    massProperties: extractMassProperties(body.massProperties),
-    pose: extractPose(body.pose),
-    isFixed: body.isFixed ?? false,
-    motionType,
-    massOverride: body.massOverride ?? false,
-  };
-}
-
-const IDENTITY_POSE: BodyPose = {
-  position: { x: 0, y: 0, z: 0 },
-  rotation: { x: 0, y: 0, z: 0, w: 1 },
-};
+import {
+  actuatorStateToProto,
+  commandFunctionToProto,
+  extractActuatorState,
+  extractAssetRef,
+  extractBodyState,
+  extractCollisionConfig,
+  extractCommandFunction,
+  extractLoadState,
+  extractMassProperties,
+  extractMeshData,
+  extractPose,
+  extractPrimitiveSource,
+  extractSensorState,
+  IDENTITY_POSE,
+  loadStateToProto,
+  mapControlMode,
+  mapDatumSurfaceClass,
+  mapReferenceFrame,
+  sensorStateToProto,
+  toProtoControlMode,
+  toProtoReferenceFrame,
+} from './connection/converters.js';
+import { connState } from './connection/state.js';
+import {
+  sendSimulationControl,
+  sendUpdateBody,
+} from './connection/commands.js';
+export * from './connection/commands.js';
+import { handleSimulationFrame, handleSimulationTrace } from './connection/hot-path.js';
 
 /** Add a body's merged geometry meshes to the scene graph. */
 export const DETACHED_BODY_PREFIX = '__detached_';
 
-function addDetachedGeometryToSceneGraph(
-  sg: SceneGraphManager,
-  geometry: GeometryState,
-): void {
+function addDetachedGeometryToSceneGraph(sg: SceneGraphManager, geometry: GeometryState): void {
   const syntheticBodyId = `${DETACHED_BODY_PREFIX}${geometry.id}`;
   const pose = geometry.localPose; // for detached geometries, localPose stores world pose
   sg.upsertBody(syntheticBodyId, geometry.name, {
@@ -640,14 +190,15 @@ function addBodyToSceneGraph(
   body: BodyState,
   geometries: GeometryState[],
 ): void {
-  sg.upsertBody(
-    body.id,
-    body.name,
-    {
-      position: [body.pose.position.x, body.pose.position.y, body.pose.position.z],
-      rotation: [body.pose.rotation.x, body.pose.rotation.y, body.pose.rotation.z, body.pose.rotation.w],
-    },
-  );
+  sg.upsertBody(body.id, body.name, {
+    position: [body.pose.position.x, body.pose.position.y, body.pose.position.z],
+    rotation: [
+      body.pose.rotation.x,
+      body.pose.rotation.y,
+      body.pose.rotation.z,
+      body.pose.rotation.w,
+    ],
+  });
   for (const geometry of geometries) {
     sg.addBodyGeometry(
       body.id,
@@ -655,7 +206,11 @@ function addBodyToSceneGraph(
       geometry.name,
       geometry.meshData,
       {
-        position: [geometry.localPose.position.x, geometry.localPose.position.y, geometry.localPose.position.z],
+        position: [
+          geometry.localPose.position.x,
+          geometry.localPose.position.y,
+          geometry.localPose.position.z,
+        ],
         rotation: [
           geometry.localPose.rotation.x,
           geometry.localPose.rotation.y,
@@ -675,113 +230,113 @@ type SetState = (
 ) => void;
 type GetState = () => EngineConnectionState;
 
-let ws: WebSocket | null = null;
-let handshakeTimer: ReturnType<typeof setTimeout> | null = null;
-let connectEpoch = 0;
 // Queued action to dispatch immediately after a successful auto-compile.
-let pendingActionAfterCompile: 'play' | 'step' | null = null;
 
 // ---------------------------------------------------------------------------
 // SceneGraphManager registry for hot-path frame updates
 // ---------------------------------------------------------------------------
 
-let sceneGraphManager: SceneGraphManager | null = null;
 
 export function registerSceneGraph(sg: SceneGraphManager | null): void {
-  sceneGraphManager = sg;
+  connState.sceneGraphManager = sg;
 }
 
 export function getSceneGraph(): SceneGraphManager | null {
-  return sceneGraphManager;
+  return connState.sceneGraphManager;
 }
 
 // ---------------------------------------------------------------------------
 // Missing assets callback — notifies App when a loaded project has missing assets
 // ---------------------------------------------------------------------------
 
-let missingAssetsCallback: ((assets: MissingAssetInfo[]) => void) | null = null;
 
 export function onMissingAssets(cb: ((assets: MissingAssetInfo[]) => void) | null): void {
-  missingAssetsCallback = cb;
+  connState.missingAssetsCallback = cb;
 }
 
 // ---------------------------------------------------------------------------
 // Relocate asset result callback — notifies dialog when relocation succeeds/fails
 // ---------------------------------------------------------------------------
 
-let relocateAssetCallback: ((bodyId: string, success: boolean, errorMessage?: string) => void) | null = null;
 
 /** Pending primitive source info — set before sending, consumed by result handler. */
-let pendingPrimitiveSource: GeometryState['primitiveSource'] | null = null;
 
-const saveIntentTracker = new SaveIntentTracker();
 
 export function onRelocateAssetResult(
   cb: ((bodyId: string, success: boolean, errorMessage?: string) => void) | null,
 ): void {
-  relocateAssetCallback = cb;
+  connState.relocateAssetCallback = cb;
 }
 
 // ---------------------------------------------------------------------------
 // Playback speed — frame skipping for sub-1x speeds
 // ---------------------------------------------------------------------------
 
-let playbackSpeed = 1;
-let frameSkipCounter = 0;
 
 export function setPlaybackSpeed(speed: number): void {
-  playbackSpeed = speed;
-  frameSkipCounter = 0;
+  connState.playbackSpeed = speed;
+  connState.frameSkipCounter = 0;
 }
 
 // ---------------------------------------------------------------------------
 // FPS measurement
 // ---------------------------------------------------------------------------
 
-let frameCount = 0;
-let lastFpsMeasure = 0;
-let measuredFps = 0;
-let nextSequenceId = 1n;
-let reportedMissingSceneGraphForSession = false;
+
+// Reused per-frame to avoid GC pressure at 60+ Hz. Inner pose/force/torque
+// objects and their tuples are mutated in place; applyBodyTransforms and
+// applyJointForceUpdates only read these synchronously.
 
 export function getMeasuredFps(): number {
-  return measuredFps;
+  return connState.measuredFps;
 }
 
 function allocateSequenceId(): bigint {
-  const id = nextSequenceId;
-  nextSequenceId += 1n;
+  const id = connState.nextSequenceId;
+  connState.nextSequenceId += 1n;
   return id;
 }
 
-function sendBinaryCommand(builder: (sequenceId: bigint) => Uint8Array): boolean {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return false;
-  const bytes = builder(allocateSequenceId());
-  getDebugRecorder().recordOutboundCommand(bytes);
-  ws.send(bytes);
-  return true;
+/** Extract damping values from a Joint proto's typed config oneof. */
+function extractJointDamping(j: Joint): {
+  damping: number;
+  translationalDamping: number;
+  rotationalDamping: number;
+} {
+  let damping = 0;
+  let translationalDamping = 0;
+  let rotationalDamping = 0;
+  if (j.config.case === 'revolute') {
+    damping = j.config.value.damping;
+  } else if (j.config.case === 'prismatic') {
+    damping = j.config.value.damping;
+  } else if (j.config.case === 'cylindrical') {
+    translationalDamping = j.config.value.translationalDamping;
+    rotationalDamping = j.config.value.rotationalDamping;
+  }
+  return { damping, translationalDamping, rotationalDamping };
 }
 
 function cleanup() {
-  if (handshakeTimer) {
-    clearTimeout(handshakeTimer);
-    handshakeTimer = null;
+  if (connState.handshakeTimer) {
+    clearTimeout(connState.handshakeTimer);
+    connState.handshakeTimer = null;
   }
-  if (ws) {
-    ws.onopen = null;
-    ws.onclose = null;
-    ws.onerror = null;
-    ws.onmessage = null;
-    ws.close();
-    ws = null;
+  if (connState.ws) {
+    connState.ws.onopen = null;
+    connState.ws.onclose = null;
+    connState.ws.onerror = null;
+    connState.ws.onmessage = null;
+    connState.ws.close();
+    connState.ws = null;
   }
   getDebugRecorder().markConnectionClosed('cleanup');
 }
 
 export function connect(set: SetState, _get: GetState) {
   cleanup();
-  const myEpoch = ++connectEpoch;
-  reportedMissingSceneGraphForSession = false;
+  const myEpoch = ++connState.connectEpoch;
+  connState.reportedMissingSceneGraphForSession = false;
 
   set({ status: 'discovering' });
 
@@ -795,7 +350,7 @@ export function connect(set: SetState, _get: GetState) {
     .then((endpoint) => {
       // Guard against StrictMode double-invoke: if connect() was called again
       // while this promise was in flight, this invocation is stale.
-      if (myEpoch !== connectEpoch) return;
+      if (myEpoch !== connState.connectEpoch) return;
 
       if (!endpoint) {
         set({ status: 'error', errorMessage: 'Engine endpoint not available' });
@@ -807,16 +362,19 @@ export function connect(set: SetState, _get: GetState) {
       const url = `ws://${endpoint.host}:${endpoint.port}`;
       const socket = new WebSocket(url);
       socket.binaryType = 'arraybuffer';
-      ws = socket;
+      connState.ws = socket;
 
       socket.onopen = () => {
-        if (ws !== socket) return;
+        if (connState.ws !== socket) return;
         set({ status: 'handshaking' });
-        const handshakeBytes = createHandshakeCommand(endpoint.sessionToken ?? '', allocateSequenceId());
+        const handshakeBytes = createHandshakeCommand(
+          endpoint.sessionToken ?? '',
+          allocateSequenceId(),
+        );
         getDebugRecorder().recordOutboundCommand(handshakeBytes);
         socket.send(handshakeBytes);
 
-        handshakeTimer = setTimeout(() => {
+        connState.handshakeTimer = setTimeout(() => {
           getDebugRecorder().recordAnomaly({
             severity: 'error',
             code: 'handshake-timeout',
@@ -829,7 +387,7 @@ export function connect(set: SetState, _get: GetState) {
       };
 
       socket.onmessage = (event) => {
-        if (ws !== socket) return;
+        if (connState.ws !== socket) return;
         let evt: ReturnType<typeof parseEvent>;
         const sizeBytes = event.data instanceof ArrayBuffer ? event.data.byteLength : 0;
         try {
@@ -842,7 +400,8 @@ export function connect(set: SetState, _get: GetState) {
         getDebugRecorder().recordInboundEvent(evt, sizeBytes);
 
         const messageType = evt.payload.case;
-        const isStreamingEvent = messageType === 'simulationFrame' || messageType === 'simulationTrace';
+        const isStreamingEvent =
+          messageType === 'simulationFrame' || messageType === 'simulationTrace';
         if ((import.meta as unknown as { env: { DEV: boolean } }).env.DEV && !isStreamingEvent) {
           console.debug('[protocol] ←', eventToDebugJson(evt));
         }
@@ -850,9 +409,9 @@ export function connect(set: SetState, _get: GetState) {
         switch (evt.payload.case) {
           case 'handshakeAck': {
             const ack = evt.payload.value;
-            if (handshakeTimer) {
-              clearTimeout(handshakeTimer);
-              handshakeTimer = null;
+            if (connState.handshakeTimer) {
+              clearTimeout(connState.handshakeTimer);
+              connState.handshakeTimer = null;
             }
             if (!ack.compatible) {
               const engineVersion = ack.engineProtocol?.version ?? 'unknown';
@@ -943,24 +502,26 @@ export function connect(set: SetState, _get: GetState) {
               mechStore.addBodiesWithGeometries(bodies, geometries);
 
               // Add to scene graph
-              if (sceneGraphManager) {
+              if (connState.sceneGraphManager) {
                 for (const body of bodies) {
                   const bodyGeoms = geometries.filter((g) => g.parentBodyId === body.id);
-                  addBodyToSceneGraph(sceneGraphManager, body, bodyGeoms);
+                  addBodyToSceneGraph(connState.sceneGraphManager, body, bodyGeoms);
                 }
                 // Add bodyless geometries as detached viewport entities
                 for (const geom of geometries) {
                   if (!geom.parentBodyId) {
-                    addDetachedGeometryToSceneGraph(sceneGraphManager, geom);
+                    addDetachedGeometryToSceneGraph(connState.sceneGraphManager, geom);
                   }
                 }
               }
 
               // Apply viewport focus-point offset so imports land near the camera target
-              if (sceneGraphManager && bodies.length > 0) {
-                const focusPoint = sceneGraphManager.getViewportFocusPoint();
+              if (connState.sceneGraphManager && bodies.length > 0) {
+                const focusPoint = connState.sceneGraphManager.getViewportFocusPoint();
                 // Compute centroid of all imported body positions
-                let cx = 0, cy = 0, cz = 0;
+                let cx = 0,
+                  cy = 0,
+                  cz = 0;
                 for (const b of bodies) {
                   cx += b.pose.position.x;
                   cy += b.pose.position.y;
@@ -1001,7 +562,8 @@ export function connect(set: SetState, _get: GetState) {
                 const importFlowStore = useImportFlowStore.getState();
                 useAssetLibraryStore.getState().registerImportedAsset({
                   assetId,
-                  filename: geometries[0]?.sourceAssetRef.originalFilename || bodies[0]?.name || 'Unknown',
+                  filename:
+                    geometries[0]?.sourceAssetRef.originalFilename || bodies[0]?.name || 'Unknown',
                   contentHash: geometries[0]?.sourceAssetRef.contentHash || '',
                   partCount: geometries.length || bodies.length,
                   type: 'cad-import',
@@ -1015,9 +577,10 @@ export function connect(set: SetState, _get: GetState) {
               useToastStore.getState().addToast({
                 variant: 'success',
                 title: 'Import complete',
-                description: detachedCount > 0
-                  ? `${detachedCount} ${detachedCount === 1 ? 'geometry' : 'geometries'} imported (visual only)`
-                  : `${bodies.length} ${bodies.length === 1 ? 'body' : 'bodies'} imported`,
+                description:
+                  detachedCount > 0
+                    ? `${detachedCount} ${detachedCount === 1 ? 'geometry' : 'geometries'} imported (visual only)`
+                    : `${bodies.length} ${bodies.length === 1 ? 'body' : 'bodies'} imported`,
                 duration: 3000,
               });
             } else {
@@ -1099,10 +662,10 @@ export function connect(set: SetState, _get: GetState) {
             mechStore.addBodiesWithGeometries(bodies, geometries);
 
             // Add to scene graph
-            if (sceneGraphManager) {
+            if (connState.sceneGraphManager) {
               for (const body of bodies) {
                 const bodyGeoms = geometries.filter((g) => g.parentBodyId === body.id);
-                addBodyToSceneGraph(sceneGraphManager, body, bodyGeoms);
+                addBodyToSceneGraph(connState.sceneGraphManager, body, bodyGeoms);
               }
             }
 
@@ -1132,17 +695,22 @@ export function connect(set: SetState, _get: GetState) {
                 massProperties: extractMassProperties(bodyProto?.massProperties),
                 pose: extractPose(bodyProto?.pose ?? g.pose),
                 isFixed: bodyProto?.isFixed ?? false,
-                motionType: bodyProto?.motionType === 2 ? 'fixed'
-                  : bodyProto?.motionType === 1 ? 'dynamic'
-                  : bodyProto?.isFixed ? 'fixed' : 'dynamic',
+                motionType:
+                  bodyProto?.motionType === 2
+                    ? 'fixed'
+                    : bodyProto?.motionType === 1
+                      ? 'dynamic'
+                      : bodyProto?.isFixed
+                        ? 'fixed'
+                        : 'dynamic',
                 massOverride: bodyProto?.massOverride ?? false,
               };
 
               // Prefer proto-sourced primitiveSource; fall back to pending client-side source
               const primSource = g.primitiveSource
                 ? extractPrimitiveSource(g.primitiveSource)
-                : pendingPrimitiveSource ?? undefined;
-              pendingPrimitiveSource = null;
+                : (connState.pendingPrimitiveSource ?? undefined);
+              connState.pendingPrimitiveSource = null;
 
               const geometry: GeometryState = {
                 id: g.geometryId,
@@ -1159,8 +727,8 @@ export function connect(set: SetState, _get: GetState) {
               const mechStore = useMechanismStore.getState();
               mechStore.addBodiesWithGeometries([body], [geometry]);
 
-              if (sceneGraphManager) {
-                addBodyToSceneGraph(sceneGraphManager, body, [geometry]);
+              if (connState.sceneGraphManager) {
+                addBodyToSceneGraph(connState.sceneGraphManager, body, [geometry]);
               }
 
               useSelectionStore.getState().select(body.id);
@@ -1172,7 +740,7 @@ export function connect(set: SetState, _get: GetState) {
                 duration: 3000,
               });
             } else if (result.result.case === 'errorMessage') {
-              pendingPrimitiveSource = null;
+              connState.pendingPrimitiveSource = null;
               useToastStore.getState().addToast({
                 variant: 'error',
                 title: 'Primitive creation failed',
@@ -1205,11 +773,13 @@ export function connect(set: SetState, _get: GetState) {
               applyUpdatedDatums(s.updatedDatums);
 
               // Replace mesh in scene graph
-              if (sceneGraphManager && geomProto) {
+              if (connState.sceneGraphManager && geomProto) {
                 const bodyId = geomProto.parentBodyId?.id ?? '';
                 const partIndex = s.partIndex.length > 0 ? new Uint32Array(s.partIndex) : undefined;
-                sceneGraphManager.addBodyGeometry(
-                  bodyId, geomId, geomProto.name ?? '',
+                connState.sceneGraphManager.addBodyGeometry(
+                  bodyId,
+                  geomId,
+                  geomProto.name ?? '',
                   extractMeshData(s.displayMesh),
                   { position: [0, 0, 0], rotation: [0, 0, 0, 1] },
                   partIndex,
@@ -1316,7 +886,12 @@ export function connect(set: SetState, _get: GetState) {
                 const newDatumId = d.id?.id ?? '';
                 const surfaceClass = mapSurfaceClass(success.surfaceClass) ?? null;
                 if (jcs.step === 'pick-parent') {
-                  jcs.setParentDatum(newDatumId, surfaceClass, success.geometryId?.id ?? null, success.faceIndex);
+                  jcs.setParentDatum(
+                    newDatumId,
+                    surfaceClass,
+                    success.geometryId?.id ?? null,
+                    success.faceIndex,
+                  );
                 } else if (jcs.step === 'pick-child') {
                   const parentDatum = jcs.parentDatumId
                     ? mechStore.datums.get(jcs.parentDatumId)
@@ -1394,7 +969,11 @@ export function connect(set: SetState, _get: GetState) {
                 // Build alignment from engine analysis
                 const alignmentKind = mapFacePairAlignment(success.alignment);
                 const recommendedType = mapJointType(success.recommendedJointType);
-                const alignment = alignmentFromEngineAnalysis(alignmentKind, recommendedType, success.recommendationConfidence);
+                const alignment = alignmentFromEngineAnalysis(
+                  alignmentKind,
+                  recommendedType,
+                  success.recommendationConfidence,
+                );
 
                 jcs.setChildDatum(childId, alignment, childSurfaceClass);
                 jcs.setCreatingDatum(false);
@@ -1715,9 +1294,9 @@ export function connect(set: SetState, _get: GetState) {
             if (result.success) {
               useToolModeStore.getState().setMode('select');
               // Dispatch any queued play/step that triggered this auto-compile.
-              if (pendingActionAfterCompile) {
-                const action = pendingActionAfterCompile;
-                pendingActionAfterCompile = null;
+              if (connState.pendingActionAfterCompile) {
+                const action = connState.pendingActionAfterCompile;
+                connState.pendingActionAfterCompile = null;
                 sendSimulationControl(
                   action === 'play' ? SimulationAction.PLAY : SimulationAction.STEP,
                 );
@@ -1729,7 +1308,7 @@ export function connect(set: SetState, _get: GetState) {
                 });
               }
             } else {
-              pendingActionAfterCompile = null;
+              connState.pendingActionAfterCompile = null;
               useAuthoringStatusStore
                 .getState()
                 .setMessage(result.errorMessage || 'Compilation failed');
@@ -1770,10 +1349,10 @@ export function connect(set: SetState, _get: GetState) {
               useTraceStore.getState().clear();
               clearBodyPoses();
               resetSimClock();
-              if (sceneGraphManager) {
-                sceneGraphManager.clearForceArrows();
+              if (connState.sceneGraphManager) {
+                connState.sceneGraphManager.clearForceArrows();
                 const { bodies } = useMechanismStore.getState();
-                sceneGraphManager.applyBodyTransforms(
+                connState.sceneGraphManager.applyBodyTransforms(
                   Array.from(bodies.values(), (body) => ({
                     id: body.id,
                     pose: {
@@ -1792,101 +1371,11 @@ export function connect(set: SetState, _get: GetState) {
             break;
           }
           case 'simulationFrame': {
-            // FPS measurement
-            const now = performance.now();
-            frameCount++;
-            if (now - lastFpsMeasure > 1000) {
-              measuredFps = frameCount;
-              frameCount = 0;
-              lastFpsMeasure = now;
-            }
-
-            // Frame skipping for sub-1x playback speeds
-            if (playbackSpeed < 1) {
-              frameSkipCounter++;
-              const skip = Math.round(1 / playbackSpeed); // 0.5→2, 0.25→4
-              if (frameSkipCounter % skip !== 0) break;
-            }
-
-            if (!sceneGraphManager) {
-              console.warn('[sim] no sceneGraphManager, skipping frame');
-              if (!reportedMissingSceneGraphForSession) {
-                reportedMissingSceneGraphForSession = true;
-                getDebugRecorder().recordAnomaly({
-                  severity: 'warning',
-                  code: 'simulation-frame-without-scene-graph',
-                  message: 'Simulation frames arrived before the scene graph manager was attached',
-                });
-              }
-              break;
-            }
-            const frame = evt.payload.value;
-            if (frame.bodyPoses.length === 0) {
-              console.warn('[sim] frame has no body poses');
-            }
-            sceneGraphManager.applyBodyTransforms(
-              frame.bodyPoses.map((bp) => {
-                const pos = {
-                  x: bp.position?.x ?? 0,
-                  y: bp.position?.y ?? 0,
-                  z: bp.position?.z ?? 0,
-                };
-                const rot = {
-                  x: bp.orientation?.x ?? 0,
-                  y: bp.orientation?.y ?? 0,
-                  z: bp.orientation?.z ?? 0,
-                  w: bp.orientation?.w ?? 1,
-                };
-                setBodyPose(bp.bodyId, pos, rot);
-                return {
-                  id: bp.bodyId,
-                  pose: {
-                    position: [pos.x, pos.y, pos.z],
-                    rotation: [rot.x, rot.y, rot.z, rot.w],
-                  },
-                };
-              }),
-            );
-            sceneGraphManager.applyJointForceUpdates(
-              frame.jointStates.map((js) => ({
-                jointId: js.jointId,
-                force: {
-                  x: js.reactionForce?.x ?? 0,
-                  y: js.reactionForce?.y ?? 0,
-                  z: js.reactionForce?.z ?? 0,
-                },
-                torque: {
-                  x: js.reactionTorque?.x ?? 0,
-                  y: js.reactionTorque?.y ?? 0,
-                  z: js.reactionTorque?.z ?? 0,
-                },
-              })),
-            );
-            /*
-             * Update simulation time from frame data so timeline tracks progress.
-             * Write to the module-level cache (zero React cost) and schedule a
-             * throttled broadcast to the Zustand store at ~10 Hz.
-             */
-            setSimClock(frame.simTime, Number(frame.stepCount));
-            scheduleReactBroadcast();
+            handleSimulationFrame(evt.payload.value);
             break;
           }
           case 'simulationTrace': {
-            const trace = evt.payload.value;
-            const samples: StoreSample[] = [];
-            for (const s of trace.samples) {
-              if (s.value.case === 'vector') {
-                const v = s.value.value;
-                samples.push({
-                  time: s.time,
-                  value: Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z),
-                  vec: { x: v.x, y: v.y, z: v.z },
-                });
-              } else if (s.value.case === 'scalar') {
-                samples.push({ time: s.time, value: s.value.value });
-              }
-            }
-            addSamplesBatched(trace.channelId, samples);
+            handleSimulationTrace(evt.payload.value);
             break;
           }
           case 'saveProjectResult': {
@@ -1895,11 +1384,12 @@ export function connect(set: SetState, _get: GetState) {
               const bytes = new Uint8Array(result.result.value);
               const mechStore = useMechanismStore.getState();
 
-              const saveIntent = saveIntentTracker.consumeProjectData(mechStore.projectFilePath);
+              const saveIntent = connState.saveIntentTracker.consumeProjectData(mechStore.projectFilePath);
 
               if (saveIntent.kind === 'autosave') {
                 const projectPath = mechStore.projectFilePath;
-                window.motionlab?.autoSaveWrite?.(bytes, projectPath)
+                window.motionlab
+                  ?.autoSaveWrite?.(bytes, projectPath)
                   .catch((err: unknown) => console.error('[autosave] write failed:', err));
                 break;
               }
@@ -1908,16 +1398,20 @@ export function connect(set: SetState, _get: GetState) {
               const projectName = mechStore.projectName;
               const existingPath = saveIntent.existingPath;
 
-              const savePromise = existingPath && window.motionlab?.saveProjectToPath
-                ? window.motionlab.saveProjectToPath(bytes, existingPath)
-                : window.motionlab?.saveProjectFile(bytes, projectName);
+              const savePromise =
+                existingPath && window.motionlab?.saveProjectToPath
+                  ? window.motionlab.saveProjectToPath(bytes, existingPath)
+                  : window.motionlab?.saveProjectFile(bytes, projectName);
 
               savePromise
                 ?.then((saveResult) => {
                   if (saveResult.saved && saveResult.filePath) {
                     mechStore.setProjectMeta(projectName, saveResult.filePath);
                     mechStore.markClean();
-                    window.motionlab?.addRecentProject?.({ name: projectName, filePath: saveResult.filePath });
+                    window.motionlab?.addRecentProject?.({
+                      name: projectName,
+                      filePath: saveResult.filePath,
+                    });
                     // Clean up autosave file after successful manual save
                     window.motionlab?.autoSaveCleanup?.(saveResult.filePath);
                   }
@@ -1926,8 +1420,11 @@ export function connect(set: SetState, _get: GetState) {
                   console.error('[project] save failed:', err);
                 });
             } else if (result.result.case === 'errorMessage') {
-              const intent = saveIntentTracker.consumeError();
-              console.error(intent === 'autosave' ? '[autosave] save failed:' : '[project] save failed:', result.result.value);
+              const intent = connState.saveIntentTracker.consumeError();
+              console.error(
+                intent === 'autosave' ? '[autosave] save failed:' : '[project] save failed:',
+                result.result.value,
+              );
             }
             break;
           }
@@ -1940,7 +1437,7 @@ export function connect(set: SetState, _get: GetState) {
               // Clear all state
               mechStore.clear();
               useSimulationStore.getState().reset();
-              if (sceneGraphManager) sceneGraphManager.clear();
+              if (connState.sceneGraphManager) connState.sceneGraphManager.clear();
 
               const mechanism = success.mechanism;
 
@@ -1960,9 +1457,7 @@ export function connect(set: SetState, _get: GetState) {
                 const geometryImportLookup = new Map(
                   success.geometries.map((g) => [g.geometryId, g]),
                 );
-                const bodyImportLookup = new Map(
-                  success.bodies.map((b) => [b.bodyId, b]),
-                );
+                const bodyImportLookup = new Map(success.bodies.map((b) => [b.bodyId, b]));
 
                 for (const g of mechanism.geometries) {
                   const geomId = g.id?.id ?? '';
@@ -1975,19 +1470,22 @@ export function connect(set: SetState, _get: GetState) {
 
                   if (geometryImport) {
                     meshData = extractMeshData(geometryImport.displayMesh);
-                    partIndex = geometryImport.partIndex.length > 0
-                      ? new Uint32Array(geometryImport.partIndex)
-                      : undefined;
+                    partIndex =
+                      geometryImport.partIndex.length > 0
+                        ? new Uint32Array(geometryImport.partIndex)
+                        : undefined;
                   } else if (g.displayMesh && (g.displayMesh.vertices?.length ?? 0) > 0) {
                     meshData = extractMeshData(g.displayMesh);
-                    partIndex = bodyImport && bodyImport.partIndex.length > 0
-                      ? new Uint32Array(bodyImport.partIndex)
-                      : undefined;
+                    partIndex =
+                      bodyImport && bodyImport.partIndex.length > 0
+                        ? new Uint32Array(bodyImport.partIndex)
+                        : undefined;
                   } else {
                     meshData = extractMeshData(bodyImport?.displayMesh);
-                    partIndex = bodyImport && bodyImport.partIndex.length > 0
-                      ? new Uint32Array(bodyImport.partIndex)
-                      : undefined;
+                    partIndex =
+                      bodyImport && bodyImport.partIndex.length > 0
+                        ? new Uint32Array(bodyImport.partIndex)
+                        : undefined;
                   }
 
                   geometryStates.push({
@@ -2029,10 +1527,10 @@ export function connect(set: SetState, _get: GetState) {
               mechStore.addBodiesWithGeometries(bodyStates, geometryStates);
 
               // Add bodies to scene graph
-              if (sceneGraphManager) {
+              if (connState.sceneGraphManager) {
                 for (const body of bodyStates) {
                   const bodyGeoms = geometryStates.filter((g) => g.parentBodyId === body.id);
-                  addBodyToSceneGraph(sceneGraphManager, body, bodyGeoms);
+                  addBodyToSceneGraph(connState.sceneGraphManager, body, bodyGeoms);
                 }
               }
 
@@ -2041,8 +1539,8 @@ export function connect(set: SetState, _get: GetState) {
                 for (const d of mechanism.datums) {
                   const datumState = extractDatumState(d);
                   mechStore.addDatum(datumState);
-                  if (sceneGraphManager) {
-                    sceneGraphManager.addDatum(
+                  if (connState.sceneGraphManager) {
+                    connState.sceneGraphManager.addDatum(
                       datumState.id,
                       datumState.parentBodyId,
                       {
@@ -2080,8 +1578,8 @@ export function connect(set: SetState, _get: GetState) {
                     ...extractJointDamping(j),
                   };
                   mechStore.addJoint(jointState);
-                  if (sceneGraphManager) {
-                    sceneGraphManager.addJoint(
+                  if (connState.sceneGraphManager) {
+                    connState.sceneGraphManager.addJoint(
                       jointState.id,
                       jointState.parentDatumId,
                       jointState.childDatumId,
@@ -2119,7 +1617,7 @@ export function connect(set: SetState, _get: GetState) {
               // Notify about missing assets so the UI can show the relocation dialog
               if (success.missingAssets.length > 0) {
                 console.warn('[project] missing assets:', success.missingAssets);
-                if (missingAssetsCallback) missingAssetsCallback(success.missingAssets);
+                if (connState.missingAssetsCallback) connState.missingAssetsCallback(success.missingAssets);
               }
             } else if (result.result.case === 'errorMessage') {
               console.error('[project] load failed:', result.result.value);
@@ -2152,23 +1650,23 @@ export function connect(set: SetState, _get: GetState) {
               }
 
               // Rebuild scene graph for this body
-              if (sceneGraphManager) {
-                sceneGraphManager.removeBody(b.bodyId);
+              if (connState.sceneGraphManager) {
+                connState.sceneGraphManager.removeBody(b.bodyId);
                 const updatedBody = useMechanismStore.getState().bodies.get(b.bodyId);
                 const bodyGeoms = [...useMechanismStore.getState().geometries.values()].filter(
                   (g) => g.parentBodyId === b.bodyId,
                 );
                 if (updatedBody && bodyGeoms.length > 0) {
-                  addBodyToSceneGraph(sceneGraphManager, updatedBody, bodyGeoms);
+                  addBodyToSceneGraph(connState.sceneGraphManager, updatedBody, bodyGeoms);
                 }
               }
 
               console.log('[project] asset relocated successfully:', b.bodyId);
-              if (relocateAssetCallback) relocateAssetCallback(b.bodyId, true);
+              if (connState.relocateAssetCallback) connState.relocateAssetCallback(b.bodyId, true);
               useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               console.error('[project] asset relocation failed:', result.result.value);
-              if (relocateAssetCallback) relocateAssetCallback('', false, result.result.value);
+              if (connState.relocateAssetCallback) connState.relocateAssetCallback('', false, result.result.value);
             }
             break;
           }
@@ -2207,7 +1705,11 @@ export function connect(set: SetState, _get: GetState) {
                 .filter((d) => d.parentBodyId === bodyId)
                 .map((d) => d.id);
               const dependentJointIds = [...mechStore.joints.values()]
-                .filter((j) => childDatumIds.includes(j.parentDatumId) || childDatumIds.includes(j.childDatumId))
+                .filter(
+                  (j) =>
+                    childDatumIds.includes(j.parentDatumId) ||
+                    childDatumIds.includes(j.childDatumId),
+                )
                 .map((j) => j.id);
 
               for (const jId of dependentJointIds) mechStore.removeJoint(jId);
@@ -2215,10 +1717,10 @@ export function connect(set: SetState, _get: GetState) {
               for (const gId of childGeomIds) mechStore.removeGeometry(gId);
               mechStore.removeBody(bodyId);
 
-              if (sceneGraphManager) {
-                for (const jId of dependentJointIds) sceneGraphManager.removeJoint(jId);
-                for (const dId of childDatumIds) sceneGraphManager.removeDatum(dId);
-                sceneGraphManager.removeBody(bodyId);
+              if (connState.sceneGraphManager) {
+                for (const jId of dependentJointIds) connState.sceneGraphManager.removeJoint(jId);
+                for (const dId of childDatumIds) connState.sceneGraphManager.removeDatum(dId);
+                connState.sceneGraphManager.removeBody(bodyId);
               }
 
               // Clear selection if deleted body was selected
@@ -2261,26 +1763,30 @@ export function connect(set: SetState, _get: GetState) {
               applyUpdatedDatums(result.updatedDatums);
 
               // Rebuild scene graph for affected bodies
-              if (sceneGraphManager) {
+              if (connState.sceneGraphManager) {
                 const updatedStore = useMechanismStore.getState();
                 // Remove synthetic detached body if geometry was previously unparented
                 if (!oldParentId) {
-                  sceneGraphManager.removeBody(`${DETACHED_BODY_PREFIX}${geomId}`);
+                  connState.sceneGraphManager.removeBody(`${DETACHED_BODY_PREFIX}${geomId}`);
                 }
                 if (oldParentId) {
-                  sceneGraphManager.removeBody(oldParentId);
+                  connState.sceneGraphManager.removeBody(oldParentId);
                   const oldBody = updatedStore.bodies.get(oldParentId);
                   if (oldBody) {
-                    const oldBodyGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === oldParentId);
-                    addBodyToSceneGraph(sceneGraphManager, oldBody, oldBodyGeoms);
+                    const oldBodyGeoms = [...updatedStore.geometries.values()].filter(
+                      (gg) => gg.parentBodyId === oldParentId,
+                    );
+                    addBodyToSceneGraph(connState.sceneGraphManager, oldBody, oldBodyGeoms);
                   }
                 }
                 if (newParentId && newParentId !== oldParentId) {
-                  sceneGraphManager.removeBody(newParentId);
+                  connState.sceneGraphManager.removeBody(newParentId);
                   const newBody = updatedStore.bodies.get(newParentId);
                   if (newBody) {
-                    const newBodyGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === newParentId);
-                    addBodyToSceneGraph(sceneGraphManager, newBody, newBodyGeoms);
+                    const newBodyGeoms = [...updatedStore.geometries.values()].filter(
+                      (gg) => gg.parentBodyId === newParentId,
+                    );
+                    addBodyToSceneGraph(connState.sceneGraphManager, newBody, newBodyGeoms);
                   }
                 }
               }
@@ -2311,18 +1817,20 @@ export function connect(set: SetState, _get: GetState) {
               }
 
               // Rebuild former parent's scene graph mesh
-              if (sceneGraphManager && oldParentId) {
-                sceneGraphManager.removeBody(oldParentId);
+              if (connState.sceneGraphManager && oldParentId) {
+                connState.sceneGraphManager.removeBody(oldParentId);
                 const updatedStore = useMechanismStore.getState();
                 const oldBody = updatedStore.bodies.get(oldParentId);
                 if (oldBody) {
-                  const bodyGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === oldParentId);
-                  addBodyToSceneGraph(sceneGraphManager, oldBody, bodyGeoms);
+                  const bodyGeoms = [...updatedStore.geometries.values()].filter(
+                    (gg) => gg.parentBodyId === oldParentId,
+                  );
+                  addBodyToSceneGraph(connState.sceneGraphManager, oldBody, bodyGeoms);
                 }
                 // Render the now-detached geometry as a standalone viewport entity
                 const detachedGeom = updatedStore.geometries.get(geomId);
                 if (detachedGeom) {
-                  addDetachedGeometryToSceneGraph(sceneGraphManager, detachedGeom);
+                  addDetachedGeometryToSceneGraph(connState.sceneGraphManager, detachedGeom);
                 }
               }
               useSimulationStore.getState().setNeedsCompile(true);
@@ -2348,17 +1856,19 @@ export function connect(set: SetState, _get: GetState) {
               mechStore.removeGeometry(geomId);
 
               // Rebuild parent body's scene graph mesh if geometry was attached
-              if (sceneGraphManager && parentBodyId) {
-                sceneGraphManager.removeBody(parentBodyId);
+              if (connState.sceneGraphManager && parentBodyId) {
+                connState.sceneGraphManager.removeBody(parentBodyId);
                 const updatedStore = useMechanismStore.getState();
                 const parentBody = updatedStore.bodies.get(parentBodyId);
                 if (parentBody) {
-                  const bodyGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === parentBodyId);
-                  addBodyToSceneGraph(sceneGraphManager, parentBody, bodyGeoms);
+                  const bodyGeoms = [...updatedStore.geometries.values()].filter(
+                    (gg) => gg.parentBodyId === parentBodyId,
+                  );
+                  addBodyToSceneGraph(connState.sceneGraphManager, parentBody, bodyGeoms);
                 }
-              } else if (sceneGraphManager) {
+              } else if (connState.sceneGraphManager) {
                 // Remove detached geometry from viewport
-                sceneGraphManager.removeBody(geomId);
+                connState.sceneGraphManager.removeBody(geomId);
               }
 
               useSimulationStore.getState().setNeedsCompile(true);
@@ -2391,11 +1901,13 @@ export function connect(set: SetState, _get: GetState) {
             if (result.result.case === 'body') {
               const b = result.result.value;
               const bodyId = b.id?.id ?? '';
-              useMechanismStore.getState().updateBodyMass(
-                bodyId,
-                extractMassProperties(b.massProperties),
-                b.massOverride ?? false,
-              );
+              useMechanismStore
+                .getState()
+                .updateBodyMass(
+                  bodyId,
+                  extractMassProperties(b.massProperties),
+                  b.massOverride ?? false,
+                );
               useSimulationStore.getState().setNeedsCompile(true);
             } else if (result.result.case === 'errorMessage') {
               useToastStore.getState().addToast({
@@ -2412,7 +1924,7 @@ export function connect(set: SetState, _get: GetState) {
               const mechStore = useMechanismStore.getState();
               mechStore.resetProject(mechStore.projectName);
               useSimulationStore.getState().reset();
-              if (sceneGraphManager) sceneGraphManager.clear();
+              if (connState.sceneGraphManager) connState.sceneGraphManager.clear();
             } else {
               console.error('[project] new project failed:', result.errorMessage);
             }
@@ -2523,25 +2035,29 @@ export function connect(set: SetState, _get: GetState) {
               applyUpdatedDatums(success.updatedDatums);
 
               // Rebuild scene graph
-              if (sceneGraphManager) {
+              if (connState.sceneGraphManager) {
                 const updatedStore = useMechanismStore.getState();
 
                 // Rebuild new body
                 const newBody = updatedStore.bodies.get(bodyId);
                 if (newBody) {
-                  sceneGraphManager.removeBody(bodyId);
-                  const newGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === bodyId);
-                  addBodyToSceneGraph(sceneGraphManager, newBody, newGeoms);
+                  connState.sceneGraphManager.removeBody(bodyId);
+                  const newGeoms = [...updatedStore.geometries.values()].filter(
+                    (gg) => gg.parentBodyId === bodyId,
+                  );
+                  addBodyToSceneGraph(connState.sceneGraphManager, newBody, newGeoms);
                 }
 
                 // Rebuild source body
                 const srcId = success.sourceBody?.id?.id ?? '';
                 if (srcId) {
-                  sceneGraphManager.removeBody(srcId);
+                  connState.sceneGraphManager.removeBody(srcId);
                   const srcBody = updatedStore.bodies.get(srcId);
                   if (srcBody) {
-                    const srcGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === srcId);
-                    addBodyToSceneGraph(sceneGraphManager, srcBody, srcGeoms);
+                    const srcGeoms = [...updatedStore.geometries.values()].filter(
+                      (gg) => gg.parentBodyId === srcId,
+                    );
+                    addBodyToSceneGraph(connState.sceneGraphManager, srcBody, srcGeoms);
                   }
                 }
               }
@@ -2593,31 +2109,35 @@ export function connect(set: SetState, _get: GetState) {
               applyUpdatedDatums(success.updatedDatums);
 
               // Rebuild scene graph
-              if (sceneGraphManager) {
+              if (connState.sceneGraphManager) {
                 const updatedStore = useMechanismStore.getState();
 
                 // Remove synthetic detached-geometry if was unparented
                 if (!oldParentId) {
-                  sceneGraphManager.removeBody(`${DETACHED_BODY_PREFIX}${geomId}`);
+                  connState.sceneGraphManager.removeBody(`${DETACHED_BODY_PREFIX}${geomId}`);
                 }
 
                 // Rebuild old parent
                 if (oldParentId) {
-                  sceneGraphManager.removeBody(oldParentId);
+                  connState.sceneGraphManager.removeBody(oldParentId);
                   const oldBody = updatedStore.bodies.get(oldParentId);
                   if (oldBody) {
-                    const oldGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === oldParentId);
-                    addBodyToSceneGraph(sceneGraphManager, oldBody, oldGeoms);
+                    const oldGeoms = [...updatedStore.geometries.values()].filter(
+                      (gg) => gg.parentBodyId === oldParentId,
+                    );
+                    addBodyToSceneGraph(connState.sceneGraphManager, oldBody, oldGeoms);
                   }
                 }
 
                 // Rebuild new parent
                 if (newParentId && newParentId !== oldParentId) {
-                  sceneGraphManager.removeBody(newParentId);
+                  connState.sceneGraphManager.removeBody(newParentId);
                   const newBody = updatedStore.bodies.get(newParentId);
                   if (newBody) {
-                    const newGeoms = [...updatedStore.geometries.values()].filter((gg) => gg.parentBodyId === newParentId);
-                    addBodyToSceneGraph(sceneGraphManager, newBody, newGeoms);
+                    const newGeoms = [...updatedStore.geometries.values()].filter(
+                      (gg) => gg.parentBodyId === newParentId,
+                    );
+                    addBodyToSceneGraph(connState.sceneGraphManager, newBody, newGeoms);
                   }
                 }
               }
@@ -2637,10 +2157,10 @@ export function connect(set: SetState, _get: GetState) {
       };
 
       socket.onclose = () => {
-        if (ws !== socket) return;
-        if (handshakeTimer) {
-          clearTimeout(handshakeTimer);
-          handshakeTimer = null;
+        if (connState.ws !== socket) return;
+        if (connState.handshakeTimer) {
+          clearTimeout(connState.handshakeTimer);
+          connState.handshakeTimer = null;
         }
         getDebugRecorder().recordAnomaly({
           severity: 'warning',
@@ -2649,11 +2169,11 @@ export function connect(set: SetState, _get: GetState) {
         });
         getDebugRecorder().markConnectionClosed('socket-close');
         set({ status: 'disconnected' });
-        ws = null;
+        connState.ws = null;
       };
 
       socket.onerror = () => {
-        if (ws !== socket) return;
+        if (connState.ws !== socket) return;
         getDebugRecorder().recordAnomaly({
           severity: 'error',
           code: 'websocket-error',
@@ -2677,467 +2197,20 @@ export function disconnect(set: SetState) {
   set({ status: 'disconnected' });
 }
 
-export function sendImportAsset(
-  filePath: string,
-  options?: { densityOverride?: number; tessellationQuality?: number; unitSystem?: string; importMode?: 'auto-body' | 'visual-only' },
-): void {
-  sendBinaryCommand((sequenceId) => createImportAssetCommand(filePath, options, sequenceId));
-}
-
-export function sendPlaceAssetInScene(
-  assetId: string,
-  position: { x: number; y: number; z: number },
-): void {
-  sendBinaryCommand((sequenceId) => createPlaceAssetInSceneCommand(assetId, position, sequenceId));
-}
-
-export function sendCreatePrimitiveBody(
-  shape: 'box' | 'cylinder' | 'sphere',
-  name: string,
-  position: { x: number; y: number; z: number },
-  params: { box?: { width: number; height: number; depth: number }; cylinder?: { radius: number; height: number }; sphere?: { radius: number } },
-  density?: number,
-): void {
-  pendingPrimitiveSource = { shape, params };
-  sendBinaryCommand((sequenceId) =>
-    createCreatePrimitiveBodyCommand(shape, name, position, params, density, sequenceId));
-}
-
-export function sendUpdatePrimitive(
-  geometryId: string,
-  params: PrimitiveParamsInput,
-  density?: number,
-): void {
-  sendBinaryCommand((sequenceId) => createUpdatePrimitiveCommand(geometryId, params, density, sequenceId));
-}
-
-export function sendUpdateCollisionConfig(
-  geometryId: string,
-  config: CollisionConfigInput,
-): void {
-  sendBinaryCommand((sequenceId) => createUpdateCollisionConfigCommand(geometryId, config, sequenceId));
-}
-
-export function sendCreateDatum(
-  parentBodyId: string,
-  name: string,
-  localPose: {
-    position: { x: number; y: number; z: number };
-    orientation: { x: number; y: number; z: number; w: number };
-  },
-): void {
-  sendBinaryCommand((sequenceId) => createCreateDatumCommand(parentBodyId, localPose, name, sequenceId));
-}
-
-export function sendCreateDatumFromFace(
-  geometryId: string,
-  faceIndex: number,
-  name: string,
-): void {
-  sendBinaryCommand((sequenceId) =>
-    createCreateDatumFromFaceCommand(geometryId, faceIndex, name, sequenceId));
-}
-
-export function sendPrepareFacePicking(geometryIds: string[]): void {
-  if (geometryIds.length === 0) return;
-  sendBinaryCommand((sequenceId) =>
-    createPrepareFacePickingCommand(geometryIds, sequenceId));
-}
-
-export function sendAnalyzeFacePair(
-  parentDatumId: string,
-  parentGeometryId: string,
-  parentFaceIndex: number,
-  childGeometryId: string,
-  childFaceIndex: number,
-  childDatumName: string,
-): void {
-  sendBinaryCommand((sequenceId) =>
-    createAnalyzeFacePairCommand(
-      parentDatumId,
-      parentGeometryId,
-      parentFaceIndex,
-      childGeometryId,
-      childFaceIndex,
-      childDatumName,
-      sequenceId,
-    ));
-}
-
-export function sendDeleteDatum(datumId: string): void {
-  sendBinaryCommand((sequenceId) => createDeleteDatumCommand(datumId, sequenceId));
-}
-
-export function sendRenameDatum(datumId: string, newName: string): void {
-  sendBinaryCommand((sequenceId) => createRenameDatumCommand(datumId, newName, sequenceId));
-}
-
-export function sendUpdateDatumPose(
-  datumId: string,
-  newLocalPose: {
-    position: { x: number; y: number; z: number };
-    orientation: { x: number; y: number; z: number; w: number };
-  },
-): void {
-  sendBinaryCommand((sequenceId) => createUpdateDatumPoseCommand(datumId, newLocalPose, sequenceId));
-}
-
-export function sendUpdateGeometryPose(
-  geometryId: string,
-  newLocalPose: {
-    position: { x: number; y: number; z: number };
-    orientation: { x: number; y: number; z: number; w: number };
-  },
-): void {
-  sendBinaryCommand((sequenceId) => createUpdateGeometryPoseCommand(geometryId, newLocalPose, sequenceId));
-}
-
-/** Extract damping values from a Joint proto's typed config oneof. */
-function extractJointDamping(j: Joint): { damping: number; translationalDamping: number; rotationalDamping: number } {
-  let damping = 0;
-  let translationalDamping = 0;
-  let rotationalDamping = 0;
-  if (j.config.case === 'revolute') {
-    damping = j.config.value.damping;
-  } else if (j.config.case === 'prismatic') {
-    damping = j.config.value.damping;
-  } else if (j.config.case === 'cylindrical') {
-    translationalDamping = j.config.value.translationalDamping;
-    rotationalDamping = j.config.value.rotationalDamping;
-  }
-  return { damping, translationalDamping, rotationalDamping };
-}
-
-/** Build the typed config oneof for a Joint proto, merging limits and damping. */
-function buildJointConfig(
-  type: JointTypeId,
-  lowerLimit: number,
-  upperLimit: number,
-  damping: number,
-  translationalDamping: number,
-  rotationalDamping: number,
-): Joint['config'] {
-  switch (type) {
-    case 'revolute':
-      return {
-        case: 'revolute',
-        value: {
-          $typeName: 'motionlab.mechanism.RevoluteJointConfig',
-          angleLimit: lowerLimit !== 0 || upperLimit !== 0
-            ? { $typeName: 'motionlab.mechanism.Range', lower: lowerLimit, upper: upperLimit }
-            : undefined,
-          damping,
-        },
-      } as Joint['config'];
-    case 'prismatic':
-      return {
-        case: 'prismatic',
-        value: {
-          $typeName: 'motionlab.mechanism.PrismaticJointConfig',
-          translationLimit: lowerLimit !== 0 || upperLimit !== 0
-            ? { $typeName: 'motionlab.mechanism.Range', lower: lowerLimit, upper: upperLimit }
-            : undefined,
-          damping,
-        },
-      } as Joint['config'];
-    case 'cylindrical':
-      return {
-        case: 'cylindrical',
-        value: {
-          $typeName: 'motionlab.mechanism.CylindricalJointConfig',
-          translationLimit: lowerLimit !== 0 || upperLimit !== 0
-            ? { $typeName: 'motionlab.mechanism.Range', lower: lowerLimit, upper: upperLimit }
-            : undefined,
-          translationalDamping,
-          rotationalDamping,
-        },
-      } as Joint['config'];
-    default:
-      return { case: undefined, value: undefined } as unknown as Joint['config'];
-  }
-}
-
-export function sendCreateJoint(
-  parentDatumId: string,
-  childDatumId: string,
-  type: JointTypeId,
-  name: string,
-  lowerLimit: number,
-  upperLimit: number,
-  damping = 0,
-  translationalDamping = 0,
-  rotationalDamping = 0,
-): void {
-  sendBinaryCommand((sequenceId) =>
-    createCreateJointCommand({
-      parentDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: parentDatumId } as ElementId,
-      childDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: childDatumId } as ElementId,
-      type: toProtoJointType(type),
-      name,
-      lowerLimit,
-      upperLimit,
-      config: buildJointConfig(type, lowerLimit, upperLimit, damping, translationalDamping, rotationalDamping),
-    } as Joint, sequenceId));
-}
-
-export function sendUpdateJoint(
-  jointId: string,
-  updates: {
-    name?: string;
-    type?: JointTypeId;
-    lowerLimit?: number;
-    upperLimit?: number;
-    parentDatumId?: string;
-    childDatumId?: string;
-    damping?: number;
-    translationalDamping?: number;
-    rotationalDamping?: number;
-  },
-): void {
-  const existing = useMechanismStore.getState().joints.get(jointId);
-  if (!existing) return;
-  const type = updates.type ?? existing.type;
-  const lowerLimit = updates.lowerLimit ?? existing.lowerLimit;
-  const upperLimit = updates.upperLimit ?? existing.upperLimit;
-  const damping = updates.damping ?? existing.damping;
-  const translationalDamping = updates.translationalDamping ?? existing.translationalDamping;
-  const rotationalDamping = updates.rotationalDamping ?? existing.rotationalDamping;
-  sendBinaryCommand((sequenceId) =>
-    createUpdateJointCommand({
-      id: { $typeName: 'motionlab.mechanism.ElementId', id: jointId } as ElementId,
-      parentDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: updates.parentDatumId ?? existing.parentDatumId } as ElementId,
-      childDatumId: { $typeName: 'motionlab.mechanism.ElementId', id: updates.childDatumId ?? existing.childDatumId } as ElementId,
-      type: toProtoJointType(type),
-      name: updates.name ?? existing.name,
-      lowerLimit,
-      upperLimit,
-      config: buildJointConfig(type, lowerLimit, upperLimit, damping, translationalDamping, rotationalDamping),
-    } as Joint, sequenceId));
-}
-
-export function sendUpdateBody(
-  bodyId: string,
-  updates: {
-    isFixed?: boolean;
-    name?: string;
-    pose?: {
-      position: { x: number; y: number; z: number };
-      orientation: { x: number; y: number; z: number; w: number };
-    };
-    motionType?: 'dynamic' | 'fixed';
-    pinDatumsInWorld?: boolean;
-  },
-): void {
-  sendBinaryCommand((sequenceId) => createUpdateBodyCommand(bodyId, updates, sequenceId));
-}
-
-export function sendCreateBody(
-  name: string,
-  options?: {
-    massProperties?: { mass: number; centerOfMass: { x: number; y: number; z: number }; ixx: number; iyy: number; izz: number; ixy: number; ixz: number; iyz: number };
-    isFixed?: boolean;
-    motionType?: 'dynamic' | 'fixed';
-  },
-): void {
-  sendBinaryCommand((sequenceId) => createCreateBodyCommand(name, options, sequenceId));
-}
-
-export function sendDeleteBody(bodyId: string): void {
-  sendBinaryCommand((sequenceId) => createDeleteBodyCommand(bodyId, sequenceId));
-}
-
-export function sendAttachGeometry(geometryId: string, targetBodyId: string): void {
-  sendBinaryCommand((sequenceId) =>
-    createAttachGeometryCommand(geometryId, targetBodyId, undefined, sequenceId));
-}
-
-export function sendDetachGeometry(geometryId: string): void {
-  sendBinaryCommand((sequenceId) => createDetachGeometryCommand(geometryId, sequenceId));
-}
-
-export function sendDeleteGeometry(geometryId: string): void {
-  sendBinaryCommand((sequenceId) => createDeleteGeometryCommand(geometryId, sequenceId));
-}
-
-export function sendRenameGeometry(geometryId: string, newName: string): void {
-  sendBinaryCommand((sequenceId) => createRenameGeometryCommand(geometryId, newName, sequenceId));
-}
-
-export function sendMakeCompoundBody(
-  geometryIds: string[],
-  name: string,
-  options?: { motionType?: 'dynamic' | 'fixed'; dissolveEmptyBodies?: boolean; referenceBodyId?: string },
-): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) {
-    console.warn('[make-body] WebSocket not open, cannot send command. ws:', ws ? `readyState=${ws.readyState}` : 'null');
-    return;
-  }
-  console.debug('[make-body] sending binary command over WebSocket');
-  sendBinaryCommand((sequenceId) => createMakeCompoundBodyCommand(geometryIds, name, options, sequenceId));
-}
-
-export function sendSplitBody(
-  sourceBodyId: string,
-  geometryIds: string[],
-  name: string,
-  options?: { motionType?: 'dynamic' | 'fixed' },
-): void {
-  sendBinaryCommand((sequenceId) => createSplitBodyCommand(sourceBodyId, geometryIds, name, options, sequenceId));
-}
-
-export function sendReparentGeometry(geometryId: string, targetBodyId: string): void {
-  sendBinaryCommand((sequenceId) => createReparentGeometryCommand(geometryId, targetBodyId, sequenceId));
-}
-
-export function sendUpdateMassProperties(
-  bodyId: string,
-  massOverride: boolean,
-  massProperties?: { mass: number; centerOfMass: { x: number; y: number; z: number }; ixx: number; iyy: number; izz: number; ixy: number; ixz: number; iyz: number },
-): void {
-  sendBinaryCommand((sequenceId) =>
-    createUpdateMassPropertiesCommand(bodyId, massOverride, massProperties, sequenceId));
-}
-
-export function sendDeleteJoint(jointId: string): void {
-  sendBinaryCommand((sequenceId) => createDeleteJointCommand(jointId, sequenceId));
-}
-
-export function sendCreateLoad(loadState: LoadState): void {
-  sendBinaryCommand((sequenceId) => createCreateLoadCommand(loadStateToProto(loadState), sequenceId));
-}
-
-export function sendUpdateLoad(loadState: LoadState): void {
-  sendBinaryCommand((sequenceId) => createUpdateLoadCommand(loadStateToProto(loadState), sequenceId));
-}
-
-export function sendDeleteLoad(loadId: string): void {
-  sendBinaryCommand((sequenceId) => createDeleteLoadCommand(loadId, sequenceId));
-}
-
-export function sendCreateActuator(actuatorState: ActuatorState): void {
-  sendBinaryCommand((sequenceId) =>
-    createCreateActuatorCommand(actuatorStateToProto(actuatorState), sequenceId));
-}
-
-export function sendUpdateActuator(actuatorState: ActuatorState): void {
-  sendBinaryCommand((sequenceId) =>
-    createUpdateActuatorCommand(actuatorStateToProto(actuatorState), sequenceId));
-}
-
-export function sendDeleteActuator(actuatorId: string): void {
-  sendBinaryCommand((sequenceId) => createDeleteActuatorCommand(actuatorId, sequenceId));
-}
-
-export function sendCreateSensor(sensorState: SensorState): void {
-  sendBinaryCommand((sequenceId) =>
-    createCreateSensorCommand(sensorStateToProto(sensorState), sequenceId));
-}
-
-export function sendUpdateSensor(sensorState: SensorState): void {
-  sendBinaryCommand((sequenceId) =>
-    createUpdateSensorCommand(sensorStateToProto(sensorState), sequenceId));
-}
-
-export function sendDeleteSensor(sensorId: string): void {
-  sendBinaryCommand((sequenceId) => createDeleteSensorCommand(sensorId, sequenceId));
-}
-
-export function sendCompileMechanism(
-  settings?: SimulationSettingsInput,
-): void {
-  sendBinaryCommand((sequenceId) => createCompileMechanismCommand(settings, sequenceId));
-}
-
-export function sendSimulationControl(action: SimulationAction): void {
-  sendBinaryCommand((sequenceId) => createSimulationControlCommand(action, sequenceId));
-}
-
-function buildSettingsInput(): SimulationSettingsInput {
-  const s = useSimulationSettingsStore.getState();
-  return {
-    timestep: s.timestep,
-    gravity: s.gravity,
-    duration: s.duration,
-    solver: {
-      type: s.solverType,
-      maxIterations: s.maxIterations,
-      tolerance: s.tolerance,
-      integrator: s.integratorType,
-    },
-    contact: {
-      friction: s.friction,
-      restitution: s.restitution,
-      compliance: s.compliance,
-      damping: s.contactDamping,
-      enableContact: s.enableContact,
-    },
-  };
-}
-
-/** Play, auto-compiling first if the model is stale or not yet compiled. */
-export function sendCompileAndPlay(): void {
-  const { state, needsCompile } = useSimulationStore.getState();
-  if (state === 'paused' && !needsCompile) {
-    sendSimulationControl(SimulationAction.PLAY);
-    return;
-  }
-  pendingActionAfterCompile = 'play';
-  sendCompileMechanism(buildSettingsInput());
-}
-
-/** Step, auto-compiling first if the model is stale or not yet compiled. */
-export function sendCompileAndStep(): void {
-  const { state, needsCompile } = useSimulationStore.getState();
-  if (state === 'paused' && !needsCompile) {
-    sendSimulationControl(SimulationAction.STEP);
-    return;
-  }
-  pendingActionAfterCompile = 'step';
-  sendCompileMechanism(buildSettingsInput());
-}
-
-export function sendScrub(time: number): void {
-  sendBinaryCommand((sequenceId) => createScrubCommand(time, sequenceId));
-}
-
-export function sendSaveProject(projectName: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  saveIntentTracker.requestManualSave();
-  sendBinaryCommand((sequenceId) => createSaveProjectCommand(projectName, sequenceId));
-}
-
-export function sendAutoSave(projectName: string): void {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
-  if (!saveIntentTracker.requestAutoSave()) return;
-  sendBinaryCommand((sequenceId) => createSaveProjectCommand(projectName, sequenceId));
-}
-
-export function sendLoadProject(data: Uint8Array): void {
-  sendBinaryCommand((sequenceId) => createLoadProjectCommand(data, sequenceId));
-}
-
-export function sendRelocateAsset(bodyId: string, newFilePath: string): void {
-  sendBinaryCommand((sequenceId) =>
-    createRelocateAssetCommand(bodyId, newFilePath, undefined, sequenceId));
-}
-
-export function sendNewProject(projectName: string): void {
-  sendBinaryCommand((sequenceId) => createNewProjectCommand(projectName, sequenceId));
-}
-
-export function sendSaveProjectAs(projectName: string): void {
-  saveIntentTracker.requestSaveAs();
-  sendSaveProject(projectName);
-}
-
 function mapSurfaceClass(sc: FaceSurfaceClass): DatumState['surfaceClass'] {
   switch (sc) {
-    case FaceSurfaceClass.PLANAR: return 'planar';
-    case FaceSurfaceClass.CYLINDRICAL: return 'cylindrical';
-    case FaceSurfaceClass.CONICAL: return 'conical';
-    case FaceSurfaceClass.SPHERICAL: return 'spherical';
-    case FaceSurfaceClass.TOROIDAL: return 'toroidal';
-    default: return 'other';
+    case FaceSurfaceClass.PLANAR:
+      return 'planar';
+    case FaceSurfaceClass.CYLINDRICAL:
+      return 'cylindrical';
+    case FaceSurfaceClass.CONICAL:
+      return 'conical';
+    case FaceSurfaceClass.SPHERICAL:
+      return 'spherical';
+    case FaceSurfaceClass.TOROIDAL:
+      return 'toroidal';
+    default:
+      return 'other';
   }
 }
 
@@ -3184,7 +2257,9 @@ function extractDatumState(datum: any, existing?: DatumState): DatumState {
     localPose: extractPose(datum.localPose),
     sourceGeometryId: datum.sourceGeometryId?.id || existing?.sourceGeometryId,
     sourceFaceIndex:
-      datum.sourceFaceIndex !== undefined ? Number(datum.sourceFaceIndex) : existing?.sourceFaceIndex,
+      datum.sourceFaceIndex !== undefined
+        ? Number(datum.sourceFaceIndex)
+        : existing?.sourceFaceIndex,
     sourceGeometryLocalPose: datum.sourceGeometryLocalPose
       ? extractPose(datum.sourceGeometryLocalPose)
       : existing?.sourceGeometryLocalPose,

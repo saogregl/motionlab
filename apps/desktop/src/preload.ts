@@ -49,9 +49,7 @@ interface MotionLabAPI {
   /** Update the native window title (taskbar/dock). */
   setWindowTitle(title: string): void;
   /** Get the list of recently opened projects. */
-  getRecentProjects(): Promise<
-    Array<{ name: string; filePath: string; lastOpened: string }>
-  >;
+  getRecentProjects(): Promise<Array<{ name: string; filePath: string; lastOpened: string }>>;
   /** Add or update a project in the recent list. */
   addRecentProject(project: { name: string; filePath: string }): Promise<void>;
   /** Remove a project from the recent list by file path. */
@@ -131,7 +129,10 @@ const api: MotionLabAPI = {
   getAppInfo: () => ipcRenderer.invoke('get-app-info'),
   getEngineEndpoint: () => ipcRenderer.invoke('get-engine-endpoint'),
   onEngineStatusChanged: (callback) => {
-    const listener = (_event: Electron.IpcRendererEvent, status: { status: string; code?: number | null; signal?: string | null }) => {
+    const listener = (
+      _event: Electron.IpcRendererEvent,
+      status: { status: string; code?: number | null; signal?: string | null },
+    ) => {
       callback(status);
     };
     ipcRenderer.on('engine-status-changed', listener);
@@ -165,8 +166,7 @@ const api: MotionLabAPI = {
   getRecentProjects: () => ipcRenderer.invoke('get-recent-projects'),
   addRecentProject: (project: { name: string; filePath: string }) =>
     ipcRenderer.invoke('add-recent-project', project),
-  removeRecentProject: (filePath: string) =>
-    ipcRenderer.invoke('remove-recent-project', filePath),
+  removeRecentProject: (filePath: string) => ipcRenderer.invoke('remove-recent-project', filePath),
   onAutoSaveTick: (callback) => {
     const listener = () => callback();
     ipcRenderer.on('auto-save-tick', listener);
